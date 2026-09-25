@@ -152,8 +152,8 @@ volume; removing volumes destroys that development database.
 Run `php tests/test_runtime.php` for isolated configuration tests. With Docker
 available, run `python tools/smoke_deploy.py --run`. The latter creates its own
 randomly named Compose project and temporary generated credentials; it checks
-installation refusal on reuse, health, anonymous permissions, the registration
-CAPTCHA, administrator editing, seed import, and preservation of live edits.
+installation refusal on reuse, health, anonymous permissions, CAPTCHA-protected
+self-registration, ordinary account editing, seed import, and preservation of live edits.
 It removes only its own containers, network, volume, and temporary files.
 
 CI runs that disposable test on GitHub's runner. It does not deploy an image,

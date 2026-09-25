@@ -80,8 +80,28 @@ def smoke():
                 raise RuntimeError("Anonymous permissions violate the public-read/account-edit policy.")
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
-            if "wpCaptchaWord" not in registration or question not in registration:
+            if 'name="captchaWord"' not in registration or question not in registration:
                 raise RuntimeError("Open registration did not render the configured CAPTCHA.")
+            requests = api({
+                "action": "query", "meta": "authmanagerinfo", "amirequestsfor": "create",
+            })["query"]["authmanagerinfo"]["requests"]
+            captcha = next((request for request in requests if request["id"] == "CaptchaAuthenticationRequest"), None)
+            if captcha is None:
+                raise RuntimeError("The account-creation API did not require a CAPTCHA.")
+            create_token = api({
+                "action": "query", "meta": "tokens", "type": "createaccount",
+            })["query"]["tokens"]["createaccounttoken"]
+            editor_password = secrets.token_hex(24)
+            creation = api({
+                "action": "createaccount", "username": "TestEditor",
+                "password": editor_password, "retype": editor_password,
+                "createreturnurl": base, "createtoken": create_token,
+                "captchaId": captcha["fields"]["captchaId"]["value"],
+                "captchaWord": json.loads(questions.read_text(encoding="utf-8"))[question][0],
+            }, post=True)
+            if creation.get("createaccount", {}).get("status") != "PASS":
+                raise RuntimeError("Open self-registration with the configured CAPTCHA failed.")
+            opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
             token = api({"action": "query", "meta": "tokens", "type": "login"})["query"]["tokens"]["logintoken"]
             login = api({
                 "action": "login", "lgname": "WikiAdmin",
@@ -103,8 +123,21 @@ def smoke():
             indexed = api({"action": "query", "list": "allpages", "aplimit": "max"})["query"]["allpages"]
             if set(pages) != {page["title"] for page in indexed}:
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
+            opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+            token = api({"action": "query", "meta": "tokens", "type": "login"})["query"]["tokens"]["logintoken"]
+            login = api({
+                "action": "login", "lgname": "TestEditor", "lgpassword": editor_password, "lgtoken": token,
+            }, post=True)
+            if login.get("login", {}).get("result") != "Success":
+                raise RuntimeError("A self-registered editor cannot log in.")
+            editor = api({"action": "query", "meta": "userinfo", "uiprop": "rights|groups"})["query"]["userinfo"]
+            if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
+                raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
+            csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
             preserved = "Original live edit for the disposable integration test."
-            api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
+            edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
+            if edit.get("edit", {}).get("result") != "Success":
+                raise RuntimeError("An ordinary self-registered editor cannot save a page.")
             current.write_bytes(run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "dumpBackup", "--current"))
             excluded = existing_titles(current)
             missing = {title: text for title, text in pages.items() if title_key(title) not in excluded}
