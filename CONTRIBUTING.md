@@ -16,6 +16,9 @@ pull-request text, screenshots, generated XML, and Git history. Do not put secre
 personal paths, database dumps, uploads, backups, or runtime configuration here.
 
 Keep source files and raw analysis in a private location outside the checkout.
+Separately approved server-only illustrations use [the operator workflow](docs/IMAGES.md);
+this never permits image bytes in Git or enables public web uploads. Artwork
+publication remains pending until redistribution rights are confirmed.
 Do not copy a paragraph to demonstrate a numeric value: reference its section and
 key, then summarize the narrow fact in your own words. If a contribution needs
 more than this policy permits, seek permission rather than broadening the policy
@@ -51,8 +54,8 @@ reviewed for misleading links or inappropriate markup.
    and `ALLOWED_FILES` in the checker, plus an appropriate size limit and tests.
    Never add a directory-wide content exception.
 
-The tests pin the initial snapshot's counts to catch accidental bulk import;
-update those expectations deliberately when reviewed records are added or removed.
+The tests fingerprint the original snapshot to preserve its records while new
+research is appended. Change existing evidence deliberately, with explicit review.
 Passing automated checks is not a legal review, a comprehensive secret scan, or
 proof that prose is original. Human pre-publication review remains required.
 

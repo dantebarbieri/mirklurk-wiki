@@ -30,6 +30,10 @@ the initial functionality. If one is mounted at `/var/www/html/images`, provisio
 it deliberately for Apache's `www-data` user (UID/GID 33 in the pinned image);
 never recursively change ownership of a shared parent directory.
 
+Future rights-approved server-only illustrations use [the private operator import
+workflow](IMAGES.md). No artwork is supplied or cleared by this repository, and
+web uploads remain disabled.
+
 The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
 

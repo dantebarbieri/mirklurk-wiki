@@ -1,0 +1,7 @@
+This page describes cited portions of level-up and progression logic in original prose.
+
+Thresholds, counters, and base parameters are separate claims from the runtime effect of a level-up. A summary does not establish cap behavior, rounding, rewards, or interactions unless the evidence explicitly supports them.
+
+Related numeric facts retain their own evidence and confidence labels. Missing conditions are not replaced by a guessed progression formula.
+
+[[Game mechanics]] | [[Skills]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

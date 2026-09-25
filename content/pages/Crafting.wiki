@@ -1,0 +1,7 @@
+This page records cited recipe inputs, outputs, stations, and costs. Each entry describes one evidenced recipe variant; alternatives are not silently combined.
+
+Station labels preserve the researched distinction, including a workstation, campfire, or alchemist workshop only where the entry supports it. A listed recipe does not establish that the player has unlocked it or can use it in every context.
+
+Unknown additional costs and conditions remain marked as not established. Quantities are not inferred from item names or descriptions.
+
+[[Items]] | [[Game mechanics]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

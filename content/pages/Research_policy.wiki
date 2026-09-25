@@ -6,7 +6,9 @@ Short entity names, numeric or boolean mechanics facts, source hashes, and preci
 Source paths must be relative to the installation. Never publish user-profile paths, usernames from saves, authentication details, or private server settings.
 
 == Keep private ==
-Do not upload game binaries, images, audio, fonts, maps, save data, full configuration files, localization descriptions, dialogue, tool exports, or decompiled source. Do not paste a full paragraph merely to prove that a number appears in it. Cite the identifier and summarize the fact instead.
+Do not publish game binaries, audio, fonts, maps, save data, full configuration files, localization descriptions, dialogue, tool exports, or decompiled source. Do not paste a full paragraph merely to prove that a number appears in it. Cite the identifier and summarize the fact instead.
+
+Pictures require a separate rights review before publication. A reserved File title or server-only storage is not permission to reproduce artwork. Only an operator may import an individually approved picture with attribution; public web uploads remain disabled, and image bytes never belong in the repository.
 
 Owning a copy of the game does not by itself grant permission to redistribute its contents. Local analysis tools do not change that rule. Stop and seek permission when a proposed contribution falls outside this narrow policy.
 

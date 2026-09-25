@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path, PurePosixPath
 
-from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, parse_data
+from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
 
 
 ALLOWED_FILES = {
@@ -19,6 +19,7 @@ ALLOWED_FILES = {
     "docs/IMPORTING.md": 32 * 1024,
     "docs/PUBLICATION.md": 32 * 1024,
     "docs/DEPLOYMENT.md": 32 * 1024,
+    "docs/IMAGES.md": 32 * 1024,
     "content/facts/game.json": MAX_FACTS_BYTES,
     "tools/check_publication.py": 32 * 1024,
     "tools/wiki_data.py": 32 * 1024,
@@ -34,7 +35,7 @@ ALLOWED_FILES = {
     "deploy/install.php": 16 * 1024,
     "deploy/healthcheck.php": 8 * 1024,
     ".github/workflows/validate.yml": 8 * 1024,
-    **{f"content/pages/{name}": 32 * 1024 for name in PAGE_FILES.values()},
+    **{f"content/pages/{name}": 32 * 1024 for name in (*PAGE_FILES.values(), *RESEARCH_PAGE_FILES.values())},
 }
 FORBIDDEN_DIRECTORIES = {
     "languages", "saves", "dumps", "exports", "raw", "research", "raw-research",

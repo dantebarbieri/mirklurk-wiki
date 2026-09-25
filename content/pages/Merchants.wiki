@@ -1,0 +1,7 @@
+This page documents specifically evidenced merchant offers and their conditions. Each row is one observed or inferred offer, not a guarantee of current stock.
+
+Names, quantities, prices, currencies, and locations need their own supporting trace within the entry's evidence. A missing quantity or location means it has not been established. A base price is not automatically a final transaction price.
+
+Random stock ranges, availability conditions, and unverified interpretations are described explicitly instead of being converted into fixed inventory promises.
+
+[[Items]] | [[Bestiary]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

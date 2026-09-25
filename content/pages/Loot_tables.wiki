@@ -1,0 +1,7 @@
+This page documents narrow loot-selection observations, not a complete or runtime-verified drop guide.
+
+'''Weights are not probabilities.''' Selection order, eligibility, repeated draws, empty outcomes, and shared conditions can affect the result. The wiki does not normalize reported weights or turn them into percentages.
+
+A conditional probability appears only when separately supported by the cited evidence. Unknown quantities, roll counts, and probabilities remain unknown. An explicit empty result is different from an unidentified item.
+
+[[Items]] | [[Bestiary]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

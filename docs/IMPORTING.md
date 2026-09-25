@@ -2,7 +2,9 @@
 
 The repository produces MediaWiki export 0.11 XML from original wikitext and
 vetted facts. It does not perform an import, fetch research files, or synchronize
-with a live server. A fresh bundle contains 11 main-namespace pages.
+with a live server. A fresh bundle contains the original 11 main-namespace pages
+plus only those new researched topic pages supported by validated entries/facts.
+The builder reports the actual emitted page count.
 
 ## Fresh wiki
 

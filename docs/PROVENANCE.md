@@ -7,7 +7,9 @@ oversized records. The entire file is limited to 512 KiB.
 
 ## Version 1 shape
 
-The root has exactly `schema_version`, `game`, `sources`, `entities`, and `facts`.
+The root requires `schema_version`, `game`, `sources`, `entities`, and `facts`.
+Optional additive arrays `entries` and `illustrations` default to empty when
+absent; the original version-1 dataset remains valid without them.
 `schema_version` is integer `1`; booleans are not accepted in integer fields.
 
 | Record | Required fields |
@@ -25,7 +27,8 @@ their respective arrays and match `[a-z0-9][a-z0-9_.-]{0,79}`.
 
 Categories are `item`, `being`, `nature`, `skill_group`, `skill`, and
 `damage_class`. They map to Items, Bestiary, Nature, Skills, and Damage types.
-Mechanics facts may target those pages or Game mechanics.
+Mechanics facts may target those pages, Game mechanics, or any researched topic
+listed below.
 
 `value` permits only JSON booleans and finite numbers with magnitude at most
 1,000,000,000,000,000. Include units or necessary context in `property`.
@@ -36,6 +39,59 @@ never quotations or copied localization prose.
 Text is trimmed, single-line Unicode. Names, labels, section/key identifiers,
 and build strings are at most 160 characters; descriptions are at most 500.
 Source paths are at most 255 characters.
+
+## Structured research entries
+
+Every entry requires `id`, `kind`, `title`, `summary`, `conditions`, `confidence`,
+`evidence`, and `details`. `summary` is original prose of at most 1200 characters;
+`conditions` is original text of at most 500 characters or null. Evidence and
+confidence cover **every claim in that narrow record**. Split records when the
+claims need different evidence or confidence; do not cite one branch of a
+function for an entire inferred system.
+
+| `kind` | Required `details` fields |
+| --- | --- |
+| `quest` | `quest_id`: short source identifier; `stage`: short label or null |
+| `merchant` | `merchant`: being entity ID; `item`: item entity ID; `quantity`: positive integer or null; `price`: nonnegative number or null; `currency`: label or null; `location`: original text or null |
+| `recipe` | `station`: short label; `inputs` and `outputs`: arrays of `{item, quantity}`; `cost`: `{amount, unit}` or null |
+| `loot` | `table`: short trace identifier; `outcome`: item entity ID or null for an explicit empty result; `quantity`: `{min, max}` or null; `weight`: nonnegative number or null; `probability`: number from 0 to 1 or null; `rolls`: `{min, max}` or null |
+| `algorithm` | `page`: Weather, Level progression, World seed logic, or Skills; `steps`: one to twenty original prose steps; `fact_ids`: references to existing numeric/boolean fact IDs |
+
+Quest entries paraphrase a **single** localized journal stage. A summary is not
+a quotation, and a localized objective alone does not prove a runtime trigger.
+
+Merchant records describe one offer. Random stock quantities may remain null
+with the supported range explained precisely in the conditions/summary. A
+known numeric price requires a currency/unit label; do not imply a final price
+when only a base field is known. Locations may be unknown.
+
+Recipe quantities are positive integers referencing existing item entities.
+Inputs may be an empty array only for a documented recipe with no item inputs;
+at least one output is required. Repeated input/output items must be combined,
+and alternate output variants are separate records. Costs carry an explicit unit.
+
+Loot quantity and roll ranges use nonnegative integers with `min <= max`.
+An explicit empty outcome has null quantity. Weight is rendered as reported:
+the builder **never derives or normalizes probabilities**. A numeric probability
+requires supporting evidence for that conditional fraction; otherwise use null
+and explain the observed selection semantics in original prose. Do not infer
+independent rolls or completeness from a partial table.
+
+Algorithm steps describe only the supported trace, not executable code.
+Function symbols and field identifiers belong in evidence references; numeric
+facts retain their own citations and are linked through stable anchors.
+
+In all these fields, null means **not established**, not zero or no cost.
+The exception is the expressly defined null loot outcome, which means a
+documented empty result. Do not use it for an unknown item.
+
+Entries map to Quests and journal, Merchants, Crafting, Loot tables, and the
+algorithm page. New topic pages and navigation are generated only when at least
+one validated entry or fact supports that page. Their authored introductions
+are not published as empty completion-shaped placeholders.
+
+Optional illustration metadata and its pending/approved rights gate are
+specified in [IMAGES.md](IMAGES.md). Image bytes remain outside Git.
 
 ## Source identity
 
