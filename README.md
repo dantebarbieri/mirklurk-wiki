@@ -9,16 +9,18 @@ The initial curated snapshot contains 336 name records and 79 numeric facts
 supported by five source-file fingerprints. Names establish source associations,
 not availability or combat behavior. The 28 localization-described mechanics have
 not been runtime-verified; the other 51 facts are qualified initializer
-observations. The installed game release is **unidentified**.
+observations. The operator confirmed the installed build as **0.8.1.5**,
+corroborating the inspected menu label. The claim that this is the latest patch
+is operator-reported, not an independent release-feed check.
 
 The expanded reference retains that baseline and now contains **107 numeric facts
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-343 main-namespace pages: 324 individual item, being, nature, and skill pages,
-plus topic indexes, guidance, provenance, and a compatibility redirect.
-The observed menu label `0.8.1.5` is cited separately, not treated as a confirmed
-release identifier.
+348 main-namespace pages: 324 individual item, being, nature, and skill pages,
+plus workstation articles, topic guides/indexes, provenance, and a compatibility
+redirect. Only `game.build` changed in the original dataset; all source
+fingerprints, entities, facts, and research entries remain unchanged.
 
 Supplemental source-scoped profiles preserve another **2,456 scalar values**
 in 372 profiles across 297 entities: 245 items, 36 beings, and 16 nature records.
@@ -27,11 +29,26 @@ computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
 have localized names but no reviewed initializer profile; no stats are invented
 for them.
 
-The metadata-only artwork register covers 320 reviewed selections: 243 items,
-36 beings, 25 skills, and 16 nature records. Four item images are deliberately
+The metadata-only artwork register covers 323 reviewed selections: 243 items,
+36 beings, 25 skills, 16 nature records, and three workstation variants.
+Four item images are deliberately
 omitted rather than replaced with placeholders or guessed frames. Some nature
 pictures show an explicitly labeled associated ground tile or branch, not a
 fabricated mature plant. Image bytes stay in separately approved server storage.
+
+Gameplay pages use compact tables and ordinary names, with machine IDs and
+citations kept in Source provenance. Each detail has **one editable wiki owner**:
+recipes on output items, offers on merchants, quest prose in the journal, and
+workstation behavior on its own page. Identical recipes across stations share
+one row; 96 original variants form 77 condition-preserving recipe groups.
+Indexes and acquisition crosslinks do not copy those details.
+
+Thirty-six verified standard unit prices cover 52 of 63 offers. Each offered
+item owns one `<onlyinclude>` price value (unknown where unresolved), and
+merchant tables transclude it with core MediaWiki rather than copying prices.
+The Currency and trading guide likewise transcludes coin-owned denomination,
+weight, and stack tables. No template extension or synchronization service is
+required; live edits to the owner propagate to readers of that information.
 
 The additive research format supports original quest/journal paraphrases,
 merchant offers, station-specific recipes, loot-selection observations, and

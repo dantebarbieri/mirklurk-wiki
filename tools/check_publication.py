@@ -8,7 +8,7 @@ from pathlib import Path, PurePosixPath
 
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
 from wiki_catalog import MAX_CATALOG_BYTES, parse_catalog
-from wiki_details import MAX_DETAILS_BYTES, MAX_ILLUSTRATIONS_BYTES, parse_details, parse_document, parse_illustrations
+from wiki_details import MAX_DETAILS_BYTES, MAX_ILLUSTRATIONS_BYTES, parse_details, parse_document, parse_illustrations, validate_coin_profiles
 
 
 ALLOWED_FILES = {
@@ -31,6 +31,7 @@ ALLOWED_FILES = {
     "tools/wiki_data.py": 32 * 1024,
     "tools/wiki_catalog.py": 32 * 1024,
     "tools/wiki_details.py": 32 * 1024,
+    "tools/wiki_render.py": 48 * 1024,
     "tools/plan_migration.py": 32 * 1024,
     "tools/build_wiki.py": 32 * 1024,
     "tools/smoke_deploy.py": 32 * 1024,
@@ -234,9 +235,23 @@ def audit_index(root):
                 problems.append(f"{path}: valid staged game.json is required for reference validation")
                 continue
             try:
-                validator(staged_metadata[path], parse_data(staged_metadata["content/facts/game.json"]))
+                data = parse_data(staged_metadata["content/facts/game.json"])
+                if path == "content/facts/illustrations.json":
+                    catalog_raw = staged_metadata.get("content/facts/catalog.json")
+                    catalog = parse_catalog(catalog_raw, data) if catalog_raw is not None else None
+                    validator(staged_metadata[path], data, catalog)
+                else:
+                    validator(staged_metadata[path], data)
             except DataError as error:
                 problems.append(f"{path}: invalid staged references: {error}")
+    if all(path in staged_metadata for path in ("content/facts/game.json", "content/facts/catalog.json", "content/facts/entity_details.json")):
+        try:
+            data = parse_data(staged_metadata["content/facts/game.json"])
+            catalog = parse_catalog(staged_metadata["content/facts/catalog.json"], data)
+            details = parse_details(staged_metadata["content/facts/entity_details.json"], data)
+            validate_coin_profiles(catalog, details)
+        except DataError as error:
+            problems.append(f"staged coin/profile consistency: {error}")
     return count, problems
 
 

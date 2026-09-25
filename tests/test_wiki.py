@@ -17,6 +17,7 @@ from build_wiki import EXPORT_NS, build_pages, build_xml, existing_titles, liter
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, load_data, parse_data, validate_data
 from check_publication import blob_errors
 from wiki_catalog import entry_owners, entry_relations, default_catalog, page_locations
+from wiki_render import recipe_groups
 
 
 def synthetic_data():
@@ -125,15 +126,16 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 343)
+        self.assertEqual(len(pages), 344)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
-        self.assertIn("base creature death-handler paths", pages["Loot tables"])
-        self.assertIn("not a promise of final harvested", pages["Loot tables"])
+        self.assertIn("[[Loot mechanics", pages["Loot tables"])
+        self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("reproducibility has not been demonstrated", pages["World seed logic"])
         self.assertIn("0.8.1.5", pages["Game mechanics"])
-        self.assertIn("versionString", pages["Game mechanics"])
+        self.assertIn("versionString", pages["Source provenance"])
+        self.assertNotIn("versionString", pages["Game mechanics"])
 
     def test_curated_payload_and_expected_shape(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")
@@ -146,7 +148,7 @@ class DataTests(unittest.TestCase):
             records = sorted(data[key][:count], key=lambda record: record["id"])
             raw = json.dumps(records, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
             self.assertEqual(hashlib.sha256(raw).hexdigest(), digest, f"Original {key} changed")
-        self.assertIsNone(data["game"]["build"])
+        self.assertEqual(data["game"]["build"], "0.8.1.5")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
@@ -154,7 +156,7 @@ class DataTests(unittest.TestCase):
         )
         pages = build_pages(ROOT, data)
         self.assertTrue(set(PAGE_FILES) <= pages.keys())
-        self.assertIn("not runtime-verified", pages["Game mechanics"])
+        self.assertIn("not a guarantee", pages["Source provenance"])
         self.assertIn("non-hostile", pages["Bestiary"])
 
     def test_valid_boolean_and_numeric_values(self):
@@ -240,17 +242,24 @@ class ResearchTests(unittest.TestCase):
         data["entries"].reverse()
         self.assertEqual(build_pages(ROOT, data)["Quests and journal"], page)
 
-    def test_other_entry_kinds_retain_lexicographic_id_order(self):
+    def test_entry_groups_retain_deterministic_record_order(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         catalog = default_catalog(data)
         owners = entry_owners(data, page_locations(data, catalog), entry_relations(data, catalog))
-        for title, page in build_pages(ROOT, data).items():
+        pages = build_pages(ROOT, data)
+        kinds = {entry["id"]: entry["kind"] for entry in data["entries"]}
+        for title, page in pages.items():
             if title == "Quests and journal":
                 continue
             with self.subTest(page=title):
-                identities = [identity for identity in re.findall(r'<span id="entry-([^"]+)"></span>', page)
-                              if owners[identity] == title]
-                self.assertEqual(identities, sorted(identities))
+                identities = [identity for identity in re.findall(r'<span id="entry-([^"]+)"></span>', page) if owners[identity] == title]
+                for kind in ("merchant", "loot", "algorithm"):
+                    matching = [identity for identity in identities if kinds[identity] == kind]
+                    self.assertEqual(matching, sorted(matching))
+                recipes = [entry for entry in data["entries"] if entry["kind"] == "recipe" and owners[entry["id"]] == title]
+                grouped = recipe_groups(sorted(recipes, key=lambda entry: entry["id"]))
+                self.assertEqual([identity for identity in identities if kinds[identity] == "recipe"],
+                                 [entry["id"] for group in grouped for entry in group])
 
     def test_original_version_one_needs_no_extension_fields(self):
         data = synthetic_data()
@@ -268,13 +277,14 @@ class ResearchTests(unittest.TestCase):
         self.assertNotIn("World seed logic", pages)
         self.assertNotIn("[[World seed logic]]", pages["Main Page"])
         self.assertIn("Not established", pages["Synthetic merchant"])
-        self.assertIn("Not established; not calculated from weight", pages["Synthetic merchant"])
+        self.assertIn("not converted to probabilities", pages["Synthetic merchant"])
         self.assertNotIn("50%", pages["Synthetic merchant"])
         self.assertIn("[[Entity synthetic-item|", pages["Entity synthetic-item"])
-        self.assertIn("[[Game mechanics#fact-synthetic-fact|", pages["Weather"])
+        self.assertIn("[[Game mechanics]]", pages["Weather"])
+        self.assertIn("[[Source provenance#synthetic|synthetic]]", pages["Source provenance"])
         for title in ("Quests and journal", "Synthetic merchant", "Entity synthetic-item", "Weather"):
-            self.assertIn("[[Source provenance#synthetic|synthetic]]", pages[title])
-            self.assertIn("Inferred; requires confirmation", pages[title])
+            self.assertNotIn("Source / section / key", pages[title])
+            self.assertNotIn("Evidence status", pages[title])
 
     def test_topic_fact_without_entry_activates_only_its_page(self):
         data = synthetic_data()
@@ -288,7 +298,8 @@ class ResearchTests(unittest.TestCase):
         for title in ("Weather", "Level progression", "World seed logic", "Skills", "Crafting", "Loot tables"):
             data = research_data()
             data["entries"][-1]["details"]["page"] = title
-            self.assertIn("An original synthetic step.", build_pages(ROOT, data)[title])
+            owner = {"Loot tables": "Loot mechanics", "Skills": "Level progression"}.get(title, title)
+            self.assertIn("An original synthetic step.", build_pages(ROOT, data)[owner])
 
     def test_explicit_empty_result_is_not_an_unknown_item(self):
         for quantity in (None, {"min": 0, "max": 0}):
@@ -296,7 +307,7 @@ class ResearchTests(unittest.TestCase):
             details = data["entries"][3]["details"]
             details.update(outcome=None, quantity=quantity, probability=0.25, rolls={"min": 0, "max": 1})
             page = build_pages(ROOT, data)["Synthetic merchant"]
-            self.assertIn("Explicit empty result", page)
+            self.assertIn("No items", page)
             self.assertIn("<nowiki>0.25</nowiki>", page)
 
     def test_invalid_structured_claims_fail(self):
@@ -349,14 +360,14 @@ class ResearchTests(unittest.TestCase):
 
     def test_pending_images_never_embed_or_link_artwork(self):
         pages = build_pages(ROOT, illustration_data())
-        self.assertIn("pending rights confirmation", pages["Entity synthetic-item"])
+        self.assertIn("No reviewed picture", pages["Entity synthetic-item"])
         self.assertNotIn("[[File:", pages["Entity synthetic-item"])
         self.assertNotIn("[[:File:", pages["Entity synthetic-item"])
 
     def test_approved_references_have_domain_independent_attribution(self):
         pages = build_pages(ROOT, illustration_data(approved=True))
         self.assertIn("[[File:Synthetic.png|thumb|", pages["Entity synthetic-item"])
-        self.assertIn("Synthetic test creator", pages["Entity synthetic-item"])
+        self.assertIn("Synthetic test creator", pages["Source provenance"])
         self.assertNotIn("https://", pages["Entity synthetic-item"])
 
     def test_invalid_illustration_metadata_is_rejected(self):

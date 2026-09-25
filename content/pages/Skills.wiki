@@ -1,5 +1,5 @@
-Browse skills and their groups. Open a skill page for its numerical facts, original mechanics summary, and source evidence. General point-allocation rules remain here.
+Browse skills and their groups. Open a skill page for its bonuses and mechanics.
 
-Localization-described bonuses and inferred formulas are labeled separately; they are not guarantees about runtime behavior or stacking.
+Described bonuses and calculated effects may have different conditions; do not assume they stack.
 
 [[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

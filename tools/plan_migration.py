@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -72,10 +73,23 @@ def plan_migration(base, current, desired):
             "base_sha256": text_hash(previous), "current_sha256": text_hash(live),
             "desired_sha256": text_hash(target),
         })
+    dependencies = []
+    for title, text in sorted(desired.items()):
+        targets = sorted({title_key(target) for target in re.findall(r"\{\{:([^{}\n|]+)\}\}", text)})
+        for target in targets:
+            wanted = desired.get(target, "")
+            if "<onlyinclude>" not in wanted:
+                continue
+            live = current.get(target, "")
+            dependencies.append({
+                "page": title, "price_owner": target,
+                "current_price_block_ready": live.count("<onlyinclude>") == 1 and live.count("</onlyinclude>") == 1,
+            })
     return {
         "schema_version": 1,
         "notice": "Review only. No writes authorized. Freeze writers and verify current hashes before any operator action.",
         "pages": records,
+        "price_dependencies": dependencies,
     }
 
 

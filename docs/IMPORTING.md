@@ -77,6 +77,16 @@ The new output contains title, action, and content SHA-256 values, not page
 texts or permission to edit. It refuses to overwrite an existing report.
 It cannot prove a supplied dump is complete; that remains an operator gate.
 
+The report also lists selective-transclusion dependencies with the historical
+field names `price_dependencies`, `price_owner`, and
+`current_price_block_ready`; these apply to both item-price blocks and
+coin-summary blocks. A missing or ambiguous live `<onlyinclude>` pair requires
+review. Do not expose a new merchant or currency guide while its existing
+community-owned item page lacks the reviewed selective block: otherwise
+MediaWiki could transclude that entire article. Merge the block through the
+normal conflict-aware editing workflow, preserving surrounding community
+content. Exact presence is a structural check, not approval of the content.
+
 | Action | Meaning |
 | --- | --- |
 | `create` | Title absent from both base and frozen current; candidate for additive import |
@@ -113,6 +123,11 @@ plan. Do not rename via source-label changes, redirect ambiguous names to one
 arbitrary entity, delete old histories, or silently retarget community links.
 After migration, verify canonical and legacy links, skill ownership, NPC
 classification, all page counts, and preservation of unrelated live edits.
+For transcluded information, edit the owner page rather than generated copies.
+Verify a canonical price edit updates the merchant view and a coin-weight edit
+updates the guide, without importing full item prose into either. Never
+reseed edited owner pages on a schedule; regenerated repository output is
+not authority over subsequent live edits.
 Rights-reviewed images have their own backed-up operator import; metadata
 alone does not prove that a File title exists or that its bytes match.
 

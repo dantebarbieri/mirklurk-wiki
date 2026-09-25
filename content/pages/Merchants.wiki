@@ -1,10 +1,5 @@
-This page documents specifically evidenced merchant offers and their conditions. Each row is one observed or inferred offer, not a guarantee of current stock.
+Choose a merchant to see their wares, location, and available trading details.
 
-Names, quantities, prices, currencies, and locations need their own supporting trace within the entry's evidence. A missing quantity or location means it has not been established. A base price is not automatically a final transaction price.
+Prices, quantities, and conditions are maintained on the merchant's own page. An item's base value is not a quoted shop price.
 
-Random stock ranges, availability conditions, and unverified interpretations are described explicitly instead of being converted into fixed inventory promises.
-
-== Coverage limits ==
-The current records cover selected offers from six researched merchants, not every possible seller or state. Some locations, prices, and stock quantities remain unestablished; their table cells intentionally do not invent values.
-
-[[Items]] | [[Bestiary]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]
+[[NPCs]] | [[Items]] | [[Main Page]]

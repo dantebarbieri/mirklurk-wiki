@@ -7780,6 +7780,85 @@
           "key": "13"
         }
       ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "id": "alchemy-workstation-early-illustration",
+      "station": "alchemy-workstation",
+      "file_title": "File:Alchemy-workstation-early.png",
+      "caption": "Magus Clay's alchemy workstation in the fort's basement.",
+      "sha256": "d157693a75aea057562611ed63baeccd000691211d466972248e3a7151196171",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_RoomCC_rm_basement_clay_17_Create",
+          "key": "index[53]/sprite_index/image_index"
+        },
+        {
+          "source": "beings-en",
+          "section": "Clay",
+          "key": "203"
+        }
+      ],
+      "variant": "early-game"
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "id": "alchemy-workstation-later-illustration",
+      "station": "alchemy-workstation",
+      "file_title": "File:Alchemy-workstation-later.png",
+      "caption": "The smaller alchemy workstation placed beside Viend after the explosion.",
+      "sha256": "a01fd52397aa4787c034f5da2b270469ccc19da087dfacbb020ea0a9923758cc",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_area_Step_0",
+          "key": "tinyScene.MAINQUESTSTAGE[22].station[131].sprite_index/image_index"
+        },
+        {
+          "source": "beings-en",
+          "section": "Eir",
+          "key": "210"
+        }
+      ],
+      "variant": "later-game"
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "id": "armor-workstation-illustration",
+      "station": "armor-workstation",
+      "file_title": "File:Armor-workstation.png",
+      "caption": "The armor workstation in Ranger Bhato's hideout.",
+      "sha256": "25ffc98bcbaac7a2edc230d77f599277637bfa64803e9826efcc8d6804c9c1f0",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_RoomCC_rm_hideout_ranger_5_Create",
+          "key": "index[125]/sprite_index/image_index"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_station_Alarm_0",
+          "key": "station[125].localMenu"
+        },
+        {
+          "source": "beings-en",
+          "section": "Bhato",
+          "key": "204"
+        }
+      ]
     }
   ]
 }

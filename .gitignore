@@ -41,6 +41,7 @@
 !/tools/wiki_data.py
 !/tools/wiki_catalog.py
 !/tools/wiki_details.py
+!/tools/wiki_render.py
 !/tools/plan_migration.py
 !/tools/build_wiki.py
 !/tools/smoke_deploy.py

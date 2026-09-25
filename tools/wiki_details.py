@@ -1,6 +1,7 @@
 """Bounded numeric profiles and rights-reviewed image metadata, never image bytes."""
 
 import json
+from decimal import Decimal
 from pathlib import Path
 
 from wiki_data import (
@@ -79,7 +80,7 @@ def parse_details(raw, data):
     return validate_details(parse_document(raw, MAX_DETAILS_BYTES), data)
 
 
-def parse_illustrations(raw, data):
+def parse_illustrations(raw, data, catalog=None):
     document = parse_document(raw, MAX_ILLUSTRATIONS_BYTES)
     _object(document, {"schema_version", "illustrations"}, set(), "image metadata")
     if type(document["schema_version"]) is not int or document["schema_version"] != 1:
@@ -89,6 +90,7 @@ def parse_illustrations(raw, data):
         [*data.get("illustrations", []), *images],
         {source["id"]: source for source in data["sources"]},
         {entity["id"]: entity for entity in data["entities"]},
+        {row["id"]: row for row in catalog.get("stations", [])} if catalog else None,
     )
     return images
 
@@ -101,11 +103,22 @@ def read_metadata(path, maximum):
         return stream.read(maximum + 1)
 
 
+def validate_coin_profiles(catalog, details):
+    for coin in catalog.get("currency", {}).get("coins", []):
+        matching = [row for row in details["profiles"] if row["entity"] == coin["entity"]]
+        for field, property_id in (("value_in_silver", "initial-price"), ("weight_kg", "initial-weight"), ("stack_limit", "stack-limit")):
+            if not any(row["values"].get(property_id) == coin[field] for row in matching):
+                raise DataError("coin summary must agree with its reviewed initializer profile")
+        if Decimal(str(coin["weight_kg"])) * 1000 != Decimal(str(coin["weight_grams"])):
+            raise DataError("coin kilogram and gram values disagree")
+
+
 def load_publication_inputs(root):
     folder = Path(root) / "content" / "facts"
     data = load_data(folder / "game.json")
-    images = parse_illustrations(read_metadata(folder / "illustrations.json", MAX_ILLUSTRATIONS_BYTES), data)
-    data = dict(data, illustrations=[*data.get("illustrations", []), *images])
     catalog = load_catalog(folder / "catalog.json", data)
+    images = parse_illustrations(read_metadata(folder / "illustrations.json", MAX_ILLUSTRATIONS_BYTES), data, catalog)
+    data = dict(data, illustrations=[*data.get("illustrations", []), *images])
     details = parse_details(read_metadata(folder / "entity_details.json", MAX_DETAILS_BYTES), data)
+    validate_coin_profiles(catalog, details)
     return data, catalog, details

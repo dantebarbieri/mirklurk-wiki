@@ -161,6 +161,34 @@ def smoke():
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+            price_title = "Longbow (Cypress)"
+            original_item = pages[price_title]
+            if original_item.count("<onlyinclude>") != 1 or original_item.count("</onlyinclude>") != 1:
+                raise RuntimeError("The item does not expose exactly one canonical price block.")
+            before_price, _, rest = original_item.partition("<onlyinclude>")
+            _, _, after_price = rest.partition("</onlyinclude>")
+            updated_item = before_price + "<onlyinclude>111.23 silver</onlyinclude>" + after_price
+            price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
+            if price_edit.get("edit", {}).get("result") != "Success":
+                raise RuntimeError("A registered editor cannot update the canonical item price.")
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            merchant_html = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
+            item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
+            if "111.23 silver" not in merchant_html or 'id="entity-item-105"' in merchant_html:
+                raise RuntimeError("The merchant did not refresh only the item-owned price value.")
+            if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
+                raise RuntimeError("Selective price transclusion removed the item's normal full article.")
+            coin_title = "Copper Coin"
+            coin_text = pages[coin_title].replace("<nowiki>25</nowiki> g", "<nowiki>26</nowiki> g")
+            if coin_text == pages[coin_title]:
+                raise RuntimeError("The synthetic coin-weight edit did not target its canonical value.")
+            coin_edit = api({"action": "edit", "title": coin_title, "text": coin_text, "token": csrf}, post=True)
+            if coin_edit.get("edit", {}).get("result") != "Success":
+                raise RuntimeError("A registered editor cannot update a coin-owned weight.")
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            currency_html = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
+            if "26 g" not in currency_html or 'id="entity-item-72"' in currency_html:
+                raise RuntimeError("The currency guide did not refresh only the coin-owned summary table.")
             preserved = "Original live edit for the disposable integration test."
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":

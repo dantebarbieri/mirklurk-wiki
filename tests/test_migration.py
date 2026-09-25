@@ -71,6 +71,19 @@ class MigrationTests(unittest.TestCase):
             self.assertEqual(output.read_bytes(), contents)
             self.assertEqual(read_snapshot(path)["Getting started"], "guide")
 
+    def test_existing_item_without_price_block_requires_review_before_merchant_import(self):
+        base = {"Item": "Earlier item content"}
+        live = {"Item": "Community item content without a selective price block"}
+        desired = {"Item": "Full article <onlyinclude>2 silver</onlyinclude>",
+                   "Merchant": "{{:Item}}"}
+        report = plan_migration(base, live, desired)
+        self.assertEqual(report["price_dependencies"], [{
+            "page": "Merchant", "price_owner": "Item", "current_price_block_ready": False,
+        }])
+        self.assertEqual(next(row["action"] for row in report["pages"] if row["title"] == "Item"), "conflict")
+        live["Item"] = "Community article <onlyinclude>3 silver</onlyinclude>"
+        self.assertTrue(plan_migration(base, live, desired)["price_dependencies"][0]["current_price_block_ready"])
+
 
 if __name__ == "__main__":
     unittest.main()

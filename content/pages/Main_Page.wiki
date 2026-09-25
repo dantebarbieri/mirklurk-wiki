@@ -12,7 +12,7 @@ Welcome to the independent '''MirkLurk Wiki'''. Find equipment, creatures, chara
 == Read the caveats ==
 Catalogues may reveal names before you encounter them in play. A source entry is not proof that content is available in the current game. [[Evidence and spoilers|Read the spoiler and build caveats]].
 
-Missing information means unknown, not zero. The installed research build remains unidentified; pages distinguish source observations from tested behavior.
+Missing information means unknown, not zero. See [[Game mechanics#Version|the documented game version]] when comparing behavior.
 
 == Help improve the wiki ==
 Add original explanations and cite evidence. [[Research policy|How to contribute and interpret evidence]] | [[Source provenance|Research sources]].
