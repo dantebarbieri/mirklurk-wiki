@@ -20,6 +20,19 @@ plus topic indexes, guidance, provenance, and a compatibility redirect.
 The observed menu label `0.8.1.5` is cited separately, not treated as a confirmed
 release identifier.
 
+Supplemental source-scoped profiles preserve another **2,456 scalar values**
+in 372 profiles across 297 entities: 245 items, 36 beings, and 16 nature records.
+Their 48 shared property definitions distinguish literal initializer values,
+computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
+have localized names but no reviewed initializer profile; no stats are invented
+for them.
+
+The metadata-only artwork register covers 320 reviewed selections: 243 items,
+36 beings, 25 skills, and 16 nature records. Four item images are deliberately
+omitted rather than replaced with placeholders or guessed frames. Some nature
+pictures show an explicitly labeled associated ground tile or branch, not a
+fabricated mature plant. Image bytes stay in separately approved server storage.
+
 The additive research format supports original quest/journal paraphrases,
 merchant offers, station-specific recipes, loot-selection observations, and
 weather, progression, skill, and world-seed summaries. Each narrow claim carries

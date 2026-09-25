@@ -7296,6 +7296,490 @@
           "key": "4"
         }
       ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-0-illustration",
+      "entity": "nature-0",
+      "file_title": "File:Nature-0.png",
+      "caption": "Grass representative nature tile, without environment-specific tinting.",
+      "sha256": "00f78589d5ed2d51d67789483f72de08f80d9458782039a457c3c466ec8c3668",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Grass[15].nature[0]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Grass.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-1-illustration",
+      "entity": "nature-1",
+      "file_title": "File:Nature-1.png",
+      "caption": "Tall Grass representative nature tile, without environment-specific tinting.",
+      "sha256": "1b17d9911abd825d74d796b6e3153ffea9896555fa52e026745beac9acb9c0f9",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[69].nature[1]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-2-illustration",
+      "entity": "nature-2",
+      "file_title": "File:Nature-2.png",
+      "caption": "Boulder representative nature tile, without environment-specific tinting.",
+      "sha256": "6a23c491af293653339d10b37cc0914b99b157ed59977da5aaed65f12ae92dd1",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[19].nature[2]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-3-illustration",
+      "entity": "nature-3",
+      "file_title": "File:Nature-3.png",
+      "caption": "Mossy Log representative nature tile, without environment-specific tinting.",
+      "sha256": "15e4676e11b4772200a787ce2dd65e7ed0ee5908d262701b4b6c1f5edfd7e840",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[29].nature[3]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-4-illustration",
+      "entity": "nature-4",
+      "file_title": "File:Nature-4.png",
+      "caption": "Willow associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
+      "sha256": "6a113849891f05d1ebfcda2e8d4542799ac8f8d240313416cbca3939d23dd6f5",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[167].nature[4]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "4"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_2",
+          "key": "natureDB[4].sprTrunk/sprBranch"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-5-illustration",
+      "entity": "nature-5",
+      "file_title": "File:Nature-5.png",
+      "caption": "Moss representative nature tile, without environment-specific tinting.",
+      "sha256": "69f010258bfae02551f4ec9e66b3af6bfc511233ff48e7dd497220f43f480c0b",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Grass[23].nature[5]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Grass.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "5"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-6-illustration",
+      "entity": "nature-6",
+      "file_title": "File:Nature-6.png",
+      "caption": "Brambles associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
+      "sha256": "398679bee8c0026f5bc5ffff0cffe9e994027431349ee5c4a4b1c8b068e9651b",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[166].nature[6]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "6"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_2",
+          "key": "natureDB[6].sprTrunk/sprBranch"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-7-illustration",
+      "entity": "nature-7",
+      "file_title": "File:Nature-7.png",
+      "caption": "Cypress associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
+      "sha256": "e607a2354f456718babebdafff8f08508f0847b13cfbbcb5551bfd777614a137",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[168].nature[7]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "7"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_2",
+          "key": "natureDB[7].sprTrunk/sprBranch"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-8-illustration",
+      "entity": "nature-8",
+      "file_title": "File:Nature-8.png",
+      "caption": "Lilypad representative nature tile, without environment-specific tinting.",
+      "sha256": "b7372c097297bf28ded1c9ce0e2bd4db47f82b7b8688d0fb78de941f60f4e528",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[79].nature[8]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "8"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-9-illustration",
+      "entity": "nature-9",
+      "file_title": "File:Nature-9.png",
+      "caption": "Fern representative nature tile, without environment-specific tinting.",
+      "sha256": "8adab0780b4ac7ea8d68856bd4ff9ac26e421c94cb5a1a2978c4d16f2d4c01b1",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[89].nature[9]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "9"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-12-illustration",
+      "entity": "nature-12",
+      "file_title": "File:Nature-12.png",
+      "caption": "Rift Grass representative nature tile, without environment-specific tinting.",
+      "sha256": "fbbd722a7824a48c6f8ac3d58cff909e9d665db614b1bad11a40927857e694de",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Grass[39].nature[12]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Grass.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "12"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-17-illustration",
+      "entity": "nature-17",
+      "file_title": "File:Nature-17.png",
+      "caption": "Trollgnarl associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
+      "sha256": "2c9ca1b6c20466add74a4cca60a74290f9d868114bfcf64df7247c8833d5c4eb",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[169].nature[17]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "17"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_2",
+          "key": "natureDB[17].sprTrunk/sprBranch"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-18-illustration",
+      "entity": "nature-18",
+      "file_title": "File:Nature-18.png",
+      "caption": "Turnip representative nature tile, without environment-specific tinting.",
+      "sha256": "a7485be56395c01965c8559ab6b6e8b2af71fbf336c842d16d3c2e70a2311e05",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[159].nature[18]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "18"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-19-illustration",
+      "entity": "nature-19",
+      "file_title": "File:Nature-19.png",
+      "caption": "Cranberry representative nature tile, without environment-specific tinting.",
+      "sha256": "5c252493041bd01583f0277af46a52b8781add6761e6de52b666e742e24bdeb5",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[164].nature[19]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "19"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-20-illustration",
+      "entity": "nature-20",
+      "file_title": "File:Nature-20.png",
+      "caption": "Elderwort Shrub associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
+      "sha256": "9cff211967121badd0a1d9b58bd938963f1b8117297745218ef6928f7750425e",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance[165].nature[20]"
+        },
+        {
+          "source": "game-data",
+          "section": "rm_world",
+          "key": "Layers.Hinderance.TilesData.Background"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "20"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_2",
+          "key": "natureDB[20].sprTrunk/sprBranch"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "id": "nature-13-illustration",
+      "entity": "nature-13",
+      "file_title": "File:Nature-13.png",
+      "caption": "Rift Vine branch detail. The game assembles the growing vine from multiple procedural segments.",
+      "sha256": "fead2426dd7ff680822c10c716e253c41c23061688b4ea6f28886fc8eb6f7e89",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_2",
+          "key": "natureDB[13].sprBranch"
+        },
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "13"
+        }
+      ]
     }
   ]
 }

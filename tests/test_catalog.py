@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from build_wiki import build_pages, build_xml, literal
+from build_wiki import build_pages, build_xml, literal, profile_value
 from wiki_catalog import (
     default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
     parse_catalog, validate_catalog,
@@ -66,6 +66,48 @@ class CatalogTests(unittest.TestCase):
             self.assertIn(f'id="entity-{entity["id"]}"', self.pages[target])
         self.assertEqual(set(facts), {fact["id"] for fact in self.data["facts"]})
         self.assertEqual(set(entries), {entry["id"] for entry in self.data["entries"]})
+
+    def test_complete_reviewed_profiles_keep_every_value_and_its_scope(self):
+        self.assertEqual(
+            hashlib.sha256((ROOT / "content" / "facts" / "entity_details.json").read_bytes()).hexdigest(),
+            "1afe8a32c2e129d483555878c938a2fbb08aa2bc6565433ecbaa9d5366568001",
+        )
+        self.assertEqual(len(self.details["properties"]), 48)
+        self.assertEqual(len(self.details["profiles"]), 372)
+        self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 297)
+        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2456)
+        locations = page_locations(self.data, self.catalog)
+        entities = {row["id"]: row for row in self.data["entities"]}
+        properties = {row["id"]: row for row in self.details["properties"]}
+        for profile in self.details["profiles"]:
+            with self.subTest(profile=profile["id"]):
+                page = self.pages[locations[profile["entity"]]]
+                self.assertEqual(page.count(f'id="profile-{profile["id"]}"'), 1)
+                self.assertIn(literal(profile["context"]), page)
+                for key, value in profile["values"].items():
+                    self.assertIn(literal(properties[key]["label"]), page)
+                    self.assertIn(profile_value(key, value, entities, locations), page)
+        for name in ("Flax", "Linen"):
+            self.assertIn("No numerical mechanics", self.pages[name])
+            self.assertNotIn("Documented profile", self.pages[name])
+
+    def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
+        self.assertEqual(
+            hashlib.sha256((ROOT / "content" / "facts" / "illustrations.json").read_bytes()).hexdigest(),
+            "d2127f41f5f41dcbe3fb7f04354b97289708c25c60a411487a3ae53cc886399e",
+        )
+        images = self.data["illustrations"]
+        self.assertEqual(len(images), 320)
+        missing = {row["entity"] for row in self.catalog["pages"]} - {row["entity"] for row in images}
+        self.assertEqual(missing, {"item-31", "item-48", "item-49", "item-171"})
+        locations = page_locations(self.data, self.catalog)
+        for image in images:
+            page = self.pages[locations[image["entity"]]]
+            self.assertEqual(page.count(f'[[{image["file_title"]}|'), 1)
+            self.assertIn(literal(image["sha256"]), page)
+            self.assertIn(literal(image["caption"]), page)
+        for identity in ("nature-4", "nature-6", "nature-7", "nature-17", "nature-20"):
+            self.assertIn("not a complete mature specimen", self.pages[locations[identity]])
 
     def test_skill_specific_facts_and_algorithms_have_individual_owners(self):
         locations = page_locations(self.data, self.catalog)
@@ -186,6 +228,17 @@ def synthetic_details():
 
 
 class ProfileTests(unittest.TestCase):
+    def test_damage_class_ids_link_to_the_single_damage_index(self):
+        data = synthetic_data()
+        entity = copy.deepcopy(data["entities"][0])
+        entity.update(id="damage-class-14", name="Synthetic damage class", category="damage_class")
+        data["entities"].append(entity)
+        details = synthetic_details()
+        details["properties"][0]["id"] = "damage-class-id"
+        details["profiles"][0]["values"] = {"damage-class-id": 14}
+        page = build_pages(ROOT, data, details=details)["Entity synthetic-item"]
+        self.assertIn("[[Damage types#entity-damage-class-14|", page)
+
     def test_numeric_boolean_and_unknown_values_are_distinct(self):
         for value in (0, -1, 2.5, True, False, None):
             details = synthetic_details()

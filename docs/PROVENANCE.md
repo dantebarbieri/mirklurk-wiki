@@ -241,6 +241,14 @@ damage, and availability. Shared labels/units/descriptions are original,
 bounded prose, not copied item descriptions. Profiles supplement historical
 facts rather than silently replacing them or claiming complete mechanics.
 
+The reviewed profile snapshot contains 48 property definitions, 372 profiles,
+and 2,456 scalar values for 297 entities (245 items, 36 beings, 16 nature
+records). Seventy-five profiles separately describe the initializer's computed
+attack-pattern totals. HP-grid dimensions are not presented as an invented
+total HP. Literal weight/value fields are explicitly before recipe
+postprocessing and trade/runtime changes. Flax and Linen retain source-known
+name pages but have no invented initializer profile.
+
 Image metadata has its own exact allowlist and schema, described in
 [IMAGES.md](IMAGES.md). Neither supplemental file changes `game.json`, carries
 image bytes, runs extraction, or authorizes deployment.

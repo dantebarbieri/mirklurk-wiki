@@ -34,6 +34,17 @@ records operator-reported permission for public-wiki display, confirmed on
 repository. Actual image hashes and source-to-frame associations must be
 reviewed individually; attribution strings are not a substitute for review.
 
+The current metadata batch contains 320 selections: 243 items, 36 beings,
+25 skills, and 16 nature records. Unarmed's internal pixel placeholder is not
+used as artwork. Flax and Linen lack verified initializer image associations.
+Finish Raft requests an out-of-range sprite frame; no wraparound or replacement
+frame is guessed. These four item pages therefore have no image reference.
+
+Some nature records use their associated ground tile, explicitly captioned as
+not a complete mature specimen; Rift Vine uses a branch detail. Do not relabel
+these crops as full procedurally assembled plants. The metadata only identifies
+the reviewed selection; source files and images remain outside Git.
+
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 record renders a review notice and its reserved title as text, **not** an image
 or File link. Do not manufacture empty records for every entity.

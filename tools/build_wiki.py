@@ -10,7 +10,7 @@ from pathlib import Path
 
 from wiki_data import (
     CATEGORY_PAGES, DataError, PAGE_FILES, RESEARCH_PAGE_FILES,
-    entry_page, load_data, validate_data,
+    entry_page, validate_data,
 )
 from wiki_catalog import (
     default_catalog, entry_owners, entry_relations, fact_owners,
@@ -137,9 +137,9 @@ def relationship_summary(entry, identity, entities, locations):
     details = entry["details"]
     if entry["kind"] == "merchant":
         return (
-            "Sold by " + entity_link(details["merchant"], entities, locations)
-            + f'; stock {known(details["quantity"])}; price {known(details["price"])} {known(details["currency"])}'
-            + f'; location {known(details["location"])}.'
+            "Recorded offer from " + entity_link(details["merchant"], entities, locations)
+            + f'; quantity {known(details["quantity"])}; price {known(details["price"])} {known(details["currency"])}'
+            + f'; location {known(details["location"])}; conditions {known(entry["conditions"])}.'
         )
     if entry["kind"] == "recipe":
         roles = []
@@ -152,7 +152,8 @@ def relationship_summary(entry, identity, entities, locations):
             (" / ".join(roles) or "Related station") + f'; station {literal(details["station"])}; inputs: '
             + (quantities(details["inputs"], entities, locations) or "No item inputs")
             + "; outputs: " + quantities(details["outputs"], entities, locations)
-            + "; additional cost: " + ("Not established" if cost is None else literal(f'{cost["amount"]} {cost["unit"]}')) + "."
+            + "; additional cost: " + ("Not established" if cost is None else literal(f'{cost["amount"]} {cost["unit"]}'))
+            + f'; conditions {known(entry["conditions"])}.'
         )
     if entry["kind"] == "loot":
         return (
@@ -162,6 +163,14 @@ def relationship_summary(entry, identity, entities, locations):
             + ". See the record for its roll conditions."
         )
     return "Related context; see the cited record."
+
+
+def profile_value(key, value, entities, locations):
+    if key in {"damage-class-id", "ranged-damage-class-id"} and type(value) is int:
+        identity = f"damage-class-{value}"
+        if identity in entities and entities[identity]["category"] == "damage_class":
+            return known(value) + " - " + entity_link(identity, entities, locations)
+    return known(value)
 
 
 def render_illustration(illustration, entities, embed=True):
@@ -319,7 +328,7 @@ def build_pages(root, data, catalog=None, details=None):
                 "", f'<span id="profile-{profile["id"]}"></span>', "== Documented profile ==",
                 literal(profile["context"]), "",
                 table(["Property", "Value", "Unit / interpretation"], [
-                    [literal(properties[key]["label"]), known(value),
+                    [literal(properties[key]["label"]), profile_value(key, value, entities_by_id, locations),
                      known(properties[key]["unit"]) + " - " + literal(properties[key]["description"])]
                     for key, value in sorted(profile["values"].items())
                 ]),
