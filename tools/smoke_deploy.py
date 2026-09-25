@@ -22,7 +22,7 @@ from wiki_data import load_data
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def smoke_thumbnail(workspace, run, api, base):
+def smoke_thumbnail(run, api, base):
     def chunk(kind, data):
         return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
 
@@ -35,11 +35,14 @@ def smoke_thumbnail(workspace, run, api, base):
         + chunk(b"IDAT", zlib.compress((b"\0" + pixel * 64) * 32))
         + chunk(b"IEND", b"")
     )
-    image = workspace / "Synthetic-thumbnail.png"
-    image.write_bytes(original)
-    image.chmod(0o444)
     run("exec", "-T", "--user", "www-data", "mirklurk", "mkdir", "/tmp/mirklurk-smoke-images")
-    run("cp", str(image), "mirklurk:/tmp/mirklurk-smoke-images/Synthetic-thumbnail.png")
+    run(
+        "exec", "-T", "--user", "www-data", "mirklurk", "php", "-r",
+        "$image = stream_get_contents(STDIN); "
+        "if (file_put_contents('/tmp/mirklurk-smoke-images/Synthetic-thumbnail.png', $image) !== strlen($image)) "
+        "{ throw new RuntimeException('Synthetic PNG staging failed.'); }",
+        input_bytes=original,
+    )
     imported = run(
         "exec", "-T", "--user", "www-data", "mirklurk", "php", "maintenance/run.php",
         "importImages", "/tmp/mirklurk-smoke-images", "--extensions", "png",
@@ -161,7 +164,7 @@ def smoke():
             general = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
             if "uploadsenabled" in general:
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
-            smoke_thumbnail(workspace, run, api, base)
+            smoke_thumbnail(run, api, base)
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
