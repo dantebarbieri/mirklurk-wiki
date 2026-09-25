@@ -1,0 +1,10 @@
+This page documents narrow loot-selection observations, not a complete or runtime-verified drop guide.
+
+'''Weights are not probabilities.''' Selection order, eligibility, repeated draws, empty outcomes, and shared conditions can affect the result. The wiki does not normalize reported weights or turn them into percentages.
+
+A conditional probability appears only when separately supported by the cited evidence. Unknown quantities, roll counts, and probabilities remain unknown. An explicit empty result is different from an unidentified item.
+
+== Coverage limits ==
+The current entries cover selected resource, treasure, and base creature death-handler paths. A base corpse inventory is not a promise of final harvested or recovered yield: runtime harvesting, skill modifiers, and the hit/recovery process remain separate limitations. Conditional quest rewards and no-loot-corpse branches must be read with their entry-specific caveats. The full set of loot-generating paths is not established, and a missing row does not mean that a drop is impossible.
+
+[[Items]] | [[Bestiary]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

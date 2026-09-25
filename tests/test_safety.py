@@ -44,6 +44,8 @@ class PublicationTests(unittest.TestCase):
             "docs/raw.txt", "tools/extra.py", ".github/workflows/unreviewed.yml",
             ".local/seed.xml", "deploy/LocalSettings.php", "deploy/.env",
             "deploy/secret.json", "tests/fixtures/raw.json",
+            "content/images/Item-2.png", "content/pages/Item-2.png",
+            "content/facts/illustrations.json", "docs/Item-2.png", "private-images/Item-2.png",
         ]
         positives = sorted(ALLOWED_FILES)
         result = self.git(

@@ -1,6 +1,8 @@
 import copy
+from collections import Counter
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -12,7 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from build_wiki import EXPORT_NS, build_pages, build_xml, existing_titles, literal, title_key
-from wiki_data import DataError, PAGE_FILES, load_data, parse_data, validate_data
+from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, load_data, parse_data, validate_data
+from check_publication import blob_errors
 
 
 def synthetic_data():
@@ -37,20 +40,119 @@ def synthetic_data():
     }
 
 
+def research_data():
+    data = synthetic_data()
+    being = copy.deepcopy(data["entities"][0])
+    being.update(id="synthetic-being", category="being", name="Synthetic merchant")
+    data["entities"].append(being)
+    details = {
+        "quest": {"quest_id": "synthetic-journal-1", "stage": None},
+        "merchant": {
+            "merchant": "synthetic-being", "item": "synthetic-item", "quantity": None,
+            "price": 2, "currency": "synthetic units", "location": None,
+        },
+        "recipe": {
+            "station": "Synthetic station",
+            "inputs": [{"item": "synthetic-item", "quantity": 2}],
+            "outputs": [{"item": "synthetic-item", "quantity": 1}], "cost": None,
+        },
+        "loot": {
+            "table": "synthetic-pool", "outcome": "synthetic-item",
+            "quantity": {"min": 1, "max": 2}, "weight": 2, "probability": None,
+            "rolls": None,
+        },
+        "algorithm": {
+            "page": "Weather", "steps": ["An original synthetic step."],
+            "fact_ids": ["synthetic-fact"],
+        },
+    }
+    data["entries"] = [
+        {
+            "id": f"synthetic-{kind}", "kind": kind, "title": f"Synthetic {kind}",
+            "summary": "Original synthetic summary; not a game claim.", "conditions": None,
+            "confidence": "inferred", "evidence": copy.deepcopy(data["facts"][0]["evidence"]),
+            "details": value,
+        }
+        for kind, value in details.items()
+    ]
+    return data
+
+
+def illustration_data(approved=False):
+    data = synthetic_data()
+    data["illustrations"] = [{
+        "id": "synthetic-picture", "entity": "synthetic-item", "file_title": "File:Synthetic.png",
+        "caption": "Original synthetic caption.", "creator": None, "sha256": None,
+        "rights_status": "pending", "rights_basis": None, "rights_note": None,
+        "confidence": "inferred", "evidence": copy.deepcopy(data["entities"][0]["evidence"]),
+    }]
+    if approved:
+        data["illustrations"][0].update(
+            creator="Synthetic test creator", sha256=hashlib.sha256(b"no image bytes; schema test").hexdigest(),
+            rights_status="approved", rights_basis="Synthetic schema fixture only",
+            rights_note="This test does not provide or clear any actual artwork.",
+        )
+    return data
+
+
 class DataTests(unittest.TestCase):
+    def test_curated_json_exact_size_boundary(self):
+        raw = json.dumps(synthetic_data()).encode()
+        at_limit = raw + b" " * (MAX_FACTS_BYTES - len(raw))
+        self.assertEqual(MAX_FACTS_BYTES, 655360)
+        self.assertEqual(parse_data(at_limit)["schema_version"], 1)
+        self.assertEqual(blob_errors("content/facts/game.json", at_limit), [])
+        with self.assertRaises(DataError):
+            parse_data(at_limit + b" ")
+        self.assertIn("limit", blob_errors("content/facts/game.json", at_limit + b" ")[0])
+
+    def test_expanded_snapshot_preserves_the_complete_vetted_handoff(self):
+        data = load_data(ROOT / "content" / "facts" / "game.json")
+        self.assertEqual(
+            {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
+            {"sources": 5, "entities": 336, "facts": 107, "entries": 293},
+        )
+        self.assertEqual(
+            Counter(entry["kind"] for entry in data["entries"]),
+            {"quest": 31, "merchant": 63, "recipe": 96, "loot": 70, "algorithm": 33},
+        )
+        extension = {"sources": [], "entities": [], "facts": data["facts"][79:], "entries": data["entries"][:249]}
+        raw = json.dumps(extension, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "a850094c2624cf2db5262bea5bc6647954de639cefc90a7f3d2adcc3a62ec270")
+        supplement = {"sources": [], "entities": [], "facts": [], "entries": data["entries"][249:]}
+        raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
+        self.assertEqual(data.get("illustrations", []), [])
+        pages = build_pages(ROOT, data)
+        self.assertEqual(len(pages), 18)
+        self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
+        for title in RESEARCH_PAGE_FILES:
+            self.assertIn(f"[[{title}]]", pages["Main Page"])
+        self.assertIn("base creature death-handler paths", pages["Loot tables"])
+        self.assertIn("not a promise of final harvested", pages["Loot tables"])
+        self.assertIn("reproducibility has not been demonstrated", pages["World seed logic"])
+        self.assertIn("0.8.1.5", pages["Game mechanics"])
+        self.assertIn("versionString", pages["Game mechanics"])
+
     def test_curated_payload_and_expected_shape(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")
-        self.assertEqual(len(data["sources"]), 5)
-        self.assertEqual(len(data["entities"]), 336)
-        self.assertEqual(len(data["facts"]), 79)
+        baseline = {
+            "sources": (5, "8dae164eff56d6bbd220051cded80d2fa6f4dd130b8adff3f471f8c82ed75508"),
+            "entities": (336, "947b17faa67b5e8fc50a37d2a0a13ee73157c6c32ea9f2ce80a895a452b8a92e"),
+            "facts": (79, "cc0c1c66f198029fffe8fa1de023fcbd1d5c5d59722d328b4d6d320aa358dc7e"),
+        }
+        for key, (count, digest) in baseline.items():
+            records = sorted(data[key][:count], key=lambda record: record["id"])
+            raw = json.dumps(records, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), digest, f"Original {key} changed")
         self.assertIsNone(data["game"]["build"])
         self.assertEqual(
-            {confidence: sum(f["confidence"] == confidence for f in data["facts"])
+            {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
             {"localization-described": 28, "inferred": 51},
         )
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), len(PAGE_FILES) + 1)
+        self.assertTrue(set(PAGE_FILES) <= pages.keys())
         self.assertIn("not runtime-verified", pages["Game mechanics"])
         self.assertIn("non-hostile", pages["Bestiary"])
 
@@ -111,14 +213,185 @@ class DataTests(unittest.TestCase):
         self.assertIn("Synthetic &amp; &lt;name&gt;", build_pages(ROOT, data)["Skills"])
 
 
+class ResearchTests(unittest.TestCase):
+    def test_quests_render_prologue_then_numeric_stages_and_related_location(self):
+        data = research_data()
+        quest = data["entries"][0]
+        expected = [
+            ("journal-first", "First"), ("journal-1", "1"), ("journal-2", "2"),
+            ("journal-7", "7"), ("journal-7-location", "7"),
+            ("journal-10", "10"), ("journal-30", "30"),
+            ("fallback-z", "Appendix"), ("fallback-a", "Epilogue"),
+        ]
+        data["entries"] = []
+        for identity, quest_id in reversed(expected):
+            entry = copy.deepcopy(quest)
+            entry["id"] = identity
+            entry["details"]["quest_id"] = quest_id
+            data["entries"].append(entry)
+        original = copy.deepcopy(data)
+        page = build_pages(ROOT, data)["Quests and journal"]
+        self.assertEqual(
+            re.findall(r'<span id="entry-([^"]+)"></span>', page),
+            [identity for identity, _ in expected],
+        )
+        self.assertEqual(data, original)
+        data["entries"].reverse()
+        self.assertEqual(build_pages(ROOT, data)["Quests and journal"], page)
+
+    def test_other_entry_kinds_retain_lexicographic_id_order(self):
+        data = load_data(ROOT / "content" / "facts" / "game.json")
+        for title, page in build_pages(ROOT, data).items():
+            if title == "Quests and journal":
+                continue
+            with self.subTest(page=title):
+                identities = re.findall(r'<span id="entry-([^"]+)"></span>', page)
+                self.assertEqual(identities, sorted(identities))
+
+    def test_original_version_one_needs_no_extension_fields(self):
+        data = synthetic_data()
+        validate_data(data)
+        pages = build_pages(ROOT, data)
+        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance"})
+        self.assertNotIn("More researched topics", pages["Main Page"])
+        self.assertNotIn("Illustration references", pages["Items"])
+
+    def test_typed_entries_render_with_evidence_and_unknowns(self):
+        data = research_data()
+        pages = build_pages(ROOT, data)
+        self.assertIn("Quests and journal", pages)
+        self.assertIn("[[Merchants]]", pages["Main Page"])
+        self.assertNotIn("World seed logic", pages)
+        self.assertNotIn("[[World seed logic]]", pages["Main Page"])
+        self.assertIn("Not established", pages["Merchants"])
+        self.assertIn("Not established; not calculated from weight", pages["Loot tables"])
+        self.assertNotIn("50%", pages["Loot tables"])
+        self.assertIn("[[Items#entity-synthetic-item|", pages["Crafting"])
+        self.assertIn("[[Game mechanics#fact-synthetic-fact|", pages["Weather"])
+        for title in ("Quests and journal", "Merchants", "Crafting", "Loot tables", "Weather"):
+            self.assertIn("[[Source provenance#synthetic|synthetic]]", pages[title])
+            self.assertIn("Inferred; requires confirmation", pages[title])
+
+    def test_topic_fact_without_entry_activates_only_its_page(self):
+        data = synthetic_data()
+        data["facts"][0]["page"] = "World seed logic"
+        pages = build_pages(ROOT, data)
+        self.assertIn("World seed logic", pages)
+        self.assertEqual(set(pages) & RESEARCH_PAGE_FILES.keys(), {"World seed logic"})
+        self.assertIn("[[World seed logic]]", pages["Main Page"])
+
+    def test_all_algorithm_destinations_are_supported(self):
+        for title in ("Weather", "Level progression", "World seed logic", "Skills", "Crafting", "Loot tables"):
+            data = research_data()
+            data["entries"][-1]["details"]["page"] = title
+            self.assertIn("An original synthetic step.", build_pages(ROOT, data)[title])
+
+    def test_explicit_empty_result_is_not_an_unknown_item(self):
+        for quantity in (None, {"min": 0, "max": 0}):
+            data = research_data()
+            details = data["entries"][3]["details"]
+            details.update(outcome=None, quantity=quantity, probability=0.25, rolls={"min": 0, "max": 1})
+            page = build_pages(ROOT, data)["Loot tables"]
+            self.assertIn("Explicit empty result", page)
+            self.assertIn("<nowiki>0.25</nowiki>", page)
+
+    def test_invalid_structured_claims_fail(self):
+        changes = [
+            lambda d: d["entries"][0].update(summary="x" * 1201),
+            lambda d: d["entries"][0].update(summary="not\none line"),
+            lambda d: d["entries"][0].update(evidence=[]),
+            lambda d: d["entries"][0].update(conditions=True),
+            lambda d: d["entries"][0].update(kind="unknown"),
+            lambda d: d["entries"][0]["details"].update(raw_journal="copied"),
+            lambda d: d["entries"].append(copy.deepcopy(d["entries"][0])),
+            lambda d: d["entries"][1]["details"].update(merchant="synthetic-item"),
+            lambda d: d["entries"][1]["details"].update(item="missing"),
+            lambda d: d["entries"][1]["details"].update(quantity=True),
+            lambda d: d["entries"][1]["details"].update(quantity=0),
+            lambda d: d["entries"][1]["details"].update(price=-1),
+            lambda d: d["entries"][1]["details"].update(currency=None),
+            lambda d: d["entries"][2]["details"].update(outputs=[]),
+            lambda d: d["entries"][2]["details"]["inputs"][0].update(quantity=0.5),
+            lambda d: d["entries"][2]["details"]["inputs"].append({"item": "synthetic-item", "quantity": 1}),
+            lambda d: d["entries"][2]["details"].update(cost={"amount": -1, "unit": "synthetic"}),
+            lambda d: d["entries"][3]["details"].update(probability=1.01),
+            lambda d: d["entries"][3]["details"].update(weight=float("nan")),
+            lambda d: d["entries"][3]["details"].update(weight=float("inf")),
+            lambda d: d["entries"][3]["details"].update(outcome=None),
+            lambda d: d["entries"][3]["details"].update(quantity={"min": 2, "max": 1}),
+            lambda d: d["entries"][3]["details"].update(rolls={"min": False, "max": 1}),
+            lambda d: d["entries"][4]["details"].update(page="Template:Injected"),
+            lambda d: d["entries"][4]["details"].update(steps=[]),
+            lambda d: d["entries"][4]["details"].update(fact_ids=["missing"]),
+            lambda d: d["entries"][4]["details"].update(fact_ids=["synthetic-fact", "synthetic-fact"]),
+        ]
+        for number, change in enumerate(changes):
+            with self.subTest(case=number):
+                data = research_data()
+                change(data)
+                with self.assertRaises(DataError):
+                    validate_data(data)
+
+    def test_research_text_is_literal_and_output_is_deterministic(self):
+        data = research_data()
+        data["entries"][0]["summary"] = '</nowiki>{{No template}}|[[No link]]<script>'
+        original = build_xml(build_pages(ROOT, data))
+        data["entries"].reverse()
+        for key in ("facts", "entities", "sources"):
+            data[key].reverse()
+        self.assertEqual(original, build_xml(build_pages(ROOT, data)))
+        self.assertIn("&amp;lt;/nowiki", original.decode())
+        self.assertNotIn("<script>", original.decode())
+
+    def test_pending_images_never_embed_or_link_artwork(self):
+        pages = build_pages(ROOT, illustration_data())
+        self.assertIn("pending rights confirmation", pages["Items"])
+        self.assertNotIn("[[File:", pages["Items"])
+        self.assertNotIn("[[:File:", pages["Items"])
+
+    def test_approved_references_have_domain_independent_attribution(self):
+        pages = build_pages(ROOT, illustration_data(approved=True))
+        self.assertIn("[[File:Synthetic.png|thumb|", pages["Items"])
+        self.assertIn("Synthetic test creator", pages["Items"])
+        self.assertNotIn("https://", pages["Items"])
+
+    def test_invalid_illustration_metadata_is_rejected(self):
+        changes = [
+            lambda i: i.update(entity="missing"),
+            lambda i: i.update(file_title="https://example.invalid/image.png"),
+            lambda i: i.update(file_title="File:../../Image.png"),
+            lambda i: i.update(file_title="File:Image.svg"),
+            lambda i: i.update(file_title="File:Image.png|link=Injected"),
+            lambda i: i.update(file_title="File:Image]].png"),
+            lambda i: i.update(rights_status="assumed"),
+            lambda i: i.update(rights_status="approved"),
+            lambda i: i.update(sha256="invalid"),
+            lambda i: i.update(evidence=[]),
+        ]
+        for number, change in enumerate(changes):
+            with self.subTest(case=number):
+                data = illustration_data()
+                change(data["illustrations"][0])
+                with self.assertRaises(DataError):
+                    validate_data(data)
+        data = illustration_data(approved=True)
+        duplicate = copy.deepcopy(data["illustrations"][0])
+        duplicate["id"] = "another-picture"
+        data["illustrations"].append(duplicate)
+        with self.assertRaises(DataError):
+            validate_data(data)
+
+
 class ExportTests(unittest.TestCase):
     def test_deterministic_independent_of_input_order(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         original = build_xml(build_pages(ROOT, data))
         reversed_data = copy.deepcopy(data)
-        for key in ("sources", "entities", "facts"):
+        for key in ("sources", "entities", "facts", "entries", "illustrations"):
+            if key not in reversed_data:
+                continue
             reversed_data[key].reverse()
-        for record in reversed_data["entities"] + reversed_data["facts"]:
+        for record in reversed_data["entities"] + reversed_data["facts"] + reversed_data.get("entries", []) + reversed_data.get("illustrations", []):
             record["evidence"].reverse()
         self.assertEqual(original, build_xml(build_pages(ROOT, reversed_data)))
 

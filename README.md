@@ -11,12 +11,29 @@ not availability or combat behavior. The 28 localization-described mechanics hav
 not been runtime-verified; the other 51 facts are qualified initializer
 observations. The installed game release is **unidentified**.
 
+The expanded reference retains that baseline and now contains **107 numeric facts
+and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
+96 station-specific recipe variants, 70 conditional loot entries, and 33
+original algorithm/skill summaries. It generates 18 main-namespace pages.
+The observed menu label `0.8.1.5` is cited separately, not treated as a confirmed
+release identifier.
+
+The additive research format supports original quest/journal paraphrases,
+merchant offers, station-specific recipes, loot-selection observations, and
+weather, progression, skill, and world-seed summaries. Each narrow claim carries
+evidence and confidence. New topic pages appear only when backed by reviewed
+entries or facts; schema support is not a claim that a subsystem is fully documented.
+Reviewed death-handler cases now document base creature loot, and lit campfire/
+field-kit menus are traced. Runtime harvesting/recovery modifiers, some merchant
+locations and prices, and world-seed reproducibility remain limited or unverified.
+The current loot reference is not an exhaustive loot-table catalogue.
+
 ## Contents
 
 | Location | Purpose |
 | --- | --- |
 | `content/pages` | Original wikitext introductions, navigation, policies, and caveats |
-| `content/facts/game.json` | Vetted short names, numbers, and provenance, not raw research |
+| `content/facts/game.json` | Vetted names, numeric facts, structured research, and provenance, not raw research |
 | `tools/build_wiki.py` | Deterministic MediaWiki XML for reviewed seeding |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
@@ -52,6 +69,11 @@ logged-in editing, no anonymous edits, and no uploads. Required QuestyCaptcha
 questions and shared-cache rate limits provide a baseline against signup spam;
 they are not a substitute for moderation. Email and email-based resets are
 disabled.
+
+Optional [illustration references](docs/IMAGES.md) keep all image bytes outside
+Git. Only separately rights-approved pictures may be imported by an operator
+into MediaWiki storage; pending references never embed artwork, and public web
+uploads remain disabled.
 
 The hostname is supplied at runtime. This repository does not configure DNS,
 certificates, a reverse proxy, a homeserver, or any existing credentials.

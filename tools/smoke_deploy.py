@@ -75,6 +75,17 @@ def smoke():
             else:
                 raise RuntimeError("Installer did not refuse the already populated database.")
             run("up", "-d", "--wait", "mirklurk")
+            try:
+                image_help = run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importImages", "--help")
+            except subprocess.CalledProcessError as error:
+                if error.returncode != 1:
+                    raise
+                # MediaWiki 1.43's maintenance help deliberately exits with status 1.
+                image_help = error.stdout + error.stderr
+            if not all(flag in image_help for flag in (
+                b"Usage: php maintenance/run.php importImages", b"--dry", b"--comment-ext", b"--skip-dupes",
+            )):
+                raise RuntimeError("The pinned image does not expose the documented operator image-import options.")
             rights = api({"action": "query", "meta": "userinfo", "uiprop": "rights"})["query"]["userinfo"]["rights"]
             if not {"read", "createaccount"} <= set(rights) or "edit" in rights:
                 raise RuntimeError("Anonymous permissions violate the public-read/account-edit policy.")

@@ -1,0 +1,10 @@
+This page gives original descriptions of specifically researched world-seed handling and generation steps. It does not publish decompiled source or promise a complete reproduction of world generation.
+
+A seed value or initialization call does not establish that every subsystem is deterministic, that all random state is shared, or that worlds match across game builds. Those are separate claims needing separate evidence.
+
+Algorithm steps and linked numeric facts carry trace identifiers and uncertainty. Do not infer a searchable world model from a partial seed-handling trace.
+
+== Coverage limits ==
+World-seed reproducibility has not been demonstrated by this reference. The current trace is not a seed finder or a guarantee that a reused seed produces the same world.
+
+[[Game mechanics]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

@@ -10,6 +10,7 @@
 !/docs/IMPORTING.md
 !/docs/PUBLICATION.md
 !/docs/DEPLOYMENT.md
+!/docs/IMAGES.md
 !/content/
 !/content/facts/
 !/content/facts/game.json
@@ -24,6 +25,13 @@
 !/content/pages/Nature.wiki
 !/content/pages/Skills.wiki
 !/content/pages/Damage_types.wiki
+!/content/pages/Quests_and_journal.wiki
+!/content/pages/Merchants.wiki
+!/content/pages/Crafting.wiki
+!/content/pages/Loot_tables.wiki
+!/content/pages/Weather.wiki
+!/content/pages/Level_progression.wiki
+!/content/pages/World_seed_logic.wiki
 !/tools/
 !/tools/check_publication.py
 !/tools/wiki_data.py

@@ -1,0 +1,7 @@
+This page gives original, traceable summaries of the researched weather logic. Steps describe the cited portion of the system, not every possible runtime interaction.
+
+Numeric parameters are linked to individually cited facts. A timer or threshold does not alone establish real-world duration, event frequency, or a probability distribution.
+
+Unverified units, update cadence, interactions, and conditions remain explicitly uncertain.
+
+[[Game mechanics]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

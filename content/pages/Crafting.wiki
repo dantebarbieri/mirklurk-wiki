@@ -1,0 +1,10 @@
+This page records cited recipe inputs, outputs, stations, and costs. Each entry describes one evidenced recipe variant; alternatives are not silently combined.
+
+Station labels preserve the researched distinction, including a workstation, campfire, or alchemist workshop only where the entry supports it. A listed recipe does not establish that the player has unlocked it or can use it in every context.
+
+Unknown additional costs and conditions remain marked as not established. Quantities are not inferred from item names or descriptions.
+
+== Coverage limits ==
+The current reference documents base menu recipes rather than every crafting-like action. In-place raft completion is not presented as a normal inventory-output recipe. Some station labels intentionally retain descriptive internal IDs instead of inventing a player-facing workshop name.
+
+[[Items]] | [[Game mechanics]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]
