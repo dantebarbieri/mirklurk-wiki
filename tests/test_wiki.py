@@ -9,6 +9,7 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -18,6 +19,7 @@ from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILE
 from check_publication import blob_errors
 from wiki_catalog import entry_owners, entry_relations, default_catalog, page_locations
 from wiki_render import recipe_groups
+from smoke_deploy import wait_for_server_tick
 
 
 def synthetic_data():
@@ -95,6 +97,31 @@ def illustration_data(approved=False):
             rights_note="This test does not provide or clear any actual artwork.",
         )
     return data
+
+
+class SmokeClockTests(unittest.TestCase):
+    def test_owner_edit_waits_for_a_distinct_server_second(self):
+        api = Mock(side_effect=[
+            {"curtimestamp": "2026-09-25T22:58:51Z"},
+            {"curtimestamp": "2026-09-25T22:58:51Z"},
+            {"curtimestamp": "2026-09-25T22:58:52Z"},
+        ])
+        with patch("smoke_deploy.time.sleep") as sleep:
+            wait_for_server_tick(api)
+        self.assertEqual(api.call_count, 3)
+        self.assertEqual(sleep.call_count, 2)
+        for call in api.call_args_list:
+            self.assertEqual(call.args, ({"action": "query", "curtimestamp": 1},))
+
+    def test_stopped_or_backward_server_clock_fails_within_the_bound(self):
+        for later in ("2026-09-25T22:58:51Z", "2026-09-25T22:58:50Z"):
+            with self.subTest(later=later):
+                api = Mock(side_effect=[{"curtimestamp": "2026-09-25T22:58:51Z"}]
+                           + [{"curtimestamp": later}] * 20)
+                with patch("smoke_deploy.time.sleep") as sleep, self.assertRaisesRegex(RuntimeError, "clock"):
+                    wait_for_server_tick(api)
+                self.assertEqual(api.call_count, 21)
+                self.assertEqual(sleep.call_count, 20)
 
 
 class DataTests(unittest.TestCase):

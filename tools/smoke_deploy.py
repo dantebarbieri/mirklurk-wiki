@@ -96,6 +96,17 @@ def smoke_reader_release(api, pages):
             raise RuntimeError("A required canonical guide is missing.")
 
 
+def wait_for_server_tick(api):
+    # MediaWiki invalidates only when cache time < page_touched, both whole seconds.
+    query = {"action": "query", "curtimestamp": 1}
+    before = api(query)["curtimestamp"]
+    for _ in range(20):
+        time.sleep(0.1)
+        if api(query)["curtimestamp"] > before:
+            return
+    raise RuntimeError("The wiki server clock did not advance before the synthetic edit.")
+
+
 def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
     # Imports and edits enqueue deferred link updates; allow their bounded completion.
     for attempt in range(10):
@@ -358,6 +369,7 @@ def smoke():
                 raise RuntimeError("The merchant price-edit precondition is invalid.")
             cache_diagnostics(api, "Ranger Bhato", price_title, cached_merchant)
             updated_item = before_price + "<onlyinclude>111.23 silver</onlyinclude>" + after_price
+            wait_for_server_tick(api)
             price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
             if price_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
@@ -374,6 +386,7 @@ def smoke():
             if "25 g" not in cached_currency or 'id="entity-item-72"' in cached_currency:
                 raise RuntimeError("The coin-weight edit precondition is invalid.")
             cache_diagnostics(api, "Currency and trading", coin_title, cached_currency)
+            wait_for_server_tick(api)
             coin_edit = api({"action": "edit", "title": coin_title, "text": coin_text, "token": csrf}, post=True)
             if coin_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update a coin-owned weight.")
