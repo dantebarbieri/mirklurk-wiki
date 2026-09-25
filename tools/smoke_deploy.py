@@ -96,7 +96,7 @@ def smoke_reader_release(api, pages):
             raise RuntimeError("A required canonical guide is missing.")
 
 
-def refreshed_transclusion(run, api, title, expected, forbidden_anchor):
+def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
     # Imports and edits enqueue deferred link updates; allow their bounded completion.
     for attempt in range(10):
         run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
@@ -107,6 +107,9 @@ def refreshed_transclusion(run, api, title, expected, forbidden_anchor):
             return rendered
         if attempt < 9:
             time.sleep(2)
+    if owner:
+        cache_diagnostics(api, title, owner, rendered)
+        print("Remaining jobs:", run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "showJobs").decode(), flush=True)
     raise RuntimeError(f"The {title} view did not refresh its owner value after ten job-drain checks.")
 
 
@@ -358,13 +361,8 @@ def smoke():
             price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
             if price_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
-            try:
-                refreshed_transclusion(run, api, "Ranger Bhato", "111.23 silver", 'id="entity-item-105"')
-            except RuntimeError:
-                rendered = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
-                cache_diagnostics(api, "Ranger Bhato", price_title, rendered)
-                print("Remaining jobs:", run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "showJobs").decode(), flush=True)
-                raise
+            print("Owner edit timestamp:", price_edit["edit"]["newtimestamp"], flush=True)
+            refreshed_transclusion(run, api, "Ranger Bhato", "111.23 silver", 'id="entity-item-105"', price_title)
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
             if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
                 raise RuntimeError("Selective price transclusion removed the item's normal full article.")
@@ -375,10 +373,12 @@ def smoke():
             cached_currency = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
             if "25 g" not in cached_currency or 'id="entity-item-72"' in cached_currency:
                 raise RuntimeError("The coin-weight edit precondition is invalid.")
+            cache_diagnostics(api, "Currency and trading", coin_title, cached_currency)
             coin_edit = api({"action": "edit", "title": coin_title, "text": coin_text, "token": csrf}, post=True)
             if coin_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update a coin-owned weight.")
-            refreshed_transclusion(run, api, "Currency and trading", "26 g", 'id="entity-item-72"')
+            print("Owner edit timestamp:", coin_edit["edit"]["newtimestamp"], flush=True)
+            refreshed_transclusion(run, api, "Currency and trading", "26 g", 'id="entity-item-72"', coin_title)
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
