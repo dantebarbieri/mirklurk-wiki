@@ -1,0 +1,9 @@
+'''Action points (AP)''' measure the cost of taking actions.
+
+A listed cost is the base cost for that action, not necessarily what your character will spend. An item's general action cost does not mean every possible use of that item costs the same amount.
+
+Individual [[Items|item pages]] own their action and recipe costs. Character pages list their base action-point maximum and attack costs.
+
+[[Crafting|Crafting methods]] link to the item-owned recipes and their base AP costs.
+
+[[Game mechanics]] | [[Health and armor]] | [[Skills]] | [[Main Page]]

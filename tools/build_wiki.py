@@ -36,7 +36,9 @@ def existing_titles(path):
         page_namespace = page.findtext(f"{prefix}ns")
         if not title or not title.strip() or page_namespace is None or not page_namespace.isdecimal():
             raise DataError("existing export has an invalid page title or namespace")
-        if page_namespace == "0":
+        if page_namespace in {"0", "14"}:
+            if (page_namespace == "14") != title_key(title).startswith("Category:"):
+                raise DataError("existing export has a title/namespace mismatch")
             titles.add(title_key(title))
     return titles
 
@@ -56,10 +58,11 @@ def build_xml(pages):
     element(siteinfo, "case", "first-letter")
     namespaces = element(siteinfo, "namespaces")
     element(namespaces, "namespace", "", key="0", case="first-letter")
+    element(namespaces, "namespace", "Category", key="14", case="first-letter")
     for identifier, title in enumerate(sorted(pages), 1):
         page = element(root, "page")
         element(page, "title", title)
-        element(page, "ns", "0")
+        element(page, "ns", "14" if title.startswith("Category:") else "0")
         element(page, "id", str(identifier))
         revision = element(page, "revision")
         element(revision, "id", str(identifier))

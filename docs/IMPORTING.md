@@ -46,10 +46,11 @@ Back up the database and stop all writers. Export **all current pages**, not a
 partial `Special:Export` selection. The builder cannot prove that an operator's
 export is complete or current.
 
-`--existing-export` excludes every title present in the dump's main namespace,
+`--existing-export` excludes every title present in the dump's main and Category namespaces,
 including redirects, regardless of revision timestamps or content. It
 normalizes underscores, spaces, and the initial letter for the standard
-first-letter English namespace. It never includes existing pages for automatic
+first-letter English namespaces (0 and 14). Category pages are emitted with
+namespace 14, never as colon-named main-space articles. It never includes existing pages for automatic
 replacement. Unreadable/malformed exports fail rather than falling back to
 fresh mode.
 
@@ -86,6 +87,17 @@ community-owned item page lacks the reviewed selective block: otherwise
 MediaWiki could transclude that entire article. Merge the block through the
 normal conflict-aware editing workflow, preserving surrounding community
 content. Exact presence is a structural check, not approval of the content.
+
+`new_page_dependencies` records links and memberships targeting pages absent
+from the base seed, including new damage guides and Category pages. Review
+creation/collision decisions for those targets before switching existing
+navigation. A target's presence does not mean its live content is approved.
+Categories receive the same conflict, deletion, and live-edit preservation
+rules as main-space articles.
+
+An offline base-versus-base comparison is a rehearsal only, not a current live
+export. Always obtain a fresh complete frozen export for publication; never
+use the prior seed as a substitute for the live snapshot.
 
 | Action | Meaning |
 | --- | --- |

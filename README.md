@@ -17,17 +17,26 @@ The expanded reference retains that baseline and now contains **107 numeric fact
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-348 main-namespace pages: 324 individual item, being, nature, and skill pages,
+357 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
-redirect. Only `game.build` changed in the original dataset; all source
+redirect. Another 44 ordinary MediaWiki category pages support grouped browsing.
+Only `game.build` changed in the original dataset; all source
 fingerprints, entities, facts, and research entries remain unchanged.
 
-Supplemental source-scoped profiles preserve another **2,456 scalar values**
-in 372 profiles across 297 entities: 245 items, 36 beings, and 16 nature records.
-Their 48 shared property definitions distinguish literal initializer values,
+Supplemental source-scoped profiles preserve **2,559 scalar values**
+in 475 profiles across 297 entities: 245 items, 36 beings, and 16 nature records.
+Their 49 shared property definitions distinguish literal initializer values,
 computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
 have localized names but no reviewed initializer profile; no stats are invented
-for them.
+for them. The original 372 profiles are unchanged; 103 additions document
+equipment AP costs separately from attack/use costs.
+
+The 118 curated grids preserve 36 base health shapes and 82 attack patterns,
+including holes, orientation, armor layers, and occupied zero-to-one cells.
+Original accessible HTML/CSS tables use no game image assets. Health cells
+represent one HP with separate armor; summed attack ranges are not maximum
+actual damage. Damage pages explain initial-hit versus spreading status
+effects and link to their weapons, attacks, skills, and remedies.
 
 The metadata-only artwork register covers 323 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
@@ -49,6 +58,11 @@ merchant tables transclude it with core MediaWiki rather than copying prices.
 The Currency and trading guide likewise transcludes coin-owned denomination,
 weight, and stack tables. No template extension or synchronization service is
 required; live edits to the owner propagate to readers of that information.
+Exact decimal price formatting uses gold, silver, and copper with the fewest
+whole coins, preserving the item-owned selective blocks. Initializer values
+remain explicitly distinct from shop prices and finalized recipe weights.
+Semantic units show chances and insulation/waterproofing as percentages,
+verified weight as kg/g, and action/equip costs as linked AP.
 
 The additive research format supports original quest/journal paraphrases,
 merchant offers, station-specific recipes, loot-selection observations, and

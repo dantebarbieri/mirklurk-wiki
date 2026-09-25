@@ -3,6 +3,7 @@
 import json
 import re
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 
 from wiki_data import (
@@ -11,8 +12,8 @@ from wiki_data import (
 )
 
 
-DEDICATED_CATEGORIES = {"item", "being", "nature", "skill"}
-MAX_CATALOG_BYTES = 128 * 1024
+DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
+MAX_CATALOG_BYTES = 192 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs", "Source provenance", "Loot mechanics"}
 CURRENCY_RULE_TITLES = {
     "coin-denominations": "Denominations",
@@ -28,6 +29,9 @@ RESERVED_TITLES.add("Currency and trading")
 
 def title_key(title):
     normalized = " ".join(title.replace("_", " ").split())
+    if normalized.lower().startswith("category:"):
+        name = normalized.split(":", 1)[1].strip()
+        return "Category:" + name[:1].upper() + name[1:]
     return normalized[:1].upper() + normalized[1:]
 
 
@@ -61,7 +65,7 @@ def default_catalog(data):
 
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
-            {"stations", "entry_display", "unit_prices", "currency"}, "catalog")
+            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -82,8 +86,29 @@ def validate_catalog(catalog, data):
                 raise DataError("catalog title: duplicate or reserved title")
             titles.add(title)
     if seen != required:
-        raise DataError("catalog pages: every item, being, nature record, and skill needs exactly one page")
+        raise DataError("catalog pages: every dedicated entity needs exactly one page")
     sources = {source["id"]: source for source in data["sources"]}
+    guide_titles = {row["title"] for row in catalog["pages"] if entities[row["entity"]]["category"] == "damage_class"} | {"Action points", "Health and armor"}
+    guides_seen = set()
+    for guide in _records(catalog.get("guides", []), "guides"):
+        _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"}, set(), "guide")
+        title = _title(guide["title"])
+        if title not in guide_titles or title in guides_seen:
+            raise DataError("guide: duplicate or unsupported canonical owner")
+        guides_seen.add(title)
+        if not isinstance(guide["paragraphs"], list) or not 1 <= len(guide["paragraphs"]) <= 16:
+            raise DataError("guide: expected one to sixteen original paragraphs")
+        for paragraph in guide["paragraphs"]:
+            _text(paragraph, "guide.paragraph", 1200)
+        related = guide["related_entities"]
+        if not isinstance(related, list) or len(related) > 16 or any(
+            not isinstance(identity, str) or identity not in required for identity in related
+        ):
+            raise DataError("guide: expected at most sixteen known related entities")
+        if len(related) != len(set(related)):
+            raise DataError("guide: duplicate related entity")
+        _confidence(guide["confidence"], "guide.confidence")
+        _evidence(guide["evidence"], sources, "guide.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
         _object(row, {"entity", "kind", "confidence", "evidence", "note"}, set(), "classification")
@@ -126,17 +151,70 @@ def validate_catalog(catalog, data):
                 raise DataError("entry display: title and summary cannot be null")
         if "steps" in row:
             entry = next(entry for entry in data["entries"] if entry["id"] == row["entry"])
-            if entry["kind"] != "algorithm" or not isinstance(row["steps"], list) or not 1 <= len(row["steps"]) <= 20:
-                raise DataError("entry display: steps require a nonempty algorithm step list")
+            if entry["kind"] != "algorithm" or not isinstance(row["steps"], list) or len(row["steps"]) > 20:
+                raise DataError("entry display: steps require at most twenty algorithm steps")
             for step in row["steps"]:
                 _text(step, "entry display step", 500)
+    if "taxonomy" in catalog:
+        taxonomy = catalog["taxonomy"]
+        _object(taxonomy, {"groups", "tags"}, set(), "taxonomy")
+        grouped = set()
+        group_titles = set(CATEGORY_PAGES.values()) | {"NPCs"}
+        classified_kind = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+        for field in ("groups", "tags"):
+            for group in _records(taxonomy[field], f"taxonomy.{field}"):
+                _object(group, {"title", "index", "members"}, set(), "taxonomy group")
+                title = _title(group["title"])
+                if title in group_titles or group["index"] not in {"Items", "Bestiary", "Nature"}:
+                    raise DataError("taxonomy: duplicate category or unsupported index")
+                group_titles.add(title)
+                members = group["members"]
+                if not isinstance(members, list) or not members or len(members) > 500:
+                    raise DataError("taxonomy: expected one to five hundred members")
+                seen_members = set()
+                for identity in members:
+                    if not isinstance(identity, str) or identity not in entities or identity in seen_members:
+                        raise DataError("taxonomy: unknown or duplicate member")
+                    seen_members.add(identity)
+                    entity = entities[identity]
+                    if CATEGORY_PAGES[entity["category"]] != group["index"] or (
+                        entity["category"] == "being" and classified_kind.get(identity) != "creature"
+                    ):
+                        raise DataError("taxonomy: group must preserve entity type and NPC separation")
+                    if field == "groups":
+                        if identity in grouped:
+                            raise DataError("taxonomy: each entity needs a single primary group")
+                        grouped.add(identity)
+        expected = {e["id"] for e in entities.values() if e["category"] in {"item", "nature"}
+                    or (e["category"] == "being" and classified_kind.get(e["id"]) == "creature")}
+        if grouped != expected:
+            raise DataError("taxonomy: primary groups must cover every item, nature record and creature")
+    for history in _records(catalog.get("state_history", []), "state history"):
+        _object(history, {"before", "after", "quest", "summary", "attribution", "recorded_on"}, {"evidence"}, "state history")
+        for field in ("before", "after"):
+            if not isinstance(history[field], str) or history[field] not in required or entities[history[field]]["category"] != "being":
+                raise DataError("state history: expected known being pages")
+        if history["before"] == history["after"]:
+            raise DataError("state history: distinct states required")
+        if not any(e["id"] == history["quest"] and e["kind"] == "quest" for e in data.get("entries", [])):
+            raise DataError("state history: expected a known quest")
+        _text(history["summary"], "state history.summary", 1200)
+        if history["attribution"] != "Wiki operator":
+            raise DataError("state history: expected operator attribution")
+        try:
+            if date.fromisoformat(history["recorded_on"]).isoformat() != history["recorded_on"]:
+                raise ValueError
+        except (TypeError, ValueError) as error:
+            raise DataError("state history: expected ISO date") from error
+        if "evidence" in history:
+            _evidence(history["evidence"], sources, "state history.evidence")
     methods = set()
     station_ids = set()
     canonical = {row["entity"]: row["title"] for row in catalog["pages"]}
     available_methods = {entry["details"]["station"] for entry in data.get("entries", []) if entry["kind"] == "recipe"}
     for row in _records(catalog.get("stations", []), "catalog.stations"):
         _object(row, {"id", "title", "entity", "methods", "summary", "acquisition", "confidence", "evidence"},
-                {"notes", "variants", "reports", "related_entities", "quest_entries"}, "station")
+                {"notes", "variants", "reports", "related_entities", "related_stations", "quest_entries"}, "station")
         _identifier(row["id"], "station.id")
         if row["id"] in station_ids:
             raise DataError("station: duplicate ID")
@@ -203,6 +281,12 @@ def validate_catalog(catalog, data):
                 raise DataError("station.quest_entries: expected a known quest entry")
     if "stations" in catalog and methods != available_methods:
         raise DataError("station registry must account for every documented recipe method")
+    for row in catalog.get("stations", []):
+        related = row.get("related_stations", [])
+        if not isinstance(related, list) or len(related) > 8:
+            raise DataError("station alternatives: expected at most eight stations")
+        if any(not isinstance(identity, str) or identity not in station_ids or identity == row["id"] for identity in related):
+            raise DataError("station alternatives: expected other known stations")
     if "unit_prices" in catalog:
         prices = catalog["unit_prices"]
         _object(prices, {"schema_version", "unit", "context", "prices", "covered_offers", "unresolved_offers"}, set(), "unit prices")
@@ -283,7 +367,7 @@ def parse_catalog(raw, data):
         return result
 
     try:
-        value = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_pairs)
+        value = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_pairs, parse_float=Decimal)
     except (UnicodeDecodeError, ValueError) as error:
         raise DataError("catalog must be valid UTF-8 JSON without duplicate keys") from error
     return validate_catalog(value, data)
@@ -319,7 +403,7 @@ def fact_owners(data, locations):
         ]
         if len(candidates) > 1:
             raise DataError("fact owner is ambiguous; curate an unambiguous identity before publication")
-        result[fact["id"]] = locations[candidates[0]["id"]] if candidates else (
+        result[fact["id"]] = "Action points" if fact["id"] == "turn-minutes" else locations[candidates[0]["id"]] if candidates else (
             "Level progression" if fact["page"] == "Skills" else fact["page"]
         )
     return result

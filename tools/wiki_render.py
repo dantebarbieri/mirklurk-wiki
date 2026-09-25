@@ -3,7 +3,7 @@
 import html
 import json
 from collections import defaultdict
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from pathlib import Path
 
 from wiki_catalog import (
@@ -34,6 +34,8 @@ def known(value):
         return "Not established"
     if type(value) is bool:
         return "Yes" if value else "No"
+    if type(value) in {int, float, Decimal}:
+        return literal(decimal_text(Decimal(str(value))))
     return literal(value)
 
 
@@ -94,13 +96,50 @@ def profile_value(key, value, entities, locations):
         if identity in entities and entities[identity]["category"] == "damage_class":
             return entity_link(identity, entities, locations)
         return "Damage type not identified"
+    if value is None or type(value) is bool:
+        return known(value)
+    if key in PERCENT_PROPERTIES:
+        return literal(decimal_text(Decimal(str(value)) * 100)) + "%"
+    if key in AP_PROPERTIES:
+        return known(value) + " [[Action points|AP]]"
+    if key == "initial-weight":
+        amount = Decimal(str(value))
+        if 0 < abs(amount) < 1:
+            return literal(decimal_text(amount * 1000)) + " g"
+        return literal(decimal_text(amount)) + " kg"
+    if key == "initial-price":
+        return known(value) + " silver equivalents"
     return known(value)
 
 
+def decimal_text(value):
+    return format(value, "f").rstrip("0").rstrip(".") if "." in format(value, "f") else format(value, "f")
+
+
+PERCENT_FACTS = {"rain-min-power", "rain-max-power", "temperature-smoothing"}
+
+
+def fact_value(fact):
+    if fact["id"] in PERCENT_FACTS:
+        return known(Decimal(str(fact["value"])) * 100) + "%"
+    if fact["property"].endswith("(%)"):
+        return known(fact["value"]) + "%"
+    return known(fact["value"])
+
+
+PERCENT_PROPERTIES = {
+    "awareness-chance", "break-chance", "dodge-chance", "idle-move-chance",
+    "opportunity-chance", "satiation-gain", "sickness-risk", "spark-chance",
+    "stone-spark-chance", "tinder-bonus", "waterproof", "insulation",
+}
+AP_PROPERTIES = {"craft-ap-cost", "item-ap-cost", "maximum-ap", "melee-ap-cost", "ranged-ap-cost", "equip-ap-cost"}
+
 PROPERTY_LABELS = {
-    "damage-class-id": "Melee damage type", "ranged-damage-class-id": "Ranged damage type",
+    "damage-class-id": "Damage type", "ranged-damage-class-id": "Ranged damage type",
     "initial-price": "Base value (not a shop price)", "initial-weight": "Base weight",
     "awareness-chance": "Targeting chance", "awareness-distance": "Targeting distance",
+    "durability-max": "Durability", "being-armor": "Armor", "item-armor": "Armor",
+    "insulation": "Insulation", "waterproof": "Waterproofing", "satiation-gain": "Satiation gain",
 }
 LEGACY_PROPERTIES = {
     "weight": "initial-weight", "stacklimit": "stack-limit", "durabilitymax": "durability-max",
@@ -114,10 +153,32 @@ PAIRED_PROPERTIES = (
 )
 
 
-def price_text(price):
+def price_text(price, images=None):
     if price is None:
         return "Not established"
-    return format(Decimal(str(price["value"])).normalize(), "f") + " silver"
+    amount = Decimal(str(price["value"]))
+    if not amount.is_finite() or amount < 0:
+        raise DataError("price must be a finite nonnegative amount")
+    with localcontext() as context:
+        context.prec = max(28, len(amount.as_tuple().digits) + 3)
+        copper = amount * 100
+    if copper != copper.to_integral_value():
+        raise DataError("price has sub-copper precision; an explicit display policy is required")
+    remaining = int(copper)
+    parts = []
+    for size, name, identity, file_title in (
+        (1000, "gold", "item-74", "File:Item-74.png"),
+        (100, "silver", "item-73", "File:Item-73.png"),
+        (1, "copper", "item-72", "File:Item-72.png"),
+    ):
+        count, remaining = divmod(remaining, size)
+        if count:
+            picture = ""
+            if images is None or any(i.get("entity") == identity and i["file_title"] == file_title
+                                     and i["rights_status"] == "approved" for i in images):
+                picture = f"[[{file_title}|20px|link=|alt={name.capitalize()} coin]] "
+            parts.append(picture + f"{count} {name}")
+    return " ".join(parts) or "0 copper"
 
 
 def recipe_profile_values(profile, recipes):
@@ -161,29 +222,40 @@ def recipe_profile_values(profile, recipes):
     return folded
 
 
-def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=()):
+def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=()):
     if not facts and not profiles and price_item is None:
         return ""
     rows = []
     coalesced = set()
     markers = "".join(anchor("profile", profile["id"]) for profile in profiles)
     show_base_value = False
+    grid_properties = set()
+    for grid in grids:
+        if grid["kind"] == "health":
+            grid_properties.update({"hp-grid-width", "hp-grid-height", "being-armor"})
+        else:
+            grid_properties.update({f'{grid["kind"]}-pattern-min', f'{grid["kind"]}-pattern-max'})
     for profile in profiles:
         values = profile["values"]
         folded = recipe_profile_values(profile, recipes)
         scope = "Potential" if any(key.endswith("-pattern-min") for key in values) else "Base"
-        paired = set()
+        paired = set(grid_properties)
         for low, high, label, separator in PAIRED_PROPERTIES:
-            if low in values and high in values:
+            if low in values and high in values and low not in grid_properties:
                 paired.update([low, high])
                 rows.append([literal(label), known(values[low]) + separator + known(values[high]), scope])
         for key, value in sorted(values.items()):
+            if key == "being-armor" and key in grid_properties:
+                for fact in facts:
+                    if fact["id"] == profile["entity"] + "-base-armor" and fact["value"] == value:
+                        markers += anchor("fact", fact["id"])
+                        coalesced.add(fact["id"])
             if key in paired or key in folded:
                 continue
             if coin is not None and key in {"initial-price", "initial-weight", "stack-limit"}:
                 continue
             if key == "initial-price":
-                if price is not None and value == price["value"]:
+                if price is not None and Decimal(str(value)) == Decimal(str(price["value"])):
                     continue
                 show_base_value = True
             extra = ""
@@ -192,25 +264,33 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
                 if (
                     fact["id"].startswith(profile["entity"] + "-base-")
                     and LEGACY_PROPERTIES.get(field) == key and fact["value"] == value
-                    and type(fact["value"]) is type(value) and fact["confidence"] == "inferred"
+                    and type(fact["value"]) in {int, float} and type(value) in {int, float}
+                    and fact["confidence"] == "inferred"
                 ):
                     extra += anchor("fact", fact["id"])
                     coalesced.add(fact["id"])
             label = PROPERTY_LABELS.get(key, properties[key]["label"])
+            if key == "damage-class-id" and entities[profile["entity"]]["category"] == "being":
+                label = "Melee damage type"
             unit = properties[key]["unit"]
-            if unit and unit != "internal ID":
+            if unit in {"XP", "items", "cells", "normalized height"}:
                 label += f" ({unit})"
             rows.append([extra + literal(label), profile_value(key, value, entities, locations), scope])
     for fact in sorted(facts, key=lambda row: row["id"]):
         if fact["id"] not in coalesced:
+            is_skill = any(e["category"] == "skill" and e["name"] == fact["entity"] for e in entities.values())
+            note = ("Per rank." if "per rank" in fact["property"].lower() else "Base or milestone effect.") if is_skill else fact["description"]
+            label = "Temperature adjustment per turn" if fact["id"] == "temperature-smoothing" else fact["property"]
+            if fact["id"] == "rain-min-power":
+                note = "Lower bound of active rain intensity."
             rows.append([
-                anchor("fact", fact["id"]) + literal(fact["property"]),
-                known(fact["value"]), literal(fact["description"]),
+                anchor("fact", fact["id"]) + literal(label),
+                fact_value(fact), literal(note),
             ])
     if price_item is not None:
         rows.append([
             anchor("price", price_item) + "Standard unit price",
-            "<onlyinclude>" + price_text(price) + "</onlyinclude>",
+            "<onlyinclude>" + price_text(price, images) + "</onlyinclude>",
             "Purchase price per item; not resale value.",
         ])
     notes = []
@@ -224,13 +304,53 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
         )
     if show_base_value:
         notes.append("Base value is not the price charged by a merchant.")
-    if "hp-grid-width" in keys:
+    if "hp-grid-width" in keys and "hp-grid-width" not in grid_properties:
         notes.append("Grid dimensions are not a stated maximum HP total.")
     if "awareness-chance" in keys:
         notes.append("Targeting parameters do not establish hostility toward the player.")
-    if any(key.endswith("-pattern-min") for key in keys):
+    if any(key.endswith("-pattern-min") for key in keys - grid_properties):
         notes.append("Potential damage is before target overlap, armor, and modifiers; it is not guaranteed damage per hit.")
     return "\n== Stats ==\n" + markers + "\n" + table(["Detail", "Value", "Applies to / notes"], rows) + " ".join(notes) + "\n"
+
+
+def cell_grid(grid, entity_category):
+    health = grid["kind"] == "health"
+    label = "Base health" if health else ("Ranged attack" if grid["kind"] == "ranged" else (
+        "Melee attack" if entity_category == "being" else "Attack pattern"))
+    rows = grid["rows"]
+    occupied = [cell for row in rows for cell in row if cell is not None]
+    caption = f"{label}: {len(rows)} rows x {len(rows[0])} columns"
+    text = "\n" + anchor("grid", grid["id"]) + f"\n== {label} ==\n"
+    text += '<div style="overflow-x:auto;">\n<table class="mirklurk-cell-grid" style="border-collapse:separate;border-spacing:3px;text-align:center;">\n'
+    text += "<caption>" + caption + "</caption>\n"
+    for y, row in enumerate(rows, 1):
+        text += "<tr>\n"
+        for x, cell in enumerate(row, 1):
+            position = f"Row {y}, column {x}: "
+            if cell is None:
+                text += f'<td class="grid-hole" aria-label="{position}empty" style="min-width:3em;height:3em;background:transparent;"></td>\n'
+                continue
+            if health:
+                visible = "1 HP" + (f'<br />{cell["armor"]} armor' if cell["armor"] else "")
+                description = f'1 HP, {cell["armor"]} armor layers'
+                color = "#663d24" if cell["armor"] else "#852c36"
+            else:
+                visible = str(cell["min"]) if cell["min"] == cell["max"] else f'{cell["min"]}-{cell["max"]}'
+                description = visible + " damage"
+                color = "#852c36"
+            text += (f'<td class="grid-cell" aria-label="{position}{description}" '
+                     f'style="min-width:3em;height:3em;padding:0.25em;border:2px solid #caa098;background:{color};color:#fff;font-weight:bold;">'
+                     + visible + "</td>\n")
+        text += "</tr>\n"
+    text += "</table>\n</div>\n"
+    if health:
+        text += f"{len(occupied)} occupied health cells. [[Health and armor|Reading base health, armor layers, and holes]].\n"
+    else:
+        low, high = (sum(cell[bound] for cell in occupied) for bound in ("min", "max"))
+        text += f"Sum of occupied-cell ranges: {low} to {high}. This is not maximum actual damage: target overlap, armor and modifiers affect the result. "
+        text += "Blank spaces do not strike; a 0-1 cell is occupied and can roll zero damage.\n"
+        text += "[[Health and armor|How pattern overlap, rotation, and armor work]].\n"
+    return text
 
 
 def recipe_groups(entries):
@@ -318,7 +438,8 @@ def recipe_table(entries, stations, images, entities, locations):
         ]
         if has_cost:
             cost = details["cost"]
-            row.append("Not established" if cost is None else known(cost["amount"]) + " " + literal(cost["unit"]))
+            row.append("Not established" if cost is None else known(cost["amount"]) + (
+                " base [[Action points|AP]]" if cost["unit"] == "base AP" else " " + literal(cost["unit"])))
         if not same_conditions:
             row.append(known(first["conditions"]))
         rows.append(row)
@@ -334,7 +455,8 @@ def loot_table(entries, images, entities, locations):
     headers = ["Result", "Quantity"]
     getters = []
     for field, label, formatter in (
-        ("weight", "Reported weight", known), ("probability", "Conditional probability", known),
+        ("weight", "Reported weight", known),
+        ("probability", "Conditional probability", lambda v: known(Decimal(str(v)) * 100) + "%" if v is not None else known(v)),
         ("rolls", "Rolls", count_range),
     ):
         if any(entry["details"][field] is not None for entry in entries):
@@ -407,10 +529,39 @@ def source_page(data, catalog, details, locations, facts, entries):
     lines.extend(["", "== Profile methodology ==", table(["Profile", "Scope"], [
         [literal(row["id"]), literal(row["context"])] for row in sorted(details["profiles"], key=lambda row: row["id"])
     ])])
+    if details.get("grids"):
+        lines.extend(["", "== Grid evidence ==", table(["Grid owner", "Confidence", "Evidence", "Scope"], [
+            [f'[[{locations[grid["entity"]]}#grid-{grid["id"]}|{literal(locations[grid["entity"]])}]]',
+             literal(grid["confidence"]), evidence_text(grid["evidence"]), literal(grid["context"])]
+            for grid in sorted(details["grids"], key=lambda row: row["id"])
+        ])])
     lines.extend(["", "== Classification evidence ==", table(["Character", "Grouping", "Confidence", "Evidence", "Interpretation"], [
         [f'[[{locations[row["entity"]]}]]', literal(row["kind"]), literal(row["confidence"]), evidence_text(row["evidence"]), literal(row["note"])]
         for row in sorted(catalog["classifications"], key=lambda row: row["entity"])
     ])])
+    if "taxonomy" in catalog:
+        lines.extend(["", "== Browsing categories ==",
+                      "Categories are editorial navigation based on reviewed names, profiles, recipes and operator identifications, not an in-game biological classification. Cross-tags link to the same editable article; they do not create another copy of its facts.",
+                      "Scaalmyr includes Sceetler and Scaal as confirmed by the wiki operator. Aquatic creatures is an operator-confirmed browsing label for Mudfin and Razorfin, not a fish classification. Nightmare is grouped with Bugs from its arthropod appearance. NPC separation is unchanged.",
+                      "Rodents groups Mirk Runner and Mirk Mauler using their rat sprite associations: " + evidence_text([
+                          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[11].sprite/beingDB[29].sprite"}
+                      ])])
+    if catalog.get("guides"):
+        lines.extend(["", "== Combat and action guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+            [f'[[{guide["title"]}]]', literal(guide["confidence"]), evidence_text(guide["evidence"])]
+            for guide in sorted(catalog["guides"], key=lambda row: row["title"])
+        ])])
+    skill_records = [row for row in data.get("entries", []) if row["id"].startswith("skill-") and row["id"].endswith("-mechanics")]
+    if skill_records:
+        lines.extend(["", "== Skill description methodology ==",
+                      "Skill effects are original paraphrases of the cited English descriptions. These source descriptions are not independent gameplay measurements; implementation, rounding and other modifiers may affect results. Per-rank benefits and milestone effects are distinguished on the owning skill pages."])
+    for history in catalog.get("state_history", []):
+        lines.extend(["", "== Character state confirmation ==",
+                      f'[[{locations[history["before"]]}#State_history|Character state history]]: '
+                      + literal(history["attribution"]) + ", " + literal(history["recorded_on"])
+                      + ". The journal remains the owner of the quest instructions."])
+        if history.get("evidence"):
+            lines.append(evidence_text(history["evidence"]))
     lines.extend(["", "== Artwork review ==", table(["File", "Creator", "Reviewed image SHA-256", "Rights review", "Evidence"], [
         [literal(row["file_title"]), known(row["creator"]), known(row["sha256"]),
          literal(row["rights_status"]) + "; " + known(row["rights_basis"]) + "; " + known(row["rights_note"]),
@@ -505,6 +656,7 @@ CURRENCY_QUALIFICATIONS = {
 def currency_page(currency, entities, locations):
     coins = currency["coins"]
     text = "[[Merchants]] | [[Items]] | [[Main Page]]\n\nCoins and barter use a shared value. The coin details below are maintained on the individual coin pages.\n"
+    text += "\nCatalog purchase prices use exact gold, silver and copper amounts with the fewest whole coins. This display does not round or alter the price; the game's change and resale rules are explained separately below.\n"
     for rule in currency["rules"]:
         text += "\n" + anchor("currency", rule["id"]) + f'\n== {CURRENCY_RULE_TITLES[rule["id"]]} ==\n'
         if rule["id"] == "coin-denominations":
@@ -582,8 +734,6 @@ def build_pages(root, data, catalog=None, details=None):
             text += "\nGroup: " + entity_link(entity["group"], entities, locations) + "\n"
         if entity["category"] == "being" and classified.get(entity["id"]) not in {"npc", "creature"}:
             text += "\nThis being has not been classified.\n"
-        if entity["id"] == "being-9":
-            text += "\nA deceased character record.\n"
         matching = [image for image in images if image.get("entity") == entity["id"]]
         for image in matching:
             text += anchor("illustration", image["id"])
@@ -591,11 +741,20 @@ def build_pages(root, data, catalog=None, details=None):
                 text += f'\n[[{image["file_title"]}|thumb|{literal(image["caption"])}]]\n'
             else:
                 text += "\nNo reviewed picture is available yet.\n"
-        if not matching:
+        if not matching and entity["category"] != "damage_class":
             text += "\nNo reviewed picture is available yet.\n"
         pages[row["title"]] = text
         for alias in row["aliases"]:
             pages[alias] = f'#REDIRECT [[{row["title"]}]]\n'
+    for guide in sorted(catalog.get("guides", []), key=lambda row: row["title"]):
+        pages[guide["title"]] += "\n== How it works ==\n" + "\n\n".join(literal(p) for p in guide["paragraphs"]) + "\n"
+        if guide["related_entities"]:
+            pages[guide["title"]] += "\nRelated skills and remedies: " + " | ".join(
+                entity_link(identity, entities, locations) for identity in guide["related_entities"]) + "\n"
+            for identity in guide["related_entities"]:
+                pages[locations[identity]] += f'\n[[{guide["title"]}|{guide["title"]}: effects and related rules]]\n'
+        if guide["title"] not in {"Action points", "Health and armor"}:
+            pages[guide["title"]] += "\n[[Health and armor|Health shapes and armor layers]] | [[Action points]]\n"
 
     # Each overview groups historical anchors with its canonical destination.
     navigation = defaultdict(lambda: defaultdict(set))
@@ -643,6 +802,13 @@ def build_pages(root, data, catalog=None, details=None):
             if "Level progression" in pages:
                 pages[title] += "\n[[Level progression|Earning and allocating skill points]]\n"
             continue
+        groups = [group for group in catalog.get("taxonomy", {}).get("groups", []) if group["index"] == title]
+        if groups:
+            for group in sorted(groups, key=lambda row: row["title"]):
+                pages[title] += f'\n== {group["title"]} ==\n[[:Category:{group["title"]}|Browse category]]\n'
+                matching = {locations[identity]: targets[locations[identity]] for identity in group["members"]}
+                pages[title] += "\n".join(navigation_lines(matching)) + "\n"
+            continue
         lines = navigation_lines(targets)
         pages[title] += "\n== Browse ==\n" + "\n".join(lines) + "\n"
     for title, targets in legacy.items():
@@ -665,10 +831,14 @@ def build_pages(root, data, catalog=None, details=None):
         coin = next((coins[identity] for identity in entity_ids if identity in coins), None)
         matching_entries = [row for row in entries if owners[row["id"]] == title]
         recipes = [row for row in matching_entries if row["kind"] == "recipe"]
+        grids = sorted((grid for grid in details.get("grids", []) if grid["entity"] in entity_ids),
+                       key=lambda row: (row["kind"] != "health", row["kind"]))
         pages[title] += stat_table(
             matching_facts, matching_profiles, properties, entities, locations,
-            price_item, prices.get(price_item), coin, recipes,
+            price_item, prices.get(price_item), coin, recipes, images, grids,
         )
+        for grid in grids:
+            pages[title] += cell_grid(grid, entities[grid["entity"]]["category"])
         if coin is not None:
             pages[title] += coin_summary(coin, entities, locations)
         for kind, renderer in (
@@ -725,8 +895,33 @@ def build_pages(root, data, catalog=None, details=None):
             pages[title] += "\n== Main quest ==\n" + "\n".join(text for _, text in sorted(quests)) + "\n"
         if other:
             pages[title] += "\n== Related pages ==\n" + "\n".join(sorted(set(other))) + "\n"
-        if not any(facts[fact["id"]] == title for fact in data["facts"]) and not any(profile["entity"] == identity for profile in details["profiles"]):
+        if entities[identity]["category"] != "damage_class" and not any(facts[fact["id"]] == title for fact in data["facts"]) and not any(profile["entity"] == identity for profile in details["profiles"]):
             pages[title] += "\nNumerical stats are not established.\n"
+
+    for entity in entities.values():
+        if entity["category"] != "damage_class":
+            continue
+        uses = defaultdict(set)
+        number = int(entity["id"].removeprefix("damage-class-")) if entity["id"].removeprefix("damage-class-").isdigit() else None
+        for profile in details["profiles"]:
+            for key, label in (("damage-class-id", "Attack"), ("ranged-damage-class-id", "Ranged attack")):
+                if number is not None and profile["values"].get(key) == number:
+                    uses[profile["entity"]].add(label)
+        text = "\n== Weapons and attacks ==\n"
+        if uses:
+            text += table(["Source", "Attack"], [
+                [entity_link(identity, entities, locations), ", ".join(sorted(labels))]
+                for identity, labels in sorted(uses.items(), key=lambda pair: entities[pair[0]]["name"])
+            ])
+        else:
+            text += "No weapon or creature attack is documented for this type yet.\n"
+        pages[locations[entity["id"]]] += text
+
+    for history in catalog.get("state_history", []):
+        before, after = locations[history["before"]], locations[history["after"]]
+        pages[before] += "\n== State history ==\n" + literal(history["summary"]) + "\n"
+        pages[before] += f'[[{after}|Revived character]] | [[Quests and journal#entry-{history["quest"]}|Return to the dead camp]]\n'
+        pages[after] += f"\n== State history ==\n[[{before}#State_history|Earlier identity and revival]]\n"
 
     if "Crafting" in pages and stations:
         pages["Crafting"] += "\n== Crafting methods ==\n" + "\n".join(
@@ -764,6 +959,11 @@ def build_pages(root, data, catalog=None, details=None):
             for identity in station["related_entities"]:
                 if entities[identity]["category"] == "being":
                     pages[locations[identity]] += f'\n== Workstation ==\n[[{title}]]\n'
+        if station.get("related_stations"):
+            pages[title] += "\n== Alternatives ==\n" + " | ".join(
+                f'[[{next(s["title"] for s in catalog["stations"] if s["id"] == identity)}|Alternative crafting method]]'
+                for identity in station["related_stations"]
+            ) + "\n"
         if station.get("quest_entries"):
             pages[title] += "\nRelated journal: " + " | ".join(
                 f'[[Quests and journal#entry-{identity}|{literal(next(entry["title"] for entry in entries if entry["id"] == identity))}]]'
@@ -788,4 +988,27 @@ def build_pages(root, data, catalog=None, details=None):
         for entry in entries:
             if entry["kind"] == "merchant" and "[[Currency and trading" not in pages[owners[entry["id"]]]:
                 pages[owners[entry["id"]]] += "\n[[Currency and trading|How prices, condition, and change work]]\n"
+    memberships = defaultdict(set)
+    category_parents = {}
+    for row in catalog["pages"]:
+        entity = entities[row["entity"]]
+        root_category = "NPCs" if classified.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
+        memberships[row["title"]].add(root_category)
+        if entity["category"] == "skill":
+            group = entities[entity["group"]]["name"]
+            memberships[row["title"]].add(group)
+            category_parents[group] = "Skills"
+    for group in [*catalog.get("taxonomy", {}).get("groups", []), *catalog.get("taxonomy", {}).get("tags", [])]:
+        category_parents[group["title"]] = group["index"]
+        for identity in group["members"]:
+            memberships[locations[identity]].add(group["title"])
+    for title, categories in sorted(memberships.items()):
+        pages[title] += "\n" + " ".join(f"[[Category:{category}]]" for category in sorted(categories)) + "\n"
+    all_categories = {category for categories in memberships.values() for category in categories}
+    for category in sorted(all_categories):
+        parent = category_parents.get(category)
+        index = parent or category
+        pages["Category:" + category] = f"[[{index}|Readable index]] | [[Main Page]]\n\nPages in this browsing group keep their own editable facts.\n"
+        if parent:
+            pages["Category:" + category] += f"\n[[Category:{parent}]]\n"
     return pages

@@ -31,7 +31,7 @@ ALLOWED_FILES = {
     "tools/wiki_data.py": 32 * 1024,
     "tools/wiki_catalog.py": 32 * 1024,
     "tools/wiki_details.py": 32 * 1024,
-    "tools/wiki_render.py": 48 * 1024,
+    "tools/wiki_render.py": 64 * 1024,
     "tools/plan_migration.py": 32 * 1024,
     "tools/build_wiki.py": 32 * 1024,
     "tools/smoke_deploy.py": 32 * 1024,

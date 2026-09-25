@@ -6,7 +6,9 @@ Welcome to the independent '''MirkLurk Wiki'''. Find equipment, creatures, chara
 * [[NPCs]] - characters, including merchants and their documented wares
 * [[Nature]] - plants, terrain, and other nature records
 * [[Skills]] - browse skill groups and individual skill mechanics
-* [[Damage types]] - named damage classes
+* [[Damage types]] - damage, status effects, armor interactions, and remedies
+* [[Health and armor]] - reading health shapes and attack grids
+* [[Action points]] - action costs, turns, and equipping items
 * [[Game mechanics]] - weather, progression, crafting, and other researched systems
 
 == Read the caveats ==

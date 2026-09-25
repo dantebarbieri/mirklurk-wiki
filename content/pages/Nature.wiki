@@ -1,5 +1,5 @@
 Browse the game's named nature records, including vegetation and terrain features. Each record has its own page, distinct from similarly named inventory items.
 
-Growth locations, harvesting, yields, and availability are unknown unless documented on the individual page.
+Browse trees, rift growth, gatherable food plants, other vegetation, and non-growing features below. A food-plant grouping does not mean its produce is safe to eat. Growth locations, harvesting yields, and availability are unknown unless documented on the individual page.
 
 [[Main Page]] | [[Items]] | [[Evidence and spoilers]] | [[Source provenance]]

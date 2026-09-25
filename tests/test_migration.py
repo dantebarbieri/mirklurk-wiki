@@ -6,12 +6,28 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from build_wiki import build_xml
+from build_wiki import build_xml, existing_titles
 from plan_migration import main, plan_migration, read_snapshot
 from wiki_data import DataError
 
 
 class MigrationTests(unittest.TestCase):
+    def test_categories_use_namespace_fourteen_and_preserve_live_history(self):
+        base = {"Category:Bugs": "base", "Category:Removed": "base", "Item": "old"}
+        live = {"Category:Bugs": "live edit", "Category:New": "community content", "Item": "old"}
+        desired = {"Category:Bugs": "new", "Category:Removed": "new", "Category:New": "new", "Item": "new"}
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "snapshot.xml"
+            payload = build_xml(live)
+            self.assertIn(b"<ns>14</ns>", payload)
+            path.write_bytes(payload)
+            self.assertEqual(read_snapshot(path), live)
+            self.assertEqual(existing_titles(path), set(live))
+        actions = {r["title"]: r["action"] for r in plan_migration(base, live, desired)["pages"]}
+        self.assertEqual(actions["Category:Bugs"], "conflict")
+        self.assertEqual(actions["Category:Removed"], "preserve-deletion")
+        self.assertEqual(actions["Category:New"], "conflict")
+
     def test_live_edits_deletions_and_collisions_are_preserved(self):
         base = {
             "Same": "same", "Changed": "old", "Edited": "old", "Both": "old",

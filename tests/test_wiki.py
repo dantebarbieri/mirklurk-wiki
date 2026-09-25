@@ -126,7 +126,7 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 344)
+        self.assertEqual(len(pages), 363)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
@@ -265,7 +265,7 @@ class ResearchTests(unittest.TestCase):
         data = synthetic_data()
         validate_data(data)
         pages = build_pages(ROOT, data)
-        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance", "NPCs", "Entity synthetic-item"})
+        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance", "NPCs", "Entity synthetic-item", "Category:Items"})
         self.assertNotIn("More researched topics", pages["Main Page"])
         self.assertNotIn("Illustration references", pages["Items"])
 
@@ -308,7 +308,7 @@ class ResearchTests(unittest.TestCase):
             details.update(outcome=None, quantity=quantity, probability=0.25, rolls={"min": 0, "max": 1})
             page = build_pages(ROOT, data)["Synthetic merchant"]
             self.assertIn("No items", page)
-            self.assertIn("<nowiki>0.25</nowiki>", page)
+            self.assertIn("<nowiki>25</nowiki>%", page)
 
     def test_invalid_structured_claims_fail(self):
         changes = [

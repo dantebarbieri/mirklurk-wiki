@@ -6,6 +6,7 @@ import re
 import sys
 import unittest
 from pathlib import Path
+from decimal import Decimal
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -20,7 +21,7 @@ from wiki_details import (
     MAX_DETAILS_BYTES, empty_details, load_publication_inputs, parse_details,
     parse_illustrations, validate_details,
 )
-from wiki_render import PAIRED_PROPERTIES, display_entry, known, price_text, recipe_groups, recipe_profile_values
+from wiki_render import PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
 
 
@@ -37,10 +38,11 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["skill-0-0"], "Strider")
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
-        self.assertEqual(len(self.catalog["pages"]), 324)
-        self.assertEqual(len(self.pages), 348)
+        self.assertEqual(len(self.catalog["pages"]), 331)
+        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 357)
+        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 44)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
-        self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 324)
+        self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
 
     def test_all_primary_records_and_typed_relationships_are_retained(self):
         locations = page_locations(self.data, self.catalog)
@@ -51,7 +53,9 @@ class CatalogTests(unittest.TestCase):
             with self.subTest(fact=fact["id"]):
                 page = self.pages[facts[fact["id"]]]
                 self.assertIn(f'id="fact-{fact["id"]}"', page)
-                self.assertIn(known(fact["value"]), page)
+                if not fact["id"].endswith("-base-armor"):
+                    value = profile_value("initial-weight", fact["value"], {}, {}) if fact["id"].endswith("-base-weight") else fact_value(fact)
+                    self.assertIn(value, page)
         for entry in self.data["entries"]:
             with self.subTest(entry=entry["id"]):
                 page = self.pages[entries[entry["id"]]]
@@ -73,13 +77,17 @@ class CatalogTests(unittest.TestCase):
 
     def test_complete_reviewed_profiles_keep_every_value_and_its_scope(self):
         self.assertEqual(
-            hashlib.sha256((ROOT / "content" / "facts" / "entity_details.json").read_bytes()).hexdigest(),
+            hashlib.sha256((json.dumps({
+                "schema_version": 1,
+                "properties": [r for r in self.details["properties"] if r["id"] != "equip-ap-cost"],
+                "profiles": [r for r in self.details["profiles"] if not r["id"].endswith("-equip-cost")],
+            }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
             "1afe8a32c2e129d483555878c938a2fbb08aa2bc6565433ecbaa9d5366568001",
         )
-        self.assertEqual(len(self.details["properties"]), 48)
-        self.assertEqual(len(self.details["profiles"]), 372)
+        self.assertEqual(len(self.details["properties"]), 49)
+        self.assertEqual(len(self.details["profiles"]), 475)
         self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 297)
-        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2456)
+        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2559)
         locations = page_locations(self.data, self.catalog)
         entities = {row["id"]: row for row in self.data["entities"]}
         prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
@@ -93,7 +101,15 @@ class CatalogTests(unittest.TestCase):
                 self.assertNotIn(literal(profile["context"]), page)
                 folded = recipe_profile_values(profile, recipes)
                 for key, value in profile["values"].items():
-                    if key in folded:
+                    grids = [grid for grid in self.details["grids"] if grid["entity"] == profile["entity"]]
+                    if key == "being-armor" and any(g["kind"] == "health" for g in grids):
+                        self.assertNotIn("<nowiki>Armor</nowiki> ||", page)
+                    elif key in {"hp-grid-width", "hp-grid-height"} and any(g["kind"] == "health" for g in grids):
+                        health = next(g for g in grids if g["kind"] == "health")
+                        self.assertIn(f'{len(health["rows"])} rows x {len(health["rows"][0])} columns', page)
+                    elif "-pattern-" in key and any(g["kind"] == key.split("-")[0] for g in grids):
+                        self.assertIn(f'{profile["values"][key.split("-")[0] + "-pattern-min"]} to {profile["values"][key.split("-")[0] + "-pattern-max"]}', page)
+                    elif key in folded:
                         self.assertIn(known(folded[key]), page.split("== Recipes ==", 1)[1])
                     elif profile["entity"] in coins and key in {"initial-price", "initial-weight", "stack-limit"}:
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
@@ -116,7 +132,7 @@ class CatalogTests(unittest.TestCase):
         original = {"schema_version": 1, "illustrations": [row for row in images if "entity" in row]}
         self.assertEqual(hashlib.sha256((json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
                          "d2127f41f5f41dcbe3fb7f04354b97289708c25c60a411487a3ae53cc886399e")
-        missing = {row["entity"] for row in self.catalog["pages"]} - {row["entity"] for row in images if "entity" in row}
+        missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in images if "entity" in row}
         self.assertEqual(missing, {"item-31", "item-48", "item-49", "item-171"})
         locations = page_locations(self.data, self.catalog)
         stations = {row["id"]: row for row in self.catalog["stations"]}
@@ -154,12 +170,13 @@ class CatalogTests(unittest.TestCase):
     def test_all_internal_links_and_explicit_anchors_resolve(self):
         for title, text in self.pages.items():
             for target in re.findall(r"\[\[([^\]|]+)", text):
+                target = target.removeprefix(":")
                 if target.startswith("File:"):
                     continue
                 page, _, anchor = target.partition("#")
                 page = page or title
                 with self.subTest(source=title, target=target):
-                    self.assertIn(page, self.pages)
+                    self.assertTrue(page in self.pages, f"{title}: missing target {page}")
                     if anchor:
                         headings = {html.unescape(re.sub(r"<[^>]+>", "", heading)).replace(" ", "_")
                                     for heading in re.findall(r"^=+\s*(.*?)\s*=+$", self.pages[page], re.MULTILINE)}
@@ -214,7 +231,7 @@ class CatalogTests(unittest.TestCase):
         npcs = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "npc"}
         self.assertEqual(npcs, {f"being-{number}" for number in (5, 6, 8, 9, 12, 19, 20, 26, 33, 34, 35)})
         self.assertEqual(len(self.catalog["classifications"]), 36)
-        self.assertIn("deceased character record", self.pages["Dead Unwanted"])
+        self.assertIn("Dead Unwanted is Viend before his revival", self.pages["Dead Unwanted"])
         for name in ("Ranger Bhato", "Magus Clay", "Captain Eir", "Wilda"):
             self.assertIn(f"[[{name}|", self.pages["NPCs"])
             self.assertNotIn(name, self.pages["Bestiary"].split("Characters now listed")[0])
@@ -231,10 +248,12 @@ class CatalogTests(unittest.TestCase):
 
     def test_catalog_and_profiles_order_do_not_change_output(self):
         catalog, details = copy.deepcopy(self.catalog), copy.deepcopy(self.details)
-        for key in ("pages", "classifications", "entry_links"):
+        for key in ("pages", "classifications", "entry_links", "guides"):
             catalog[key].reverse()
-        for key in ("profiles", "properties"):
+        for key in ("profiles", "properties", "grids"):
             details[key].reverse()
+        catalog["taxonomy"]["groups"].reverse()
+        catalog["taxonomy"]["tags"].reverse()
         self.assertEqual(build_xml(self.pages), build_xml(build_pages(ROOT, self.data, catalog, details)))
 
     def test_player_pages_hide_identifiers_and_evidence_plumbing(self):
@@ -300,10 +319,10 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("Base recipe yield", campfire)
         self.assertIn('id="profile-item-38-initializer"', campfire)
         self.assertIn('id="entry-recipe-personal-crafting-menu-38"', campfire)
-        self.assertIn("<nowiki>4.0</nowiki> <nowiki>base AP</nowiki>", campfire)
+        self.assertIn("<nowiki>4</nowiki> base [[Action points|AP]]", campfire)
         self.assertIn("[[Campfire|<nowiki>Campfire</nowiki>]] x <nowiki>1</nowiki>", campfire)
         for key, value, label in (
-            ("craft-ap-cost", 5, "Base crafting cost (AP)"),
+            ("craft-ap-cost", 5, "Base crafting cost"),
             ("craft-yield", 2, "Base recipe yield (items)"),
         ):
             details = copy.deepcopy(self.details)
@@ -311,7 +330,7 @@ class CatalogTests(unittest.TestCase):
             profile["values"][key] = value
             changed = build_pages(ROOT, self.data, self.catalog, details)["Campfire"]
             self.assertIn(literal(label) + " || " + known(value), changed)
-            self.assertIn("<nowiki>4.0</nowiki> <nowiki>base AP</nowiki>", changed)
+            self.assertIn("<nowiki>4</nowiki> base [[Action points|AP]]", changed)
             self.assertIn("[[Campfire|<nowiki>Campfire</nowiki>]] x <nowiki>1</nowiki>", changed)
         profile = next(row for row in self.details["profiles"] if row["id"] == "item-38-initializer")
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
@@ -353,7 +372,8 @@ class CatalogTests(unittest.TestCase):
 
     def test_global_prices_are_item_owned_selective_transclusions(self):
         prices = self.catalog["unit_prices"]
-        self.assertEqual(hashlib.sha256((json.dumps(prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
+        raw_prices = json.loads((ROOT / "content" / "facts" / "catalog.json").read_text())["unit_prices"]
+        self.assertEqual(hashlib.sha256((json.dumps(raw_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
                          "cc87a1884a50596233aad3708fd145d636bbe88e8c8bea9fa1867aaff4e198ea")
         self.assertEqual(len(prices["prices"]), 36)
         self.assertEqual(len(prices["covered_offers"]), 52)
@@ -459,6 +479,186 @@ class CatalogTests(unittest.TestCase):
         with self.assertRaises(DataError):
             build_pages(ROOT, self.data, catalog, self.details)
 
+    def test_taxonomy_is_complete_and_preserves_primary_and_cross_navigation(self):
+        locations = page_locations(self.data, self.catalog)
+        kinds = {row["entity"]: row["kind"] for row in self.catalog["classifications"]}
+        seen = set()
+        for group in self.catalog["taxonomy"]["groups"]:
+            for identity in group["members"]:
+                self.assertNotIn(identity, seen)
+                seen.add(identity)
+                self.assertIn(f'[[Category:{group["title"]}]]', self.pages[locations[identity]])
+                section = self.pages[group["index"]].split(f'== {group["title"]} ==\n', 1)[1].split("\n== ", 1)[0]
+                self.assertIn(f'[[{locations[identity]}|', section)
+                self.assertNotEqual(kinds.get(identity), "npc")
+        for title in ("Sceetler", "Scaal"):
+            self.assertIn("[[Category:Scaalmyr]]", self.pages[title])
+        for title in ("Mirk Runner", "Mirk Mauler"):
+            self.assertIn("[[Category:Rodents]]", self.pages[title])
+        for title in ("Mudfin", "Razorfin"):
+            self.assertIn("[[Category:Aquatic creatures]]", self.pages[title])
+        self.assertIn("[[Category:Bugs]]", self.pages["Nightmare"])
+        self.assertIn("[[Category:Cutting and chopping tools]]", self.pages["Steel Hand Axe"])
+        self.assertIn("[[Category:Weapons]]", self.pages["Steel Hand Axe"])
+        for change in (
+            lambda c: c["taxonomy"]["groups"][0]["members"].pop(),
+            lambda c: c["taxonomy"]["groups"][0]["members"].append("being-12"),
+            lambda c: c["taxonomy"]["groups"][0]["members"].append("item-0"),
+            lambda c: c["taxonomy"]["groups"][0].update(title="Category:Injected"),
+        ):
+            catalog = copy.deepcopy(self.catalog)
+            change(catalog)
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, self.data)
+
+    def test_player_facing_skill_rewrites_keep_their_evidence_off_the_page(self):
+        locations = page_locations(self.data, self.catalog)
+        skills = [row for row in self.data["entities"] if row["category"] == "skill"]
+        self.assertEqual(len(skills), 25)
+        for skill in skills:
+            page = self.pages[locations[skill["id"]]]
+            self.assertIn("== <nowiki>Effects</nowiki> ==", page)
+            self.assertNotRegex(page, r"Paraphrase of|not independently verified|localized design|described effects|runtime implementation")
+            self.assertIn("[[Category:Skills]]", page)
+        self.assertIn("Skill description methodology", self.pages["Source provenance"])
+
+    def test_prices_use_exact_minimum_coin_count_and_approved_icons(self):
+        cases = ((20, "2 gold"), (Decimal("3.57"), "3 silver 57 copper"),
+                 (Decimal("12.34"), "1 gold 2 silver 34 copper"),
+                 (Decimal("0.01"), "1 copper"), (0, "0 copper"))
+        for value, expected in cases:
+            self.assertEqual(price_text({"value": value}, []), expected)
+        rendered = price_text({"value": Decimal("12.34")}, self.data["illustrations"])
+        for number, name in ((74, "Gold"), (73, "Silver"), (72, "Copper")):
+            self.assertIn(f"[[File:Item-{number}.png|20px|link=|alt={name} coin]]", rendered)
+        for value in (Decimal("0.001"), Decimal("1.23000000000000000000000000000000001")):
+            with self.assertRaises(DataError):
+                price_text({"value": value}, [])
+        raw = (ROOT / "content" / "facts" / "catalog.json").read_bytes().replace(
+            b'"value": 0.25,', b'"value": 0.25000000000000000000000000000000001,', 1)
+        exact = parse_catalog(raw, self.data)
+        self.assertTrue(any(row["value"] == Decimal("0.25000000000000000000000000000000001")
+                            for row in exact["unit_prices"]["prices"]))
+        field_kit = self.pages["Survivor's Field Kit"]
+        self.assertIn("2 gold</onlyinclude>", field_kit)
+        self.assertIn("{{:Survivor's Field Kit}}", self.pages["Gurb-Gurb"])
+        self.assertIn("[[Alchemy workstation|Alternative crafting method]]", field_kit)
+        self.assertIn("only while the fire remains active", field_kit)
+        self.assertIn("[[Survivor's Field Kit|Alternative crafting method]]", self.pages["Alchemy workstation"])
+
+    def test_health_and_attack_grids_preserve_shape_orientation_and_cell_meaning(self):
+        grids = self.details["grids"]
+        self.assertEqual(len(grids), 118)
+        self.assertEqual(sum(g["kind"] == "health" for g in grids), 36)
+        nightmare = next(g for g in grids if g["id"] == "being-28-health")
+        self.assertEqual((len(nightmare["rows"]), len(nightmare["rows"][0])), (7, 3))
+        self.assertEqual({(y, x) for y, row in enumerate(nightmare["rows"]) for x, cell in enumerate(row) if cell is None},
+                         {(y, 2 if y % 2 == 0 else 0) for y in range(7)})
+        self.assertEqual(sum(c["health"] for r in nightmare["rows"] for c in r if c), 14)
+        page = self.pages["Nightmare"]
+        self.assertIn("14 occupied health cells", page)
+        self.assertIn('aria-label="Row 1, column 3: empty"', page)
+        thorns = next(g for g in grids if g["id"] == "item-206-melee")
+        self.assertEqual(thorns["rows"], [[{"min": 1, "max": 4}, {"min": 1, "max": 4}]] * 4)
+        attack = self.pages["Thorns of Wackah"]
+        self.assertEqual(attack.count(">1-4</td>"), 8)
+        self.assertIn("4 rows x 2 columns", attack)
+        self.assertIn("not maximum actual damage", attack)
+        self.assertNotIn("Potential melee damage", attack)
+        self.assertNotIn("== Melee", self.pages["Shortbow (Willow)"])
+        self.assertIn("0-1</td>", self.pages["Unarmed"])
+        self.assertIn("1 HP<br />3 armor", self.pages["Sceetler"])
+        self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages["Sceetler"])
+        for title in ("Giant Slug", "Swamp Troll", "Mirk Mauler", "Scaal", "Wilda", "Unwanted Guard"):
+            self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages[title])
+        self.assertIn('id="fact-being-0-base-armor"', self.pages["Giant Slug"])
+        for g in grids:
+            self.assertIn(f'id="grid-{g["id"]}"', self.pages[page_locations(self.data, self.catalog)[g["entity"]]])
+            if g["kind"] == "health":
+                self.assertTrue(all(c is None or c["health"] == 1 for r in g["rows"] for c in r))
+
+    def test_grid_schema_rejects_invented_health_holes_ranges_and_totals(self):
+        for change in (
+            lambda g: g["rows"].append([]),
+            lambda g: g["rows"][0][0].update(health=2),
+            lambda g: g["rows"][0][0].update(armor=4),
+            lambda g: g["rows"][0][0].update(health=0),
+            lambda g: g.update(rows=[]),
+            lambda g: g.update(rows=[[None]]),
+            lambda g: g.update(evidence=[]),
+        ):
+            details = copy.deepcopy(self.details)
+            change(details["grids"][0])
+            with self.assertRaises(DataError):
+                validate_details(details, self.data)
+        for cell in ({"min": 4, "max": 1}, {"min": 0, "max": 0}, {"min": False, "max": 1}, {"min": 1, "max": 999}):
+            details = copy.deepcopy(self.details)
+            next(g for g in details["grids"] if g["id"] == "item-206-melee")["rows"][0][0] = cell
+            with self.assertRaises(DataError):
+                validate_details(details, self.data)
+
+    def test_semantic_units_are_explicit_without_changing_raw_values(self):
+        for key, value, expected in (
+            ("insulation", 0.5, "<nowiki>50</nowiki>%"),
+            ("waterproof", 0.95, "<nowiki>95</nowiki>%"),
+            ("tinder-bonus", -0.2, "<nowiki>-20</nowiki>%"),
+            ("satiation-gain", 0.03, "<nowiki>3</nowiki>%"),
+            ("initial-weight", 0.025, "<nowiki>25</nowiki> g"),
+            ("initial-weight", 1.5, "<nowiki>1.5</nowiki> kg"),
+            ("melee-ap-cost", 6, "<nowiki>6</nowiki> [[Action points|AP]]"),
+            ("durability-max", 50, "<nowiki>50</nowiki>"),
+            ("item-armor", 3.5, "<nowiki>3.5</nowiki>"),
+        ):
+            self.assertEqual(profile_value(key, value, {}, {}), expected)
+        for title, page in self.pages.items():
+            if title.startswith("Category:") or title in {"Source provenance", "Research policy", "Evidence and spoilers"}:
+                continue
+            self.assertNotRegex(page, r"\((?:internal [^)]*|0-1 fraction|fraction|unitless|durability units)\)")
+        self.assertIn("not finalized in-game weights or prices", self.pages["Twine"])
+
+    def test_character_state_and_damage_reverse_links_have_canonical_owners(self):
+        self.assertIn("[[Dead Unwanted#State_history|", self.pages["Viend"])
+        for title in ("Dead Unwanted", "Viend", "Magus Clay", "Clay's Strange Potion"):
+            self.assertIn("[[Quests and journal#entry-journal-11|", self.pages[title])
+            self.assertNotIn("Return to the abandoned campsite with the potion", self.pages[title])
+        self.assertIn("Return to the abandoned campsite with Clay's Strange Potion", self.pages["Quests and journal"])
+        for title in ("Thorns of Wackah", "Serpent Fang", "Nightmare", "Viper"):
+            self.assertIn(f"[[{title}|", self.pages["Poison"])
+        self.assertIn("[[Poison|", self.pages["Thorns of Wackah"])
+        self.assertIn('id="entity-damage-class-2"', self.pages["Damage types"])
+
+    def test_combat_guides_distinguish_initial_hits_spread_and_remedies(self):
+        poison = self.pages["Poison"]
+        self.assertIn("Poison that spreads can get beneath armor", poison)
+        self.assertIn("removes one armor layer instead of applying poison", poison)
+        self.assertIn("do not restore already lost hit points", poison)
+        sharp = self.pages["Sharp"]
+        self.assertIn("cannot also make that cell bleed", sharp)
+        self.assertIn("Rank 10 Blade Master", sharp)
+        fire = self.pages["Fire"]
+        self.assertIn("cannot be restored by ordinary wound salves", fire)
+        self.assertIn("turn the burned cell into an ordinary wound", fire)
+        self.assertIn("does not immediately restore the hit point", fire)
+        self.assertIn("multi-point hit can make more than one check", self.pages["Piercing"])
+        self.assertIn("Each positive-damage pattern cell", self.pages["Force"])
+        for title, guide in (("Bandage", "Sharp"), ("Minor Antidote", "Poison"), ("Simple Burn Remedy", "Fire")):
+            self.assertIn(f"[[{guide}|{guide}: effects and related rules]]", self.pages[title])
+        self.assertIn("normally has 8 AP per turn", self.pages["Action points"])
+        self.assertIn("minus any action cost carried over", self.pages["Action points"])
+        self.assertIn("0.4 AP per square", self.pages["Action points"])
+        self.assertIn("<nowiki>Equip cost</nowiki> || <nowiki>3.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
+        self.assertIn("<nowiki>7.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
+        for change in (
+            lambda c: c["guides"][0].update(title="Unreviewed guide"),
+            lambda c: c["guides"][0].update(paragraphs=[]),
+            lambda c: c["guides"][0].update(evidence=[]),
+            lambda c: c["guides"][0].update(related_entities=["missing"]),
+        ):
+            catalog = copy.deepcopy(self.catalog)
+            change(catalog)
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, self.data)
+
 
 def synthetic_details():
     data = synthetic_data()
@@ -475,7 +675,7 @@ def synthetic_details():
 
 
 class ProfileTests(unittest.TestCase):
-    def test_damage_class_ids_link_to_the_single_damage_index(self):
+    def test_damage_class_ids_link_to_the_canonical_damage_page(self):
         data = synthetic_data()
         entity = copy.deepcopy(data["entities"][0])
         entity.update(id="damage-class-14", name="Synthetic damage class", category="damage_class")
@@ -484,7 +684,7 @@ class ProfileTests(unittest.TestCase):
         details["properties"][0]["id"] = "damage-class-id"
         details["profiles"][0]["values"] = {"damage-class-id": 14}
         page = build_pages(ROOT, data, details=details)["Entity synthetic-item"]
-        self.assertIn("[[Damage types#entity-damage-class-14|", page)
+        self.assertIn("[[Synthetic damage class|", page)
 
     def test_numeric_boolean_and_unknown_values_are_distinct(self):
         for value in (0, -1, 2.5, True, False, None):

@@ -166,13 +166,13 @@ is embedded; entity and File links are relative MediaWiki links.
 
 ## Encyclopedia identities and ownership
 
-`content/facts/catalog.json` (128 KiB maximum) contains `schema_version: 1`,
+`content/facts/catalog.json` (192 KiB maximum) contains `schema_version: 1`,
 `pages`, `classifications`, and `entry_links`, with reviewed `entry_display`,
-`stations`, `unit_prices`, and `currency` additions. It changes presentation
+`stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, and `guides` additions. It changes presentation
 without rewriting historical evidence:
 
 - `pages`: `{entity, title, aliases}` for every item, being, nature record,
-  and skill, exactly once. Titles are locked ordinary names. Only collisions
+  skill, and damage type, exactly once. Titles are locked ordinary names. Only collisions
   receive qualifiers: `Turnip (item)` and `Turnip (nature)`. Do not redirect
   ambiguous `Turnip` to just one record. Aliases are explicit previous
   titles, emitted as redirects; none may collide with a canonical title,
@@ -188,16 +188,37 @@ without rewriting historical evidence:
   mechanic or unsupported semantic claim.
 - `entry_display`: `{entry, title?, summary?, conditions?, steps?}` gives
   bounded original reader wording for an existing entry. Omitted fields keep
-  their original value; conditions alone may be null. Technical stage/table
+  their original value; conditions alone may be null. An empty override `steps`
+  list suppresses technical boilerplate while keeping its evidence and original
+  record. Technical stage/table
   labels can be replaced by reviewed descriptive titles without changing IDs,
   ordering, source evidence, or the underlying record. No guessed names for
   unidentified categories are introduced.
 
-Five skill groups remain sections of Skills; seven damage classes remain on
-Damage types. Other entities have dedicated pages. Facts with an exact,
+Five skill groups remain sections of Skills; seven damage types now have their
+own pages, with Damage types retained as a directory and legacy-anchor owner.
+Facts with an exact,
 unambiguous entity-name/category match move to that entity's page; ambiguous
 matches fail. In particular, legacy skill facts retain `page: Game mechanics`
 in the immutable data but are rendered only on their skill owners.
+The completed-turn clock fact is owned by Action points, with its old Weather
+anchor retained as a link.
+
+`taxonomy` contains `groups` and `tags`, each with `{title,index,members}`.
+Every item, creature, and nature record belongs to exactly one primary group;
+cross-tags may overlap. NPC classifications cannot be bypassed by taxonomy.
+Each membership points to the same canonical article. Skills and root
+categories use existing entity types/group identities. Category titles are
+generated in namespace 14; arbitrary namespace titles remain forbidden in the
+entity registry. Groupings are editorial navigation, not biological claims.
+
+`guides` contains bounded original paragraphs, existing related-entity IDs,
+confidence and evidence for the seven damage owners, Health and armor, and
+Action points. Reverse damage links are derived from profiles, never guessed
+from weapon names. Remedies and related skills link back to the rule owner.
+`state_history` links two being records and a canonical quest, with attributed
+operator confirmation and optional source evidence. Revival instructions stay
+in Quests and journal, not copied onto character or potion pages.
 
 Merchant offers are primarily owned by the merchant. Recipes belong to the
 output item (lowest stable item ID if a future recipe has several outputs).
@@ -245,7 +266,7 @@ Station rows contain `{id, title, entity, methods, summary, acquisition,
 confidence, evidence}`. `entity` is either the existing canonical item ID
 (the title must match) or null for a non-item workstation. `methods` account
 for every exact source recipe-method label, without creating fake item IDs.
-Optional `notes`, `related_entities`, and `quest_entries` provide original
+Optional `notes`, `related_entities`, `related_stations`, and `quest_entries` provide original
 station behavior and verified crosslinks. Optional `variants` have `{id,title}`.
 
 One Alchemy workstation article covers early-game and later-game variants,
@@ -290,9 +311,16 @@ guarantee perfect sub-copper value preservation or globally optimal coin count.
 The builder reports these reviewed rules; it does not execute game logic or
 claim that a local arithmetic mirror was a gameplay test.
 
+Unit-price decimals are parsed directly as `Decimal`, not binary floats.
+Displayed whole-copper values are decomposed into the fewest gold, silver and
+copper coins, using accessible text and only approved coin File references.
+Sub-copper purchase amounts fail explicitly rather than being rounded.
+This display policy does not alter the game's separate change rounding.
+Literal initializer values are not reformatted into asserted shop prices.
+
 ## Compact typed profiles
 
-`content/facts/entity_details.json` (512 KiB maximum) has:
+`content/facts/entity_details.json` (768 KiB maximum) has:
 
 ```json
 {
@@ -322,13 +350,37 @@ damage, and availability. Shared labels/units/descriptions are original,
 bounded prose, not copied item descriptions. Profiles supplement historical
 facts rather than silently replacing them or claiming complete mechanics.
 
-The reviewed profile snapshot contains 48 property definitions, 372 profiles,
-and 2,456 scalar values for 297 entities (245 items, 36 beings, 16 nature
-records). Seventy-five profiles separately describe the initializer's computed
+The current profile snapshot contains 49 property definitions, 475 profiles,
+and 2,559 scalar values for 297 entities (245 items, 36 beings, 16 nature
+records). The original 48 definitions/372 profiles/2,456 values are preserved
+exactly; 103 added profiles document equip costs. Seventy-five original profiles describe the initializer's computed
 attack-pattern totals. HP-grid dimensions are not presented as an invented
 total HP. Literal weight/value fields are explicitly before recipe
 postprocessing and trade/runtime changes. Flax and Linen retain source-known
 name pages but have no invented initializer profile.
+
+Optional `grids` contains at most 256 records with
+`{id,entity,kind,rows,context,confidence,evidence}`. Kinds are `health`, `melee`,
+or `ranged`, unique per entity. Each rectangular row-major matrix has 1-32
+rows/columns; null is a hole. Occupied attack cells have integer `{min,max}`,
+including zero-to-one cells but excluding zero-only cells. Health cells have
+`{health:1,armor:0..3}`: armor is not extra HP. Every grid's dimensions or
+range sums must agree with its original scalar profile. The reviewed release
+contains 118 grids: 36 base health and 82 attack patterns.
+
+Original accessible HTML tables preserve shape and orientation without
+image bytes or a runtime extension. Grid-owned dimensions/totals replace
+duplicate profile rows while retaining profile anchors. Item attack patterns
+are not labeled melee-only, particularly bows. Damaged/story-specific health
+instances are never substituted for base shapes.
+
+Explicit property IDs select display units: fraction-based chance,
+waterproofing, insulation, satiation and tinder fields become percentages;
+AP costs link to Action points; verified weight uses kg/g. Armor and durability
+have plain labels and numbers. Movement, time, distance, and other unsupported
+units are not converted to invented real-world quantities. Stored values
+and source scope are unchanged. Initializer weight/value caveats remain
+visible; technical source terminology stays in Source provenance.
 
 Image metadata has its own exact allowlist and schema, described in
 [IMAGES.md](IMAGES.md). Neither supplemental file changes `game.json`, carries

@@ -13,6 +13,7 @@ import tempfile
 import urllib.parse
 import urllib.request
 import zlib
+from html.parser import HTMLParser
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, existing_titles, title_key
@@ -20,6 +21,77 @@ from wiki_details import load_publication_inputs
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class RenderedGrids(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.grids = []
+        self.active = False
+        self.cell = None
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "table" and "mirklurk-cell-grid" in attrs.get("class", "").split():
+            self.active = True
+            self.grids.append([])
+        elif self.active and tag == "tr":
+            self.grids[-1].append([])
+        elif self.active and tag == "td":
+            self.cell = {"attrs": attrs, "text": ""}
+            self.grids[-1][-1].append(self.cell)
+
+    def handle_endtag(self, tag):
+        if tag == "table":
+            self.active = False
+        elif tag == "td":
+            self.cell = None
+
+    def handle_data(self, data):
+        if self.active and self.cell is not None:
+            self.cell["text"] += data
+
+
+def smoke_reader_release(api, pages):
+    for title, category in (("Nightmare", "Bugs"), ("Mirk Runner", "Rodents"),
+                            ("Sceetler", "Scaalmyr"), ("Mudfin", "Aquatic creatures")):
+        result = api({"action": "query", "titles": title, "prop": "categories"})["query"]["pages"]
+        categories = next(iter(result.values())).get("categories", [])
+        if "Category:" + category not in {row["title"] for row in categories}:
+            raise RuntimeError("Imported category membership is missing.")
+    for title in ("Thorns of Wackah", "Nightmare"):
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        parsed = RenderedGrids()
+        parsed.feed(rendered)
+        if not parsed.grids:
+            raise RuntimeError("MediaWiki did not render the cell grid.")
+        rows = parsed.grids[0]
+        if title == "Thorns of Wackah":
+            if len(rows) != 4 or any(len(row) != 2 for row in rows):
+                raise RuntimeError("Thorns attack grid orientation changed.")
+            if any(cell["text"].strip() != "1-4" for row in rows for cell in row):
+                raise RuntimeError("Thorns attack cells lost their per-cell ranges.")
+        else:
+            holes = {(y, x) for y, row in enumerate(rows) for x, cell in enumerate(row)
+                     if "grid-hole" in cell["attrs"].get("class", "")}
+            if len(rows) != 7 or any(len(row) != 3 for row in rows) or holes != {(y, 2 if y % 2 == 0 else 0) for y in range(7)}:
+                raise RuntimeError("Nightmare base-health shape lost its alternating holes.")
+        for row in rows:
+            for cell in row:
+                if not cell["attrs"].get("aria-label", "").startswith("Row "):
+                    raise RuntimeError("Grid cell accessibility labels were stripped.")
+                if "grid-cell" in cell["attrs"].get("class", "") and "background" not in cell["attrs"].get("style", ""):
+                    raise RuntimeError("Grid cell styling was stripped.")
+    for title, expected in (
+        ("Survivor's Field Kit", "2 gold"), ("Gurb-Gurb", "2 gold"),
+        ("Fine Wool Socks", "50%"), ("Steel Hand Axe", "AP"),
+    ):
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        if expected not in rendered:
+            raise RuntimeError("Reader-facing coin, percentage or AP formatting did not survive parsing.")
+    for title in ("Poison", "Sharp", "Blunt", "Force", "Piercing", "Fire", "Weak", "Action points"):
+        if title not in pages:
+            raise RuntimeError("A required canonical guide is missing.")
 
 
 def smoke_thumbnail(run, api, base):
@@ -210,9 +282,14 @@ def smoke():
             excluded = existing_titles(current)
             missing = {title: text for title, text in pages.items() if title_key(title) not in excluded}
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=build_xml(missing))
-            indexed = api({"action": "query", "list": "allpages", "aplimit": "max"})["query"]["allpages"]
+            indexed = []
+            for namespace in (0, 14):
+                indexed.extend(api({"action": "query", "list": "allpages", "apnamespace": namespace,
+                                    "aplimit": "max"})["query"]["allpages"])
             if set(pages) != {page["title"] for page in indexed}:
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            smoke_reader_release(api, pages)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},

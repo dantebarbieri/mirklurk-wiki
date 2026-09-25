@@ -1,6 +1,664 @@
 {
   "schema_version": 1,
+  "taxonomy": {
+    "groups": [
+      {
+        "title": "Clothes",
+        "index": "Items",
+        "members": [
+          "item-15",
+          "item-16",
+          "item-17",
+          "item-18",
+          "item-20",
+          "item-21",
+          "item-22",
+          "item-23",
+          "item-24",
+          "item-33",
+          "item-42",
+          "item-57",
+          "item-59",
+          "item-137",
+          "item-145",
+          "item-146",
+          "item-164",
+          "item-196",
+          "item-197",
+          "item-198",
+          "item-199",
+          "item-200",
+          "item-201",
+          "item-202",
+          "item-203",
+          "item-204",
+          "item-205",
+          "item-207",
+          "item-208",
+          "item-209"
+        ]
+      },
+      {
+        "title": "Armor",
+        "index": "Items",
+        "members": [
+          "item-0",
+          "item-1",
+          "item-43",
+          "item-50",
+          "item-54",
+          "item-55",
+          "item-56",
+          "item-58",
+          "item-116",
+          "item-117",
+          "item-118",
+          "item-119",
+          "item-147",
+          "item-165",
+          "item-192",
+          "item-193",
+          "item-194",
+          "item-195"
+        ]
+      },
+      {
+        "title": "Weapons",
+        "index": "Items",
+        "members": [
+          "item-2",
+          "item-3",
+          "item-4",
+          "item-5",
+          "item-6",
+          "item-7",
+          "item-8",
+          "item-9",
+          "item-10",
+          "item-11",
+          "item-27",
+          "item-28",
+          "item-29",
+          "item-30",
+          "item-31",
+          "item-44",
+          "item-90",
+          "item-93",
+          "item-105",
+          "item-106",
+          "item-157",
+          "item-158",
+          "item-159",
+          "item-160",
+          "item-161",
+          "item-169",
+          "item-179",
+          "item-184",
+          "item-185",
+          "item-186",
+          "item-187",
+          "item-188",
+          "item-189",
+          "item-190",
+          "item-191",
+          "item-206"
+        ]
+      },
+      {
+        "title": "Tools",
+        "index": "Items",
+        "members": [
+          "item-40",
+          "item-41",
+          "item-89",
+          "item-94",
+          "item-96",
+          "item-110",
+          "item-111",
+          "item-156",
+          "item-172",
+          "item-182",
+          "item-183",
+          "item-212",
+          "item-248",
+          "item-252",
+          "item-254",
+          "item-255"
+        ]
+      },
+      {
+        "title": "Consumables",
+        "index": "Items",
+        "members": [
+          "item-25",
+          "item-32",
+          "item-51",
+          "item-60",
+          "item-61",
+          "item-62",
+          "item-63",
+          "item-64",
+          "item-65",
+          "item-66",
+          "item-67",
+          "item-69",
+          "item-70",
+          "item-82",
+          "item-83",
+          "item-84",
+          "item-85",
+          "item-86",
+          "item-87",
+          "item-88",
+          "item-95",
+          "item-103",
+          "item-104",
+          "item-112",
+          "item-113",
+          "item-114",
+          "item-115",
+          "item-127",
+          "item-138",
+          "item-139",
+          "item-140",
+          "item-141",
+          "item-143",
+          "item-144",
+          "item-162",
+          "item-163",
+          "item-176",
+          "item-180",
+          "item-181",
+          "item-217",
+          "item-218",
+          "item-221",
+          "item-222",
+          "item-223",
+          "item-225",
+          "item-226",
+          "item-235",
+          "item-236",
+          "item-237",
+          "item-241",
+          "item-242",
+          "item-243",
+          "item-244",
+          "item-245",
+          "item-246",
+          "item-247",
+          "item-251",
+          "item-253"
+        ]
+      },
+      {
+        "title": "Crafting materials",
+        "index": "Items",
+        "members": [
+          "item-19",
+          "item-34",
+          "item-35",
+          "item-36",
+          "item-37",
+          "item-39",
+          "item-48",
+          "item-49",
+          "item-52",
+          "item-77",
+          "item-78",
+          "item-79",
+          "item-80",
+          "item-81",
+          "item-91",
+          "item-92",
+          "item-102",
+          "item-107",
+          "item-120",
+          "item-121",
+          "item-122",
+          "item-124",
+          "item-129",
+          "item-134",
+          "item-135",
+          "item-136",
+          "item-142",
+          "item-173",
+          "item-175",
+          "item-177",
+          "item-178",
+          "item-210",
+          "item-211",
+          "item-213",
+          "item-214",
+          "item-215",
+          "item-216",
+          "item-224"
+        ]
+      },
+      {
+        "title": "Carrying equipment",
+        "index": "Items",
+        "members": [
+          "item-12",
+          "item-13",
+          "item-14",
+          "item-26",
+          "item-148",
+          "item-166",
+          "item-167",
+          "item-168"
+        ]
+      },
+      {
+        "title": "Camping and construction",
+        "index": "Items",
+        "members": [
+          "item-38",
+          "item-47",
+          "item-68",
+          "item-108",
+          "item-153",
+          "item-154",
+          "item-155",
+          "item-170",
+          "item-171",
+          "item-238",
+          "item-239",
+          "item-240",
+          "item-249",
+          "item-250",
+          "item-256",
+          "item-257"
+        ]
+      },
+      {
+        "title": "Ammunition",
+        "index": "Items",
+        "members": [
+          "item-45",
+          "item-46",
+          "item-76",
+          "item-174",
+          "item-219",
+          "item-220"
+        ]
+      },
+      {
+        "title": "Seeds",
+        "index": "Items",
+        "members": [
+          "item-227",
+          "item-228",
+          "item-229",
+          "item-230",
+          "item-231",
+          "item-232",
+          "item-233",
+          "item-234"
+        ]
+      },
+      {
+        "title": "Coins and valuables",
+        "index": "Items",
+        "members": [
+          "item-72",
+          "item-73",
+          "item-74",
+          "item-97",
+          "item-98",
+          "item-99",
+          "item-100",
+          "item-101"
+        ]
+      },
+      {
+        "title": "Quest items",
+        "index": "Items",
+        "members": [
+          "item-123",
+          "item-126",
+          "item-130",
+          "item-132"
+        ]
+      },
+      {
+        "title": "Miscellaneous items",
+        "index": "Items",
+        "members": [
+          "item-75"
+        ]
+      },
+      {
+        "title": "Bugs",
+        "index": "Bestiary",
+        "members": [
+          "being-1",
+          "being-2",
+          "being-25",
+          "being-27",
+          "being-28"
+        ]
+      },
+      {
+        "title": "Snakes",
+        "index": "Bestiary",
+        "members": [
+          "being-4",
+          "being-10",
+          "being-23"
+        ]
+      },
+      {
+        "title": "Trolls",
+        "index": "Bestiary",
+        "members": [
+          "being-3",
+          "being-18"
+        ]
+      },
+      {
+        "title": "Scaalmyr",
+        "index": "Bestiary",
+        "members": [
+          "being-13",
+          "being-14",
+          "being-15",
+          "being-16",
+          "being-22"
+        ]
+      },
+      {
+        "title": "Crabs",
+        "index": "Bestiary",
+        "members": [
+          "being-7",
+          "being-30"
+        ]
+      },
+      {
+        "title": "Mollusks",
+        "index": "Bestiary",
+        "members": [
+          "being-0"
+        ]
+      },
+      {
+        "title": "Toadkin",
+        "index": "Bestiary",
+        "members": [
+          "being-21"
+        ]
+      },
+      {
+        "title": "Unwanted creatures",
+        "index": "Bestiary",
+        "members": [
+          "being-31",
+          "being-32"
+        ]
+      },
+      {
+        "title": "Rodents",
+        "index": "Bestiary",
+        "members": [
+          "being-11",
+          "being-29"
+        ]
+      },
+      {
+        "title": "Aquatic creatures",
+        "index": "Bestiary",
+        "members": [
+          "being-17",
+          "being-24"
+        ]
+      },
+      {
+        "title": "Trees",
+        "index": "Nature",
+        "members": [
+          "nature-4",
+          "nature-7",
+          "nature-17"
+        ]
+      },
+      {
+        "title": "Rift growth",
+        "index": "Nature",
+        "members": [
+          "nature-12",
+          "nature-13"
+        ]
+      },
+      {
+        "title": "Gatherable food plants",
+        "index": "Nature",
+        "members": [
+          "nature-6",
+          "nature-18",
+          "nature-19",
+          "nature-20"
+        ]
+      },
+      {
+        "title": "Non-growing nature",
+        "index": "Nature",
+        "members": [
+          "nature-2",
+          "nature-3"
+        ]
+      },
+      {
+        "title": "Ground cover and water plants",
+        "index": "Nature",
+        "members": [
+          "nature-0",
+          "nature-1",
+          "nature-5",
+          "nature-8",
+          "nature-9"
+        ]
+      }
+    ],
+    "tags": [
+      {
+        "title": "Cutting and chopping tools",
+        "index": "Items",
+        "members": [
+          "item-2",
+          "item-3",
+          "item-4",
+          "item-5",
+          "item-6",
+          "item-7",
+          "item-8",
+          "item-9",
+          "item-10",
+          "item-11",
+          "item-27",
+          "item-28",
+          "item-29",
+          "item-30",
+          "item-184",
+          "item-185",
+          "item-188",
+          "item-189"
+        ]
+      },
+      {
+        "title": "Light sources",
+        "index": "Items",
+        "members": [
+          "item-41",
+          "item-96",
+          "item-110",
+          "item-111",
+          "item-212",
+          "item-248"
+        ]
+      },
+      {
+        "title": "Fire-making supplies",
+        "index": "Items",
+        "members": [
+          "item-19",
+          "item-34",
+          "item-35",
+          "item-36",
+          "item-37",
+          "item-39",
+          "item-40",
+          "item-78",
+          "item-79",
+          "item-80",
+          "item-81",
+          "item-94",
+          "item-121",
+          "item-169",
+          "item-182",
+          "item-183",
+          "item-210",
+          "item-211",
+          "item-213",
+          "item-214",
+          "item-215",
+          "item-216",
+          "item-224",
+          "item-254",
+          "item-255"
+        ]
+      },
+      {
+        "title": "Remedies",
+        "index": "Items",
+        "members": [
+          "item-32",
+          "item-84",
+          "item-85",
+          "item-86",
+          "item-138",
+          "item-139",
+          "item-140",
+          "item-141",
+          "item-143",
+          "item-144"
+        ]
+      },
+      {
+        "title": "Food and drink",
+        "index": "Items",
+        "members": [
+          "item-25",
+          "item-51",
+          "item-60",
+          "item-61",
+          "item-62",
+          "item-63",
+          "item-64",
+          "item-65",
+          "item-66",
+          "item-67",
+          "item-69",
+          "item-70",
+          "item-82",
+          "item-83",
+          "item-87",
+          "item-88",
+          "item-95",
+          "item-103",
+          "item-104",
+          "item-162",
+          "item-163",
+          "item-180",
+          "item-181",
+          "item-217",
+          "item-218",
+          "item-221",
+          "item-222",
+          "item-223",
+          "item-225",
+          "item-226",
+          "item-235",
+          "item-236",
+          "item-237",
+          "item-241",
+          "item-242",
+          "item-243",
+          "item-244",
+          "item-245",
+          "item-246",
+          "item-247"
+        ]
+      }
+    ]
+  },
+  "state_history": [
+    {
+      "before": "being-9",
+      "after": "being-19",
+      "quest": "journal-11",
+      "summary": "Dead Unwanted is Viend before his revival. The two records describe different states of the same character.",
+      "attribution": "Wiki operator",
+      "recorded_on": "2026-09-25",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "Journal",
+          "key": "11"
+        },
+        {
+          "source": "beings-en",
+          "section": "Clay",
+          "key": "205"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "dialogue.being[8].choice[205]/being[9].choice[114/112]/being_initiate[19]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.being[9]/item[126]/Pour-Potion[114]"
+        }
+      ]
+    }
+  ],
   "pages": [
+    {
+      "entity": "damage-class-2",
+      "title": "Poison",
+      "aliases": []
+    },
+    {
+      "entity": "damage-class-14",
+      "title": "Sharp",
+      "aliases": []
+    },
+    {
+      "entity": "damage-class-15",
+      "title": "Blunt",
+      "aliases": []
+    },
+    {
+      "entity": "damage-class-16",
+      "title": "Force",
+      "aliases": []
+    },
+    {
+      "entity": "damage-class-17",
+      "title": "Piercing",
+      "aliases": []
+    },
+    {
+      "entity": "damage-class-18",
+      "title": "Fire",
+      "aliases": []
+    },
+    {
+      "entity": "damage-class-24",
+      "title": "Weak",
+      "aliases": []
+    },
     {
       "entity": "item-99",
       "title": "Amethyst",
@@ -2333,13 +2991,17 @@
     {
       "entry": "journal-11",
       "entities": [
-        "being-8"
+        "being-8",
+        "being-9",
+        "being-19",
+        "item-126"
       ]
     },
     {
       "entry": "journal-12",
       "entities": [
-        "being-19"
+        "being-19",
+        "being-9"
       ]
     },
     {
@@ -2449,6 +3111,185 @@
     }
   ],
   "entry_display": [
+    {
+      "entry": "skill-0-0-mechanics",
+      "title": "Effects",
+      "summary": "Move through vegetation and obstacles more efficiently: each rank adds 8% traversal efficiency. Every third rank also improves your ability to form paths.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-0-1-mechanics",
+      "title": "Effects",
+      "summary": "Travel through water more efficiently, gaining 8% efficiency per rank. At rank 10, swimming drains half as much stamina.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-0-2-mechanics",
+      "title": "Effects",
+      "summary": "Jump farther and spend less on each jump as you raise this skill.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-0-3-mechanics",
+      "title": "Effects",
+      "summary": "Climb slopes more efficiently, with a 6% improvement per rank.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-0-4-mechanics",
+      "title": "Effects",
+      "summary": "Keep your footing when you might slip or be knocked off balance. Each rank gives an 8% chance to avoid the loss of balance.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-1-0-mechanics",
+      "title": "Effects",
+      "summary": "Start fires more reliably. Each rank adds 3 percentage points to the success chance of a fire-starting attempt.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-1-1-mechanics",
+      "title": "Effects",
+      "summary": "Stay fed longer: each rank reduces the rate at which you lose satiation by 4%.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-1-2-mechanics",
+      "title": "Effects",
+      "summary": "Lose focus 3% more slowly per rank. Every third rank also adds 7 percentage points to your chance of gaining 30% extra XP.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-1-3-mechanics",
+      "title": "Effects",
+      "summary": "Hold on to warmth and dry your clothing more effectively. Each rank reduces warmth loss by 4% and improves clothing drying by 4%.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-1-4-mechanics",
+      "title": "Effects",
+      "summary": "Carry more before exceeding your allowance. Each rank adds 1.5 kg of carrying capacity.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-2-0-mechanics",
+      "title": "Effects",
+      "summary": "Spend 0.3 less AP on bow use per rank. Rank 5 allows close-range bow attacks; rank 10 gives a 12.5% chance for a shot to cost no AP.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-2-1-mechanics",
+      "title": "Effects",
+      "summary": "Skin and butcher for 0.2 less AP per rank. Each rank also adds a 10% chance to obtain an extra meat or skin result.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-2-2-mechanics",
+      "title": "Effects",
+      "summary": "Evade attacks more often, gaining 2 percentage points of evasion per rank. Rank 5 unlocks diagonal dodging.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-2-3-mechanics",
+      "title": "Effects",
+      "summary": "Recover more arrows from corpses. Start with a 10% recovery chance and add 6 percentage points for each rank.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-2-4-mechanics",
+      "title": "Effects",
+      "summary": "Avoid detection by hostile creatures. Each rank gives a 6.5% chance to pass unnoticed when detection is checked.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-3-0-mechanics",
+      "title": "Effects",
+      "summary": "Make worn armor count less toward your carried weight, with a 7.5% reduction per rank. Armor carried but not worn does not receive this benefit.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-3-1-mechanics",
+      "title": "Effects",
+      "summary": "Stun more often with blunt melee attacks: each rank adds 1.5 percentage points to the stun chance. Every third rank also reduces their AP cost by 1.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-3-2-mechanics",
+      "title": "Effects",
+      "summary": "Improve force melee attacks. Each rank adds 2 percentage points to their bonus-damage chance, and every third rank reduces their AP cost by 1.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-3-3-mechanics",
+      "title": "Effects",
+      "summary": "Spend 0.3 less AP on bladed attacks per rank. At rank 10, an attack can break armor and cause bleeding on the same hit.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-3-4-mechanics",
+      "title": "Effects",
+      "summary": "Block attacks completely while carrying an equipped shield. Each rank gives a 2.5% chance of a full block.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-4-0-mechanics",
+      "title": "Effects",
+      "summary": "Harvest plants more efficiently, gaining 8% efficiency per rank. Every third rank also adds a 15% chance of an extra harvest.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-4-1-mechanics",
+      "title": "Effects",
+      "summary": "Find small creatures while examining or harvesting plants. Each search gains 5 percentage points of success chance per rank, and every third rank adds another search.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-4-2-mechanics",
+      "title": "Effects",
+      "summary": "Get 8% more satiation from green food per rank. Every third rank also reduces the AP cost of eating it by 0.2.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-4-3-mechanics",
+      "title": "Effects",
+      "summary": "Use alchemy stations for 8% less AP per rank. Every third rank adds 20 percentage points to your chance of saving ingredients.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "skill-4-4-mechanics",
+      "title": "Effects",
+      "summary": "Fight poison before it deals damage at the start of your turn. Each poisoned cell has a 9% chance per rank to lose one poison count; at rank 10, a successful check removes one more count.",
+      "conditions": null,
+      "steps": []
+    },
+    {
+      "entry": "journal-11",
+      "summary": "Return to the abandoned campsite with Clay's Strange Potion, provided by Magus Clay. Pour it into the dead Unwanted's mouth to revive him as Viend."
+    },
     {
       "entry": "journal-7-location",
       "title": "Finding Bhato's hideout"
@@ -2874,11 +3715,11 @@
       "entry": "weather-state-machine",
       "steps": [
         "Update the rain-history balance by adding 1/180 while rain power is positive or subtracting 1/360 otherwise, then clamp the balance between minus one and one.",
-        "Clear weather tests a cloud threshold of the larger of 0.02 and 0.12 times one minus the balance.",
-        "Cloudy weather first tests clearing: the larger of 0.02 and 0.10 times one plus the balance. Only after failure does it test rain: the larger of 0.02 and 0.30 times one minus the balance.",
+        "Clear weather tests a cloud threshold of the larger of 2% and 12% times one minus the balance.",
+        "Cloudy weather first tests clearing: the larger of 2% and 10% times one plus the balance. Only after failure does it test rain: the larger of 2% and 30% times one minus the balance.",
         "Rain onset is disabled while the survival-day counter is below two on certain difficulty settings. The corresponding displayed difficulty names are not established here.",
-        "Rainy weather first tests return to clouds using the larger of 0.01 and 0.25 times one plus the balance. Only after failure does it test direct clearing using the larger of 0.01 and 0.05 times one plus the balance.",
-        "If rain continues, intensity is perturbed by a random amount between minus 0.10 and plus 0.10 and clamped. Ending rain can fade over subsequent turns."
+        "Rainy weather first tests return to clouds using the larger of 1% and 25% times one plus the balance. Only after failure does it test direct clearing using the larger of 1% and 5% times one plus the balance.",
+        "If rain continues, intensity changes by a random amount between minus 10 and plus 10 percentage points and is clamped to its limits. Ending rain can fade over subsequent turns."
       ]
     },
     {
@@ -3027,7 +3868,7 @@
       "methods": [
         "Survivor's Field Kit"
       ],
-      "summary": "Use the field kit's fire-linked menu for its alchemy options.",
+      "summary": "A portable alternative to the alchemy workstation, offering the same 15 alchemy recipes. The field kit uses the shared fire menu: its recipes are available only while the fire remains active. Fuel and access requirements differ from the permanent workstation.",
       "acquisition": null,
       "confidence": "inferred",
       "evidence": [
@@ -3035,9 +3876,22 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_menu_related",
           "key": "menu_psynch.station[172].activeTurns/CM.item[140]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_open.fieldkit.activeTurns/CM"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_station_Alarm_0",
+          "key": "station[53]/station[131].localMenu"
         }
       ],
       "notes": [],
+      "related_stations": [
+        "alchemy-workstation"
+      ],
       "related_entities": [
         "item-38",
         "skill-4-3"
@@ -3121,7 +3975,7 @@
         "Alchemy station (internal ID 53)",
         "Alchemy station (internal ID 131)"
       ],
-      "summary": "The early-game and later-game alchemy workstations share one output catalog.",
+      "summary": "The early-game and later-game alchemy workstations share one output catalog. These permanent workstations have their own crafting menu, independent of the field kit's active fire.",
       "acquisition": null,
       "confidence": "inferred",
       "evidence": [
@@ -3152,6 +4006,9 @@
         }
       ],
       "notes": [],
+      "related_stations": [
+        "field-kit"
+      ],
       "variants": [
         {
           "id": "early-game",
@@ -4285,5 +5142,279 @@
       }
     ],
     "confidence": "inferred"
-  }
+  },
+  "guides": [
+    {
+      "title": "Sharp",
+      "paragraphs": [
+        "Sharp attacks cause bleeding. On an unarmored hit point, the attack adds bleeding rather than immediately removing that hit point. Bleeding takes effect at the start of the target's turn and can stack.",
+        "Remaining bleeding spreads in a fixed direction to the next neighboring hit point. Rotating the attack changes that direction. This spread can reach a hit point beneath its armor, so armor does not stop bleeding that has already spread.",
+        "Armor still protects against the initial application: normally, a sharp hit that starts on an armored cell can remove armor but cannot also make that cell bleed. Rank 10 Blade Master allows remaining damage to apply bleeding after breaking through.",
+        "Apply an Improvised Bandage or Bandage to the affected cells to remove bleeding. Stopping bleeding does not itself restore a hit point that has already been lost."
+      ],
+      "related_entities": [
+        "item-143",
+        "item-144",
+        "skill-3-3"
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "32"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.Sharp/ROT"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands.bleed/passThrough;delayed_effects_check.directional-spread"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "healing-grid.bleedStopItem/statusgrid_delete"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "statusgrid_get/statusgrid_delete.bleed-directions"
+        }
+      ]
+    },
+    {
+      "title": "Poison",
+      "paragraphs": [
+        "Poison builds up on individual hit points and takes effect at the start of the target's turn. A poisoned cell is lost and one poison counter is used; remaining poison can move to a randomly chosen adjacent healthy cell, including a diagonal neighbor.",
+        "Poison that spreads can get beneath armor. This does not mean every poison attack ignores armor: an initial poison hit on an armored cell removes one armor layer instead of applying poison there.",
+        "Apply Minor Antidote or Antidote over poisoned cells to clear their poison counters. Antidotes prevent further poison damage but do not restore already lost hit points. Natural Antidote can reduce poison before it takes effect."
+      ],
+      "related_entities": [
+        "item-84",
+        "item-139",
+        "skill-4-4"
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "34"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands.poison;delayed_effects_check.poison/spreadPoints"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "healing-grid.antidoteItem/statusgrid_delete"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_antidote"
+        }
+      ]
+    },
+    {
+      "title": "Blunt",
+      "paragraphs": [
+        "Blunt damage removes armor layers before the protected hit point. A successful blunt attack has a base 12% chance to stun a surviving target, causing it to lose its next turn.",
+        "Master Basher raises the player's stun chance and reduces the AP cost of blunt melee attacks at its rank milestones."
+      ],
+      "related_entities": [
+        "skill-3-1"
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "33"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands;attack_aftermath.stunChance;delayed_effects_check.stunned"
+        }
+      ]
+    },
+    {
+      "title": "Piercing",
+      "paragraphs": [
+        "Piercing damage removes armor layers before the protected hit point. After a point of damage, if the struck cell still has armor or a hit point remaining, there is a 15% chance to remove one additional layer or hit point from that same cell.",
+        "The extra damage is checked during damage application, so a multi-point hit can make more than one check. Piercing is not an unconditional armor bypass."
+      ],
+      "related_entities": [],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "36"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands.piercing/repeat-damage/chance[0.15]"
+        }
+      ]
+    },
+    {
+      "title": "Force",
+      "paragraphs": [
+        "Force damage removes armor layers before the protected hit point. Each positive-damage pattern cell that hits a living part of the target has a base 15% chance to deal one extra damage to an eligible neighboring cell.",
+        "The extra hit can strike a diagonal neighbor and still has to remove armor before its hit point. Force Fighter raises the player's chance and reduces the AP cost of force-based melee attacks at its rank milestones."
+      ],
+      "related_entities": [
+        "skill-3-2"
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "37"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.forceChance/force_spread"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "force_spread.extraCells/attack_lands"
+        }
+      ]
+    },
+    {
+      "title": "Fire",
+      "paragraphs": [
+        "Fire damage removes armor layers before burning the hit point underneath. A burned cell cannot be restored by ordinary wound salves or normal resting regeneration.",
+        "Apply Simple Burn Remedy to turn the burned cell into an ordinary wound. The remedy removes the burn; it does not immediately restore the hit point. The wound can then be healed normally."
+      ],
+      "related_entities": [
+        "item-141"
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "35"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands.fire/hpgrid[-1];player_endturn.heal-grid-equals-zero"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "healing-grid.fireFixItem/hpgrid[-1-to-0]/healItem"
+        }
+      ]
+    },
+    {
+      "title": "Weak",
+      "paragraphs": [
+        "Weak damage is a basic direct hit with no additional damage-type effect. It removes armor layers before the hit point underneath; it does not add bleeding, poison, burns, stun, or the special piercing and force effects."
+      ],
+      "related_entities": [],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "38"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands.default-damage"
+        }
+      ]
+    },
+    {
+      "title": "Health and armor",
+      "paragraphs": [
+        "Health is a shape, not just a total: every occupied health-grid square contains one hit point. Missing positions outside the shape are not hit points and cannot be struck.",
+        "Up to three armor layers can protect each hit point. Armor layers are separate from health: a square with three armor layers still contains only one hit point.",
+        "An attack's pattern is placed over the target's health grid. Only the overlapping attack cells can affect it; the numbers show each cell's damage range, not guaranteed total damage. Attack rotation and dodging change the overlap.",
+        "The wiki shows normal starting health shapes and armor. Actual creatures may be wounded or affected by the story, and equipment, skills, ammunition, and status effects can change combat results."
+      ],
+      "related_entities": [],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints;being_attacks_target.AttPatt/overlap"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.hpgrid/armor;attack_lands"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor;attack_draw"
+        }
+      ]
+    },
+    {
+      "title": "Action points",
+      "paragraphs": [
+        "Action points (AP) are the budget for taking actions during a turn. Attacking, equipping items, crafting, and applying remedies have their own costs, which can include fractions of an AP.",
+        "The player normally has 8 AP per turn. Spending the remaining AP ends the turn. When the next turn begins, AP is replenished, minus any action cost carried over from the previous turn.",
+        "Outside combat, some actions can proceed without enough AP remaining and carry the excess cost into the next turn. Combat checks whether the required AP is available; do not assume an expensive action can always be completed in one turn.",
+        "Ending a turn with AP left can help recover stamina. The world clock advances by eight in-game minutes when the player ends a turn, rather than by a fixed number of minutes for each AP.",
+        "Equipment has a base equip cost of 0.4 AP per square of its inventory footprint. This is distinct from the AP cost of attacking or using the item.",
+        "Skills can reduce AP costs. Examples include Fast Draw for bows, Blade Master for sharp weapons, Master Basher and Force Fighter for their melee weapon types, and Brewer for alchemy crafting."
+      ],
+      "related_entities": [
+        "skill-2-0",
+        "skill-3-3",
+        "skill-3-1",
+        "skill-3-2",
+        "skill-4-3"
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "2/19"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "actionPointsMax/actionPoints[8]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Alarm_0",
+          "key": "actionPointsMax-apDelayed/refill"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_ap_lose/player_ap_or_combat/player_endturn.minute/player_get_attackcost"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "item_is_equippable/equipCost/width/height"
+        }
+      ]
+    }
+  ]
 }
