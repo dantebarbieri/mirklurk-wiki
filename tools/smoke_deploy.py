@@ -6,11 +6,13 @@ import json
 import os
 import secrets
 import socket
+import struct
 import subprocess
 import sys
 import tempfile
 import urllib.parse
 import urllib.request
+import zlib
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, existing_titles, title_key
@@ -18,6 +20,73 @@ from wiki_data import load_data
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def smoke_thumbnail(run, api, base):
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+
+    # Original solid-color RGB pixels; no fixture or game image is read.
+    pixel = bytes((37, 149, 211))
+    signature = b"\x89PNG\r\n\x1a\n"
+    original = (
+        signature
+        + chunk(b"IHDR", struct.pack(">IIBBBBB", 64, 32, 8, 2, 0, 0, 0))
+        + chunk(b"IDAT", zlib.compress((b"\0" + pixel * 64) * 32))
+        + chunk(b"IEND", b"")
+    )
+    run("exec", "-T", "--user", "www-data", "mirklurk", "mkdir", "/tmp/mirklurk-smoke-images")
+    run(
+        "exec", "-T", "--user", "www-data", "mirklurk", "php", "-r",
+        "$image = stream_get_contents(STDIN); "
+        "if (file_put_contents('/tmp/mirklurk-smoke-images/Synthetic-thumbnail.png', $image) !== strlen($image)) "
+        "{ throw new RuntimeException('Synthetic PNG staging failed.'); }",
+        input_bytes=original,
+    )
+    imported = run(
+        "exec", "-T", "--user", "www-data", "mirklurk", "php", "maintenance/run.php",
+        "importImages", "/tmp/mirklurk-smoke-images", "--extensions", "png",
+        "--user", "WikiAdmin", "--skip-dupes",
+        "--comment", "Original synthetic solid-color PNG generated only for this disposable test.",
+    )
+    if b"Added: 1" not in imported.splitlines() or any(
+        line.startswith((b"Failed:", b"Skipped:", b"Overwritten:")) for line in imported.splitlines()
+    ):
+        raise RuntimeError("The synthetic CLI image import did not add exactly one new file.")
+    result = api({
+        "action": "query", "titles": "File:Synthetic-thumbnail.png", "prop": "imageinfo",
+        "iiprop": "url|size|mime", "iiurlwidth": 16,
+    })
+    page = next(iter(result["query"]["pages"].values()))
+    info = page.get("imageinfo", [{}])[0]
+    if info.get("mime") != "image/png" or (info.get("width"), info.get("height")) != (64, 32):
+        raise RuntimeError("The CLI-imported synthetic PNG is missing or has incorrect dimensions.")
+    if (info.get("thumbwidth"), info.get("thumbheight")) != (16, 8):
+        raise RuntimeError("MediaWiki did not generate the requested 16x8 thumbnail.")
+    thumbnail_url = info.get("thumburl")
+    if not thumbnail_url or thumbnail_url == info["url"]:
+        raise RuntimeError("The thumbnail URL is missing or falls back to the original image.")
+    for url, expected_size in ((info["url"], (64, 32)), (thumbnail_url, (16, 8))):
+        if urllib.parse.urlsplit(url)[:2] != urllib.parse.urlsplit(base)[:2]:
+            raise RuntimeError("The synthetic image URL points outside the disposable wiki.")
+        # A fresh opener proves anonymous HTTP access, independent of the API session.
+        with urllib.request.urlopen(url, timeout=30) as response:
+            if response.status != 200 or response.headers.get_content_type() != "image/png":
+                raise RuntimeError("The synthetic image could not be read as a PNG over HTTP.")
+            body = response.read()
+        if len(body) < 24 or body[:8] != signature or body[12:16] != b"IHDR":
+            raise RuntimeError("The served image is not a PNG with a dimension header.")
+        if struct.unpack(">II", body[16:24]) != expected_size:
+            raise RuntimeError("The served image dimensions differ from the requested size.")
+        if expected_size == (64, 32) and body != original:
+            raise RuntimeError("The served original differs from the synthetic imported bytes.")
+        decoded = run(
+            "exec", "-T", "--user", "www-data", "mirklurk", "/usr/bin/convert",
+            "png:-", "-depth", "8", "rgb:-", input_bytes=body,
+        )
+        if decoded != pixel * (expected_size[0] * expected_size[1]):
+            raise RuntimeError("The served PNG did not decode to the expected resized RGB pixels.")
+    print("Synthetic CLI import and anonymous PNG reads passed: original 64x32, decoded thumbnail 16x8.")
 
 
 def smoke():
@@ -47,12 +116,15 @@ def smoke():
         opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
         base = f"http://localhost:{port}"
 
-        def api(parameters, post=False):
+        def api(parameters, post=False, expected_error=None):
             encoded = urllib.parse.urlencode(dict(format="json", **parameters)).encode()
             url = base + "/api.php" + ("" if post else "?" + encoded.decode())
             with opener.open(url, data=encoded if post else None, timeout=30) as response:
                 value = json.load(response)
-            if "error" in value:
+            if expected_error is not None:
+                if value.get("error", {}).get("code") != expected_error:
+                    raise RuntimeError(f"API request did not fail with the expected {expected_error} error.")
+            elif "error" in value:
                 raise RuntimeError(f"API request failed: {value['error'].get('code', 'unknown')}")
             return value
 
@@ -89,6 +161,10 @@ def smoke():
             rights = api({"action": "query", "meta": "userinfo", "uiprop": "rights"})["query"]["userinfo"]["rights"]
             if not {"read", "createaccount"} <= set(rights) or "edit" in rights:
                 raise RuntimeError("Anonymous permissions violate the public-read/account-edit policy.")
+            general = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
+            if "uploadsenabled" in general:
+                raise RuntimeError("Web uploads are unexpectedly enabled.")
+            smoke_thumbnail(run, api, base)
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -121,6 +197,9 @@ def smoke():
             if login.get("login", {}).get("result") != "Success":
                 raise RuntimeError("The freshly created administrator cannot log in.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+            api({
+                "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
+            }, post=True, expected_error="uploaddisabled")
             pages = build_pages(ROOT, load_data(ROOT / "content" / "facts" / "game.json"))
             edit = api({"action": "edit", "title": "Main Page", "text": pages["Main Page"], "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
@@ -145,6 +224,9 @@ def smoke():
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+            api({
+                "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
+            }, post=True, expected_error="uploaddisabled")
             preserved = "Original live edit for the disposable integration test."
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
@@ -158,7 +240,10 @@ def smoke():
             parsed = api({"action": "parse", "page": "Game mechanics", "prop": "wikitext"})
             if parsed["parse"]["wikitext"]["*"] != preserved:
                 raise RuntimeError("Additive reimport changed a live edit.")
-            print("Disposable Docker smoke passed: install, health, access policy, CAPTCHA, seed, edit preservation.")
+            print(
+                "Disposable Docker smoke passed: install, health, access policy, CAPTCHA, seed, "
+                "edit preservation, CLI image import, resized thumbnail, web uploads disabled."
+            )
         except subprocess.CalledProcessError as error:
             # The child only receives mounted secret paths, never literal secrets in argv.
             sys.stderr.write(error.stdout.decode(errors="replace"))

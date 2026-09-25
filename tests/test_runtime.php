@@ -41,6 +41,9 @@ try {
     check($wgGroupPermissions['*']['read'] && $wgGroupPermissions['*']['createaccount'], 'Public access missing.');
     check(!$wgGroupPermissions['*']['edit'] && $wgGroupPermissions['user']['edit'], 'Editing policy mismatch.');
     check(!$wgEnableUploads && !$wgEnableEmail, 'Disabled functionality unexpectedly enabled.');
+    check(!$wgAllowCopyUploads && !$wgAllowExternalImages, 'Remote image access unexpectedly enabled.');
+    check($wgUseImageMagick === true, 'CLI-imported images require the installed ImageMagick renderer.');
+    check($wgImageMagickConvertCommand === '/usr/bin/convert', 'Pinned image renderer path mismatch.');
     check($wgMainCacheType === CACHE_DB && $wgMainStash === CACHE_DB, 'Throttles require shared cache.');
     check($wgCaptchaTriggers['createaccount'] && $wgCaptchaTriggers['addurl'], 'CAPTCHA trigger missing.');
     check(isset($wgCaptchaQuestions['Synthetic &lt;question&gt;']), 'Question HTML was not escaped.');
