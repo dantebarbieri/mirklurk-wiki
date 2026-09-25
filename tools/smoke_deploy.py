@@ -10,6 +10,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.parse
 import urllib.request
 import zlib
@@ -92,6 +93,20 @@ def smoke_reader_release(api, pages):
     for title in ("Poison", "Sharp", "Blunt", "Force", "Piercing", "Fire", "Weak", "Action points"):
         if title not in pages:
             raise RuntimeError("A required canonical guide is missing.")
+
+
+def refreshed_transclusion(run, api, title, expected, forbidden_anchor):
+    # Imports and edits enqueue deferred link updates; allow their bounded completion.
+    for attempt in range(10):
+        run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        if forbidden_anchor in rendered:
+            raise RuntimeError("Selective transclusion leaked the full owner article.")
+        if expected in rendered:
+            return rendered
+        if attempt < 9:
+            time.sleep(2)
+    raise RuntimeError(f"The {title} view did not refresh its owner value after ten job-drain checks.")
 
 
 def smoke_thumbnail(run, api, base):
@@ -323,28 +338,28 @@ def smoke():
                 raise RuntimeError("The item does not expose exactly one canonical price block.")
             before_price, _, rest = original_item.partition("<onlyinclude>")
             _, _, after_price = rest.partition("</onlyinclude>")
+            cached_merchant = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
+            if "111.23 silver" in cached_merchant or 'id="entity-item-105"' in cached_merchant:
+                raise RuntimeError("The merchant price-edit precondition is invalid.")
             updated_item = before_price + "<onlyinclude>111.23 silver</onlyinclude>" + after_price
             price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
             if price_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
-            merchant_html = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
+            refreshed_transclusion(run, api, "Ranger Bhato", "111.23 silver", 'id="entity-item-105"')
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
-            if "111.23 silver" not in merchant_html or 'id="entity-item-105"' in merchant_html:
-                raise RuntimeError("The merchant did not refresh only the item-owned price value.")
             if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
                 raise RuntimeError("Selective price transclusion removed the item's normal full article.")
             coin_title = "Copper Coin"
             coin_text = pages[coin_title].replace("<nowiki>25</nowiki> g", "<nowiki>26</nowiki> g")
             if coin_text == pages[coin_title]:
                 raise RuntimeError("The synthetic coin-weight edit did not target its canonical value.")
+            cached_currency = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
+            if "25 g" not in cached_currency or 'id="entity-item-72"' in cached_currency:
+                raise RuntimeError("The coin-weight edit precondition is invalid.")
             coin_edit = api({"action": "edit", "title": coin_title, "text": coin_text, "token": csrf}, post=True)
             if coin_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update a coin-owned weight.")
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
-            currency_html = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
-            if "26 g" not in currency_html or 'id="entity-item-72"' in currency_html:
-                raise RuntimeError("The currency guide did not refresh only the coin-owned summary table.")
+            refreshed_transclusion(run, api, "Currency and trading", "26 g", 'id="entity-item-72"')
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")

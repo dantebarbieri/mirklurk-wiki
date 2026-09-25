@@ -1,5 +1,62 @@
 {
   "schema_version": 1,
+  "damage_sources": [
+    {
+      "entity": "item-174",
+      "damage_type": "damage-class-2",
+      "delivery": "ammunition",
+      "summary": "Changes the bow attack to Poison.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_projectile_Step_0", "key": "ammoIndex[174].dmgClass/ammoDat.extraDamage/minD/maxD/extraDmg"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"}
+      ]
+    },
+    {
+      "entity": "item-219",
+      "damage_type": "damage-class-2",
+      "delivery": "ammunition",
+      "summary": "Changes the bow attack to Poison.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_projectile_Step_0", "key": "ammoIndex[219].dmgClass/ammoDat.extraDamage/minD/maxD/extraDmg"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"}
+      ]
+    },
+    {
+      "entity": "item-220",
+      "damage_type": "damage-class-2",
+      "delivery": "ammunition",
+      "summary": "Changes the bow attack to Poison.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_projectile_Step_0", "key": "ammoIndex[220].dmgClass/ammoDat.extraDamage/minD/maxD/extraDmg"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"}
+      ]
+    },
+    {
+      "entity": "item-251",
+      "damage_type": "damage-class-2",
+      "delivery": "thrown",
+      "summary": "The flask's impact delivers 8 poison to beings within a 2-tile radius. This thrown effect bypasses armor on its selected healthy cell, unlike an ordinary direct poison weapon hit.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[251].attack_from_nature[8,2,true]/impact-radius[32]"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_from_nature.arg3/hpgrid[1]/attack_lands"}
+      ]
+    },
+    {
+      "entity": "item-253",
+      "damage_type": "damage-class-18",
+      "delivery": "thrown",
+      "summary": "The flask's impact delivers 5 fire damage to beings within a 2-tile radius. This thrown effect bypasses armor on its selected healthy cell, unlike an ordinary direct fire weapon hit.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[253].attack_from_nature[5,18,true]/impact-radius[32]"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_from_nature.arg3/hpgrid[1]/attack_lands"}
+      ]
+    }
+  ],
   "taxonomy": {
     "groups": [
       {
@@ -5190,7 +5247,7 @@
       "title": "Poison",
       "paragraphs": [
         "Poison builds up on individual hit points and takes effect at the start of the target's turn. A poisoned cell is lost and one poison counter is used; remaining poison can move to a randomly chosen adjacent healthy cell, including a diagonal neighbor.",
-        "Poison that spreads can get beneath armor. This does not mean every poison attack ignores armor: an initial poison hit on an armored cell removes one armor layer instead of applying poison there.",
+        "Poison that spreads can get beneath armor. For an ordinary direct poison weapon hit, an armored cell loses one armor layer instead of receiving poison. Thrown effects can have different rules; see the linked thrown item's own effect description.",
         "Apply Minor Antidote or Antidote over poisoned cells to clear their poison counters. Antidotes prevent further poison damage but do not restore already lost hit points. Natural Antidote can reduce poison before it takes effect."
       ],
       "related_entities": [
@@ -5297,7 +5354,7 @@
     {
       "title": "Fire",
       "paragraphs": [
-        "Fire damage removes armor layers before burning the hit point underneath. A burned cell cannot be restored by ordinary wound salves or normal resting regeneration.",
+        "Ordinary direct fire attacks remove armor layers before burning the hit point underneath. Thrown effects can have different rules; see the linked thrown item's own effect description. A burned cell cannot be restored by ordinary wound salves or normal resting regeneration.",
         "Apply Simple Burn Remedy to turn the burned cell into an ordinary wound. The remedy removes the burn; it does not immediately restore the hit point. The wound can then be healed normally."
       ],
       "related_entities": [
@@ -5348,7 +5405,8 @@
         "Health is a shape, not just a total: every occupied health-grid square contains one hit point. Missing positions outside the shape are not hit points and cannot be struck.",
         "Up to three armor layers can protect each hit point. Armor layers are separate from health: a square with three armor layers still contains only one hit point.",
         "An attack's pattern is placed over the target's health grid. Only the overlapping attack cells can affect it; the numbers show each cell's damage range, not guaranteed total damage. Attack rotation and dodging change the overlap.",
-        "The wiki shows normal starting health shapes and armor. Actual creatures may be wounded or affected by the story, and equipment, skills, ammunition, and status effects can change combat results."
+        "The wiki shows normal starting health shapes and armor. Actual creatures may be wounded or affected by the story, and equipment, skills, ammunition, and status effects can change combat results.",
+        "Ammunition can add bonus damage to a bow's pattern. The bonus range is rolled independently for each occupied attack cell; it is not a separate arrow-shaped attack grid."
       ],
       "related_entities": [],
       "confidence": "inferred",
@@ -5367,6 +5425,16 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_gui_general",
           "key": "hpcell_draw.hpValue/armor;attack_draw"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_projectile_Step_0",
+          "key": "ammoDat.extraDamage/minD/maxD/extraDmg"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"
         }
       ]
     },

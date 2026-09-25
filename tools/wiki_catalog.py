@@ -65,7 +65,7 @@ def default_catalog(data):
 
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
-            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides"}, "catalog")
+            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides", "damage_sources"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -88,6 +88,20 @@ def validate_catalog(catalog, data):
     if seen != required:
         raise DataError("catalog pages: every dedicated entity needs exactly one page")
     sources = {source["id"]: source for source in data["sources"]}
+    damage_sources = set()
+    for row in _records(catalog.get("damage_sources", []), "damage sources"):
+        _object(row, {"entity", "damage_type", "delivery", "summary", "confidence", "evidence"}, set(), "damage source")
+        for field, category in (("entity", "item"), ("damage_type", "damage_class")):
+            identity = row[field]
+            if not isinstance(identity, str) or identity not in entities or entities[identity]["category"] != category:
+                raise DataError("damage source: expected known item and damage type")
+        pair = (row["entity"], row["damage_type"])
+        if pair in damage_sources or row["delivery"] not in ("ammunition", "thrown"):
+            raise DataError("damage source: duplicate relation or unknown delivery")
+        damage_sources.add(pair)
+        _text(row["summary"], "damage source.summary", 1200)
+        _confidence(row["confidence"], "damage source.confidence")
+        _evidence(row["evidence"], sources, "damage source.evidence")
     guide_titles = {row["title"] for row in catalog["pages"] if entities[row["entity"]]["category"] == "damage_class"} | {"Action points", "Health and armor"}
     guides_seen = set()
     for guide in _records(catalog.get("guides", []), "guides"):

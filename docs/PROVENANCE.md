@@ -220,6 +220,15 @@ from weapon names. Remedies and related skills link back to the rule owner.
 operator confirmation and optional source evidence. Revival instructions stay
 in Quests and journal, not copied onto character or potion pages.
 
+`damage_sources` adds explicit projectile-handler evidence for ammunition and
+thrown effects not represented by an ordinary weapon's profile damage class.
+Each row has `{entity,damage_type,delivery,summary,confidence,evidence}`; delivery
+is `ammunition` or `thrown`. Effects and their amounts belong to the item.
+Damage-page reverse lists contain only source links and delivery labels.
+The three poison arrows override the bow's damage class. The two reviewed
+flasks bypass armor, so general Poison/Fire rules explicitly distinguish
+ordinary direct hits from item-specific thrown exceptions.
+
 Merchant offers are primarily owned by the merchant. Recipes belong to the
 output item (lowest stable item ID if a future recipe has several outputs).
 Loot belongs to its uniquely identity-cited being, otherwise its outcome item;
@@ -381,6 +390,10 @@ have plain labels and numbers. Movement, time, distance, and other unsupported
 units are not converted to invented real-world quantities. Stored values
 and source scope are unchanged. Initializer weight/value caveats remain
 visible; technical source terminology stays in Source provenance.
+The six ammunition `extra-damage` fields are encoded minimum/maximum ranges,
+not fractional direct damage. Their display decodes the verified projectile
+logic while retaining the raw profile values. Health and armor owns the
+shared per-occupied-cell bonus-roll explanation.
 
 Image metadata has its own exact allowlist and schema, described in
 [IMAGES.md](IMAGES.md). Neither supplemental file changes `game.json`, carries

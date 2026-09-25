@@ -109,6 +109,13 @@ def profile_value(key, value, entities, locations):
         return literal(decimal_text(amount)) + " kg"
     if key == "initial-price":
         return known(value) + " silver equivalents"
+    if key == "extra-damage":
+        amount = Decimal(str(value))
+        low = int(amount)
+        high = int(((amount - low) * 10).to_integral_value())
+        if low < 0 or high < low:
+            raise DataError("ammunition bonus must encode an ordered nonnegative range")
+        return known(low) if low == high else known(low) + "-" + known(high)
     return known(value)
 
 
@@ -140,6 +147,7 @@ PROPERTY_LABELS = {
     "awareness-chance": "Targeting chance", "awareness-distance": "Targeting distance",
     "durability-max": "Durability", "being-armor": "Armor", "item-armor": "Armor",
     "insulation": "Insulation", "waterproof": "Waterproofing", "satiation-gain": "Satiation gain",
+    "extra-damage": "Bonus damage per attack cell",
 }
 LEGACY_PROPERTIES = {
     "weight": "initial-weight", "stacklimit": "stack-limit", "durabilitymax": "durability-max",
@@ -310,6 +318,8 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
         notes.append("Targeting parameters do not establish hostility toward the player.")
     if any(key.endswith("-pattern-min") for key in keys - grid_properties):
         notes.append("Potential damage is before target overlap, armor, and modifiers; it is not guaranteed damage per hit.")
+    if "extra-damage" in keys:
+        notes.append("[[Health and armor|How ammunition bonus rolls modify an attack pattern]].")
     return "\n== Stats ==\n" + markers + "\n" + table(["Detail", "Value", "Applies to / notes"], rows) + " ".join(notes) + "\n"
 
 
@@ -550,6 +560,12 @@ def source_page(data, catalog, details, locations, facts, entries):
         lines.extend(["", "== Combat and action guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
             [f'[[{guide["title"]}]]', literal(guide["confidence"]), evidence_text(guide["evidence"])]
             for guide in sorted(catalog["guides"], key=lambda row: row["title"])
+        ])])
+    if catalog.get("damage_sources"):
+        lines.extend(["", "== Ammunition and thrown damage evidence ==", table(["Editable owner", "Delivery", "Confidence", "Evidence"], [
+            [f'[[{locations[row["entity"]]}#Damage_behavior|{literal(locations[row["entity"]])}]]',
+             literal(row["delivery"]), literal(row["confidence"]), evidence_text(row["evidence"])]
+            for row in sorted(catalog["damage_sources"], key=lambda row: (row["entity"], row["damage_type"]))
         ])])
     skill_records = [row for row in data.get("entries", []) if row["id"].startswith("skill-") and row["id"].endswith("-mechanics")]
     if skill_records:
@@ -907,6 +923,9 @@ def build_pages(root, data, catalog=None, details=None):
             for key, label in (("damage-class-id", "Attack"), ("ranged-damage-class-id", "Ranged attack")):
                 if number is not None and profile["values"].get(key) == number:
                     uses[profile["entity"]].add(label)
+        for source in catalog.get("damage_sources", []):
+            if source["damage_type"] == entity["id"]:
+                uses[source["entity"]].add(source["delivery"].capitalize())
         text = "\n== Weapons and attacks ==\n"
         if uses:
             text += table(["Source", "Attack"], [
@@ -916,6 +935,11 @@ def build_pages(root, data, catalog=None, details=None):
         else:
             text += "No weapon or creature attack is documented for this type yet.\n"
         pages[locations[entity["id"]]] += text
+    for source in sorted(catalog.get("damage_sources", []), key=lambda row: (row["entity"], row["damage_type"])):
+        pages[locations[source["entity"]]] += (
+            "\n== Damage behavior ==\n" + source["delivery"].capitalize() + ": "
+            + entity_link(source["damage_type"], entities, locations) + "\n\n" + literal(source["summary"]) + "\n"
+        )
 
     for history in catalog.get("state_history", []):
         before, after = locations[history["before"]], locations[history["after"]]

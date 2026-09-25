@@ -5,6 +5,7 @@ import json
 import re
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from decimal import Decimal
 
@@ -23,6 +24,7 @@ from wiki_details import (
 )
 from wiki_render import PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
+from smoke_deploy import refreshed_transclusion
 
 
 class CatalogTests(unittest.TestCase):
@@ -248,7 +250,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_catalog_and_profiles_order_do_not_change_output(self):
         catalog, details = copy.deepcopy(self.catalog), copy.deepcopy(self.details)
-        for key in ("pages", "classifications", "entry_links", "guides"):
+        for key in ("pages", "classifications", "entry_links", "guides", "damage_sources"):
             catalog[key].reverse()
         for key in ("profiles", "properties", "grids"):
             details[key].reverse()
@@ -630,7 +632,7 @@ class CatalogTests(unittest.TestCase):
     def test_combat_guides_distinguish_initial_hits_spread_and_remedies(self):
         poison = self.pages["Poison"]
         self.assertIn("Poison that spreads can get beneath armor", poison)
-        self.assertIn("removes one armor layer instead of applying poison", poison)
+        self.assertIn("loses one armor layer instead of receiving poison", poison)
         self.assertIn("do not restore already lost hit points", poison)
         sharp = self.pages["Sharp"]
         self.assertIn("cannot also make that cell bleed", sharp)
@@ -648,11 +650,29 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("0.4 AP per square", self.pages["Action points"])
         self.assertIn("<nowiki>Equip cost</nowiki> || <nowiki>3.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
         self.assertIn("<nowiki>7.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
+        locations = page_locations(self.data, self.catalog)
+        self.assertEqual(len(self.catalog["damage_sources"]), 5)
+        for source in self.catalog["damage_sources"]:
+            item, damage = locations[source["entity"]], locations[source["damage_type"]]
+            self.assertIn(f"[[{item}|", self.pages[damage])
+            self.assertIn(f"[[{damage}|", self.pages[item])
+            self.assertIn(literal(source["summary"]), self.pages[item])
+            self.assertNotIn(literal(source["summary"]), self.pages[damage])
+            self.assertIn(source["delivery"].capitalize(), self.pages[damage])
+        for title in ("Gurb's Flask of Vileness", "Flask of Fire"):
+            self.assertIn("bypasses armor", self.pages[title])
+        for value, expected in ((0, "0"), (0.1, "0-1"), (1.2, "1-2"), (2.3, "2-3")):
+            text = profile_value("extra-damage", value, {}, {})
+            self.assertEqual(re.sub(r"</?nowiki>", "", text), expected)
+        self.assertIn("rolled independently for each occupied attack cell", self.pages["Health and armor"])
         for change in (
             lambda c: c["guides"][0].update(title="Unreviewed guide"),
             lambda c: c["guides"][0].update(paragraphs=[]),
             lambda c: c["guides"][0].update(evidence=[]),
             lambda c: c["guides"][0].update(related_entities=["missing"]),
+            lambda c: c["damage_sources"][0].update(damage_type="item-45"),
+            lambda c: c["damage_sources"][0].update(delivery="melee"),
+            lambda c: c["damage_sources"][0].update(evidence=[]),
         ):
             catalog = copy.deepcopy(self.catalog)
             change(catalog)
@@ -675,6 +695,21 @@ def synthetic_details():
 
 
 class ProfileTests(unittest.TestCase):
+    def test_transclusion_smoke_waits_for_jobs_but_never_masks_leaks_or_timeout(self):
+        outputs = iter(("old price", "new price"))
+        calls = []
+        run = lambda *args: calls.append(args)
+        api = lambda args: {"parse": {"text": {"*": next(outputs)}}}
+        with patch("smoke_deploy.time.sleep"):
+            self.assertEqual(refreshed_transclusion(run, api, "Merchant", "new price", "owner-anchor"), "new price")
+        self.assertEqual(len(calls), 2)
+        for response in ("old price", "new price owner-anchor"):
+            calls.clear()
+            api = lambda args: {"parse": {"text": {"*": response}}}
+            with patch("smoke_deploy.time.sleep"), self.assertRaises(RuntimeError):
+                refreshed_transclusion(run, api, "Merchant", "new price", "owner-anchor")
+            self.assertEqual(len(calls), 1 if "owner-anchor" in response else 10)
+
     def test_damage_class_ids_link_to_the_canonical_damage_page(self):
         data = synthetic_data()
         entity = copy.deepcopy(data["entities"][0])

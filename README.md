@@ -37,6 +37,9 @@ Original accessible HTML/CSS tables use no game image assets. Health cells
 represent one HP with separate armor; summed attack ranges are not maximum
 actual damage. Damage pages explain initial-hit versus spreading status
 effects and link to their weapons, attacks, skills, and remedies.
+Explicit projectile evidence adds poison-ammunition and thrown-flask links,
+including the flasks' armor-bypass exceptions. Ammunition bonus ranges are
+decoded per attack cell, not shown as misleading fractional damage.
 
 The metadata-only artwork register covers 323 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
