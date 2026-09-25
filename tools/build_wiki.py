@@ -67,6 +67,15 @@ def quantities(items, entities):
     )
 
 
+def quest_order(entry):
+    quest_id = entry["details"]["quest_id"]
+    if quest_id == "First":
+        return (0, 0, entry["id"])
+    if quest_id.isdecimal():
+        return (1, int(quest_id), entry["id"])
+    return (2, quest_id, entry["id"])
+
+
 def render_entry(entry, entities, facts):
     details = entry["details"]
     lines = [
@@ -242,6 +251,8 @@ def build_pages(root, data):
     illustrations = sorted(data.get("illustrations", []), key=lambda item: item["id"])
     for title in sorted(pages):
         matching = [entry for entry in entries if entry_page(entry) == title]
+        if title == "Quests and journal":
+            matching.sort(key=quest_order)
         if matching:
             pages[title] += "\n== Documented entries ==\n"
             pages[title] += "\n".join(render_entry(entry, entities_by_id, facts_by_id) for entry in matching)

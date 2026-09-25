@@ -2,6 +2,7 @@ import copy
 from collections import Counter
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -213,6 +214,40 @@ class DataTests(unittest.TestCase):
 
 
 class ResearchTests(unittest.TestCase):
+    def test_quests_render_prologue_then_numeric_stages_and_related_location(self):
+        data = research_data()
+        quest = data["entries"][0]
+        expected = [
+            ("journal-first", "First"), ("journal-1", "1"), ("journal-2", "2"),
+            ("journal-7", "7"), ("journal-7-location", "7"),
+            ("journal-10", "10"), ("journal-30", "30"),
+            ("fallback-z", "Appendix"), ("fallback-a", "Epilogue"),
+        ]
+        data["entries"] = []
+        for identity, quest_id in reversed(expected):
+            entry = copy.deepcopy(quest)
+            entry["id"] = identity
+            entry["details"]["quest_id"] = quest_id
+            data["entries"].append(entry)
+        original = copy.deepcopy(data)
+        page = build_pages(ROOT, data)["Quests and journal"]
+        self.assertEqual(
+            re.findall(r'<span id="entry-([^"]+)"></span>', page),
+            [identity for identity, _ in expected],
+        )
+        self.assertEqual(data, original)
+        data["entries"].reverse()
+        self.assertEqual(build_pages(ROOT, data)["Quests and journal"], page)
+
+    def test_other_entry_kinds_retain_lexicographic_id_order(self):
+        data = load_data(ROOT / "content" / "facts" / "game.json")
+        for title, page in build_pages(ROOT, data).items():
+            if title == "Quests and journal":
+                continue
+            with self.subTest(page=title):
+                identities = re.findall(r'<span id="entry-([^"]+)"></span>', page)
+                self.assertEqual(identities, sorted(identities))
+
     def test_original_version_one_needs_no_extension_fields(self):
         data = synthetic_data()
         validate_data(data)
