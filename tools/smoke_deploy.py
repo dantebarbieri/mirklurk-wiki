@@ -4,15 +4,18 @@ import argparse
 import http.cookiejar
 import json
 import os
+import re
 import secrets
 import socket
 import struct
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.parse
 import urllib.request
 import zlib
+from html.parser import HTMLParser
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, existing_titles, title_key
@@ -20,6 +23,116 @@ from wiki_details import load_publication_inputs
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class RenderedGrids(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.grids = []
+        self.active = False
+        self.cell = None
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "table" and "mirklurk-cell-grid" in attrs.get("class", "").split():
+            self.active = True
+            self.grids.append([])
+        elif self.active and tag == "tr":
+            self.grids[-1].append([])
+        elif self.active and tag == "td":
+            self.cell = {"attrs": attrs, "text": ""}
+            self.grids[-1][-1].append(self.cell)
+
+    def handle_endtag(self, tag):
+        if tag == "table":
+            self.active = False
+        elif tag == "td":
+            self.cell = None
+
+    def handle_data(self, data):
+        if self.active and self.cell is not None:
+            self.cell["text"] += data
+
+
+def smoke_reader_release(api, pages):
+    for title, category in (("Nightmare", "Bugs"), ("Mirk Runner", "Rodents"),
+                            ("Sceetler", "Scaalmyr"), ("Mudfin", "Aquatic creatures")):
+        result = api({"action": "query", "titles": title, "prop": "categories"})["query"]["pages"]
+        categories = next(iter(result.values())).get("categories", [])
+        if "Category:" + category not in {row["title"] for row in categories}:
+            raise RuntimeError("Imported category membership is missing.")
+    for title in ("Thorns of Wackah", "Nightmare"):
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        parsed = RenderedGrids()
+        parsed.feed(rendered)
+        if not parsed.grids:
+            raise RuntimeError("MediaWiki did not render the cell grid.")
+        rows = parsed.grids[0]
+        if title == "Thorns of Wackah":
+            if len(rows) != 4 or any(len(row) != 2 for row in rows):
+                raise RuntimeError("Thorns attack grid orientation changed.")
+            if any(cell["text"].strip() != "1-4" for row in rows for cell in row):
+                raise RuntimeError("Thorns attack cells lost their per-cell ranges.")
+        else:
+            holes = {(y, x) for y, row in enumerate(rows) for x, cell in enumerate(row)
+                     if "grid-hole" in cell["attrs"].get("class", "")}
+            if len(rows) != 7 or any(len(row) != 3 for row in rows) or holes != {(y, 2 if y % 2 == 0 else 0) for y in range(7)}:
+                raise RuntimeError("Nightmare base-health shape lost its alternating holes.")
+        for row in rows:
+            for cell in row:
+                if not cell["attrs"].get("aria-label", "").startswith("Row "):
+                    raise RuntimeError("Grid cell accessibility labels were stripped.")
+                if "grid-cell" in cell["attrs"].get("class", "") and "background" not in cell["attrs"].get("style", ""):
+                    raise RuntimeError("Grid cell styling was stripped.")
+    for title, expected in (
+        ("Survivor's Field Kit", "2 gold"), ("Gurb-Gurb", "2 gold"),
+        ("Fine Wool Socks", "50%"), ("Steel Hand Axe", "AP"),
+    ):
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        if expected not in rendered:
+            raise RuntimeError("Reader-facing coin, percentage or AP formatting did not survive parsing.")
+    for title in ("Poison", "Sharp", "Blunt", "Force", "Piercing", "Fire", "Weak", "Action points"):
+        if title not in pages:
+            raise RuntimeError("A required canonical guide is missing.")
+
+
+def wait_for_server_tick(api):
+    # MediaWiki invalidates only when cache time < page_touched, both whole seconds.
+    query = {"action": "query", "curtimestamp": 1}
+    before = api(query)["curtimestamp"]
+    for _ in range(20):
+        time.sleep(0.1)
+        if api(query)["curtimestamp"] > before:
+            return
+    raise RuntimeError("The wiki server clock did not advance before the synthetic edit.")
+
+
+def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
+    # Imports and edits enqueue deferred link updates; allow their bounded completion.
+    for attempt in range(10):
+        run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        if forbidden_anchor in rendered:
+            raise RuntimeError("Selective transclusion leaked the full owner article.")
+        if expected in rendered:
+            return rendered
+        if attempt < 9:
+            time.sleep(2)
+    if owner:
+        cache_diagnostics(api, title, owner, rendered)
+        print("Remaining jobs:", run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "showJobs").decode(), flush=True)
+    raise RuntimeError(f"The {title} view did not refresh its owner value after ten job-drain checks.")
+
+
+def cache_diagnostics(api, title, owner, rendered):
+    state = api({"action": "query", "titles": title + "|" + owner, "prop": "info|revisions",
+                 "rvprop": "ids|timestamp", "curtimestamp": 1})
+    print("Transclusion timestamps:", json.dumps({
+        "server": state["curtimestamp"],
+        "cached": re.findall(r"(?:Cached time:|timestamp)\s*(\d{14})", rendered),
+        "pages": [{key: page[key] for key in ("title", "touched", "lastrevid", "revisions")}
+                  for page in state["query"]["pages"].values()],
+    }), flush=True)
 
 
 def smoke_thumbnail(run, api, base):
@@ -210,9 +323,14 @@ def smoke():
             excluded = existing_titles(current)
             missing = {title: text for title, text in pages.items() if title_key(title) not in excluded}
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=build_xml(missing))
-            indexed = api({"action": "query", "list": "allpages", "aplimit": "max"})["query"]["allpages"]
+            indexed = []
+            for namespace in (0, 14):
+                indexed.extend(api({"action": "query", "list": "allpages", "apnamespace": namespace,
+                                    "aplimit": "max"})["query"]["allpages"])
             if set(pages) != {page["title"] for page in indexed}:
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            smoke_reader_release(api, pages)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
@@ -246,28 +364,34 @@ def smoke():
                 raise RuntimeError("The item does not expose exactly one canonical price block.")
             before_price, _, rest = original_item.partition("<onlyinclude>")
             _, _, after_price = rest.partition("</onlyinclude>")
+            cached_merchant = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
+            if "111.23 silver" in cached_merchant or 'id="entity-item-105"' in cached_merchant:
+                raise RuntimeError("The merchant price-edit precondition is invalid.")
+            cache_diagnostics(api, "Ranger Bhato", price_title, cached_merchant)
             updated_item = before_price + "<onlyinclude>111.23 silver</onlyinclude>" + after_price
+            wait_for_server_tick(api)
             price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
             if price_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
-            merchant_html = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
+            print("Owner edit timestamp:", price_edit["edit"]["newtimestamp"], flush=True)
+            refreshed_transclusion(run, api, "Ranger Bhato", "111.23 silver", 'id="entity-item-105"', price_title)
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
-            if "111.23 silver" not in merchant_html or 'id="entity-item-105"' in merchant_html:
-                raise RuntimeError("The merchant did not refresh only the item-owned price value.")
             if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
                 raise RuntimeError("Selective price transclusion removed the item's normal full article.")
             coin_title = "Copper Coin"
             coin_text = pages[coin_title].replace("<nowiki>25</nowiki> g", "<nowiki>26</nowiki> g")
             if coin_text == pages[coin_title]:
                 raise RuntimeError("The synthetic coin-weight edit did not target its canonical value.")
+            cached_currency = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
+            if "25 g" not in cached_currency or 'id="entity-item-72"' in cached_currency:
+                raise RuntimeError("The coin-weight edit precondition is invalid.")
+            cache_diagnostics(api, "Currency and trading", coin_title, cached_currency)
+            wait_for_server_tick(api)
             coin_edit = api({"action": "edit", "title": coin_title, "text": coin_text, "token": csrf}, post=True)
             if coin_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update a coin-owned weight.")
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
-            currency_html = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
-            if "26 g" not in currency_html or 'id="entity-item-72"' in currency_html:
-                raise RuntimeError("The currency guide did not refresh only the coin-owned summary table.")
+            print("Owner edit timestamp:", coin_edit["edit"]["newtimestamp"], flush=True)
+            refreshed_transclusion(run, api, "Currency and trading", "26 g", 'id="entity-item-72"', coin_title)
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")

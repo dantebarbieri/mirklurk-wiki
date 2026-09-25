@@ -9,6 +9,7 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -18,6 +19,7 @@ from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILE
 from check_publication import blob_errors
 from wiki_catalog import entry_owners, entry_relations, default_catalog, page_locations
 from wiki_render import recipe_groups
+from smoke_deploy import wait_for_server_tick
 
 
 def synthetic_data():
@@ -97,6 +99,31 @@ def illustration_data(approved=False):
     return data
 
 
+class SmokeClockTests(unittest.TestCase):
+    def test_owner_edit_waits_for_a_distinct_server_second(self):
+        api = Mock(side_effect=[
+            {"curtimestamp": "2026-09-25T22:58:51Z"},
+            {"curtimestamp": "2026-09-25T22:58:51Z"},
+            {"curtimestamp": "2026-09-25T22:58:52Z"},
+        ])
+        with patch("smoke_deploy.time.sleep") as sleep:
+            wait_for_server_tick(api)
+        self.assertEqual(api.call_count, 3)
+        self.assertEqual(sleep.call_count, 2)
+        for call in api.call_args_list:
+            self.assertEqual(call.args, ({"action": "query", "curtimestamp": 1},))
+
+    def test_stopped_or_backward_server_clock_fails_within_the_bound(self):
+        for later in ("2026-09-25T22:58:51Z", "2026-09-25T22:58:50Z"):
+            with self.subTest(later=later):
+                api = Mock(side_effect=[{"curtimestamp": "2026-09-25T22:58:51Z"}]
+                           + [{"curtimestamp": later}] * 20)
+                with patch("smoke_deploy.time.sleep") as sleep, self.assertRaisesRegex(RuntimeError, "clock"):
+                    wait_for_server_tick(api)
+                self.assertEqual(api.call_count, 21)
+                self.assertEqual(sleep.call_count, 20)
+
+
 class DataTests(unittest.TestCase):
     def test_curated_json_exact_size_boundary(self):
         raw = json.dumps(synthetic_data()).encode()
@@ -126,7 +153,7 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 344)
+        self.assertEqual(len(pages), 363)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
@@ -265,7 +292,7 @@ class ResearchTests(unittest.TestCase):
         data = synthetic_data()
         validate_data(data)
         pages = build_pages(ROOT, data)
-        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance", "NPCs", "Entity synthetic-item"})
+        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance", "NPCs", "Entity synthetic-item", "Category:Items"})
         self.assertNotIn("More researched topics", pages["Main Page"])
         self.assertNotIn("Illustration references", pages["Items"])
 
@@ -308,7 +335,7 @@ class ResearchTests(unittest.TestCase):
             details.update(outcome=None, quantity=quantity, probability=0.25, rolls={"min": 0, "max": 1})
             page = build_pages(ROOT, data)["Synthetic merchant"]
             self.assertIn("No items", page)
-            self.assertIn("<nowiki>0.25</nowiki>", page)
+            self.assertIn("<nowiki>25</nowiki>%", page)
 
     def test_invalid_structured_claims_fail(self):
         changes = [

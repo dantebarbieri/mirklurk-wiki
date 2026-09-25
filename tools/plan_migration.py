@@ -29,11 +29,13 @@ def read_snapshot(path):
         page_namespace = page.findtext(f"{prefix}ns")
         if not title or not title.strip() or page_namespace is None or not page_namespace.isdecimal():
             raise DataError("Snapshot contains an invalid page identity")
-        if page_namespace != "0":
+        if page_namespace not in {"0", "14"}:
             continue
+        if (page_namespace == "14") != title_key(title).startswith("Category:"):
+            raise DataError("Snapshot contains a title/namespace mismatch")
         revisions = page.findall(f"{prefix}revision")
         if len(revisions) != 1:
-            raise DataError("Snapshot must contain exactly one current revision per main-namespace page")
+            raise DataError("Snapshot must contain exactly one current revision per managed-namespace page")
         text = revisions[0].find(f"{prefix}text")
         if text is None or "deleted" in text.attrib or "location" in text.attrib:
             raise DataError("Snapshot has unavailable page text; cannot safely compare it")
@@ -74,6 +76,7 @@ def plan_migration(base, current, desired):
             "desired_sha256": text_hash(target),
         })
     dependencies = []
+    new_page_dependencies = []
     for title, text in sorted(desired.items()):
         targets = sorted({title_key(target) for target in re.findall(r"\{\{:([^{}\n|]+)\}\}", text)})
         for target in targets:
@@ -85,11 +88,19 @@ def plan_migration(base, current, desired):
                 "page": title, "price_owner": target,
                 "current_price_block_ready": live.count("<onlyinclude>") == 1 and live.count("</onlyinclude>") == 1,
             })
+        linked_titles = {title_key(target.lstrip(":").split("#", 1)[0])
+                         for target in re.findall(r"\[\[([^\]|]+)", text)}
+        for target in sorted(linked_titles & (desired.keys() - base.keys())):
+            if target != title:
+                new_page_dependencies.append({
+                    "page": title, "target": target, "current_target_exists": target in current,
+                })
     return {
         "schema_version": 1,
         "notice": "Review only. No writes authorized. Freeze writers and verify current hashes before any operator action.",
         "pages": records,
         "price_dependencies": dependencies,
+        "new_page_dependencies": new_page_dependencies,
     }
 
 

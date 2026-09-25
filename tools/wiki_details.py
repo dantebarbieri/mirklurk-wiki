@@ -11,7 +11,7 @@ from wiki_data import (
 from wiki_catalog import DEDICATED_CATEGORIES, load_catalog
 
 
-MAX_DETAILS_BYTES = 512 * 1024
+MAX_DETAILS_BYTES = 768 * 1024
 MAX_ILLUSTRATIONS_BYTES = 512 * 1024
 
 
@@ -38,7 +38,7 @@ def parse_document(raw, maximum):
 
 
 def validate_details(details, data):
-    _object(details, {"schema_version", "properties", "profiles"}, set(), "entity details")
+    _object(details, {"schema_version", "properties", "profiles"}, {"grids"}, "entity details")
     if type(details["schema_version"]) is not int or details["schema_version"] != 1:
         raise DataError("entity details schema_version: expected integer 1")
     properties = set()
@@ -73,6 +73,62 @@ def validate_details(details, data):
                 raise DataError("profile value refers to an undeclared property")
             if value is not None and type(value) is not bool:
                 _number(value, f"profile.values.{key}", minimum=-(10**15))
+    grid_ids = set()
+    grid_owners = set()
+    grids = _records(details.get("grids", []), "grids")
+    if len(grids) > 256:
+        raise DataError("grids: expected at most 256 reviewed grids")
+    for grid in grids:
+        _object(grid, {"id", "entity", "kind", "rows", "context", "confidence", "evidence"}, set(), "grid")
+        identity = _identifier(grid["id"], "grid.id")
+        if identity in grid_ids:
+            raise DataError("grid: duplicate ID")
+        grid_ids.add(identity)
+        entity = grid["entity"]
+        kind = grid["kind"]
+        if not isinstance(entity, str) or entity not in entities or entities[entity]["category"] not in {"item", "being"}:
+            raise DataError("grid: expected known item or being")
+        if not isinstance(kind, str) or kind not in {"health", "melee", "ranged"} or (entity, kind) in grid_owners:
+            raise DataError("grid: unsupported or duplicate entity/kind")
+        grid_owners.add((entity, kind))
+        if kind == "health" and entities[entity]["category"] != "being":
+            raise DataError("grid: health belongs to beings")
+        _text(grid["context"], "grid.context", 1200)
+        _confidence(grid["confidence"], "grid.confidence")
+        _evidence(grid["evidence"], sources, "grid.evidence")
+        rows = grid["rows"]
+        if not isinstance(rows, list) or not 1 <= len(rows) <= 32:
+            raise DataError("grid: expected one to thirty-two rows")
+        if not isinstance(rows[0], list) or not 1 <= len(rows[0]) <= 32:
+            raise DataError("grid: expected one to thirty-two columns")
+        width = len(rows[0])
+        occupied = []
+        for row in rows:
+            if not isinstance(row, list) or len(row) != width:
+                raise DataError("grid: rows must be rectangular; use null for holes")
+            for cell in row:
+                if cell is None:
+                    continue
+                if kind == "health":
+                    _object(cell, {"health", "armor"}, set(), "health cell")
+                    if type(cell["health"]) is not int or cell["health"] != 1:
+                        raise DataError("health cell: base health is exactly one; wounded states are not base health")
+                    _number(cell["armor"], "health cell.armor", maximum=3, integer=True)
+                else:
+                    _object(cell, {"min", "max"}, set(), "attack cell")
+                    _number(cell["min"], "attack cell.min", maximum=1000, integer=True)
+                    _number(cell["max"], "attack cell.max", minimum=max(1, cell["min"]), maximum=1000, integer=True)
+                occupied.append(cell)
+        if kind == "health" and not occupied:
+            raise DataError("health grid: at least one occupied cell required")
+        values = {key: value for profile in details["profiles"] if profile["entity"] == entity
+                  for key, value in profile["values"].items()}
+        if kind == "health":
+            expected = {"hp-grid-width": width, "hp-grid-height": len(rows)}
+        else:
+            expected = {f"{kind}-pattern-{bound}": sum(cell[bound] for cell in occupied) for bound in ("min", "max")}
+        if any(key not in values or values[key] != value for key, value in expected.items()):
+            raise DataError("grid: shape or occupied-cell totals disagree with reviewed scalar profile")
     return details
 
 
@@ -107,7 +163,8 @@ def validate_coin_profiles(catalog, details):
     for coin in catalog.get("currency", {}).get("coins", []):
         matching = [row for row in details["profiles"] if row["entity"] == coin["entity"]]
         for field, property_id in (("value_in_silver", "initial-price"), ("weight_kg", "initial-weight"), ("stack_limit", "stack-limit")):
-            if not any(row["values"].get(property_id) == coin[field] for row in matching):
+            if not any(row["values"].get(property_id) is not None
+                       and Decimal(str(row["values"][property_id])) == Decimal(str(coin[field])) for row in matching):
                 raise DataError("coin summary must agree with its reviewed initializer profile")
         if Decimal(str(coin["weight_kg"])) * 1000 != Decimal(str(coin["weight_grams"])):
             raise DataError("coin kilogram and gram values disagree")

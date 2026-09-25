@@ -5,4 +5,4 @@ This guide documents installed build '''0.8.1.5'''. Behavior may differ in other
 
 Missing information is unknown, not zero. Do not add bonuses together unless their interaction is documented.
 
-[[Skills]] | [[Damage types]] | [[Main Page]] | [[Evidence and spoilers]]
+[[Skills]] | [[Damage types]] | [[Health and armor]] | [[Action points]] | [[Main Page]] | [[Evidence and spoilers]]

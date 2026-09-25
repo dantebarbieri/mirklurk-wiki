@@ -1,5 +1,5 @@
-This page indexes short damage-class names recorded in the local source.
+Damage types describe how an attack interacts with health cells, armor, and status effects. Choose a type below for its rules and links to weapons or creatures that use it.
 
-A named class does not establish a resistance formula, a weakness, a damage-over-time rule, or the class of a particular attack. Any such relationship needs its own evidence.
+Attack patterns show where a hit can land; they are not a promise that every cell will damage the target. Armor, overlap, and other modifiers still matter.
 
 [[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

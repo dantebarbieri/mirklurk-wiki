@@ -1,0 +1,5 @@
+Combat uses shaped health and attack grids. Individual [[Bestiary|creature]], [[NPCs|character]], and [[Items|item]] pages own their base patterns and cell values.
+
+The original diagrams on this wiki use text and colored cells, not game images. Red cells show unarmored health or an attack range; brown health cells also display their armor count. Empty positions are left blank.
+
+[[Damage types]] | [[Action points]] | [[Game mechanics]] | [[Main Page]]

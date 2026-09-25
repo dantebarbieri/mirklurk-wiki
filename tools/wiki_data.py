@@ -3,6 +3,7 @@
 import json
 import math
 import re
+from decimal import Decimal
 from pathlib import Path
 
 
@@ -17,6 +18,8 @@ PAGE_FILES = {
     "Nature": "Nature.wiki",
     "Skills": "Skills.wiki",
     "Damage types": "Damage_types.wiki",
+    "Action points": "Action_points.wiki",
+    "Health and armor": "Health_and_armor.wiki",
 }
 RESEARCH_PAGE_FILES = {
     "Quests and journal": "Quests_and_journal.wiki",
@@ -117,8 +120,8 @@ def _confidence(value, location):
 
 
 def _number(value, location, minimum=0, maximum=10**15, integer=False):
-    types = {int} if integer else {int, float}
-    if type(value) not in types or not minimum <= value <= maximum:
+    types = {int} if integer else {int, float, Decimal}
+    if type(value) not in types or (isinstance(value, Decimal) and not value.is_finite()) or not minimum <= value <= maximum:
         raise DataError(f"{location}: expected a finite {'integer' if integer else 'number'} from {minimum} to {maximum}")
 
 
