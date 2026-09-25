@@ -4,6 +4,7 @@ import argparse
 import http.cookiejar
 import json
 import os
+import re
 import secrets
 import socket
 import struct
@@ -107,6 +108,17 @@ def refreshed_transclusion(run, api, title, expected, forbidden_anchor):
         if attempt < 9:
             time.sleep(2)
     raise RuntimeError(f"The {title} view did not refresh its owner value after ten job-drain checks.")
+
+
+def cache_diagnostics(api, title, owner, rendered):
+    state = api({"action": "query", "titles": title + "|" + owner, "prop": "info|revisions",
+                 "rvprop": "ids|timestamp", "curtimestamp": 1})
+    print("Transclusion timestamps:", json.dumps({
+        "server": state["curtimestamp"],
+        "cached": re.findall(r"(?:Cached time:|timestamp)\s*(\d{14})", rendered),
+        "pages": [{key: page[key] for key in ("title", "touched", "lastrevid", "revisions")}
+                  for page in state["query"]["pages"].values()],
+    }), flush=True)
 
 
 def smoke_thumbnail(run, api, base):
@@ -341,11 +353,18 @@ def smoke():
             cached_merchant = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
             if "111.23 silver" in cached_merchant or 'id="entity-item-105"' in cached_merchant:
                 raise RuntimeError("The merchant price-edit precondition is invalid.")
+            cache_diagnostics(api, "Ranger Bhato", price_title, cached_merchant)
             updated_item = before_price + "<onlyinclude>111.23 silver</onlyinclude>" + after_price
             price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
             if price_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
-            refreshed_transclusion(run, api, "Ranger Bhato", "111.23 silver", 'id="entity-item-105"')
+            try:
+                refreshed_transclusion(run, api, "Ranger Bhato", "111.23 silver", 'id="entity-item-105"')
+            except RuntimeError:
+                rendered = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
+                cache_diagnostics(api, "Ranger Bhato", price_title, rendered)
+                print("Remaining jobs:", run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "showJobs").decode(), flush=True)
+                raise
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
             if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
                 raise RuntimeError("Selective price transclusion removed the item's normal full article.")
