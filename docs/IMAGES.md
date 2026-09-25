@@ -63,6 +63,11 @@ The pinned MediaWiki CLI supports `importImages`, `--dry`, `--comment-ext`,
 rather than the web-upload form. No change to `$wgEnableUploads` is made:
 anonymous and registered-user web uploads remain disabled.
 
+Thumbnail generation requires a renderer even though web uploads are disabled.
+The runtime template explicitly enables ImageMagick at `/usr/bin/convert`, already
+installed in the pinned MediaWiki image; PHP GD is not available there. Rebuild
+and recreate the app from the reviewed template rather than editing live settings.
+
 The following Linux commands are **instructions only**. They require explicit
 operator authorization, reviewed rights, an existing image-volume mount, the
 same app/database configuration, a valid operator account, and a verified
@@ -96,5 +101,7 @@ merge affected live wiki pages through the normal review process.
 The image volume and database must be backed up and restored together. Do not
 copy random exports directly into MediaWiki's hashed image directories.
 The repository neither performs this procedure nor supplies any artwork.
-CI checks CLI availability only; it does not import game images or assert that
-any artwork is cleared for publication.
+CI imports only an original synthetic PNG generated inside its disposable test,
+then reads and decodes an actually resized thumbnail over anonymous HTTP while
+web uploads stay disabled. No image fixture is stored in Git or CI artifacts.
+This does not import game images or establish that any artwork is cleared for publication.

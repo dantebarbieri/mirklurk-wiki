@@ -32,7 +32,8 @@ never recursively change ownership of a shared parent directory.
 
 Future rights-approved server-only illustrations use [the private operator import
 workflow](IMAGES.md). No artwork is supplied or cleared by this repository, and
-web uploads remain disabled.
+web uploads remain disabled. The runtime explicitly uses the pinned image's
+`/usr/bin/convert` (ImageMagick) for thumbnails; it does not rely on PHP GD.
 
 The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
@@ -158,6 +159,10 @@ available, run `python tools/smoke_deploy.py --run`. The latter creates its own
 randomly named Compose project and temporary generated credentials; it checks
 installation refusal on reuse, health, anonymous permissions, CAPTCHA-protected
 self-registration, ordinary account editing, seed import, and preservation of live edits.
+It also generates an original synthetic PNG outside the checkout, imports it by
+CLI as `www-data`, and anonymously fetches and decodes a 16x8 thumbnail of the
+64x32 original, rejecting original-URL fallbacks. Administrator and ordinary-user
+web-upload attempts must still fail as disabled. No game images are used or retained.
 It removes only its own containers, network, volume, and temporary files.
 
 CI runs that disposable test on GitHub's runner. It does not deploy an image,
