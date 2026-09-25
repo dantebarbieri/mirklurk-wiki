@@ -1,0 +1,20 @@
+Welcome to the independent '''MirkLurk Wiki''': a community reference built from carefully attributed facts and original explanations.
+
+== Explore ==
+* [[Getting started]] - how to use this wiki without mistaking evidence for certainty
+* [[Game mechanics]] - sourced observations and open questions
+* [[Items]] - short item-name index
+* [[Bestiary]] - beings named in the source, including possible non-hostile characters
+* [[Nature]] - short nature-name index
+* [[Skills]] - skill groups, names, and evidence
+* [[Damage types]] - named damage classes
+
+== Read the caveats ==
+Catalogues may reveal names before you encounter them in play. A source entry is not proof that content is available in the current game. [[Evidence and spoilers|Read the spoiler and build caveats]].
+
+The installed release used for initial research has not been identified. [[Source provenance|Source hashes]] distinguish the researched files without distributing those files.
+
+== Contribute responsibly ==
+Use your own words, cite the precise evidence, and distinguish a localization description from tested behavior. [[Research policy|Our research policy]] excludes game assets, copied descriptions, dialogue, and decompiled code.
+
+This is not an official game publication. Game names and other third-party material remain subject to their owners' rights.

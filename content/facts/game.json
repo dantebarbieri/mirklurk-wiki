@@ -1,0 +1,5957 @@
+{
+  "schema_version": 1,
+  "game": {
+    "name": "MirkLurk",
+    "developer": null,
+    "build": null,
+    "steam_app_id": 3972980
+  },
+  "sources": [
+    {
+      "id": "items-en",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "b490c5e7a52fae1e88d14cd204b1927d15ec415492aabe719f2fc4db19798252",
+      "build": null
+    },
+    {
+      "id": "beings-en",
+      "path": "Languages\\English\\Bestiary.ini",
+      "sha256": "8f07f33f590d2b75e4420ff8a8985d905682769ee9278ec782204acc08570154",
+      "build": null
+    },
+    {
+      "id": "nature-en",
+      "path": "Languages\\English\\Nature.ini",
+      "sha256": "5b2910545b5d441ea947fca4f0221e1485c861911d4bac6f9650d64e123b8303",
+      "build": null
+    },
+    {
+      "id": "ui-en",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "9e0041a39060a6e6d98a23e44e482f4fe81b9e04f6d917915ed20982d53e4c54",
+      "build": null
+    },
+    {
+      "id": "game-data",
+      "path": "data.win",
+      "sha256": "163d02abb9e514b603736633121bb3e6240e88dc81fb66a83b6f43f3d7660205",
+      "build": null
+    }
+  ],
+  "entities": [
+    {
+      "id": "item-0",
+      "category": "item",
+      "name": "Wood Buckler",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "item-1",
+      "category": "item",
+      "name": "Iron Buckler",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "item-2",
+      "category": "item",
+      "name": "Shoddy Dagger",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "item-3",
+      "category": "item",
+      "name": "Iron Dagger",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "item-4",
+      "category": "item",
+      "name": "Steel Dagger",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "item-5",
+      "category": "item",
+      "name": "Decent Hunting Knife",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "5"
+        }
+      ]
+    },
+    {
+      "id": "item-6",
+      "category": "item",
+      "name": "Great Hunting Knife",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "6"
+        }
+      ]
+    },
+    {
+      "id": "item-7",
+      "category": "item",
+      "name": "Hunter Master's Knife",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "7"
+        }
+      ]
+    },
+    {
+      "id": "item-8",
+      "category": "item",
+      "name": "Steel Longsword",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "8"
+        }
+      ]
+    },
+    {
+      "id": "item-9",
+      "category": "item",
+      "name": "Iron Shortsword",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "9"
+        }
+      ]
+    },
+    {
+      "id": "item-10",
+      "category": "item",
+      "name": "Steel Shortsword",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "10"
+        }
+      ]
+    },
+    {
+      "id": "item-11",
+      "category": "item",
+      "name": "Iron Longsword",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "11"
+        }
+      ]
+    },
+    {
+      "id": "item-12",
+      "category": "item",
+      "name": "Small Backpack",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "12"
+        }
+      ]
+    },
+    {
+      "id": "item-13",
+      "category": "item",
+      "name": "Apprentice Herbalist's Belt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "13"
+        }
+      ]
+    },
+    {
+      "id": "item-14",
+      "category": "item",
+      "name": "Medium Backpack",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "14"
+        }
+      ]
+    },
+    {
+      "id": "item-15",
+      "category": "item",
+      "name": "Simple Cloth Shoes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "15"
+        }
+      ]
+    },
+    {
+      "id": "item-16",
+      "category": "item",
+      "name": "Worn Socks",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "16"
+        }
+      ]
+    },
+    {
+      "id": "item-17",
+      "category": "item",
+      "name": "Decent Socks",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "17"
+        }
+      ]
+    },
+    {
+      "id": "item-18",
+      "category": "item",
+      "name": "Fine Wool Socks",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "18"
+        }
+      ]
+    },
+    {
+      "id": "item-19",
+      "category": "item",
+      "name": "Twig (Willow)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "19"
+        }
+      ]
+    },
+    {
+      "id": "item-20",
+      "category": "item",
+      "name": "Simple Pants",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "20"
+        }
+      ]
+    },
+    {
+      "id": "item-21",
+      "category": "item",
+      "name": "Hiker's Pants",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "21"
+        }
+      ]
+    },
+    {
+      "id": "item-22",
+      "category": "item",
+      "name": "Simple Shirt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "22"
+        }
+      ]
+    },
+    {
+      "id": "item-23",
+      "category": "item",
+      "name": "Wool Shirt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "23"
+        }
+      ]
+    },
+    {
+      "id": "item-24",
+      "category": "item",
+      "name": "Hiker's Shirt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "24"
+        }
+      ]
+    },
+    {
+      "id": "item-25",
+      "category": "item",
+      "name": "Loaf of Bread",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "25"
+        }
+      ]
+    },
+    {
+      "id": "item-26",
+      "category": "item",
+      "name": "Large Backpack",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "26"
+        }
+      ]
+    },
+    {
+      "id": "item-27",
+      "category": "item",
+      "name": "Iron Hand Axe",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "27"
+        }
+      ]
+    },
+    {
+      "id": "item-28",
+      "category": "item",
+      "name": "Steel Hand Axe",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "28"
+        }
+      ]
+    },
+    {
+      "id": "item-29",
+      "category": "item",
+      "name": "Iron Felling Axe",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "29"
+        }
+      ]
+    },
+    {
+      "id": "item-30",
+      "category": "item",
+      "name": "Steel Felling Axe",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "30"
+        }
+      ]
+    },
+    {
+      "id": "item-31",
+      "category": "item",
+      "name": "Unarmed",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "31"
+        }
+      ]
+    },
+    {
+      "id": "item-32",
+      "category": "item",
+      "name": "Lesser Wound Salve",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "32"
+        }
+      ]
+    },
+    {
+      "id": "item-33",
+      "category": "item",
+      "name": "Worn Leather Pants",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "33"
+        }
+      ]
+    },
+    {
+      "id": "item-34",
+      "category": "item",
+      "name": "Branch (Willow)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "34"
+        }
+      ]
+    },
+    {
+      "id": "item-35",
+      "category": "item",
+      "name": "Log (Willow)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "35"
+        }
+      ]
+    },
+    {
+      "id": "item-36",
+      "category": "item",
+      "name": "Firewood (Willow)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "36"
+        }
+      ]
+    },
+    {
+      "id": "item-37",
+      "category": "item",
+      "name": "Rock",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "37"
+        }
+      ]
+    },
+    {
+      "id": "item-38",
+      "category": "item",
+      "name": "Campfire",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "38"
+        }
+      ]
+    },
+    {
+      "id": "item-39",
+      "category": "item",
+      "name": "Flint",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "39"
+        }
+      ]
+    },
+    {
+      "id": "item-40",
+      "category": "item",
+      "name": "Firesteel",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "40"
+        }
+      ]
+    },
+    {
+      "id": "item-41",
+      "category": "item",
+      "name": "Torch",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "41"
+        }
+      ]
+    },
+    {
+      "id": "item-42",
+      "category": "item",
+      "name": "Simple Hood",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "42"
+        }
+      ]
+    },
+    {
+      "id": "item-43",
+      "category": "item",
+      "name": "Leather Vest",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "43"
+        }
+      ]
+    },
+    {
+      "id": "item-44",
+      "category": "item",
+      "name": "Shortbow (Willow)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "44"
+        }
+      ]
+    },
+    {
+      "id": "item-45",
+      "category": "item",
+      "name": "Iron Arrow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "45"
+        }
+      ]
+    },
+    {
+      "id": "item-46",
+      "category": "item",
+      "name": "Steel Arrow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "46"
+        }
+      ]
+    },
+    {
+      "id": "item-47",
+      "category": "item",
+      "name": "Small Linen Tent",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "47"
+        }
+      ]
+    },
+    {
+      "id": "item-48",
+      "category": "item",
+      "name": "Flax",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "48"
+        }
+      ]
+    },
+    {
+      "id": "item-49",
+      "category": "item",
+      "name": "Linen",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "49"
+        }
+      ]
+    },
+    {
+      "id": "item-50",
+      "category": "item",
+      "name": "Large Scaalmyr Husk",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "50"
+        }
+      ]
+    },
+    {
+      "id": "item-51",
+      "category": "item",
+      "name": "Honey",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "51"
+        }
+      ]
+    },
+    {
+      "id": "item-52",
+      "category": "item",
+      "name": "Beeswax",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "52"
+        }
+      ]
+    },
+    {
+      "id": "item-54",
+      "category": "item",
+      "name": "Steel Bascinet",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "54"
+        }
+      ]
+    },
+    {
+      "id": "item-55",
+      "category": "item",
+      "name": "Steel Chestplate",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "55"
+        }
+      ]
+    },
+    {
+      "id": "item-56",
+      "category": "item",
+      "name": "Steel Legplates",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "56"
+        }
+      ]
+    },
+    {
+      "id": "item-57",
+      "category": "item",
+      "name": "Sturdy Leather Boots",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "57"
+        }
+      ]
+    },
+    {
+      "id": "item-58",
+      "category": "item",
+      "name": "Steel Shield",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "58"
+        }
+      ]
+    },
+    {
+      "id": "item-59",
+      "category": "item",
+      "name": "Leather Gloves",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "59"
+        }
+      ]
+    },
+    {
+      "id": "item-60",
+      "category": "item",
+      "name": "Large Maggot",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "60"
+        }
+      ]
+    },
+    {
+      "id": "item-61",
+      "category": "item",
+      "name": "Grilled Maggot",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "61"
+        }
+      ]
+    },
+    {
+      "id": "item-62",
+      "category": "item",
+      "name": "Large Beetle",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "62"
+        }
+      ]
+    },
+    {
+      "id": "item-63",
+      "category": "item",
+      "name": "Crisp Beetle",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "63"
+        }
+      ]
+    },
+    {
+      "id": "item-64",
+      "category": "item",
+      "name": "Frog",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "64"
+        }
+      ]
+    },
+    {
+      "id": "item-65",
+      "category": "item",
+      "name": "Grilled Frog Legs",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "65"
+        }
+      ]
+    },
+    {
+      "id": "item-66",
+      "category": "item",
+      "name": "Crab Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "66"
+        }
+      ]
+    },
+    {
+      "id": "item-67",
+      "category": "item",
+      "name": "Grilled Crab Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "67"
+        }
+      ]
+    },
+    {
+      "id": "item-68",
+      "category": "item",
+      "name": "Tattered Bedroll",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "68"
+        }
+      ]
+    },
+    {
+      "id": "item-69",
+      "category": "item",
+      "name": "Bug Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "69"
+        }
+      ]
+    },
+    {
+      "id": "item-70",
+      "category": "item",
+      "name": "Grilled Bug Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "70"
+        }
+      ]
+    },
+    {
+      "id": "item-72",
+      "category": "item",
+      "name": "Copper Coin",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "72"
+        }
+      ]
+    },
+    {
+      "id": "item-73",
+      "category": "item",
+      "name": "Silver Coin",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "73"
+        }
+      ]
+    },
+    {
+      "id": "item-74",
+      "category": "item",
+      "name": "Gold Coin",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "74"
+        }
+      ]
+    },
+    {
+      "id": "item-75",
+      "category": "item",
+      "name": "Wooden Recorder",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "75"
+        }
+      ]
+    },
+    {
+      "id": "item-76",
+      "category": "item",
+      "name": "Flinthead Arrow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "76"
+        }
+      ]
+    },
+    {
+      "id": "item-77",
+      "category": "item",
+      "name": "Feather",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "77"
+        }
+      ]
+    },
+    {
+      "id": "item-78",
+      "category": "item",
+      "name": "Twig (Cypress)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "78"
+        }
+      ]
+    },
+    {
+      "id": "item-79",
+      "category": "item",
+      "name": "Branch (Cypress)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "79"
+        }
+      ]
+    },
+    {
+      "id": "item-80",
+      "category": "item",
+      "name": "Log (Cypress)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "80"
+        }
+      ]
+    },
+    {
+      "id": "item-81",
+      "category": "item",
+      "name": "Firewood (Cypress)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "81"
+        }
+      ]
+    },
+    {
+      "id": "item-82",
+      "category": "item",
+      "name": "Snake Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "82"
+        }
+      ]
+    },
+    {
+      "id": "item-83",
+      "category": "item",
+      "name": "Grilled Snake Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "83"
+        }
+      ]
+    },
+    {
+      "id": "item-84",
+      "category": "item",
+      "name": "Minor Antidote",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "84"
+        }
+      ]
+    },
+    {
+      "id": "item-85",
+      "category": "item",
+      "name": "Sickness Remedy",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "85"
+        }
+      ]
+    },
+    {
+      "id": "item-86",
+      "category": "item",
+      "name": "Sickness Cure",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "86"
+        }
+      ]
+    },
+    {
+      "id": "item-87",
+      "category": "item",
+      "name": "Egg",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "87"
+        }
+      ]
+    },
+    {
+      "id": "item-88",
+      "category": "item",
+      "name": "Fried Egg",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "88"
+        }
+      ]
+    },
+    {
+      "id": "item-89",
+      "category": "item",
+      "name": "Map of area",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "89"
+        }
+      ]
+    },
+    {
+      "id": "item-90",
+      "category": "item",
+      "name": "Stone Club",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "90"
+        }
+      ]
+    },
+    {
+      "id": "item-91",
+      "category": "item",
+      "name": "Plant Fiber",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "91"
+        }
+      ]
+    },
+    {
+      "id": "item-92",
+      "category": "item",
+      "name": "Twine",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "92"
+        }
+      ]
+    },
+    {
+      "id": "item-93",
+      "category": "item",
+      "name": "Improvised Bow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "93"
+        }
+      ]
+    },
+    {
+      "id": "item-94",
+      "category": "item",
+      "name": "Fool's Gold",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "94"
+        }
+      ]
+    },
+    {
+      "id": "item-95",
+      "category": "item",
+      "name": "Strange Glowing Bug",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "95"
+        }
+      ]
+    },
+    {
+      "id": "item-96",
+      "category": "item",
+      "name": "Improvised Torch",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "96"
+        }
+      ]
+    },
+    {
+      "id": "item-97",
+      "category": "item",
+      "name": "Emerald",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "97"
+        }
+      ]
+    },
+    {
+      "id": "item-98",
+      "category": "item",
+      "name": "Ruby",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "98"
+        }
+      ]
+    },
+    {
+      "id": "item-99",
+      "category": "item",
+      "name": "Amethyst",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "99"
+        }
+      ]
+    },
+    {
+      "id": "item-100",
+      "category": "item",
+      "name": "Sapphire",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "100"
+        }
+      ]
+    },
+    {
+      "id": "item-101",
+      "category": "item",
+      "name": "Topaz",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "101"
+        }
+      ]
+    },
+    {
+      "id": "item-102",
+      "category": "item",
+      "name": "Shabby Pelt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "102"
+        }
+      ]
+    },
+    {
+      "id": "item-103",
+      "category": "item",
+      "name": "Vile Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "103"
+        }
+      ]
+    },
+    {
+      "id": "item-104",
+      "category": "item",
+      "name": "Grilled Vile Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "104"
+        }
+      ]
+    },
+    {
+      "id": "item-105",
+      "category": "item",
+      "name": "Longbow (Cypress)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "105"
+        }
+      ]
+    },
+    {
+      "id": "item-106",
+      "category": "item",
+      "name": "Longbow (Yew)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "106"
+        }
+      ]
+    },
+    {
+      "id": "item-107",
+      "category": "item",
+      "name": "Rift Weave",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "107"
+        }
+      ]
+    },
+    {
+      "id": "item-108",
+      "category": "item",
+      "name": "Hidden Hollow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "108"
+        }
+      ]
+    },
+    {
+      "id": "item-110",
+      "category": "item",
+      "name": "Lantern",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "110"
+        }
+      ]
+    },
+    {
+      "id": "item-111",
+      "category": "item",
+      "name": "Masterwork Lantern",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "111"
+        }
+      ]
+    },
+    {
+      "id": "item-112",
+      "category": "item",
+      "name": "Lamp Oil",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "112"
+        }
+      ]
+    },
+    {
+      "id": "item-113",
+      "category": "item",
+      "name": "Cloth Repair Kit",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "113"
+        }
+      ]
+    },
+    {
+      "id": "item-114",
+      "category": "item",
+      "name": "Wood Repair Kit",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "114"
+        }
+      ]
+    },
+    {
+      "id": "item-115",
+      "category": "item",
+      "name": "Metal Repair Kit",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "115"
+        }
+      ]
+    },
+    {
+      "id": "item-116",
+      "category": "item",
+      "name": "Iron Skull Cap",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "116"
+        }
+      ]
+    },
+    {
+      "id": "item-117",
+      "category": "item",
+      "name": "Steel Skull Cap",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "117"
+        }
+      ]
+    },
+    {
+      "id": "item-118",
+      "category": "item",
+      "name": "Improvised Shield",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "118"
+        }
+      ]
+    },
+    {
+      "id": "item-119",
+      "category": "item",
+      "name": "Leather Cap",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "119"
+        }
+      ]
+    },
+    {
+      "id": "item-120",
+      "category": "item",
+      "name": "Small Venom Gland",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "120"
+        }
+      ]
+    },
+    {
+      "id": "item-121",
+      "category": "item",
+      "name": "Moldy Wood",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "121"
+        }
+      ]
+    },
+    {
+      "id": "item-122",
+      "category": "item",
+      "name": "Mold",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "122"
+        }
+      ]
+    },
+    {
+      "id": "item-123",
+      "category": "item",
+      "name": "Glowing Rune",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "123"
+        }
+      ]
+    },
+    {
+      "id": "item-124",
+      "category": "item",
+      "name": "Glow Goo",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "124"
+        }
+      ]
+    },
+    {
+      "id": "item-126",
+      "category": "item",
+      "name": "Clay's Strange Potion",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "126"
+        }
+      ]
+    },
+    {
+      "id": "item-127",
+      "category": "item",
+      "name": "Summoning Stone",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "127"
+        }
+      ]
+    },
+    {
+      "id": "item-129",
+      "category": "item",
+      "name": "Scaalmyr Husk",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "129"
+        }
+      ]
+    },
+    {
+      "id": "item-130",
+      "category": "item",
+      "name": "Ancient Strongbox",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "130"
+        }
+      ]
+    },
+    {
+      "id": "item-132",
+      "category": "item",
+      "name": "Ward Breaker",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "132"
+        }
+      ]
+    },
+    {
+      "id": "item-134",
+      "category": "item",
+      "name": "Troll Fat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "134"
+        }
+      ]
+    },
+    {
+      "id": "item-135",
+      "category": "item",
+      "name": "Swamp Troll Hide",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "135"
+        }
+      ]
+    },
+    {
+      "id": "item-136",
+      "category": "item",
+      "name": "Cave Troll Hide",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "136"
+        }
+      ]
+    },
+    {
+      "id": "item-137",
+      "category": "item",
+      "name": "Shabby Pelt Cloak",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "137"
+        }
+      ]
+    },
+    {
+      "id": "item-138",
+      "category": "item",
+      "name": "Wound Salve",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "138"
+        }
+      ]
+    },
+    {
+      "id": "item-139",
+      "category": "item",
+      "name": "Antidote",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "139"
+        }
+      ]
+    },
+    {
+      "id": "item-140",
+      "category": "item",
+      "name": "Minor Wound Salve",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "140"
+        }
+      ]
+    },
+    {
+      "id": "item-141",
+      "category": "item",
+      "name": "Simple Burn Remedy",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "141"
+        }
+      ]
+    },
+    {
+      "id": "item-142",
+      "category": "item",
+      "name": "Calmia Root",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "142"
+        }
+      ]
+    },
+    {
+      "id": "item-143",
+      "category": "item",
+      "name": "Improvised Bandage",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "143"
+        }
+      ]
+    },
+    {
+      "id": "item-144",
+      "category": "item",
+      "name": "Bandage",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "144"
+        }
+      ]
+    },
+    {
+      "id": "item-145",
+      "category": "item",
+      "name": "Troll Skin Cloak",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "145"
+        }
+      ]
+    },
+    {
+      "id": "item-146",
+      "category": "item",
+      "name": "Troll Skin Hood",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "146"
+        }
+      ]
+    },
+    {
+      "id": "item-147",
+      "category": "item",
+      "name": "Troll Skin Vest",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "147"
+        }
+      ]
+    },
+    {
+      "id": "item-148",
+      "category": "item",
+      "name": "Ranger's Backpack",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "148"
+        }
+      ]
+    },
+    {
+      "id": "item-153",
+      "category": "item",
+      "name": "Decent Bedroll",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "153"
+        }
+      ]
+    },
+    {
+      "id": "item-154",
+      "category": "item",
+      "name": "Great Bedroll",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "154"
+        }
+      ]
+    },
+    {
+      "id": "item-155",
+      "category": "item",
+      "name": "Waxed Linen Tent",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "155"
+        }
+      ]
+    },
+    {
+      "id": "item-156",
+      "category": "item",
+      "name": "Map Drawing Kit",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "156"
+        }
+      ]
+    },
+    {
+      "id": "item-157",
+      "category": "item",
+      "name": "Iron Cudgel",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "157"
+        }
+      ]
+    },
+    {
+      "id": "item-158",
+      "category": "item",
+      "name": "Steel Cudgel",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "158"
+        }
+      ]
+    },
+    {
+      "id": "item-159",
+      "category": "item",
+      "name": "Serpent Fang",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "159"
+        }
+      ]
+    },
+    {
+      "id": "item-160",
+      "category": "item",
+      "name": "Iron Morning Star",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "160"
+        }
+      ]
+    },
+    {
+      "id": "item-161",
+      "category": "item",
+      "name": "Steel Morning Star",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "161"
+        }
+      ]
+    },
+    {
+      "id": "item-162",
+      "category": "item",
+      "name": "Toadkin Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "162"
+        }
+      ]
+    },
+    {
+      "id": "item-163",
+      "category": "item",
+      "name": "Grilled Toadkin Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "163"
+        }
+      ]
+    },
+    {
+      "id": "item-164",
+      "category": "item",
+      "name": "Worn Leather Gloves",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "164"
+        }
+      ]
+    },
+    {
+      "id": "item-165",
+      "category": "item",
+      "name": "Iron Reinforced Gloves",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "165"
+        }
+      ]
+    },
+    {
+      "id": "item-166",
+      "category": "item",
+      "name": "Journeyman Herbalist's Belt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "166"
+        }
+      ]
+    },
+    {
+      "id": "item-167",
+      "category": "item",
+      "name": "Expert Herbalist's Belt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "167"
+        }
+      ]
+    },
+    {
+      "id": "item-168",
+      "category": "item",
+      "name": "Master Herbalist's Belt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "168"
+        }
+      ]
+    },
+    {
+      "id": "item-169",
+      "category": "item",
+      "name": "Heavy Branch (Cypress)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "169"
+        }
+      ]
+    },
+    {
+      "id": "item-170",
+      "category": "item",
+      "name": "Raft Base",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "170"
+        }
+      ]
+    },
+    {
+      "id": "item-171",
+      "category": "item",
+      "name": "Finish Raft",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "171"
+        }
+      ]
+    },
+    {
+      "id": "item-172",
+      "category": "item",
+      "name": "Survivor's Field Kit",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "172"
+        }
+      ]
+    },
+    {
+      "id": "item-173",
+      "category": "item",
+      "name": "Vile Bulb (Mushroom)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "173"
+        }
+      ]
+    },
+    {
+      "id": "item-174",
+      "category": "item",
+      "name": "Poison Arrow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "174"
+        }
+      ]
+    },
+    {
+      "id": "item-175",
+      "category": "item",
+      "name": "Water Lily",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "175"
+        }
+      ]
+    },
+    {
+      "id": "item-176",
+      "category": "item",
+      "name": "Wayfarer's Vigor",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "176"
+        }
+      ]
+    },
+    {
+      "id": "item-177",
+      "category": "item",
+      "name": "Lump of Coal",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "177"
+        }
+      ]
+    },
+    {
+      "id": "item-178",
+      "category": "item",
+      "name": "Small Fire Gland",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "178"
+        }
+      ]
+    },
+    {
+      "id": "item-179",
+      "category": "item",
+      "name": "Gurb's Expertimental Bow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "179"
+        }
+      ]
+    },
+    {
+      "id": "item-180",
+      "category": "item",
+      "name": "Cave Creeper",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "180"
+        }
+      ]
+    },
+    {
+      "id": "item-181",
+      "category": "item",
+      "name": "Grilled Cave Creeper",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "181"
+        }
+      ]
+    },
+    {
+      "id": "item-182",
+      "category": "item",
+      "name": "Drake Jasper",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "182"
+        }
+      ]
+    },
+    {
+      "id": "item-183",
+      "category": "item",
+      "name": "Dragon Flint",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "183"
+        }
+      ]
+    },
+    {
+      "id": "item-184",
+      "category": "item",
+      "name": "Iron Greatsword",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "184"
+        }
+      ]
+    },
+    {
+      "id": "item-185",
+      "category": "item",
+      "name": "Steel Greatsword",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "185"
+        }
+      ]
+    },
+    {
+      "id": "item-186",
+      "category": "item",
+      "name": "Iron Warhammer",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "186"
+        }
+      ]
+    },
+    {
+      "id": "item-187",
+      "category": "item",
+      "name": "Steel Warhammer",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "187"
+        }
+      ]
+    },
+    {
+      "id": "item-188",
+      "category": "item",
+      "name": "Iron Battleaxe",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "188"
+        }
+      ]
+    },
+    {
+      "id": "item-189",
+      "category": "item",
+      "name": "Steel Battleaxe",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "189"
+        }
+      ]
+    },
+    {
+      "id": "item-190",
+      "category": "item",
+      "name": "Iron Mace",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "190"
+        }
+      ]
+    },
+    {
+      "id": "item-191",
+      "category": "item",
+      "name": "Steel Mace",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "191"
+        }
+      ]
+    },
+    {
+      "id": "item-192",
+      "category": "item",
+      "name": "Leather Leg Armor",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "192"
+        }
+      ]
+    },
+    {
+      "id": "item-193",
+      "category": "item",
+      "name": "Iron Legplates",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "193"
+        }
+      ]
+    },
+    {
+      "id": "item-194",
+      "category": "item",
+      "name": "Shabby Leather Vest",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "194"
+        }
+      ]
+    },
+    {
+      "id": "item-195",
+      "category": "item",
+      "name": "Shabby Leather Leg Armor",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "195"
+        }
+      ]
+    },
+    {
+      "id": "item-196",
+      "category": "item",
+      "name": "Forager's Vest",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "196"
+        }
+      ]
+    },
+    {
+      "id": "item-197",
+      "category": "item",
+      "name": "Explorer's Vest",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "197"
+        }
+      ]
+    },
+    {
+      "id": "item-198",
+      "category": "item",
+      "name": "Expedition Vest",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "198"
+        }
+      ]
+    },
+    {
+      "id": "item-199",
+      "category": "item",
+      "name": "Tattered Gloves",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "199"
+        }
+      ]
+    },
+    {
+      "id": "item-200",
+      "category": "item",
+      "name": "Sturdy Leather Gloves",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "200"
+        }
+      ]
+    },
+    {
+      "id": "item-201",
+      "category": "item",
+      "name": "Leather Boots",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "201"
+        }
+      ]
+    },
+    {
+      "id": "item-202",
+      "category": "item",
+      "name": "Worn Boots",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "202"
+        }
+      ]
+    },
+    {
+      "id": "item-203",
+      "category": "item",
+      "name": "Wanderer's Shoes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "203"
+        }
+      ]
+    },
+    {
+      "id": "item-204",
+      "category": "item",
+      "name": "Wool Hood",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "204"
+        }
+      ]
+    },
+    {
+      "id": "item-205",
+      "category": "item",
+      "name": "Ranger's Hood",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "205"
+        }
+      ]
+    },
+    {
+      "id": "item-206",
+      "category": "item",
+      "name": "Thorns of Wackah",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "206"
+        }
+      ]
+    },
+    {
+      "id": "item-207",
+      "category": "item",
+      "name": "Decent Cloak",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "207"
+        }
+      ]
+    },
+    {
+      "id": "item-208",
+      "category": "item",
+      "name": "Traveller's Cloak",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "208"
+        }
+      ]
+    },
+    {
+      "id": "item-209",
+      "category": "item",
+      "name": "Ranger's Cloak",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "209"
+        }
+      ]
+    },
+    {
+      "id": "item-210",
+      "category": "item",
+      "name": "Bark (Willow)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "210"
+        }
+      ]
+    },
+    {
+      "id": "item-211",
+      "category": "item",
+      "name": "Bark (Cypress)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "211"
+        }
+      ]
+    },
+    {
+      "id": "item-212",
+      "category": "item",
+      "name": "Improvised Enduring Torch",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "212"
+        }
+      ]
+    },
+    {
+      "id": "item-213",
+      "category": "item",
+      "name": "Branch (Trollgnarl)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "213"
+        }
+      ]
+    },
+    {
+      "id": "item-214",
+      "category": "item",
+      "name": "Log Chunk (Trollgnarl)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "214"
+        }
+      ]
+    },
+    {
+      "id": "item-215",
+      "category": "item",
+      "name": "Firewood (Trollgnarl)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "215"
+        }
+      ]
+    },
+    {
+      "id": "item-216",
+      "category": "item",
+      "name": "Bark (Trollgnarl)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "216"
+        }
+      ]
+    },
+    {
+      "id": "item-217",
+      "category": "item",
+      "name": "Bramble Berries",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "217"
+        }
+      ]
+    },
+    {
+      "id": "item-218",
+      "category": "item",
+      "name": "Riftvine Berries",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "218"
+        }
+      ]
+    },
+    {
+      "id": "item-219",
+      "category": "item",
+      "name": "Poison Arrow II",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "219"
+        }
+      ]
+    },
+    {
+      "id": "item-220",
+      "category": "item",
+      "name": "Poison Arrow III",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "220"
+        }
+      ]
+    },
+    {
+      "id": "item-221",
+      "category": "item",
+      "name": "Turnip",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "221"
+        }
+      ]
+    },
+    {
+      "id": "item-222",
+      "category": "item",
+      "name": "Grilled Turnip",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "222"
+        }
+      ]
+    },
+    {
+      "id": "item-223",
+      "category": "item",
+      "name": "Elderwort Berries",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "223"
+        }
+      ]
+    },
+    {
+      "id": "item-224",
+      "category": "item",
+      "name": "Branch (Elderwort)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "224"
+        }
+      ]
+    },
+    {
+      "id": "item-225",
+      "category": "item",
+      "name": "Cranberries",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "225"
+        }
+      ]
+    },
+    {
+      "id": "item-226",
+      "category": "item",
+      "name": "Watercress",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "226"
+        }
+      ]
+    },
+    {
+      "id": "item-227",
+      "category": "item",
+      "name": "Bramble Seeds",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "227"
+        }
+      ]
+    },
+    {
+      "id": "item-228",
+      "category": "item",
+      "name": "Elderberry Seeds",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "228"
+        }
+      ]
+    },
+    {
+      "id": "item-229",
+      "category": "item",
+      "name": "Cranberry Seeds",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "229"
+        }
+      ]
+    },
+    {
+      "id": "item-230",
+      "category": "item",
+      "name": "Turnip Seeds",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "230"
+        }
+      ]
+    },
+    {
+      "id": "item-231",
+      "category": "item",
+      "name": "Watercress Seeds",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "231"
+        }
+      ]
+    },
+    {
+      "id": "item-232",
+      "category": "item",
+      "name": "Willow Seeds",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "232"
+        }
+      ]
+    },
+    {
+      "id": "item-233",
+      "category": "item",
+      "name": "Cypress Seed Pods",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "233"
+        }
+      ]
+    },
+    {
+      "id": "item-234",
+      "category": "item",
+      "name": "Trollgnarl Seed Pods",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "234"
+        }
+      ]
+    },
+    {
+      "id": "item-235",
+      "category": "item",
+      "name": "Pleasant Vegetable Soup",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "235"
+        }
+      ]
+    },
+    {
+      "id": "item-236",
+      "category": "item",
+      "name": "Tasty Crab Soup",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "236"
+        }
+      ]
+    },
+    {
+      "id": "item-237",
+      "category": "item",
+      "name": "Survivor's Delight",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "237"
+        }
+      ]
+    },
+    {
+      "id": "item-238",
+      "category": "item",
+      "name": "Chopping Log",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "238"
+        }
+      ]
+    },
+    {
+      "id": "item-239",
+      "category": "item",
+      "name": "Primitive Farmwork Table",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "239"
+        }
+      ]
+    },
+    {
+      "id": "item-240",
+      "category": "item",
+      "name": "Simple Shelter",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "240"
+        }
+      ]
+    },
+    {
+      "id": "item-241",
+      "category": "item",
+      "name": "Wakebug",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "241"
+        }
+      ]
+    },
+    {
+      "id": "item-242",
+      "category": "item",
+      "name": "Baby Firelouse",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "242"
+        }
+      ]
+    },
+    {
+      "id": "item-243",
+      "category": "item",
+      "name": "Bursthopper",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "243"
+        }
+      ]
+    },
+    {
+      "id": "item-244",
+      "category": "item",
+      "name": "Grilled Wakebug",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "244"
+        }
+      ]
+    },
+    {
+      "id": "item-245",
+      "category": "item",
+      "name": "Grilled Baby Firelouse",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "245"
+        }
+      ]
+    },
+    {
+      "id": "item-246",
+      "category": "item",
+      "name": "Grilled Bursthopper",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "246"
+        }
+      ]
+    },
+    {
+      "id": "item-247",
+      "category": "item",
+      "name": "Firefly",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "247"
+        }
+      ]
+    },
+    {
+      "id": "item-248",
+      "category": "item",
+      "name": "Jar of Fireflies",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "248"
+        }
+      ]
+    },
+    {
+      "id": "item-249",
+      "category": "item",
+      "name": "Canopy (2x2 tiles)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "249"
+        }
+      ]
+    },
+    {
+      "id": "item-250",
+      "category": "item",
+      "name": "Canopy (3x3 tiles)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "250"
+        }
+      ]
+    },
+    {
+      "id": "item-251",
+      "category": "item",
+      "name": "Gurb's Flask of Vileness",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "251"
+        }
+      ]
+    },
+    {
+      "id": "item-252",
+      "category": "item",
+      "name": "Map Ledger",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "252"
+        }
+      ]
+    },
+    {
+      "id": "item-253",
+      "category": "item",
+      "name": "Flask of Fire",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "253"
+        }
+      ]
+    },
+    {
+      "id": "item-254",
+      "category": "item",
+      "name": "Iron Firesteel",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "254"
+        }
+      ]
+    },
+    {
+      "id": "item-255",
+      "category": "item",
+      "name": "Worn Firesteel",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "255"
+        }
+      ]
+    },
+    {
+      "id": "item-256",
+      "category": "item",
+      "name": "Furhide Bedroll",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "256"
+        }
+      ]
+    },
+    {
+      "id": "item-257",
+      "category": "item",
+      "name": "Improvised Bedroll",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "257"
+        }
+      ]
+    },
+    {
+      "id": "being-0",
+      "category": "being",
+      "name": "Giant Slug",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "being-1",
+      "category": "being",
+      "name": "Dreadfly",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "being-2",
+      "category": "being",
+      "name": "Giant Gnat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "being-3",
+      "category": "being",
+      "name": "Swamp Troll",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "being-4",
+      "category": "being",
+      "name": "Mire Serpent",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "being-5",
+      "category": "being",
+      "name": "Soldier",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "5"
+        }
+      ]
+    },
+    {
+      "id": "being-6",
+      "category": "being",
+      "name": "Captain Eir",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "6"
+        }
+      ]
+    },
+    {
+      "id": "being-7",
+      "category": "being",
+      "name": "Boulder Crab",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "7"
+        }
+      ]
+    },
+    {
+      "id": "being-8",
+      "category": "being",
+      "name": "Magus Clay",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "8"
+        }
+      ]
+    },
+    {
+      "id": "being-9",
+      "category": "being",
+      "name": "Dead Unwanted",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "9"
+        }
+      ]
+    },
+    {
+      "id": "being-10",
+      "category": "being",
+      "name": "Viper",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "10"
+        }
+      ]
+    },
+    {
+      "id": "being-11",
+      "category": "being",
+      "name": "Mirk Runner",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "11"
+        }
+      ]
+    },
+    {
+      "id": "being-12",
+      "category": "being",
+      "name": "Ranger Bhato",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "12"
+        }
+      ]
+    },
+    {
+      "id": "being-13",
+      "category": "being",
+      "name": "Sceetler",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "13"
+        }
+      ]
+    },
+    {
+      "id": "being-14",
+      "category": "being",
+      "name": "Scaalmyr Grunt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "14"
+        }
+      ]
+    },
+    {
+      "id": "being-15",
+      "category": "being",
+      "name": "Scaalmyr Warrior",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "15"
+        }
+      ]
+    },
+    {
+      "id": "being-16",
+      "category": "being",
+      "name": "Scaalmyr Geomancer",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "16"
+        }
+      ]
+    },
+    {
+      "id": "being-17",
+      "category": "being",
+      "name": "Mudfin",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "17"
+        }
+      ]
+    },
+    {
+      "id": "being-18",
+      "category": "being",
+      "name": "Cave Troll",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "18"
+        }
+      ]
+    },
+    {
+      "id": "being-19",
+      "category": "being",
+      "name": "Viend",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "19"
+        }
+      ]
+    },
+    {
+      "id": "being-20",
+      "category": "being",
+      "name": "Commander Tain",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "20"
+        }
+      ]
+    },
+    {
+      "id": "being-21",
+      "category": "being",
+      "name": "Toadkin",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "21"
+        }
+      ]
+    },
+    {
+      "id": "being-22",
+      "category": "being",
+      "name": "Scaal",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "22"
+        }
+      ]
+    },
+    {
+      "id": "being-23",
+      "category": "being",
+      "name": "Red Fang",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "23"
+        }
+      ]
+    },
+    {
+      "id": "being-24",
+      "category": "being",
+      "name": "Razorfin",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "24"
+        }
+      ]
+    },
+    {
+      "id": "being-25",
+      "category": "being",
+      "name": "Deathfly",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "25"
+        }
+      ]
+    },
+    {
+      "id": "being-26",
+      "category": "being",
+      "name": "Gurb-Gurb",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "26"
+        }
+      ]
+    },
+    {
+      "id": "being-27",
+      "category": "being",
+      "name": "Firelouse",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "27"
+        }
+      ]
+    },
+    {
+      "id": "being-28",
+      "category": "being",
+      "name": "Nightmare",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "28"
+        }
+      ]
+    },
+    {
+      "id": "being-29",
+      "category": "being",
+      "name": "Mirk Mauler",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "29"
+        }
+      ]
+    },
+    {
+      "id": "being-30",
+      "category": "being",
+      "name": "Titanspine Crab",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "30"
+        }
+      ]
+    },
+    {
+      "id": "being-31",
+      "category": "being",
+      "name": "Raving Unwanted",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "31"
+        }
+      ]
+    },
+    {
+      "id": "being-32",
+      "category": "being",
+      "name": "Mutated Unwanted",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "32"
+        }
+      ]
+    },
+    {
+      "id": "being-33",
+      "category": "being",
+      "name": "Ihar",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "33"
+        }
+      ]
+    },
+    {
+      "id": "being-34",
+      "category": "being",
+      "name": "Wilda",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "34"
+        }
+      ]
+    },
+    {
+      "id": "being-35",
+      "category": "being",
+      "name": "Unwanted Guard",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "35"
+        }
+      ]
+    },
+    {
+      "id": "nature-0",
+      "category": "nature",
+      "name": "Grass",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "nature-1",
+      "category": "nature",
+      "name": "Tall Grass",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "nature-2",
+      "category": "nature",
+      "name": "Boulder",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "nature-3",
+      "category": "nature",
+      "name": "Mossy Log",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "nature-4",
+      "category": "nature",
+      "name": "Willow",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "nature-5",
+      "category": "nature",
+      "name": "Moss",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "5"
+        }
+      ]
+    },
+    {
+      "id": "nature-6",
+      "category": "nature",
+      "name": "Brambles",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "6"
+        }
+      ]
+    },
+    {
+      "id": "nature-7",
+      "category": "nature",
+      "name": "Cypress",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "7"
+        }
+      ]
+    },
+    {
+      "id": "nature-8",
+      "category": "nature",
+      "name": "Lilypad",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "8"
+        }
+      ]
+    },
+    {
+      "id": "nature-9",
+      "category": "nature",
+      "name": "Fern",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "9"
+        }
+      ]
+    },
+    {
+      "id": "nature-12",
+      "category": "nature",
+      "name": "Rift Grass",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "12"
+        }
+      ]
+    },
+    {
+      "id": "nature-13",
+      "category": "nature",
+      "name": "Rift Vine",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "13"
+        }
+      ]
+    },
+    {
+      "id": "nature-17",
+      "category": "nature",
+      "name": "Trollgnarl",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "17"
+        }
+      ]
+    },
+    {
+      "id": "nature-18",
+      "category": "nature",
+      "name": "Turnip",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "18"
+        }
+      ]
+    },
+    {
+      "id": "nature-19",
+      "category": "nature",
+      "name": "Cranberry",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "19"
+        }
+      ]
+    },
+    {
+      "id": "nature-20",
+      "category": "nature",
+      "name": "Elderwort Shrub",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "nature-en",
+          "section": "Titles",
+          "key": "20"
+        }
+      ]
+    },
+    {
+      "id": "skill-group-0",
+      "category": "skill_group",
+      "name": "Wanderer",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "StatCats",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "skill-group-1",
+      "category": "skill_group",
+      "name": "Survivor",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "StatCats",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "skill-group-2",
+      "category": "skill_group",
+      "name": "Hunter",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "StatCats",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "skill-group-3",
+      "category": "skill_group",
+      "name": "Warrior",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "StatCats",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "skill-group-4",
+      "category": "skill_group",
+      "name": "Forager",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "StatCats",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "skill-0-0",
+      "category": "skill",
+      "name": "Strider",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle0",
+          "key": "0"
+        }
+      ],
+      "group": "skill-group-0"
+    },
+    {
+      "id": "skill-0-1",
+      "category": "skill",
+      "name": "Amphibian",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle0",
+          "key": "1"
+        }
+      ],
+      "group": "skill-group-0"
+    },
+    {
+      "id": "skill-0-2",
+      "category": "skill",
+      "name": "Jumper",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle0",
+          "key": "2"
+        }
+      ],
+      "group": "skill-group-0"
+    },
+    {
+      "id": "skill-0-3",
+      "category": "skill",
+      "name": "Firm Grip",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle0",
+          "key": "3"
+        }
+      ],
+      "group": "skill-group-0"
+    },
+    {
+      "id": "skill-0-4",
+      "category": "skill",
+      "name": "Balance",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle0",
+          "key": "4"
+        }
+      ],
+      "group": "skill-group-0"
+    },
+    {
+      "id": "skill-1-0",
+      "category": "skill",
+      "name": "Fire Striker",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle1",
+          "key": "0"
+        }
+      ],
+      "group": "skill-group-1"
+    },
+    {
+      "id": "skill-1-1",
+      "category": "skill",
+      "name": "Slow Metabolism",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle1",
+          "key": "1"
+        }
+      ],
+      "group": "skill-group-1"
+    },
+    {
+      "id": "skill-1-2",
+      "category": "skill",
+      "name": "Focused Mind",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle1",
+          "key": "2"
+        }
+      ],
+      "group": "skill-group-1"
+    },
+    {
+      "id": "skill-1-3",
+      "category": "skill",
+      "name": "Body Warmth",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle1",
+          "key": "3"
+        }
+      ],
+      "group": "skill-group-1"
+    },
+    {
+      "id": "skill-1-4",
+      "category": "skill",
+      "name": "Pack Mule",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle1",
+          "key": "4"
+        }
+      ],
+      "group": "skill-group-1"
+    },
+    {
+      "id": "skill-2-0",
+      "category": "skill",
+      "name": "Fast Draw",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle2",
+          "key": "0"
+        }
+      ],
+      "group": "skill-group-2"
+    },
+    {
+      "id": "skill-2-1",
+      "category": "skill",
+      "name": "Butchery",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle2",
+          "key": "1"
+        }
+      ],
+      "group": "skill-group-2"
+    },
+    {
+      "id": "skill-2-2",
+      "category": "skill",
+      "name": "Fast Feet",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle2",
+          "key": "2"
+        }
+      ],
+      "group": "skill-group-2"
+    },
+    {
+      "id": "skill-2-3",
+      "category": "skill",
+      "name": "Arrow Recovery",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle2",
+          "key": "3"
+        }
+      ],
+      "group": "skill-group-2"
+    },
+    {
+      "id": "skill-2-4",
+      "category": "skill",
+      "name": "Blend Into Nature",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle2",
+          "key": "4"
+        }
+      ],
+      "group": "skill-group-2"
+    },
+    {
+      "id": "skill-3-0",
+      "category": "skill",
+      "name": "Tailor-Made",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle3",
+          "key": "0"
+        }
+      ],
+      "group": "skill-group-3"
+    },
+    {
+      "id": "skill-3-1",
+      "category": "skill",
+      "name": "Master Basher",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle3",
+          "key": "1"
+        }
+      ],
+      "group": "skill-group-3"
+    },
+    {
+      "id": "skill-3-2",
+      "category": "skill",
+      "name": "Force Fighter",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle3",
+          "key": "2"
+        }
+      ],
+      "group": "skill-group-3"
+    },
+    {
+      "id": "skill-3-3",
+      "category": "skill",
+      "name": "Blade Master",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle3",
+          "key": "3"
+        }
+      ],
+      "group": "skill-group-3"
+    },
+    {
+      "id": "skill-3-4",
+      "category": "skill",
+      "name": "Shield Savant",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle3",
+          "key": "4"
+        }
+      ],
+      "group": "skill-group-3"
+    },
+    {
+      "id": "skill-4-0",
+      "category": "skill",
+      "name": "Green Fingers",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle4",
+          "key": "0"
+        }
+      ],
+      "group": "skill-group-4"
+    },
+    {
+      "id": "skill-4-1",
+      "category": "skill",
+      "name": "Creepy-Crawlies",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle4",
+          "key": "1"
+        }
+      ],
+      "group": "skill-group-4"
+    },
+    {
+      "id": "skill-4-2",
+      "category": "skill",
+      "name": "Herbivore",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle4",
+          "key": "2"
+        }
+      ],
+      "group": "skill-group-4"
+    },
+    {
+      "id": "skill-4-3",
+      "category": "skill",
+      "name": "Brewer",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle4",
+          "key": "3"
+        }
+      ],
+      "group": "skill-group-4"
+    },
+    {
+      "id": "skill-4-4",
+      "category": "skill",
+      "name": "Natural Antidote",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsTitle4",
+          "key": "4"
+        }
+      ],
+      "group": "skill-group-4"
+    },
+    {
+      "id": "damage-class-2",
+      "category": "damage_class",
+      "name": "Poison",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "DamageClasses",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "damage-class-14",
+      "category": "damage_class",
+      "name": "Sharp",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "DamageClasses",
+          "key": "14"
+        }
+      ]
+    },
+    {
+      "id": "damage-class-15",
+      "category": "damage_class",
+      "name": "Blunt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "DamageClasses",
+          "key": "15"
+        }
+      ]
+    },
+    {
+      "id": "damage-class-16",
+      "category": "damage_class",
+      "name": "Force",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "DamageClasses",
+          "key": "16"
+        }
+      ]
+    },
+    {
+      "id": "damage-class-17",
+      "category": "damage_class",
+      "name": "Piercing",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "DamageClasses",
+          "key": "17"
+        }
+      ]
+    },
+    {
+      "id": "damage-class-18",
+      "category": "damage_class",
+      "name": "Fire",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "DamageClasses",
+          "key": "18"
+        }
+      ]
+    },
+    {
+      "id": "damage-class-24",
+      "category": "damage_class",
+      "name": "Weak",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "DamageClasses",
+          "key": "24"
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "id": "amphibian-efficiency",
+      "page": "Game mechanics",
+      "entity": "Amphibian",
+      "property": "Water-movement efficiency per rank (%)",
+      "value": 8.0,
+      "description": "The English skill text specifies this bonus for water traversal; its exact runtime calculation has not been verified.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc0",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "amphibian-milestone",
+      "page": "Game mechanics",
+      "entity": "Amphibian",
+      "property": "Swimming stamina milestone rank",
+      "value": 10.0,
+      "description": "The listed milestone halves swimming-related stamina loss.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc0",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "balance-resistance",
+      "page": "Game mechanics",
+      "entity": "Balance",
+      "property": "Avoidance chance per rank (%)",
+      "value": 8.0,
+      "description": "The described avoidance roll applies to slipping and knock effects.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc0",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "firm-grip-efficiency",
+      "page": "Game mechanics",
+      "entity": "Firm Grip",
+      "property": "Slope-climbing efficiency per rank (%)",
+      "value": 6.0,
+      "description": "This is the listed slope traversal bonus, not a measured movement-speed increase.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc0",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "strider-efficiency",
+      "page": "Game mechanics",
+      "entity": "Strider",
+      "property": "Obstacle-traversal efficiency per rank (%)",
+      "value": 8.0,
+      "description": "The bonus concerns vegetation and obstacles; the separate path-creation milestone occurs every three ranks.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc0",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "fire-striker-chance",
+      "page": "Game mechanics",
+      "entity": "Fire Striker",
+      "property": "Fire-starting chance bonus per rank (%)",
+      "value": 3.0,
+      "description": "The localization assigns a per-rank bonus to fire-starting attempts.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc1",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "slow-metabolism-rate",
+      "page": "Game mechanics",
+      "entity": "Slow Metabolism",
+      "property": "Satiation-loss reduction per rank (%)",
+      "value": 4.0,
+      "description": "This reduces the described loss rate rather than increasing the amount restored by food.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc1",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "body-warmth-rate",
+      "page": "Game mechanics",
+      "entity": "Body Warmth",
+      "property": "Warmth-loss reduction per rank (%)",
+      "value": 4.0,
+      "description": "The description also assigns the same percentage improvement to clothing drying.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc1",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "focused-mind-rate",
+      "page": "Game mechanics",
+      "entity": "Focused Mind",
+      "property": "Focus-loss reduction per rank (%)",
+      "value": 3.0,
+      "description": "Experience-related milestones are separate from this per-rank resource modifier.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc1",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "pack-mule-capacity",
+      "page": "Game mechanics",
+      "entity": "Pack Mule",
+      "property": "Additional carrying capacity per rank (kg)",
+      "value": 1.5,
+      "description": "The listed capacity increase is additive per skill rank.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc1",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "fast-draw-ap",
+      "page": "Game mechanics",
+      "entity": "Fast Draw",
+      "property": "Bow AP-cost reduction per rank",
+      "value": 0.3,
+      "description": "The description separately lists melee-range bow use at rank five and an AP-free shot chance at rank ten.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc2",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "fast-draw-free-shot",
+      "page": "Game mechanics",
+      "entity": "Fast Draw",
+      "property": "AP-free shot chance at rank 10 (%)",
+      "value": 12.5,
+      "description": "This chance is described as a rank-ten milestone; it is not a per-rank increase.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc2",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "arrow-recovery-base",
+      "page": "Game mechanics",
+      "entity": "Arrow Recovery",
+      "property": "Default arrow-recovery chance (%)",
+      "value": 10.0,
+      "description": "The English description states this baseline before the skill bonus.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc2",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "arrow-recovery-bonus",
+      "page": "Game mechanics",
+      "entity": "Arrow Recovery",
+      "property": "Arrow-recovery chance bonus per rank (%)",
+      "value": 6.0,
+      "description": "This bonus concerns arrows recovered from corpses.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc2",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "butchery-ap",
+      "page": "Game mechanics",
+      "entity": "Butchery",
+      "property": "Butchering and skinning AP reduction per rank",
+      "value": 0.2,
+      "description": "Additional meat or skin is a separate chance-based benefit.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc2",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "fast-feet-dodge",
+      "page": "Game mechanics",
+      "entity": "Fast Feet",
+      "property": "Dodge-chance bonus per rank (%)",
+      "value": 2.0,
+      "description": "The description also enables diagonal dodging at rank five.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc2",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "blend-detection",
+      "page": "Game mechanics",
+      "entity": "Blend Into Nature",
+      "property": "Detection-evasion chance per rank (%)",
+      "value": 6.5,
+      "description": "This is the listed chance modifier for avoiding hostile detection, not a guarantee of invisibility.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc2",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "tailor-made-weight",
+      "page": "Game mechanics",
+      "entity": "Tailor-Made",
+      "property": "Equipped-armor weight reduction per rank (%)",
+      "value": 7.5,
+      "description": "The stated bonus applies to equipped armor, not every item carried.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc3",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "master-basher-stun",
+      "page": "Game mechanics",
+      "entity": "Master Basher",
+      "property": "Blunt-melee stun-chance bonus per rank (%)",
+      "value": 1.5,
+      "description": "The description associates the chance bonus with blunt melee attacks.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc3",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "force-fighter-damage",
+      "page": "Game mechanics",
+      "entity": "Force Fighter",
+      "property": "Extra-damage chance bonus per rank (%)",
+      "value": 2.0,
+      "description": "The benefit is described for force-based melee weapons; it is not a flat damage increase.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc3",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "blade-master-ap",
+      "page": "Game mechanics",
+      "entity": "Blade Master",
+      "property": "Bladed-weapon AP reduction per rank",
+      "value": 0.3,
+      "description": "The rank-ten armor-and-bleeding interaction is a separate milestone.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc3",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "shield-savant-block",
+      "page": "Game mechanics",
+      "entity": "Shield Savant",
+      "property": "Full-block chance bonus per rank (%)",
+      "value": 2.5,
+      "description": "The skill description requires an equipped shield.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc3",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "green-fingers-harvest",
+      "page": "Game mechanics",
+      "entity": "Green Fingers",
+      "property": "Plant-harvest effectiveness per rank (%)",
+      "value": 8.0,
+      "description": "Extra-harvest milestone rolls are distinct from this per-rank modifier.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc4",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "creepy-crawlies-chance",
+      "page": "Game mechanics",
+      "entity": "Creepy-Crawlies",
+      "property": "Critter-search chance per rank (%)",
+      "value": 5.0,
+      "description": "This chance applies to the skill searches triggered while harvesting or examining plants.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc4",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "creepy-crawlies-searches",
+      "page": "Game mechanics",
+      "entity": "Creepy-Crawlies",
+      "property": "Searches at rank 10",
+      "value": 4.0,
+      "description": "The localization describes four searches at the rank-ten milestone; this is not four guaranteed finds.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc4",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "herbivore-satiation",
+      "page": "Game mechanics",
+      "entity": "Herbivore",
+      "property": "Green-food satiation bonus per rank (%)",
+      "value": 8.0,
+      "description": "The description limits the bonus to greens and lists separate AP-cost milestones.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc4",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "brewer-ap",
+      "page": "Game mechanics",
+      "entity": "Brewer",
+      "property": "Alchemy-station AP reduction per rank (%)",
+      "value": 8.0,
+      "description": "Ingredient-conservation benefits are separate and are not quantified here.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc4",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "natural-antidote-chance",
+      "page": "Game mechanics",
+      "entity": "Natural Antidote",
+      "property": "Per-cell poison-reduction chance per rank (%)",
+      "value": 9.0,
+      "description": "The described check occurs for poisoned cells at turn start before damage; rank ten adds a further reduction.",
+      "confidence": "localization-described",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc4",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "item-2-base-weight",
+      "page": "Items",
+      "entity": "Shoddy Dagger",
+      "property": "Base weight (internal units)",
+      "value": 0.5,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[2].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "item-2-base-stacklimit",
+      "page": "Items",
+      "entity": "Shoddy Dagger",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[2].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "item-2-base-durabilitymax",
+      "page": "Items",
+      "entity": "Shoddy Dagger",
+      "property": "Base durability maximum",
+      "value": 50.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[2].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "item-2-base-apcost",
+      "page": "Items",
+      "entity": "Shoddy Dagger",
+      "property": "Base action cost (AP)",
+      "value": 5.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[2].apCost"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "item-3-base-weight",
+      "page": "Items",
+      "entity": "Iron Dagger",
+      "property": "Base weight (internal units)",
+      "value": 0.5,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[3].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "item-3-base-stacklimit",
+      "page": "Items",
+      "entity": "Iron Dagger",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[3].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "item-3-base-durabilitymax",
+      "page": "Items",
+      "entity": "Iron Dagger",
+      "property": "Base durability maximum",
+      "value": 100.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[3].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "item-3-base-apcost",
+      "page": "Items",
+      "entity": "Iron Dagger",
+      "property": "Base action cost (AP)",
+      "value": 5.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[3].apCost"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "item-4-base-weight",
+      "page": "Items",
+      "entity": "Steel Dagger",
+      "property": "Base weight (internal units)",
+      "value": 0.55,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[4].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "item-4-base-stacklimit",
+      "page": "Items",
+      "entity": "Steel Dagger",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[4].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "item-4-base-durabilitymax",
+      "page": "Items",
+      "entity": "Steel Dagger",
+      "property": "Base durability maximum",
+      "value": 180.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[4].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "item-4-base-apcost",
+      "page": "Items",
+      "entity": "Steel Dagger",
+      "property": "Base action cost (AP)",
+      "value": 5.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[4].apCost"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "4"
+        }
+      ]
+    },
+    {
+      "id": "item-12-base-weight",
+      "page": "Items",
+      "entity": "Small Backpack",
+      "property": "Base weight (internal units)",
+      "value": 1.5,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[12].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "12"
+        }
+      ]
+    },
+    {
+      "id": "item-12-base-stacklimit",
+      "page": "Items",
+      "entity": "Small Backpack",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[12].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "12"
+        }
+      ]
+    },
+    {
+      "id": "item-12-base-durabilitymax",
+      "page": "Items",
+      "entity": "Small Backpack",
+      "property": "Base durability maximum",
+      "value": 40.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[12].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "12"
+        }
+      ]
+    },
+    {
+      "id": "item-14-base-weight",
+      "page": "Items",
+      "entity": "Medium Backpack",
+      "property": "Base weight (internal units)",
+      "value": 2.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[14].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "14"
+        }
+      ]
+    },
+    {
+      "id": "item-14-base-stacklimit",
+      "page": "Items",
+      "entity": "Medium Backpack",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[14].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "14"
+        }
+      ]
+    },
+    {
+      "id": "item-14-base-durabilitymax",
+      "page": "Items",
+      "entity": "Medium Backpack",
+      "property": "Base durability maximum",
+      "value": 60.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[14].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "14"
+        }
+      ]
+    },
+    {
+      "id": "item-26-base-weight",
+      "page": "Items",
+      "entity": "Large Backpack",
+      "property": "Base weight (internal units)",
+      "value": 3.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[26].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "26"
+        }
+      ]
+    },
+    {
+      "id": "item-26-base-stacklimit",
+      "page": "Items",
+      "entity": "Large Backpack",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[26].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "26"
+        }
+      ]
+    },
+    {
+      "id": "item-26-base-durabilitymax",
+      "page": "Items",
+      "entity": "Large Backpack",
+      "property": "Base durability maximum",
+      "value": 60.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[26].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "26"
+        }
+      ]
+    },
+    {
+      "id": "item-27-base-weight",
+      "page": "Items",
+      "entity": "Iron Hand Axe",
+      "property": "Base weight (internal units)",
+      "value": 1.25,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[27].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "27"
+        }
+      ]
+    },
+    {
+      "id": "item-27-base-stacklimit",
+      "page": "Items",
+      "entity": "Iron Hand Axe",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[27].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "27"
+        }
+      ]
+    },
+    {
+      "id": "item-27-base-durabilitymax",
+      "page": "Items",
+      "entity": "Iron Hand Axe",
+      "property": "Base durability maximum",
+      "value": 100.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[27].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "27"
+        }
+      ]
+    },
+    {
+      "id": "item-27-base-apcost",
+      "page": "Items",
+      "entity": "Iron Hand Axe",
+      "property": "Base action cost (AP)",
+      "value": 6.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[27].apCost"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "27"
+        }
+      ]
+    },
+    {
+      "id": "item-28-base-weight",
+      "page": "Items",
+      "entity": "Steel Hand Axe",
+      "property": "Base weight (internal units)",
+      "value": 1.35,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[28].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "28"
+        }
+      ]
+    },
+    {
+      "id": "item-28-base-stacklimit",
+      "page": "Items",
+      "entity": "Steel Hand Axe",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[28].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "28"
+        }
+      ]
+    },
+    {
+      "id": "item-28-base-durabilitymax",
+      "page": "Items",
+      "entity": "Steel Hand Axe",
+      "property": "Base durability maximum",
+      "value": 300.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[28].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "28"
+        }
+      ]
+    },
+    {
+      "id": "item-28-base-apcost",
+      "page": "Items",
+      "entity": "Steel Hand Axe",
+      "property": "Base action cost (AP)",
+      "value": 6.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[28].apCost"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "28"
+        }
+      ]
+    },
+    {
+      "id": "item-25-base-weight",
+      "page": "Items",
+      "entity": "Loaf of Bread",
+      "property": "Base weight (internal units)",
+      "value": 0.8,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[25].weight"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "25"
+        }
+      ]
+    },
+    {
+      "id": "item-25-base-stacklimit",
+      "page": "Items",
+      "entity": "Loaf of Bread",
+      "property": "Base stack limit",
+      "value": 1.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[25].stackLimit"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "25"
+        }
+      ]
+    },
+    {
+      "id": "item-25-base-durabilitymax",
+      "page": "Items",
+      "entity": "Loaf of Bread",
+      "property": "Base durability maximum",
+      "value": 5.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[25].durabilityMax"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "25"
+        }
+      ]
+    },
+    {
+      "id": "item-25-base-apcost",
+      "page": "Items",
+      "entity": "Loaf of Bread",
+      "property": "Base action cost (AP)",
+      "value": 2.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[25].apCost"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "25"
+        }
+      ]
+    },
+    {
+      "id": "being-0-base-armor",
+      "page": "Bestiary",
+      "entity": "Giant Slug",
+      "property": "Base armor",
+      "value": 0.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[0].armor"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "being-0-base-apmax",
+      "page": "Bestiary",
+      "entity": "Giant Slug",
+      "property": "Base AP maximum",
+      "value": 2.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[0].APmax"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "being-0-base-attackcost",
+      "page": "Bestiary",
+      "entity": "Giant Slug",
+      "property": "Base attack cost (AP)",
+      "value": 2.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[0].attackCost"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "0"
+        }
+      ]
+    },
+    {
+      "id": "being-1-base-armor",
+      "page": "Bestiary",
+      "entity": "Dreadfly",
+      "property": "Base armor",
+      "value": 0.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[1].armor"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "being-1-base-apmax",
+      "page": "Bestiary",
+      "entity": "Dreadfly",
+      "property": "Base AP maximum",
+      "value": 10.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[1].APmax"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "being-1-base-attackcost",
+      "page": "Bestiary",
+      "entity": "Dreadfly",
+      "property": "Base attack cost (AP)",
+      "value": 6.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[1].attackCost"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "1"
+        }
+      ]
+    },
+    {
+      "id": "being-2-base-armor",
+      "page": "Bestiary",
+      "entity": "Giant Gnat",
+      "property": "Base armor",
+      "value": 0.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[2].armor"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "being-2-base-apmax",
+      "page": "Bestiary",
+      "entity": "Giant Gnat",
+      "property": "Base AP maximum",
+      "value": 5.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[2].APmax"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "being-2-base-attackcost",
+      "page": "Bestiary",
+      "entity": "Giant Gnat",
+      "property": "Base attack cost (AP)",
+      "value": 3.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[2].attackCost"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "2"
+        }
+      ]
+    },
+    {
+      "id": "being-3-base-armor",
+      "page": "Bestiary",
+      "entity": "Swamp Troll",
+      "property": "Base armor",
+      "value": 0.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[3].armor"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "being-3-base-apmax",
+      "page": "Bestiary",
+      "entity": "Swamp Troll",
+      "property": "Base AP maximum",
+      "value": 10.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[3].APmax"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "being-3-base-attackcost",
+      "page": "Bestiary",
+      "entity": "Swamp Troll",
+      "property": "Base attack cost (AP)",
+      "value": 6.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[3].attackCost"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "3"
+        }
+      ]
+    },
+    {
+      "id": "being-7-base-armor",
+      "page": "Bestiary",
+      "entity": "Boulder Crab",
+      "property": "Base armor",
+      "value": 4.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[7].armor"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "7"
+        }
+      ]
+    },
+    {
+      "id": "being-7-base-apmax",
+      "page": "Bestiary",
+      "entity": "Boulder Crab",
+      "property": "Base AP maximum",
+      "value": 8.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[7].APmax"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "7"
+        }
+      ]
+    },
+    {
+      "id": "being-7-base-attackcost",
+      "page": "Bestiary",
+      "entity": "Boulder Crab",
+      "property": "Base attack cost (AP)",
+      "value": 6.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[7].attackCost"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "7"
+        }
+      ]
+    },
+    {
+      "id": "being-10-base-armor",
+      "page": "Bestiary",
+      "entity": "Viper",
+      "property": "Base armor",
+      "value": 0.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[10].armor"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "10"
+        }
+      ]
+    },
+    {
+      "id": "being-10-base-apmax",
+      "page": "Bestiary",
+      "entity": "Viper",
+      "property": "Base AP maximum",
+      "value": 5.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[10].APmax"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "10"
+        }
+      ]
+    },
+    {
+      "id": "being-10-base-attackcost",
+      "page": "Bestiary",
+      "entity": "Viper",
+      "property": "Base attack cost (AP)",
+      "value": 3.0,
+      "description": "A literal base value in the installed data initializer. Runtime modifiers, skills and item state may change the effective value; this has not been playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[10].attackCost"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "10"
+        }
+      ]
+    }
+  ]
+}

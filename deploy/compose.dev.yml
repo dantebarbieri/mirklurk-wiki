@@ -1,0 +1,73 @@
+name: mirklurk-wiki-dev
+
+services:
+  mirklurk:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    ports:
+      - "127.0.0.1:${MIRKLURK_DEV_PORT:-8089}:80"
+    environment:
+      MW_SERVER_URL: "http://localhost:${MIRKLURK_DEV_PORT:-8089}"
+      MW_DB_SERVER: mirklurk-db
+      MW_DB_NAME: mirklurk
+      MW_DB_USER: mirklurk
+      MW_DB_PASSWORD_FILE: /run/secrets/MIRKLURK_DB_PASSWORD
+      MW_SECRET_KEY_FILE: /run/secrets/MIRKLURK_SECRET_KEY
+      MW_UPGRADE_KEY_FILE: /run/secrets/MIRKLURK_UPGRADE_KEY
+      MW_CAPTCHA_QUESTIONS_FILE: /run/secrets/MIRKLURK_CAPTCHA_QUESTIONS
+      MW_READ_ONLY: "${MW_READ_ONLY:-}"
+    secrets:
+      - MIRKLURK_DB_PASSWORD
+      - MIRKLURK_SECRET_KEY
+      - MIRKLURK_UPGRADE_KEY
+      - MIRKLURK_CAPTCHA_QUESTIONS
+    depends_on:
+      mirklurk-db:
+        condition: service_healthy
+    networks:
+      - database
+      - frontend
+    tmpfs:
+      - /tmp
+
+  mirklurk-db:
+    image: mariadb:11.4.13@sha256:70cc072b29b4a89ae07abb2d4da2c64678a7f2dfe092751bb51c87d67dc1338b
+    environment:
+      MARIADB_DATABASE: mirklurk
+      MARIADB_USER: mirklurk
+      MARIADB_PASSWORD_FILE: /run/secrets/MIRKLURK_DB_PASSWORD
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/MIRKLURK_DB_ROOT_PASSWORD
+    secrets:
+      - MIRKLURK_DB_PASSWORD
+      - MIRKLURK_DB_ROOT_PASSWORD
+    volumes:
+      - database:/var/lib/mysql
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+networks:
+  database:
+    internal: true
+  frontend:
+
+volumes:
+  database:
+
+secrets:
+  MIRKLURK_DB_PASSWORD:
+    file: ${MIRKLURK_SECRETS_DIR:?Set an absolute external secrets directory}/MIRKLURK_DB_PASSWORD
+  MIRKLURK_DB_ROOT_PASSWORD:
+    file: ${MIRKLURK_SECRETS_DIR:?Set an absolute external secrets directory}/MIRKLURK_DB_ROOT_PASSWORD
+  MIRKLURK_SECRET_KEY:
+    file: ${MIRKLURK_SECRETS_DIR:?Set an absolute external secrets directory}/MIRKLURK_SECRET_KEY
+  MIRKLURK_UPGRADE_KEY:
+    file: ${MIRKLURK_SECRETS_DIR:?Set an absolute external secrets directory}/MIRKLURK_UPGRADE_KEY
+  MIRKLURK_CAPTCHA_QUESTIONS:
+    file: ${MIRKLURK_SECRETS_DIR:?Set an absolute external secrets directory}/MIRKLURK_CAPTCHA_QUESTIONS

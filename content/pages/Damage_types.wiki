@@ -1,0 +1,5 @@
+This page indexes short damage-class names recorded in the local source.
+
+A named class does not establish a resistance formula, a weakness, a damage-over-time rule, or the class of a particular attack. Any such relationship needs its own evidence.
+
+[[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

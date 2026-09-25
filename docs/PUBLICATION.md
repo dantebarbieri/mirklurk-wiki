@@ -1,0 +1,63 @@
+# Public-repository safety
+
+## Layers
+
+The root `.gitignore` starts with a deny-all rule. Directory exceptions permit
+traversal only; each allowed file is named separately. Additional exclusions
+cover game binaries/media, INIs, GML, language/save directories, raw research,
+tool dumps/exports, UTMT binaries, secrets, runtime state, databases, uploads,
+and backups.
+
+**Git ignores do not protect files already tracked or added with `--force`.**
+They are an accident-prevention layer, not a security boundary.
+
+`tools/check_publication.py` independently examines `git ls-files --stage` and
+reads each object by its staged Git object ID. It does not trust a cleaned-up
+working copy. It rejects:
+
+- Paths outside its exact-file allowlist, forbidden names, and malformed paths.
+- Symlinks, submodules, executable modes, unresolved index conflicts, and an empty index.
+- Oversized files, non-UTF-8 data, binary/control characters, and byte-order marks.
+- Selected private-key/provider-token patterns, credential-bearing URLs,
+  likely literal secret assignments, personal absolute paths, and decompiled
+  function definitions.
+- Structured facts that do not satisfy the strict provenance schema.
+
+Diagnostics name the rule and line, not the matched secret. The scanner is
+deliberately conservative about ordinary documentation: discussing a password
+file or a forbidden asset name is not itself a leak.
+
+The Docker build context has its own deny-by-default `.dockerignore`: only the
+five named runtime/build files are sent to Docker. Local game files, Git history,
+secrets, and research cannot be included by a broad `COPY .`.
+
+## Before committing or pushing
+
+Run tests, stage only intended files, run the index checker, and review the
+complete staged diff. On updates, also review the commits being pushed, not
+merely the last worktree state. Generated XML is for a private handoff, not Git.
+Check any attachments and command logs separately.
+
+CI repeats the publication gate and tests, then builds and exercises disposable
+Docker containers. CI is **after publication** and cannot prevent an initial
+leak. The local pre-publication gate is mandatory. No check can automatically
+establish authorship, fair use, or that an arbitrary new secret pattern is absent.
+
+The current gate checks the index, not every historical commit. A committed
+leak is not fixed merely by adding an ignore rule or deleting its latest copy.
+Stop publication, revoke affected credentials if relevant, and coordinate a
+reviewed history-remediation plan. Do not force-push or rewrite collaborators'
+history casually.
+
+## Updating policy
+
+Add only a specific authored file with a clear purpose and bounded size.
+Update both allowlists and representative `git check-ignore` tests. Keep final
+hard exclusions after positive exceptions. Never allow an entire directory's
+contents, use force-add as a workaround, relax binary checks for an asset, or
+introduce a fixture containing a real secret.
+
+Runtime files belong outside the checkout, even when ignored. Actual
+`LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original
+nonsecret source that reads mounted files and is copied into the image under
+the runtime name.

@@ -1,0 +1,36 @@
+name: Validate authored publication
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publication:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate indexed publication, facts, ignore rules, and deterministic XML
+        run: |
+          python3 tools/check_publication.py
+          python3 -m unittest discover -s tests -v
+      - name: Validate secret-file runtime configuration
+        run: |
+          php -l deploy/install.php
+          php -l deploy/healthcheck.php
+          php tests/test_runtime.php
+  docker-smoke:
+    needs: publication
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Test disposable image and database; never deploy
+        run: python3 tools/smoke_deploy.py --run

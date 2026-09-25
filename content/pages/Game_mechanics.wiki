@@ -1,0 +1,13 @@
+This page collects narrow, attributed mechanics facts. It is not a complete description of the game's rules.
+
+== How to read a fact ==
+The property label includes the relevant unit or context. Boolean values state only the named property. Do not combine bonuses, infer stacking, or calculate totals unless the interaction has its own evidence.
+
+'''Localization-described''' means a numeric value was summarized from local explanatory text, in original wording. It has not been confirmed by a runtime test. '''Observed''' refers to the stated source, not automatically to gameplay. '''Inferred''' marks a conclusion that still needs confirmation.
+
+The installed build remains unidentified. A future release may change the values or their meaning. Exact source hashes and section/key identifiers are recorded in [[Source provenance]] and the fact tables.
+
+== Open research ==
+Runtime formulas, rounding, stacking, eligibility, and availability are unknown unless a cited fact explicitly addresses them.
+
+[[Skills]] | [[Damage types]] | [[Main Page]] | [[Evidence and spoilers]]

@@ -1,0 +1,7 @@
+This index records beings named by the local bestiary title section. The source's label does not mean that every entry is an enemy.
+
+An entry may refer to a non-hostile character, unused content, or something not yet classified. The index makes no claims about aggression, habitats, drops, health, or encounter availability.
+
+'''Spoilers:''' names can reveal characters or creatures you have not encountered. No dialogue or copied bestiary descriptions are included.
+
+[[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

@@ -1,0 +1,18 @@
+The wiki publishes original explanations and a limited factual reference, not the game or a substitute for its creative content.
+
+== Acceptable evidence ==
+Short entity names, numeric or boolean mechanics facts, source hashes, and precise section/key identifiers can support a curated entry. Explain uncertainty and write descriptions yourself.
+
+Source paths must be relative to the installation. Never publish user-profile paths, usernames from saves, authentication details, or private server settings.
+
+== Keep private ==
+Do not upload game binaries, images, audio, fonts, maps, save data, full configuration files, localization descriptions, dialogue, tool exports, or decompiled source. Do not paste a full paragraph merely to prove that a number appears in it. Cite the identifier and summarize the fact instead.
+
+Owning a copy of the game does not by itself grant permission to redistribute its contents. Local analysis tools do not change that rule. Stop and seek permission when a proposed contribution falls outside this narrow policy.
+
+== Evidence is not certainty ==
+Distinguish what a source says from what the game does. A name may be unused, obsolete, or reserved for content not currently accessible. A shared label does not establish combat behavior.
+
+Corrections should preserve useful attribution and explain the changed conclusion. Existing live wiki edits are not automatically replaced by repository seed imports.
+
+[[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

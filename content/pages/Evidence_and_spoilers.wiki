@@ -1,0 +1,16 @@
+'''Spoiler notice:''' name indexes can reveal beings, items, skills, and other content before you discover it. Mechanics tables may disclose progression details.
+
+== Evidence levels ==
+* '''Observed:''' the stated value or short name was found in the cited source. This label alone does not mean the behavior was tested in play.
+* '''Localization-described:''' local explanatory text describes the mechanic. The wiki gives an original factual summary, not a quotation or a verified runtime formula.
+* '''Inferred:''' a conclusion drawn from evidence that still requires independent confirmation.
+
+== Build caveat ==
+The initial installation's release identifier is unknown. Each cited file has a SHA-256 fingerprint, so observations can be compared against exact bytes. A fingerprint is not a version number and does not demonstrate that two separate files came from the same release.
+
+== Interpretation caveat ==
+A title section is an index, not a guarantee of reachability. A bestiary-labelled file may name non-hostile characters. Similar names need not describe identical objects. A number in explanatory text may omit conditions, rounding, or interactions.
+
+When contributing, preserve these distinctions rather than turning uncertainty into a confident guide.
+
+[[Main Page]] | [[Research policy]] | [[Source provenance]]

@@ -1,0 +1,7 @@
+**
+!deploy
+!deploy/Dockerfile
+!deploy/LocalSettings.template.php
+!deploy/mirklurk-runtime.php
+!deploy/install.php
+!deploy/healthcheck.php
