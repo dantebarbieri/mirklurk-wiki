@@ -16946,6 +16946,1843 @@
         ],
         "fact_ids": []
       }
+    },
+    {
+      "id": "corpse-7-66",
+      "kind": "loot",
+      "title": "Boulder Crab: Crab Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[7].item[66]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "7"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "66"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-7",
+        "outcome": "item-66",
+        "quantity": {
+          "min": 1,
+          "max": 3
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-30-66",
+      "kind": "loot",
+      "title": "Titanspine Crab: Crab Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[30].item[66]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "30"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "66"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-30",
+        "outcome": "item-66",
+        "quantity": {
+          "min": 2,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-2-69",
+      "kind": "loot",
+      "title": "Giant Gnat: Bug Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[2].item[69]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "2"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "69"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-2",
+        "outcome": "item-69",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-1-69",
+      "kind": "loot",
+      "title": "Dreadfly: Bug Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[1].item[69]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "1"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "69"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-1",
+        "outcome": "item-69",
+        "quantity": {
+          "min": 2,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-27-69",
+      "kind": "loot",
+      "title": "Firelouse: Bug Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[27].item[69]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "27"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "69"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-27",
+        "outcome": "item-69",
+        "quantity": {
+          "min": 2,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-25-69",
+      "kind": "loot",
+      "title": "Deathfly: Bug Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[25].item[69]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "25"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "69"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-25",
+        "outcome": "item-69",
+        "quantity": {
+          "min": 2,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-28-69",
+      "kind": "loot",
+      "title": "Nightmare: Bug Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[28].item[69]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "28"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "69"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-28",
+        "outcome": "item-69",
+        "quantity": {
+          "min": 4,
+          "max": 9
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-10-82",
+      "kind": "loot",
+      "title": "Viper: Snake Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[10].item[82]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "10"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "82"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-10",
+        "outcome": "item-82",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-23-82",
+      "kind": "loot",
+      "title": "Red Fang: Snake Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[23].item[82]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "23"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "82"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-23",
+        "outcome": "item-82",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-21-162",
+      "kind": "loot",
+      "title": "Toadkin: Toadkin Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[21].item[162]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "21"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "162"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-21",
+        "outcome": "item-162",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-15-129",
+      "kind": "loot",
+      "title": "Scaalmyr Warrior: Scaalmyr Husk",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[15].item[129]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "15"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "129"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-15",
+        "outcome": "item-129",
+        "quantity": {
+          "min": 1,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-16-129",
+      "kind": "loot",
+      "title": "Scaalmyr Geomancer: Scaalmyr Husk",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[16].item[129]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "16"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "129"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-16",
+        "outcome": "item-129",
+        "quantity": {
+          "min": 1,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-27-178",
+      "kind": "loot",
+      "title": "Firelouse: Small Fire Gland",
+      "summary": "This base corpse inventory receives one item without an additional random check.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[27].item[178]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "27"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "178"
+        }
+      ],
+      "details": {
+        "table": "corpse-27",
+        "outcome": "item-178",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-28-120",
+      "kind": "loot",
+      "title": "Nightmare: Small Venom Gland",
+      "summary": "This base corpse inventory receives one item when a separate 85-percent check succeeds.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[28].item[120]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "28"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "120"
+        }
+      ],
+      "details": {
+        "table": "corpse-28",
+        "outcome": "item-120",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.85,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-10-120",
+      "kind": "loot",
+      "title": "Viper: Small Venom Gland",
+      "summary": "This base corpse inventory receives one item when a separate 55-percent check succeeds.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[10].item[120]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "10"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "120"
+        }
+      ],
+      "details": {
+        "table": "corpse-10",
+        "outcome": "item-120",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.55,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-23-120",
+      "kind": "loot",
+      "title": "Red Fang: Small Venom Gland",
+      "summary": "This base corpse inventory receives one item without an additional random check.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[23].item[120]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "23"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "120"
+        }
+      ],
+      "details": {
+        "table": "corpse-23",
+        "outcome": "item-120",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-4-159",
+      "kind": "loot",
+      "title": "Mire Serpent: Serpent Fang",
+      "summary": "This base corpse inventory receives one item without an additional random check.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[4].item[159]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "4"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "159"
+        }
+      ],
+      "details": {
+        "table": "corpse-4",
+        "outcome": "item-159",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-15-50",
+      "kind": "loot",
+      "title": "Scaalmyr Warrior: Large Scaalmyr Husk",
+      "summary": "This base corpse inventory receives one item when a separate 15-percent check succeeds.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[15].item[50]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "15"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "50"
+        }
+      ],
+      "details": {
+        "table": "corpse-15",
+        "outcome": "item-50",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.15,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-16-50",
+      "kind": "loot",
+      "title": "Scaalmyr Geomancer: Large Scaalmyr Husk",
+      "summary": "This base corpse inventory receives one item when a separate 15-percent check succeeds.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[16].item[50]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "16"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "50"
+        }
+      ],
+      "details": {
+        "table": "corpse-16",
+        "outcome": "item-50",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.15,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-13-107",
+      "kind": "loot",
+      "title": "Sceetler: Rift Weave",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[13].item[107]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "13"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "107"
+        }
+      ],
+      "details": {
+        "table": "corpse-13",
+        "outcome": "item-107",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-13-124",
+      "kind": "loot",
+      "title": "Sceetler: Glow Goo",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[13].item[124]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "13"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "124"
+        }
+      ],
+      "details": {
+        "table": "corpse-13",
+        "outcome": "item-124",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-14-107",
+      "kind": "loot",
+      "title": "Scaalmyr Grunt: Rift Weave",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[14].item[107]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "14"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "107"
+        }
+      ],
+      "details": {
+        "table": "corpse-14",
+        "outcome": "item-107",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-14-124",
+      "kind": "loot",
+      "title": "Scaalmyr Grunt: Glow Goo",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[14].item[124]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "14"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "124"
+        }
+      ],
+      "details": {
+        "table": "corpse-14",
+        "outcome": "item-124",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-14-129",
+      "kind": "loot",
+      "title": "Scaalmyr Grunt: Scaalmyr Husk",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[14].item[129]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "14"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "129"
+        }
+      ],
+      "details": {
+        "table": "corpse-14",
+        "outcome": "item-129",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-15-107",
+      "kind": "loot",
+      "title": "Scaalmyr Warrior: Rift Weave",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[15].item[107]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "15"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "107"
+        }
+      ],
+      "details": {
+        "table": "corpse-15",
+        "outcome": "item-107",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-15-124",
+      "kind": "loot",
+      "title": "Scaalmyr Warrior: Glow Goo",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[15].item[124]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "15"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "124"
+        }
+      ],
+      "details": {
+        "table": "corpse-15",
+        "outcome": "item-124",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-16-107",
+      "kind": "loot",
+      "title": "Scaalmyr Geomancer: Rift Weave",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[16].item[107]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "16"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "107"
+        }
+      ],
+      "details": {
+        "table": "corpse-16",
+        "outcome": "item-107",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-16-124",
+      "kind": "loot",
+      "title": "Scaalmyr Geomancer: Glow Goo",
+      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[16].item[124]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "16"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "124"
+        }
+      ],
+      "details": {
+        "table": "corpse-16",
+        "outcome": "item-124",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-11-103",
+      "kind": "loot",
+      "title": "Mirk Runner: Vile Meat",
+      "summary": "The initial quantity chooses between a fixed count of 1 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[11].item[103]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "11"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "103"
+        }
+      ],
+      "details": {
+        "table": "corpse-11",
+        "outcome": "item-103",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-11-102",
+      "kind": "loot",
+      "title": "Mirk Runner: Shabby Pelt",
+      "summary": "The initial quantity chooses between a fixed count of 1 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[11].item[102]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "11"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "102"
+        }
+      ],
+      "details": {
+        "table": "corpse-11",
+        "outcome": "item-102",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-29-103",
+      "kind": "loot",
+      "title": "Mirk Mauler: Vile Meat",
+      "summary": "The initial quantity chooses between a fixed count of 2 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[29].item[103]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "29"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "103"
+        }
+      ],
+      "details": {
+        "table": "corpse-29",
+        "outcome": "item-103",
+        "quantity": {
+          "min": 2,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-29-102",
+      "kind": "loot",
+      "title": "Mirk Mauler: Shabby Pelt",
+      "summary": "The initial quantity chooses between a fixed count of 1 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[29].item[102]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "29"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "102"
+        }
+      ],
+      "details": {
+        "table": "corpse-29",
+        "outcome": "item-102",
+        "quantity": {
+          "min": 1,
+          "max": 4
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-3-135",
+      "kind": "loot",
+      "title": "Swamp Troll: Swamp Troll Hide",
+      "summary": "The initial quantity chooses between a fixed count of 1 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[3].item[135]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "3"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "135"
+        }
+      ],
+      "details": {
+        "table": "corpse-3",
+        "outcome": "item-135",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-3-134",
+      "kind": "loot",
+      "title": "Swamp Troll: Troll Fat",
+      "summary": "The initial quantity chooses between a fixed count of 1 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[3].item[134]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "3"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "134"
+        }
+      ],
+      "details": {
+        "table": "corpse-3",
+        "outcome": "item-134",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-18-136",
+      "kind": "loot",
+      "title": "Cave Troll: Cave Troll Hide",
+      "summary": "The initial quantity chooses between a fixed count of 1 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[18].item[136]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "18"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "136"
+        }
+      ],
+      "details": {
+        "table": "corpse-18",
+        "outcome": "item-136",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-18-134",
+      "kind": "loot",
+      "title": "Cave Troll: Troll Fat",
+      "summary": "The initial quantity chooses between a fixed count of 1 and a biased amount draw. The reported range is not a uniform quantity distribution.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[18].item[134]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "18"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "134"
+        }
+      ],
+      "details": {
+        "table": "corpse-18",
+        "outcome": "item-134",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-4-82",
+      "kind": "loot",
+      "title": "Mire Serpent: Snake Meat",
+      "summary": "The handler adds four Snake Meat stacks, each with a biased four-to-eleven count. The table reports their aggregate sixteen-to-forty-four total, not one oversized uniform stack.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[4].item[82]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "4"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "82"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-4",
+        "outcome": "item-82",
+        "quantity": {
+          "min": 16,
+          "max": 44
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-13-123-quest",
+      "kind": "loot",
+      "title": "Sceetler: Glowing Rune",
+      "summary": "A qualifying quest death creates this object as a separate ground drop and advances the journal to stage nine. It is not part of the ordinary corpse inventory.",
+      "conditions": "Only when quest_active_check returns true for this defeated creature. This conditional certainty is not an unconditional drop chance.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[13].item[123]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "13"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "123"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "quest_active_check"
+        }
+      ],
+      "details": {
+        "table": "corpse-13",
+        "outcome": "item-123",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-0-none",
+      "kind": "loot",
+      "title": "Giant Slug: no generated loot corpse",
+      "summary": "This death handler skips creation of a loot-bearing corpse for this being. A visual remnant, XP award or story change is not ruled out by that branch.",
+      "conditions": "Only the inspected death-handler corpse result is described; this is not a claim that the encounter has no reward.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.leaveLoot.excluded[0]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "0"
+        }
+      ],
+      "details": {
+        "table": "corpse-0",
+        "outcome": null,
+        "quantity": {
+          "min": 0,
+          "max": 0
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-17-none",
+      "kind": "loot",
+      "title": "Mudfin: no generated loot corpse",
+      "summary": "This death handler skips creation of a loot-bearing corpse for this being. A visual remnant, XP award or story change is not ruled out by that branch.",
+      "conditions": "Only the inspected death-handler corpse result is described; this is not a claim that the encounter has no reward.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.leaveLoot.excluded[17]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "17"
+        }
+      ],
+      "details": {
+        "table": "corpse-17",
+        "outcome": null,
+        "quantity": {
+          "min": 0,
+          "max": 0
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-24-none",
+      "kind": "loot",
+      "title": "Razorfin: no generated loot corpse",
+      "summary": "This death handler skips creation of a loot-bearing corpse for this being. A visual remnant, XP award or story change is not ruled out by that branch.",
+      "conditions": "Only the inspected death-handler corpse result is described; this is not a claim that the encounter has no reward.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.leaveLoot.excluded[24]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "24"
+        }
+      ],
+      "details": {
+        "table": "corpse-24",
+        "outcome": null,
+        "quantity": {
+          "min": 0,
+          "max": 0
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-5-none",
+      "kind": "loot",
+      "title": "Soldier: no generated loot corpse",
+      "summary": "This death handler skips creation of a loot-bearing corpse for this being. A visual remnant, XP award or story change is not ruled out by that branch.",
+      "conditions": "Only the inspected death-handler corpse result is described; this is not a claim that the encounter has no reward.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.leaveLoot.excluded[5]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "5"
+        }
+      ],
+      "details": {
+        "table": "corpse-5",
+        "outcome": null,
+        "quantity": {
+          "min": 0,
+          "max": 0
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-22-none",
+      "kind": "loot",
+      "title": "Scaal: no generated loot corpse",
+      "summary": "This death handler skips creation of a loot-bearing corpse for this being. A visual remnant, XP award or story change is not ruled out by that branch.",
+      "conditions": "Only the inspected death-handler corpse result is described; this is not a claim that the encounter has no reward.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.leaveLoot.excluded[22]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "22"
+        }
+      ],
+      "details": {
+        "table": "corpse-22",
+        "outcome": null,
+        "quantity": {
+          "min": 0,
+          "max": 0
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-budgeted-treasure",
+      "kind": "algorithm",
+      "title": "Budgeted creature treasure and recovered projectiles",
+      "summary": "Raving Unwanted, Mutated Unwanted use budget-generated treasure rather than a fixed item list. Loot-bearing corpse inventories also receive the being's stored arrow entries.",
+      "conditions": "The corpse must be generated. Stored arrows are not evidence that every fired arrow is recoverable.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "corpse[31]/corpse[32]/stuckArrows"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray"
+        }
+      ],
+      "details": {
+        "page": "Loot tables",
+        "steps": [
+          "The two creature cases call the treasure generator with category one, a total base-value budget of one, and a minimum item value of 0.1.",
+          "The generator's type restrictions, nonlootable exclusions, story gates, durability handling and rejection loop still apply.",
+          "After the creature-specific base inventory is built, each stored arrow entry is appended. The hit/recovery process that populated that list is a separate mechanic."
+        ],
+        "fact_ids": []
+      }
     }
   ]
 }

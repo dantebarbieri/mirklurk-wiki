@@ -44,7 +44,7 @@ CATEGORY_PAGES = {
 }
 FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES}
 CONFIDENCES = {"observed", "inferred", "localization-described"}
-MAX_FACTS_BYTES = 512 * 1024
+MAX_FACTS_BYTES = 640 * 1024
 IDENTIFIER = re.compile(r"[a-z0-9][a-z0-9_.-]{0,79}\Z")
 
 

@@ -3,7 +3,9 @@
 `content/facts/game.json` is a reviewed publication, not an extraction format.
 The validator rejects unknown fields, duplicate JSON keys, missing references,
 non-finite values, multiline strings, unsupported page/category names, and
-oversized records. The entire file is limited to 512 KiB.
+oversized records. The entire file is limited to 640 KiB (655360 bytes).
+This bounded allowance covers the vetted expanded reference; every other
+publication path and size limit remains unchanged.
 
 ## Version 1 shape
 
@@ -131,13 +133,18 @@ modifying the original records. It includes 31 quest/journal notes (28 localized
 stage paraphrases and three separately qualified runtime notes), 63 merchant
 offers, 96 base recipe variants, 27 conditional loot entries, and 32 algorithm
 summaries (25 original skill descriptions and seven runtime/topic summaries).
-Current totals are five source fingerprints, 336 entities, 107 facts, and 249
-entries. There are no illustration records or approved artwork.
+A final bounded death-handler supplement adds 43 qualified base-loot entries and
+one algorithm summary, preserving every prior record. Current totals are five
+source fingerprints, 336 entities, 107 facts, and 293 entries: 31 quest/journal,
+63 merchant, 96 recipe, 70 loot, and 33 algorithm records. There are no
+illustration records or approved artwork.
 
 The separate observed menu label `0.8.1.5` is documented with explicit source
 field citations in Game mechanics; it does not replace null release metadata.
-Coverage gaps are stated on the relevant pages, including enemy-corpse loot,
-some merchant locations, and world-seed reproducibility.
+Coverage gaps are stated on the relevant pages. Reviewed creature death handlers
+are documented, but base generation is not a guaranteed harvested yield;
+runtime harvesting/recovery modifiers, some merchant locations/prices, and
+world-seed reproducibility remain limited or unverified.
 
 ## Build output
 

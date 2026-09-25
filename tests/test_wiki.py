@@ -13,7 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from build_wiki import EXPORT_NS, build_pages, build_xml, existing_titles, literal, title_key
-from wiki_data import DataError, PAGE_FILES, RESEARCH_PAGE_FILES, load_data, parse_data, validate_data
+from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, load_data, parse_data, validate_data
+from check_publication import blob_errors
 
 
 def synthetic_data():
@@ -94,26 +95,40 @@ def illustration_data(approved=False):
 
 
 class DataTests(unittest.TestCase):
+    def test_curated_json_exact_size_boundary(self):
+        raw = json.dumps(synthetic_data()).encode()
+        at_limit = raw + b" " * (MAX_FACTS_BYTES - len(raw))
+        self.assertEqual(MAX_FACTS_BYTES, 655360)
+        self.assertEqual(parse_data(at_limit)["schema_version"], 1)
+        self.assertEqual(blob_errors("content/facts/game.json", at_limit), [])
+        with self.assertRaises(DataError):
+            parse_data(at_limit + b" ")
+        self.assertIn("limit", blob_errors("content/facts/game.json", at_limit + b" ")[0])
+
     def test_expanded_snapshot_preserves_the_complete_vetted_handoff(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 5, "entities": 336, "facts": 107, "entries": 249},
+            {"sources": 5, "entities": 336, "facts": 107, "entries": 293},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
-            {"quest": 31, "merchant": 63, "recipe": 96, "loot": 27, "algorithm": 32},
+            {"quest": 31, "merchant": 63, "recipe": 96, "loot": 70, "algorithm": 33},
         )
-        extension = {"sources": [], "entities": [], "facts": data["facts"][79:], "entries": data["entries"]}
+        extension = {"sources": [], "entities": [], "facts": data["facts"][79:], "entries": data["entries"][:249]}
         raw = json.dumps(extension, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "a850094c2624cf2db5262bea5bc6647954de639cefc90a7f3d2adcc3a62ec270")
+        supplement = {"sources": [], "entities": [], "facts": [], "entries": data["entries"][249:]}
+        raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
         self.assertEqual(len(pages), 18)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
-        self.assertIn("Enemy-corpse loot", pages["Loot tables"])
+        self.assertIn("base creature death-handler paths", pages["Loot tables"])
+        self.assertIn("not a promise of final harvested", pages["Loot tables"])
         self.assertIn("reproducibility has not been demonstrated", pages["World seed logic"])
         self.assertIn("0.8.1.5", pages["Game mechanics"])
         self.assertIn("versionString", pages["Game mechanics"])
