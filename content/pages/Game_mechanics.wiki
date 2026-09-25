@@ -1,4 +1,4 @@
-This page collects narrow, attributed mechanics facts. It is not a complete description of the game's rules.
+Explore researched systems through the topic links below. Individual skill bonuses and formulas live on their [[Skills|skill pages]], while [[Items|items]] and [[Bestiary|creatures]] own their documented stats.
 
 == How to read a fact ==
 The property label includes the relevant unit or context. Boolean values state only the named property. Do not combine bonuses, infer stacking, or calculate totals unless the interaction has its own evidence.

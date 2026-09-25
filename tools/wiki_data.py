@@ -245,8 +245,8 @@ def _validate_illustrations(records, sources, entities):
             raise DataError(f"{where}: duplicate illustration ID")
         seen.add(identity)
         entity_id = _identifier(illustration["entity"], f"{where}.entity")
-        if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being"}:
-            raise DataError(f"{where}.entity: must reference an item or being")
+        if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being", "nature", "skill"}:
+            raise DataError(f"{where}.entity: must reference an item, being, nature record, or skill")
         title = illustration["file_title"]
         if not isinstance(title, str) or not re.fullmatch(r"File:[A-Z][A-Za-z0-9 _.-]{0,119}\.(?:png|jpg|jpeg|webp)", title):
             raise DataError(f"{where}.file_title: expected a plain local File title for a raster image")

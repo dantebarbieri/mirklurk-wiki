@@ -1,0 +1,2334 @@
+{
+  "schema_version": 1,
+  "pages": [
+    {
+      "entity": "item-99",
+      "title": "Amethyst",
+      "aliases": []
+    },
+    {
+      "entity": "skill-0-1",
+      "title": "Amphibian",
+      "aliases": []
+    },
+    {
+      "entity": "item-130",
+      "title": "Ancient Strongbox",
+      "aliases": []
+    },
+    {
+      "entity": "item-139",
+      "title": "Antidote",
+      "aliases": []
+    },
+    {
+      "entity": "item-13",
+      "title": "Apprentice Herbalist's Belt",
+      "aliases": []
+    },
+    {
+      "entity": "skill-2-3",
+      "title": "Arrow Recovery",
+      "aliases": []
+    },
+    {
+      "entity": "item-242",
+      "title": "Baby Firelouse",
+      "aliases": []
+    },
+    {
+      "entity": "skill-0-4",
+      "title": "Balance",
+      "aliases": []
+    },
+    {
+      "entity": "item-144",
+      "title": "Bandage",
+      "aliases": []
+    },
+    {
+      "entity": "item-211",
+      "title": "Bark (Cypress)",
+      "aliases": []
+    },
+    {
+      "entity": "item-216",
+      "title": "Bark (Trollgnarl)",
+      "aliases": []
+    },
+    {
+      "entity": "item-210",
+      "title": "Bark (Willow)",
+      "aliases": []
+    },
+    {
+      "entity": "item-52",
+      "title": "Beeswax",
+      "aliases": []
+    },
+    {
+      "entity": "skill-3-3",
+      "title": "Blade Master",
+      "aliases": []
+    },
+    {
+      "entity": "skill-2-4",
+      "title": "Blend Into Nature",
+      "aliases": []
+    },
+    {
+      "entity": "skill-1-3",
+      "title": "Body Warmth",
+      "aliases": []
+    },
+    {
+      "entity": "nature-2",
+      "title": "Boulder",
+      "aliases": []
+    },
+    {
+      "entity": "being-7",
+      "title": "Boulder Crab",
+      "aliases": []
+    },
+    {
+      "entity": "item-217",
+      "title": "Bramble Berries",
+      "aliases": []
+    },
+    {
+      "entity": "item-227",
+      "title": "Bramble Seeds",
+      "aliases": []
+    },
+    {
+      "entity": "nature-6",
+      "title": "Brambles",
+      "aliases": []
+    },
+    {
+      "entity": "item-79",
+      "title": "Branch (Cypress)",
+      "aliases": []
+    },
+    {
+      "entity": "item-224",
+      "title": "Branch (Elderwort)",
+      "aliases": []
+    },
+    {
+      "entity": "item-213",
+      "title": "Branch (Trollgnarl)",
+      "aliases": []
+    },
+    {
+      "entity": "item-34",
+      "title": "Branch (Willow)",
+      "aliases": []
+    },
+    {
+      "entity": "skill-4-3",
+      "title": "Brewer",
+      "aliases": []
+    },
+    {
+      "entity": "item-69",
+      "title": "Bug Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-243",
+      "title": "Bursthopper",
+      "aliases": []
+    },
+    {
+      "entity": "skill-2-1",
+      "title": "Butchery",
+      "aliases": []
+    },
+    {
+      "entity": "item-142",
+      "title": "Calmia Root",
+      "aliases": []
+    },
+    {
+      "entity": "item-38",
+      "title": "Campfire",
+      "aliases": []
+    },
+    {
+      "entity": "item-249",
+      "title": "Canopy (2x2 tiles)",
+      "aliases": []
+    },
+    {
+      "entity": "item-250",
+      "title": "Canopy (3x3 tiles)",
+      "aliases": []
+    },
+    {
+      "entity": "being-6",
+      "title": "Captain Eir",
+      "aliases": []
+    },
+    {
+      "entity": "item-180",
+      "title": "Cave Creeper",
+      "aliases": []
+    },
+    {
+      "entity": "being-18",
+      "title": "Cave Troll",
+      "aliases": []
+    },
+    {
+      "entity": "item-136",
+      "title": "Cave Troll Hide",
+      "aliases": []
+    },
+    {
+      "entity": "item-238",
+      "title": "Chopping Log",
+      "aliases": []
+    },
+    {
+      "entity": "item-126",
+      "title": "Clay's Strange Potion",
+      "aliases": []
+    },
+    {
+      "entity": "item-113",
+      "title": "Cloth Repair Kit",
+      "aliases": []
+    },
+    {
+      "entity": "being-20",
+      "title": "Commander Tain",
+      "aliases": []
+    },
+    {
+      "entity": "item-72",
+      "title": "Copper Coin",
+      "aliases": []
+    },
+    {
+      "entity": "item-66",
+      "title": "Crab Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-225",
+      "title": "Cranberries",
+      "aliases": []
+    },
+    {
+      "entity": "nature-19",
+      "title": "Cranberry",
+      "aliases": []
+    },
+    {
+      "entity": "item-229",
+      "title": "Cranberry Seeds",
+      "aliases": []
+    },
+    {
+      "entity": "skill-4-1",
+      "title": "Creepy-Crawlies",
+      "aliases": []
+    },
+    {
+      "entity": "item-63",
+      "title": "Crisp Beetle",
+      "aliases": []
+    },
+    {
+      "entity": "nature-7",
+      "title": "Cypress",
+      "aliases": []
+    },
+    {
+      "entity": "item-233",
+      "title": "Cypress Seed Pods",
+      "aliases": []
+    },
+    {
+      "entity": "being-9",
+      "title": "Dead Unwanted",
+      "aliases": []
+    },
+    {
+      "entity": "being-25",
+      "title": "Deathfly",
+      "aliases": []
+    },
+    {
+      "entity": "item-153",
+      "title": "Decent Bedroll",
+      "aliases": []
+    },
+    {
+      "entity": "item-207",
+      "title": "Decent Cloak",
+      "aliases": []
+    },
+    {
+      "entity": "item-5",
+      "title": "Decent Hunting Knife",
+      "aliases": []
+    },
+    {
+      "entity": "item-17",
+      "title": "Decent Socks",
+      "aliases": []
+    },
+    {
+      "entity": "item-183",
+      "title": "Dragon Flint",
+      "aliases": []
+    },
+    {
+      "entity": "item-182",
+      "title": "Drake Jasper",
+      "aliases": []
+    },
+    {
+      "entity": "being-1",
+      "title": "Dreadfly",
+      "aliases": []
+    },
+    {
+      "entity": "item-87",
+      "title": "Egg",
+      "aliases": []
+    },
+    {
+      "entity": "item-228",
+      "title": "Elderberry Seeds",
+      "aliases": []
+    },
+    {
+      "entity": "item-223",
+      "title": "Elderwort Berries",
+      "aliases": []
+    },
+    {
+      "entity": "nature-20",
+      "title": "Elderwort Shrub",
+      "aliases": []
+    },
+    {
+      "entity": "item-97",
+      "title": "Emerald",
+      "aliases": []
+    },
+    {
+      "entity": "item-198",
+      "title": "Expedition Vest",
+      "aliases": []
+    },
+    {
+      "entity": "item-167",
+      "title": "Expert Herbalist's Belt",
+      "aliases": []
+    },
+    {
+      "entity": "item-197",
+      "title": "Explorer's Vest",
+      "aliases": []
+    },
+    {
+      "entity": "skill-2-0",
+      "title": "Fast Draw",
+      "aliases": []
+    },
+    {
+      "entity": "skill-2-2",
+      "title": "Fast Feet",
+      "aliases": []
+    },
+    {
+      "entity": "item-77",
+      "title": "Feather",
+      "aliases": []
+    },
+    {
+      "entity": "nature-9",
+      "title": "Fern",
+      "aliases": []
+    },
+    {
+      "entity": "item-18",
+      "title": "Fine Wool Socks",
+      "aliases": []
+    },
+    {
+      "entity": "item-171",
+      "title": "Finish Raft",
+      "aliases": []
+    },
+    {
+      "entity": "skill-1-0",
+      "title": "Fire Striker",
+      "aliases": []
+    },
+    {
+      "entity": "item-247",
+      "title": "Firefly",
+      "aliases": []
+    },
+    {
+      "entity": "being-27",
+      "title": "Firelouse",
+      "aliases": []
+    },
+    {
+      "entity": "item-40",
+      "title": "Firesteel",
+      "aliases": []
+    },
+    {
+      "entity": "item-81",
+      "title": "Firewood (Cypress)",
+      "aliases": []
+    },
+    {
+      "entity": "item-215",
+      "title": "Firewood (Trollgnarl)",
+      "aliases": []
+    },
+    {
+      "entity": "item-36",
+      "title": "Firewood (Willow)",
+      "aliases": []
+    },
+    {
+      "entity": "skill-0-3",
+      "title": "Firm Grip",
+      "aliases": []
+    },
+    {
+      "entity": "item-253",
+      "title": "Flask of Fire",
+      "aliases": []
+    },
+    {
+      "entity": "item-48",
+      "title": "Flax",
+      "aliases": []
+    },
+    {
+      "entity": "item-39",
+      "title": "Flint",
+      "aliases": []
+    },
+    {
+      "entity": "item-76",
+      "title": "Flinthead Arrow",
+      "aliases": []
+    },
+    {
+      "entity": "skill-1-2",
+      "title": "Focused Mind",
+      "aliases": []
+    },
+    {
+      "entity": "item-94",
+      "title": "Fool's Gold",
+      "aliases": []
+    },
+    {
+      "entity": "item-196",
+      "title": "Forager's Vest",
+      "aliases": []
+    },
+    {
+      "entity": "skill-3-2",
+      "title": "Force Fighter",
+      "aliases": []
+    },
+    {
+      "entity": "item-88",
+      "title": "Fried Egg",
+      "aliases": []
+    },
+    {
+      "entity": "item-64",
+      "title": "Frog",
+      "aliases": []
+    },
+    {
+      "entity": "item-256",
+      "title": "Furhide Bedroll",
+      "aliases": []
+    },
+    {
+      "entity": "being-2",
+      "title": "Giant Gnat",
+      "aliases": []
+    },
+    {
+      "entity": "being-0",
+      "title": "Giant Slug",
+      "aliases": []
+    },
+    {
+      "entity": "item-124",
+      "title": "Glow Goo",
+      "aliases": []
+    },
+    {
+      "entity": "item-123",
+      "title": "Glowing Rune",
+      "aliases": []
+    },
+    {
+      "entity": "item-74",
+      "title": "Gold Coin",
+      "aliases": []
+    },
+    {
+      "entity": "nature-0",
+      "title": "Grass",
+      "aliases": []
+    },
+    {
+      "entity": "item-154",
+      "title": "Great Bedroll",
+      "aliases": []
+    },
+    {
+      "entity": "item-6",
+      "title": "Great Hunting Knife",
+      "aliases": []
+    },
+    {
+      "entity": "skill-4-0",
+      "title": "Green Fingers",
+      "aliases": []
+    },
+    {
+      "entity": "item-245",
+      "title": "Grilled Baby Firelouse",
+      "aliases": []
+    },
+    {
+      "entity": "item-70",
+      "title": "Grilled Bug Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-246",
+      "title": "Grilled Bursthopper",
+      "aliases": []
+    },
+    {
+      "entity": "item-181",
+      "title": "Grilled Cave Creeper",
+      "aliases": []
+    },
+    {
+      "entity": "item-67",
+      "title": "Grilled Crab Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-65",
+      "title": "Grilled Frog Legs",
+      "aliases": []
+    },
+    {
+      "entity": "item-61",
+      "title": "Grilled Maggot",
+      "aliases": []
+    },
+    {
+      "entity": "item-83",
+      "title": "Grilled Snake Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-163",
+      "title": "Grilled Toadkin Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-222",
+      "title": "Grilled Turnip",
+      "aliases": []
+    },
+    {
+      "entity": "item-104",
+      "title": "Grilled Vile Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-244",
+      "title": "Grilled Wakebug",
+      "aliases": []
+    },
+    {
+      "entity": "item-179",
+      "title": "Gurb's Expertimental Bow",
+      "aliases": []
+    },
+    {
+      "entity": "item-251",
+      "title": "Gurb's Flask of Vileness",
+      "aliases": []
+    },
+    {
+      "entity": "being-26",
+      "title": "Gurb-Gurb",
+      "aliases": []
+    },
+    {
+      "entity": "item-169",
+      "title": "Heavy Branch (Cypress)",
+      "aliases": []
+    },
+    {
+      "entity": "skill-4-2",
+      "title": "Herbivore",
+      "aliases": []
+    },
+    {
+      "entity": "item-108",
+      "title": "Hidden Hollow",
+      "aliases": []
+    },
+    {
+      "entity": "item-21",
+      "title": "Hiker's Pants",
+      "aliases": []
+    },
+    {
+      "entity": "item-24",
+      "title": "Hiker's Shirt",
+      "aliases": []
+    },
+    {
+      "entity": "item-51",
+      "title": "Honey",
+      "aliases": []
+    },
+    {
+      "entity": "item-7",
+      "title": "Hunter Master's Knife",
+      "aliases": []
+    },
+    {
+      "entity": "being-33",
+      "title": "Ihar",
+      "aliases": []
+    },
+    {
+      "entity": "item-143",
+      "title": "Improvised Bandage",
+      "aliases": []
+    },
+    {
+      "entity": "item-257",
+      "title": "Improvised Bedroll",
+      "aliases": []
+    },
+    {
+      "entity": "item-93",
+      "title": "Improvised Bow",
+      "aliases": []
+    },
+    {
+      "entity": "item-212",
+      "title": "Improvised Enduring Torch",
+      "aliases": []
+    },
+    {
+      "entity": "item-118",
+      "title": "Improvised Shield",
+      "aliases": []
+    },
+    {
+      "entity": "item-96",
+      "title": "Improvised Torch",
+      "aliases": []
+    },
+    {
+      "entity": "item-45",
+      "title": "Iron Arrow",
+      "aliases": []
+    },
+    {
+      "entity": "item-188",
+      "title": "Iron Battleaxe",
+      "aliases": []
+    },
+    {
+      "entity": "item-1",
+      "title": "Iron Buckler",
+      "aliases": []
+    },
+    {
+      "entity": "item-157",
+      "title": "Iron Cudgel",
+      "aliases": []
+    },
+    {
+      "entity": "item-3",
+      "title": "Iron Dagger",
+      "aliases": []
+    },
+    {
+      "entity": "item-29",
+      "title": "Iron Felling Axe",
+      "aliases": []
+    },
+    {
+      "entity": "item-254",
+      "title": "Iron Firesteel",
+      "aliases": []
+    },
+    {
+      "entity": "item-184",
+      "title": "Iron Greatsword",
+      "aliases": []
+    },
+    {
+      "entity": "item-27",
+      "title": "Iron Hand Axe",
+      "aliases": []
+    },
+    {
+      "entity": "item-193",
+      "title": "Iron Legplates",
+      "aliases": []
+    },
+    {
+      "entity": "item-11",
+      "title": "Iron Longsword",
+      "aliases": []
+    },
+    {
+      "entity": "item-190",
+      "title": "Iron Mace",
+      "aliases": []
+    },
+    {
+      "entity": "item-160",
+      "title": "Iron Morning Star",
+      "aliases": []
+    },
+    {
+      "entity": "item-165",
+      "title": "Iron Reinforced Gloves",
+      "aliases": []
+    },
+    {
+      "entity": "item-9",
+      "title": "Iron Shortsword",
+      "aliases": []
+    },
+    {
+      "entity": "item-116",
+      "title": "Iron Skull Cap",
+      "aliases": []
+    },
+    {
+      "entity": "item-186",
+      "title": "Iron Warhammer",
+      "aliases": []
+    },
+    {
+      "entity": "item-248",
+      "title": "Jar of Fireflies",
+      "aliases": []
+    },
+    {
+      "entity": "item-166",
+      "title": "Journeyman Herbalist's Belt",
+      "aliases": []
+    },
+    {
+      "entity": "skill-0-2",
+      "title": "Jumper",
+      "aliases": []
+    },
+    {
+      "entity": "item-112",
+      "title": "Lamp Oil",
+      "aliases": []
+    },
+    {
+      "entity": "item-110",
+      "title": "Lantern",
+      "aliases": []
+    },
+    {
+      "entity": "item-26",
+      "title": "Large Backpack",
+      "aliases": []
+    },
+    {
+      "entity": "item-62",
+      "title": "Large Beetle",
+      "aliases": []
+    },
+    {
+      "entity": "item-60",
+      "title": "Large Maggot",
+      "aliases": []
+    },
+    {
+      "entity": "item-50",
+      "title": "Large Scaalmyr Husk",
+      "aliases": []
+    },
+    {
+      "entity": "item-201",
+      "title": "Leather Boots",
+      "aliases": []
+    },
+    {
+      "entity": "item-119",
+      "title": "Leather Cap",
+      "aliases": []
+    },
+    {
+      "entity": "item-59",
+      "title": "Leather Gloves",
+      "aliases": []
+    },
+    {
+      "entity": "item-192",
+      "title": "Leather Leg Armor",
+      "aliases": []
+    },
+    {
+      "entity": "item-43",
+      "title": "Leather Vest",
+      "aliases": []
+    },
+    {
+      "entity": "item-32",
+      "title": "Lesser Wound Salve",
+      "aliases": []
+    },
+    {
+      "entity": "nature-8",
+      "title": "Lilypad",
+      "aliases": []
+    },
+    {
+      "entity": "item-49",
+      "title": "Linen",
+      "aliases": []
+    },
+    {
+      "entity": "item-25",
+      "title": "Loaf of Bread",
+      "aliases": []
+    },
+    {
+      "entity": "item-80",
+      "title": "Log (Cypress)",
+      "aliases": []
+    },
+    {
+      "entity": "item-35",
+      "title": "Log (Willow)",
+      "aliases": []
+    },
+    {
+      "entity": "item-214",
+      "title": "Log Chunk (Trollgnarl)",
+      "aliases": []
+    },
+    {
+      "entity": "item-105",
+      "title": "Longbow (Cypress)",
+      "aliases": []
+    },
+    {
+      "entity": "item-106",
+      "title": "Longbow (Yew)",
+      "aliases": []
+    },
+    {
+      "entity": "item-177",
+      "title": "Lump of Coal",
+      "aliases": []
+    },
+    {
+      "entity": "being-8",
+      "title": "Magus Clay",
+      "aliases": []
+    },
+    {
+      "entity": "item-156",
+      "title": "Map Drawing Kit",
+      "aliases": []
+    },
+    {
+      "entity": "item-252",
+      "title": "Map Ledger",
+      "aliases": []
+    },
+    {
+      "entity": "item-89",
+      "title": "Map of area",
+      "aliases": []
+    },
+    {
+      "entity": "skill-3-1",
+      "title": "Master Basher",
+      "aliases": []
+    },
+    {
+      "entity": "item-168",
+      "title": "Master Herbalist's Belt",
+      "aliases": []
+    },
+    {
+      "entity": "item-111",
+      "title": "Masterwork Lantern",
+      "aliases": []
+    },
+    {
+      "entity": "item-14",
+      "title": "Medium Backpack",
+      "aliases": []
+    },
+    {
+      "entity": "item-115",
+      "title": "Metal Repair Kit",
+      "aliases": []
+    },
+    {
+      "entity": "item-84",
+      "title": "Minor Antidote",
+      "aliases": []
+    },
+    {
+      "entity": "item-140",
+      "title": "Minor Wound Salve",
+      "aliases": []
+    },
+    {
+      "entity": "being-4",
+      "title": "Mire Serpent",
+      "aliases": []
+    },
+    {
+      "entity": "being-29",
+      "title": "Mirk Mauler",
+      "aliases": []
+    },
+    {
+      "entity": "being-11",
+      "title": "Mirk Runner",
+      "aliases": []
+    },
+    {
+      "entity": "item-122",
+      "title": "Mold",
+      "aliases": []
+    },
+    {
+      "entity": "item-121",
+      "title": "Moldy Wood",
+      "aliases": []
+    },
+    {
+      "entity": "nature-5",
+      "title": "Moss",
+      "aliases": []
+    },
+    {
+      "entity": "nature-3",
+      "title": "Mossy Log",
+      "aliases": []
+    },
+    {
+      "entity": "being-17",
+      "title": "Mudfin",
+      "aliases": []
+    },
+    {
+      "entity": "being-32",
+      "title": "Mutated Unwanted",
+      "aliases": []
+    },
+    {
+      "entity": "skill-4-4",
+      "title": "Natural Antidote",
+      "aliases": []
+    },
+    {
+      "entity": "being-28",
+      "title": "Nightmare",
+      "aliases": []
+    },
+    {
+      "entity": "skill-1-4",
+      "title": "Pack Mule",
+      "aliases": []
+    },
+    {
+      "entity": "item-91",
+      "title": "Plant Fiber",
+      "aliases": []
+    },
+    {
+      "entity": "item-235",
+      "title": "Pleasant Vegetable Soup",
+      "aliases": []
+    },
+    {
+      "entity": "item-174",
+      "title": "Poison Arrow",
+      "aliases": []
+    },
+    {
+      "entity": "item-219",
+      "title": "Poison Arrow II",
+      "aliases": []
+    },
+    {
+      "entity": "item-220",
+      "title": "Poison Arrow III",
+      "aliases": []
+    },
+    {
+      "entity": "item-239",
+      "title": "Primitive Farmwork Table",
+      "aliases": []
+    },
+    {
+      "entity": "item-170",
+      "title": "Raft Base",
+      "aliases": []
+    },
+    {
+      "entity": "being-12",
+      "title": "Ranger Bhato",
+      "aliases": []
+    },
+    {
+      "entity": "item-148",
+      "title": "Ranger's Backpack",
+      "aliases": []
+    },
+    {
+      "entity": "item-209",
+      "title": "Ranger's Cloak",
+      "aliases": []
+    },
+    {
+      "entity": "item-205",
+      "title": "Ranger's Hood",
+      "aliases": []
+    },
+    {
+      "entity": "being-31",
+      "title": "Raving Unwanted",
+      "aliases": []
+    },
+    {
+      "entity": "being-24",
+      "title": "Razorfin",
+      "aliases": []
+    },
+    {
+      "entity": "being-23",
+      "title": "Red Fang",
+      "aliases": []
+    },
+    {
+      "entity": "nature-12",
+      "title": "Rift Grass",
+      "aliases": []
+    },
+    {
+      "entity": "nature-13",
+      "title": "Rift Vine",
+      "aliases": []
+    },
+    {
+      "entity": "item-107",
+      "title": "Rift Weave",
+      "aliases": []
+    },
+    {
+      "entity": "item-218",
+      "title": "Riftvine Berries",
+      "aliases": []
+    },
+    {
+      "entity": "item-37",
+      "title": "Rock",
+      "aliases": []
+    },
+    {
+      "entity": "item-98",
+      "title": "Ruby",
+      "aliases": []
+    },
+    {
+      "entity": "item-100",
+      "title": "Sapphire",
+      "aliases": []
+    },
+    {
+      "entity": "being-22",
+      "title": "Scaal",
+      "aliases": []
+    },
+    {
+      "entity": "being-16",
+      "title": "Scaalmyr Geomancer",
+      "aliases": []
+    },
+    {
+      "entity": "being-14",
+      "title": "Scaalmyr Grunt",
+      "aliases": []
+    },
+    {
+      "entity": "item-129",
+      "title": "Scaalmyr Husk",
+      "aliases": []
+    },
+    {
+      "entity": "being-15",
+      "title": "Scaalmyr Warrior",
+      "aliases": []
+    },
+    {
+      "entity": "being-13",
+      "title": "Sceetler",
+      "aliases": []
+    },
+    {
+      "entity": "item-159",
+      "title": "Serpent Fang",
+      "aliases": []
+    },
+    {
+      "entity": "item-195",
+      "title": "Shabby Leather Leg Armor",
+      "aliases": []
+    },
+    {
+      "entity": "item-194",
+      "title": "Shabby Leather Vest",
+      "aliases": []
+    },
+    {
+      "entity": "item-102",
+      "title": "Shabby Pelt",
+      "aliases": []
+    },
+    {
+      "entity": "item-137",
+      "title": "Shabby Pelt Cloak",
+      "aliases": []
+    },
+    {
+      "entity": "skill-3-4",
+      "title": "Shield Savant",
+      "aliases": []
+    },
+    {
+      "entity": "item-2",
+      "title": "Shoddy Dagger",
+      "aliases": []
+    },
+    {
+      "entity": "item-44",
+      "title": "Shortbow (Willow)",
+      "aliases": []
+    },
+    {
+      "entity": "item-86",
+      "title": "Sickness Cure",
+      "aliases": []
+    },
+    {
+      "entity": "item-85",
+      "title": "Sickness Remedy",
+      "aliases": []
+    },
+    {
+      "entity": "item-73",
+      "title": "Silver Coin",
+      "aliases": []
+    },
+    {
+      "entity": "item-141",
+      "title": "Simple Burn Remedy",
+      "aliases": []
+    },
+    {
+      "entity": "item-15",
+      "title": "Simple Cloth Shoes",
+      "aliases": []
+    },
+    {
+      "entity": "item-42",
+      "title": "Simple Hood",
+      "aliases": []
+    },
+    {
+      "entity": "item-20",
+      "title": "Simple Pants",
+      "aliases": []
+    },
+    {
+      "entity": "item-240",
+      "title": "Simple Shelter",
+      "aliases": []
+    },
+    {
+      "entity": "item-22",
+      "title": "Simple Shirt",
+      "aliases": []
+    },
+    {
+      "entity": "skill-1-1",
+      "title": "Slow Metabolism",
+      "aliases": []
+    },
+    {
+      "entity": "item-12",
+      "title": "Small Backpack",
+      "aliases": []
+    },
+    {
+      "entity": "item-178",
+      "title": "Small Fire Gland",
+      "aliases": []
+    },
+    {
+      "entity": "item-47",
+      "title": "Small Linen Tent",
+      "aliases": []
+    },
+    {
+      "entity": "item-120",
+      "title": "Small Venom Gland",
+      "aliases": []
+    },
+    {
+      "entity": "item-82",
+      "title": "Snake Meat",
+      "aliases": []
+    },
+    {
+      "entity": "being-5",
+      "title": "Soldier",
+      "aliases": []
+    },
+    {
+      "entity": "item-46",
+      "title": "Steel Arrow",
+      "aliases": []
+    },
+    {
+      "entity": "item-54",
+      "title": "Steel Bascinet",
+      "aliases": []
+    },
+    {
+      "entity": "item-189",
+      "title": "Steel Battleaxe",
+      "aliases": []
+    },
+    {
+      "entity": "item-55",
+      "title": "Steel Chestplate",
+      "aliases": []
+    },
+    {
+      "entity": "item-158",
+      "title": "Steel Cudgel",
+      "aliases": []
+    },
+    {
+      "entity": "item-4",
+      "title": "Steel Dagger",
+      "aliases": []
+    },
+    {
+      "entity": "item-30",
+      "title": "Steel Felling Axe",
+      "aliases": []
+    },
+    {
+      "entity": "item-185",
+      "title": "Steel Greatsword",
+      "aliases": []
+    },
+    {
+      "entity": "item-28",
+      "title": "Steel Hand Axe",
+      "aliases": []
+    },
+    {
+      "entity": "item-56",
+      "title": "Steel Legplates",
+      "aliases": []
+    },
+    {
+      "entity": "item-8",
+      "title": "Steel Longsword",
+      "aliases": []
+    },
+    {
+      "entity": "item-191",
+      "title": "Steel Mace",
+      "aliases": []
+    },
+    {
+      "entity": "item-161",
+      "title": "Steel Morning Star",
+      "aliases": []
+    },
+    {
+      "entity": "item-58",
+      "title": "Steel Shield",
+      "aliases": []
+    },
+    {
+      "entity": "item-10",
+      "title": "Steel Shortsword",
+      "aliases": []
+    },
+    {
+      "entity": "item-117",
+      "title": "Steel Skull Cap",
+      "aliases": []
+    },
+    {
+      "entity": "item-187",
+      "title": "Steel Warhammer",
+      "aliases": []
+    },
+    {
+      "entity": "item-90",
+      "title": "Stone Club",
+      "aliases": []
+    },
+    {
+      "entity": "item-95",
+      "title": "Strange Glowing Bug",
+      "aliases": []
+    },
+    {
+      "entity": "skill-0-0",
+      "title": "Strider",
+      "aliases": []
+    },
+    {
+      "entity": "item-57",
+      "title": "Sturdy Leather Boots",
+      "aliases": []
+    },
+    {
+      "entity": "item-200",
+      "title": "Sturdy Leather Gloves",
+      "aliases": []
+    },
+    {
+      "entity": "item-127",
+      "title": "Summoning Stone",
+      "aliases": []
+    },
+    {
+      "entity": "item-237",
+      "title": "Survivor's Delight",
+      "aliases": []
+    },
+    {
+      "entity": "item-172",
+      "title": "Survivor's Field Kit",
+      "aliases": []
+    },
+    {
+      "entity": "being-3",
+      "title": "Swamp Troll",
+      "aliases": []
+    },
+    {
+      "entity": "item-135",
+      "title": "Swamp Troll Hide",
+      "aliases": []
+    },
+    {
+      "entity": "skill-3-0",
+      "title": "Tailor-Made",
+      "aliases": []
+    },
+    {
+      "entity": "nature-1",
+      "title": "Tall Grass",
+      "aliases": []
+    },
+    {
+      "entity": "item-236",
+      "title": "Tasty Crab Soup",
+      "aliases": []
+    },
+    {
+      "entity": "item-68",
+      "title": "Tattered Bedroll",
+      "aliases": []
+    },
+    {
+      "entity": "item-199",
+      "title": "Tattered Gloves",
+      "aliases": []
+    },
+    {
+      "entity": "item-206",
+      "title": "Thorns of Wackah",
+      "aliases": []
+    },
+    {
+      "entity": "being-30",
+      "title": "Titanspine Crab",
+      "aliases": []
+    },
+    {
+      "entity": "being-21",
+      "title": "Toadkin",
+      "aliases": []
+    },
+    {
+      "entity": "item-162",
+      "title": "Toadkin Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-101",
+      "title": "Topaz",
+      "aliases": []
+    },
+    {
+      "entity": "item-41",
+      "title": "Torch",
+      "aliases": []
+    },
+    {
+      "entity": "item-208",
+      "title": "Traveller's Cloak",
+      "aliases": []
+    },
+    {
+      "entity": "item-134",
+      "title": "Troll Fat",
+      "aliases": []
+    },
+    {
+      "entity": "item-145",
+      "title": "Troll Skin Cloak",
+      "aliases": []
+    },
+    {
+      "entity": "item-146",
+      "title": "Troll Skin Hood",
+      "aliases": []
+    },
+    {
+      "entity": "item-147",
+      "title": "Troll Skin Vest",
+      "aliases": []
+    },
+    {
+      "entity": "nature-17",
+      "title": "Trollgnarl",
+      "aliases": []
+    },
+    {
+      "entity": "item-234",
+      "title": "Trollgnarl Seed Pods",
+      "aliases": []
+    },
+    {
+      "entity": "item-221",
+      "title": "Turnip (item)",
+      "aliases": []
+    },
+    {
+      "entity": "nature-18",
+      "title": "Turnip (nature)",
+      "aliases": []
+    },
+    {
+      "entity": "item-230",
+      "title": "Turnip Seeds",
+      "aliases": []
+    },
+    {
+      "entity": "item-78",
+      "title": "Twig (Cypress)",
+      "aliases": []
+    },
+    {
+      "entity": "item-19",
+      "title": "Twig (Willow)",
+      "aliases": []
+    },
+    {
+      "entity": "item-92",
+      "title": "Twine",
+      "aliases": []
+    },
+    {
+      "entity": "item-31",
+      "title": "Unarmed",
+      "aliases": []
+    },
+    {
+      "entity": "being-35",
+      "title": "Unwanted Guard",
+      "aliases": []
+    },
+    {
+      "entity": "being-19",
+      "title": "Viend",
+      "aliases": []
+    },
+    {
+      "entity": "item-173",
+      "title": "Vile Bulb (Mushroom)",
+      "aliases": []
+    },
+    {
+      "entity": "item-103",
+      "title": "Vile Meat",
+      "aliases": []
+    },
+    {
+      "entity": "being-10",
+      "title": "Viper",
+      "aliases": []
+    },
+    {
+      "entity": "item-241",
+      "title": "Wakebug",
+      "aliases": []
+    },
+    {
+      "entity": "item-203",
+      "title": "Wanderer's Shoes",
+      "aliases": []
+    },
+    {
+      "entity": "item-132",
+      "title": "Ward Breaker",
+      "aliases": []
+    },
+    {
+      "entity": "item-175",
+      "title": "Water Lily",
+      "aliases": []
+    },
+    {
+      "entity": "item-226",
+      "title": "Watercress",
+      "aliases": []
+    },
+    {
+      "entity": "item-231",
+      "title": "Watercress Seeds",
+      "aliases": []
+    },
+    {
+      "entity": "item-155",
+      "title": "Waxed Linen Tent",
+      "aliases": []
+    },
+    {
+      "entity": "item-176",
+      "title": "Wayfarer's Vigor",
+      "aliases": []
+    },
+    {
+      "entity": "being-34",
+      "title": "Wilda",
+      "aliases": []
+    },
+    {
+      "entity": "nature-4",
+      "title": "Willow",
+      "aliases": []
+    },
+    {
+      "entity": "item-232",
+      "title": "Willow Seeds",
+      "aliases": []
+    },
+    {
+      "entity": "item-0",
+      "title": "Wood Buckler",
+      "aliases": []
+    },
+    {
+      "entity": "item-114",
+      "title": "Wood Repair Kit",
+      "aliases": []
+    },
+    {
+      "entity": "item-75",
+      "title": "Wooden Recorder",
+      "aliases": []
+    },
+    {
+      "entity": "item-204",
+      "title": "Wool Hood",
+      "aliases": []
+    },
+    {
+      "entity": "item-23",
+      "title": "Wool Shirt",
+      "aliases": []
+    },
+    {
+      "entity": "item-202",
+      "title": "Worn Boots",
+      "aliases": []
+    },
+    {
+      "entity": "item-255",
+      "title": "Worn Firesteel",
+      "aliases": []
+    },
+    {
+      "entity": "item-164",
+      "title": "Worn Leather Gloves",
+      "aliases": []
+    },
+    {
+      "entity": "item-33",
+      "title": "Worn Leather Pants",
+      "aliases": []
+    },
+    {
+      "entity": "item-16",
+      "title": "Worn Socks",
+      "aliases": []
+    },
+    {
+      "entity": "item-138",
+      "title": "Wound Salve",
+      "aliases": []
+    }
+  ],
+  "classifications": [
+    {
+      "entity": "being-0",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "0"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[0].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-1",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "1"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[1].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-2",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "2"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[2].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-3",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "3"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[3].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-4",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "4"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[4].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-5",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "5"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[5].sprite/team"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-6",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "6"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[6].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[6].porPic[0]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-7",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "7"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[7].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-8",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "8"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[8].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[8].porPic[1]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-9",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "9"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[9].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[9].porPic[2]"
+        }
+      ],
+      "note": "A deceased character record, not an ordinary creature."
+    },
+    {
+      "entity": "being-10",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "10"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[10].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-11",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "11"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[11].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-12",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "12"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[12].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[12].porPic[3]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-13",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "13"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[13].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-14",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "14"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[14].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-15",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "15"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[15].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-16",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "16"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[16].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-17",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "17"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[17].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-18",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "18"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[18].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-19",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "19"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[19].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[19].porPic[4]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-20",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "20"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[20].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[20].porPic[5]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-21",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "21"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[21].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-22",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "22"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[22].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-23",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "23"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[23].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-24",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "24"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[24].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-25",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "25"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[25].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-26",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "26"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[26].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[26].porPic[6]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-27",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "27"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[27].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-28",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "28"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[28].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-29",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "29"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[29].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-30",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "30"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[30].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-31",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "31"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[31].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-32",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "32"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[32].sprite/team"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility."
+    },
+    {
+      "entity": "being-33",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "33"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[33].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[33].porPic[7]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-34",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[34].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[34].porPic[8]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    },
+    {
+      "entity": "being-35",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "35"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[35].sprite/team"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+    }
+  ],
+  "entry_links": [
+    {
+      "entry": "skill-allocation",
+      "entities": [
+        "skill-1-2"
+      ]
+    },
+    {
+      "entry": "crafting-station-modifiers",
+      "entities": [
+        "skill-4-3"
+      ]
+    }
+  ]
+}

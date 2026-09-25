@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from build_wiki import EXPORT_NS, build_pages, build_xml, existing_titles, literal, title_key
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, load_data, parse_data, validate_data
 from check_publication import blob_errors
+from wiki_catalog import entry_owners, entry_relations, default_catalog, page_locations
 
 
 def synthetic_data():
@@ -124,7 +125,7 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 18)
+        self.assertEqual(len(pages), 343)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
@@ -241,18 +242,21 @@ class ResearchTests(unittest.TestCase):
 
     def test_other_entry_kinds_retain_lexicographic_id_order(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")
+        catalog = default_catalog(data)
+        owners = entry_owners(data, page_locations(data, catalog), entry_relations(data, catalog))
         for title, page in build_pages(ROOT, data).items():
             if title == "Quests and journal":
                 continue
             with self.subTest(page=title):
-                identities = re.findall(r'<span id="entry-([^"]+)"></span>', page)
+                identities = [identity for identity in re.findall(r'<span id="entry-([^"]+)"></span>', page)
+                              if owners[identity] == title]
                 self.assertEqual(identities, sorted(identities))
 
     def test_original_version_one_needs_no_extension_fields(self):
         data = synthetic_data()
         validate_data(data)
         pages = build_pages(ROOT, data)
-        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance"})
+        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance", "NPCs", "Entity synthetic-item"})
         self.assertNotIn("More researched topics", pages["Main Page"])
         self.assertNotIn("Illustration references", pages["Items"])
 
@@ -263,12 +267,12 @@ class ResearchTests(unittest.TestCase):
         self.assertIn("[[Merchants]]", pages["Main Page"])
         self.assertNotIn("World seed logic", pages)
         self.assertNotIn("[[World seed logic]]", pages["Main Page"])
-        self.assertIn("Not established", pages["Merchants"])
-        self.assertIn("Not established; not calculated from weight", pages["Loot tables"])
-        self.assertNotIn("50%", pages["Loot tables"])
-        self.assertIn("[[Items#entity-synthetic-item|", pages["Crafting"])
+        self.assertIn("Not established", pages["Synthetic merchant"])
+        self.assertIn("Not established; not calculated from weight", pages["Synthetic merchant"])
+        self.assertNotIn("50%", pages["Synthetic merchant"])
+        self.assertIn("[[Entity synthetic-item|", pages["Entity synthetic-item"])
         self.assertIn("[[Game mechanics#fact-synthetic-fact|", pages["Weather"])
-        for title in ("Quests and journal", "Merchants", "Crafting", "Loot tables", "Weather"):
+        for title in ("Quests and journal", "Synthetic merchant", "Entity synthetic-item", "Weather"):
             self.assertIn("[[Source provenance#synthetic|synthetic]]", pages[title])
             self.assertIn("Inferred; requires confirmation", pages[title])
 
@@ -291,7 +295,7 @@ class ResearchTests(unittest.TestCase):
             data = research_data()
             details = data["entries"][3]["details"]
             details.update(outcome=None, quantity=quantity, probability=0.25, rolls={"min": 0, "max": 1})
-            page = build_pages(ROOT, data)["Loot tables"]
+            page = build_pages(ROOT, data)["Synthetic merchant"]
             self.assertIn("Explicit empty result", page)
             self.assertIn("<nowiki>0.25</nowiki>", page)
 
@@ -345,15 +349,15 @@ class ResearchTests(unittest.TestCase):
 
     def test_pending_images_never_embed_or_link_artwork(self):
         pages = build_pages(ROOT, illustration_data())
-        self.assertIn("pending rights confirmation", pages["Items"])
-        self.assertNotIn("[[File:", pages["Items"])
-        self.assertNotIn("[[:File:", pages["Items"])
+        self.assertIn("pending rights confirmation", pages["Entity synthetic-item"])
+        self.assertNotIn("[[File:", pages["Entity synthetic-item"])
+        self.assertNotIn("[[:File:", pages["Entity synthetic-item"])
 
     def test_approved_references_have_domain_independent_attribution(self):
         pages = build_pages(ROOT, illustration_data(approved=True))
-        self.assertIn("[[File:Synthetic.png|thumb|", pages["Items"])
-        self.assertIn("Synthetic test creator", pages["Items"])
-        self.assertNotIn("https://", pages["Items"])
+        self.assertIn("[[File:Synthetic.png|thumb|", pages["Entity synthetic-item"])
+        self.assertIn("Synthetic test creator", pages["Entity synthetic-item"])
+        self.assertNotIn("https://", pages["Entity synthetic-item"])
 
     def test_invalid_illustration_metadata_is_rejected(self):
         changes = [

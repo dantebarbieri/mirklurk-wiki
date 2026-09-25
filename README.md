@@ -14,7 +14,9 @@ observations. The installed game release is **unidentified**.
 The expanded reference retains that baseline and now contains **107 numeric facts
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
-original algorithm/skill summaries. It generates 18 main-namespace pages.
+original algorithm/skill summaries. The encyclopedia presentation generates
+343 main-namespace pages: 324 individual item, being, nature, and skill pages,
+plus topic indexes, guidance, provenance, and a compatibility redirect.
 The observed menu label `0.8.1.5` is cited separately, not treated as a confirmed
 release identifier.
 
@@ -34,7 +36,11 @@ The current loot reference is not an exhaustive loot-table catalogue.
 | --- | --- |
 | `content/pages` | Original wikitext introductions, navigation, policies, and caveats |
 | `content/facts/game.json` | Vetted names, numeric facts, structured research, and provenance, not raw research |
+| `content/facts/catalog.json` | Stable ordinary page titles, evidence-backed classifications, and editorial crosslinks |
+| `content/facts/entity_details.json` | Bounded typed profiles with shared original property explanations |
+| `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
 | `tools/build_wiki.py` | Deterministic MediaWiki XML for reviewed seeding |
+| `tools/plan_migration.py` | Three-way review report that never modifies a wiki |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
 | `tests` | Publication, facts, escaping, deterministic export, and runtime-policy tests |
@@ -60,6 +66,12 @@ platforms with their usual path separators.
 The builder requires an explicit fresh/additive mode, refuses to overwrite an
 output file, and never connects to a wiki. **Do not import a fresh seed into an
 existing community wiki.** Follow [the import procedure](docs/IMPORTING.md).
+
+Entity pages use ordinary names; only collisions are qualified, such as
+**Turnip (item)** and **Turnip (nature)**. NPCs are indexed separately from
+creatures, without assuming either grouping guarantees peacefulness or
+hostility. Skill-specific facts and summaries live on individual skill pages;
+old aggregate anchors remain as links. Initial research records are unchanged.
 
 ## Operate a wiki
 

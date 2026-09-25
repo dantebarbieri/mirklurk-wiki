@@ -22,6 +22,8 @@ working copy. It rejects:
   likely literal secret assignments, personal absolute paths, and decompiled
   function definitions.
 - Structured facts that do not satisfy the strict provenance schema.
+- Catalog, profile, or illustration references that disagree with the staged
+  `game.json`; supplemental validation reads staged blobs, not working copies.
 
 Diagnostics name the rule and line, not the matched secret. The scanner is
 deliberately conservative about ordinary documentation: discussing a password

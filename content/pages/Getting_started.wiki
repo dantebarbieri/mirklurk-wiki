@@ -1,13 +1,1 @@
-This page explains how to navigate the wiki; it does not invent a strategy guide from untested source entries.
-
-== Start with evidence ==
-Read the evidence status beside each fact. A name observed in a title section establishes an ID/name association, not a drop location, unlock condition, or stat. A number described by localization may differ from the calculation used during play.
-
-Use [[Game mechanics]] for currently curated mechanics. Browse [[Items]], [[Bestiary]], [[Nature]], [[Skills]], and [[Damage types]] only if discovering names early will not spoil your experience.
-
-== Record a useful observation ==
-Note the game version if visible, the conditions of the observation, and what you actually measured. Keep save files and raw research private. Publish a concise original explanation and enough evidence identifiers for another owner of the same build to investigate.
-
-If evidence is incomplete, say what remains unknown instead of supplying a likely number.
-
-[[Main Page]] | [[Research policy]] | [[Evidence and spoilers]] | [[Source provenance]]
+#REDIRECT [[Research policy]]

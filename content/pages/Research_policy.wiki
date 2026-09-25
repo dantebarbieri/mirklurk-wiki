@@ -15,6 +15,13 @@ Owning a copy of the game does not by itself grant permission to redistribute it
 == Evidence is not certainty ==
 Distinguish what a source says from what the game does. A name may be unused, obsolete, or reserved for content not currently accessible. A shared label does not establish combat behavior.
 
+Read the evidence status beside each fact. A title-section name establishes an ID/name association, not a drop location, unlock condition, or stat. A number described by localization may differ from the calculation used during play.
+
+== Record a useful observation ==
+Note the visible game version, the observation's conditions, and what you actually measured. Keep saves and raw research private. Publish a concise original explanation and precise identifiers so another owner of the same build can investigate.
+
+When evidence is incomplete, state what remains unknown instead of supplying a likely number.
+
 Corrections should preserve useful attribution and explain the changed conclusion. Existing live wiki edits are not automatically replaced by repository seed imports.
 
 [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

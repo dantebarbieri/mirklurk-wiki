@@ -1,7 +1,5 @@
-This is a factual index of short item names and their source identifiers, not a catalogue of copied item descriptions.
+Browse equipment, materials, and supplies. Each item page brings together its documented stats, crafting recipes, merchant offers, and loot references.
 
-An entry does not establish that an item is obtainable, equipped in a particular slot, sold by a particular character, or assigned any particular stat. Those claims require separate evidence.
-
-'''Spoilers:''' the index may reveal names before they appear in your playthrough. Duplicate or unused labels may exist.
+A missing stat or acquisition method is unknown. A source entry alone does not prove that the item is obtainable in your build.
 
 [[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

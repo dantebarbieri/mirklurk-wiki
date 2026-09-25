@@ -7,6 +7,8 @@ import sys
 from pathlib import Path, PurePosixPath
 
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
+from wiki_catalog import MAX_CATALOG_BYTES, parse_catalog
+from wiki_details import MAX_DETAILS_BYTES, MAX_ILLUSTRATIONS_BYTES, parse_details, parse_document, parse_illustrations
 
 
 ALLOWED_FILES = {
@@ -21,12 +23,21 @@ ALLOWED_FILES = {
     "docs/DEPLOYMENT.md": 32 * 1024,
     "docs/IMAGES.md": 32 * 1024,
     "content/facts/game.json": MAX_FACTS_BYTES,
+    "content/facts/catalog.json": MAX_CATALOG_BYTES,
+    "content/facts/entity_details.json": MAX_DETAILS_BYTES,
+    "content/facts/illustrations.json": MAX_ILLUSTRATIONS_BYTES,
+    "content/pages/NPCs.wiki": 32 * 1024,
     "tools/check_publication.py": 32 * 1024,
     "tools/wiki_data.py": 32 * 1024,
+    "tools/wiki_catalog.py": 32 * 1024,
+    "tools/wiki_details.py": 32 * 1024,
+    "tools/plan_migration.py": 32 * 1024,
     "tools/build_wiki.py": 32 * 1024,
     "tools/smoke_deploy.py": 32 * 1024,
     "tests/test_safety.py": 48 * 1024,
     "tests/test_wiki.py": 48 * 1024,
+    "tests/test_catalog.py": 48 * 1024,
+    "tests/test_migration.py": 32 * 1024,
     "tests/test_runtime.php": 32 * 1024,
     "deploy/Dockerfile": 8 * 1024,
     "deploy/compose.dev.yml": 16 * 1024,
@@ -170,6 +181,11 @@ def blob_errors(path, raw):
             parse_data(raw)
         except DataError as error:
             problems.append(f"invalid curated facts: {error}")
+    elif path in {"content/facts/catalog.json", "content/facts/entity_details.json", "content/facts/illustrations.json"}:
+        try:
+            parse_document(raw, maximum)
+        except DataError as error:
+            problems.append(f"invalid reviewed metadata: {error}")
     return problems
 
 
@@ -177,6 +193,7 @@ def audit_index(root):
     entries = _git(root, "ls-files", "--stage", "-z")
     problems = []
     count = 0
+    staged_metadata = {}
     if not entries:
         return 0, ["Git index is empty; there is nothing to validate"]
     for entry in entries.rstrip(b"\0").split(b"\0"):
@@ -203,7 +220,23 @@ def audit_index(root):
             else:
                 raw = _git(root, "cat-file", "blob", object_id)
                 errors.extend(blob_errors(path, raw))
+                if path.startswith("content/facts/") and not errors:
+                    staged_metadata[path] = raw
         problems.extend(f"{label}: {error}" for error in errors)
+    validators = {
+        "content/facts/catalog.json": parse_catalog,
+        "content/facts/entity_details.json": parse_details,
+        "content/facts/illustrations.json": parse_illustrations,
+    }
+    for path, validator in validators.items():
+        if path in staged_metadata:
+            if "content/facts/game.json" not in staged_metadata:
+                problems.append(f"{path}: valid staged game.json is required for reference validation")
+                continue
+            try:
+                validator(staged_metadata[path], parse_data(staged_metadata["content/facts/game.json"]))
+            except DataError as error:
+                problems.append(f"{path}: invalid staged references: {error}")
     return count, problems
 
 

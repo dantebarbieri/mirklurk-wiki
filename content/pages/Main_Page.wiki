@@ -1,20 +1,20 @@
-Welcome to the independent '''MirkLurk Wiki''': a community reference built from carefully attributed facts and original explanations.
+Welcome to the independent '''MirkLurk Wiki'''. Find equipment, creatures, characters, skills, and the systems behind your journey.
 
 == Explore ==
-* [[Getting started]] - how to use this wiki without mistaking evidence for certainty
-* [[Game mechanics]] - sourced observations and open questions
-* [[Items]] - short item-name index
-* [[Bestiary]] - beings named in the source, including possible non-hostile characters
-* [[Nature]] - short nature-name index
-* [[Skills]] - skill groups, names, and evidence
+* [[Items]] - equipment, materials, and supplies; open an item for its documented stats and relationships
+* [[Bestiary]] - creatures and enemies
+* [[NPCs]] - characters, including merchants and their documented wares
+* [[Nature]] - plants, terrain, and other nature records
+* [[Skills]] - browse skill groups and individual skill mechanics
 * [[Damage types]] - named damage classes
+* [[Game mechanics]] - weather, progression, crafting, and other researched systems
 
 == Read the caveats ==
 Catalogues may reveal names before you encounter them in play. A source entry is not proof that content is available in the current game. [[Evidence and spoilers|Read the spoiler and build caveats]].
 
-The installed release used for initial research has not been identified. [[Source provenance|Source hashes]] distinguish the researched files without distributing those files.
+Missing information means unknown, not zero. The installed research build remains unidentified; pages distinguish source observations from tested behavior.
 
-== Contribute responsibly ==
-Use your own words, cite the precise evidence, and distinguish a localization description from tested behavior. [[Research policy|Our research policy]] excludes game assets, copied descriptions, dialogue, and decompiled code.
+== Help improve the wiki ==
+Add original explanations and cite evidence. [[Research policy|How to contribute and interpret evidence]] | [[Source provenance|Research sources]].
 
-This is not an official game publication. Game names and other third-party material remain subject to their owners' rights.
+MirkLurk is developed and published by [https://edympixels.com/ Edym Pixels], as listed on [https://store.steampowered.com/app/3972980/MirkLurk/ its Steam page]. This is an unofficial community wiki; game names and artwork remain subject to their owners' rights.

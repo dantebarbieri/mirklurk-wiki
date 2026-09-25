@@ -136,8 +136,9 @@ summaries (25 original skill descriptions and seven runtime/topic summaries).
 A final bounded death-handler supplement adds 43 qualified base-loot entries and
 one algorithm summary, preserving every prior record. Current totals are five
 source fingerprints, 336 entities, 107 facts, and 293 entries: 31 quest/journal,
-63 merchant, 96 recipe, 70 loot, and 33 algorithm records. There are no
-illustration records or approved artwork.
+63 merchant, 96 recipe, 70 loot, and 33 algorithm records. Those immutable
+records remain in `game.json`; the encyclopedia adds separately reviewed
+presentation, profiles, and server-only image metadata.
 
 The separate observed menu label `0.8.1.5` is documented with explicit source
 field citations in Game mechanics; it does not replace null release metadata.
@@ -156,4 +157,90 @@ MediaWiki export 0.11 includes content byte counts and base-36 SHA-1 fields
 
 Page/revision IDs are synthetic, local to the bundle. The fixed seed timestamp
 `2000-01-01T00:00:00Z` makes output reproducible; it is **not** a publication date,
-game release date, or evidence of historical research. No hostname is embedded.
+game release date, or evidence of historical research. No deployment hostname
+is embedded; entity and File links are relative MediaWiki links.
+
+## Encyclopedia identities and ownership
+
+`content/facts/catalog.json` (128 KiB maximum) contains `schema_version: 1`,
+`pages`, `classifications`, and `entry_links`. It changes presentation without
+rewriting historical evidence:
+
+- `pages`: `{entity, title, aliases}` for every item, being, nature record,
+  and skill, exactly once. Titles are locked ordinary names. Only collisions
+  receive qualifiers: `Turnip (item)` and `Turnip (nature)`. Do not redirect
+  ambiguous `Turnip` to just one record. Aliases are explicit previous
+  titles, emitted as redirects; none may collide with a canonical title,
+  another alias, or an authored index. Namespace syntax, fragments, markup,
+  noncanonical spaces/underscores, and duplicate titles are rejected.
+- `classifications`: `{entity, kind, confidence, evidence, note}`, where
+  `kind` is `npc`, `creature`, or `unclassified`. Name/dialogue/database
+  evidence supports this navigation grouping, not universal hostility,
+  friendliness, survival, or reachability. A missing classification remains
+  visibly unclassified; it is never silently labeled an enemy.
+- `entry_links`: `{entry, entities}` for reviewed editorial crosslinks to
+  existing records. These are see-also relationships, not a place to add a
+  mechanic or unsupported semantic claim.
+
+Five skill groups remain sections of Skills; seven damage classes remain on
+Damage types. Other entities have dedicated pages. Facts with an exact,
+unambiguous entity-name/category match move to that entity's page; ambiguous
+matches fail. In particular, legacy skill facts retain `page: Game mechanics`
+in the immutable data but are rendered only on their skill owners.
+
+Merchant offers are primarily owned by the merchant. Recipes belong to the
+output item (lowest stable item ID if a future recipe has several outputs).
+Loot belongs to its uniquely identity-cited being, otherwise its outcome item;
+unassigned/empty outcomes remain on Loot tables. Skill mechanics entries use
+the exact existing `<skill-id>-mechanics` association. Other algorithms and
+quests retain their topic owner. Generic allocation and crafting may retain
+useful cited cross-skill context while linking to the individual skill.
+
+Typed merchant/item/input/output/outcome references and exact matching entity
+identity evidence produce bidirectional links. No substring guessing or
+weight-to-probability normalization is used. Each complete record has one
+primary owner; concise related-record summaries link back to its conditions,
+confidence, and evidence. Legacy `entity-`, `fact-`, and `entry-` anchors remain
+on old indexes as links, so old bookmarks are not silently broken.
+
+The CLI and Docker smoke load the checked-in registry and supplemental files
+explicitly. `build_pages` also supports small caller-supplied datasets: omitted
+catalog/profile arguments use a generated title proposal and no profiles.
+Publication must use the reviewed inputs, not an automatically renamed
+registry. Tests reject title collisions and verify complete record coverage.
+
+## Compact typed profiles
+
+`content/facts/entity_details.json` (512 KiB maximum) has:
+
+```json
+{
+  "schema_version": 1,
+  "properties": [
+    {
+      "id": "example-property",
+      "label": "Original property label",
+      "unit": null,
+      "description": "Original explanation of the field and its interpretation."
+    }
+  ],
+  "profiles": []
+}
+```
+
+Each profile is `{id, entity, context, confidence, evidence, values}`.
+`values` is an object mapping one to 64 declared property IDs to finite
+numbers, booleans, or null. Numeric magnitudes cannot exceed 10^15. Null
+means unknown, never zero; strings, arrays, undeclared properties, duplicate
+IDs, and missing/invalid evidence fail validation.
+
+The profile's context, evidence, and confidence cover **every included value**.
+Split profiles when evidence differs. Distinguish a literal initializer from
+later postprocessing or a runtime measurement, particularly for weight, price,
+damage, and availability. Shared labels/units/descriptions are original,
+bounded prose, not copied item descriptions. Profiles supplement historical
+facts rather than silently replacing them or claiming complete mechanics.
+
+Image metadata has its own exact allowlist and schema, described in
+[IMAGES.md](IMAGES.md). Neither supplemental file changes `game.json`, carries
+image bytes, runs extraction, or authorizes deployment.
