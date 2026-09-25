@@ -1,7 +1,5 @@
-This page indexes skill groups and short skill names from their title identifiers. Group associations preserve the structure of that source, not a tested progression model.
+Browse skills and their groups. Open a skill page for its bonuses and mechanics.
 
-For originally summarized numeric skill claims, see [[Game mechanics]]. A localization-described bonus is not proof of the runtime formula, stacking rule, or unlock requirement.
-
-'''Spoilers:''' names and group associations can reveal progression options before you encounter them. No full skill descriptions are copied here.
+Described bonuses and calculated effects may have different conditions; do not assume they stack.
 
 [[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

@@ -1,7 +1,5 @@
-This index records beings named by the local bestiary title section. The source's label does not mean that every entry is an enemy.
+Browse creatures and enemies. Their pages collect documented profiles and loot relationships. Characters and merchants are listed separately under [[NPCs]].
 
-An entry may refer to a non-hostile character, unused content, or something not yet classified. The index makes no claims about aggression, habitats, drops, health, or encounter availability.
-
-'''Spoilers:''' names can reveal characters or creatures you have not encountered. No dialogue or copied bestiary descriptions are included.
+This grouping is not a claim that every creature is hostile: non-hostile or unclassified behavior remains possible. Locations and encounter availability need their own evidence.
 
 [[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

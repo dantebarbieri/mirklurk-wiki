@@ -1,7 +1,5 @@
-This index records short names found in the source's nature title section.
+Browse the game's named nature records, including vegetation and terrain features. Each record has its own page, distinct from similarly named inventory items.
 
-A label alone does not establish where something grows, whether it can be harvested, what it yields, or whether it is currently accessible. Such behavior needs separate evidence.
-
-'''Spoilers:''' browsing names can reveal undiscovered content. This page does not reproduce the source's descriptive prose.
+Growth locations, harvesting, yields, and availability are unknown unless documented on the individual page.
 
 [[Main Page]] | [[Items]] | [[Evidence and spoilers]] | [[Source provenance]]

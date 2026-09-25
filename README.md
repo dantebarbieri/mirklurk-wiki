@@ -9,14 +9,46 @@ The initial curated snapshot contains 336 name records and 79 numeric facts
 supported by five source-file fingerprints. Names establish source associations,
 not availability or combat behavior. The 28 localization-described mechanics have
 not been runtime-verified; the other 51 facts are qualified initializer
-observations. The installed game release is **unidentified**.
+observations. The operator confirmed the installed build as **0.8.1.5**,
+corroborating the inspected menu label. The claim that this is the latest patch
+is operator-reported, not an independent release-feed check.
 
 The expanded reference retains that baseline and now contains **107 numeric facts
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
-original algorithm/skill summaries. It generates 18 main-namespace pages.
-The observed menu label `0.8.1.5` is cited separately, not treated as a confirmed
-release identifier.
+original algorithm/skill summaries. The encyclopedia presentation generates
+348 main-namespace pages: 324 individual item, being, nature, and skill pages,
+plus workstation articles, topic guides/indexes, provenance, and a compatibility
+redirect. Only `game.build` changed in the original dataset; all source
+fingerprints, entities, facts, and research entries remain unchanged.
+
+Supplemental source-scoped profiles preserve another **2,456 scalar values**
+in 372 profiles across 297 entities: 245 items, 36 beings, and 16 nature records.
+Their 48 shared property definitions distinguish literal initializer values,
+computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
+have localized names but no reviewed initializer profile; no stats are invented
+for them.
+
+The metadata-only artwork register covers 323 reviewed selections: 243 items,
+36 beings, 25 skills, 16 nature records, and three workstation variants.
+Four item images are deliberately
+omitted rather than replaced with placeholders or guessed frames. Some nature
+pictures show an explicitly labeled associated ground tile or branch, not a
+fabricated mature plant. Image bytes stay in separately approved server storage.
+
+Gameplay pages use compact tables and ordinary names, with machine IDs and
+citations kept in Source provenance. Each detail has **one editable wiki owner**:
+recipes on output items, offers on merchants, quest prose in the journal, and
+workstation behavior on its own page. Identical recipes across stations share
+one row; 96 original variants form 77 condition-preserving recipe groups.
+Indexes and acquisition crosslinks do not copy those details.
+
+Thirty-six verified standard unit prices cover 52 of 63 offers. Each offered
+item owns one `<onlyinclude>` price value (unknown where unresolved), and
+merchant tables transclude it with core MediaWiki rather than copying prices.
+The Currency and trading guide likewise transcludes coin-owned denomination,
+weight, and stack tables. No template extension or synchronization service is
+required; live edits to the owner propagate to readers of that information.
 
 The additive research format supports original quest/journal paraphrases,
 merchant offers, station-specific recipes, loot-selection observations, and
@@ -34,7 +66,11 @@ The current loot reference is not an exhaustive loot-table catalogue.
 | --- | --- |
 | `content/pages` | Original wikitext introductions, navigation, policies, and caveats |
 | `content/facts/game.json` | Vetted names, numeric facts, structured research, and provenance, not raw research |
+| `content/facts/catalog.json` | Stable ordinary page titles, evidence-backed classifications, and editorial crosslinks |
+| `content/facts/entity_details.json` | Bounded typed profiles with shared original property explanations |
+| `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
 | `tools/build_wiki.py` | Deterministic MediaWiki XML for reviewed seeding |
+| `tools/plan_migration.py` | Three-way review report that never modifies a wiki |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
 | `tests` | Publication, facts, escaping, deterministic export, and runtime-policy tests |
@@ -60,6 +96,12 @@ platforms with their usual path separators.
 The builder requires an explicit fresh/additive mode, refuses to overwrite an
 output file, and never connects to a wiki. **Do not import a fresh seed into an
 existing community wiki.** Follow [the import procedure](docs/IMPORTING.md).
+
+Entity pages use ordinary names; only collisions are qualified, such as
+**Turnip (item)** and **Turnip (nature)**. NPCs are indexed separately from
+creatures, without assuming either grouping guarantees peacefulness or
+hostility. Skill-specific facts and summaries live on individual skill pages;
+old aggregate anchors remain as links. Initial research records are unchanged.
 
 ## Operate a wiki
 

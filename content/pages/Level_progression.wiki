@@ -1,7 +1,5 @@
-This page describes cited portions of level-up and progression logic in original prose.
+Experience thresholds, level-up rewards, and level caps are collected here. Individual skill effects belong on their [[Skills|skill pages]].
 
-Thresholds, counters, and base parameters are separate claims from the runtime effect of a level-up. A summary does not establish cap behavior, rounding, rewards, or interactions unless the evidence explicitly supports them.
+Unknown interactions and rounding behavior are not inferred from a base value alone.
 
-Related numeric facts retain their own evidence and confidence labels. Missing conditions are not replaced by a guessed progression formula.
-
-[[Game mechanics]] | [[Skills]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]
+[[Game mechanics]] | [[Skills]] | [[Main Page]]

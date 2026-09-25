@@ -1,4 +1,5 @@
 import subprocess
+import json
 import sys
 import tempfile
 import unittest
@@ -8,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from check_publication import ALLOWED_FILES, audit_index, blob_errors, path_errors
+from wiki_catalog import default_catalog
 
 
 class PublicationTests(unittest.TestCase):
@@ -45,7 +47,7 @@ class PublicationTests(unittest.TestCase):
             ".local/seed.xml", "deploy/LocalSettings.php", "deploy/.env",
             "deploy/secret.json", "tests/fixtures/raw.json",
             "content/images/Item-2.png", "content/pages/Item-2.png",
-            "content/facts/illustrations.json", "docs/Item-2.png", "private-images/Item-2.png",
+            "content/facts/illustrations-raw.json", "docs/Item-2.png", "private-images/Item-2.png",
         ]
         positives = sorted(ALLOWED_FILES)
         result = self.git(
@@ -135,6 +137,23 @@ class PublicationTests(unittest.TestCase):
     def test_facts_blob_is_validated_from_index(self):
         self.stage("content/facts/game.json", b'{"unexpected":"raw export"}')
         self.assertTrue(any("invalid curated facts" in error for error in audit_index(self.repo)[1]))
+
+    def test_supplemental_references_are_checked_against_staged_data(self):
+        raw = (ROOT / "content" / "facts" / "game.json").read_bytes()
+        self.stage("content/facts/game.json", raw)
+        catalog = default_catalog(json.loads(raw))
+        valid = json.dumps(catalog).encode()
+        catalog["pages"][0]["entity"] = "not-a-curated-entity"
+        self.stage("content/facts/catalog.json", json.dumps(catalog).encode())
+        (self.repo / "content" / "facts" / "catalog.json").write_bytes(valid)
+        errors = audit_index(self.repo)[1]
+        self.assertTrue(any("catalog.json: invalid staged references" in error for error in errors))
+        self.stage("content/facts/catalog.json", valid)
+        self.assertEqual(audit_index(self.repo)[1], [])
+
+    def test_supplemental_metadata_requires_a_valid_staged_base(self):
+        self.stage("content/facts/entity_details.json", b'{"schema_version":1,"properties":[],"profiles":[]}')
+        self.assertTrue(any("valid staged game.json is required" in error for error in audit_index(self.repo)[1]))
 
     def test_all_repository_publication_files_pass_content_policy(self):
         for path in ALLOWED_FILES:

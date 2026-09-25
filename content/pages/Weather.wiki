@@ -1,7 +1,5 @@
-This page gives original, traceable summaries of the researched weather logic. Steps describe the cited portion of the system, not every possible runtime interaction.
+Weather changes over time, with rain history affecting later transitions.
 
-Numeric parameters are linked to individually cited facts. A timer or threshold does not alone establish real-world duration, event frequency, or a probability distribution.
+Conditional checks are not a single normalized probability distribution. Units, timing, and interactions not described here remain unknown.
 
-Unverified units, update cadence, interactions, and conditions remain explicitly uncertain.
-
-[[Game mechanics]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]
+[[Game mechanics]] | [[Main Page]]

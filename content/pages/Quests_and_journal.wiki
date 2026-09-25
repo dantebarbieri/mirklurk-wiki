@@ -1,7 +1,5 @@
-This page contains original paraphrases of specifically cited quest or journal stages. It does not reproduce the game's journal entries or dialogue.
+Follow the main quest through its objectives and discoveries.
 
-'''Spoilers:''' summaries can reveal objectives, discoveries, or progression. A localized stage describes what that text communicates; it does not by itself prove the runtime trigger, quest order, reward, or availability.
+'''Story spoilers.''' These notes are not an exhaustive guide to triggers or rewards. Directions belong to the current world; follow your own journal rather than coordinates from another save.
 
-Each entry is a narrow claim with its own evidence and confidence. Unknown conditions are marked as not established rather than supplied from a likely interpretation.
-
-[[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]] | [[Research policy]]
+[[NPCs]] | [[Main Page]]

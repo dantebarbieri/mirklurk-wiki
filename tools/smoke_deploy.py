@@ -16,7 +16,7 @@ import zlib
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, existing_titles, title_key
-from wiki_data import load_data
+from wiki_details import load_publication_inputs
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -200,7 +200,7 @@ def smoke():
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
-            pages = build_pages(ROOT, load_data(ROOT / "content" / "facts" / "game.json"))
+            pages = build_pages(ROOT, *load_publication_inputs(ROOT))
             edit = api({"action": "edit", "title": "Main Page", "text": pages["Main Page"], "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("Authenticated editing failed.")
@@ -213,6 +213,22 @@ def smoke():
             indexed = api({"action": "query", "list": "allpages", "aplimit": "max"})["query"]["allpages"]
             if set(pages) != {page["title"] for page in indexed}:
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
+            for title, expected_links in {
+                "Items": {"Wood Buckler", "Turnip (item)"},
+                "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
+                "Nature": {"Turnip (nature)"},
+                "Skills": {"Strider", "Focused Mind"},
+            }.items():
+                parsed_links = api({"action": "parse", "page": title, "prop": "links"})["parse"]["links"]
+                if not expected_links <= {link["*"] for link in parsed_links if link["ns"] == 0}:
+                    raise RuntimeError("MediaWiki did not resolve the encyclopedia's canonical entity links.")
+            redirect = api({"action": "query", "titles": "Getting started", "redirects": "1"})["query"].get("redirects", [])
+            if not any(row["from"] == "Getting started" and row["to"] == "Research policy" for row in redirect):
+                raise RuntimeError("The reviewed guidance compatibility redirect was not imported correctly.")
+            for title, anchor in {"Strider": "entry-skill-0-0-mechanics", "Ranger Bhato": "entity-being-12"}.items():
+                rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+                if f'id="{anchor}"' not in rendered:
+                    raise RuntimeError("MediaWiki did not render the entity page's primary record anchor.")
             opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
             token = api({"action": "query", "meta": "tokens", "type": "login"})["query"]["tokens"]["logintoken"]
             login = api({
@@ -224,6 +240,34 @@ def smoke():
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+            price_title = "Longbow (Cypress)"
+            original_item = pages[price_title]
+            if original_item.count("<onlyinclude>") != 1 or original_item.count("</onlyinclude>") != 1:
+                raise RuntimeError("The item does not expose exactly one canonical price block.")
+            before_price, _, rest = original_item.partition("<onlyinclude>")
+            _, _, after_price = rest.partition("</onlyinclude>")
+            updated_item = before_price + "<onlyinclude>111.23 silver</onlyinclude>" + after_price
+            price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
+            if price_edit.get("edit", {}).get("result") != "Success":
+                raise RuntimeError("A registered editor cannot update the canonical item price.")
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            merchant_html = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
+            item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
+            if "111.23 silver" not in merchant_html or 'id="entity-item-105"' in merchant_html:
+                raise RuntimeError("The merchant did not refresh only the item-owned price value.")
+            if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
+                raise RuntimeError("Selective price transclusion removed the item's normal full article.")
+            coin_title = "Copper Coin"
+            coin_text = pages[coin_title].replace("<nowiki>25</nowiki> g", "<nowiki>26</nowiki> g")
+            if coin_text == pages[coin_title]:
+                raise RuntimeError("The synthetic coin-weight edit did not target its canonical value.")
+            coin_edit = api({"action": "edit", "title": coin_title, "text": coin_text, "token": csrf}, post=True)
+            if coin_edit.get("edit", {}).get("result") != "Success":
+                raise RuntimeError("A registered editor cannot update a coin-owned weight.")
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            currency_html = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
+            if "26 g" not in currency_html or 'id="entity-item-72"' in currency_html:
+                raise RuntimeError("The currency guide did not refresh only the coin-owned summary table.")
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")

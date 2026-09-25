@@ -5,15 +5,23 @@ issues, or pull requests. MediaWiki may serve separately approved pictures from
 its persistent `/var/www/html/images` storage. That is an operator workflow,
 not an exception to the repository's asset exclusions.
 
-**No redistribution permission has been established by this project.**
-Owning the game, inspecting its files, or choosing server-only storage does not
-grant permission to publish its artwork. Actual publication stays pending until
-the operator confirms a suitable rights basis for each image.
+On 2026-09-25, the wiki operator reported permission to display game artwork
+on the public wiki. This is **not permission to put assets in Git or grant
+a redistribution license**. Each selected image still requires verified
+identity, attribution, bytes, and an operator-reviewed import. Owning or
+inspecting the game would not itself establish that permission.
 
 ## Metadata only
 
-Optional `illustrations` records in the curated JSON associate an item or being
-with a stable local title such as `File:Item-2.png`. There are no URLs, domain
+Optional `illustrations` records associate an item, being, nature record, or
+skill with a stable local title such as `File:Item-2.png`. The encyclopedia
+stores new records in the exact allowlisted `content/facts/illustrations.json`
+with root `{"schema_version": 1, "illustrations": [...]}` and a 512 KiB cap.
+Non-item workstation illustrations use `station` instead of `entity`, with an
+optional reviewed `variant` ID. The target must exist in the station registry;
+item workstations reuse their entity images. Legacy `game.json` illustration
+support remains compatible; duplicate IDs or
+File titles across both inputs are rejected. There are no URLs, domain
 names, local source paths, image bytes, download instructions, or automatic
 uploads in these records.
 
@@ -23,9 +31,28 @@ Every record contains `id`, `entity`, `file_title`, `caption`, `creator`,
 identifies the exact separately reviewed **image** bytes, not the original game
 container. Captions and rights notes are original writing.
 
+The current reviewed batch attributes game artwork to **Edym Pixels** and
+records operator-reported permission for public-wiki display, confirmed on
+2026-09-25. Its notes explicitly exclude asset redistribution through this
+repository. Actual image hashes and source-to-frame associations must be
+reviewed individually; attribution strings are not a substitute for review.
+
+The current metadata batch contains 323 selections: 243 items, 36 beings,
+25 skills, 16 nature records, and early/later alchemy plus armor workstations.
+The original 320 entity records are unchanged. Unarmed's internal pixel placeholder is not
+used as artwork. Flax and Linen lack verified initializer image associations.
+Finish Raft requests an out-of-range sprite frame; no wraparound or replacement
+frame is guessed. These four item pages therefore have no image reference.
+
+Some nature records use their associated ground tile, explicitly captioned as
+not a complete mature specimen; Rift Vine uses a branch detail. Do not relabel
+these crops as full procedurally assembled plants. The metadata only identifies
+the reviewed selection; source files and images remain outside Git.
+
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
-record renders a review notice and its reserved title as text, **not** an image
-or File link. Do not manufacture empty records for every entity.
+record renders a neutral missing-picture notice, **not** an image or File link.
+Its reserved title and rights/evidence details remain on Source provenance.
+Do not manufacture empty records for every entity.
 
 For `rights_status: approved`, creator, hash, rights basis, and review note are
 required. The reviewed record may then emit `[[File:...|thumb|...]]`.

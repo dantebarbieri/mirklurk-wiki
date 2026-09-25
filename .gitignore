@@ -14,6 +14,9 @@
 !/content/
 !/content/facts/
 !/content/facts/game.json
+!/content/facts/catalog.json
+!/content/facts/entity_details.json
+!/content/facts/illustrations.json
 !/content/pages/
 !/content/pages/Main_Page.wiki
 !/content/pages/Getting_started.wiki
@@ -22,6 +25,7 @@
 !/content/pages/Evidence_and_spoilers.wiki
 !/content/pages/Items.wiki
 !/content/pages/Bestiary.wiki
+!/content/pages/NPCs.wiki
 !/content/pages/Nature.wiki
 !/content/pages/Skills.wiki
 !/content/pages/Damage_types.wiki
@@ -35,11 +39,17 @@
 !/tools/
 !/tools/check_publication.py
 !/tools/wiki_data.py
+!/tools/wiki_catalog.py
+!/tools/wiki_details.py
+!/tools/wiki_render.py
+!/tools/plan_migration.py
 !/tools/build_wiki.py
 !/tools/smoke_deploy.py
 !/tests/
 !/tests/test_safety.py
 !/tests/test_wiki.py
+!/tests/test_catalog.py
+!/tests/test_migration.py
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile

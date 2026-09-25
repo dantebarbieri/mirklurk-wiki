@@ -229,24 +229,37 @@ def _validate_entries(records, sources, entities, facts):
                 references.add(reference)
 
 
-def _validate_illustrations(records, sources, entities):
+def _validate_illustrations(records, sources, entities, stations=None):
     seen = set()
     titles = set()
     for index, illustration in enumerate(_records(records, "illustrations")):
         where = f"illustrations[{index}]"
         _object(
             illustration,
-            {"id", "entity", "file_title", "caption", "creator", "sha256", "rights_status",
+            {"id", "file_title", "caption", "creator", "sha256", "rights_status",
              "rights_basis", "rights_note", "confidence", "evidence"},
-            set(), where,
+            {"entity", "station", "variant"}, where,
         )
         identity = _identifier(illustration["id"], f"{where}.id")
         if identity in seen:
             raise DataError(f"{where}: duplicate illustration ID")
         seen.add(identity)
-        entity_id = _identifier(illustration["entity"], f"{where}.entity")
-        if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being"}:
-            raise DataError(f"{where}.entity: must reference an item or being")
+        if ("entity" in illustration) == ("station" in illustration):
+            raise DataError(f"{where}: provide exactly one entity or station target")
+        if "entity" in illustration:
+            entity_id = _identifier(illustration["entity"], f"{where}.entity")
+            if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being", "nature", "skill"}:
+                raise DataError(f"{where}.entity: must reference an item, being, nature record, or skill")
+            if "variant" in illustration:
+                raise DataError(f"{where}: a variant belongs to a station, not an entity")
+        else:
+            station_id = _identifier(illustration["station"], f"{where}.station")
+            if not stations or station_id not in stations:
+                raise DataError(f"{where}.station: must reference a reviewed station")
+            if "variant" in illustration:
+                variant = _identifier(illustration["variant"], f"{where}.variant")
+                if variant not in {row["id"] for row in stations[station_id].get("variants", [])}:
+                    raise DataError(f"{where}.variant: must reference a reviewed station variant")
         title = illustration["file_title"]
         if not isinstance(title, str) or not re.fullmatch(r"File:[A-Z][A-Za-z0-9 _.-]{0,119}\.(?:png|jpg|jpeg|webp)", title):
             raise DataError(f"{where}.file_title: expected a plain local File title for a raster image")
@@ -271,7 +284,7 @@ def _validate_illustrations(records, sources, entities):
         _evidence(illustration["evidence"], sources, f"{where}.evidence")
 
 
-def validate_data(data):
+def validate_data(data, stations=None):
     _object(data, {"schema_version", "game", "sources", "entities", "facts"}, {"entries", "illustrations"}, "root")
     if type(data["schema_version"]) is not int or data["schema_version"] != 1:
         raise DataError("schema_version: expected integer 1")
@@ -362,7 +375,7 @@ def validate_data(data):
         _confidence(fact["confidence"], f"{where}.confidence")
         _evidence(fact["evidence"], sources, f"{where}.evidence")
     _validate_entries(data.get("entries", []), sources, entities, facts)
-    _validate_illustrations(data.get("illustrations", []), sources, entities)
+    _validate_illustrations(data.get("illustrations", []), sources, entities, stations)
     return data
 
 

@@ -2,9 +2,10 @@
 
 The repository produces MediaWiki export 0.11 XML from original wikitext and
 vetted facts. It does not perform an import, fetch research files, or synchronize
-with a live server. A fresh bundle contains the original 11 main-namespace pages
-plus only those new researched topic pages supported by validated entries/facts.
-The builder reports the actual emitted page count.
+with a live server. A fresh encyclopedia bundle includes dedicated entity pages,
+compact topic indexes, guidance, and explicit compatibility redirects. New
+research topics still require reviewed entries/facts. The builder reports the
+actual emitted page count.
 
 ## Fresh wiki
 
@@ -59,6 +60,76 @@ writers too; a maintenance banner alone is not a concurrency lock.
 Review existing-page changes manually using the live page history and editor.
 There is no automatic overwrite option, timestamp-based "newer wins" policy,
 scheduled import, or force-update mode in this tool.
+
+## Conflict-aware encyclopedia migration
+
+The encyclopedia is a separate reviewed publication, not an automatic update
+to an existing wiki. Keep the complete old generated seed as the **base**,
+the frozen complete current-page dump as **current**, and the new full seed
+as **desired**. Hash and retain all three privately. The read-only planner
+compares page contents, never revision timestamps:
+
+```powershell
+python tools\plan_migration.py --base-export BASE_XML --current-export CURRENT_XML --desired-export DESIRED_XML --output PRIVATE_PLAN_JSON
+```
+
+The new output contains title, action, and content SHA-256 values, not page
+texts or permission to edit. It refuses to overwrite an existing report.
+It cannot prove a supplied dump is complete; that remains an operator gate.
+
+The report also lists selective-transclusion dependencies with the historical
+field names `price_dependencies`, `price_owner`, and
+`current_price_block_ready`; these apply to both item-price blocks and
+coin-summary blocks. A missing or ambiguous live `<onlyinclude>` pair requires
+review. Do not expose a new merchant or currency guide while its existing
+community-owned item page lacks the reviewed selective block: otherwise
+MediaWiki could transclude that entire article. Merge the block through the
+normal conflict-aware editing workflow, preserving surrounding community
+content. Exact presence is a structural check, not approval of the content.
+
+| Action | Meaning |
+| --- | --- |
+| `create` | Title absent from both base and frozen current; candidate for additive import |
+| `unchanged` | Current text already equals desired |
+| `review-update` | Current exactly equals base, but desired changed; operator review still required |
+| `preserve-live` | Desired equals base; retain the community's changed text |
+| `conflict` | Concurrent content changes or a new canonical-title collision; manual three-way review |
+| `preserve-deletion` | A base title is missing live; do not automatically recreate it |
+| `preserve-retired` / `preserve-unmanaged` | No desired text; never delete historical or community-only pages |
+
+Generate an additive bundle with the existing-title exclusion, then **also
+review it against the plan**: additive exclusion alone cannot distinguish a
+deliberately deleted old page from a genuinely new page. Omit any
+`preserve-deletion` title from the operator-approved creation set. Never import
+the full desired seed into an existing wiki to apply the updates.
+
+Ordinary canonical names may already be community pages. Such collisions must
+not be taken over: preserve/edit them through reviewed normal revisions, or
+agree a new registry title before publication. Verify the frozen current hash
+again before each edit and keep writers stopped through the full operation.
+An edited page is not an error to work around with an overwrite option.
+
+Old Items, Bestiary, Nature, Skills, Merchants, Crafting, and Loot tables stay
+as indexes. Legacy explicit entity/fact/entry anchors remain on their previous
+pages and link to the new primary owner. NPCs receives character navigation;
+Bestiary keeps collapsed compatibility links to moved character records.
+The proposed **Getting started** redirect points to **Research policy**,
+where useful evidence/contribution guidance is retained. If live Getting
+started has changed, merge useful edits before reviewing any redirect; do
+not erase them just because the repository now supplies a redirect.
+
+Renames require explicit registry aliases and a separately reviewed redirect
+plan. Do not rename via source-label changes, redirect ambiguous names to one
+arbitrary entity, delete old histories, or silently retarget community links.
+After migration, verify canonical and legacy links, skill ownership, NPC
+classification, all page counts, and preservation of unrelated live edits.
+For transcluded information, edit the owner page rather than generated copies.
+Verify a canonical price edit updates the merchant view and a coin-weight edit
+updates the guide, without importing full item prose into either. Never
+reseed edited owner pages on a schedule; regenerated repository output is
+not authority over subsequent live edits.
+Rights-reviewed images have their own backed-up operator import; metadata
+alone does not prove that a File title exists or that its bytes match.
 
 ## Docker handoff
 

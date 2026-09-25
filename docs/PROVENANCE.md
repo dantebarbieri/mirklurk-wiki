@@ -136,11 +136,16 @@ summaries (25 original skill descriptions and seven runtime/topic summaries).
 A final bounded death-handler supplement adds 43 qualified base-loot entries and
 one algorithm summary, preserving every prior record. Current totals are five
 source fingerprints, 336 entities, 107 facts, and 293 entries: 31 quest/journal,
-63 merchant, 96 recipe, 70 loot, and 33 algorithm records. There are no
-illustration records or approved artwork.
+63 merchant, 96 recipe, 70 loot, and 33 algorithm records. Those immutable
+records remain in `game.json`; the encyclopedia adds separately reviewed
+presentation, profiles, and server-only image metadata.
 
-The separate observed menu label `0.8.1.5` is documented with explicit source
-field citations in Game mechanics; it does not replace null release metadata.
+The wiki operator confirmed installed build `0.8.1.5`, matching the menu label.
+Only the formerly null `game.build` metadata field changes; reverting that
+field restores the exact earlier file fingerprint. The operator's
+latest-patch assertion is recorded as a user report in Source provenance,
+not an independent global release check. Source record build fields/hashes,
+all entities, and every historical fact/entry remain unchanged.
 Coverage gaps are stated on the relevant pages. Reviewed creature death handlers
 are documented, but base generation is not a guaranteed harvested yield;
 runtime harvesting/recovery modifiers, some merchant locations/prices, and
@@ -156,4 +161,175 @@ MediaWiki export 0.11 includes content byte counts and base-36 SHA-1 fields
 
 Page/revision IDs are synthetic, local to the bundle. The fixed seed timestamp
 `2000-01-01T00:00:00Z` makes output reproducible; it is **not** a publication date,
-game release date, or evidence of historical research. No hostname is embedded.
+game release date, or evidence of historical research. No deployment hostname
+is embedded; entity and File links are relative MediaWiki links.
+
+## Encyclopedia identities and ownership
+
+`content/facts/catalog.json` (128 KiB maximum) contains `schema_version: 1`,
+`pages`, `classifications`, and `entry_links`, with reviewed `entry_display`,
+`stations`, `unit_prices`, and `currency` additions. It changes presentation
+without rewriting historical evidence:
+
+- `pages`: `{entity, title, aliases}` for every item, being, nature record,
+  and skill, exactly once. Titles are locked ordinary names. Only collisions
+  receive qualifiers: `Turnip (item)` and `Turnip (nature)`. Do not redirect
+  ambiguous `Turnip` to just one record. Aliases are explicit previous
+  titles, emitted as redirects; none may collide with a canonical title,
+  another alias, or an authored index. Namespace syntax, fragments, markup,
+  noncanonical spaces/underscores, and duplicate titles are rejected.
+- `classifications`: `{entity, kind, confidence, evidence, note}`, where
+  `kind` is `npc`, `creature`, or `unclassified`. Name/dialogue/database
+  evidence supports this navigation grouping, not universal hostility,
+  friendliness, survival, or reachability. A missing classification remains
+  visibly unclassified; it is never silently labeled an enemy.
+- `entry_links`: `{entry, entities}` for reviewed editorial crosslinks to
+  existing records. These are see-also relationships, not a place to add a
+  mechanic or unsupported semantic claim.
+- `entry_display`: `{entry, title?, summary?, conditions?, steps?}` gives
+  bounded original reader wording for an existing entry. Omitted fields keep
+  their original value; conditions alone may be null. Technical stage/table
+  labels can be replaced by reviewed descriptive titles without changing IDs,
+  ordering, source evidence, or the underlying record. No guessed names for
+  unidentified categories are introduced.
+
+Five skill groups remain sections of Skills; seven damage classes remain on
+Damage types. Other entities have dedicated pages. Facts with an exact,
+unambiguous entity-name/category match move to that entity's page; ambiguous
+matches fail. In particular, legacy skill facts retain `page: Game mechanics`
+in the immutable data but are rendered only on their skill owners.
+
+Merchant offers are primarily owned by the merchant. Recipes belong to the
+output item (lowest stable item ID if a future recipe has several outputs).
+Loot belongs to its uniquely identity-cited being, otherwise its outcome item;
+unassigned/empty outcomes and general loot rules use Loot mechanics.
+Skill mechanics entries use
+the exact existing `<skill-id>-mechanics` association. Other algorithms and
+quests retain their topic owner. Generic skill allocation is on Level
+progression, not the Skills directory. Crafting is a workstation directory;
+Inventory crafting owns general carried-tool requirements. Station-specific
+behavior lives on the relevant workstation, with links to skills instead of
+copied skill formulas.
+
+Typed merchant/item/input/output/outcome references and exact matching entity
+identity evidence produce bidirectional links. No substring guessing or
+weight-to-probability normalization is used. Each complete record has one
+primary editable wiki owner. Acquisition, ingredient, NPC, and workstation
+catalog links do not repeat prices, ingredient quantities, AP costs, or quest
+prose. Identical recipes may share one row with all applicable stations, but
+different inputs, outputs, costs, or conditions remain distinct. Legacy
+`entity-`, `fact-`, and `entry-` anchors remain
+on old indexes as links, so old bookmarks are not silently broken.
+
+Source provenance keeps IDs, hashes, confidence, evidence references, and
+methodology. It points to the editable gameplay owner rather than duplicating
+its values or prose. Reader pages contain invisible stable anchors, not
+visible machine labels or repeated citation columns. Exact duplicate legacy
+initializer facts and profile fields can share the same value row and retain
+both anchors. Initializer crafting cost and yield share the canonical recipe
+cells only when all relevant recipes agree on value, units, confidence, and
+source-field scope; mismatches remain explicit stat rows. Ingredient "Used in"
+links point once to each output's Recipes section, while all source-entry
+anchors remain on that output. Base, conditional, and potential values are not summed or
+converted into invented final stats.
+
+The CLI and Docker smoke load the checked-in registry and supplemental files
+explicitly. `build_pages` also supports small caller-supplied datasets: omitted
+catalog/profile arguments use a generated title proposal and no profiles.
+Publication must use the reviewed inputs, not an automatically renamed
+registry. Tests reject title collisions and verify complete record coverage.
+
+## Workstations and user reports
+
+Station rows contain `{id, title, entity, methods, summary, acquisition,
+confidence, evidence}`. `entity` is either the existing canonical item ID
+(the title must match) or null for a non-item workstation. `methods` account
+for every exact source recipe-method label, without creating fake item IDs.
+Optional `notes`, `related_entities`, and `quest_entries` provide original
+station behavior and verified crosslinks. Optional `variants` have `{id,title}`.
+
+One Alchemy workstation article covers early-game and later-game variants,
+with a shared illustrated output catalog; both variants' identical recipes
+are fully documented only on output-item pages. Armor workstation is identified
+at Bhato's hideout with an evidenced follow-up-conversation unlock; it is not
+marked unused merely because the item-title table lacks an entry.
+
+Optional station `reports` are `{id, section, text, attribution, recorded_on}`.
+The section is null or a known variant ID; attribution must be `Wiki operator`
+and the date is ISO format. These are explicitly user-reported gameplay in
+technical provenance, distinct from source-file evidence. Personal
+correspondence and private identities are never included.
+
+## Item-owned prices and currency
+
+`unit_prices` contains version, verified unit, bounded original context,
+`prices`, and exact `covered_offers` / `unresolved_offers` ID sets. Each price
+is `{entity,value,confidence,evidence}` for a known item. Values are nonnegative
+finite numbers, never booleans. The reviewed unit is silver coin equivalents.
+The offer coverage is validated against actual merchant-to-item references.
+
+The 36 verified standard prices do not depend on unresolved recipe-price
+postprocessing; they cover 52 offers, leaving 11 offers unresolved. The
+42 distinct offered items each own one selective `<onlyinclude>` price value.
+The same item's matching raw initializer-value row is folded into it rather
+than rendered twice. Merchant wares use `{{:Canonical item title}}`; the rest
+of the item article is not transcluded. Actual vendor-specific prices, if
+separately documented, remain owned by the vendor offer instead.
+
+`currency` preserves the reviewed build confirmation, three coin definitions,
+and seven original rule explanations with evidence and confidence. It
+validates positive value/weight fields, coin identity, gram/kilogram agreement,
+and exact agreement with existing profile values. Coin pages alone own value,
+weight, and stack limits in selective summary tables; Currency and trading
+transcludes those tables instead of hardcoding conversion/weight duplicates.
+
+The guide distinguishes purchase value from condition-adjusted resale.
+Fuel-based reduction replaces durability reduction when the required fields
+exist; they are not multiplied. Rounded copper change is not claimed to
+guarantee perfect sub-copper value preservation or globally optimal coin count.
+The builder reports these reviewed rules; it does not execute game logic or
+claim that a local arithmetic mirror was a gameplay test.
+
+## Compact typed profiles
+
+`content/facts/entity_details.json` (512 KiB maximum) has:
+
+```json
+{
+  "schema_version": 1,
+  "properties": [
+    {
+      "id": "example-property",
+      "label": "Original property label",
+      "unit": null,
+      "description": "Original explanation of the field and its interpretation."
+    }
+  ],
+  "profiles": []
+}
+```
+
+Each profile is `{id, entity, context, confidence, evidence, values}`.
+`values` is an object mapping one to 64 declared property IDs to finite
+numbers, booleans, or null. Numeric magnitudes cannot exceed 10^15. Null
+means unknown, never zero; strings, arrays, undeclared properties, duplicate
+IDs, and missing/invalid evidence fail validation.
+
+The profile's context, evidence, and confidence cover **every included value**.
+Split profiles when evidence differs. Distinguish a literal initializer from
+later postprocessing or a runtime measurement, particularly for weight, price,
+damage, and availability. Shared labels/units/descriptions are original,
+bounded prose, not copied item descriptions. Profiles supplement historical
+facts rather than silently replacing them or claiming complete mechanics.
+
+The reviewed profile snapshot contains 48 property definitions, 372 profiles,
+and 2,456 scalar values for 297 entities (245 items, 36 beings, 16 nature
+records). Seventy-five profiles separately describe the initializer's computed
+attack-pattern totals. HP-grid dimensions are not presented as an invented
+total HP. Literal weight/value fields are explicitly before recipe
+postprocessing and trade/runtime changes. Flax and Linen retain source-known
+name pages but have no invented initializer profile.
+
+Image metadata has its own exact allowlist and schema, described in
+[IMAGES.md](IMAGES.md). Neither supplemental file changes `game.json`, carries
+image bytes, runs extraction, or authorizes deployment.
