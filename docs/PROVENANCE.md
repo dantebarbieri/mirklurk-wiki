@@ -55,7 +55,7 @@ function for an entire inferred system.
 | `merchant` | `merchant`: being entity ID; `item`: item entity ID; `quantity`: positive integer or null; `price`: nonnegative number or null; `currency`: label or null; `location`: original text or null |
 | `recipe` | `station`: short label; `inputs` and `outputs`: arrays of `{item, quantity}`; `cost`: `{amount, unit}` or null |
 | `loot` | `table`: short trace identifier; `outcome`: item entity ID or null for an explicit empty result; `quantity`: `{min, max}` or null; `weight`: nonnegative number or null; `probability`: number from 0 to 1 or null; `rolls`: `{min, max}` or null |
-| `algorithm` | `page`: Weather, Level progression, World seed logic, or Skills; `steps`: one to twenty original prose steps; `fact_ids`: references to existing numeric/boolean fact IDs |
+| `algorithm` | `page`: Weather, Level progression, World seed logic, Skills, Crafting, or Loot tables; `steps`: one to twenty original prose steps; `fact_ids`: references to existing numeric/boolean fact IDs |
 
 Quest entries paraphrase a **single** localized journal stage. A summary is not
 a quotation, and a localized objective alone does not prove a runtime trigger.
@@ -71,7 +71,8 @@ at least one output is required. Repeated input/output items must be combined,
 and alternate output variants are separate records. Costs carry an explicit unit.
 
 Loot quantity and roll ranges use nonnegative integers with `min <= max`.
-An explicit empty outcome has null quantity. Weight is rendered as reported:
+An explicit empty outcome has null quantity or an explicitly recorded zero-to-zero
+quantity range. Any positive quantity is rejected for an empty outcome. Weight is rendered as reported:
 the builder **never derives or normalizes probabilities**. A numeric probability
 requires supporting evidence for that conditional fraction; otherwise use null
 and explain the observed selection semantics in original prose. Do not infer
@@ -124,6 +125,19 @@ The first snapshot contains 336 entities: 247 items, 36 beings, 16 nature names,
 25 skills, five skill groups, and seven damage classes. Its 79 numeric facts
 comprise 28 localization-described summaries and 51 initializer observations.
 Those counts describe the curated dataset, not the game's reachable content.
+
+The first expanded handoff appends 28 numeric facts and 249 entries without
+modifying the original records. It includes 31 quest/journal notes (28 localized
+stage paraphrases and three separately qualified runtime notes), 63 merchant
+offers, 96 base recipe variants, 27 conditional loot entries, and 32 algorithm
+summaries (25 original skill descriptions and seven runtime/topic summaries).
+Current totals are five source fingerprints, 336 entities, 107 facts, and 249
+entries. There are no illustration records or approved artwork.
+
+The separate observed menu label `0.8.1.5` is documented with explicit source
+field citations in Game mechanics; it does not replace null release metadata.
+Coverage gaps are stated on the relevant pages, including enemy-corpse loot,
+some merchant locations, and world-seed reproducibility.
 
 ## Build output
 

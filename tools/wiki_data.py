@@ -33,7 +33,7 @@ ENTRY_PAGES = {
     "recipe": "Crafting",
     "loot": "Loot tables",
 }
-ALGORITHM_PAGES = {"Weather", "Level progression", "World seed logic", "Skills"}
+ALGORITHM_PAGES = {"Weather", "Level progression", "World seed logic", "Skills", "Crafting", "Loot tables"}
 CATEGORY_PAGES = {
     "item": "Items",
     "being": "Bestiary",
@@ -200,11 +200,11 @@ def _validate_entries(records, sources, entities, facts):
         elif kind == "loot":
             _object(details, {"table", "outcome", "quantity", "weight", "probability", "rolls"}, set(), location)
             _text(details["table"], f"{location}.table")
+            _range(details["quantity"], f"{location}.quantity")
             if details["outcome"] is not None:
                 _entity_reference(details["outcome"], entities, "item", f"{location}.outcome")
-            elif details["quantity"] is not None:
-                raise DataError(f"{location}: explicit empty outcomes must have null quantity")
-            _range(details["quantity"], f"{location}.quantity")
+            elif details["quantity"] not in (None, {"min": 0, "max": 0}):
+                raise DataError(f"{location}: explicit empty outcomes require null or exactly zero quantity")
             _range(details["rolls"], f"{location}.rolls")
             if details["weight"] is not None:
                 _number(details["weight"], f"{location}.weight")

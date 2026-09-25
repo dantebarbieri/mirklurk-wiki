@@ -4,4 +4,7 @@ This page documents narrow loot-selection observations, not a complete or runtim
 
 A conditional probability appears only when separately supported by the cited evidence. Unknown quantities, roll counts, and probabilities remain unknown. An explicit empty result is different from an unidentified item.
 
+== Coverage limits ==
+The current entries cover selected resource and treasure paths. Enemy-corpse loot and the full set of loot-generating paths have not been established here. A missing row does not mean that a drop is impossible.
+
 [[Items]] | [[Bestiary]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

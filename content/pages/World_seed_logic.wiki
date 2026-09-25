@@ -4,4 +4,7 @@ A seed value or initialization call does not establish that every subsystem is d
 
 Algorithm steps and linked numeric facts carry trace identifiers and uncertainty. Do not infer a searchable world model from a partial seed-handling trace.
 
+== Coverage limits ==
+World-seed reproducibility has not been demonstrated by this reference. The current trace is not a seed finder or a guarantee that a reused seed produces the same world.
+
 [[Game mechanics]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

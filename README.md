@@ -11,11 +11,20 @@ not availability or combat behavior. The 28 localization-described mechanics hav
 not been runtime-verified; the other 51 facts are qualified initializer
 observations. The installed game release is **unidentified**.
 
+The expanded reference retains that baseline and now contains **107 numeric facts
+and 249 structured entries**: 31 quest/journal notes, 63 merchant offers,
+96 station-specific recipe variants, 27 conditional loot entries, and 32
+original algorithm/skill summaries. It generates 18 main-namespace pages.
+The observed menu label `0.8.1.5` is cited separately, not treated as a confirmed
+release identifier.
+
 The additive research format supports original quest/journal paraphrases,
 merchant offers, station-specific recipes, loot-selection observations, and
 weather, progression, skill, and world-seed summaries. Each narrow claim carries
 evidence and confidence. New topic pages appear only when backed by reviewed
 entries or facts; schema support is not a claim that a subsystem is fully documented.
+Enemy-corpse loot, some merchant locations, and world-seed reproducibility remain
+unverified. The current loot reference is not an exhaustive loot-table catalogue.
 
 ## Contents
 

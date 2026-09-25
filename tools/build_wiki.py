@@ -99,7 +99,7 @@ def render_entry(entry, entities, facts):
             "Not established" if cost is None else literal(f'{cost["amount"]} {cost["unit"]}'),
         ]]))
     elif entry["kind"] == "loot":
-        lines.append(table(["Table/trace", "Outcome", "Quantity range", "Reported weight", "Conditional probability", "Roll-count range"], [[
+        lines.append(table(["Table/trace", "Outcome", "Quantity range", "Reported weight", "Conditional probability (0-1 fraction)", "Roll-count range"], [[
             literal(details["table"]),
             "Explicit empty result" if details["outcome"] is None else entity_link(details["outcome"], entities),
             count_range(details["quantity"]), known(details["weight"]),

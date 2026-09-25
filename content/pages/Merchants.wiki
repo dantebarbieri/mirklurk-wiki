@@ -4,4 +4,7 @@ Names, quantities, prices, currencies, and locations need their own supporting t
 
 Random stock ranges, availability conditions, and unverified interpretations are described explicitly instead of being converted into fixed inventory promises.
 
+== Coverage limits ==
+The current records cover selected offers from six researched merchants, not every possible seller or state. Some locations, prices, and stock quantities remain unestablished; their table cells intentionally do not invent values.
+
 [[Items]] | [[Bestiary]] | [[Main Page]] | [[Evidence and spoilers]] | [[Source provenance]]

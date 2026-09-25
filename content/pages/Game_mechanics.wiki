@@ -7,6 +7,11 @@ The property label includes the relevant unit or context. Boolean values state o
 
 The installed build remains unidentified. A future release may change the values or their meaning. Exact source hashes and section/key identifiers are recorded in [[Source provenance]] and the fact tables.
 
+== Observed menu version label ==
+The inspected menu source contains the displayed label '''0.8.1.5'''. This is an observation of the cited menu fields, not an independently confirmed installed-release identifier or a guarantee of compatibility across builds.
+
+'''Evidence status:''' observed in source, not runtime-verified. '''Evidence:''' [[Source provenance#game-data|game-data]] / <nowiki>gml_Object_obj_menu_Create_0</nowiki> / <nowiki>versionString</nowiki>; [[Source provenance#game-data|game-data]] / <nowiki>gml_Object_obj_menu_Step_0</nowiki> / <nowiki>versionCheck</nowiki>.
+
 == Open research ==
 Runtime formulas, rounding, stacking, eligibility, and availability are unknown unless a cited fact explicitly addresses them.
 
