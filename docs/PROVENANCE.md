@@ -226,7 +226,11 @@ methodology. It points to the editable gameplay owner rather than duplicating
 its values or prose. Reader pages contain invisible stable anchors, not
 visible machine labels or repeated citation columns. Exact duplicate legacy
 initializer facts and profile fields can share the same value row and retain
-both anchors. Base, conditional, and potential values are not summed or
+both anchors. Initializer crafting cost and yield share the canonical recipe
+cells only when all relevant recipes agree on value, units, confidence, and
+source-field scope; mismatches remain explicit stat rows. Ingredient "Used in"
+links point once to each output's Recipes section, while all source-entry
+anchors remain on that output. Base, conditional, and potential values are not summed or
 converted into invented final stats.
 
 The CLI and Docker smoke load the checked-in registry and supplemental files

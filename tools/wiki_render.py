@@ -120,7 +120,48 @@ def price_text(price):
     return format(Decimal(str(price["value"])).normalize(), "f") + " silver"
 
 
-def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None):
+def recipe_profile_values(profile, recipes):
+    if not profile["context"].startswith("Literal initializer values."):
+        return {}
+    matches = [
+        entry for entry in recipes
+        if any(output["item"] == profile["entity"] for output in entry["details"]["outputs"])
+    ]
+    if not matches:
+        return {}
+
+    def traces(references, field):
+        return {
+            (reference["source"], reference["section"])
+            for reference in references if field in reference["key"].replace(".", "/").split("/")
+        }
+
+    folded = {}
+    for key, field in (("craft-ap-cost", "craftCost"), ("craft-yield", "craftReturn")):
+        value = profile["values"].get(key)
+        if type(value) not in (int, float):
+            continue
+        if any(
+            entry["confidence"] != profile["confidence"]
+            or not traces(profile["evidence"], field) & traces(entry["evidence"], field)
+            for entry in matches
+        ):
+            continue
+        if key == "craft-ap-cost":
+            costs = [entry["details"]["cost"] for entry in matches]
+            if all(cost is not None and cost["unit"] == "base AP" and cost["amount"] == value for cost in costs):
+                folded[key] = costs[0]["amount"]
+        else:
+            quantities = [
+                output["quantity"] for entry in matches
+                for output in entry["details"]["outputs"] if output["item"] == profile["entity"]
+            ]
+            if all(quantity == value for quantity in quantities):
+                folded[key] = quantities[0]
+    return folded
+
+
+def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=()):
     if not facts and not profiles and price_item is None:
         return ""
     rows = []
@@ -129,6 +170,7 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
     show_base_value = False
     for profile in profiles:
         values = profile["values"]
+        folded = recipe_profile_values(profile, recipes)
         scope = "Potential" if any(key.endswith("-pattern-min") for key in values) else "Base"
         paired = set()
         for low, high, label, separator in PAIRED_PROPERTIES:
@@ -136,7 +178,7 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
                 paired.update([low, high])
                 rows.append([literal(label), known(values[low]) + separator + known(values[high]), scope])
         for key, value in sorted(values.items()):
-            if key in paired:
+            if key in paired or key in folded:
                 continue
             if coin is not None and key in {"initial-price", "initial-weight", "stack-limit"}:
                 continue
@@ -173,8 +215,13 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
         ])
     notes = []
     if profiles and coin is None:
-        notes.append("Base values can change with equipment, state, crafting adjustments, or other effects.")
+        notes.append("Equipment, condition, and other effects may change effective values.")
     keys = {key for profile in profiles for key in profile["values"]}
+    if coin is None and keys & {"initial-weight", "initial-price"}:
+        notes.append(
+            "Base weight and base value are literal initializer values before recipe postprocessing, "
+            "not finalized in-game weights or prices."
+        )
     if show_base_value:
         notes.append("Base value is not the price charged by a merchant.")
     if "hp-grid-width" in keys:
@@ -412,6 +459,11 @@ def source_page(data, catalog, details, locations, facts, entries):
                 [f'[[{locations[coin["entity"]]}]]', literal(currency["confidence"]), evidence_text(coin["evidence"])]
                 for coin in currency["coins"]
             ]),
+            table(["Rule", "Methodological qualification"], [
+                [literal(rule["id"]), literal(rule["qualification"])]
+                for rule in currency["rules"]
+                if rule.get("qualification") and rule["id"] in {*CURRENCY_QUALIFICATIONS, "coin-weight-units"}
+            ]),
         ])
     lines.extend([
         "", "== Menu-label trace ==",
@@ -438,6 +490,18 @@ def coin_summary(coin, entities, locations):
     )
 
 
+CURRENCY_QUALIFICATIONS = {
+    "coin-consolidation": (
+        "Change uses the highest denominations first. Copper change is rounded to a whole coin, "
+        "so rounding can affect exact results; the fewest possible coins are not guaranteed at every rounding boundary."
+    ),
+    "trade-standard-value": (
+        "An unchanged, full-condition item has the same underlying buy and sell value. Rounding in the "
+        "affordability check and copper change can affect fractions smaller than one copper coin."
+    ),
+}
+
+
 def currency_page(currency, entities, locations):
     coins = currency["coins"]
     text = "[[Merchants]] | [[Items]] | [[Main Page]]\n\nCoins and barter use a shared value. The coin details below are maintained on the individual coin pages.\n"
@@ -450,7 +514,7 @@ def currency_page(currency, entities, locations):
             text += "A coin stack's weight is its per-coin weight multiplied by the quantity. Consolidating equal value into higher denominations reduces carried weight.\n"
         else:
             text += literal(rule["text"]) + "\n"
-        qualification = rule.get("qualification")
+        qualification = CURRENCY_QUALIFICATIONS.get(rule["id"], rule.get("qualification"))
         if qualification and rule["id"] != "coin-weight-units":
             text += "\n" + literal(qualification) + "\n"
     return text
@@ -599,10 +663,14 @@ def build_pages(root, data, catalog=None, details=None):
         )
         price_item = next(iter(entity_ids & price_items), None)
         coin = next((coins[identity] for identity in entity_ids if identity in coins), None)
-        pages[title] += stat_table(matching_facts, matching_profiles, properties, entities, locations, price_item, prices.get(price_item), coin)
+        matching_entries = [row for row in entries if owners[row["id"]] == title]
+        recipes = [row for row in matching_entries if row["kind"] == "recipe"]
+        pages[title] += stat_table(
+            matching_facts, matching_profiles, properties, entities, locations,
+            price_item, prices.get(price_item), coin, recipes,
+        )
         if coin is not None:
             pages[title] += coin_summary(coin, entities, locations)
-        matching_entries = [row for row in entries if owners[row["id"]] == title]
         for kind, renderer in (
             ("merchant", lambda rows: merchant_table(rows, images, entities, locations, "unit_prices" in catalog)),
             ("recipe", lambda rows: recipe_table(rows, stations, images, entities, locations)),
@@ -636,7 +704,7 @@ def build_pages(root, data, catalog=None, details=None):
             if entry["kind"] in {"merchant", "loot"}:
                 acquisition.append(f"* [[{target}|{literal(owners[entry['id']])}]]")
             elif entry["kind"] == "recipe":
-                recipes.append(f"* [[{target}|{literal(owners[entry['id']])}]]")
+                recipes.append(f"* [[{owners[entry['id']]}#Recipes|{literal(owners[entry['id']])}]]")
             elif entry["kind"] == "quest":
                 quests.append((quest_order(entry), f"* [[{target}|{literal(entry['title'])}]]"))
             else:
@@ -647,6 +715,8 @@ def build_pages(root, data, catalog=None, details=None):
                 pages[title] += "See [[#Recipes|Recipes]] for the documented crafting options.\n"
             if acquisition:
                 pages[title] += "\n".join(sorted(set(acquisition))) + "\n"
+            elif identity in coins:
+                pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
             elif not any(entry["kind"] == "recipe" and owners[entry["id"]] == title for entry in entries):
                 pages[title] += "Acquisition is not established.\n"
         if recipes:
@@ -666,7 +736,7 @@ def build_pages(root, data, catalog=None, details=None):
         title = station["title"]
         pages[title] += "\n== Crafting here ==\n" + literal(station["summary"]) + "\n"
         reports = station.get("reports", [])
-        if station["entity"] is None and not reports:
+        if station["entity"] is None and not reports and station["id"] != "inventory-crafting":
             pages[title] += "\n== Obtaining or finding ==\n" + known(station["acquisition"]) + "\n"
         elif station["acquisition"] is not None:
             pages[title] += "\n" + literal(station["acquisition"]) + "\n"

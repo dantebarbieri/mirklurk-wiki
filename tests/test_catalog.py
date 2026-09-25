@@ -20,7 +20,7 @@ from wiki_details import (
     MAX_DETAILS_BYTES, empty_details, load_publication_inputs, parse_details,
     parse_illustrations, validate_details,
 )
-from wiki_render import PAIRED_PROPERTIES, display_entry, known, price_text, recipe_groups
+from wiki_render import PAIRED_PROPERTIES, display_entry, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
 
 
@@ -63,7 +63,8 @@ class CatalogTests(unittest.TestCase):
                     if entry["kind"] in {"quest", "algorithm", "recipe", "merchant"} and locations[identity] != entries[entry["id"]]:
                         self.assertIn(f'[[{locations[identity]}', page)
                     if locations[identity] != entries[entry["id"]] and "#" not in locations[identity] and entry["kind"] != "loot":
-                        self.assertIn(f'[[{entries[entry["id"]]}#entry-{entry["id"]}|', self.pages[locations[identity]])
+                        fragment = "Recipes" if entry["kind"] == "recipe" else "entry-" + entry["id"]
+                        self.assertIn(f'[[{entries[entry["id"]]}#{fragment}|', self.pages[locations[identity]])
         for entity in self.data["entities"]:
             target = locations[entity["id"]].split("#", 1)[0]
             self.assertIn(f'id="entity-{entity["id"]}"', self.pages[target])
@@ -83,14 +84,18 @@ class CatalogTests(unittest.TestCase):
         entities = {row["id"]: row for row in self.data["entities"]}
         prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
         coins = {row["entity"]: row for row in self.catalog["currency"]["coins"]}
+        recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         for profile in self.details["profiles"]:
             with self.subTest(profile=profile["id"]):
                 page = self.pages[locations[profile["entity"]]]
                 self.assertEqual(page.count(f'id="profile-{profile["id"]}"'), 1)
                 self.assertIn(literal(profile["context"]), self.pages["Source provenance"])
                 self.assertNotIn(literal(profile["context"]), page)
+                folded = recipe_profile_values(profile, recipes)
                 for key, value in profile["values"].items():
-                    if profile["entity"] in coins and key in {"initial-price", "initial-weight", "stack-limit"}:
+                    if key in folded:
+                        self.assertIn(known(folded[key]), page.split("== Recipes ==", 1)[1])
+                    elif profile["entity"] in coins and key in {"initial-price", "initial-weight", "stack-limit"}:
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
                         self.assertIn(known(coins[profile["entity"]][field]), page)
                     elif key == "initial-price" and profile["entity"] in prices:
@@ -286,6 +291,65 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("item-53", locations)
         self.assertNotIn("item-131", locations)
         self.assertNotIn("item-125", locations)
+        self.assertNotIn("Obtaining or finding", self.pages["Inventory crafting"])
+        self.assertNotIn("Not established", self.pages["Inventory crafting"])
+
+    def test_matching_recipe_profile_cost_and_yield_share_recipe_cells(self):
+        campfire = self.pages["Campfire"]
+        self.assertNotIn("Base crafting cost", campfire)
+        self.assertNotIn("Base recipe yield", campfire)
+        self.assertIn('id="profile-item-38-initializer"', campfire)
+        self.assertIn('id="entry-recipe-personal-crafting-menu-38"', campfire)
+        self.assertIn("<nowiki>4.0</nowiki> <nowiki>base AP</nowiki>", campfire)
+        self.assertIn("[[Campfire|<nowiki>Campfire</nowiki>]] x <nowiki>1</nowiki>", campfire)
+        for key, value, label in (
+            ("craft-ap-cost", 5, "Base crafting cost (AP)"),
+            ("craft-yield", 2, "Base recipe yield (items)"),
+        ):
+            details = copy.deepcopy(self.details)
+            profile = next(row for row in details["profiles"] if row["id"] == "item-38-initializer")
+            profile["values"][key] = value
+            changed = build_pages(ROOT, self.data, self.catalog, details)["Campfire"]
+            self.assertIn(literal(label) + " || " + known(value), changed)
+            self.assertIn("<nowiki>4.0</nowiki> <nowiki>base AP</nowiki>", changed)
+            self.assertIn("[[Campfire|<nowiki>Campfire</nowiki>]] x <nowiki>1</nowiki>", changed)
+        profile = next(row for row in self.details["profiles"] if row["id"] == "item-38-initializer")
+        recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
+        for change in (
+            lambda p: p.update(context="Different effective runtime values."),
+            lambda p: p.update(confidence="observed"),
+            lambda p: p["evidence"][0].update(section="Different_source_scope"),
+        ):
+            modified = copy.deepcopy(profile)
+            change(modified)
+            self.assertEqual(recipe_profile_values(modified, recipes), {})
+        original = next(row for row in recipes if row["id"] == "recipe-personal-crafting-menu-38")
+        for change, retained in (
+            (lambda e: e["details"]["cost"].update(amount=5), "craft-ap-cost"),
+            (lambda e: e["details"]["cost"].update(unit="different unit"), "craft-ap-cost"),
+            (lambda e: e["details"].update(cost=None), "craft-ap-cost"),
+            (lambda e: e["details"]["outputs"][0].update(quantity=2), "craft-yield"),
+        ):
+            variant = copy.deepcopy(original)
+            change(variant)
+            self.assertNotIn(retained, recipe_profile_values(profile, [original, variant]))
+
+    def test_ingredient_links_are_unique_outputs_with_all_legacy_recipe_anchors(self):
+        used_in = self.pages["Beeswax"].split("== Used in ==\n", 1)[1].split("\n== ", 1)[0]
+        links = re.findall(r"\[\[([^|]+)\|", used_in)
+        self.assertEqual(set(links), {"Lesser Wound Salve#Recipes", "Minor Wound Salve#Recipes", "Wound Salve#Recipes"})
+        self.assertEqual(len(links), 3)
+        locations = page_locations(self.data, self.catalog)
+        owners = entry_owners(self.data, locations, entry_relations(self.data, self.catalog), self.catalog)
+        recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
+        self.assertEqual(len(recipes), 96)
+        for recipe in recipes:
+            self.assertEqual(self.pages[owners[recipe["id"]]].count(f'id="entry-{recipe["id"]}"'), 1)
+
+    def test_initializer_weight_and_value_are_explicitly_not_final_stats(self):
+        for title in ("Campfire", "Wood Buckler"):
+            self.assertIn("literal initializer values before recipe postprocessing", self.pages[title])
+            self.assertIn("not finalized in-game weights or prices", self.pages[title])
 
     def test_global_prices_are_item_owned_selective_transclusions(self):
         prices = self.catalog["unit_prices"]
@@ -363,14 +427,27 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("Base weight", page)
             self.assertNotIn("Base value (not a shop price)", page)
             self.assertNotIn("initial-weight", guide)
+            self.assertNotIn("Acquisition is not established", page)
+            self.assertIn("[[Currency and trading#currency-coin-consolidation|", page)
         self.assertIn("replaces the durability factor", guide)
         self.assertIn("does not multiply the durability and fuel reductions together", guide)
         self.assertIn("25 percent", guide)
         self.assertIn("10 percent", guide)
-        self.assertIn("not an absolute guarantee", guide)
+        self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
         self.assertEqual(self.data["game"]["build"], "0.8.1.5")
         self.assertIn("user report", self.pages["Source provenance"])
+
+    def test_currency_editorial_qualifications_stay_on_technical_page(self):
+        guide = self.pages["Currency and trading"]
+        self.assertNotRegex(guide, r"Describe descending|so do not promise|Use the coin pages as")
+        self.assertIn("Change uses the highest denominations first", guide)
+        self.assertIn("Copper change is rounded to a whole coin", guide)
+        self.assertIn("affect fractions smaller than one copper coin", guide)
+        for rule in self.catalog["currency"]["rules"]:
+            if rule["id"] in {"coin-consolidation", "coin-weight-units", "trade-standard-value"}:
+                self.assertIn(literal(rule["qualification"]), self.pages["Source provenance"])
+                self.assertNotIn(literal(rule["qualification"]), guide)
 
     def test_coin_profile_and_unit_mismatch_are_rejected(self):
         catalog = copy.deepcopy(self.catalog)
