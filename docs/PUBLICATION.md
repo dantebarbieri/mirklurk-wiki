@@ -66,7 +66,9 @@ introduce a fixture containing a real secret.
 The catalog validator's named-file cap is 48 KiB, including the bounded
 recipe-input/source joins used to derive acquisition browsing without another
 stored dataset. `tests/test_catalog.py` and `tools/smoke_prefix.py` retain their
-66 KiB caps. No path exception or other file's size limit is widened.
+66 KiB caps. The focused `tests/test_landmarks.py` is separately allowlisted at
+20 KiB for metadata, rights, portrait preservation, seller projections and
+synthetic-image regressions. No existing size cap or media exclusion is widened.
 
 Runtime files belong outside the checkout, even when ignored. Actual
 `LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original

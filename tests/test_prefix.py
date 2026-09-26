@@ -158,8 +158,8 @@ class PrefixTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         data, catalog, details = load_publication_inputs(root)
         specs = synthetic_image_specs(data)
-        self.assertEqual(len(specs), 331)
-        self.assertEqual(len({row[2] for row in specs.values()}), 331)
+        self.assertEqual(len(specs), 334)
+        self.assertEqual(len({row[2] for row in specs.values()}), 334)
         self.assertTrue({f"Nature-{index}.png" for index in (4, 7, 17, 20)} <= specs.keys())
         self.assertTrue({row["file_title"].removeprefix("File:") for row in data["illustrations"]} <= specs.keys())
         require_image_coverage(specs, build_pages(root, data, catalog, details))

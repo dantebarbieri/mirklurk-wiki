@@ -153,6 +153,17 @@ def category_definitions(data, catalog):
             **row, "parents": row.get("parents", [row["index"]]),
             "summary": row.get("summary", f"An editorial browsing group within {row['index']}. Membership does not establish availability or guarantee an outcome."),
         }
+    merchants = sorted({
+        row["details"]["merchant"] for row in data.get("entries", [])
+        if row["kind"] == "merchant" and kinds.get(row["details"]["merchant"]) == "npc"
+    })
+    if merchants:
+        if "Merchants" in categories:
+            raise DataError("taxonomy: duplicate derived merchant category")
+        categories["Merchants"] = {
+            "title": "Merchants", "index": "NPCs", "parents": ["NPCs"], "members": merchants,
+            "summary": "Documented shops. Each NPC owns its shop availability; each item owns its standard price.",
+        }
     ingredients = ingredient_acquisition(data, catalog)
     if ingredients:
         derived = [{
@@ -303,7 +314,7 @@ def validate_catalog(catalog, data):
         _evidence(effect["evidence"], sources, "item effect.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
-        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, {"summary"}, "classification")
+        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, {"summary", "location"}, "classification")
         identity = row["entity"]
         if (
             not isinstance(identity, str) or identity not in entities
@@ -318,6 +329,22 @@ def validate_catalog(catalog, data):
         _text(row["note"], "classification.note", 500)
         if "summary" in row:
             _text(row["summary"], "classification.summary", 500)
+        if "location" in row:
+            if row["kind"] != "npc":
+                raise DataError("classification.location: requires an NPC owner")
+            location = row["location"]
+            _object(location, {"paragraphs", "related_entities", "confidence", "evidence"}, set(), "NPC location")
+            if not isinstance(location["paragraphs"], list) or not 1 <= len(location["paragraphs"]) <= 3:
+                raise DataError("NPC location: expected one to three original paragraphs")
+            for paragraph in location["paragraphs"]:
+                _text(paragraph, "NPC location.paragraph", 800)
+            related = location["related_entities"]
+            if not isinstance(related, list) or len(related) > 8 or any(
+                not isinstance(target, str) or target not in required or target == identity for target in related
+            ) or len(related) != len(set(related)):
+                raise DataError("NPC location: expected at most eight unique related entities")
+            _confidence(location["confidence"], "NPC location.confidence")
+            _evidence(location["evidence"], sources, "NPC location.evidence")
     entry_ids = {entry["id"] for entry in data.get("entries", [])}
     linked = set()
     for row in _records(catalog["entry_links"], "catalog.entry_links"):

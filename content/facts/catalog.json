@@ -2966,7 +2966,22 @@
           "key": "dialogue.NPC[12].porPic[3]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "location": {
+        "paragraphs": [
+          "Bhato lives in a small hut with a foliage-covered roof. Captain Eir gives the direction to the neighboring area containing his hideout, and the journal records the search. Its position varies with the generated world. Enter the hut, not the nearby ancient cellar."
+        ],
+        "related_entities": ["being-6"],
+        "confidence": "observed",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "rangerCamp/marker-2995/spr_built_48x32.frame0/portal31"},
+          {"source": "game-data", "section": "gml_Object_obj_screenfader_Step_0", "key": "area31/rm_hideout_ranger"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "Eir203/rangerCamp-direction"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_mapcreations", "key": "spr_built_48x32.frame1/different-entrance"},
+          {"source": "beings-en", "section": "Eir", "key": "203"},
+          {"source": "ui-en", "section": "Journal", "key": "7"}
+        ]
+      }
     },
     {
       "entity": "being-13",
@@ -3233,7 +3248,24 @@
           "key": "dialogue.NPC[26].porPic[6]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "location": {
+        "paragraphs": [
+          "Gurb-Gurb lives inside a large hollow tree stump in Drowned Fen. The hollow is created only once per world; Savage Mirk is used instead only if the world has no Drowned Fen area.",
+          "When the hollow is first generated, a smoke-discovery message and five white dots point toward it. This is a one-time discovery cue, not a message on every return; the dots show direction, not a safe path. Smoke rises separately in play and is not part of the exterior image."
+        ],
+        "related_entities": [],
+        "confidence": "observed",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_manager_area_Alarm_6", "key": "createdGurbsHut/type3-or-type5-with-no-type3/marker-2990/portal34/IseeSmoke"},
+          {"source": "game-data", "section": "gml_Object_obj_eff_popup_Draw_0", "key": "marker-2990/five-white-direction-dots"},
+          {"source": "game-data", "section": "gml_Object_obj_solid_Alarm_2", "key": "marker-2990/partFireSmoke-separate-particle-stream"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_saveload", "key": "createdGurbsHut/persistent-landmark-flags"},
+          {"source": "game-data", "section": "gml_Object_obj_screenfader_Step_0", "key": "area34/rm_hut_gurb"},
+          {"source": "ui-en", "section": "Pops", "key": "IseeSmoke"},
+          {"source": "ui-en", "section": "LocTitles", "key": "3/5"}
+        ]
+      }
     },
     {
       "entity": "being-27",
@@ -3364,7 +3396,21 @@
           "key": "dialogue.NPC[33].porPic[7]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "location": {
+        "paragraphs": [
+          "Look for Ihar inside a wrecked wooden ship on a Broken Fen shoreline. The wreck is created only once, when a suitable shoreline position is found. Placement can fail, so it is not guaranteed in every Broken Fen area."
+        ],
+        "related_entities": [],
+        "confidence": "observed",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_manager_area_Alarm_6", "key": "type4/marker-2989/suitable-shoreline/1280-attempt-limit/portal35"},
+          {"source": "game-data", "section": "gml_Object_obj_screenfader_Step_0", "key": "area35/rm_shipwreck"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_saveload", "key": "persistent-landmark-creation-flags"},
+          {"source": "beings-en", "section": "Ihar", "key": "-1/101"},
+          {"source": "ui-en", "section": "LocTitles", "key": "4"}
+        ]
+      }
     },
     {
       "entity": "being-34",
@@ -5516,8 +5562,8 @@
       },
       {
         "id": "trade-stock-and-funds",
-        "text": "While a documented shop is available, purchases do not deplete its listed stock and accepted sales are not limited by the merchant's funds. Shop display quantities are samples, not finite stock. This applies to the standard trading screen, not story gifts or exchanges, and does not bypass item-sale restrictions or dialogue availability. Summoned characters cannot be interacted with, so summoning does not provide a portable or reopened shop.",
-        "qualification": "The six populated stock branches belong to Magus Clay, Ranger Bhato, Commander Tain, Viend, Gurb-Gurb and Ihar. Wilda has a Trade dialogue option but no populated stock branch in the inspected menu; neither an additional stock list nor normal encounter availability is inferred.",
+        "text": "Listed wares do not run out, and merchants have unlimited buying funds.",
+        "qualification": "This applies to available standard shops, not story gifts or exchanges; item-sale restrictions and dialogue availability still apply. Display quantities are samples, not finite stock. Summoned characters cannot be interacted with, so summoning does not reopen a shop. The six populated stock branches belong to Magus Clay, Ranger Bhato, Commander Tain, Viend, Gurb-Gurb and Ihar. Wilda has a Trade dialogue option but no populated stock branch in the inspected menu; no additional stock list or normal encounter availability is inferred.",
         "evidence": [
           {
             "source": "game-data",

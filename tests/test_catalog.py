@@ -24,7 +24,7 @@ from wiki_details import (
 )
 from wiki_render import PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
-from smoke_deploy import check_seller_context, refreshed_transclusion
+from smoke_deploy import refreshed_transclusion
 from wiki_views import available_views, selective_view, transclusions
 
 
@@ -43,7 +43,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
         self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 385)
-        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 86)
+        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 87)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
 
@@ -132,7 +132,12 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        images = self.data["illustrations"]
+        self.assertEqual(len(self.data["illustrations"]), 329)
+        images = [row for row in self.data["illustrations"] if "role" not in row]
+        self.assertEqual(
+            hashlib.sha256((json.dumps({"schema_version": 1, "illustrations": images}, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
+            "26cd04c5255d3a76d10ac771df5182d64db92f833f1e4fc909f6724b3972c508",
+        )
         replaced_trees = {"nature-4", "nature-7", "nature-17", "nature-20"}
         original_batch = {"schema_version": 1, "illustrations": [
             row for row in images if "health_armor" not in row and row.get("entity") not in replaced_trees]}
@@ -314,8 +319,9 @@ class CatalogTests(unittest.TestCase):
         bhato = self.pages["Ranger Bhato"]
         self.assertEqual(bhato.count('{| class="wikitable"') + bhato.count('<table class="wikitable">'), 2)
         self.assertEqual(bhato.count('id="entry-merchant-12-'), 12)
-        self.assertEqual(bhato.count("{{:"), 13)
-        self.assertEqual(bhato.count("{{:Currency and trading|view=stock}}"), 1)
+        self.assertEqual(bhato.count("{{:"), 12)
+        self.assertNotIn("{{:Currency and trading|view=stock}}", bhato)
+        self.assertIn("[[:Category:Merchants#Trading_rules|Shared trading rules]]", bhato)
         self.assertIn("[[Ranger Bhato|", self.pages["Merchants"])
         self.assertIn("[[Ranger Bhato|", self.pages["NPCs"])
         for identity in ("journal-7", "journal-7-location", "journal-8", "journal-9"):
@@ -629,7 +635,7 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(actual, expected[row["entity"]], row["title"])
         for title, page in self.pages.items():
             for target in re.findall(r"\[\[:?(Category:[^\]|]+)", page):
-                self.assertIn(target, self.pages, (title, target))
+                self.assertIn(target.partition("#")[0], self.pages, (title, target))
         self.assertIn("[[:Category:Equipment by slot|", self.pages["Items"])
         self.assertIn("[[:Category:Skills|", self.pages["Skills"])
         document = build_xml(self.pages)
@@ -948,23 +954,6 @@ def synthetic_details():
 
 
 class ProfileTests(unittest.TestCase):
-    def test_seller_smoke_keeps_filtered_views_leaf_and_checks_stock_rule_references(self):
-        stock = "Purchases do not deplete listed stock."
-        reference = "Shared stock and merchant-funds rules"
-        result = {"templates": [{"*": "Merchant"}]}
-        check_seller_context(result, "Merchant", "item-0", reference, stock)
-        check_seller_context(result, "Merchant", None, stock, stock)
-        check_seller_context({"templates": [{"*": "Merchant"}]}, "Merchant", "item-0", "Quantity is not established.")
-        for templates in ([], ["Currency and trading"], ["Merchant", "Currency and trading"], ["Merchant", "Item"],
-                          ["Merchant", "Currency and trading", "Copper Coin"]):
-            with self.assertRaises(RuntimeError):
-                check_seller_context({"templates": [{"*": title} for title in templates]}, "Merchant", "item-0", reference, stock)
-        for text in ("A different stock rule.", reference + " Unit price", reference + " Quantity is not established."):
-            with self.assertRaises(RuntimeError):
-                check_seller_context(result, "Merchant", "item-0", text, stock)
-        with self.assertRaises(RuntimeError):
-            check_seller_context(result, "Merchant", None, reference, stock)
-
     def test_transclusion_smoke_waits_for_jobs_but_never_masks_leaks_or_timeout(self):
         outputs = iter(("old price", "new price"))
         calls = []

@@ -149,6 +149,11 @@ def parse_illustrations(raw, data, catalog=None):
         {entity["id"]: entity for entity in data["entities"]},
         {row["id"]: row for row in catalog.get("stations", [])} if catalog else None,
     )
+    location_owners = {row["entity"] for row in catalog.get("classifications", [])
+                       if row["kind"] == "npc" and "location" in row} if catalog else set()
+    if any(image.get("role") == "location" and image["entity"] not in location_owners
+           for image in [*data.get("illustrations", []), *images]):
+        raise DataError("location illustration: requires a reviewed NPC location owner")
     return images
 
 
