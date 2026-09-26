@@ -66,7 +66,10 @@ introduce a fixture containing a real secret.
 The catalog validator's named-file cap is 48 KiB, including the bounded
 recipe-input/source joins used to derive acquisition browsing without another
 stored dataset. `tests/test_catalog.py` and `tools/smoke_prefix.py` retain their
-66 KiB caps. No path exception or other file's size limit is widened.
+66 KiB caps. The incremental disposable adapter and its synthetic controls have
+exact exceptions for `tools/smoke_incremental.py` (48 KiB) and
+`tests/test_incremental.py` (32 KiB). No private input, XML, measurement, artwork,
+or broad directory exception is allowed.
 
 Runtime files belong outside the checkout, even when ignored. Actual
 `LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original

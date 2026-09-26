@@ -954,8 +954,8 @@ def smoke_images(run, api, base, data, *corpora):
     return {filename: hashlib.sha256(payload).hexdigest() for filename, payload in originals.items()}
 
 
-def smoke(evidence_dir=None):
-    from smoke_native import NativeSmoke, docker
+def smoke(evidence_dir=None, incremental_inputs=None):
+    from smoke_native import NativeSmoke, docker, require_historical_coverage
     from publication_journal import Journal
     from smoke_prefix import (
         PREVIOUS_AUTHORED_COMMIT, STORED_BASELINE_BINDING, Rehearsal, SETTINGS_KEYS,
@@ -966,10 +966,21 @@ def smoke(evidence_dir=None):
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
         workspace = Path(folder)
-        previous_authored, previous_payload, baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
+        incremental = None
+        if incremental_inputs is None:
+            previous_authored, previous_payload, baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
+            previous_head = PREVIOUS_AUTHORED_COMMIT
+        else:
+            from smoke_incremental import IncrementalRehearsal, load_incremental_inputs, verify_native_completion
+            inputs, payloads, previous_inputs, incremental = load_incremental_inputs(ROOT, workspace, incremental_inputs)
+            previous_authored, baseline = inputs["previous_authored"], inputs["baseline"]
+            previous_payload, baseline_payload = payloads["previous_authored"], payloads["baseline"]
+            baseline_catalog = previous_inputs[1]
+            previous_head = incremental["previous_source"]["head_sha"]
         source_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
         subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=True)
-        evidence = {"stored-baseline-binding.json": STORED_BASELINE_BINDING}
+        evidence = ({"stored-baseline-binding.json": STORED_BASELINE_BINDING} if incremental is None else
+                    {"incremental-input-binding.json": incremental})
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
@@ -1064,6 +1075,8 @@ def smoke(evidence_dir=None):
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
             data, catalog, details = load_publication_inputs(ROOT)
             authored = build_pages(ROOT, data, catalog, details)
+            if incremental is not None and authored != inputs["authored"]:
+                raise RuntimeError("Incremental authored source changed after input validation.")
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
             parser_functions = next((row for row in extensions if row["name"] == "ParserFunctions"), None)
             if not parser_functions or not parser_functions.get("version"):
@@ -1153,7 +1166,7 @@ def smoke(evidence_dir=None):
                 raise RuntimeError("The initial import is not exactly the frozen baseline title set.")
             pages, evidence["storage-materialization.json"] = materialize_desired(
                 api, previous_authored, baseline, authored, source_head, runtime, actor,
-                previous_source_head=PREVIOUS_AUTHORED_COMMIT,
+                previous_source_head=previous_head,
             )
             if (evidence["storage-materialization.json"]["baseline_seed_sha256"] != hashlib.sha256(baseline_payload).hexdigest()
                     or evidence["storage-materialization.json"]["previous_authored_seed_sha256"]
@@ -1225,7 +1238,7 @@ def smoke(evidence_dir=None):
             evidence["prebarrier-storage-materialization.json"] = evidence["storage-materialization.json"]
             observer_pages, evidence["storage-materialization.json"] = materialize_desired(
                 api, previous_authored, baseline, authored, source_head, observer_runtime, actor,
-                previous_source_head=PREVIOUS_AUTHORED_COMMIT,
+                previous_source_head=previous_head,
             )
             if observer_pages != pages:
                 raise RuntimeError("Authoritative read-only PST changed the desired corpus bytes.")
@@ -1233,8 +1246,11 @@ def smoke(evidence_dir=None):
                                        "public_db_requests": 0, "public_transactions": 0,
                                        "public_http_unreachable": True, "private_observer_edit_error": "readonly",
                                        "worker_surface": "CLI-only; no published ports"}
-            rehearsal = Rehearsal(api, sys.modules[__name__], baseline, pages, data, catalog,
-                                  baseline_catalog, observer_runtime, source_head)
+            rehearsal_type = Rehearsal if incremental is None else IncrementalRehearsal
+            rehearsal = rehearsal_type(
+                api, sys.modules[__name__], baseline, pages, data, catalog, baseline_catalog, observer_runtime, source_head,
+                **({} if incremental is None else {"previous_inputs": previous_inputs, "binding": incremental}),
+            )
             save, accept = native.full_run(rehearsal, {
                 key: hashlib.sha256(canonical_bytes(corpus)).hexdigest()
                 for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
@@ -1268,26 +1284,53 @@ def smoke(evidence_dir=None):
                 rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
                 if f'id="{anchor}"' not in rendered:
                     raise RuntimeError("MediaWiki did not render the entity page's primary record anchor.")
-            accept(len(rehearsal.order), {
-                **rehearsal.pending_final_guard, "final_observations": rehearsal.final_observations,
-                "mixed_price_expectations": evidence["price-expectations-candidate.json"],
-                "final_categories_and_reader_release": "passed",
-                "final_prerequisite_stability": "passed",
-            })
-            if len(rehearsal.prefixes) != 454 or len(native.release_journal.accepted) != 453:
-                raise RuntimeError("Native full-prefix proof is incomplete.")
-            native.release_journal.verify_resume(native.states(native.release_journal.manifest,
-                                                                native.release_journal.accepted))
-            native.release_journal.close()
-            with Journal(workspace / "native-release-journal") as replayed:
-                if len(replayed.accepted) != 453:
-                    raise RuntimeError("Native durable release replay is incomplete.")
+            if rehearsal.order:
+                accept(len(rehearsal.order), {
+                    **rehearsal.pending_final_guard, "final_observations": rehearsal.final_observations,
+                    **({"mixed_price_expectations": evidence["price-expectations-candidate.json"]}
+                       if incremental is None else {"incremental_envelope": evidence["full-prefix-proof.json"]["incremental"]}),
+                    "final_categories_and_reader_release": "passed",
+                    "final_prerequisite_stability": "passed",
+                })
+                if incremental is None:
+                    require_historical_coverage(len(native.release_journal.accepted), prefixes=len(rehearsal.prefixes))
+                else:
+                    verify_native_completion(rehearsal, native.proof, native.release_journal.accepted)
+                native.release_journal.verify_resume(native.states(native.release_journal.manifest,
+                                                                    native.release_journal.accepted))
+                native.release_journal.close()
+                with Journal(workspace / "native-release-journal") as replayed:
+                    if incremental is None:
+                        require_historical_coverage(len(replayed.accepted))
+                    else:
+                        verify_native_completion(rehearsal, native.proof, replayed.accepted)
+                        replayed.verify_resume(native.states(replayed.manifest, replayed.accepted))
+                journal_records = replayed.records
+            else:
+                verify_native_completion(rehearsal, native.proof, [])
+                journal_records = {}
             evidence["native-publication-proof.json"] = native.proof
             evidence["native-journal-proof.json"] = {
                 "schema_version": 1, "source_head_sha": source_head,
                 "scope": "Synthetic-only replayable guard preimages; never a production journal.",
-                "records": replayed.records,
+                "records": journal_records,
             }
+            if incremental is not None:
+                envelope = evidence["full-prefix-proof.json"]["incremental"]
+                envelope["corpora"] = {key: hashlib.sha256(canonical_bytes(corpus)).hexdigest()
+                                       for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
+                                                           ("authored", authored), ("desired", pages))}
+                envelope["seeds"] = {key: hashlib.sha256(build_xml(corpus)).hexdigest()
+                                     for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
+                                                         ("authored", authored), ("desired", pages))}
+                envelope["order_sha256"] = hashlib.sha256(canonical_bytes(rehearsal.order)).hexdigest()
+                envelope["native"] = {
+                    **native.proof["incremental"],
+                    "proof_sha256": hashlib.sha256(canonical_bytes(native.proof)).hexdigest(),
+                    "journal_proof_sha256": hashlib.sha256(canonical_bytes(evidence["native-journal-proof.json"])).hexdigest(),
+                    "primitive_sha256": hashlib.sha256((ROOT / "tools" / "native_publication.php").read_bytes()).hexdigest(),
+                    "cold_replay": "passed" if rehearsal.order else "not-applicable-no-publication",
+                }
             docker("stop", observer)
             docker("rm", observer)
             observer = None
@@ -1402,8 +1445,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", required=True, action="store_true", help="Create and remove test-only Docker resources")
     parser.add_argument("--evidence-dir", type=Path, help="New output directory for nonsecret disposable evidence")
+    parser.add_argument("--incremental-inputs", type=Path, help="Explicit pinned private incremental input JSON; never upload inputs/evidence to CI")
     args = parser.parse_args()
-    smoke(args.evidence_dir)
+    smoke(args.evidence_dir, args.incremental_inputs)
 
 
 if __name__ == "__main__":

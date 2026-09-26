@@ -450,7 +450,9 @@ def strip_colon_invocations(text):
 
 
 class Rehearsal:
-    def __init__(self, api, checks, baseline, desired, data, catalog, old_catalog, runtime, source_head):
+    def __init__(self, api, checks, baseline, desired, data, catalog, old_catalog, runtime, source_head,
+                 *, incremental=False):
+        self.incremental = incremental
         self.api, self.checks = api, checks
         self.baseline, self.desired, self.current = baseline, desired, dict(baseline)
         self.data, self.catalog = data, catalog
@@ -468,10 +470,14 @@ class Rehearsal:
         self.stations = {method: station for station in catalog["stations"] for method in station["methods"]}
         self.sources = {row["title"]: row for row in catalog["acquisition"]["sources"]}
         self.pools = {row["id"]: row for row in catalog["acquisition"]["pools"]}
-        self.order = planned_order(baseline, desired, self.locations, self.old_prices.keys(), self.coins.keys())
-        self.cohort = [self.locations[identity] for identity in COHORT]
+        if incremental:
+            from smoke_incremental import incremental_order
+            self.order = incremental_order(baseline, desired)
+        else:
+            self.order = planned_order(baseline, desired, self.locations, self.old_prices.keys(), self.coins.keys())
+        self.cohort = [] if incremental else [self.locations[identity] for identity in COHORT]
         self.allowed = {(self.locations[consumer], self.locations[owner])
-                        for consumer, owners in COMPATIBILITY.items() for owner in owners}
+                        for consumer, owners in COMPATIBILITY.items() for owner in owners} if not incremental else set()
         self.base_meta = None
         self.metadata = {}
         self.revisions = {}
@@ -496,10 +502,15 @@ class Rehearsal:
         previous_max = max(self.revisions, default=0)
         titles = sorted(self.current)
         for offset in range(0, len(titles), 50):
+            seen = set()
             result = self.api({"action": "query", "titles": "|".join(titles[offset:offset + 50]),
                                "prop": "revisions", "rvprop": "ids|content", "rvslots": "main"})
             for page in result["query"]["pages"].values():
                 title = page["title"]
+                if self.incremental and (title not in titles[offset:offset + 50] or title in seen
+                                         or "missing" in page or "invalid" in page):
+                    raise RuntimeError("Incremental readback contains missing/duplicate/unknown identities.")
+                seen.add(title)
                 revision = page["revisions"][0]
                 raw = revision["slots"]["main"]["*"]
                 if raw != self.current[title]:
@@ -523,6 +534,8 @@ class Rehearsal:
                 self.revisions[record["revid"]] = fingerprint
                 self.pageids[title] = record["pageid"]
                 self.metadata[title] = record
+            if self.incremental and seen != set(titles[offset:offset + 50]):
+                raise RuntimeError("Incremental readback omitted owned titles.")
         if self.base_meta is None:
             self.base_meta = dict(self.metadata)
 
@@ -652,6 +665,7 @@ class Rehearsal:
 
     def inspect_consumer(self, title):
         result = self.api({"action": "parse", "page": title, "prop": "text|templates|links|revid"})["parse"]
+        self.last_consumer_html = result["text"]["*"]
         if result.get("revid") != self.metadata[title]["revid"]:
             raise RuntimeError("A consumer parse is not bound to its captured current revision.")
         self.checks.check_parser_errors(result["text"]["*"])
@@ -671,7 +685,7 @@ class Rehearsal:
         for probe in probes:
             if not probe["parameters"]:
                 continue
-            selected = dom(probe["html"], "Prefix projection")
+            selected = dom(probe["html"], probe.get("parse_title", "Prefix projection"))
             for row in selected.rows:
                 ids = set(row["ids"])
                 if ids and not any(ids <= set(actual["ids"]) and row["cells"] == actual["cells"] for actual in parsed.rows):
@@ -852,6 +866,9 @@ class Rehearsal:
             for consumer, text in corpus.items():
                 for owner, arguments in transclusions(text):
                     queries.setdefault((owner, arguments), set()).add(consumer)
+        if getattr(self, "incremental", False):
+            for owner in self.registry["prices"].keys() | self.registry["coins"].keys():
+                queries.setdefault((owner, ()), set())
 
         def targets(links):
             return {row["*"] for row in links if row["*"] in self.desired}
@@ -888,7 +905,7 @@ class Rehearsal:
                     "reason": "owner-absent" if owner not in self.current else "view-not-declared",
                 })
                 continue
-            if endpoint == "baseline" and parameters:
+            if endpoint == "baseline" and parameters and not getattr(self, "incremental", False):
                 raise RuntimeError("The reviewed baseline may expose only its genuine default contracts.")
             neutral = None
             invocation = projection_invocation(owner, parameters)

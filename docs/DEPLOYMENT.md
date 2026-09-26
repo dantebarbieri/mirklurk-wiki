@@ -160,6 +160,101 @@ volume; removing volumes destroys that development database.
 
 ## Validation without touching infrastructure
 
+### Explicit incremental disposable inputs
+
+Historical CI continues to use the existing historical baseline and strict cohort
+order. For a reviewed later release, opt in explicitly:
+
+```powershell
+python tools\smoke_deploy.py --run --incremental-inputs C:\private\inputs.json --evidence-dir C:\private\new-evidence
+```
+
+This is the **same disposable Compose / Rehearsal / NativeSmoke pipeline**, not
+a production executor. It imports exact owned stored **B**, not previous authored
+A0. Inputs and resulting evidence are private: do not commit them, put them in
+CI, or treat synthetic XML identities as production history. A separate reviewed
+community-title inventory detects collisions but is not imported as owned data.
+Fresh production observation, conflict reconciliation, writer freeze and
+publication approval remain operator responsibilities.
+
+The input is a closed JSON object with `schema_version: 1` and
+`kind: "disposable-incremental-inputs"`, containing exactly these additional keys:
+
+| Key | Required value |
+| --- | --- |
+| `previous_source`, `candidate_source` | Objects with exact `head_sha` and `tree_sha`. Candidate must be the clean executing HEAD. |
+| `previous_authored`, `baseline`, `authored`, `provenance` | Each has `path`, positive integer `bytes`, and `sha256`. Relative paths resolve beside the input JSON. The first three are A0, B and A1 XML; provenance is pinned reviewed JSON. |
+| `owned_titles`, `community_titles` | Sorted unique normalized title lists, disjoint. Owned titles must equal both A0 and B; no owned deletion or candidate/community collision is accepted. |
+| `reviewed_drift_sha256` | SHA-256 of canonical JSON `{title: {previous_authored_sha256, baseline_sha256}}` for **every** A0/B raw difference, including storage-only differences. No inferred normalization or unreviewed drift. |
+| `catalog_inputs` | Exactly `previous` and `candidate`, each mapping the five bare filenames `game.json`, `catalog.json`, `acquisition.json`, `entity_details.json`, `illustrations.json` to their exact raw SHA-256 hashes. |
+
+Canonical JSON here means sorted compact UTF-8, unescaped Unicode, no NaN and no
+terminal newline. XML must equal `build_xml`'s deterministic synthetic disposable
+format; production history exports and unsupported namespaces/shapes are rejected.
+The previous source is archived from its pinned Git commit and its own generator
+must reproduce A0. `load_publication_inputs` loads the previous archived catalog
+without rounding or serializing away its Decimals. The current generator must
+reproduce A1. Runtime materialization still performs actual only-PST only for
+source-changed/new titles; source-unchanged titles retain exact B without PST.
+
+Incremental order is exactly the changed B/D set, once each, deterministically
+preferring ready creates and then lexical title order. Every transclusion owner
+must be at D before saving its changed consumer; unchanged owners are already
+ready. Missing views and affected cycles fail. There are no historical nine-save
+cohorts, six unknown-price exceptions, source-equivalence waivers or cycle escapes.
+Zero operations produces explicit `no-publication`, one baseline prefix and no
+release journal/accepted operation.
+
+Baseline named projections are measured from MediaWiki in neutral and complete
+B/D consumer contexts, using the baseline catalog and the genuine old pool shape.
+Desired pool checks reuse the current compact-pool checker. Actual owner raw state
+selects B/D semantics even while the consumer is still B. Context, expansion,
+leaf dependencies, current revision, full consumer DOM, links and bounded natural
+settling remain checked. All current registered defaults (42 prices and three
+coins) have explicit baseline/final neutral probes and per-prefix references;
+all six formerly unknown prices must stay established. Unchanged leaf caches are
+keyed by owner revision, raw hash, parameters and consumer context; changed owners
+and pre-save prerequisites are freshly probed.
+
+`full-prefix-proof.json` retains the existing baseline/desired revision maps,
+`order`, `prefixes`, `view_evidence`, `final_observations` and `default_contracts`.
+Each view adds `parse_title`. Its additive `incremental` envelope has:
+
+- `schema_version: 1`, `kind: "disposable-incremental-envelope"`, `inputs` (the
+  original input pins without local paths, plus original `input_sha256`), and
+  `outcome` (`rehearsed` or `no-publication`).
+- `coverage`: `titles` and `counts`, each keyed `create`, `update`, `preserved`;
+  plus `operations`, `prefixes` and `desired_titles`, derived independently from B/D.
+- `default_endpoint_probe_ids` (`baseline`, `desired`) and
+  `default_prefix_probe_ids` (one list per prefix); each list covers all default
+  owners in sorted title order, in the neutral `Prefix projection` context.
+- `corpora` and `seeds`, each mapping `previous_authored`, `baseline`, `authored`,
+  `desired` to canonical corpus-map and deterministic XML digests respectively;
+  `order_sha256`; and `native`, binding the manifest, exact prerequisite-plan,
+  executor/journal implementations, native proof and full journal-record artifact.
+  `cold_replay` is `passed` or `not-applicable-no-publication`.
+
+`native-publication-proof.json.incremental` independently records input, dynamic
+coverage, manifest and prerequisite-plan hashes. The plan hash covers the ordered
+list of operation prerequisite arrays from the native manifest retained in
+`native-journal-proof.json.records["manifest.json"]`. Native operation guards have
+`prefix`, `prerequisite_checks`, `default_probe_ids` and `incremental_input_sha256`;
+the final guard also binds final observations and the pre-native-binding envelope.
+The envelope's native hashes are attached afterward to avoid a circular digest.
+The unchanged native executor/journal still require one launch/collection/whole
+exit, exact CAS/prerequisites/effects and full cold replay for each accepted write.
+
+`endpoint-link-view-candidates.json` retains measured selected/context/direct/full
+endpoint HTML and expansion preimages. `consumer-html.json` maps each actual
+consumer HTML digest to its preimage. The normal artifact manifest hashes all
+retained files. No fabricated `price_prefix`, ten-state compatibility receipt or
+historical expectation artifact is emitted in incremental mode. Generic fault
+tests and historical CI are separate evidence, never incremental DOM/native proof.
+Offline unit tests use explicitly synthetic fixtures; only an authorized real
+disposable MediaWiki run can provide measured incremental evidence.
+
+### Historical and ordinary-editor checks
+
 Run `php tests/test_runtime.php` for isolated configuration tests. With Docker
 available, run `python tools/smoke_deploy.py --run`. The latter creates its own
 randomly named Compose project and temporary generated credentials; it checks

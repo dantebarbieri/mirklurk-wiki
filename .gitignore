@@ -55,6 +55,7 @@
 !/tools/native_publication.php
 !/tools/publication_journal.py
 !/tools/smoke_native.py
+!/tools/smoke_incremental.py
 !/tests/
 !/tests/test_safety.py
 !/tests/test_wiki.py
@@ -63,6 +64,7 @@
 !/tests/test_acquisition.py
 !/tests/test_migration.py
 !/tests/test_prefix.py
+!/tests/test_incremental.py
 !/tests/test_runtime.php
 !/tests/test_publication_journal.py
 !/tests/native_worker_fixture.php
