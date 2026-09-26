@@ -73,6 +73,8 @@ class PrefixTests(unittest.TestCase):
         changed = copy.deepcopy(value)
         changed["ReadOnly"] = False
         self.assertNotEqual(settings_hash(changed), settings_hash(value))
+        changed["ReadOnly"] = None
+        self.assertNotEqual(settings_hash(changed), settings_hash(value))
         for key, invalid in (("Extra", False), ("EnableUploads", 0), ("GroupPermissions", [])):
             changed = {**value, key: invalid}
             with self.assertRaises(RuntimeError):

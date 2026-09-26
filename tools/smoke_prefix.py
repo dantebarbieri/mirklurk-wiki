@@ -41,10 +41,11 @@ def settings_hash(value):
         raise RuntimeError("The effective-settings projection has unexpected keys.")
     if any(value[key] is not False for key in SETTINGS_KEYS[:3]):
         raise RuntimeError("A disabled-upload runtime invariant changed.")
-    if not isinstance(value["ReadOnly"], (bool, str)) or not all(
+    if value["ReadOnly"] is not None and not isinstance(value["ReadOnly"], (bool, str)) or not all(
         isinstance(value[key], dict) for key in ("GroupPermissions", "CaptchaTriggers")
     ):
-        raise RuntimeError("The installed settings projection has unexpected value types.")
+        raise RuntimeError("The installed settings projection has unexpected value types: "
+                           + ", ".join(key + "=" + type(value[key]).__name__ for key in SETTINGS_KEYS))
     return hashlib.sha256(canonical_bytes(value)).hexdigest()
 
 
@@ -235,7 +236,8 @@ class Rehearsal:
         self.endpoint_rows = {}
         self.endpoint_projections = {}
         self.provenance = {
-            "schema_version": 1, "source_head_sha": source_head, "checkout_sha": source_head,
+            "schema_version": 1, "evidence_kind": "disposable-mediawiki",
+            "source_head_sha": source_head, "checkout_sha": source_head,
             "baseline_seed_sha256": BASELINE_SHA256,
             "desired_seed_sha256": hashlib.sha256(build_xml(desired)).hexdigest(), "runtime": runtime,
         }
@@ -590,6 +592,11 @@ class Rehearsal:
                 "order": self.order, "prefixes": self.prefixes, "view_evidence": self.probes,
                 "baseline_revisions": self.base_meta, "desired_revisions": self.metadata,
                 "final_observations": self.final_observations,
+                "default_contracts": {
+                    "preserved_price_owners": sorted(self.locations[identity] for identity in self.old_prices),
+                    "coin_owners": sorted(self.locations[identity] for identity in self.coins),
+                    "compatibility_edges": [{"consumer": consumer, "owner": owner} for consumer, owner in sorted(self.allowed)],
+                },
                 "cohort_full_positions": [0, *[self.order.index(title) + 1 for title in self.cohort]],
             },
             "price-compatibility-receipt.json": {

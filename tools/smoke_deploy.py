@@ -879,8 +879,14 @@ def smoke(evidence_dir=None):
 
         opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
         base = f"http://localhost:{port}"
+        minimum_edit_interval = 0
+        last_edit_at = 0
 
         def api(parameters, post=False, expected_error=None):
+            nonlocal last_edit_at
+            if parameters.get("action") == "edit" and minimum_edit_interval:
+                time.sleep(max(0, minimum_edit_interval - (time.monotonic() - last_edit_at)))
+                last_edit_at = time.monotonic()
             encoded = urllib.parse.urlencode(dict(format="json", **parameters)).encode()
             url = base + "/api.php" + ("" if post else "?" + encoded.decode())
             with opener.open(url, data=encoded if post else None, timeout=30) as response:
@@ -1043,6 +1049,8 @@ def smoke(evidence_dir=None):
             editor = api({"action": "query", "meta": "userinfo", "uiprop": "rights|groups"})["query"]["userinfo"]
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
+            # Respect the unchanged ten-edits/minute policy rather than exempting the test account.
+            minimum_edit_interval = 7
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
             evidence["desired-view-contracts.json"] = capture_view_fixtures(api, pages, catalog)
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
