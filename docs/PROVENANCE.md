@@ -183,10 +183,15 @@ without rewriting historical evidence:
   evidence supports this navigation grouping, not universal hostility,
   friendliness, survival, or reachability. A missing classification remains
   visibly unclassified; it is never silently labeled an enemy.
+  An optional original `summary` (at most 500 characters) explains a reviewed
+  distinction on the entity's own page using the same evidence; technical
+  `note` text remains in Source provenance. Unwanted Guard retains an inferred
+  NPC grouping, with its friendly base faction, possible retaliation and
+  unverified encounter/dialogue availability distinguished explicitly.
 - `entry_links`: `{entry, entities}` for reviewed editorial crosslinks to
   existing records. These are see-also relationships, not a place to add a
   mechanic or unsupported semantic claim.
-- `entry_display`: `{entry, title?, summary?, conditions?, steps?}` gives
+- `entry_display`: `{entry, title?, summary?, conditions?, steps?, confidence?, evidence?}` gives
   bounded original reader wording for an existing entry. Omitted fields keep
   their original value; conditions alone may be null. An empty override `steps`
   list suppresses technical boilerplate while keeping its evidence and original
@@ -194,6 +199,19 @@ without rewriting historical evidence:
   labels can be replaced by reviewed descriptive titles without changing IDs,
   ordering, source evidence, or the underlying record. No guessed names for
   unidentified categories are introduced.
+  Paired optional confidence/evidence fields support newly verified reader
+  corrections. Source provenance lists those supplements separately and
+  retains the original research citations. Recorder pickup remains owned by
+  Story rewards and finds; its Eir hand-in and midnight progression are owned
+  by the ordered journal entries, with item and character crosslinks.
+- `merchant_profiles` optionally covers each documented stock owner exactly
+  once with `{entity, conditions, spoiler, confidence, evidence}` and an
+  optional `compare_with` merchant. These replace generic historical offer
+  conditions without changing the offers. Competing per-offer condition
+  overrides are rejected. Conditions occur once in the merchant's selective
+  offer view, so item readers inherit the same availability and collapsed
+  spoiler warning. Stock comparisons derive links to existing offer anchors,
+  never a second stock/price table.
 
 Five localized skill groups remain sections of Skills and have linked category
 pages; seven damage types now have their
@@ -446,10 +464,15 @@ arguments, so their dependencies are statically visible without dynamic
 forwarding or recursive inclusions. Tier odds, bonus-generation checks, and
 retention checks must not be relabeled as per-item probabilities.
 
-Six `item_notes` cover built-in equipment, the in-place construction action,
-and four explicitly unverified items. The latter distinguish absent item
-definitions from valid definitions without a verified ordinary route. These
+Seven `item_notes` cover built-in equipment, the in-place construction action,
+Calmia Root gathering advice, and four explicitly unverified items. The latter
+distinguish absent item definitions from valid definitions without a verified ordinary route. These
 are limits of this inspected build, not universal impossibility claims.
+The `gathering` note keeps Calmia's intact-item sale proceeds on the item owner;
+it does not create a standard purchase-price record or a default price view.
+The plant source owns the purple-flowered overworld identification and base
+harvest yield. That yield is not a count of plants in a patch, and its
+Green Fingers bonus is separate from additional insect stacks.
 Context on a related entity can explain a distinct caller, such as the
 single berry-insect check versus Creepy-Crawlies' repeated ground checks.
 
@@ -479,8 +502,18 @@ execute MediaWiki; the disposable integration test separately proves normal,
 default, filtered, and live-edit behavior without cache purges or reimports.
 
 `currency` preserves the reviewed build confirmation, three coin definitions,
-and seven original rule explanations with evidence and confidence. It
-validates positive value/weight fields, coin identity, gram/kilogram agreement,
+and seven original rule explanations, plus a reviewed stock/funds rule, with
+evidence and confidence. Optional `standard_merchants` must exactly match the
+documented offer owners and cannot override an explicit finite offer quantity.
+The shared stock rule is owned by Currency and trading and selected through
+`view=stock` on ordinary merchant pages. Filtered item readers link to that
+same owner instead of nesting its transclusion, preserving the offer view's
+parser-proven leaf contract just as omitted purchase-price cells do.
+The finite stock projection must contain exactly its rule, with no article
+links, anchors, tables or extra parser dependencies.
+Quest-item and early Rift Weave sale restrictions remain separate from merchant
+cash availability; an unpopulated Trade dialogue option creates no stock list.
+The schema validates positive value/weight fields, coin identity, gram/kilogram agreement,
 and exact agreement with existing profile values. Coin pages alone own value,
 weight, and stack limits in selective summary tables; Currency and trading
 transcludes those tables instead of hardcoding conversion/weight duplicates.

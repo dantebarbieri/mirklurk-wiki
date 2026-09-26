@@ -2,4 +2,6 @@ Browse characters, including merchants. Open a character page for documented det
 
 NPC is a browsing category, not a guarantee of friendliness, dialogue availability, or survival. Deceased characters are identified on their own pages.
 
+[[Unwanted Guard]] is included only as an inferred character grouping; read its availability caveats rather than assuming a normal encounter or dialogue.
+
 [[Main Page]] | [[Bestiary]] | [[Evidence and spoilers]]

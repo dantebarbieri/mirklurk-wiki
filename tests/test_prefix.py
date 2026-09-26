@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 from smoke_deploy import (
     RenderedRows, bounded_maintenance, check_parser_errors, drain_jobs_bounded, item_links,
-    require_image_coverage, synthetic_image_specs, wait_for_server_tick,
+    plain, require_image_coverage, synthetic_image_specs, wait_for_server_tick,
 )
 from smoke_prefix import (
     COHORT, STORED_BASELINE_BINDING, PendingConsumerUpdate, Rehearsal, baseline_metadata, canonical_bytes,
@@ -83,6 +83,30 @@ class PrefixTests(unittest.TestCase):
         desired["item-248"] = baseline["item-248"]
         with self.assertRaises(RuntimeError):
             planned_order(baseline, desired, locations, set(), set())
+
+    def test_stock_projection_is_an_exact_registered_leaf_not_a_general_waiver(self):
+        text = "Purchases do not deplete the listed stock."
+        rehearsal = SimpleNamespace(
+            checks=SimpleNamespace(check_parser_errors=check_parser_errors, plain=plain),
+            entities={}, catalog={"currency": {"rules": [{"id": "trade-stock-and-funds", "text": text}]}},
+        )
+        result = {"templates": [{"*": "Currency and trading"}], "text": {"*": "<p>" + text + "</p>"}}
+        Rehearsal.validate_projection(rehearsal, "Currency and trading", {"view": "stock"}, result)
+        for html in ("Changed rule.", text + "<table></table>", text + '<span id="extra"></span>',
+                     '<a href="/index.php?title=Item">' + text + "</a>",
+                     '<a href="https://example.test/">' + text + "</a>", text + '<img src="extra.png">'):
+            changed = {**result, "text": {"*": html}}
+            with self.assertRaises(RuntimeError):
+                Rehearsal.validate_projection(rehearsal, "Currency and trading", {"view": "stock"}, changed)
+        for templates in ([], [{"*": "Currency and trading"}, {"*": "Copper Coin"}]):
+            with self.assertRaises(RuntimeError):
+                Rehearsal.validate_projection(rehearsal, "Currency and trading", {"view": "stock"},
+                                             {**result, "templates": templates})
+        with self.assertRaises(RuntimeError):
+            Rehearsal.validate_projection(rehearsal, "Currency and trading", {"view": "stock", "item": "item-0"}, result)
+        with self.assertRaises(RuntimeError):
+            Rehearsal.validate_projection(rehearsal, "Other owner", {"view": "stock"},
+                                         {**result, "templates": [{"*": "Other owner"}]})
 
     def test_settings_hash_is_exact_nonsecret_typed_canonical_json(self):
         value = {"EnableUploads": False, "AllowCopyUploads": False, "AllowExternalImages": False,

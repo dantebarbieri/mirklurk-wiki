@@ -40,8 +40,12 @@ complete staged diff. On updates, also review the commits being pushed, not
 merely the last worktree state. Generated XML is for a private handoff, not Git.
 Check any attachments and command logs separately.
 
-CI repeats the publication gate and tests, then builds and exercises disposable
-Docker containers. CI is **after publication** and cannot prevent an initial
+Pull requests run the publication gate, Python tests and PHP runtime checks.
+The full disposable Docker smoke runs on pushes to `main` or explicit manual
+dispatch, not on pull requests or feature-branch pushes. Workflow/ref concurrency
+cancels obsolete runs. A skipped pull-request smoke job is **not** smoke evidence:
+a release still requires a successful full run bound to its exact merged source.
+CI is **after publication** and cannot prevent an initial
 leak. The local pre-publication gate is mandatory. No check can automatically
 establish authorship, fair use, or that an arbitrary new secret pattern is absent.
 
@@ -58,6 +62,12 @@ Update both allowlists and representative `git check-ignore` tests. Keep final
 hard exclusions after positive exceptions. Never allow an entire directory's
 contents, use force-add as a workaround, relax binary checks for an asset, or
 introduce a fixture containing a real secret.
+
+The catalog validator's named-file cap is 44 KiB to accommodate the bounded
+merchant-availability, editorial-evidence and shared-stock validation. This
+correction also gives `tests/test_catalog.py` and `tools/smoke_prefix.py`
+66 KiB each for the focused regressions and finite stock-view checks.
+No path exception or other file's size limit is widened.
 
 Runtime files belong outside the checkout, even when ignored. Actual
 `LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original

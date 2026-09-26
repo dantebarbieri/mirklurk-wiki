@@ -2,4 +2,6 @@ Choose a merchant to see their wares, location, and available trading details.
 
 Prices, quantities, and conditions are maintained on the merchant's own page. An item's base value is not a quoted shop price.
 
+See [[Currency and trading]] for shared stock, buying and selling rules, and [[Calmia Root]] for a gathering-based income source.
+
 [[NPCs]] | [[Items]] | [[Main Page]]
