@@ -125,12 +125,13 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
+        images = self.data["illustrations"]
+        original_batch = {"schema_version": 1, "illustrations": [row for row in images if "health_armor" not in row]}
         self.assertEqual(
-            hashlib.sha256((ROOT / "content" / "facts" / "illustrations.json").read_bytes()).hexdigest(),
+            hashlib.sha256((json.dumps(original_batch, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
             "c39da5b3edcc0a8ca077b7265fdf7ebc92b44613c23c79f01bbc1d2de51f6459",
         )
-        images = self.data["illustrations"]
-        self.assertEqual(len(images), 323)
+        self.assertEqual(len(images), 326)
         original = {"schema_version": 1, "illustrations": [row for row in images if "entity" in row]}
         self.assertEqual(hashlib.sha256((json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
                          "d2127f41f5f41dcbe3fb7f04354b97289708c25c60a411487a3ae53cc886399e")
@@ -138,7 +139,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(missing, {"item-31", "item-48", "item-49", "item-171"})
         locations = page_locations(self.data, self.catalog)
         stations = {row["id"]: row for row in self.catalog["stations"]}
-        for image in images:
+        for image in original_batch["illustrations"]:
             title = locations[image["entity"]] if "entity" in image else stations[image["station"]]["title"]
             page = self.pages[title]
             self.assertEqual(page.count(f'[[{image["file_title"]}|thumb|'), 1)
@@ -569,7 +570,7 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("Potential melee damage", attack)
         self.assertNotIn("== Melee", self.pages["Shortbow (Willow)"])
         self.assertIn("0-1</td>", self.pages["Unarmed"])
-        self.assertIn("1 HP<br />3 armor", self.pages["Sceetler"])
+        self.assertIn("[[File:Health-armor-3.png|32px|alt=1 HP, 3 armor layers (gold shield)", self.pages["Sceetler"])
         self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages["Sceetler"])
         for title in ("Giant Slug", "Swamp Troll", "Mirk Mauler", "Scaal", "Wilda", "Unwanted Guard"):
             self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages[title])

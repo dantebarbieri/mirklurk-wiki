@@ -7859,6 +7859,63 @@
           "key": "204"
         }
       ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "id": "health-armor-1-illustration",
+      "health_armor": 1,
+      "file_title": "File:Health-armor-1.png",
+      "caption": "Bronze shield indicating 1 armor layer on one health cell.",
+      "sha256": "2446f7658cce73471225a316e521e7e4a77f992d453a6d2089b95a7b1b89fd05",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue[2]/picAdjust[hpValue-2]/spr_ui_16x16.frame[11]"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "id": "health-armor-2-illustration",
+      "health_armor": 2,
+      "file_title": "File:Health-armor-2.png",
+      "caption": "Silver shield indicating 2 armor layers on one health cell.",
+      "sha256": "79c07516cdf2d76b927904a0fc61d8cb10a4d66a381472ce182910301a048df0",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue[3]/picAdjust[hpValue-2]/spr_ui_16x16.frame[12]"
+        }
+      ]
+    },
+    {
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This is not a license to redistribute game assets through the source repository.",
+      "id": "health-armor-3-illustration",
+      "health_armor": 3,
+      "file_title": "File:Health-armor-3.png",
+      "caption": "Gold shield indicating 3 armor layers on one health cell.",
+      "sha256": "44fabe3d59a5de4e4f6b6a9c4e5a107795fe612ec994f83f0121b9ffd2f8056c",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue[4]/picAdjust[hpValue-2]/spr_ui_16x16.frame[13]"
+        }
+      ]
     }
   ]
 }

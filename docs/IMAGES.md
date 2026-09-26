@@ -25,9 +25,10 @@ File titles across both inputs are rejected. There are no URLs, domain
 names, local source paths, image bytes, download instructions, or automatic
 uploads in these records.
 
-Every record contains `id`, `entity`, `file_title`, `caption`, `creator`,
+Every record contains `id`, `file_title`, `caption`, `creator`,
 `sha256`, `rights_status`, `rights_basis`, `rights_note`, `confidence`, and
-`evidence`. Evidence uses the existing source/section/key format; the SHA-256
+`evidence`, plus exactly one target: `entity`, `station`, or `health_armor`.
+Only station targets may have `variant`. Evidence uses the existing source/section/key format; the SHA-256
 identifies the exact separately reviewed **image** bytes, not the original game
 container. Captions and rights notes are original writing.
 
@@ -37,7 +38,7 @@ records operator-reported permission for public-wiki display, confirmed on
 repository. Actual image hashes and source-to-frame associations must be
 reviewed individually; attribution strings are not a substitute for review.
 
-The current metadata batch contains 323 selections: 243 items, 36 beings,
+The original metadata batch contains 323 selections: 243 items, 36 beings,
 25 skills, 16 nature records, and early/later alchemy plus armor workstations.
 The original 320 entity records are unchanged. Unarmed's internal pixel placeholder is not
 used as artwork. Flax and Linen lack verified initializer image associations.
@@ -49,10 +50,34 @@ not a complete mature specimen; Rift Vine uses a branch detail. Do not relabel
 these crops as full procedurally assembled plants. The metadata only identifies
 the reviewed selection; source files and images remain outside Git.
 
+Three shared shield records bring the total to 326 without changing any of the
+original 323 selections. They use `health_armor`, an integer restricted to 1,
+2, or 3, not a fabricated entity. Each level has exactly one reserved File title:
+
+| Armor layers | Shield | File title | Sprite frame | PNG bytes |
+| --- | --- | --- | --- | --- |
+| 1 | Bronze | `File:Health-armor-1.png` | 11 | 188 |
+| 2 | Silver | `File:Health-armor-2.png` | 12 | 213 |
+| 3 | Gold | `File:Health-armor-3.png` | 13 | 230 |
+
+The reviewed `spr_ui_16x16` frames are native 16x16 RGBA overlays, privately
+scaled to 64x64 PNG using integer nearest-neighbor scaling. The health-cell
+renderer uses a 32px File reference over the existing red base and preserves
+the cell dimensions. HP and armor remain in the cell's title and ARIA label
+and the image's alt text; there is no additional visible armor-count chip.
+The Health and armor guide owns the three-shield legend.
+The frame association is cited through `hpcell_draw` in Source provenance.
+Actual PNG hashes, rights, and exact evidence keys are in each metadata record.
+No additional health art or other frames are included in this approval.
+
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
-record renders a neutral missing-picture notice, **not** an image or File link.
+entity or station record renders a neutral missing-picture notice, **not** an image or File link.
 Its reserved title and rights/evidence details remain on Source provenance.
 Do not manufacture empty records for every entity.
+Shared shields are required when armored grids or a shield legend are built:
+missing or pending shield metadata raises an explicit `DataError`, rather than
+publishing broken images, guessing another level, or falling back to brown.
+Zero-armor cells and holes never reference a shield; values above 3 are rejected.
 
 For `rights_status: approved`, creator, hash, rights basis, and review note are
 required. The reviewed record may then emit `[[File:...|thumb|...]]`.
@@ -128,7 +153,10 @@ merge affected live wiki pages through the normal review process.
 The image volume and database must be backed up and restored together. Do not
 copy random exports directly into MediaWiki's hashed image directories.
 The repository neither performs this procedure nor supplies any artwork.
-CI imports only an original synthetic PNG generated inside its disposable test,
-then reads and decodes an actually resized thumbnail over anonymous HTTP while
-web uploads stay disabled. No image fixture is stored in Git or CI artifacts.
+CI imports only original synthetic PNGs generated inside its disposable test:
+one RGB thumbnail fixture and three RGBA fixtures under the shield File titles.
+It reads and decodes resized thumbnails over anonymous HTTP, including 32x32
+shield fixtures, then checks actual MediaWiki-parsed shield cells and the legend
+while web uploads stay disabled. Those fixtures are not game artwork or evidence
+of approved game-image hashes. No image fixture is stored in Git or CI artifacts.
 This does not import game images or establish that any artwork is cleared for publication.

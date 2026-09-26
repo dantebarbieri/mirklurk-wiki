@@ -19,6 +19,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, existing_titles, title_key
+from wiki_catalog import page_locations
 from wiki_details import load_publication_inputs
 
 
@@ -31,6 +32,9 @@ class RenderedGrids(HTMLParser):
         self.grids = []
         self.active = False
         self.cell = None
+        self.images = []
+        self.links = []
+        self.icon_styles = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -40,8 +44,20 @@ class RenderedGrids(HTMLParser):
         elif self.active and tag == "tr":
             self.grids[-1].append([])
         elif self.active and tag == "td":
-            self.cell = {"attrs": attrs, "text": ""}
+            self.cell = {"attrs": attrs, "text": "", "images": [], "links": [], "icon_styles": []}
             self.grids[-1][-1].append(self.cell)
+        if tag == "img":
+            self.images.append(attrs)
+            if self.cell is not None:
+                self.cell["images"].append(attrs)
+        elif tag == "a":
+            self.links.append(attrs)
+            if self.cell is not None:
+                self.cell["links"].append(attrs)
+        elif tag == "span" and "health-armor-icon" in attrs.get("class", "").split():
+            self.icon_styles.append(attrs.get("style", ""))
+            if self.cell is not None:
+                self.cell["icon_styles"].append(attrs.get("style", ""))
 
     def handle_endtag(self, tag):
         if tag == "table":
@@ -54,7 +70,23 @@ class RenderedGrids(HTMLParser):
             self.cell["text"] += data
 
 
-def smoke_reader_release(api, pages):
+def check_shield_icon(images, links, styles, armor):
+    name = {1: "bronze", 2: "silver", 3: "gold"}[armor]
+    label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
+    if len(images) != 1 or any(images[0].get(key) != value for key, value in (
+        ("alt", label), ("width", "32"), ("height", "32"),
+    )):
+        raise RuntimeError("A health shield lost its exact size or accessible HP/armor label.")
+    filename = f"Health-armor-{armor}.png"
+    if filename not in urllib.parse.unquote(images[0].get("src", "")):
+        raise RuntimeError("A health cell displays the wrong armor sprite.")
+    if len(links) != 1 or "File:" + filename not in urllib.parse.unquote(links[0].get("href", "")):
+        raise RuntimeError("A shield no longer links to its canonical local File page.")
+    if len(styles) != 1 or "image-rendering:pixelated" not in styles[0].replace(" ", ""):
+        raise RuntimeError("MediaWiki stripped the shield's pixel rendering style.")
+
+
+def smoke_reader_release(api, pages, data, catalog, details):
     for title, category in (("Nightmare", "Bugs"), ("Mirk Runner", "Rodents"),
                             ("Sceetler", "Scaalmyr"), ("Mudfin", "Aquatic creatures")):
         result = api({"action": "query", "titles": title, "prop": "categories"})["query"]["pages"]
@@ -84,6 +116,53 @@ def smoke_reader_release(api, pages):
                     raise RuntimeError("Grid cell accessibility labels were stripped.")
                 if "grid-cell" in cell["attrs"].get("class", "") and "background" not in cell["attrs"].get("style", ""):
                     raise RuntimeError("Grid cell styling was stripped.")
+                if cell["images"]:
+                    raise RuntimeError("An unarmored health cell, attack cell or hole gained a shield.")
+    locations = page_locations(data, catalog)
+    seen_armor = set()
+    for title in ("Scaal", "Sceetler"):
+        grid = next(grid for grid in details["grids"] if grid["kind"] == "health" and locations[grid["entity"]] == title)
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        parsed = RenderedGrids()
+        parsed.feed(rendered)
+        if not parsed.grids or [len(row) for row in parsed.grids[0]] != [len(row) for row in grid["rows"]]:
+            raise RuntimeError("An armored health grid changed its dimensions.")
+        for y, (expected_row, row) in enumerate(zip(grid["rows"], parsed.grids[0]), 1):
+            for x, (expected, cell) in enumerate(zip(expected_row, row), 1):
+                position = f"Row {y}, column {x}: "
+                attrs = cell["attrs"]
+                if expected is None:
+                    if (attrs.get("aria-label") != position + "empty" or cell["images"] or cell["text"].strip()
+                            or "grid-hole" not in attrs.get("class", "").split()):
+                        raise RuntimeError("A health-grid hole gained content or lost its coordinates.")
+                    continue
+                armor = expected["armor"]
+                description = position + f"1 HP, {armor} armor layers"
+                if attrs.get("aria-label") != description or "grid-cell" not in attrs.get("class", "").split():
+                    raise RuntimeError("A shield changed the underlying one-HP cell semantics.")
+                style = attrs.get("style", "").replace(" ", "")
+                if not all(part in style for part in ("min-width:3em", "height:3em", "padding:0.25em", "background:#852c36")):
+                    raise RuntimeError("A shield changed cell dimensions or retained the old brown fill.")
+                if armor:
+                    if attrs.get("title") != description or cell["text"].strip():
+                        raise RuntimeError("A shield lost its cell tooltip or retained duplicate visible labels.")
+                    check_shield_icon(cell["images"], cell["links"], cell["icon_styles"], armor)
+                    seen_armor.add(armor)
+                elif cell["images"] or cell["text"].strip() != "1 HP":
+                    raise RuntimeError("An unarmored health cell changed.")
+    if seen_armor != {1, 2, 3}:
+        raise RuntimeError("The armored-cell smoke fixtures did not exercise all three shield levels.")
+    guide = api({"action": "parse", "page": "Health and armor", "prop": "text|images"})["parse"]
+    if set(guide["images"]) != {f"Health-armor-{armor}.png" for armor in (1, 2, 3)}:
+        raise RuntimeError("The shield legend did not resolve exactly the three reviewed File references.")
+    legend = RenderedGrids()
+    legend.feed(guide["text"]["*"])
+    if len(legend.images) != 3 or len(legend.icon_styles) != 3 or "Shield legend" not in guide["text"]["*"]:
+        raise RuntimeError("The guide lost its compact three-shield legend.")
+    for armor in (1, 2, 3):
+        filename = f"Health-armor-{armor}.png"
+        links = [link for link in legend.links if "File:" + filename in urllib.parse.unquote(link.get("href", ""))]
+        check_shield_icon([legend.images[armor - 1]], links, [legend.icon_styles[armor - 1]], armor)
     for title, expected in (
         ("Survivor's Field Kit", "2 gold"), ("Gurb-Gurb", "2 gold"),
         ("Fine Wool Socks", "50%"), ("Steel Hand Axe", "AP"),
@@ -135,71 +214,76 @@ def cache_diagnostics(api, title, owner, rendered):
     }), flush=True)
 
 
-def smoke_thumbnail(run, api, base):
+def smoke_images(run, api, base):
     def chunk(kind, data):
         return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
 
-    # Original solid-color RGB pixels; no fixture or game image is read.
-    pixel = bytes((37, 149, 211))
     signature = b"\x89PNG\r\n\x1a\n"
-    original = (
-        signature
-        + chunk(b"IHDR", struct.pack(">IIBBBBB", 64, 32, 8, 2, 0, 0, 0))
-        + chunk(b"IDAT", zlib.compress((b"\0" + pixel * 64) * 32))
-        + chunk(b"IEND", b"")
-    )
+    # Original solid-color RGB/RGBA pixels, not game artwork or a committed fixture.
+    specs = {"Synthetic-thumbnail.png": (64, 32, bytes((37, 149, 211)), 16)}
+    specs.update({f"Health-armor-{armor}.png": (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
+                  for armor in (1, 2, 3)})
+    originals = {}
     run("exec", "-T", "--user", "www-data", "mirklurk", "mkdir", "/tmp/mirklurk-smoke-images")
-    run(
-        "exec", "-T", "--user", "www-data", "mirklurk", "php", "-r",
-        "$image = stream_get_contents(STDIN); "
-        "if (file_put_contents('/tmp/mirklurk-smoke-images/Synthetic-thumbnail.png', $image) !== strlen($image)) "
-        "{ throw new RuntimeException('Synthetic PNG staging failed.'); }",
-        input_bytes=original,
-    )
+    for filename, (width, height, pixel, _) in specs.items():
+        original = (signature
+                    + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6 if len(pixel) == 4 else 2, 0, 0, 0))
+                    + chunk(b"IDAT", zlib.compress((b"\0" + pixel * width) * height))
+                    + chunk(b"IEND", b""))
+        originals[filename] = original
+        run(
+            "exec", "-T", "--user", "www-data", "mirklurk", "php", "-r",
+            "$image = stream_get_contents(STDIN); "
+            f"if (file_put_contents('/tmp/mirklurk-smoke-images/{filename}', $image) !== strlen($image)) "
+            "{ throw new RuntimeException('Synthetic PNG staging failed.'); }",
+            input_bytes=original,
+        )
     imported = run(
         "exec", "-T", "--user", "www-data", "mirklurk", "php", "maintenance/run.php",
         "importImages", "/tmp/mirklurk-smoke-images", "--extensions", "png",
         "--user", "WikiAdmin", "--skip-dupes",
         "--comment", "Original synthetic solid-color PNG generated only for this disposable test.",
     )
-    if b"Added: 1" not in imported.splitlines() or any(
+    if b"Added: 4" not in imported.splitlines() or any(
         line.startswith((b"Failed:", b"Skipped:", b"Overwritten:")) for line in imported.splitlines()
     ):
-        raise RuntimeError("The synthetic CLI image import did not add exactly one new file.")
-    result = api({
-        "action": "query", "titles": "File:Synthetic-thumbnail.png", "prop": "imageinfo",
-        "iiprop": "url|size|mime", "iiurlwidth": 16,
-    })
-    page = next(iter(result["query"]["pages"].values()))
-    info = page.get("imageinfo", [{}])[0]
-    if info.get("mime") != "image/png" or (info.get("width"), info.get("height")) != (64, 32):
-        raise RuntimeError("The CLI-imported synthetic PNG is missing or has incorrect dimensions.")
-    if (info.get("thumbwidth"), info.get("thumbheight")) != (16, 8):
-        raise RuntimeError("MediaWiki did not generate the requested 16x8 thumbnail.")
-    thumbnail_url = info.get("thumburl")
-    if not thumbnail_url or thumbnail_url == info["url"]:
-        raise RuntimeError("The thumbnail URL is missing or falls back to the original image.")
-    for url, expected_size in ((info["url"], (64, 32)), (thumbnail_url, (16, 8))):
-        if urllib.parse.urlsplit(url)[:2] != urllib.parse.urlsplit(base)[:2]:
-            raise RuntimeError("The synthetic image URL points outside the disposable wiki.")
-        # A fresh opener proves anonymous HTTP access, independent of the API session.
-        with urllib.request.urlopen(url, timeout=30) as response:
-            if response.status != 200 or response.headers.get_content_type() != "image/png":
-                raise RuntimeError("The synthetic image could not be read as a PNG over HTTP.")
-            body = response.read()
-        if len(body) < 24 or body[:8] != signature or body[12:16] != b"IHDR":
-            raise RuntimeError("The served image is not a PNG with a dimension header.")
-        if struct.unpack(">II", body[16:24]) != expected_size:
-            raise RuntimeError("The served image dimensions differ from the requested size.")
-        if expected_size == (64, 32) and body != original:
-            raise RuntimeError("The served original differs from the synthetic imported bytes.")
-        decoded = run(
-            "exec", "-T", "--user", "www-data", "mirklurk", "/usr/bin/convert",
-            "png:-", "-depth", "8", "rgb:-", input_bytes=body,
-        )
-        if decoded != pixel * (expected_size[0] * expected_size[1]):
-            raise RuntimeError("The served PNG did not decode to the expected resized RGB pixels.")
-    print("Synthetic CLI import and anonymous PNG reads passed: original 64x32, decoded thumbnail 16x8.")
+        raise RuntimeError("The synthetic CLI image import did not add exactly four new files.")
+    for filename, (width, height, pixel, thumbwidth) in specs.items():
+        thumbheight = height * thumbwidth // width
+        result = api({
+            "action": "query", "titles": "File:" + filename, "prop": "imageinfo",
+            "iiprop": "url|size|mime", "iiurlwidth": thumbwidth,
+        })
+        page = next(iter(result["query"]["pages"].values()))
+        info = page.get("imageinfo", [{}])[0]
+        if info.get("mime") != "image/png" or (info.get("width"), info.get("height")) != (width, height):
+            raise RuntimeError("The CLI-imported synthetic PNG is missing or has incorrect dimensions.")
+        if (info.get("thumbwidth"), info.get("thumbheight")) != (thumbwidth, thumbheight):
+            raise RuntimeError("MediaWiki did not generate the requested thumbnail dimensions.")
+        thumbnail_url = info.get("thumburl")
+        if not thumbnail_url or thumbnail_url == info["url"]:
+            raise RuntimeError("The thumbnail URL is missing or falls back to the original image.")
+        for url, expected_size in ((info["url"], (width, height)), (thumbnail_url, (thumbwidth, thumbheight))):
+            if urllib.parse.urlsplit(url)[:2] != urllib.parse.urlsplit(base)[:2]:
+                raise RuntimeError("The synthetic image URL points outside the disposable wiki.")
+            # A fresh opener proves anonymous HTTP access, independent of the API session.
+            with urllib.request.urlopen(url, timeout=30) as response:
+                if response.status != 200 or response.headers.get_content_type() != "image/png":
+                    raise RuntimeError("The synthetic image could not be read as a PNG over HTTP.")
+                body = response.read()
+            if len(body) < 24 or body[:8] != signature or body[12:16] != b"IHDR":
+                raise RuntimeError("The served image is not a PNG with a dimension header.")
+            if struct.unpack(">II", body[16:24]) != expected_size:
+                raise RuntimeError("The served image dimensions differ from the requested size.")
+            if expected_size == (width, height) and body != originals[filename]:
+                raise RuntimeError("The served original differs from the synthetic imported bytes.")
+            decoded = run(
+                "exec", "-T", "--user", "www-data", "mirklurk", "/usr/bin/convert",
+                "png:-", "-depth", "8", "rgba:-" if len(pixel) == 4 else "rgb:-", input_bytes=body,
+            )
+            if decoded != pixel * (expected_size[0] * expected_size[1]):
+                raise RuntimeError("The served PNG did not decode to the expected resized pixels and alpha.")
+    print("Synthetic CLI import and anonymous decoded PNG reads passed: one RGB thumbnail and three RGBA 32px shields.")
 
 
 def smoke():
@@ -277,7 +361,7 @@ def smoke():
             general = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
             if "uploadsenabled" in general:
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
-            smoke_thumbnail(run, api, base)
+            smoke_images(run, api, base)
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -313,7 +397,8 @@ def smoke():
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
-            pages = build_pages(ROOT, *load_publication_inputs(ROOT))
+            data, catalog, details = load_publication_inputs(ROOT)
+            pages = build_pages(ROOT, data, catalog, details)
             edit = api({"action": "edit", "title": "Main Page", "text": pages["Main Page"], "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("Authenticated editing failed.")
@@ -330,7 +415,7 @@ def smoke():
             if set(pages) != {page["title"] for page in indexed}:
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
-            smoke_reader_release(api, pages)
+            smoke_reader_release(api, pages, data, catalog, details)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
