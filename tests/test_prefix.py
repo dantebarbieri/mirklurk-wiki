@@ -4,12 +4,17 @@ import copy
 import hashlib
 import sys
 import unittest
+from decimal import Decimal
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
-from smoke_deploy import RenderedRows, item_links
-from smoke_prefix import COHORT, canonical_bytes, dom, linked_titles, planned_order, settings_hash
+from smoke_deploy import RenderedRows, check_parser_errors, item_links, require_image_coverage, synthetic_image_specs
+from smoke_prefix import COHORT, Rehearsal, baseline_metadata, canonical_bytes, dom, linked_titles, planned_order, settings_hash
+from build_wiki import build_pages
+from wiki_catalog import page_locations
+from wiki_data import DataError
+from wiki_details import load_publication_inputs
 
 
 class PrefixTests(unittest.TestCase):
@@ -102,9 +107,59 @@ class PrefixTests(unittest.TestCase):
                     '</td></tr></table>')
         self.assertEqual(item_links(parsed.rows[0]["cells"][0], {"item-92": "Twine"}), ["Twine"])
 
+    def test_all_active_and_retired_media_have_unique_synthetic_pixels(self):
+        root = Path(__file__).resolve().parents[1]
+        data, catalog, details = load_publication_inputs(root)
+        specs = synthetic_image_specs(data)
+        self.assertEqual(len(specs), 331)
+        self.assertEqual(len({row[2] for row in specs.values()}), 331)
+        self.assertTrue({f"Nature-{index}.png" for index in (4, 7, 17, 20)} <= specs.keys())
+        self.assertTrue({row["file_title"].removeprefix("File:") for row in data["illustrations"]} <= specs.keys())
+        require_image_coverage(specs, build_pages(root, data, catalog, details))
+        with self.assertRaisesRegex(RuntimeError, "lack synthetic"):
+            require_image_coverage(specs, {"Unseeded": "[[File:Unseeded.png|32px]]"})
+        for armor in (1, 2, 3):
+            self.assertEqual(specs[f"Health-armor-{armor}.png"][2][-1], 128)
+
+    def test_missing_file_placeholders_are_not_valid_row_evidence(self):
+        with self.assertRaisesRegex(RuntimeError, "missing image"):
+            check_parser_errors('<span typeof="mw:Error mw:File"><span class="mw-file-element mw-broken-media">Twine</span></span>')
+        check_parser_errors('<span typeof="mw:File"><a href="/index.php?title=Twine"><img src="synthetic.png" /></a></span>')
+
     def test_ordinary_links_are_recorded_separately_from_selectors(self):
         self.assertEqual(linked_titles("[[New_source#Details|label]] {{:Owner|view=loot}} [[Existing]]"),
                          {"New source", "Existing"})
+
+    def test_baseline_metadata_preserves_exact_decimals_and_rejects_duplicate_keys(self):
+        value = baseline_metadata(b'{"price":0.20000000000000000001}')
+        self.assertEqual(value["price"], Decimal("0.20000000000000000001"))
+        with self.assertRaises(DataError):
+            baseline_metadata(b'{"price":0.2,"price":0.3}')
+
+    def test_expectation_candidate_has_exact_shared_provenance_shape(self):
+        root = Path(__file__).resolve().parents[1]
+        data, catalog, details = load_publication_inputs(root)
+        desired = build_pages(root, data, catalog, details)
+        locations = page_locations(data, catalog)
+        baseline = dict(desired)
+        for identity in COHORT:
+            baseline[locations[identity]] = "Synthetic schema-test baseline"
+        old_catalog = baseline_metadata((root / "content" / "facts" / "catalog.json").read_bytes())
+        rehearsal = Rehearsal(None, None, baseline, desired, data, catalog, old_catalog, {}, "0" * 40)
+        rehearsal.final_observations = []
+        rehearsal.endpoint_projections = {
+            state: {locations[identity]: {} for identity in COHORT[3:]} for state in ("baseline", "desired")
+        }
+        artifacts = rehearsal.artifacts()
+        receipt = artifacts["price-compatibility-receipt.json"]
+        candidate = artifacts["price-expectations-candidate.json"]
+        shared = {"schema_version", "evidence_kind", "source_head_sha", "checkout_sha",
+                  "baseline_seed_sha256", "desired_seed_sha256", "runtime", "order"}
+        self.assertEqual(set(candidate), shared | {"versions", "projections", "prefixes"})
+        self.assertEqual(set(receipt), shared | {"receipt_type", "coverage_scope", "prefixes"})
+        self.assertEqual({key: candidate[key] for key in shared}, {key: receipt[key] for key in shared})
+        self.assertEqual(candidate["evidence_kind"], "disposable-mediawiki")
+        self.assertEqual(candidate["prefixes"], [])  # Deliberately incomplete synthetic data, never runtime evidence.
 
 
 if __name__ == "__main__":

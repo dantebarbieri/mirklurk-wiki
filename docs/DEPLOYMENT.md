@@ -195,9 +195,14 @@ Canonical bytes use UTF-8 sorted compact JSON, preserve types, and have no
 trailing newline; secrets and CAPTCHA questions/answers are never projected.
 CI checks out the exact source head with history and retains successful,
 nonsecret rehearsal artifacts for seven days.
-It also generates an original synthetic PNG outside the checkout, imports it by
-CLI as `www-data`, and anonymously fetches and decodes a 16x8 thumbnail of the
-64x32 original, rejecting original-URL fallbacks. Administrator and ordinary-user
+It also generates unique original synthetic PNGs outside the checkout for all
+326 active and four preserved tree File titles, plus a separate 64x32 thumbnail
+fixture. It imports them by CLI as `www-data` and anonymously fetches and decodes
+every original and thumbnail, retaining mature-tree dimensions and translucent
+shield pixels. Generic icons use neutral square fixtures, not game silhouettes.
+Every rendered File reference must be covered; missing-image placeholders are
+rejected rather than stripped from row evidence. The custom thumbnail must be
+16x8, and original-URL fallbacks are rejected. Administrator and ordinary-user
 web-upload attempts must still fail as disabled. No game images are used or retained.
 It removes only its own containers, network, volume, and temporary files.
 

@@ -8,12 +8,14 @@ import subprocess
 import sys
 import tarfile
 import urllib.parse
+from decimal import Decimal
 from html.parser import HTMLParser
 from pathlib import Path
 
 from build_wiki import build_xml
 from plan_migration import plan_migration, read_snapshot, text_hash
-from wiki_catalog import entry_owners, entry_relations, page_locations, title_key
+from wiki_catalog import MAX_CATALOG_BYTES, entry_owners, entry_relations, page_locations, title_key
+from wiki_details import parse_document
 from wiki_render import display_entry, recipe_groups
 from wiki_views import available_views, transclusions
 
@@ -34,6 +36,11 @@ SETTINGS_KEYS = ("EnableUploads", "AllowCopyUploads", "AllowExternalImages",
 def canonical_bytes(value):
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
                       allow_nan=False).encode("utf-8")
+
+
+def baseline_metadata(raw):
+    parse_document(raw, MAX_CATALOG_BYTES)
+    return json.loads(raw.decode("utf-8"), parse_float=Decimal)
 
 
 def settings_hash(value):
@@ -74,7 +81,7 @@ def reconstruct_baseline(root, workspace):
     pages = read_snapshot(output)
     if len(pages) != 401:
         raise RuntimeError("The frozen baseline title count changed.")
-    return pages, payload, json.loads((destination / "content" / "facts" / "catalog.json").read_bytes())
+    return pages, payload, baseline_metadata((destination / "content" / "facts" / "catalog.json").read_bytes())
 
 
 def planned_order(baseline, desired, locations, baseline_prices, coins):
@@ -213,8 +220,10 @@ class Rehearsal:
         self.old_prices = {row["entity"]: row["value"] for row in old_catalog["unit_prices"]["prices"]}
         self.prices = {row["entity"]: row["value"] for row in catalog["unit_prices"]["prices"]}
         self.coins = {row["entity"]: row for row in catalog["currency"]["coins"]}
-        if any(self.prices.get(identity) != value for identity, value in self.old_prices.items()):
-            raise RuntimeError("A preserved baseline standard price changed.")
+        for identity, value in self.old_prices.items():
+            if self.prices.get(identity) != value:
+                raise RuntimeError(f"A preserved baseline standard price changed: {identity}: "
+                                   f"{value!r} != {self.prices.get(identity)!r}")
         self.owners = entry_owners(data, self.locations, entry_relations(data, catalog), catalog)
         self.groups = recipe_groups([display_entry(row, catalog) for row in data["entries"] if row["kind"] == "recipe"])
         self.stations = {method: station for station in catalog["stations"] for method in station["methods"]}

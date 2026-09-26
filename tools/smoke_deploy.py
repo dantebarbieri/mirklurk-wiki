@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import http.cookiejar
+import io
 import json
 import os
 import re
@@ -11,6 +12,7 @@ import socket
 import struct
 import subprocess
 import sys
+import tarfile
 import tempfile
 import time
 import urllib.parse
@@ -225,8 +227,8 @@ def wait_for_server_tick(api):
 
 
 def check_parser_errors(rendered):
-    if re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded', rendered):
-        raise RuntimeError("A canonical view produced a MediaWiki parser error or expansion limit.")
+    if re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded|mw-broken-media|typeof="[^"]*mw:Error[^"]*mw:File', rendered):
+        raise RuntimeError("A canonical view produced a MediaWiki parser error, expansion limit, or missing image.")
 
 
 class RenderedRows(HTMLParser):
@@ -760,29 +762,39 @@ def cache_diagnostics(api, title, owner, rendered):
     }), flush=True)
 
 
-def smoke_images(run, api, base, data, catalog):
-    def chunk(kind, data):
-        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
-
-    signature = b"\x89PNG\r\n\x1a\n"
+def synthetic_image_specs(data):
     # Original solid-color RGB/RGBA pixels, not game artwork or a committed fixture.
     specs = {"Synthetic-thumbnail.png": (64, 32, bytes((37, 149, 211)), 16)}
     specs.update({f"Health-armor-{armor}.png": (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
                   for armor in (1, 2, 3)})
-    contextual = sorted({image_for(guide["image_entity"], data["illustrations"])["file_title"].removeprefix("File:")
-                         for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]
-                         if "image_entity" in guide})
-    contextual += [image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
-                   for identity in MATURE_TREES]
-    contextual += [image_for(coin["entity"], data["illustrations"])["file_title"].removeprefix("File:")
-                   for coin in catalog.get("currency", {}).get("coins", [])]
-    specs.update({filename: (64, 64, bytes((130 + index, 91, 73, 255)), 32)
-                  for index, filename in enumerate(contextual)})
+    for index, image in enumerate(sorted(data["illustrations"], key=lambda row: row["file_title"])):
+        filename = image["file_title"].removeprefix("File:")
+        specs.setdefault(filename, (64, 64, bytes((index % 256, index // 256, 73, 255)), 32))
     for identity, (width, height) in MATURE_TREES.items():
         filename = image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
         specs[filename] = (width, height, specs[filename][2], 32)
     specs.update({f"Nature-{number}.png": (64, 64, bytes((200 + number, 40, 70, 255)), 32)
                   for number in (4, 7, 17, 20)})
+    if len({value[2] for value in specs.values()}) != len(specs):
+        raise RuntimeError("Synthetic fixture colors are not unique; image import could skip duplicates.")
+    return specs
+
+
+def require_image_coverage(specs, *corpora):
+    for pages in corpora:
+        references = {title.removeprefix("File:") for text in pages.values()
+                      for title in re.findall(r"\[\[(File:[^\]|]+)", text)}
+        if not references <= specs.keys():
+            raise RuntimeError("Rendered image references lack synthetic fixtures: " + ", ".join(sorted(references - specs.keys())))
+
+
+def smoke_images(run, api, base, data, *corpora):
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+
+    signature = b"\x89PNG\r\n\x1a\n"
+    specs = synthetic_image_specs(data)
+    require_image_coverage(specs, *corpora)
     originals = {}
     run("exec", "-T", "--user", "www-data", "mirklurk", "mkdir", "/tmp/mirklurk-smoke-images")
     for filename, (width, height, pixel, _) in specs.items():
@@ -791,13 +803,14 @@ def smoke_images(run, api, base, data, catalog):
                     + chunk(b"IDAT", zlib.compress((b"\0" + pixel * width) * height))
                     + chunk(b"IEND", b""))
         originals[filename] = original
-        run(
-            "exec", "-T", "--user", "www-data", "mirklurk", "php", "-r",
-            "$image = stream_get_contents(STDIN); "
-            f"if (file_put_contents('/tmp/mirklurk-smoke-images/{filename}', $image) !== strlen($image)) "
-            "{ throw new RuntimeException('Synthetic PNG staging failed.'); }",
-            input_bytes=original,
-        )
+    archive = io.BytesIO()
+    with tarfile.open(fileobj=archive, mode="w") as bundle:
+        for filename, original in originals.items():
+            member = tarfile.TarInfo(filename)
+            member.size, member.mode = len(original), 0o600
+            bundle.addfile(member, io.BytesIO(original))
+    run("exec", "-T", "--user", "www-data", "mirklurk", "tar", "--extract", "--no-same-owner",
+        "--file", "-", "--directory", "/tmp/mirklurk-smoke-images", input_bytes=archive.getvalue())
     imported = run(
         "exec", "-T", "--user", "www-data", "mirklurk", "php", "maintenance/run.php",
         "importImages", "/tmp/mirklurk-smoke-images", "--extensions", "png",
@@ -843,7 +856,7 @@ def smoke_images(run, api, base, data, catalog):
             )
             if decoded != pixel * (expected_size[0] * expected_size[1]):
                 raise RuntimeError("The served PNG did not decode to the expected resized pixels and alpha.")
-    print("Synthetic CLI import and anonymous decoded PNG reads passed: thumbnail, shields and contextual guide images.")
+    print(f"Synthetic CLI import and anonymous decoded PNG reads passed: {len(specs)} fixtures, all active/retired images, thumbnail and alpha.")
     return {filename: hashlib.sha256(payload).hexdigest() for filename, payload in originals.items()}
 
 
@@ -935,6 +948,7 @@ def smoke(evidence_dir=None):
             if "uploadsenabled" in general:
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
             data, catalog, details = load_publication_inputs(ROOT)
+            pages = build_pages(ROOT, data, catalog, details)
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
             parser_functions = next((row for row in extensions if row["name"] == "ParserFunctions"), None)
             if not parser_functions or not parser_functions.get("version"):
@@ -958,7 +972,7 @@ def smoke(evidence_dir=None):
                 "generator": general["generator"], "ParserFunctions_version": parser_functions["version"],
                 "runtime_image_id": image_id, "effective_settings_sha256": settings_hash(projection),
             }
-            image_hashes = smoke_images(run, api, base, data, catalog)
+            image_hashes = smoke_images(run, api, base, data, baseline, pages)
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -994,7 +1008,6 @@ def smoke(evidence_dir=None):
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
-            pages = build_pages(ROOT, data, catalog, details)
             edit = api({"action": "edit", "title": "Main Page", "text": baseline["Main Page"], "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("Authenticated editing failed.")
