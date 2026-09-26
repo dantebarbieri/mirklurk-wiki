@@ -373,6 +373,20 @@ class EndpointCandidateTests(unittest.TestCase):
         rehearsal.capture_link_endpoint("baseline")
         self.assertIn("api-dom-targets", {row["kind"] for row in rehearsal.link_candidates["baseline"]["discrepancies"]})
 
+    def test_toc_and_edit_ancestry_apply_only_their_own_link_patterns(self):
+        fragment = '<a href="#Content">Ordinary fragment</a>'
+        edit = '<a href="?title=Owner&amp;action=edit&amp;section=1">Ordinary edit link</a>'
+        for wrapper, link, expected in (
+            ('<span class="mw-editsection">{}</span>', fragment, (set(), {"Owner#Content"})),
+            ('<div id="toc" class="toc">{}</div>', edit, ({"Owner"}, {"Owner"})),
+            ('<div id="toc" class="toc"><span>{}</span></div>', fragment, (set(), set())),
+            ('<span class="mw-editsection"><span>{}</span></span>', edit, (set(), set())),
+        ):
+            with self.subTest(wrapper=wrapper, link=link):
+                parsed = dom(wrapper.format(link), "Owner")
+                self.assertEqual(endpoint_targets(parsed, {"Owner"}), expected)
+                self.assertEqual(len(parsed.wiki_links), 1)
+
     def test_projection_failure_retains_active_raw_parse_and_incomplete_capture(self):
         rehearsal = self.mediawiki_fixture()
         def invalid(*args):
@@ -543,9 +557,24 @@ class FailureEvidenceTests(unittest.TestCase):
             result = json.loads((output / "failed-rehearsal.json").read_bytes())
             self.assertIsNone(result["rehearsal"])
             self.assertIsNone(result["native_partial"])
-            with patch("smoke_deploy.subprocess.run") as command, self.assertRaises(FileExistsError):
-                smoke(output)
-            command.assert_not_called()
+    def test_existing_evidence_paths_including_dangling_symlinks_reject_before_work(self):
+        with tempfile.TemporaryDirectory() as folder:
+            directory, regular, dangling = (Path(folder) / name for name in ("directory", "file", "dangling"))
+            directory.mkdir()
+            regular.write_text("Keep")
+            dangling.symlink_to(Path(folder) / "missing-target", target_is_directory=True)
+            self.assertFalse(dangling.exists())
+            self.assertTrue(dangling.is_symlink())
+            for path in (directory, regular, dangling):
+                with (self.subTest(path=path.name),
+                      patch("smoke_prefix.reconstruct_baseline", side_effect=RuntimeError("REACHED_LOADER")) as loader,
+                      patch("smoke_deploy.subprocess.run") as command):
+                    with self.assertRaises(FileExistsError):
+                        smoke(path)
+                    loader.assert_not_called()
+                    command.assert_not_called()
+            self.assertEqual(regular.read_text(), "Keep")
+            self.assertTrue(dangling.is_symlink())
 
     def test_evidence_io_failure_does_not_skip_disposable_cleanup(self):
         calls = []

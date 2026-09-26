@@ -315,10 +315,11 @@ class ProjectionDOM(HTMLParser):
     def handle_starttag(self, tag, attributes):
         attrs = dict(attributes)
         classes = attrs.get("class", "").split()
-        chrome = (self.elements[-1][1] if self.elements else False) or "mw-editsection" in classes or (
+        in_toc = (self.elements[-1][1] if self.elements else False) or (
             attrs.get("id") == "toc" and "toc" in classes)
+        in_edit = (self.elements[-1][2] if self.elements else False) or "mw-editsection" in classes
         if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}:
-            self.elements.append((tag, chrome))
+            self.elements.append((tag, in_toc, in_edit))
         if tag == "table":
             self.tables.append([])
         elif tag == "tr":
@@ -356,8 +357,8 @@ class ProjectionDOM(HTMLParser):
             self.wiki_links.append({"target": self.link["target"].split("#", 1)[0],
                                     "redlink": "new" in attrs.get("class", "").split() or query.get("redlink") == ["1"],
                                     "href": href, "classes": attrs.get("class", "").split()})
-            navigation = chrome and (href.startswith("#") or (
-                self.wiki_links[-1]["target"] == self.title and query.get("action") == ["edit"] and "section" in query))
+            navigation = (in_toc and href.startswith("#")) or (in_edit and
+                self.wiki_links[-1]["target"] == self.title and query.get("action") == ["edit"] and "section" in query)
             if not navigation:
                 self.content_links.append(self.link)
                 self.content_wiki_links.append(self.wiki_links[-1])

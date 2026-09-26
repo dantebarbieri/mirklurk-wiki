@@ -320,7 +320,9 @@ or named-view exemption is granted.
 
 ### Failed disposable evidence
 
-`--evidence-dir` must name a new directory; previous attempts are never replaced.
+`--evidence-dir` must name a new directory; existing destinations, including
+dangling symlinks, are rejected before loading inputs or starting Docker.
+Previous attempts are never replaced.
 The existing writer now runs before disposable cleanup on failure or interruption,
 as well as on success. Success artifact names remain unchanged; the manifest adds
 `status: "passed"` and `complete: true`. A failed run instead writes

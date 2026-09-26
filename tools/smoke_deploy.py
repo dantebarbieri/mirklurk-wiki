@@ -1070,7 +1070,7 @@ def smoke(evidence_dir=None, incremental_inputs=None):
         materialize_desired, reconstruct_baseline, settings_hash,
     )
 
-    if evidence_dir is not None and evidence_dir.exists():
+    if evidence_dir is not None and (evidence_dir.exists() or evidence_dir.is_symlink()):
         raise FileExistsError("Smoke evidence directory must be new; preserve previous attempts.")
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
