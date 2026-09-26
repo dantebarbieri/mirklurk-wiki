@@ -261,6 +261,67 @@ class IncrementalDefaultsTests(unittest.TestCase):
                 rehearsal.validate_projection(owner, {}, {"text": {"*": "<p>Not established</p>"},
                                                           "templates": [{"*": owner}]})
 
+    def default_html(self, rehearsal, owner):
+        identity = rehearsal.entities[owner]
+        if identity in rehearsal.coins:
+            coin = rehearsal.coins[identity]
+            cells = [f'<span id="coin-{identity}"></span><a href="?title={owner}">{owner}</a>',
+                     checks.scalar(coin["value_in_silver"]), checks.scalar(coin["weight_grams"]) + " g", str(coin["stack_limit"])]
+            headers = ["Coin", "Value in silver", "Weight", "Maximum stack"]
+            return "<table><tr>" + " ".join("<th>" + value + "</th>" for value in headers) + "</tr> <tr>" + " ".join(
+                "<td>" + value + "</td>" for value in cells) + "</tr></table>"
+        remainder = int(rehearsal.prices[identity] * 100)
+        pieces = []
+        for unit, value, image in (("gold", 1000, 74), ("silver", 100, 73), ("copper", 1, 72)):
+            count, remainder = divmod(remainder, value)
+            if count:
+                pieces.append(f'<img src="/images/20px-Item-{image}.png" alt="{unit.capitalize()} coin" width="20" height="20"> {count} {unit}')
+        return "<p>" + (" ".join(pieces) or "0 copper") + "</p>"
+
+    def test_all_45_defaults_match_measured_B_expansion_and_dom_despite_new_owner_revisions(self):
+        registry = default_registry(self.pages, self.pages, self.inputs, self.inputs)
+        default_owners = registry["prices"].keys() | registry["coins"].keys()
+        baseline = {title: text + ("\nBaseline body" if title in default_owners else "") for title, text in self.pages.items()}
+        rehearsal = IncrementalRehearsal(None, checks, baseline, self.pages, *self.inputs[:2],
+                                        self.inputs[1], {}, "a" * 40,
+                                        previous_inputs=self.inputs, binding={"input_sha256": "a" * 64})
+        rehearsal.metadata = metadata(baseline)
+        rehearsal.baseline_contracts = {}
+        payloads = {}
+        owners = sorted(rehearsal.registry["prices"].keys() | rehearsal.registry["coins"].keys())
+        for owner in owners:
+            html = self.default_html(rehearsal, owner)
+            payloads[owner] = {"expanded": "Synthetic measured B " + owner, "html": html}
+            rehearsal.baseline_contracts[(owner, (), "Prefix projection")] = {
+                "owner": dict(rehearsal.metadata[owner]), "expanded_wikitext": payloads[owner]["expanded"], "html": html}
+            rehearsal.current[owner] = rehearsal.desired[owner]
+            rehearsal.metadata[owner] = {**rehearsal.metadata[owner], "revid": rehearsal.metadata[owner]["revid"] + 1000,
+                                         "raw_sha256": hashlib.sha256(rehearsal.current[owner].encode()).hexdigest()}
+        def api(query, **kwargs):
+            owner = query["text"].removeprefix("{{:").removesuffix("}}")
+            if query["action"] == "expandtemplates":
+                return {"expandtemplates": {"wikitext": payloads[owner]["expanded"]}}
+            return {"parse": {"text": {"*": payloads[owner]["html"]}, "templates": [{"*": owner}]}}
+        rehearsal.api = api
+        rehearsal.capture_defaults("desired")
+        self.assertEqual(len(rehearsal.default_endpoints["desired"]), 45)
+        owner = "Antidote"
+        original = dict(payloads[owner])
+        for field, value in (
+            ("expanded", original["expanded"] + " changed"),
+            ("html", original["html"] + '<img src="/images/leaked-article.png">'),
+            ("html", original["html"] + '<a href="?title=File:Leaked.png"><img src="/images/leaked-article.png"></a>'),
+            ("html", original["html"] + '<a href="?title=File:Leaked.png"></a>'),
+            ("html", original["html"] + '<a href="https://example.invalid/"></a>'),
+        ):
+            payloads[owner] = {**original, field: value}
+            with self.subTest(field=field, value=value), self.assertRaises(RuntimeError):
+                rehearsal.probe("Prefix projection", owner, (), fresh=True)
+        coin = rehearsal.locations[next(iter(rehearsal.coins))]
+        payloads[coin]["html"] += '<img src="/images/leaked-article.png">'
+        with self.assertRaisesRegex(RuntimeError, "coin leaked"):
+            rehearsal.probe("Prefix projection", coin, (), fresh=True)
+
 
 class IncrementalProjectionTests(unittest.TestCase):
     def test_mixed_prefix_run_observes_unchanged_B_consumer_and_no_compatibility_trace(self):

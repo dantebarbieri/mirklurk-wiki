@@ -52,7 +52,7 @@ ALLOWED_FILES = {
     "tests/test_acquisition.py": 32 * 1024,
     "tests/test_migration.py": 32 * 1024,
     "tests/test_prefix.py": 40 * 1024,
-    "tests/test_incremental.py": 36 * 1024,
+    "tests/test_incremental.py": 40 * 1024,
     "tests/test_runtime.php": 32 * 1024,
     "tests/test_publication_journal.py": 24 * 1024,
     "tests/native_worker_fixture.php": 4 * 1024,

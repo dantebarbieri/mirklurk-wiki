@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 import tarfile
+import urllib.parse
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml
@@ -286,9 +287,14 @@ def default_registry(baseline, desired, previous_inputs, current_inputs):
 
 
 def projection_signature(html, title):
+    from smoke_deploy import RenderedGrids
     parsed = dom(html, title)
+    media = RenderedGrids()
+    media.feed(html)
     return {"text": parsed.text, "rows": parsed.rows, "anchors": parsed.anchors,
-            "links": parsed.links, "non_wiki_links": parsed.non_wiki_links}
+            "links": parsed.links, "non_wiki_links": parsed.non_wiki_links,
+            "images": [{key: image.get(key) for key in ("src", "srcset", "alt", "width", "height")}
+                       for image in media.images]}
 
 
 class IncrementalRehearsal(Rehearsal):
@@ -345,6 +351,8 @@ class IncrementalRehearsal(Rehearsal):
             Rehearsal.validate_projection(checker, owner, parameters, result, parse_title)
         if not parameters:
             parsed = dom(result["text"]["*"], parse_title)
+            media = self.checks.RenderedGrids()
+            media.feed(result["text"]["*"])
             identity = self.entities[owner]
             if identity in self.coins:
                 coin = self.coins[identity]
@@ -352,10 +360,21 @@ class IncrementalRehearsal(Rehearsal):
                                    self.checks.scalar(coin["value_in_silver"]),
                                    self.checks.scalar(coin["weight_grams"]) + " g", str(coin["stack_limit"])))
                 if (parsed.text != wanted or parsed.anchors != ["coin-" + identity]
-                        or [link["target"] for link in parsed.links] != [owner] or parsed.non_wiki_links):
+                        or [link["target"] for link in parsed.links] != [owner] or parsed.non_wiki_links or media.images):
                     raise RuntimeError("An incremental default coin leaked article content.")
-            elif parsed.non_wiki_links or re.search(r"<(?:table|h[1-6])\b", result["text"]["*"], re.I):
-                raise RuntimeError("An incremental default price leaked article content.")
+            else:
+                if parsed.links or parsed.non_wiki_links or re.search(r"<(?:table|h[1-6])\b", result["text"]["*"], re.I):
+                    raise RuntimeError("An incremental default price leaked article content.")
+                denominations = [unit for amount, unit in re.findall(r"(\d+) (gold|silver|copper)", parsed.text) if int(amount)]
+                if len(media.images) != len(denominations):
+                    raise RuntimeError("A default price omitted a denomination icon or leaked another image.")
+                for unit, image in zip(denominations, media.images):
+                    filename = "Item-" + {"copper": "72", "silver": "73", "gold": "74"}[unit] + ".png"
+                    source = urllib.parse.unquote(urllib.parse.urlsplit(image.get("src", "")).path)
+                    if (not re.search(r"(?:^|/)(?:[0-9]+px-)?" + re.escape(filename) + "$", source)
+                            or image.get("alt") != unit.capitalize() + " coin"
+                            or image.get("width") != "20" or image.get("height") != "20"):
+                        raise RuntimeError("A default price changed its exact denomination icon.")
 
     def probe(self, consumer, owner, arguments, fresh=False):
         if owner not in self.current or dict(arguments).get("view", "") not in available_views(self.current[owner]):
@@ -376,13 +395,13 @@ class IncrementalRehearsal(Rehearsal):
         signature = projection_signature(result["text"]["*"], context)
         contract_key = (owner, tuple(arguments), context)
         at_baseline = self.current[owner] == self.baseline.get(owner)
-        if at_baseline:
+        if at_baseline or not parameters:
             contract = self.baseline_contracts.get(contract_key)
             if contract is None:
                 raise RuntimeError("Missing measured baseline projection/context contract.")
-            if (contract["owner"] != metadata or contract["expanded_wikitext"] != expanded
+            if ((at_baseline and contract["owner"] != metadata) or contract["expanded_wikitext"] != expanded
                     or projection_signature(contract["html"], context) != signature):
-                raise RuntimeError("Baseline projection/context drifted from its measured contract.")
+                raise RuntimeError("Baseline/default projection/context drifted from its measured B contract.")
         kind = ("desired-leaf-projection" if self.current[owner] == self.desired[owner]
                 else "baseline-leaf-projection" if parameters else "preserved-baseline-default")
         evidence = {"id": len(self.probes), "owner": dict(metadata), "parameters": parameters, "kind": kind,

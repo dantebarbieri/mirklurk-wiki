@@ -214,7 +214,11 @@ settling remain checked. All current registered defaults (42 prices and three
 coins) have explicit baseline/final neutral probes and per-prefix references;
 all six formerly unknown prices must stay established. Unchanged leaf caches are
 keyed by owner revision, raw hash, parameters and consumer context; changed owners
-and pre-save prerequisites are freshly probed.
+and pre-save prerequisites are freshly probed. Every D default expansion and
+semantic DOM (including images) must equal its measured B context contract even
+if the owner's article/revision changed. Prices permit only their exact 20px
+denomination icons with no links, including empty links; coin summaries permit
+only the exact owner link/table and no images.
 
 `full-prefix-proof.json` retains the existing baseline/desired revision maps,
 `order`, `prefixes`, `view_evidence`, `final_observations` and `default_contracts`.
