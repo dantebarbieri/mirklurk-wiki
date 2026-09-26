@@ -1,5 +1,7 @@
 Browse equipment, materials, and supplies. Each item page brings together its documented stats, crafting recipes, merchant offers, and loot references.
 
+Jump to [[#Clothes|clothing by type]] or [[#Recipe_ingredients_by_acquisition|recipe ingredients by how to get them]]. Ingredient groups distinguish creature drops, gatherables and purchases, while keeping crafted ingredients and other sources reachable.
+
 The groups below are browsing aids. Useful cross-categories connect tools, ingredients, remedies, and other overlapping uses without copying the item article. Consumables include food that may cause sickness, not just safe food.
 
 Browse [[:Category:Equipment by slot|equipment by actual slot]], [[:Category:Weapons|weapon families]], [[:Category:Consumables|consumable subcategories]], or [[:Category:Crafting materials|material families]]. Slot labels describe the supported slots, not invented additional equipment rules. Arrows remain [[:Category:Ammunition|ammunition]] even though they are readied in the off hand.

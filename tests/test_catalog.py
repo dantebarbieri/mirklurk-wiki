@@ -43,7 +43,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
         self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 385)
-        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 80)
+        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 86)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
 

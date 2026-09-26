@@ -32,7 +32,7 @@ ALLOWED_FILES = {
     "content/pages/NPCs.wiki": 32 * 1024,
     "tools/check_publication.py": 32 * 1024,
     "tools/wiki_data.py": 32 * 1024,
-    "tools/wiki_catalog.py": 44 * 1024,
+    "tools/wiki_catalog.py": 48 * 1024,
     "tools/wiki_details.py": 32 * 1024,
     "tools/wiki_render.py": 96 * 1024,
     "tools/wiki_views.py": 16 * 1024,

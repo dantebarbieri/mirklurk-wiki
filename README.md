@@ -19,7 +19,7 @@ and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 original algorithm/skill summaries. The encyclopedia presentation generates
 385 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
-redirect. Another 80 ordinary MediaWiki category pages support hierarchical browsing.
+redirect. Another 86 ordinary MediaWiki category pages support hierarchical browsing.
 Only `game.build` changed in the original dataset; all source
 fingerprints, entities, facts, and research entries remain unchanged.
 
@@ -90,7 +90,10 @@ harvesting, insects, story rewards, and mapmaking. All 27 historical world-loot
 records move to named owners without changing their evidence or losing old
 anchors. Random treasure owns ten source-specific pools with 538 verified
 eligibility memberships, not invented per-item probabilities. Shared interruption
-and story gates remain visible in filtered item views. All 247 item pages have
+and story gates remain visible in filtered item views. Pools show alphabetical
+item/category lists beneath their budget rules, not repeated unknown quantity
+and probability cells. Item readers get short named-source references after
+their recipes, sellers and specific acquisition records. All 247 item pages have
 documented methods or explicit notes: 243 cover acquisition, built-in equipment,
 or construction actions; four explain the limits of the available evidence.
 
@@ -177,6 +180,15 @@ carried equipment. The five localized skill groups have explanatory category
 pages linked from Skills and every individual skill. Category names and
 introductions add navigation, not duplicate numerical facts or an invented
 skill tree.
+
+The Clothes section in Items and its category expose Headwear, Shirts,
+Outerwear, Cloaks, Gloves, Pants, Socks and Footwear, derived from those same
+reviewed slots without moving an item's primary group. Recipe-ingredient
+acquisition browsing joins the 53 actual inputs to existing source owners:
+12 creature-drop ingredients, 36 gatherables, one purchased ingredient
+(Iron Arrow), four crafted ingredients, and Flint's additional starting grant.
+These method groups can overlap. Random eligibility alone does not qualify a
+creature drop, gatherable or purchase; material-family browsing remains intact.
 
 ## Operate a wiki
 

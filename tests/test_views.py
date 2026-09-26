@@ -1,8 +1,11 @@
 import copy
 import hashlib
+import html
+import re
 import sys
 import unittest
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -13,6 +16,66 @@ from wiki_data import DataError, MECHANIC_GUIDE_TITLES
 from wiki_details import load_publication_inputs
 from wiki_render import build_pages, display_entry, linked_prose, merchant_table, recipe_groups
 from wiki_views import available_views, selective_view, transclusions, validate_transclusions
+from smoke_prefix import check_pool_projection, dom
+
+
+def expand_selective_view(text, parameters):
+    """Evaluate only the bounded selector syntax emitted by the view helpers, not MediaWiki."""
+    text = "".join(re.findall(r"<onlyinclude>(.*?)</onlyinclude>", text, re.S))
+    text = re.sub(r"<noinclude>.*?</noinclude>", "", text, flags=re.S)
+    text = text.replace("<includeonly>", "").replace("</includeonly>", "")
+    protected = []
+
+    def protect(match):
+        protected.append(match.group())
+        return f"@LITERAL{len(protected) - 1}@"
+
+    text = re.sub(r"<nowiki>.*?</nowiki>|\[\[.*?\]\]", protect, text, flags=re.S)
+
+    def selector(match):
+        parts = match[2].split("|")
+        if match[1] == "if":
+            if len(parts) != 3:
+                raise AssertionError("Unexpected test selector shape")
+            return parts[1] if parts[0].strip() else parts[2]
+        selected, matched, default = parts[0], False, ""
+        for part in parts[1:]:
+            key, separator, value = part.partition("=")
+            if not separator:
+                matched |= selected == key
+            elif key == "#default":
+                default = value
+            elif matched or selected == key:
+                return value
+            else:
+                matched = False
+        return default
+
+    for _ in range(40):
+        before = text
+        text = re.sub(r"\{\{\{([^{}|]+)\|([^{}]*)\}\}\}",
+                      lambda match: parameters.get(match[1], match[2]), text)
+        text = re.sub(r"\{\{#(if|switch):([^{}]*)\}\}", selector, text)
+        if "{{" not in text:
+            break
+        if text == before:
+            raise AssertionError("Unsupported or unbalanced test selector")
+    else:
+        raise AssertionError("Test selector expansion exceeded its bound")
+    text = re.sub(r"@LITERAL(\d+)@", lambda match: protected[int(match[1])], text)
+    text = re.sub(r"<nowiki>(.*?)</nowiki>", r"\1", text, flags=re.S)
+
+    def link(match):
+        target, _, label = match[1].partition("|")
+        target = target.lstrip(":")
+        title, separator, fragment = target.partition("#")
+        href = "/index.php?title=" + quote(title.replace(" ", "_"))
+        if separator:
+            href += "#" + quote(fragment)
+        return '<a href="' + html.escape(href, quote=True) + '">' + (label or html.escape(target)) + "</a>"
+
+    text = re.sub(r"\[\[(.*?)\]\]", link, text, flags=re.S)
+    return re.sub(r"'''(.*?)'''", r"<b>\1</b>", text, flags=re.S)
 
 
 class SelectiveViewTests(unittest.TestCase):
@@ -92,6 +155,73 @@ class SelectiveViewTests(unittest.TestCase):
             if owner != locations[item]:
                 self.assertIn((owner, (("item", item), ("view", "loot"))), transclusions(self.pages[locations[item]]))
             self.assertEqual(self.pages[owner].count('id="entry-' + entry["id"] + '"'), 1)
+
+    def test_compact_pools_keep_every_candidate_and_exact_filtered_reference(self):
+        locations = page_locations(self.data, self.catalog)
+        names = {row["id"]: row["name"] for row in self.data["entities"]}
+        owner = self.pages["Random treasure"]
+        self.assertEqual(owner.count('id="pool-item-'), 538)
+        for placeholder in ("Budget-dependent", "Not established", "Eligible, not guaranteed."):
+            self.assertNotIn(placeholder, owner)
+        for pool in self.catalog["acquisition"]["pools"]:
+            params = {"view": "pool", "pool": pool["id"]}
+            listing = expand_selective_view(owner, params)
+            parsed = check_pool_projection(listing, pool, "Random treasure", locations, self.catalog)
+            expected = sorted(pool["eligible_item_ids"], key=lambda identity: (names[identity], identity))
+            self.assertEqual([row["ids"] for row in parsed.rows],
+                             [["pool-item-" + pool["id"] + "-" + item] for item in expected])
+            for item in [*expected, "item-48"]:
+                with self.subTest(pool=pool["id"], item=item):
+                    rendered = expand_selective_view(owner, {**params, "item": item})
+                    check_pool_projection(rendered, pool, "Random treasure", locations, self.catalog, item)
+                    self.assertNotIn("<table", rendered)
+        self.assertEqual(expand_selective_view(owner, {"view": "pool", "pool": "missing", "item": "item-127"}), "")
+        self.assertEqual(expand_selective_view(owner, {"view": "price"}), "")
+        self.assertIn("== How random selection works ==", owner)
+        self.assertIn("500 counted proposals", owner)
+        self.assertIn("can be modeled", owner)
+        self.assertNotIn("non-coin", owner.lower())
+        self.assertIn("Coins and other valuables bypass the minimum-value test", owner)
+        self.assertIn("one-silver base-value budget", self.pages["Loot mechanics"])
+        self.assertIn("Their pool allows food and materials", self.pages["Loot mechanics"])
+
+    def test_compact_pool_projection_rejects_missing_members_and_invented_odds(self):
+        pool = next(row for row in self.catalog["acquisition"]["pools"] if row["id"] == "chest-common")
+        locations = page_locations(self.data, self.catalog)
+        item = "item-127"
+        rendered = expand_selective_view(self.pages["Random treasure"], {"view": "pool", "pool": pool["id"], "item": item})
+        for changed in (
+            rendered.replace("pool-item-chest-common-item-127", "missing"),
+            rendered.replace("(eligible)", "(100% drop)"),
+            rendered.replace(pool["item_conditions"][item], ""),
+            rendered + "<table></table>",
+            rendered + rendered,
+            rendered + '<a href="https://example.invalid/">Extra</a>',
+        ):
+            with self.subTest(changed=changed), self.assertRaises(RuntimeError):
+                check_pool_projection(changed, pool, "Random treasure", locations, self.catalog, item)
+        listing = expand_selective_view(self.pages["Random treasure"], {"view": "pool", "pool": pool["id"]})
+        for changed in (listing.replace("<th scope=\"col\">Category</th>", "<th>Chance</th>"),
+                        listing.replace("</td></tr>", "<td>Not established</td></tr>", 1)):
+            with self.assertRaises(RuntimeError):
+                check_pool_projection(changed, pool, "Random treasure", locations, self.catalog)
+
+    def test_named_source_scopes_survive_without_repeating_candidate_tables(self):
+        for source in self.catalog["acquisition"]["sources"]:
+            for reference in source.get("pool_refs", []):
+                rendered = expand_selective_view(self.pages[source["title"]],
+                                                {"view": "pool-source", "pool": reference["pool"]})
+                parsed = dom(rendered, "Test source")
+                self.assertEqual(parsed.text, source["title"] + ": " + reference["condition"])
+                self.assertFalse(parsed.rows)
+                self.assertNotIn("<table", rendered)
+        for item, source in (("Calmia Root", "Plant harvesting"), ("Summoning Stone", "Story rewards and finds"),
+                             ("Shoddy Dagger", "Starting equipment")):
+            page = self.pages[item]
+            self.assertLess(page.index("{{:" + source + "|view=loot|"), page.index("=== Random treasure sources ==="))
+            self.assertIn('class="treasure-source"', page)
+        self.assertIn("Raving and Mutated Unwanted loot|view=pool-source", self.pages["Calmia Root"])
+        self.assertIn("Treasure chests|view=pool-source", self.pages["Summoning Stone"])
 
     def test_shared_stock_rule_has_one_owner_and_reaches_filtered_sellers(self):
         locations = page_locations(self.data, self.catalog)

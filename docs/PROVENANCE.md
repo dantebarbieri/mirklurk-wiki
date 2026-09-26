@@ -265,6 +265,26 @@ off-hand ammunition, not weapon-family members. Non-ranged two-handed weapons
 occupy both hands without being independently placeable off hand; bows leave
 that slot for arrows. Built-in Unarmed is excluded from inventory equipment.
 
+Items and Category:Clothes display the 30 clothing members under Headwear,
+Shirts, Outerwear, Cloaks, Gloves, Pants, Socks and Footwear, intersecting the
+primary Clothes group with those reviewed slots. Each primary item anchor
+appears once even if slot tags overlap; unmatched future members stay visible
+under Other clothing. Slot links retain access to protective equipment in
+other primary groups.
+
+Recipe ingredients and their acquisition categories are derived, not stored
+as another membership dataset. The 53 inputs across inventory recipes and
+in-place construction are joined to named creature loot, source-owned
+gathering/search records, merchant offers and recipe outputs. Creature drops,
+Gatherables, Purchased ingredients, Crafted ingredients and Other ingredient
+sources overlap without changing material families. The only current merchant
+intersection is Iron Arrow; Flint also has a starting grant. Pool-only routes
+are labeled eligibility under Other ingredient sources, never promoted into
+the first three groups. Inputs lacking any recorded route retain an explicit
+Unverified ingredient sources link to their item notes. Empty method categories
+are not generated. All displayed source links target existing owners and anchors,
+not copied quantities, prices or guarantees.
+
 Weapon and material families are editorial browsing labels based on reviewed
 names, definitions, profiles and recipe roles, not invented native item types.
 Axes retain their cutting/chopping role; Heavy Branch remains a weapon, wood
@@ -425,7 +445,7 @@ no longer a valid readiness check.
 | Item seller table | `{{:Merchant|view=offers|item=item-id}}` | Merchant's stock and conditions |
 | Item loot table | `{{:Source|view=loot|item=item-id}}` | Creature or other documented loot owner |
 | Item random-source context | `{{:Source|view=pool-source|pool=pool-id}}` | Source's condition, including tier/attempt qualifications |
-| Item pool eligibility | `{{:Random treasure|view=pool|pool=pool-id|item=item-id}}` | Pool membership and shared story gates |
+| Item pool reference | `{{:Random treasure|view=pool|pool=pool-id|item=item-id}}` | Compact eligibility reference and shared story gates |
 | Currency guide | `{{:Coin}}` | Coin's value/weight/stack summary |
 
 `acquisition.json` is a separately bounded, build-matched source register
@@ -455,9 +475,16 @@ Being/nature illustrations reuse existing approved entity records just as item
 illustrations do; no source image creates a synthetic entity or a new upload.
 
 Pool membership means eligibility under at least one valid source budget,
-not an equal or guaranteed final chance. Quantities and probabilities remain
-explicitly unresolved where the budget-filling process prevents a constant
-answer. Item-specific gates have one canonical shared block, selected alongside
+not an equal or guaranteed final chance. The owner and unfiltered pool views
+show alphabetical Item/Category tables with all member anchors; shared rules
+and each pool's budget appear once on the owner. Item-filtered views instead
+return a short linked pool reference, without an empty quantity/probability
+table. Named source contexts remain separate, including chest-tier, bonus and
+retention checks. The generator's counted-attempt limit, diminishing budget
+and condition/stack rules are established. Fixed-context outcome probabilities
+could be modeled, but proposal, accepted-selection and whole-container chances
+are not interchangeable and no new drop rates are calculated here.
+Item-specific gates have one canonical shared block, selected alongside
 the applicable member: Summoning Stone's story requirement is present in its
 filtered chest-pool views. Source context and pool tables use separate constant
 arguments, so their dependencies are statically visible without dynamic

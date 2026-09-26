@@ -2,4 +2,6 @@ Choose [[Inventory crafting]] or a workstation below to browse what it can make.
 
 Each output item owns its complete recipe: ingredients, quantities, base cost, applicable methods, and conditions. Workstation catalogs link there rather than copying recipes.
 
+Find inputs through [[Items#Recipe_ingredients_by_acquisition|ingredients by acquisition]] or [[:Category:Crafting materials|material families]]. Acquisition groups overlap and link to the existing creature, gathering, merchant and recipe owners.
+
 [[Items]] | [[Game mechanics]] | [[Main Page]]

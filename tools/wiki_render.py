@@ -9,8 +9,8 @@ from fractions import Fraction
 from pathlib import Path
 
 from wiki_catalog import (
-    CURRENCY_RULE_TITLES, category_definitions, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
-    skill_category_title, validate_catalog,
+    CURRENCY_RULE_TITLES, INGREDIENT_METHODS, category_definitions, default_catalog, entry_owners, entry_relations,
+    fact_owners, ingredient_acquisition, page_locations, skill_category_title, validate_catalog,
 )
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
 from wiki_details import empty_details, validate_coin_profiles, validate_details
@@ -594,20 +594,58 @@ def acquisition_table(source, images, entities, locations):
     ), "loot") + "\n"
 
 
-def acquisition_pool_table(pool, owner, entities, locations):
+def acquisition_pool_table(pool, owner, entities, locations, categories):
+    def item_view(single, listing=""):
+        return "{{#if:{{{item|}}}|" + single + "|" + listing + "}}"
+
     rows = []
-    for identity in sorted(pool["eligible_item_ids"]):
-        condition = f'Eligible, not guaranteed. [[{owner}#pool-{pool["id"]}|Rules and value budget]].'
+    reference = f'[[{owner}#pool-{pool["id"]}|{literal(pool["title"])}]] (eligible)'
+    for identity in sorted(pool["eligible_item_ids"], key=lambda identity: (entities[identity]["name"], identity)):
+        item = entity_link(identity, entities, locations)
         if identity in pool["item_conditions"]:
-            condition += f' [[{owner}#treasure-condition-{identity}|Additional story condition]].'
-        cells = [
-            anchor("pool-item", pool["id"] + "-" + identity) + entity_link(identity, entities, locations),
-            "Budget-dependent", "Not established", condition,
-        ]
-        rows.append(filtered_row(html_row(cells), "item", [identity]))
-    content = html_table(["Item", "Quantity", "Per-item probability", "Eligibility"], rows)
+            item += f' [[{owner}#treasure-condition-{identity}|Story condition]].'
+        category = categories.get(identity)
+        listing = item + "</td><td>" + (f'[[:Category:{category}|{category}]]' if category else "Item")
+        row = item_view('<span class="treasure-pool-reference">', "<tr><td>")
+        row += anchor("pool-item", pool["id"] + "-" + identity) + item_view(reference, listing)
+        row += item_view("</span>", "</td></tr>") + "\n"
+        rows.append(filtered_row(row, "item", [identity]))
+    heading = f'<includeonly>[[{owner}#pool-{pool["id"]}|{literal(pool["title"])}]] &mdash; rules and value budget.</includeonly>\n'
+    heading += '<table class="wikitable">\n<tr><th scope="col">Item</th><th scope="col">Category</th></tr>\n'
+    content = item_view("", heading) + "".join(rows) + item_view("", "</table>\n")
     return selective_view(filtered_row(filtered_row(content, "item", pool["eligible_item_ids"]),
                                        "pool", [pool["id"]]), "pool")
+
+
+def clothing_subgroups(catalog, members):
+    labels = (
+        ("Headwear", ("Helmet-slot equipment", "Hood-slot equipment")),
+        ("Shirts", ("Shirt-slot equipment",)), ("Outerwear", ("Outer torso equipment",)),
+        ("Cloaks", ("Cloak-slot equipment",)), ("Gloves", ("Glove-slot equipment",)),
+        ("Pants", ("Pants-slot equipment",)), ("Socks", ("Sock-slot equipment",)),
+        ("Footwear", ("Footwear-slot equipment",)),
+    )
+    slots = {row["title"]: set(row["members"]) for row in catalog.get("taxonomy", {}).get("tags", [])
+             if "Equipment by slot" in row.get("parents", [])}
+    remaining, groups = set(members), []
+    for label, titles in labels:
+        matching = remaining & set().union(*(slots.get(title, set()) for title in titles))
+        if matching:
+            groups.append((label, matching, [title for title in titles if title in slots]))
+            remaining -= matching
+    if remaining:
+        groups.append(("Other clothing", remaining, []))
+    return groups
+
+
+def ingredient_table(method, ingredients, entities, locations):
+    return html_table(["Ingredient", "Documented sources"], [
+        html_row([entity_link(identity, entities, locations), " &middot; ".join(
+            f"[[{target}|{literal(label)}]]" for target, label in sorted(ingredients[identity][method])
+        )])
+        for identity in sorted(ingredients, key=lambda identity: (entities[identity]["name"], identity))
+        if method in ingredients[identity]
+    ])
 
 
 def evidence_text(references):
@@ -907,6 +945,9 @@ def build_pages(root, data, catalog=None, details=None):
     acquisition_by_id = {source["id"]: source for source in acquisition_sources}
     acquisition_pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
     acquisition_notes = {note["item"]: note for note in catalog.get("acquisition", {}).get("item_notes", [])}
+    item_categories = {identity: group["title"] for group in catalog.get("taxonomy", {}).get("groups", [])
+                       if group["index"] == "Items" for identity in group["members"]}
+    ingredients = ingredient_acquisition(data, catalog)
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
     pages = {title: read_authored(root, title, filename) for title, filename in {**PAGE_FILES, "NPCs": "NPCs.wiki", **active}.items()}
@@ -968,6 +1009,8 @@ def build_pages(root, data, catalog=None, details=None):
                 raise DataError("acquisition source: contextual picture has no approved image")
             text += f'\n[[{image["file_title"]}|thumb|{literal(source["image_caption"])}]]\n'
         text += "\n" + linked_prose(source["summary"], links) + "\n"
+        if source.get("pool_ids"):
+            text += "\n== How random selection works ==\n"
         text += "\n\n".join(linked_prose(condition, links) for condition in source["conditions"]) + "\n"
         if source.get("loot_context"):
             text += "\n" + selective_view(linked_prose(source["loot_context"], links), "loot") + "\n"
@@ -979,7 +1022,7 @@ def build_pages(root, data, catalog=None, details=None):
             text += "\n== Item-specific treasure conditions ==\n"
             for identity, condition in sorted(conditions.items()):
                 gate = "<noinclude>" + anchor("treasure-condition", identity) + "</noinclude>"
-                gate += entity_link(identity, entities, locations) + ": " + literal(condition)
+                gate += entity_link(identity, entities, locations) + ": " + literal(condition) + "<br />"
                 pool_ids = [pool["id"] for pool in owned_pools if identity in pool["item_conditions"]]
                 text += selective_view(filtered_row(filtered_row(gate, "item", [identity]), "pool", pool_ids), "pool") + "\n"
         if owned_pools:
@@ -987,7 +1030,13 @@ def build_pages(root, data, catalog=None, details=None):
             text += "\n\n".join(literal(note) for note in sorted({pool["odds_note"] for pool in owned_pools})) + "\n"
         for pool in sorted(owned_pools, key=lambda row: row["id"]):
             text += "\n" + anchor("pool", pool["id"]) + "\n=== " + literal(pool["title"]) + " ===\n"
-            text += literal(pool["summary"]) + "\n\n" + acquisition_pool_table(pool, source["title"], entities, locations) + "\n"
+            text += literal(pool["summary"]) + "\n"
+            pool_sources = [other["title"] for other in acquisition_sources
+                            if any(reference["pool"] == pool["id"] for reference in other.get("pool_refs", []))]
+            if pool_sources:
+                text += "\nSource: " + " | ".join(f"[[{title}]]" for title in sorted(pool_sources)) + "\n"
+            text += "\nCan contain (" + str(len(pool["eligible_item_ids"])) + " eligible items):\n"
+            text += acquisition_pool_table(pool, source["title"], entities, locations, item_categories) + "\n"
         for reference in source.get("pool_refs", []):
             pool = acquisition_pools[reference["pool"]]
             label = anchor("pool-source", source["id"] + "-" + pool["id"])
@@ -1089,11 +1138,33 @@ def build_pages(root, data, catalog=None, details=None):
         if groups:
             for group in sorted(groups, key=lambda row: row["title"]):
                 pages[title] += f'\n== {group["title"]} ==\n[[:Category:{group["title"]}|Browse category]]\n'
+                if title == "Items" and group["title"] == "Crafting materials" and ingredients:
+                    pages[title] += "\n[[#Recipe_ingredients_by_acquisition|Find recipe ingredients by creature drops, gathering, purchases and other sources]].\n"
+                if title == "Items" and group["title"] == "Clothes":
+                    pages[title] += "\nShirts and outerwear, and socks and footwear, use distinct slots. Slot links also include armor where applicable.\n"
+                    for label, members, slots in clothing_subgroups(catalog, group["members"]):
+                        pages[title] += f"\n=== {label} ===\n"
+                        pages[title] += " | ".join(f"[[:Category:{slot}|{slot}]]" for slot in slots) + "\n"
+                        matching = {locations[identity]: targets[locations[identity]] for identity in members}
+                        pages[title] += "\n".join(navigation_lines(matching)) + "\n"
+                    pages[title] += "\nSee also [[#Armor|armor]] and [[#Carrying_equipment|belts and backpacks]].\n"
+                    continue
                 matching = {locations[identity]: targets[locations[identity]] for identity in group["members"]}
                 pages[title] += "\n".join(navigation_lines(matching)) + "\n"
             continue
         lines = navigation_lines(targets)
         pages[title] += "\n== Browse ==\n" + "\n".join(lines) + "\n"
+    if ingredients:
+        pages["Items"] += (
+            "\n== Recipe ingredients by acquisition ==\n"
+            "[[:Category:Recipe ingredients|All recipe ingredients]] | [[:Category:Crafting materials|Material families]]\n\n"
+            "These are inputs to documented recipes, not all wares or every material. Methods can overlap; "
+            "source links retain quantities, availability and conditions. Random-pool eligibility alone does not make an ingredient a creature drop, gatherable or purchase.\n"
+        )
+        for method, summary in INGREDIENT_METHODS.items():
+            if any(method in routes for routes in ingredients.values()):
+                pages["Items"] += f"\n=== {method} ===\n[[:Category:{method}|Browse category]]\n"
+                pages["Items"] += literal(summary) + "\n" + ingredient_table(method, ingredients, entities, locations)
     for title, targets in legacy.items():
         if not targets:
             continue
@@ -1226,16 +1297,18 @@ def build_pages(root, data, catalog=None, details=None):
             if loot_owners:
                 pages[title] += "\n=== Loot sources ===\n" + "\n".join(
                     "{{:" + owner + "|view=loot|item=" + identity + "}}"
-                    for owner in sorted(loot_owners)
+                    for owner in sorted(loot_owners, key=lambda owner: (
+                        not any(source["title"] == owner and source["kind"] in {"starting", "fixed-location"}
+                                for source in acquisition_sources), owner))
                 ) + "\n"
             eligible_sources = [(source, reference, acquisition_pools[reference["pool"]])
                                 for source in acquisition_sources for reference in source.get("pool_refs", [])
                                 if identity in acquisition_pools[reference["pool"]]["eligible_item_ids"]]
             if eligible_sources:
-                pages[title] += "\n=== Random treasure sources ===\n"
+                pages[title] += "\n=== Random treasure sources ===\nPossible random finds, not guaranteed drops. Pool links list candidates and value-budget rules.\n"
                 for source, reference, pool in sorted(eligible_sources, key=lambda row: (row[0]["title"], row[2]["id"])):
-                    pages[title] += "\n{{:" + source["title"] + "|view=pool-source|pool=" + pool["id"] + "}}\n"
-                    pages[title] += "{{:" + acquisition_by_id[pool["owner_source"]]["title"] + "|view=pool|pool=" + pool["id"] + "|item=" + identity + "}}\n"
+                    pages[title] += '\n<div class="treasure-source">{{:' + source["title"] + "|view=pool-source|pool=" + pool["id"] + "}} "
+                    pages[title] += "{{:" + acquisition_by_id[pool["owner_source"]]["title"] + "|view=pool|pool=" + pool["id"] + "|item=" + identity + "}}</div>\n"
             if identity in coins:
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
             elif not own_recipes and not offers and not loot and not documented_sources and not eligible_sources and identity not in acquisition_notes:
@@ -1378,10 +1451,22 @@ def build_pages(root, data, catalog=None, details=None):
         if children:
             text += "\n== Subcategories ==\n" + "\n".join(f"* [[:Category:{child}|{child}]]" for child in children) + "\n"
         if row["members"]:
-            text += "\n== Directly listed articles ==\n" + "\n".join(
-                "* " + entity_link(identity, entities, locations)
-                for identity in sorted(row["members"], key=lambda identity: locations[identity])
-            ) + "\n"
+            text += "\n== Directly listed articles ==\n"
+            if category == "Clothes":
+                for label, members, slots in clothing_subgroups(catalog, row["members"]):
+                    text += f"\n=== {label} ===\n"
+                    text += " | ".join(f"[[:Category:{slot}|{slot}]]" for slot in slots) + "\n"
+                    text += "\n".join("* " + entity_link(identity, entities, locations)
+                                      for identity in sorted(members, key=lambda identity: locations[identity])) + "\n"
+            elif category in INGREDIENT_METHODS:
+                text += ingredient_table(category, ingredients, entities, locations)
+            else:
+                text += "\n".join("* " + entity_link(identity, entities, locations)
+                                  for identity in sorted(row["members"], key=lambda identity: locations[identity])) + "\n"
+        if category == "Recipe ingredients" or category in INGREDIENT_METHODS:
+            text += "\n[[Items#Recipe_ingredients_by_acquisition|Browse ingredients by acquisition]] | [[:Category:Crafting materials|Material families]]\n"
+        elif category == "Crafting materials" and ingredients:
+            text += "\n[[Items#Recipe_ingredients_by_acquisition|Find recipe ingredients by acquisition]] | [[:Category:Recipe ingredients|All recipe ingredients]]\n"
         text += "\n" + " ".join(f"[[Category:{parent}]]" for parent in sorted(row["parents"])) + "\n"
         pages["Category:" + category] = text
         if category == row["index"]:
