@@ -127,7 +127,7 @@ class IncrementalInputsTests(unittest.TestCase):
         arguments = (previous, baseline, authored, ["Owned"], ["Community"], digest(reviewed_drift(previous, baseline)))
         validate_owned(*arguments)
         for position, value in ((1, {}), (1, {**baseline, "Unknown": "Collision"}), (2, {}),
-                                (3, []), (3, ["Owned", "Owned"]), (4, ["Create"]), (4, ["Owned"]), (5, "0" * 64)):
+                                (3, []), (3, ["Owned", "Owned"]), (4, ["Create"]), (4, ["Owned"]), (4, [""]), (5, "0" * 64)):
             changed = list(arguments)
             changed[position] = value
             with self.subTest(position=position, value=value), self.assertRaises(RuntimeError):
@@ -349,6 +349,18 @@ class IncrementalProjectionTests(unittest.TestCase):
         self.assertNotIn("price-compatibility-receipt.json", artifacts)
         self.assertNotIn("price_prefix", rehearsal.pending_final_guard)
         self.assertTrue(artifacts["consumer-html.json"])
+        rehearsal.baseline = dict(rehearsal.current)
+        rehearsal.base_meta = copy.deepcopy(rehearsal.metadata)
+        rehearsal.order, rehearsal.prefixes, rehearsal.probes, rehearsal.default_prefixes = [], [], [], []
+        rehearsal.cache = {}
+        rehearsal.run(lambda *args: self.fail("No-op saved a revision."), lambda api: None,
+                      lambda **kwargs: None, lambda **kwargs: None, lambda *args: self.fail("No-op accepted an operation."))
+        proof = rehearsal.artifacts()["full-prefix-proof.json"]
+        self.assertEqual(proof["incremental"]["outcome"], "no-publication")
+        self.assertEqual(proof["order"], [])
+        self.assertEqual(len(proof["prefixes"]), 1)
+        self.assertIsNone(proof["prefixes"][0]["saved"])
+        self.assertEqual(proof["baseline_revisions"], proof["desired_revisions"])
 
     def test_actual_owner_state_selects_legacy_B_or_compact_D_pool_checker(self):
         rehearsal = IncrementalRehearsal.__new__(IncrementalRehearsal)

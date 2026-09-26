@@ -79,7 +79,7 @@ def reviewed_drift(previous, baseline):
 def validate_owned(previous, baseline, authored, owned, community, drift_sha256):
     validate_materialization_inputs(previous, baseline, authored)
     for label, titles in (("owned", owned), ("community", community)):
-        if (not isinstance(titles, list) or any(not isinstance(title, str) or title_key(title) != title for title in titles)
+        if (not isinstance(titles, list) or any(not isinstance(title, str) or not title or title_key(title) != title for title in titles)
                 or titles != sorted(set(titles))):
             raise RuntimeError("Invalid incremental " + label + " title inventory.")
     if set(owned) != previous.keys() or set(owned) != baseline.keys():
