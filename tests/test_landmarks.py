@@ -108,7 +108,7 @@ class LandmarkTests(unittest.TestCase):
                     f"Generating a new {region} area schedules a later placement check",
                     f"only if the {landmark} has not already been created",
                     "saved to prevent another normal placement",
-                    f"Entering the {interior}'s interior creates {title}'s NPC instance there",
+                    f"{title}'s NPC instance is part of the {interior}'s interior room setup",
                     "separately from placing the exterior",
                 ):
                     self.assertIn(phrase, location)

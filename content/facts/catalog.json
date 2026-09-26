@@ -3253,7 +3253,7 @@
         "paragraphs": [
           "Gurb-Gurb's large hollow tree stump is not pre-positioned with the initial world map. Generating a new Drowned Fen area schedules a later placement check; a new Savage Mirk area is eligible instead only if the world has no Drowned Fen area. Placement is attempted only if the hollow has not already been created.",
           "Successful exterior creation triggers a smoke-discovery message and five white dots pointing toward it. That success is then saved to prevent another normal placement. This is a one-time discovery cue, not a message on every return; the dots show direction, not a safe path. Smoke rises separately in play and is not part of the exterior image.",
-          "Entering the hollow's interior creates Gurb-Gurb's NPC instance there, separately from placing the exterior."
+          "Gurb-Gurb's NPC instance is part of the hollow's interior room setup, separately from placing the exterior."
         ],
         "related_entities": [],
         "confidence": "observed",
@@ -3401,7 +3401,7 @@
       "location": {
         "paragraphs": [
           "Look for Ihar inside a wrecked wooden ship on a Broken Fen shoreline. Its exterior is not pre-positioned with the initial world map. Generating a new Broken Fen area schedules a later placement check; placement is attempted only if the wreck has not already been created. Placement can fail after 1280 attempts to find a suitable sand/water shoreline, so it is not guaranteed in every Broken Fen area.",
-          "Successful exterior creation is saved to prevent another normal placement. Entering the shipwreck's interior creates Ihar's NPC instance there, separately from placing the exterior."
+          "Successful exterior creation is saved to prevent another normal placement. Ihar's NPC instance is part of the shipwreck's interior room setup, separately from placing the exterior."
         ],
         "related_entities": [],
         "confidence": "observed",
