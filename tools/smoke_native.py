@@ -19,6 +19,16 @@ from wiki_views import transclusions
 
 RECOVERY_TABLES = ("page", "revision", "slots", "content", "text", "actor", "logging",
                    "archive", "user", "image", "oldimage", "filearchive", "comment")
+HISTORICAL_OPERATIONS = 460
+HISTORICAL_PRESERVED = 12
+
+
+def require_historical_coverage(operations, *, preserved=None, prefixes=None):
+    if (operations != HISTORICAL_OPERATIONS
+            or preserved is not None and preserved != HISTORICAL_PRESERVED
+            or prefixes is not None and prefixes != HISTORICAL_OPERATIONS + 1):
+        raise RuntimeError(f"Native release coverage differs from {HISTORICAL_OPERATIONS} writes plus "
+                           f"{HISTORICAL_PRESERVED} preserved pages.")
 
 
 def sha(raw):
@@ -332,9 +342,26 @@ class NativeSmoke:
         preserved = [{"namespace": 14 if title.startswith("Category:") else 0, "title": title,
                       "page_id": row["pageid"], "revision_id": row["revid"], "raw_sha256": row["raw_sha256"]}
                      for title, row in sorted(metadata.items()) if title not in rehearsal.order]
-        if len(operations) != 460 or len(preserved) != 12:
-            raise RuntimeError("Native release coverage differs from 460 writes plus 12 preserved pages.")
+        if getattr(rehearsal, "incremental", False):
+            from smoke_incremental import validate_native_plan
+            summary = validate_native_plan(rehearsal, operations, preserved)
+            self.proof["incremental"] = {
+                "schema_version": 1, "input_sha256": rehearsal.binding["input_sha256"], "coverage": summary,
+                "default_source_contracts_sha256": digest(getattr(rehearsal, "default_sources", {})),
+                "prerequisite_plan_sha256": digest([row["prerequisites"] for row in operations]),
+                "journal_implementation_sha256": sha((self.root / "tools" / "publication_journal.py").read_bytes()),
+            }
+            if not operations:
+                self.release_journal = None
+                self.proof["incremental"]["outcome"] = "no-publication"
+                def no_dispatch(*args):
+                    raise RuntimeError("A zero-operation incremental result cannot dispatch or accept.")
+                return no_dispatch, no_dispatch
+        else:
+            require_historical_coverage(len(operations), preserved=len(preserved))
         manifest = self.manifest(operations, preserved, corpora)
+        if getattr(rehearsal, "incremental", False):
+            self.proof["incremental"]["manifest_sha256"] = digest(manifest)
         journal = Journal(self.workspace / "native-release-journal", manifest)
         self.release_journal = journal
         previous_effects = self.effects()
@@ -365,6 +392,9 @@ class NativeSmoke:
             if pending is None or pending[0]["index"] != index:
                 raise RuntimeError("No matching guarded native dispatch.")
             request, evidence, result, name = pending
+            if getattr(rehearsal, "incremental", False):
+                from smoke_incremental import validate_prefix_guard
+                validate_prefix_guard(rehearsal, index, guards)
             guards = json.loads(canonical_bytes(guards))
             current_effects = self.effects()
             delta = self.check_effects(previous_effects, current_effects, result["revision"], manifest["operator"])
@@ -695,7 +725,7 @@ class NativeSmoke:
                 "scope": "Actual isolated synthetic SQL and image restore; no production backup data retained."}
 
     def close(self):
-        if hasattr(self, "release_journal"):
+        if getattr(self, "release_journal", None) is not None:
             self.release_journal.close()
         for name in self.containers:
             docker("rm", "-f", name)
