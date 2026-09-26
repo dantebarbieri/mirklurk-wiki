@@ -69,7 +69,7 @@ stored dataset. `tests/test_catalog.py` retains its 66 KiB cap;
 `tools/smoke_prefix.py` has a 70 KiB cap for the explicit incremental hooks.
 The incremental disposable adapter and its synthetic controls have
 exact exceptions for `tools/smoke_incremental.py` (48 KiB) and
-`tests/test_incremental.py` (40 KiB). No private input, XML, measurement, artwork,
+`tests/test_incremental.py` (44 KiB). No private input, XML, measurement, artwork,
 or broad directory exception is allowed.
 
 Runtime files belong outside the checkout, even when ignored. Actual

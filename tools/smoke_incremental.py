@@ -40,6 +40,9 @@ def source_pin(root, pin, *, current=False):
     exact_keys(pin, ("head_sha", "tree_sha"), "source")
     if any(not isinstance(value, str) or not re.fullmatch("[0-9a-f]{40}", value) for value in pin.values()):
         raise RuntimeError("Incremental sources require exact commit/tree hashes.")
+    kind = subprocess.check_output(["git", "cat-file", "-t", pin["head_sha"]], cwd=root, text=True).strip()
+    if kind != "commit":
+        raise RuntimeError("Incremental source head is not a commit.")
     actual = subprocess.check_output(["git", "rev-parse", pin["head_sha"] + "^{tree}"], cwd=root, text=True).strip()
     if actual != pin["tree_sha"]:
         raise RuntimeError("Incremental source tree pin differs.")

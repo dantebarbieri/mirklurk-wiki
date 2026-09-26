@@ -146,14 +146,17 @@ class IncrementalInputsTests(unittest.TestCase):
 
     def test_wrong_source_tree_and_head_reject_before_runtime(self):
         pin = {"head_sha": "a" * 40, "tree_sha": "b" * 40}
-        with patch("smoke_incremental.subprocess.check_output", return_value="c" * 40):
+        with patch("smoke_incremental.subprocess.check_output", side_effect=["commit", "c" * 40]):
             with self.assertRaisesRegex(RuntimeError, "tree pin"):
                 source_pin(ROOT, pin)
-        with patch("smoke_incremental.subprocess.check_output", side_effect=["b" * 40, "c" * 40]):
+        with patch("smoke_incremental.subprocess.check_output", side_effect=["commit", "b" * 40, "c" * 40]):
             with self.assertRaisesRegex(RuntimeError, "executing checkout"):
                 source_pin(ROOT, pin, current=True)
         with self.assertRaises(RuntimeError):
             source_pin(ROOT, {**pin, "head_sha": "main"})
+        for kind in ("tree", "tag"):
+            with patch("smoke_incremental.subprocess.check_output", return_value=kind), self.assertRaisesRegex(RuntimeError, "not a commit"):
+                source_pin(ROOT, pin)
 
     def test_input_shape_is_closed_and_no_docker_is_started(self):
         with tempfile.TemporaryDirectory() as folder:
