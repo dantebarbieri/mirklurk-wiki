@@ -314,8 +314,10 @@ def drain_jobs_bounded(run, timeout=90):
 
 
 def check_parser_errors(rendered):
-    if re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded|mw-broken-media|typeof="[^"]*mw:Error[^"]*mw:File', rendered):
-        raise RuntimeError("A canonical view produced a MediaWiki parser error, expansion limit, or missing image.")
+    match = re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded|mw-broken-media|typeof="[^"]*mw:Error[^"]*mw:File', rendered)
+    if match:
+        raise RuntimeError("A canonical view produced a MediaWiki parser error, expansion limit, or missing image: "
+                           + rendered[max(0, match.start() - 120):match.end() + 400])
 
 
 class RenderedRows(HTMLParser):
@@ -1153,6 +1155,7 @@ def smoke(evidence_dir=None):
                     != hashlib.sha256(previous_payload).hexdigest()):
                 raise RuntimeError("Materialization no longer binds the exact previous-authored and stored baseline XML.")
             image_hashes = smoke_images(run, api, base, data, baseline, authored, pages)
+            native.prepare_thumbnails(baseline, authored, pages)
             wait_for_server_tick(api)
             baseline_titles = sorted(baseline)
             for offset in range(0, len(baseline_titles), 50):

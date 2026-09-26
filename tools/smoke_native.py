@@ -5,6 +5,7 @@ import io
 import json
 import multiprocessing
 import os
+import re
 import secrets
 import subprocess
 import tarfile
@@ -244,6 +245,38 @@ class NativeSmoke:
             return results[0]["revision"]["revision_id"]
         return save
 
+    def prepare_thumbnails(self, *corpora):
+        operator = self.operator()
+        default_width = int(self.evaluate(
+            "$s=MediaWiki\\MediaWikiServices::getInstance();$u=$s->getUserFactory()->newFromId("
+            + str(operator["id"]) + ");$limits=$s->getMainConfig()->get('ThumbLimits');"
+            "echo $limits[$s->getUserOptionsLookup()->getOption($u,'thumbsize')];"))
+        widths = {}
+        for corpus in corpora:
+            for text in corpus.values():
+                for filename, options in re.findall(r"\[\[(File:[^|\]]+)\|([^\]]*)", text):
+                    explicit = re.search(r"(?:^|\|)([0-9]+)px(?:\||$)", options)
+                    width = int(explicit[1]) if explicit else default_width if "thumb" in options.split("|") else None
+                    if width is not None:
+                        for scaled in (width, (width * 3 + 1) // 2, width * 2):
+                            widths.setdefault(scaled, set()).add(filename)
+        count = 0
+        for width, titles in sorted(widths.items()):
+            titles = sorted(titles)
+            for offset in range(0, len(titles), 50):
+                rows = self.api({"action": "query", "titles": "|".join(titles[offset:offset + 50]),
+                                 "prop": "imageinfo", "iiprop": "url|size", "iiurlwidth": width})["query"]["pages"]
+                for row in rows.values():
+                    info = row.get("imageinfo", [{}])[0]
+                    if "missing" in row or "thumberror" in info or not info.get("thumburl"):
+                        raise RuntimeError("Declared synthetic derivative could not be prepared before read-only freeze.")
+                    count += 1
+        self.proof["thumbnail_preparation"] = {
+            "default_width": default_width, "transform_requests": count,
+            "declared_widths_sha256": digest({str(width): sorted(titles) for width, titles in widths.items()}),
+            "scope": "Synthetic derivatives prepared before barrier; no page save, purge or touch.",
+        }
+
     def faults(self, csrf):
         title = "Native synthetic target"
         warm = self.api({"action": "edit", "title": title, "text": "Native fixture baseline", "token": csrf}, post=True)
@@ -375,14 +408,15 @@ class NativeSmoke:
             {"action": "delete", "title": title, "reason": "Disposable create/update mismatch", "token": csrf}, post=True))
         self.api({"action": "protect", "title": title, "protections": "create=sysop", "expiry": "infinite",
                   "token": csrf}, post=True)
-        case("protected-creation", actor=ordinary, error="permission-denied-create")
+        case("protected-creation", actor=ordinary, error="permission-denied-edit")
         self.api({"action": "protect", "title": title, "protections": "create=all", "expiry": "infinite",
                   "token": csrf}, post=True)
-        case("wrong-create-rights", actor=ordinary, deny_rights="createpage", error="permission-denied-create")
+        case("wrong-create-rights", actor=ordinary, deny_rights="createpage", error="permission-denied-edit")
         case("after-grab-create-race", stage="after-parent", observe=False, error="save-failed-or-null", during=lambda: self.api(
             {"action": "edit", "title": title, "text": "Competing create", "token": csrf}, post=True))
         self.api({"action": "delete", "title": title, "reason": "Reset synthetic creation fixture", "token": csrf}, post=True)
         case("ordinary-create", actor=ordinary, success=True)
+        case("unicode-roundtrip", text="Synthetic \u00e9 / \u2028 exact bytes", success=True)
         self.api({"action": "protect", "title": title, "protections": "edit=sysop", "expiry": "infinite", "token": csrf}, post=True)
         case("protected-target", actor=ordinary, error="permission-denied-edit")
         self.api({"action": "protect", "title": title, "protections": "edit=all", "expiry": "infinite", "token": csrf}, post=True)

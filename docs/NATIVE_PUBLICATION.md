@@ -15,6 +15,11 @@ configuration. Supply an already existing user ID, exact name and actor ID.
 The worker must have the independently approved writable CLI configuration.
 Public PHP must be stopped and positively drained; a final-capable private
 observer remains read-only. There is no write-enabled Apache helper.
+MediaWiki refuses missing thumbnail transformations in read-only mode. Required
+approved derivatives must already exist before this observer is used; missing
+derivatives are an explicit preparation failure, not permission to enable web
+writes. Disposable setup prepares source-declared image sizes and retina
+variants using only its synthetic image fixtures before entering the barrier.
 
 ## Exact wire format
 
