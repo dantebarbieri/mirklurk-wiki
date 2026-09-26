@@ -314,7 +314,8 @@ def check_recipe_cells(row, group, locations, stations, quantity_override=None, 
         if index == 0 and quantity_override is not None:
             quantities[0] = quantity_override
         if item_links(cells[index], locations) != [locations[entry["item"]] for entry in entries]:
-            raise RuntimeError("A recipe changed its ordered ingredient/output links.")
+            raise RuntimeError(f"Recipe {row['entries']} cell {index} links {item_links(cells[index], locations)!r} "
+                               f"!= {[locations[entry['item']] for entry in entries]!r}; actual {cells[index]['links']!r}")
         if [int(value) for value in re.findall(r"\bx\s+(\d+)", cells[index]["text"])] != quantities:
             raise RuntimeError("A recipe changed its exact ingredient/output quantities.")
     wanted_stations = sorted({stations[entry["details"]["station"]]["title"] for entry in group})
@@ -709,12 +710,15 @@ def capture_view_fixtures(api, pages, catalog):
             raise RuntimeError("A named-view fixture owner differs from the frozen desired seed.")
         invocation = "{{:" + owner + "".join("|" + key + "=" + value for key, value in parameters.items()) + "}}"
         expanded = api({"action": "expandtemplates", "text": invocation, "prop": "wikitext"}, post=True)["expandtemplates"]["wikitext"]
-        result = api({"action": "parse", "title": "Synthetic contract view", "text": invocation,
+        render_context = "table" if parameters.get("view") == "recipes" else "block"
+        render_text = "<table>" + invocation + "</table>" if render_context == "table" else invocation
+        result = api({"action": "parse", "title": "Synthetic contract view", "text": render_text,
                       "prop": "text|templates"}, post=True)["parse"]
         check_parser_errors(result["text"]["*"])
         print("VIEW_CONTRACT_JSON=" + json.dumps({
             "name": name, "owner": owner, "owner_sha256": hashlib.sha256(original.encode()).hexdigest(),
             "parameters": parameters, "invocation": invocation, "expanded_wikitext": expanded,
+            "render_context": render_context,
             "html": result["text"]["*"], "templates": sorted(row["*"] for row in result.get("templates", [])),
             "scope": "Disposable MediaWiki with synthetic artwork; image URLs and cache metadata are not portable.",
         }, ensure_ascii=False), flush=True)
