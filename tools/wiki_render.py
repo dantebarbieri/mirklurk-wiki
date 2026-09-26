@@ -10,7 +10,7 @@ from wiki_catalog import (
     CURRENCY_RULE_TITLES, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
     validate_catalog,
 )
-from wiki_data import CATEGORY_PAGES, DataError, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
 from wiki_details import empty_details, validate_coin_profiles, validate_details
 
 
@@ -323,7 +323,25 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
     return "\n== Stats ==\n" + markers + "\n" + table(["Detail", "Value", "Applies to / notes"], rows) + " ".join(notes) + "\n"
 
 
-def cell_grid(grid, entity_category):
+def health_armor_icon(armor, images):
+    image = next((row for row in images if row.get("health_armor") == armor), None)
+    if image is None or image["rights_status"] != "approved":
+        raise DataError(f"health armor {armor}: an approved shield illustration is required")
+    name = HEALTH_ARMOR_ICONS[armor][1].lower()
+    label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
+    return ('<span class="health-armor-icon" style="image-rendering:pixelated;">'
+            f'[[{image["file_title"]}|32px|alt={label}|{label}]]</span>')
+
+
+def health_armor_legend(images):
+    return "\n== Shield legend ==\n" + table(["Shield", "Armor on one HP cell"], [
+        [health_armor_icon(armor, images),
+         f'{name} shield: {armor} armor {"layer" if armor == 1 else "layers"}']
+        for armor, (_, name) in HEALTH_ARMOR_ICONS.items()
+    ])
+
+
+def cell_grid(grid, entity_category, images=()):
     health = grid["kind"] == "health"
     label = "Base health" if health else ("Ranged attack" if grid["kind"] == "ranged" else (
         "Melee attack" if entity_category == "being" else "Attack pattern"))
@@ -341,14 +359,15 @@ def cell_grid(grid, entity_category):
                 text += f'<td class="grid-hole" aria-label="{position}empty" style="min-width:3em;height:3em;background:transparent;"></td>\n'
                 continue
             if health:
-                visible = "1 HP" + (f'<br />{cell["armor"]} armor' if cell["armor"] else "")
+                visible = health_armor_icon(cell["armor"], images) if cell["armor"] else "1 HP"
                 description = f'1 HP, {cell["armor"]} armor layers'
-                color = "#663d24" if cell["armor"] else "#852c36"
+                color = "#852c36"
             else:
                 visible = str(cell["min"]) if cell["min"] == cell["max"] else f'{cell["min"]}-{cell["max"]}'
                 description = visible + " damage"
                 color = "#852c36"
-            text += (f'<td class="grid-cell" aria-label="{position}{description}" '
+            title = f'title="{position}{description}" ' if health and cell["armor"] else ""
+            text += (f'<td class="grid-cell" aria-label="{position}{description}" {title}'
                      f'style="min-width:3em;height:3em;padding:0.25em;border:2px solid #caa098;background:{color};color:#fff;font-weight:bold;">'
                      + visible + "</td>\n")
         text += "</tr>\n"
@@ -728,6 +747,11 @@ def build_pages(root, data, catalog=None, details=None):
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
     pages = {title: read_authored(root, title, filename) for title, filename in {**PAGE_FILES, "NPCs": "NPCs.wiki", **active}.items()}
+    if any("health_armor" in image for image in images) or any(
+        grid["kind"] == "health" and any(cell and cell["armor"] for row in grid["rows"] for cell in row)
+        for grid in details.get("grids", [])
+    ):
+        pages["Health and armor"] += health_armor_legend(images)
     if active:
         navigation = "\n== Explore more ==\n" + " | ".join(f"[[{title}]]" for title in sorted(active)) + "\n"
         pages["Main Page"] = pages["Main Page"].replace("== Read the caveats ==", navigation + "\n== Read the caveats ==")
@@ -854,7 +878,7 @@ def build_pages(root, data, catalog=None, details=None):
             price_item, prices.get(price_item), coin, recipes, images, grids,
         )
         for grid in grids:
-            pages[title] += cell_grid(grid, entities[grid["entity"]]["category"])
+            pages[title] += cell_grid(grid, entities[grid["entity"]]["category"], images)
         if coin is not None:
             pages[title] += coin_summary(coin, entities, locations)
         for kind, renderer in (

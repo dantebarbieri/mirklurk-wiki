@@ -383,6 +383,17 @@ duplicate profile rows while retaining profile anchors. Item attack patterns
 are not labeled melee-only, particularly bows. Damaged/story-specific health
 instances are never substituted for base shapes.
 
+Three metadata-only shared illustrations map armor levels 1, 2, and 3 to the
+reviewed bronze, silver, and gold shields. Evidence identifies the health-cell
+draw routine's raw values 2, 3, and 4 and the corresponding UI sprite frames
+11, 12, and 13; these raw values are not additional HP. The curated grids remain
+unchanged. Only occupied armored cells use the approved 32px shields; one-HP
+semantics and armor counts remain in title, ARIA, and alt text. Unarmored cells,
+null holes, attack ranges, and all grid coordinates/dimensions are unchanged.
+The guide supplies a small legend. Required missing/unapproved shield metadata
+fails the build explicitly. The finite target mapping and server-only rights
+workflow are documented in [IMAGES.md](IMAGES.md).
+
 Explicit property IDs select display units: fraction-based chance,
 waterproofing, insulation, satiation and tinder fields become percentages;
 AP costs link to Action points; verified weight uses kg/g. Armor and durability

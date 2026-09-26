@@ -47,6 +47,11 @@ CATEGORY_PAGES = {
 }
 FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES}
 CONFIDENCES = {"observed", "inferred", "localization-described"}
+HEALTH_ARMOR_ICONS = {
+    1: ("File:Health-armor-1.png", "Bronze"),
+    2: ("File:Health-armor-2.png", "Silver"),
+    3: ("File:Health-armor-3.png", "Gold"),
+}
 MAX_FACTS_BYTES = 640 * 1024
 IDENTIFIER = re.compile(r"[a-z0-9][a-z0-9_.-]{0,79}\Z")
 
@@ -235,27 +240,28 @@ def _validate_entries(records, sources, entities, facts):
 def _validate_illustrations(records, sources, entities, stations=None):
     seen = set()
     titles = set()
+    armor_levels = set()
     for index, illustration in enumerate(_records(records, "illustrations")):
         where = f"illustrations[{index}]"
         _object(
             illustration,
             {"id", "file_title", "caption", "creator", "sha256", "rights_status",
              "rights_basis", "rights_note", "confidence", "evidence"},
-            {"entity", "station", "variant"}, where,
+            {"entity", "station", "variant", "health_armor"}, where,
         )
         identity = _identifier(illustration["id"], f"{where}.id")
         if identity in seen:
             raise DataError(f"{where}: duplicate illustration ID")
         seen.add(identity)
-        if ("entity" in illustration) == ("station" in illustration):
-            raise DataError(f"{where}: provide exactly one entity or station target")
+        if sum(key in illustration for key in ("entity", "station", "health_armor")) != 1:
+            raise DataError(f"{where}: provide exactly one entity, station, or health_armor target")
+        if "variant" in illustration and "station" not in illustration:
+            raise DataError(f"{where}: a variant belongs only to a station")
         if "entity" in illustration:
             entity_id = _identifier(illustration["entity"], f"{where}.entity")
             if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being", "nature", "skill"}:
                 raise DataError(f"{where}.entity: must reference an item, being, nature record, or skill")
-            if "variant" in illustration:
-                raise DataError(f"{where}: a variant belongs to a station, not an entity")
-        else:
+        elif "station" in illustration:
             station_id = _identifier(illustration["station"], f"{where}.station")
             if not stations or station_id not in stations:
                 raise DataError(f"{where}.station: must reference a reviewed station")
@@ -263,6 +269,15 @@ def _validate_illustrations(records, sources, entities, stations=None):
                 variant = _identifier(illustration["variant"], f"{where}.variant")
                 if variant not in {row["id"] for row in stations[station_id].get("variants", [])}:
                     raise DataError(f"{where}.variant: must reference a reviewed station variant")
+        else:
+            armor = illustration["health_armor"]
+            if type(armor) is not int or armor not in HEALTH_ARMOR_ICONS:
+                raise DataError(f"{where}.health_armor: expected integer 1, 2, or 3")
+            if armor in armor_levels:
+                raise DataError(f"{where}.health_armor: duplicate armor level")
+            armor_levels.add(armor)
+            if illustration["file_title"] != HEALTH_ARMOR_ICONS[armor][0]:
+                raise DataError(f"{where}.file_title: does not match the fixed health_armor target")
         title = illustration["file_title"]
         if not isinstance(title, str) or not re.fullmatch(r"File:[A-Z][A-Za-z0-9 _.-]{0,119}\.(?:png|jpg|jpeg|webp)", title):
             raise DataError(f"{where}.file_title: expected a plain local File title for a raster image")

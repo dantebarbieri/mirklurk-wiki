@@ -1,5 +1,7 @@
 Combat uses shaped health and attack grids. Individual [[Bestiary|creature]], [[NPCs|character]], and [[Items|item]] pages own their base patterns and cell values.
 
-The original diagrams on this wiki use text and colored cells, not game images. Red cells show unarmored health or an attack range; brown health cells also display their armor count. Empty positions are left blank.
+Each occupied health cell represents one HP. An armored cell shows the game's shield icon on the same red base: bronze means 1 armor layer, silver means 2, and gold means 3. Armor is separate from HP, not extra health. Hover text and accessible image labels give the HP and armor count without relying on color.
+
+Unarmored cells show "1 HP"; attack cells retain their per-cell damage ranges. Empty positions are left blank. Shield artwork is separately approved for public-wiki display and is not distributed with the repository.
 
 [[Damage types]] | [[Action points]] | [[Game mechanics]] | [[Main Page]]

@@ -424,6 +424,102 @@ class ResearchTests(unittest.TestCase):
             validate_data(data)
 
 
+class HealthArmorTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from wiki_details import load_publication_inputs
+        cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
+        cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+
+    def test_shields_replace_only_occupied_armored_cells_at_exact_levels(self):
+        from smoke_deploy import RenderedGrids
+        from wiki_render import cell_grid
+        self.assertEqual(hashlib.sha256(json.dumps(self.details["grids"], sort_keys=True).encode()).hexdigest(),
+                         "d693bb51f80cbd3ad1502cd260c6eca44351c9bd3f1d4f8fda87eb75d3bb693b")
+        totals = {0: 0, 1: 0, 2: 0, 3: 0}
+        for grid in self.details["grids"]:
+            rendered = cell_grid(grid, "being", self.data["illustrations"])
+            parsed = RenderedGrids()
+            parsed.feed(rendered)
+            self.assertEqual([len(row) for row in parsed.grids[0]], [len(row) for row in grid["rows"]])
+            for y, (expected_row, row) in enumerate(zip(grid["rows"], parsed.grids[0]), 1):
+                for x, (expected, cell) in enumerate(zip(expected_row, row), 1):
+                    with self.subTest(grid=grid["id"], row=y, column=x):
+                        position = f"Row {y}, column {x}: "
+                        if expected is None:
+                            self.assertEqual(cell["attrs"]["aria-label"], position + "empty")
+                            self.assertEqual(cell["text"], "")
+                            self.assertEqual(cell["attrs"]["class"], "grid-hole")
+                        elif grid["kind"] == "health":
+                            armor = expected["armor"]
+                            totals[armor] += 1
+                            description = position + f"1 HP, {armor} armor layers"
+                            self.assertEqual(cell["attrs"]["aria-label"], description)
+                            if armor:
+                                name = {1: "bronze", 2: "silver", 3: "gold"}[armor]
+                                label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
+                                self.assertEqual(cell["text"], f'[[File:Health-armor-{armor}.png|32px|alt={label}|{label}]]')
+                                self.assertEqual(cell["attrs"]["title"], description)
+                                self.assertEqual(cell["icon_styles"], ["image-rendering:pixelated;"])
+                            else:
+                                self.assertEqual(cell["text"], "1 HP")
+                            self.assertIn("background:#852c36;", cell["attrs"]["style"])
+                            self.assertIn("min-width:3em;height:3em;padding:0.25em;", cell["attrs"]["style"])
+                        else:
+                            visible = str(expected["min"]) if expected["min"] == expected["max"] else f'{expected["min"]}-{expected["max"]}'
+                            self.assertEqual(cell["text"], visible)
+                            self.assertEqual(cell["attrs"]["aria-label"], position + visible + " damage")
+                        if expected is None or grid["kind"] != "health" or not expected["armor"]:
+                            self.assertNotIn("Health-armor-", cell["text"])
+                            self.assertEqual(cell["icon_styles"], [])
+            self.assertNotIn("#663d24", rendered)
+        self.assertEqual(totals, {0: 259, 1: 189, 2: 22, 3: 10})
+        self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 224)
+        guide = self.pages["Health and armor"]
+        for armor, name in ((1, "Bronze"), (2, "Silver"), (3, "Gold")):
+            self.assertEqual(guide.count(f"[[File:Health-armor-{armor}.png|32px|"), 1)
+            self.assertIn(f"{name} shield: {armor} armor", guide)
+
+    def test_shared_shields_require_finite_targets_and_approved_metadata(self):
+        from wiki_details import parse_illustrations
+        base = load_data(ROOT / "content" / "facts" / "game.json")
+        shields = [copy.deepcopy(row) for row in self.data["illustrations"] if "health_armor" in row]
+        self.assertEqual([row["health_armor"] for row in shields], [1, 2, 3])
+        for change in (
+            lambda i: i.update(health_armor=0), lambda i: i.update(health_armor=4),
+            lambda i: i.update(health_armor=True), lambda i: i.update(health_armor="1"),
+            lambda i: i.update(entity="item-0"), lambda i: i.update(station="armor-workstation"),
+            lambda i: i.update(variant="early-game"),
+            lambda i: i.update(file_title="File:Health-armor-2.png"),
+            lambda i: i.update(file_title="File:Invented-shield.png"),
+            lambda i: i.update(sha256=None), lambda i: i.update(creator=None),
+            lambda i: i.update(rights_basis=None), lambda i: i.update(rights_note=None),
+            lambda i: i.update(evidence=[]),
+        ):
+            image = copy.deepcopy(shields[0])
+            change(image)
+            with self.assertRaises(DataError):
+                parse_illustrations(json.dumps({"schema_version": 1, "illustrations": [image]}).encode(), base, self.catalog)
+        duplicate = dict(shields[0], id="duplicate-shield")
+        with self.assertRaisesRegex(DataError, "duplicate armor level"):
+            parse_illustrations(json.dumps({"schema_version": 1, "illustrations": [*shields, duplicate]}).encode(), base)
+        for armor in (1, 2, 3):
+            for state in ("missing", "pending"):
+                data = copy.deepcopy(self.data)
+                if state == "missing":
+                    data["illustrations"] = [row for row in data["illustrations"] if row.get("health_armor") != armor]
+                else:
+                    next(row for row in data["illustrations"] if row.get("health_armor") == armor).update(
+                        rights_status="pending", creator=None, sha256=None, rights_basis=None, rights_note=None)
+                with self.subTest(armor=armor, state=state), self.assertRaisesRegex(
+                    DataError, f"health armor {armor}: an approved shield illustration is required"
+                ):
+                    build_pages(ROOT, data, self.catalog, self.details)
+        data = dict(self.data, illustrations=[row for row in self.data["illustrations"] if "health_armor" not in row])
+        with self.assertRaisesRegex(DataError, "approved shield illustration is required"):
+            build_pages(ROOT, data, self.catalog, self.details)
+
+
 class ExportTests(unittest.TestCase):
     def test_deterministic_independent_of_input_order(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")

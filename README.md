@@ -33,7 +33,8 @@ equipment AP costs separately from attack/use costs.
 
 The 118 curated grids preserve 36 base health shapes and 82 attack patterns,
 including holes, orientation, armor layers, and occupied zero-to-one cells.
-Original accessible HTML/CSS tables use no game image assets. Health cells
+Original accessible HTML/CSS tables reference three separately approved shield
+sprites for armored health cells; image bytes remain outside Git. Health cells
 represent one HP with separate armor; summed attack ranges are not maximum
 actual damage. Damage pages explain initial-hit versus spreading status
 effects and link to their weapons, attacks, skills, and remedies.
@@ -41,8 +42,10 @@ Explicit projectile evidence adds poison-ammunition and thrown-flask links,
 including the flasks' armor-bypass exceptions. Ammunition bonus ranges are
 decoded per attack cell, not shown as misleading fractional damage.
 
-The metadata-only artwork register covers 323 reviewed selections: 243 items,
+The metadata-only artwork register covers 326 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
+The original 323 selections are unchanged; three shared health shields show
+bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
 Four item images are deliberately
 omitted rather than replaced with placeholders or guessed frames. Some nature
 pictures show an explicitly labeled associated ground tile or branch, not a
