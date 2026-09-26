@@ -949,17 +949,18 @@ def smoke_images(run, api, base, data, *corpora):
 
 def smoke(evidence_dir=None):
     from smoke_prefix import (
-        Rehearsal, SETTINGS_KEYS, canonical_bytes, capture_installer_welcome, managed_titles,
+        PREVIOUS_AUTHORED_COMMIT, STORED_BASELINE_BINDING, Rehearsal, SETTINGS_KEYS,
+        canonical_bytes, capture_installer_welcome, managed_titles,
         materialize_desired, reconstruct_baseline, settings_hash,
     )
 
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
         workspace = Path(folder)
-        baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
+        previous_authored, previous_payload, baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
         source_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
         subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=True)
-        evidence = {}
+        evidence = {"stored-baseline-binding.json": STORED_BASELINE_BINDING}
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
@@ -1123,10 +1124,13 @@ def smoke(evidence_dir=None):
             if managed_titles(api) != set(baseline):
                 raise RuntimeError("The initial import is not exactly the frozen baseline title set.")
             pages, evidence["storage-materialization.json"] = materialize_desired(
-                api, baseline, authored, source_head, runtime, actor,
+                api, previous_authored, baseline, authored, source_head, runtime, actor,
+                previous_source_head=PREVIOUS_AUTHORED_COMMIT,
             )
-            if evidence["storage-materialization.json"]["baseline_seed_sha256"] != hashlib.sha256(baseline_payload).hexdigest():
-                raise RuntimeError("Materialization no longer binds the exact frozen baseline XML.")
+            if (evidence["storage-materialization.json"]["baseline_seed_sha256"] != hashlib.sha256(baseline_payload).hexdigest()
+                    or evidence["storage-materialization.json"]["previous_authored_seed_sha256"]
+                    != hashlib.sha256(previous_payload).hexdigest()):
+                raise RuntimeError("Materialization no longer binds the exact previous-authored and stored baseline XML.")
             image_hashes = smoke_images(run, api, base, data, baseline, authored, pages)
             wait_for_server_tick(api)
             baseline_titles = sorted(baseline)
@@ -1239,7 +1243,8 @@ def smoke(evidence_dir=None):
                 for name, value in evidence.items():
                     with (evidence_dir / name).open("xb") as stream:
                         stream.write(canonical_bytes(value))
-                for name, payload in (("baseline-seed.xml", baseline_payload), ("authored-seed.xml", build_xml(authored)),
+                for name, payload in (("previous-authored-seed.xml", previous_payload),
+                                      ("baseline-seed.xml", baseline_payload), ("authored-seed.xml", build_xml(authored)),
                                       ("desired-seed.xml", build_xml(pages))):
                     with (evidence_dir / name).open("xb") as stream:
                         stream.write(payload)

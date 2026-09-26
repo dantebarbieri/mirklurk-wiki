@@ -174,15 +174,22 @@ the account a rate-limit exemption. Logged
 template dependencies and owner hashes before mutation tests. Their synthetic
 artwork URLs/cache metadata are not portable, and these records are not live
 readiness or baseline-prefix receipts.
-The rehearsal first reconstructs the pinned 401-title baseline and verifies its
-exact frozen XML hash. A bootstrap check captures the untouched installer's welcome Main Page against
+The rehearsal reconstructs the pinned published source as previous authored A0,
+then reconstructs the independently observed 401-title stored baseline B under
+the release-specific binding in `smoke_prefix.py`. This historical transform
+preserves the entire **Evidence and spoilers** body (including its terminal
+LF), removes terminal LF from the other 400 titles only for that exact release,
+and must match both
+the captured B deterministic XML and canonical corpus hashes. It is not a
+generic storage normalization rule, live observation, or permission to change
+production. A bootstrap check captures the untouched installer's welcome Main Page against
 its installed English message source, removes only that default page by the
 normal API, and imports all 401 baseline titles exactly. This is exclusively
 fresh disposable setup, never a live migration step. A separate receipt retains
 the welcome identity/raw text and deletion log ID.
 One baseline cache refresh occurs before prefix zero; no purge or reseed occurs
 during the planned transition or ordinary-editor propagation checks. Every
-changed/new page is then saved once, after actual revision-bound leaf-view
+planned changed/new stored page is then saved once, after actual revision-bound leaf-view
 checks, with all affected consumers observed at each prefix. Ready new pages
 are preferred. Deferred stale consumer rows or redlinks receive at most ten
 natural job-drain observations within a 90-second settling budget, with verified
@@ -209,18 +216,31 @@ Canonical bytes use UTF-8 sorted compact JSON, preserve types, and have no
 trailing newline; secrets and CAPTCHA questions/answers are never projected.
 CI checks out the exact source head with history and retains successful,
 nonsecret rehearsal artifacts for seven days.
-`authored-seed.xml` retains generator output A unchanged. Before any rehearsal
-save, changed/new titles undergo actual `ApiParse onlypst=1` in the operator's
-title/user context. Its transformed `parse.text` must equal A with terminal
-CR/LF removed, and nothing else; broader whitespace trimming, internal changes,
-substitution and signatures fail. Unchanged baseline titles are never
-transformed. The exact results form materialized desired snapshot D in
-`desired-seed.xml`; all subsequent raw hashes, comparisons and migration/receipt
-pins use D, without normalized equality. `storage-materialization.json` binds
-source/runtime/actor, baseline/A/D hashes and each title's exact output and
-removed suffix. Independent review must approve this linkage. A later live
-operation must explicitly target reviewed D, not silently reuse raw-A writer
-assumptions; no live operation is authorized by these artifacts.
+The retained four artifacts are `previous-authored-seed.xml` (A0),
+`baseline-seed.xml` (exact stored B), `authored-seed.xml` (unaltered generator
+A1), and `desired-seed.xml` (D). `stored-baseline-binding.json` records the
+narrow historical reconstruction pins, not raw host snapshots or accounts.
+Source-unchanged means A1 equals A0, even when A1 differs from B: preserve
+exact B in D with no PST or write. Never reintroduce legacy storage-only
+whitespace. Changed/new source undergoes actual `ApiParse onlypst=1` in the
+operator's title/user context. Its transformed `parse.text['*']` must equal
+A1 with terminal CR/LF removed, and nothing else; broader whitespace trimming,
+internal changes, substitution and signatures fail. A source-changed PST
+result equal to B is `storage-noop` and creates no revision.
+`storage-materialization.json` schema 2 binds source/runtime/actor and all
+four seed hashes, adding `previous_source_head_sha`,
+`previous_authored_seed_sha256`, and per-title `previous_authored_sha256`.
+Page classifications are `unchanged`, `storage-noop`, `update`, or `create`;
+unchanged rows have null `only_pst_output` and null `removed_suffix` (no PST), while
+all others retain the actual PST output and exact removed suffix.
+All subsequent raw hashes, comparisons and migration/receipt pins use D,
+without normalized equality; the write order and counts are derived from B
+versus D, not hardcoded. Independent review must approve this linkage. A later
+live operation must explicitly target reviewed D, not silently reuse raw-A1
+writer assumptions. Preserve A1 and D separately as the next release's A0 and B;
+an existing A/D difference is not a community edit. A fresh frozen live dump
+must still pass strict comparison against B. No live operation is authorized
+by these artifacts.
 `endpoint-link-view-candidates.json` separately captures both exact endpoints.
 Direct previews remove every explicit colon inclusion by recorded UTF-8 byte
 span, retaining duplicates and all other source bytes, and must have no

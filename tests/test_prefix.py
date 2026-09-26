@@ -5,6 +5,7 @@ import hashlib
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
 from decimal import Decimal
 from pathlib import Path
@@ -18,10 +19,12 @@ from smoke_deploy import (
     require_image_coverage, synthetic_image_specs, wait_for_server_tick,
 )
 from smoke_prefix import (
-    COHORT, PendingConsumerUpdate, Rehearsal, baseline_metadata, canonical_bytes, capture_installer_welcome, dom,
-    linked_titles, materialize_desired, planned_order, settings_hash, strip_colon_invocations, verify_materialization,
+    COHORT, STORED_BASELINE_BINDING, PendingConsumerUpdate, Rehearsal, baseline_metadata, canonical_bytes,
+    capture_installer_welcome, dom, linked_titles, materialize_desired, planned_order, reconstruct_stored_baseline,
+    settings_hash, strip_colon_invocations, verify_materialization,
 )
 from build_wiki import build_pages, build_xml
+from plan_migration import plan_migration, read_snapshot
 from wiki_catalog import page_locations
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
@@ -355,39 +358,172 @@ class EndpointCandidateTests(unittest.TestCase):
         self.assertFalse(any("|view=loot" in query.get("text", "") for query in calls))
 
 
+class StoredBaselineTests(unittest.TestCase):
+    def setUp(self):
+        self.previous = {"Evidence and spoilers": "Exact\n", "Action points": "Action\n\n", "Other": "Other\n"}
+        self.stored = {"Evidence and spoilers": "Exact\n", "Action points": "Action", "Other": "Other"}
+        self.payload = build_xml(self.previous)
+        stored_payload = build_xml(self.stored)
+        self.binding = {
+            **STORED_BASELINE_BINDING,
+            "previous_authored_seed_bytes": len(self.payload),
+            "previous_authored_seed_sha256": hashlib.sha256(self.payload).hexdigest(),
+            "baseline_seed_bytes": len(stored_payload),
+            "baseline_seed_sha256": hashlib.sha256(stored_payload).hexdigest(),
+            "baseline_corpus_sha256": hashlib.sha256(canonical_bytes(self.stored)).hexdigest(),
+            "managed_title_count": 3, "removed_lf_counts": {"0": 1, "1": 1, "2": 1},
+        }
+
+    def test_synthetic_binding_preserves_observed_exact_title_and_roundtrips_stored_bytes(self):
+        with patch("smoke_prefix.STORED_BASELINE_BINDING", self.binding):
+            pages, payload = reconstruct_stored_baseline(self.previous, self.payload)
+        self.assertEqual(pages, self.stored)
+        self.assertNotEqual(payload, self.payload)
+        self.assertTrue(pages["Evidence and spoilers"].endswith("\n"))
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "stored.xml"
+            path.write_bytes(payload)
+            self.assertEqual(read_snapshot(path), self.stored)
+
+    def test_reconstruction_requires_exact_source_bytes_and_complete_identities(self):
+        for previous, payload in (
+            (self.previous, self.payload + b"\n"),
+            (self.stored, build_xml(self.stored)),
+            ({**self.previous, "Other": "Changed\n"}, self.payload),
+            ({title: text for title, text in self.previous.items() if title != "Other"}, self.payload),
+            ({**self.previous, "Extra": "Unknown"}, self.payload),
+        ):
+            with patch("smoke_prefix.STORED_BASELINE_BINDING", self.binding), self.assertRaisesRegex(RuntimeError, "exact reviewed"):
+                reconstruct_stored_baseline(previous, payload)
+
+    def test_blanket_normalization_and_rebound_xml_do_not_waive_observed_corpus_pin(self):
+        for field, value in (
+            ("exact_titles", []), ("exact_titles", ["Other"]), ("baseline_seed_sha256", "0" * 64),
+            ("baseline_corpus_sha256", "0" * 64), ("baseline_seed_bytes", 0),
+            ("removed_lf_counts", {"0": 1, "1": 2}),
+        ):
+            binding = {**self.binding, field: value}
+            with self.subTest(field=field), patch("smoke_prefix.STORED_BASELINE_BINDING", binding):
+                with self.assertRaisesRegex(RuntimeError, "observed release"):
+                    reconstruct_stored_baseline(self.previous, self.payload)
+        trimmed = {title: text.rstrip("\n") for title, text in self.previous.items()}
+        trimmed_xml = build_xml(trimmed)
+        rebound = {**self.binding, "exact_titles": [], "removed_lf_counts": {"1": 2, "2": 1},
+                   "baseline_seed_bytes": len(trimmed_xml),
+                   "baseline_seed_sha256": hashlib.sha256(trimmed_xml).hexdigest()}
+        with patch("smoke_prefix.STORED_BASELINE_BINDING", rebound), self.assertRaisesRegex(RuntimeError, "observed release"):
+            reconstruct_stored_baseline(self.previous, self.payload)
+
+    def test_unknown_duplicate_or_generic_transform_identities_fail(self):
+        for field, value in (
+            ("exact_titles", ["Unknown"]), ("exact_titles", ["Other", "Other"]),
+            ("historical_transform", "normalize-all-whitespace"),
+        ):
+            with patch("smoke_prefix.STORED_BASELINE_BINDING", {**self.binding, field: value}):
+                with self.assertRaisesRegex(RuntimeError, "transform"):
+                    reconstruct_stored_baseline(self.previous, self.payload)
+
+
 class MaterializationTests(unittest.TestCase):
     actor = {"id": 1, "name": "Synthetic writer"}
     head = "0" * 40
     kind = "synthetic-unit-fixture"
+    provenance = {"previous_source_head": "1" * 40, "evidence_kind": kind}
 
     def inputs(self):
-        return {"Stable": "same\n", "Changed": "old\n"}, {
-            "Stable": "same\n", "Changed": "new\r\n\r\n", "New": "created\n",
-        }
+        return (
+            {"Stable": "same\n", "Legacy": "stored\n\n", "Changed": "old\n", "Noop": "old\n"},
+            {"Stable": "same\n", "Legacy": "stored", "Changed": "old", "Noop": "new"},
+            {"Stable": "same\n", "Legacy": "stored\n\n", "Changed": "new\r\n\r\n", "Noop": "new\n", "New": "created\n"},
+        )
 
     def api(self, query, post=False):
         self.assertTrue(post)
         self.assertEqual(query["onlypst"], 1)
         self.assertEqual(query["assertuser"], self.actor["name"])
-        self.assertNotEqual(query["title"], "Stable")
+        self.assertNotIn(query["title"], {"Stable", "Legacy"})
         return {"parse": {"text": {"*": query["text"].rstrip("\r\n")},
                           "wikitext": {"*": query["text"]}}}
 
     def test_actual_transformed_text_is_used_and_unchanged_pages_are_not_trimmed(self):
-        baseline, authored = self.inputs()
-        desired, receipt = materialize_desired(self.api, baseline, authored, self.head, {}, self.actor, self.kind)
-        self.assertEqual(desired, {"Changed": "new", "New": "created", "Stable": "same\n"})
+        previous, baseline, authored = self.inputs()
+        desired, receipt = materialize_desired(self.api, previous, baseline, authored, self.head, {}, self.actor,
+                                               **self.provenance)
+        self.assertEqual(desired, {"Changed": "new", "New": "created", "Stable": "same\n", "Legacy": "stored", "Noop": "new"})
         stable = next(row for row in receipt["pages"] if row["title"] == "Stable")
         self.assertIsNone(stable["only_pst_output"])
-        self.assertEqual(stable["removed_suffix"], "")
+        self.assertIsNone(stable["removed_suffix"])
+        legacy = next(row for row in receipt["pages"] if row["title"] == "Legacy")
+        self.assertEqual(legacy["classification"], "unchanged")
+        self.assertIsNone(legacy["only_pst_output"])
+        self.assertIsNone(legacy["removed_suffix"])
+        self.assertNotEqual(legacy["authored_sha256"], legacy["desired_sha256"])
+        noop = next(row for row in receipt["pages"] if row["title"] == "Noop")
+        self.assertEqual(noop["classification"], "storage-noop")
+        self.assertEqual(noop["only_pst_output"], "new")
+        self.assertEqual(noop["removed_suffix"], "\n")
         self.assertEqual(receipt["pages"][0]["removed_suffix"], "\r\n\r\n")
         self.assertEqual(receipt["evidence_kind"], self.kind)
+        self.assertEqual(receipt["schema_version"], 2)
+        self.assertEqual(receipt["previous_authored_seed_sha256"], hashlib.sha256(build_xml(previous)).hexdigest())
+        self.assertEqual({row["title"]: row["action"] for row in plan_migration(baseline, baseline, desired)["pages"]},
+                         {"Changed": "review-update", "New": "create", "Stable": "unchanged",
+                          "Legacy": "unchanged", "Noop": "unchanged"})
+
+    def test_source_changed_already_matching_storage_still_requires_actual_pst(self):
+        calls = []
+        def api(query, post=False):
+            calls.append(query["title"])
+            return self.api(query, post=post)
+        desired, receipt = materialize_desired(api, {"Noop": "old"}, {"Noop": "new"}, {"Noop": "new"},
+                                               self.head, {}, self.actor, **self.provenance)
+        self.assertEqual(calls, ["Noop"])
+        self.assertEqual(receipt["pages"][0]["classification"], "storage-noop")
+        self.assertEqual(desired, {"Noop": "new"})
+
+    def test_planned_order_omits_preserved_storage_and_storage_noops(self):
+        baseline, desired, locations = PrefixTests().fixture()
+        baseline.update({"Legacy": "stored", "Noop": "new"})
+        desired.update({"Legacy": "stored", "Noop": "new"})
+        order = planned_order(baseline, desired, locations, set(), set())
+        self.assertNotIn("Legacy", order)
+        self.assertNotIn("Noop", order)
+
+    def test_live_conflicts_use_stored_baseline_not_previous_authored_whitespace(self):
+        previous, baseline, authored = self.inputs()
+        desired, _ = materialize_desired(self.api, previous, baseline, authored, self.head, {}, self.actor,
+                                         **self.provenance)
+        current = {**baseline, "Legacy": "community change", "Changed": "community change",
+                   "New": "community collision"}
+        actions = {row["title"]: row["action"] for row in plan_migration(baseline, current, desired)["pages"]}
+        self.assertEqual(actions["Legacy"], "preserve-live")
+        self.assertEqual(actions["Changed"], "conflict")
+        self.assertEqual(actions["New"], "conflict")
+
+    def test_missing_unknown_or_noncanonical_baseline_identities_fail_before_pst(self):
+        previous, baseline, authored = self.inputs()
+        for old, stored, new in (
+            (None, baseline, authored), ({}, baseline, authored),
+            ({**previous, "Unknown": "extra"}, baseline, authored),
+            (previous, {**baseline, "Unknown": "extra"}, authored),
+            (previous, {title: text for title, text in baseline.items() if title != "Legacy"}, authored),
+            (previous, baseline, {title: text for title, text in authored.items() if title != "Legacy"}),
+            ({"Some_page": "one", "Some page": "two"}, {"Some page": "one"}, {"Some page": "one"}),
+            ({"": "invalid"}, {"": "invalid"}, {"": "invalid"}),
+            ({"Page": None}, {"Page": ""}, {"Page": ""}),
+        ):
+            with self.subTest(previous=old), self.assertRaisesRegex(RuntimeError, "explicit|identities"):
+                materialize_desired(lambda *args, **kwargs: self.fail("Invalid inputs must fail before PST"),
+                                    old, stored, new, self.head, {}, self.actor, **self.provenance)
+        with self.assertRaisesRegex(RuntimeError, "source commits"):
+            materialize_desired(self.api, previous, baseline, authored, self.head, {}, self.actor,
+                                previous_source_head=None, evidence_kind=self.kind)
 
     def test_wrong_onlypst_return_field_cannot_substitute_for_transformed_text(self):
         def wrong_field(query, post=False):
             return {"parse": {"wikitext": {"*": query["text"].rstrip("\r\n")}}}
         with self.assertRaisesRegex(RuntimeError, "transformed text"):
-            materialize_desired(wrong_field, {}, {"New": "created\n"}, self.head, {}, self.actor, self.kind)
+            materialize_desired(wrong_field, {}, {}, {"New": "created\n"}, self.head, {}, self.actor, **self.provenance)
 
     def test_broader_trims_internal_changes_substitution_and_signature_fail(self):
         for authored, forbidden in [
@@ -399,14 +535,16 @@ class MaterializationTests(unittest.TestCase):
                 def changed(query, post=False):
                     return {"parse": {"text": {"*": forbidden}}}
                 with self.assertRaisesRegex(RuntimeError, "more than terminal"):
-                    materialize_desired(changed, {}, {"New": authored}, self.head, {}, self.actor, self.kind)
+                    materialize_desired(changed, {}, {}, {"New": authored}, self.head, {}, self.actor, **self.provenance)
 
     def test_source_runtime_actor_hash_and_suffix_mismatches_fail(self):
-        baseline, authored = self.inputs()
-        desired, receipt = materialize_desired(self.api, baseline, authored, self.head, {}, self.actor, self.kind)
+        previous, baseline, authored = self.inputs()
+        desired, receipt = materialize_desired(self.api, previous, baseline, authored, self.head, {}, self.actor,
+                                               **self.provenance)
         for field, value in (
             ("source_head_sha", "1" * 40), ("authored_seed_sha256", "1" * 64),
             ("baseline_seed_sha256", "1" * 64), ("desired_seed_sha256", "1" * 64),
+            ("previous_authored_seed_sha256", "1" * 64), ("previous_source_head_sha", "2" * 40),
             ("runtime", {"different": True}), ("actor", {"id": 2, "name": "Different"}),
             ("acceptance", "php-rtrim"), ("schema_version", True),
             ("actor", {"id": True, "name": "Synthetic writer"}),
@@ -414,19 +552,39 @@ class MaterializationTests(unittest.TestCase):
             with self.subTest(field=field):
                 changed = {**receipt, field: value}
                 with self.assertRaisesRegex(RuntimeError, "pins differ"):
-                    verify_materialization(baseline, authored, desired, changed, self.head, {}, self.actor, self.kind)
+                    verify_materialization(previous, baseline, authored, desired, changed, self.head, {}, self.actor,
+                                           **self.provenance)
         changed = copy.deepcopy(receipt)
         changed["pages"][0]["removed_suffix"] = ""
         with self.assertRaisesRegex(RuntimeError, "per-title hashes"):
-            verify_materialization(baseline, authored, desired, changed, self.head, {}, self.actor, self.kind)
+            verify_materialization(previous, baseline, authored, desired, changed, self.head, {}, self.actor,
+                                   **self.provenance)
+        for title, field, value in (
+            ("Legacy", "removed_suffix", "\n\n"), ("Legacy", "only_pst_output", "stored"),
+            ("Noop", "classification", "update"), ("Noop", "only_pst_output", None),
+            ("New", "previous_authored_sha256", "1" * 64),
+        ):
+            changed = copy.deepcopy(receipt)
+            next(row for row in changed["pages"] if row["title"] == title)[field] = value
+            with self.subTest(title=title, field=field), self.assertRaisesRegex(RuntimeError, "per-title hashes"):
+                verify_materialization(previous, baseline, authored, desired, changed, self.head, {}, self.actor,
+                                       **self.provenance)
+        for records in (receipt["pages"][:-1], receipt["pages"] + [receipt["pages"][-1]],
+                        [{**receipt["pages"][0], "title": "Unknown"}, *receipt["pages"][1:]]):
+            with self.assertRaisesRegex(RuntimeError, "title records"):
+                verify_materialization(previous, baseline, authored, desired, {**receipt, "pages": records},
+                                       self.head, {}, self.actor, **self.provenance)
 
     def test_unchanged_page_trimming_is_forbidden_even_with_recomputed_seed_hash(self):
-        baseline, authored = self.inputs()
-        desired, receipt = materialize_desired(self.api, baseline, authored, self.head, {}, self.actor, self.kind)
-        desired["Stable"] = "same"
-        receipt["desired_seed_sha256"] = hashlib.sha256(build_xml(desired)).hexdigest()
-        with self.assertRaisesRegex(RuntimeError, "unchanged page"):
-            verify_materialization(baseline, authored, desired, receipt, self.head, {}, self.actor, self.kind)
+        previous, baseline, authored = self.inputs()
+        desired, receipt = materialize_desired(self.api, previous, baseline, authored, self.head, {}, self.actor,
+                                               **self.provenance)
+        for title, text in (("Stable", "same"), ("Legacy", authored["Legacy"])):
+            changed = {**desired, title: text}
+            rebound = {**receipt, "desired_seed_sha256": hashlib.sha256(build_xml(changed)).hexdigest()}
+            with self.assertRaisesRegex(RuntimeError, "unchanged page"):
+                verify_materialization(previous, baseline, authored, changed, rebound, self.head, {}, self.actor,
+                                       **self.provenance)
 
     def test_bootstrap_capture_refuses_changed_or_extra_pages(self):
         def fixture(raw="Welcome\n\nFooter", user="MediaWiki default", parentid=0, extra=False):
