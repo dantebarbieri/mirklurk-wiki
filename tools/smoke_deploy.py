@@ -1,6 +1,7 @@
 """Opt-in Docker integration test in an isolated, disposable Compose project."""
 
 import argparse
+import hashlib
 import http.cookiejar
 import json
 import os
@@ -21,7 +22,7 @@ from pathlib import Path
 from build_wiki import build_pages, build_xml, existing_titles, title_key
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
-from wiki_render import display_entry, recipe_groups
+from wiki_render import display_entry, image_for, recipe_groups
 from wiki_views import selective_view
 
 
@@ -88,7 +89,37 @@ def check_shield_icon(images, links, styles, armor):
         raise RuntimeError("MediaWiki stripped the shield's pixel rendering style.")
 
 
-def smoke_reader_release(api, pages, data, catalog, details):
+def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
+    locations = page_locations(data, catalog)
+    for identity in ("nature-4", "nature-7", "nature-17"):
+        image = image_for(identity, data["illustrations"])
+        filename = image["file_title"].removeprefix("File:")
+        old_filename = identity.capitalize() + ".png"
+        parsed = api({"action": "parse", "page": locations[identity], "prop": "text|images"})["parse"]
+        check_parser_errors(parsed["text"]["*"])
+        if filename not in parsed["images"] or old_filename in parsed["images"]:
+            raise RuntimeError("A tree page does not use its reviewed mature composition exclusively.")
+        if "representative shape assembled" not in parsed["text"]["*"]:
+            raise RuntimeError("A mature-tree caption lost its assembly qualification.")
+        info = next(iter(api({"action": "query", "titles": "File:" + old_filename,
+                              "prop": "imageinfo", "iiprop": "url"})["query"]["pages"].values()))
+        with urllib.request.urlopen(info["imageinfo"][0]["url"], timeout=30) as response:
+            if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
+                raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
+    for guide in catalog["guides"]:
+        if "image_entity" not in guide:
+            continue
+        image = image_for(guide["image_entity"], data["illustrations"])
+        parsed = api({"action": "parse", "page": guide["title"], "prop": "text|images|links"})["parse"]
+        check_parser_errors(parsed["text"]["*"])
+        if image["file_title"].removeprefix("File:") not in parsed["images"]:
+            raise RuntimeError("A mechanics guide lost its approved contextual image.")
+        if not set(guide.get("related_pages", [])) <= {link["*"] for link in parsed["links"] if link["ns"] == 0}:
+            raise RuntimeError("A mechanics guide lost its related guide links.")
+        images = RenderedGrids()
+        images.feed(parsed["text"]["*"])
+        if not any(image["file_title"].removeprefix("File:") in urllib.parse.unquote(row.get("src", "")) for row in images.images):
+            raise RuntimeError("A contextual guide illustration did not resolve to an actual rendered image.")
     for title, category in (("Nightmare", "Bugs"), ("Mirk Runner", "Rodents"),
                             ("Sceetler", "Scaalmyr"), ("Mudfin", "Aquatic creatures")):
         result = api({"action": "query", "titles": title, "prop": "categories"})["query"]["pages"]
@@ -342,7 +373,7 @@ def cache_diagnostics(api, title, owner, rendered):
     }), flush=True)
 
 
-def smoke_images(run, api, base):
+def smoke_images(run, api, base, data, catalog):
     def chunk(kind, data):
         return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
 
@@ -351,6 +382,19 @@ def smoke_images(run, api, base):
     specs = {"Synthetic-thumbnail.png": (64, 32, bytes((37, 149, 211)), 16)}
     specs.update({f"Health-armor-{armor}.png": (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
                   for armor in (1, 2, 3)})
+    contextual = sorted({image_for(guide["image_entity"], data["illustrations"])["file_title"].removeprefix("File:")
+                         for guide in catalog["guides"] if "image_entity" in guide})
+    contextual += [image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
+                   for identity in ("nature-4", "nature-7", "nature-17")]
+    specs.update({filename: (64, 64, bytes((130 + index, 91, 73, 255)), 32)
+                  for index, filename in enumerate(contextual)})
+    for identity, (width, height) in {
+        "nature-4": (588, 564), "nature-7": (684, 912), "nature-17": (340, 540),
+    }.items():
+        filename = image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
+        specs[filename] = (width, height, specs[filename][2], 32)
+    specs.update({f"Nature-{number}.png": (64, 64, bytes((200 + number, 40, 70, 255)), 32)
+                  for number in (4, 7, 17)})
     originals = {}
     run("exec", "-T", "--user", "www-data", "mirklurk", "mkdir", "/tmp/mirklurk-smoke-images")
     for filename, (width, height, pixel, _) in specs.items():
@@ -372,12 +416,12 @@ def smoke_images(run, api, base):
         "--user", "WikiAdmin", "--skip-dupes",
         "--comment", "Original synthetic solid-color PNG generated only for this disposable test.",
     )
-    if b"Added: 4" not in imported.splitlines() or any(
+    if f"Added: {len(specs)}".encode() not in imported.splitlines() or any(
         line.startswith((b"Failed:", b"Skipped:", b"Overwritten:")) for line in imported.splitlines()
     ):
-        raise RuntimeError("The synthetic CLI image import did not add exactly four new files.")
+        raise RuntimeError("The synthetic CLI image import did not add the exact fixture set.")
     for filename, (width, height, pixel, thumbwidth) in specs.items():
-        thumbheight = height * thumbwidth // width
+        thumbheight = (2 * height * thumbwidth + width) // (2 * width)
         result = api({
             "action": "query", "titles": "File:" + filename, "prop": "imageinfo",
             "iiprop": "url|size|mime", "iiurlwidth": thumbwidth,
@@ -411,7 +455,8 @@ def smoke_images(run, api, base):
             )
             if decoded != pixel * (expected_size[0] * expected_size[1]):
                 raise RuntimeError("The served PNG did not decode to the expected resized pixels and alpha.")
-    print("Synthetic CLI import and anonymous decoded PNG reads passed: one RGB thumbnail and three RGBA 32px shields.")
+    print("Synthetic CLI import and anonymous decoded PNG reads passed: thumbnail, shields and contextual guide images.")
+    return {filename: hashlib.sha256(payload).hexdigest() for filename, payload in originals.items()}
 
 
 def smoke():
@@ -489,7 +534,8 @@ def smoke():
             general = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
             if "uploadsenabled" in general:
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
-            smoke_images(run, api, base)
+            data, catalog, details = load_publication_inputs(ROOT)
+            image_hashes = smoke_images(run, api, base, data, catalog)
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -525,7 +571,6 @@ def smoke():
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
-            data, catalog, details = load_publication_inputs(ROOT)
             pages = build_pages(ROOT, data, catalog, details)
             edit = api({"action": "edit", "title": "Main Page", "text": pages["Main Page"], "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
@@ -543,7 +588,7 @@ def smoke():
             if set(pages) != {page["title"] for page in indexed}:
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
-            smoke_reader_release(api, pages, data, catalog, details)
+            smoke_reader_release(api, pages, data, catalog, details, image_hashes)
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},

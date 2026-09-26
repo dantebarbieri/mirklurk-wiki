@@ -66,7 +66,7 @@ def default_catalog(data):
 
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
-            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides", "damage_sources"}, "catalog")
+            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides", "damage_sources", "item_effects"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -111,7 +111,7 @@ def validate_catalog(catalog, data):
     guides_seen = set()
     for guide in _records(catalog.get("guides", []), "guides"):
         _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"},
-                {"related_pages", "image_entity", "image_caption"}, "guide")
+                {"related_pages", "image_entity", "image_caption", "section_titles"}, "guide")
         title = _title(guide["title"])
         if title not in guide_titles or title in guides_seen:
             raise DataError("guide: duplicate or unsupported canonical owner")
@@ -120,6 +120,12 @@ def validate_catalog(catalog, data):
             raise DataError("guide: expected one to sixteen original paragraphs")
         for paragraph in guide["paragraphs"]:
             _text(paragraph, "guide.paragraph", 1200)
+        if "section_titles" in guide:
+            headings = guide["section_titles"]
+            if not isinstance(headings, list) or len(headings) != len(guide["paragraphs"]):
+                raise DataError("guide: section titles must match its paragraph count")
+            for heading in headings:
+                _nullable_text(heading, "guide.section_title")
         related = guide["related_entities"]
         if not isinstance(related, list) or len(related) > 16 or any(
             not isinstance(identity, str) or identity not in required for identity in related
@@ -144,6 +150,19 @@ def validate_catalog(catalog, data):
             _text(guide["image_caption"], "guide.image_caption", 500)
         _confidence(guide["confidence"], "guide.confidence")
         _evidence(guide["evidence"], sources, "guide.evidence")
+    effects_seen = set()
+    for effect in _records(catalog.get("item_effects", []), "item effects"):
+        _object(effect, {"entity", "paragraphs", "confidence", "evidence"}, set(), "item effect")
+        identity = effect["entity"]
+        if not isinstance(identity, str) or identity not in required or entities[identity]["category"] != "item" or identity in effects_seen:
+            raise DataError("item effect: expected one record per known item")
+        effects_seen.add(identity)
+        if not isinstance(effect["paragraphs"], list) or not 1 <= len(effect["paragraphs"]) <= 4:
+            raise DataError("item effect: expected one to four original paragraphs")
+        for paragraph in effect["paragraphs"]:
+            _text(paragraph, "item effect.paragraph", 1200)
+        _confidence(effect["confidence"], "item effect.confidence")
+        _evidence(effect["evidence"], sources, "item effect.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
         _object(row, {"entity", "kind", "confidence", "evidence", "note"}, set(), "classification")

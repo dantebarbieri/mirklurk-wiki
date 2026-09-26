@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import sys
 import unittest
 from pathlib import Path
@@ -10,7 +11,7 @@ from plan_migration import plan_migration
 from wiki_catalog import entry_owners, entry_relations, page_locations, validate_catalog
 from wiki_data import DataError, MECHANIC_GUIDE_TITLES
 from wiki_details import load_publication_inputs
-from wiki_render import build_pages, display_entry, merchant_table, recipe_groups
+from wiki_render import build_pages, display_entry, linked_prose, merchant_table, recipe_groups
 from wiki_views import available_views, selective_view, transclusions, validate_transclusions
 
 
@@ -161,6 +162,94 @@ class SelectiveViewTests(unittest.TestCase):
             change(next(row for row in modified["guides"] if row["title"] == "Action points"))
             with self.assertRaises(DataError):
                 build_pages(ROOT, self.data, modified, self.details)
+
+    def test_survival_guides_keep_exact_thresholds_and_distinct_meter_indices(self):
+        guides = {row["title"]: row for row in self.catalog["guides"]}
+        for index, title in enumerate(("Satiation", "Stamina", "Focus", "Temperature")):
+            self.assertIn(title, self.pages)
+            self.assertEqual(guides[title]["confidence"], "observed")
+            self.assertTrue(any(f"player_get_stat_changes[{index}]" in ref["key"] for ref in guides[title]["evidence"]))
+            self.assertIn("[[Wellbeing", self.pages[title])
+            self.assertIn("Contribution to wellbeing", self.pages[title])
+        for title, text in (
+            ("Satiation", "0.715 percentage points"), ("Satiation", "above 90%"),
+            ("Stamina", "4 percentage points"), ("Focus", "0.56 percentage points"),
+            ("Temperature", "40-60%"), ("Temperature", "not Celsius or Fahrenheit"),
+            ("Temperature", "-3 percentage points"), ("Wellbeing", "0.1 percentage point"),
+            ("Wellbeing", "by 0.67"), ("Wellbeing", "by 1.2"),
+            ("Resting", "At 50% wellbeing or more"), ("Resting", "5% per resting turn"),
+            ("Resting", "not routinely doubled"), ("Resting", "Below 45% wellbeing"),
+            ("Resting", "focus exceeds 95%"), ("Resting", "35 turns"),
+            ("Weather", "Easy and Medium"), ("Weather", "fewer than two days"),
+        ):
+            self.assertIn(text, self.pages[title])
+        for title in ("Stamina", "Focus"):
+            self.assertIn("not an accident chance on every turn" if title == "Stamina" else "must still make an accident check", self.pages[title])
+        self.assertIn("distinct from your personal temperature meter", self.pages["Weather"])
+        self.assertIn("[[:Category:Food and drink", self.pages["Foods"])
+        self.assertIn('id="Combat_and_action_guide_evidence"', self.pages["Source provenance"])
+
+    def test_food_effect_amounts_have_one_item_owner_not_copied_guide_values(self):
+        locations = page_locations(self.data, self.catalog)
+        for effect in self.catalog["item_effects"]:
+            text = "\n\n".join(effect["paragraphs"])
+            self.assertIn("== Consumption effects ==", self.pages[locations[effect["entity"]]])
+            self.assertIn(text, self.pages[locations[effect["entity"]]])
+            for guide in self.catalog["guides"]:
+                self.assertNotIn(text, self.pages[guide["title"]])
+        bursthopper = next(row for row in self.catalog["item_effects"] if row["entity"] == "item-243")
+        self.assertIn("15 percentage points of stamina", bursthopper["paragraphs"][0])
+        self.assertNotIn("focus", bursthopper["paragraphs"][0].lower())
+        self.assertNotIn("4% per rank", self.pages["Satiation"])
+        self.assertNotIn("3% per rank", self.pages["Focus"])
+        self.assertNotIn("8% per rank", self.pages["Foods"])
+        for change in (
+            lambda c: c["item_effects"][0].update(entity="being-0"),
+            lambda c: c["item_effects"][0].update(evidence=[]),
+            lambda c: c["item_effects"][0].update(paragraphs=[]),
+            lambda c: c["item_effects"].append(copy.deepcopy(c["item_effects"][0])),
+            lambda c: c["guides"][-1].update(section_titles=["Mismatch"]),
+        ):
+            catalog = copy.deepcopy(self.catalog)
+            change(catalog)
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, self.data)
+
+    def test_guide_inline_links_are_explicit_and_literal_safe(self):
+        text = linked_prose("See Focus, not Focused. {{untrusted|markup}}", {"Focus": "Focus"})
+        self.assertIn("[[Focus|<nowiki>Focus</nowiki>]]", text)
+        self.assertIn("<nowiki>, not Focused. {{untrusted|markup}}</nowiki>", text)
+        self.assertNotIn("[[Focused", text)
+
+    def test_all_original_titles_survive_the_additive_guides(self):
+        new_guides = MECHANIC_GUIDE_TITLES - {"Action points", "Health and armor", "Weather"}
+        old_titles = sorted(set(self.pages) - new_guides)
+        self.assertEqual(len(old_titles), 401)
+        self.assertEqual(hashlib.sha256(("\n".join(old_titles) + "\n").encode()).hexdigest(),
+                         "b32b5d0645406b2b6e8073d4c355ebca0eacf1fbd554ba1b6dfdc1bbffc78b75")
+
+    def test_three_tree_references_use_distinct_reviewed_mature_compositions(self):
+        locations = page_locations(self.data, self.catalog)
+        hashes = {
+            "nature-4": "f73b3ed66aacdf320cdd9e892ce251e767024639c7a0114c0d169554564b17ad",
+            "nature-7": "088b42c512242db358a0c34cb9da78208d7522470161e8db3283a5519d866176",
+            "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
+        }
+        self.assertEqual(len(self.data["illustrations"]), 326)
+        for identity, digest in hashes.items():
+            images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
+            self.assertEqual(len(images), 1)
+            image = images[0]
+            self.assertEqual(image["sha256"], digest)
+            self.assertEqual(image["file_title"], "File:" + identity.capitalize() + "-mature.png")
+            page = self.pages[locations[identity]]
+            self.assertIn("[[" + image["file_title"] + "|thumb|", page)
+            self.assertNotIn("[[File:" + identity.capitalize() + ".png", page)
+            self.assertIn("representative shape assembled", page)
+            self.assertEqual({row["section"] for row in image["evidence"]}, {
+                "gml_Object_databank_Alarm_2", "gml_GlobalScript_scr_nature",
+                "gml_Object_obj_tree_Step_0", "gml_Object_obj_tree_Draw_0",
+            })
 
 
 if __name__ == "__main__":

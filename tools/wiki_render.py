@@ -2,6 +2,7 @@
 
 import html
 import json
+import re
 from collections import defaultdict
 from decimal import Decimal, localcontext
 from pathlib import Path
@@ -17,6 +18,16 @@ from wiki_views import filtered_row, html_row, html_table, selective_view, valid
 
 def literal(value):
     return "<nowiki>" + html.escape(str(value), quote=False) + "</nowiki>"
+
+
+def linked_prose(text, links):
+    if not links:
+        return literal(text)
+    names = "|".join(re.escape(name) for name in sorted(links, key=len, reverse=True))
+    return "".join(
+        f"[[{links[part]}|{literal(part)}]]" if part in links else literal(part)
+        for part in re.split(r"(?<!\w)(" + names + r")(?!\w)", text) if part
+    )
 
 
 def anchor(kind, identity):
@@ -584,9 +595,15 @@ def source_page(data, catalog, details, locations, facts, entries):
                           {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[11].sprite/beingDB[29].sprite"}
                       ])])
     if catalog.get("guides"):
-        lines.extend(["", "== Guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+        lines.extend(["", '<span id="Combat_and_action_guide_evidence"></span>', "== Guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
             [f'[[{guide["title"]}]]', literal(guide["confidence"]), evidence_text(guide["evidence"])]
             for guide in sorted(catalog["guides"], key=lambda row: row["title"])
+        ])])
+    if catalog.get("item_effects"):
+        lines.extend(["", "== Consumption effect evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+            [f'[[{locations[row["entity"]]}#Consumption_effects|{literal(locations[row["entity"]])}]]',
+             literal(row["confidence"]), evidence_text(row["evidence"])]
+            for row in sorted(catalog["item_effects"], key=lambda row: row["entity"])
         ])])
     if catalog.get("damage_sources"):
         lines.extend(["", "== Ammunition and thrown damage evidence ==", table(["Editable owner", "Delivery", "Confidence", "Evidence"], [
@@ -804,17 +821,27 @@ def build_pages(root, data, catalog=None, details=None):
             if image is None:
                 raise DataError("guide: contextual picture has no approved image metadata")
             pages[guide["title"]] += f'\n[[{image["file_title"]}|thumb|{literal(guide["image_caption"])}]]\n'
-        pages[guide["title"]] += "\n== How it works ==\n" + "\n\n".join(literal(p) for p in guide["paragraphs"]) + "\n"
+        pages[guide["title"]] += "\n== How it works ==\n"
+        links = {target: target for target in guide.get("related_pages", [])}
+        if "section_titles" in guide:
+            links.update({entities[identity]["name"]: locations[identity] for identity in guide["related_entities"]})
+        for heading, paragraph in zip(guide.get("section_titles", [None] * len(guide["paragraphs"])), guide["paragraphs"]):
+            if heading:
+                pages[guide["title"]] += "\n=== " + literal(heading) + " ===\n"
+            pages[guide["title"]] += "\n" + linked_prose(paragraph, links) + "\n"
         if guide.get("related_pages"):
             pages[guide["title"]] += "\nRelated guides: " + " | ".join(
                 f"[[{target}]]" for target in guide["related_pages"]) + "\n"
         if guide["related_entities"]:
-            pages[guide["title"]] += "\nRelated skills and remedies: " + " | ".join(
+            pages[guide["title"]] += "\nRelated items and skills: " + " | ".join(
                 entity_link(identity, entities, locations) for identity in guide["related_entities"]) + "\n"
             for identity in guide["related_entities"]:
                 pages[locations[identity]] += f'\n[[{guide["title"]}|{guide["title"]}: effects and related rules]]\n'
         if guide["title"] not in MECHANIC_GUIDE_TITLES:
             pages[guide["title"]] += "\n[[Health and armor|Health shapes and armor layers]] | [[Action points]]\n"
+        if guide["title"] == "Foods" and any(group["title"] == "Food and drink" for field in ("groups", "tags")
+                                           for group in catalog.get("taxonomy", {}).get(field, [])):
+            pages[guide["title"]] += "\n[[:Category:Food and drink|Browse foods and drinks]] | [[Crafting|Find a preparation recipe]]\n"
 
     # Each overview groups historical anchors with its canonical destination.
     navigation = defaultdict(lambda: defaultdict(set))
@@ -1004,6 +1031,10 @@ def build_pages(root, data, catalog=None, details=None):
             "\n== Damage behavior ==\n" + source["delivery"].capitalize() + ": "
             + entity_link(source["damage_type"], entities, locations) + "\n\n" + literal(source["summary"]) + "\n"
         )
+    for effect in catalog.get("item_effects", []):
+        pages[locations[effect["entity"]]] += "\n== Consumption effects ==\n" + "\n\n".join(
+            literal(paragraph) for paragraph in effect["paragraphs"]
+        ) + "\n"
 
     for history in catalog.get("state_history", []):
         before, after = locations[history["before"]], locations[history["after"]]

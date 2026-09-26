@@ -17,7 +17,7 @@ The expanded reference retains that baseline and now contains **107 numeric fact
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-357 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
+364 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
 redirect. Another 44 ordinary MediaWiki category pages support grouped browsing.
 Only `game.build` changed in the original dataset; all source
@@ -44,12 +44,22 @@ decoded per attack cell, not shown as misleading fractional damage.
 
 The metadata-only artwork register covers 326 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
-The original 323 selections are unchanged; three shared health shields show
+Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
 Four item images are deliberately
-omitted rather than replaced with placeholders or guessed frames. Some nature
-pictures show an explicitly labeled associated ground tile or branch, not a
-fabricated mature plant. Image bytes stay in separately approved server storage.
+omitted rather than replaced with placeholders or guessed frames. Willow, Cypress, and Trollgnarl now use distinct reviewed mature compositions
+assembled from native parts and the verified tree rules. Only their three
+metadata records change; the other 323 selections are preserved. Older tree
+File pages and bytes remain live history, not overwritten artwork. Other nature
+pictures retain their explicit ground-tile or branch qualifications. Image bytes
+stay in separately approved server storage.
+
+Separate Satiation, Stamina, Focus, Temperature, Wellbeing, Foods, and Resting
+guides explain the survival meters, threshold effects, recovery, weather
+exposure, and combat-healing distinction. They reuse approved item pictures in
+context, not invented stat icons. Meter-specific rates stay on meter pages,
+combined effects on Wellbeing, bed recovery and natural healing on Resting,
+and ten reviewed consumption effects on their item owners.
 
 Gameplay pages use compact tables and ordinary names, with machine IDs and
 citations kept in Source provenance. Each detail has **one editable wiki owner**:

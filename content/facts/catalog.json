@@ -3774,7 +3774,7 @@
         "Update the rain-history balance by adding 1/180 while rain power is positive or subtracting 1/360 otherwise, then clamp the balance between minus one and one.",
         "Clear weather tests a cloud threshold of the larger of 2% and 12% times one minus the balance.",
         "Cloudy weather first tests clearing: the larger of 2% and 10% times one plus the balance. Only after failure does it test rain: the larger of 2% and 30% times one minus the balance.",
-        "Rain onset is disabled while the survival-day counter is below two on certain difficulty settings. The corresponding displayed difficulty names are not established here.",
+        "The early-game protection described above can block this transition from clouds to new rain; it does not promise clear skies throughout the protected period.",
         "Rainy weather first tests return to clouds using the larger of 1% and 25% times one plus the balance. Only after failure does it test direct clearing using the larger of 1% and 5% times one plus the balance.",
         "If rain continues, intensity changes by a random amount between minus 10 and plus 10 percentage points and is clamped to its limits. Ending rain can fade over subsequent turns."
       ]
@@ -5406,9 +5406,11 @@
         "Up to three armor layers can protect each hit point. Armor layers are separate from health: a square with three armor layers still contains only one hit point.",
         "An attack's pattern is placed over the target's health grid. Only the overlapping attack cells can affect it; the numbers show each cell's damage range, not guaranteed total damage. Attack rotation and dodging change the overlap.",
         "The wiki shows normal starting health shapes and armor. Actual creatures may be wounded or affected by the story, and equipment, skills, ammunition, and status effects can change combat results.",
-        "Ammunition can add bonus damage to a bow's pattern. The bonus range is rolled independently for each occupied attack cell; it is not a separate arrow-shaped attack grid."
+        "Ammunition can add bonus damage to a bow's pattern. The bonus range is rolled independently for each occupied attack cell; it is not a separate arrow-shaped attack grid.",
+        "Wellbeing is a separate survival meter from this combat grid. Resting can sometimes restore an ordinary wounded cell when its wellbeing and recovery conditions are met; burned-away cells are excluded. See Resting for the natural-healing threshold and chance."
       ],
       "related_entities": [],
+      "related_pages": ["Wellbeing", "Resting"],
       "confidence": "inferred",
       "evidence": [
         {
@@ -5435,7 +5437,199 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_ai_related",
           "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.rest-healing.haelth>=0.5/hpgrid==0"
         }
+      ]
+    },
+    {
+      "title": "Satiation",
+      "paragraphs": [
+        "Satiation measures how well fed you are. Eating increases it, while passing turns consumes it. On Medium difficulty, an ordinary turn removes 0.715 percentage points before skill modifiers. Resting and sleeping reduce this ordinary loss; their rates are documented on Resting.",
+        "At 50% satiation or more, satiation contributes +0.5 percentage points to wellbeing each turn. From 20% to below 50% it is neutral. Below 20% it causes a growing penalty, reaching -1 percentage point per turn at zero satiation. Wellbeing explains how this contribution combines with the other meters.",
+        "Slow Metabolism reduces satiation loss according to its rank. Difficulty also modifies losses; see Wellbeing for the shared difficulty multipliers. Skill and difficulty modifiers multiply together.",
+        "Eating without becoming sick can grant Well fed when the resulting satiation is above 90%. Each qualifying food adds a duration based on its base satiation value, up to 35 turns. Well fed helps conserve stamina rather than adding a separate direct wellbeing bonus; see Stamina for its loss reduction.",
+        "A food's base satiation, sickness risk, special effects and acquisition methods belong on its item page. Plant-based foods recognized by the game receive the Herbivore skill's satiation bonus. Foods links to the relevant items; not every edible item is equally safe or equally filling."
+      ],
+      "section_titles": ["Eating and ordinary loss", "Contribution to wellbeing", "Skills and difficulty", "Well fed", "Choosing food"],
+      "related_entities": ["skill-1-1", "skill-4-2", "item-25"],
+      "related_pages": ["Foods", "Wellbeing", "Stamina", "Resting"],
+      "image_entity": "item-25",
+      "image_caption": "Loaf of Bread is one source of satiation.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "hungerGainTresh/hungerLoseTresh/FEDMAX"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_hunger_lose;player_get_stat_changes[0];player_endturn;player_item_consume.food/fedTime"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_get_real_satiation/item_is_greenfood"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "resting[14];sleeping[19].player_endturn"}
+      ]
+    },
+    {
+      "title": "Stamina",
+      "paragraphs": [
+        "Stamina pays for exertion and is distinct from action points. Outside swimming and drowning, ending a turn restores 4 percentage points of stamina for each unspent AP, up to the meter's maximum. Spending every AP removes this ordinary recovery opportunity.",
+        "At 50% stamina or more, stamina contributes +0.2 percentage points to wellbeing each turn. From 20% to below 50% it is neutral. Below 20% it causes an increasing penalty, reaching -0.5 percentage points per turn at zero. Wellbeing combines this contribution with the other meters and active effects.",
+        "Stamina below 30%, 15% and 5% adds cumulative accident-risk contributions of 1, 2 and 3 percentage points respectively: 1%, 3% or 6% from stamina alone. This contributes to checks made by relevant actions, not an accident chance on every turn. Low focus and encumbrance can add further risk.",
+        "Well fed halves stamina losses. Its food trigger and duration are documented on Satiation. The shared difficulty multipliers on Wellbeing combine multiplicatively with this reduction; these loss modifiers do not reduce ordinary recovery from unused AP.",
+        "Swimming uses stamina at turn end instead of granting ordinary unused-AP recovery. Running out can lead to drowning. A bed or bedroll supplies its own stamina recovery while resting or sleeping; normal AP replenishment is suspended in that state, so do not add a second automatic recovery. See Resting for bed-recovery amounts.",
+        "Wayfarer's Vigor grants temporary stamina recovery. Bramble Berries and Bursthopper restore stamina immediately. Their amounts and durations are maintained on those item pages."
+      ],
+      "section_titles": ["Unused AP and recovery", "Contribution to wellbeing", "Accident checks", "Loss modifiers", "Swimming and bed rest", "Items that restore stamina"],
+      "related_entities": ["item-176", "item-217", "item-243", "item-68"],
+      "related_pages": ["Action points", "Satiation", "Focus", "Wellbeing", "Resting"],
+      "image_entity": "item-176",
+      "image_caption": "Wayfarer's Vigor grants temporary stamina recovery.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "energyGainTresh/energyLoseTresh"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "actionPointsMax/energyLittle/energyLow/energyLowest"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_energy_lose;player_get_stat_changes[1];player_get_accident;player_endturn.energy/swimming/staminaBoostTime"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[176/217/243]"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Alarm_0", "key": "AP-refill.excludes-state19"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state19.rest/sleep.player_energy_gain"}
+      ]
+    },
+    {
+      "title": "Focus",
+      "paragraphs": [
+        "Focus falls while you are active and is restored by rest and sleep. On Medium difficulty, an ordinary turn removes 0.56 percentage points before skill modifiers. See Resting for direct recovery amounts and reduced decay rates for each resting or sleeping action.",
+        "At 50% focus or more, focus contributes +0.2 percentage points to wellbeing each turn. From 20% to below 50% it is neutral. Below 20% it causes a growing penalty, reaching -0.5 percentage points per turn at zero. Wellbeing combines this contribution with the other meters and active effects.",
+        "Focus below 30%, 15% and 5% adds cumulative accident-risk contributions of 1, 2 and 3 percentage points: 1%, 3% or 6% from focus alone. The relevant action must still make an accident check. Stamina and encumbrance can add to that risk.",
+        "Focused Mind reduces focus loss according to its rank. The shared difficulty multipliers on Wellbeing also affect decay, not the listed direct gains from resting or sleeping.",
+        "Cranberries can restore focus immediately; their item page gives the amount. Sleeping until rested ends when focus reaches its maximum, while sleep until sunrise uses the sunrise schedule rather than a fixed number of turns."
+      ],
+      "section_titles": ["Ordinary loss and recovery", "Contribution to wellbeing", "Accident checks", "Loss modifiers", "Food and sleep"],
+      "related_entities": ["skill-1-2", "item-225", "item-68", "item-154", "item-256"],
+      "related_pages": ["Resting", "Stamina", "Wellbeing", "Foods"],
+      "image_entity": "item-68",
+      "image_caption": "A Tattered Bedroll provides a place to rest or sleep.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "focusGainTresh/focusLoseTresh"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "focusLittle/focusLow/focusLowest"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_focus_lose;player_get_stat_changes[2];player_get_accident;player_item_consume[225]"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state14;state19.targetAction[7/8/9]/focusNext"}
+      ]
+    },
+    {
+      "title": "Temperature",
+      "paragraphs": [
+        "The personal temperature meter runs from cold to hot. Its comfortable range is 40-60% of that meter; these are game-meter percentages, not Celsius or Fahrenheit. Temperature contributes no wellbeing penalty within that range.",
+        "Outside the comfortable range, the wellbeing penalty increases toward the cold or hot extreme. It reaches -3 percentage points per turn at either 0% or 100% temperature. Temperature does not grant the positive high-meter bonus that satiation, stamina and focus do.",
+        "Each turn, body temperature moves toward local ambient temperature. Normally the change is one third of the difference before cooling modifiers. Insulation then pulls the result toward the middle of the comfortable range. Wetness further draws it toward a cold 10% target, so rain, soaked clothing and immersion can matter even when the air is mild.",
+        "Body Warmth reduces cooling loss according to its rank and improves drying. The shared difficulty multipliers on Wellbeing apply to cooling losses, not to every possible temperature change.",
+        "An active nearby fire raises effective temperature and helps drying. Sufficient warmth can build Warm to the core, which halves the ambient cooling step. Its direct wellbeing bonus is documented on Wellbeing. Shelter reduces rain exposure and can cool hot conditions. Equipment condition affects insulation and waterproofing, and sleeping equipment can contribute while in use.",
+        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse also does so but causes a fire hit. Their item pages own the durations and effects; not every source of warmth is risk-free."
+      ],
+      "section_titles": ["The comfortable range", "Contribution to wellbeing", "Ambient temperature and wetness", "Cooling modifiers", "Fire, shelter and clothing", "Warm food"],
+      "related_entities": ["skill-1-3", "item-38", "item-172", "item-235", "item-236", "item-237", "item-242", "item-256"],
+      "related_pages": ["Weather", "Wellbeing", "Resting", "Foods", "Fire"],
+      "image_entity": "item-38",
+      "image_caption": "An active nearby Campfire can warm and dry you.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "warmthLoseLow/warmthLoseHigh/wetTempTresh"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_warmth_lose;player_get_stat_changes[3];player_endturn.warmth/insulation/wetness"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet;player_update_gearstats;player_get_combined_wellbeing"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[235/236/237/242]"}
+      ]
+    },
+    {
+      "title": "Wellbeing",
+      "paragraphs": [
+        "Wellbeing is your overall condition, separate from the health-and-armor grid used in combat. Each turn combines the contributions from Satiation, Stamina, Focus and Temperature with active bonuses and penalties. Those meter pages own their contribution thresholds and rates. Reaching zero wellbeing causes death.",
+        "A percentage point is a change on a 0-100% meter, not a percentage multiplier. Each meter's wellbeing contribution is rounded to steps of 0.1 percentage point. The listed turn contributions are applied before the visual wellbeing grid settles. Meter gains are capped at 100% and losses at zero.",
+        "Warm to the core and Well rested each add +1 percentage point per turn while active. Well fed is different: it conserves stamina rather than adding another direct wellbeing bonus. Temperature, Resting and Satiation respectively describe how these effects are gained.",
+        "Sickness I, II and III subtract 1, 2 and 3 percentage points per turn respectively, using the highest active level rather than adding all three. Being very overburdened subtracts 1 percentage point per turn; being extremely overburdened subtracts 2. The lighter overburdened state increases movement costs and accident risk but has no direct wellbeing penalty.",
+        "Compared with Medium, Easy multiplies satiation, stamina and focus losses, and cooling losses, by 0.67; Hard multiplies them by 1.2. Skill and temporary-effect loss modifiers combine multiplicatively with these difficulty modifiers. They do not scale the listed direct recovery gains, and cooling modifiers are not a general slowdown of every temperature change.",
+        "Improving wellbeing is not the same as instantly refilling the combat grid. See Resting for the wellbeing threshold and conditional chance of naturally healing an ordinary wounded cell; burned-away cells are excluded.",
+        "Food can affect wellbeing beyond filling satiation. Honey helps directly and reduces sickness duration, while Riftvine Berries lower wellbeing. Their exact effects belong on the item pages."
+      ],
+      "section_titles": ["Combining the four meters", "Units and rounding", "Helpful effects", "Sickness and carrying too much", "Difficulty and loss modifiers", "Wellbeing is not combat HP", "Direct food effects"],
+      "related_entities": ["item-51", "item-218", "item-85", "item-86"],
+      "related_pages": ["Satiation", "Stamina", "Focus", "Temperature", "Resting", "Health and armor", "Foods"],
+      "image_entity": "item-51",
+      "image_caption": "Honey has a direct wellbeing benefit as well as food value.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes;player_get_combined_wellbeing;player_endturn.rest-healing"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_hunger_lose;player_energy_lose;player_focus_lose;player_warmth_lose"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[51/218]"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "wellbeing-grid;haelth<=0.death"},
+        {"source": "ui-en", "section": "AEs", "key": "20/21/22/24/25/26"}
+      ]
+    },
+    {
+      "title": "Resting",
+      "paragraphs": [
+        "Resting and sleeping restore focus and stamina while completed turns still advance the clock at the rate listed on Action points. Recovery therefore exposes you to changing weather, temperature and other ongoing conditions.",
+        "Resting on the ground adds 2 percentage points of focus per turn and uses half the ordinary satiation and focus losses. Stamina recovery comes from unused AP, as described on Stamina. Ground resting finishes when both focus and stamina are full, or can be interrupted manually.",
+        "Resting on a bed or bedroll uses the same focus gain and half-rate losses, but explicitly restores 32 percentage points of stamina each turn. Sleeping adds 2.5 percentage points of focus and 32 of stamina, while reducing satiation and focus decay to 35% of ordinary rates. In bed, normal AP replenishment is suspended, so this stamina gain is not routinely doubled.",
+        "Sleep until rested ends when focus is full; sleep until sunrise checks the sunrise schedule. Disturbance or deteriorating wellbeing can interrupt sleep. Below 45% wellbeing, a negative wellbeing trend can force you awake.",
+        "Sleeping can build Well rested once focus exceeds 95%, provided satiation and stamina are above 20% and temperature is strictly inside its comfortable range. The sleeping item's comfort determines the duration added, up to 35 turns. Its timer can pause while you remain in bed with at least two of the three supporting conditions satisfied. See Wellbeing for the effect's direct bonus.",
+        "At 50% wellbeing or more, resting allows a chance to restore one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and whether temperature is causing a wellbeing penalty; with full supporting meters and no temperature penalty it is 5% per resting turn. A successful roll restores one ordinary wounded cell, not a burned-away cell.",
+        "Choose shelter, warmth and adequate food before a long rest. A sleeping item's insulation and waterproofing can contribute while in use. Great Bedroll and Furhide Bedroll also slow the decay of Warm to the core, but do not make you immune to hunger, cold, sickness or interruption."
+      ],
+      "section_titles": ["Time keeps passing", "Resting on the ground", "Beds and sleeping", "Waking and interruption", "Well rested", "Natural healing", "Preparing a resting place"],
+      "related_entities": ["item-68", "item-154", "item-256", "item-38"],
+      "related_pages": ["Focus", "Stamina", "Satiation", "Temperature", "Weather", "Wellbeing", "Action points", "Health and armor"],
+      "image_entity": "item-154",
+      "image_caption": "A Great Bedroll provides sleeping comfort and protection.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state14;state19.rest/sleep/interruptions/restedTime"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Alarm_0", "key": "AP-refill.excludes-state19"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.minute+=8/restedTime/warmthTime/rest-healing"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_update_gearstats.sleeping-item;player_get_combined_wellbeing"},
+        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "RESTEDMAX/warmthLoseLow/warmthLoseHigh"}
+      ]
+    },
+    {
+      "title": "Foods",
+      "paragraphs": [
+        "Foods restore satiation, but differ in how filling they are, how likely they are to cause sickness, and their additional effects. Item pages own base satiation, sickness risk, consumption effects, crafting recipes and verified acquisition methods.",
+        "Herbivore increases the satiation of plant-based foods recognized by the game; its skill page gives the rank bonus. It does not apply indiscriminately to all food. Satiation gains are capped at the meter's maximum.",
+        "Eating a food rolls its declared sickness risk. A meal that does not make you sick may also extend Well fed when its satiation condition is met. See Satiation for that trigger and duration, and Stamina for the resulting loss reduction. Sickness and Well fed are separate from the satiation meter's ordinary wellbeing contribution.",
+        "Honey directly helps wellbeing and reduces sickness duration. Bramble Berries and Bursthopper restore stamina; Cranberries restore focus. Riftvine Berries instead lower wellbeing. Each linked item gives its exact amount, so a food's special effect is not inferred from its name or appearance.",
+        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight provide temporary warmth. Baby Firelouse also does so, but causes a fire hit. Their item pages own the durations and effects. An edible item can help one meter while hurting another.",
+        "Check cooking and preparation recipe by recipe. Workstations display ingredient quantities, output amounts and base AP costs from the resulting item's recipe owner. Check that food's sickness risk separately; processing does not automatically make every food safe or require the same workstation."
+      ],
+      "section_titles": ["Food value and effects", "Plant-based foods", "Sickness and Well fed", "Direct meter effects", "Warm meals and risks", "Cooking and preparation"],
+      "related_entities": ["skill-4-2", "item-51", "item-217", "item-243", "item-225", "item-218", "item-235", "item-236", "item-237", "item-242"],
+      "related_pages": ["Satiation", "Wellbeing", "Temperature", "Stamina", "Focus"],
+      "image_entity": "item-235",
+      "image_caption": "Pleasant Vegetable Soup provides food and temporary warmth.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_get_real_satiation/item_is_greenfood"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume.food/sickness/fedTime/special-effects"},
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "food.hungerGain/sicknessRisk/components/craftCost/craftReturn"}
+      ]
+    },
+    {
+      "title": "Weather",
+      "paragraphs": [
+        "Weather changes between clear, cloudy and rainy conditions. Transitions are checked when a completed turn crosses an hour boundary; see Action points for the turn-clock duration. Ambient temperature shifts toward a time-of-day target with a small random variation rather than instantly matching a fixed daytime value; this is distinct from your personal temperature meter.",
+        "Recent rain and dry periods affect later transition chances. A dry spell makes cloud and rain formation more likely, while accumulated rain encourages clearing. These are conditional hourly checks, not a fixed chance of rain every turn. The ordered checks and rain-history details are listed below.",
+        "On Easy and Medium, the early-game weather rule prevents cloudy conditions from starting new rain while fewer than two days have been survived. Hard does not receive that protection. This does not promise constant clear skies.",
+        "Rain matters through exposure and wetness. Wet clothing can transfer moisture to its wearer and other carried clothing. Personal wetness affects the Temperature rules, so waterproofing, shelter and drying complement insulation rather than replacing it.",
+        "The lesser shelter effect provides 80% protection from rain and the stronger shelter effect 95%. Shelter can also lower effective ambient temperature when conditions are hot. Nearby active fires help warmth and drying; dungeon-like areas use a separate ambient baseline rather than the outdoor value.",
+        "Resting still advances weather and temperature. Before sleeping, consider exposure, clothing, sleeping equipment and whether your wellbeing trend is improving or deteriorating."
+      ],
+      "section_titles": ["Changing weather", "Rain history", "Early-game rain protection", "Wetness and exposure", "Shelter and local conditions", "Resting through weather"],
+      "related_entities": ["item-38", "item-208", "item-154", "item-256"],
+      "related_pages": ["Temperature", "Wellbeing", "Resting", "Action points"],
+      "image_entity": "item-208",
+      "image_caption": "Protective clothing such as a Traveller's Cloak matters when travelling in wet weather.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.clock/temperature/localWeather/rainBalance/daysAlive"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet/wet_transfer/player_update_gearstats"},
+        {"source": "ui-en", "section": "AEs", "key": "23/31"},
+        {"source": "game-data", "section": "gml_Object_manager_day_Step_0", "key": "rain/outside/weather-presentation"}
       ]
     },
     {
@@ -5444,9 +5638,10 @@
         "Action points (AP) are the budget for taking actions during a turn. Attacking, equipping items, crafting, and applying remedies have their own costs, which can include fractions of an AP.",
         "The player normally has 8 AP per turn. Spending the remaining AP ends the turn. When the next turn begins, AP is replenished, minus any action cost carried over from the previous turn.",
         "Outside combat, some actions can proceed without enough AP remaining and carry the excess cost into the next turn. Combat checks whether the required AP is available; do not assume an expensive action can always be completed in one turn.",
-        "Ending a turn with AP left can help recover stamina. The world clock advances by eight in-game minutes when the player ends a turn, rather than by a fixed number of minutes for each AP.",
+        "Ending a turn with AP left can recover stamina; see Stamina for the recovery rate and its swimming and bed-rest exceptions. The clock advances when a turn is completed, not by a fixed time for each AP; the minutes-per-turn value is listed below.",
         "Equipment has a base equip cost of 0.4 AP per square of its inventory footprint. This is distinct from the AP cost of attacking or using the item.",
-        "Skills can reduce AP costs. Examples include Fast Draw for bows, Blade Master for sharp weapons, Master Basher and Force Fighter for their melee weapon types, and Brewer for alchemy crafting."
+        "Skills can reduce AP costs. Examples include Fast Draw for bows, Blade Master for sharp weapons, Master Basher and Force Fighter for their melee weapon types, and Brewer for alchemy crafting.",
+        "Completed turns also process satiation, focus, temperature and wellbeing. Resting and sleeping alter recovery and resource loss but do not pause that survival simulation."
       ],
       "related_entities": [
         "skill-2-0",
@@ -5455,6 +5650,7 @@
         "skill-3-2",
         "skill-4-3"
       ],
+      "related_pages": ["Stamina", "Satiation", "Focus", "Temperature", "Wellbeing", "Resting", "Weather"],
       "confidence": "inferred",
       "evidence": [
         {
@@ -5481,8 +5677,75 @@
           "source": "game-data",
           "section": "gml_Object_databank_Alarm_1",
           "key": "item_is_equippable/equipCost/width/height"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.minute+=8/energy_gain/actionPoints/wellbeing"
         }
       ]
+    }
+  ],
+  "item_effects": [
+    {
+      "entity": "item-51",
+      "paragraphs": ["Eating Honey immediately adds 1 percentage point of wellbeing and reduces sickness duration, in addition to its ordinary food value."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[51]"}]
+    },
+    {
+      "entity": "item-176",
+      "paragraphs": ["Drinking Wayfarer's Vigor adds 20 turns to a temporary effect that restores 12 percentage points of stamina each turn."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[176];player_endturn.staminaBoostTime"}]
+    },
+    {
+      "entity": "item-217",
+      "paragraphs": ["Eating Bramble Berries immediately restores 5 percentage points of stamina, in addition to the ordinary food effect."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[217]"}]
+    },
+    {
+      "entity": "item-218",
+      "paragraphs": ["Eating Riftvine Berries immediately removes 5 percentage points of wellbeing, despite providing ordinary food value."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[218]"}]
+    },
+    {
+      "entity": "item-225",
+      "paragraphs": ["Eating Cranberries immediately restores 1 percentage point of focus, in addition to the ordinary food effect."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[225]"}]
+    },
+    {
+      "entity": "item-235",
+      "paragraphs": ["Eating Pleasant Vegetable Soup adds five turns of Warm to the core. Temperature and Wellbeing own the effect's cooling and wellbeing rules."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[235]"}]
+    },
+    {
+      "entity": "item-236",
+      "paragraphs": ["Eating Tasty Crab Soup adds five turns of Warm to the core. Temperature and Wellbeing own the effect's cooling and wellbeing rules."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[236]"}]
+    },
+    {
+      "entity": "item-237",
+      "paragraphs": ["Eating Survivor's Delight adds five turns of Warm to the core. Temperature and Wellbeing own the effect's cooling and wellbeing rules."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[237]"}]
+    },
+    {
+      "entity": "item-242",
+      "paragraphs": ["Eating Baby Firelouse adds ten turns of Warm to the core but also causes a fire hit. This is not a risk-free substitute for a warm meal."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[242]"}]
+    },
+    {
+      "entity": "item-243",
+      "paragraphs": ["Eating Bursthopper immediately restores 15 percentage points of stamina, in addition to the ordinary food effect."],
+      "confidence": "observed",
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[243].first-reachable-branch"}]
     }
   ]
 }

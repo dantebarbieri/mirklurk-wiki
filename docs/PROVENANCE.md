@@ -168,7 +168,7 @@ is embedded; entity and File links are relative MediaWiki links.
 
 `content/facts/catalog.json` (192 KiB maximum) contains `schema_version: 1`,
 `pages`, `classifications`, and `entry_links`, with reviewed `entry_display`,
-`stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, and `guides` additions. It changes presentation
+`stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, `guides`, and `item_effects` additions. It changes presentation
 without rewriting historical evidence:
 
 - `pages`: `{entity, title, aliases}` for every item, being, nature record,
@@ -221,6 +221,26 @@ when their evidence-backed guide exists, never as empty schema placeholders.
 Optional `image_entity` and `image_caption` must appear together and reuse an
 already approved illustration with a contextual caption, not a fabricated stat
 icon or duplicate image record.
+Optional `section_titles` matches the paragraph count, with null for a
+continuation paragraph. Explicit related-guide and related-entity names become
+safe links without treating prose as executable wikitext.
+
+The meter pages own their contribution thresholds and ordinary losses;
+Wellbeing owns the combination, rounding, active-effect and shared difficulty
+rules. Resting owns bed/sleep recovery and natural healing, and Action points
+retains the completed-turn clock. Per-rank values remain on skill pages.
+`item_effects` records `{entity,paragraphs,confidence,evidence}` for a unique item
+and one to four original paragraphs. Those consumption effects render only on
+the item, with source references on Source provenance; overview guides link to
+them rather than copying their amounts.
+
+Personal temperature is a normalized cold-to-hot meter, not a physical-degree
+scale or the same thing as the ambient-temperature interpolation on Weather.
+Accident modifiers belong to relevant action checks, not an automatic roll
+each turn. Bed-state AP refill is suspended, so explicit bed recovery is not
+silently doubled. Rest healing uses the reviewed inclusive wellbeing threshold
+and excludes burned-away cells. An unreachable duplicate food-handler branch
+is not treated as an additional effect.
 Reverse damage links are derived from profiles, never guessed
 from weapon names. Remedies and related skills link back to the rule owner.
 `state_history` links two being records and a canonical quest, with attributed

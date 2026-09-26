@@ -42,7 +42,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
-        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 357)
+        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 364)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 44)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
@@ -133,15 +133,18 @@ class CatalogTests(unittest.TestCase):
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
         images = self.data["illustrations"]
-        original_batch = {"schema_version": 1, "illustrations": [row for row in images if "health_armor" not in row]}
+        replaced_trees = {"nature-4", "nature-7", "nature-17"}
+        original_batch = {"schema_version": 1, "illustrations": [
+            row for row in images if "health_armor" not in row and row.get("entity") not in replaced_trees]}
         self.assertEqual(
             hashlib.sha256((json.dumps(original_batch, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "c39da5b3edcc0a8ca077b7265fdf7ebc92b44613c23c79f01bbc1d2de51f6459",
+            "2d0a8fe2bab9c5d6b74a381fbfe15c838ba3c5d2e3d8ccb8b8cbfcdafc4be7ee",
         )
         self.assertEqual(len(images), 326)
-        original = {"schema_version": 1, "illustrations": [row for row in images if "entity" in row]}
+        original = {"schema_version": 1, "illustrations": [
+            row for row in images if "entity" in row and row["entity"] not in replaced_trees]}
         self.assertEqual(hashlib.sha256((json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "d2127f41f5f41dcbe3fb7f04354b97289708c25c60a411487a3ae53cc886399e")
+                         "4965345a3bdc0a215b4d74fd35d2779f334773f22c128293e891bfecab33f93a")
         missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in images if "entity" in row}
         self.assertEqual(missing, {"item-31", "item-48", "item-49", "item-171"})
         locations = page_locations(self.data, self.catalog)
@@ -153,7 +156,7 @@ class CatalogTests(unittest.TestCase):
             self.assertIn(literal(image["sha256"]), self.pages["Source provenance"])
             self.assertNotIn(image["sha256"], page)
             self.assertIn(literal(image["caption"]), page)
-        for identity in ("nature-4", "nature-6", "nature-7", "nature-17", "nature-20"):
+        for identity in ("nature-6", "nature-20"):
             self.assertIn("not a complete mature specimen", self.pages[locations[identity]])
 
     def test_skill_specific_facts_and_algorithms_have_individual_owners(self):
