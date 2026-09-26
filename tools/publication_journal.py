@@ -353,6 +353,7 @@ class Journal:
                     for key in ("worker_exited", "request_finished", "owned_transactions_absent")),
                 "Positive worker/request/transaction quiescence is required.")
         hex_value(evidence["quiescence"]["authority_sha256"])
+        self.get_artifact(evidence["quiescence"]["authority_sha256"])
         hex_value(evidence["guard_sha256"])
         self.get_artifact(evidence["guard_sha256"])
         hex_value(evidence["observation_nonce"], 32)

@@ -1,5 +1,6 @@
 """Real native-worker and recovery proof, exclusively inside disposable Compose."""
 
+import base64
 import hashlib
 import io
 import json
@@ -24,6 +25,21 @@ def sha(raw):
     return hashlib.sha256(raw.encode() if isinstance(raw, str) else raw).hexdigest()
 
 
+def maintenance_program(code):
+    # MediaWiki readconsole() reads at most 1023 bytes before eval()ing each line.
+    encoded = base64.b64encode(code.encode()).decode()
+    lines = ["$nativeSmokeProgram='';"]
+    lines.extend("$nativeSmokeProgram.='" + encoded[offset:offset + 720] + "';"
+                 for offset in range(0, len(encoded), 720))
+    lines.append("eval(base64_decode($nativeSmokeProgram,true));")
+    return ("\n".join(lines) + "\n").encode()
+
+
+def php_json(value):
+    encoded = base64.b64encode(canonical_bytes(value)).decode()
+    return "json_decode(base64_decode('" + encoded + "'),true,512,JSON_THROW_ON_ERROR)"
+
+
 def docker(*args, input_bytes=None, timeout=120):
     return subprocess.run(["docker", *args], input=input_bytes, stdout=subprocess.PIPE,
                           stderr=subprocess.PIPE, check=True, timeout=timeout).stdout
@@ -44,13 +60,13 @@ class NativeSmoke:
 
     def evaluate(self, code):
         return self.run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "eval", "--quiet",
-                        input_bytes=code.encode())
+                        input_bytes=maintenance_program(code))
 
     def operator(self, name="WikiAdmin"):
         code = (
             "$s=MediaWiki\\MediaWikiServices::getInstance();$d=$s->getConnectionProvider()->getPrimaryDatabase();"
             "$u=$d->newSelectQueryBuilder()->select(['user_id','user_name','user_editcount'])->from('user')"
-            "->where(['user_name'=>" + json.dumps(name) + "])->caller(__METHOD__)->fetchRow();"
+            "->where(['user_name'=>" + php_json(name) + "])->caller(__METHOD__)->fetchRow();"
             "if(!$u || $u->user_editcount===null){throw new RuntimeException('fixture-operator-not-ready');}"
             "$a=$d->newSelectQueryBuilder()->select('actor_id')->from('actor')->where(['actor_user'=>$u->user_id,"
             "'actor_name'=>$u->user_name])->caller(__METHOD__)->fetchField();"
@@ -98,10 +114,9 @@ class NativeSmoke:
                     for row in manifest["operations"]}
         expected.update({row["title"]: row for row in manifest["preserved"]})
         expected.update({row["revision"]["title"]: row["revision"] for row in accepted})
-        titles = json.dumps(sorted(expected))
         code = (
             "$s=MediaWiki\\MediaWikiServices::getInstance();$d=$s->getConnectionProvider()->getPrimaryDatabase();$out=[];"
-            "foreach(json_decode(" + json.dumps(titles) + ",true) as $name){"
+            "foreach(" + php_json(sorted(expected)) + " as $name){"
             "$t=MediaWiki\\Title\\Title::newFromText($name);"
             "$r=$s->getRevisionStore()->getRevisionByTitle($t,0,Wikimedia\\Rdbms\\IDBAccessObject::READ_LATEST);"
             "$v=['namespace'=>$t->getNamespace(),'title'=>$name,'page_id'=>$r?$r->getPageId():0,"
@@ -118,7 +133,7 @@ class NativeSmoke:
     def launch(self, journal, request, fixture_stage=None, deny_rights=None, *, record_intent=True):
         if record_intent:
             journal.intent(request)
-        dispatch_id = request["worker"]["nonce"] + "-" + secrets.token_hex(4)
+        dispatch_id = request["worker"]["nonce"] + ("" if record_intent else "-duplicate-" + secrets.token_hex(4))
         folder = self.workspace / ("native-" + dispatch_id)
         folder.mkdir(mode=0o700)
         (folder / "manifest.json").write_bytes(canonical_bytes(journal.manifest))
@@ -178,14 +193,17 @@ class NativeSmoke:
                 "filearchive": ["fa_id"], "comment": ["comment_id"], "user_groups": ["ug_user", "ug_group"]}
         code = (
             "$s=MediaWiki\\MediaWikiServices::getInstance();$d=$s->getConnectionProvider()->getPrimaryDatabase();"
-            "$out=['tables'=>[],'pages'=>[],'users'=>[],'slot_content'=>[],'content_address'=>[]];"
-            "$keys=json_decode(" + json.dumps(json.dumps(keys)) + ",true);"
+            "$out=['tables'=>[],'pages'=>[],'users'=>[],'slot_content'=>[],'content_address'=>[],'original_files'=>[]];"
+            "$keys=" + php_json(keys) + ";"
             "foreach($keys as $table=>$columns){$rows=[];"
             "foreach($d->newSelectQueryBuilder()->select('*')->from($table)->caller(__METHOD__)->fetchResultSet() as $r){"
             "$v=(array)$r;ksort($v);$id=implode(':',array_map(static fn($c)=>$v[$c],$columns));"
             "$rows[$id]=hash('sha256',serialize($v));"
             "if($table==='slots'){$out['slot_content'][$id]=(int)$r->slot_content_id;}"
             "if($table==='content'){$out['content_address'][$id]=$r->content_address;}"
+            "if($table==='image'){$f=$s->getRepoGroup()->findFile(MediaWiki\\Title\\Title::newFromText('File:'.$r->img_name));"
+            "if(!$f){throw new RuntimeException('preserved-original-file-missing');}"
+            "$out['original_files'][$r->img_name]=hash_file('sha256',$f->getLocalRefPath());}"
             "}$out['tables'][$table]=(object)$rows;}"
             "foreach($d->newSelectQueryBuilder()->select(['page_id','page_namespace','page_title','page_latest','page_touched',"
             "'page_content_model','page_is_redirect','page_len'])->from('page')->caller(__METHOD__)->fetchResultSet() as $r){"
@@ -198,7 +216,7 @@ class NativeSmoke:
             "'metadata_sha256'=>hash('sha256',serialize($v))];}"
             "$out['main_role_id']=(int)$d->newSelectQueryBuilder()->select('role_id')->from('slot_roles')"
             "->where(['role_name'=>'main'])->caller(__METHOD__)->fetchField();"
-            "foreach(['pages','users','slot_content','content_address'] as $k){$out[$k]=(object)$out[$k];}"
+            "foreach(['pages','users','slot_content','content_address','original_files'] as $k){$out[$k]=(object)$out[$k];}"
             "echo json_encode($out,JSON_THROW_ON_ERROR);"
         )
         return json.loads(self.evaluate(code))
@@ -211,6 +229,8 @@ class NativeSmoke:
             return {"operator_delta": 0, "history_rows_added": {}}
         if before["main_role_id"] != after["main_role_id"]:
             raise RuntimeError("Main slot identity changed.")
+        if before["original_files"] != after["original_files"]:
+            raise RuntimeError("An original image file changed during native publication.")
         additions = {}
         for table, rows in before["tables"].items():
             actual = after["tables"][table]
@@ -251,15 +271,23 @@ class NativeSmoke:
 
     def collect(self, journal, request, name, *, lose_result=False, allow_error=False):
         status = self.wait(name)
+        if status["Status"] != "exited" or status["Pid"] != 0:
+            raise RuntimeError("Worker process is not positively exited.")
         events = [json.loads(line) for line in docker("logs", name).decode().splitlines() if line.startswith("{")]
         starts = [row for row in events if row.get("kind") == "native-publication-start"]
         results = [row for row in events if row.get("kind") == "native-publication-result"]
         if len(starts) != 1:
             raise RuntimeError("Native worker failed before identifiable start: " + docker("logs", name).decode())
-        journal.event(request, starts[0])
+        def retain(event, kind):
+            prior = journal.records.get(journal.name(kind, request))
+            if prior is None:
+                journal.event(request, event)
+            elif canonical_bytes(prior) != canonical_bytes(event):
+                raise RuntimeError("Retained worker event changed on restart.")
+        retain(starts[0], "start")
         if not lose_result:
             for result in results:
-                journal.event(request, result)
+                retain(result, "result")
         if not allow_error and (status["ExitCode"] != 0 or len(results) != 1 or results[0]["outcome"] != "committed"):
             raise RuntimeError("Native worker did not commit: " + docker("logs", name).decode())
         connection = starts[0]["start"]["db_connection_id"]
@@ -268,11 +296,19 @@ class NativeSmoke:
             f"SELECT COUNT(*) FROM information_schema.INNODB_TRX WHERE trx_mysql_thread_id={connection};")
         if remaining.split() != [b"0", b"0"]:
             raise RuntimeError("Exited worker still has an owned DB request/transaction.")
+        container = json.loads(docker("inspect", "--format",
+                                     '{"id":{{json .Id}},"image":{{json .Image}}}', name))
+        if container["image"] != self.runtime["runtime_image_id"]:
+            raise RuntimeError("Worker container used a different runtime image.")
+        completion = {"schema_version": 1, "kind": "disposable-native-completion",
+                      "request_sha256": digest(request), "worker": request["worker"], "start": starts[0]["start"],
+                      "container": {**container, "name": name}, "state": status,
+                      "owned_db_counts": {"requests": 0, "transactions": 0}}
         evidence = {
             "schema_version": 1, "kind": "native-publication-observation", "request_sha256": digest(request),
             "worker": request["worker"], "start": starts[0]["start"],
             "quiescence": {"worker_exited": True, "request_finished": True, "owned_transactions_absent": True,
-                           "authority_sha256": digest({"container": name, "state": status, "owned_remaining": [0, 0]})},
+                           "authority_sha256": journal.put_artifact(completion)},
             "states": self.states(journal.manifest, journal.accepted),
             "guard_sha256": "",
             "observation_nonce": secrets.token_hex(16),
@@ -317,19 +353,18 @@ class NativeSmoke:
                               "revision_id": metadata[owner["title"]]["revid"],
                               "raw_sha256": metadata[owner["title"]]["raw_sha256"]}
                              for owner in operations[index - 1]["prerequisites"]]
-            request = self.request(manifest, journal, index, text, prerequisites, probes)
+            request = self.request(manifest, journal, index, text, prerequisites, {
+                "probes": probes, "effects_before_sha256": journal.put_artifact(previous_effects)})
             name = self.launch(journal, request)
             evidence, results = self.collect(journal, request, name)
-            pending = (request, evidence, results[0])
-            docker("rm", name)
-            self.containers.remove(name)
+            pending = (request, evidence, results[0], name)
             return results[0]["revision"]["revision_id"]
 
         def accept(index, guards):
             nonlocal pending, previous_effects
             if pending is None or pending[0]["index"] != index:
                 raise RuntimeError("No matching guarded native dispatch.")
-            request, evidence, result = pending
+            request, evidence, result, name = pending
             guards = json.loads(canonical_bytes(guards))
             current_effects = self.effects()
             delta = self.check_effects(previous_effects, current_effects, result["revision"], manifest["operator"])
@@ -345,6 +380,8 @@ class NativeSmoke:
                                             "effects": delta, "prefix_guards": guards})
             previous_effects = current_effects
             pending = None
+            docker("rm", name)
+            self.containers.remove(name)
         return save, accept
 
     def prepare_thumbnails(self, *corpora):
@@ -368,7 +405,7 @@ class NativeSmoke:
                 requested.setdefault(title, []).append(width)
         code = (
             "$s=MediaWiki\\MediaWikiServices::getInstance();$out=[];"
-            "foreach(json_decode(" + json.dumps(json.dumps(requested)) + ",true) as $name=>$widths){"
+            "foreach(" + php_json(requested) + " as $name=>$widths){"
             "$f=$s->getRepoGroup()->findFile(MediaWiki\\Title\\Title::newFromText($name));"
             "if(!$f || $f->getRepo()!==$s->getRepoGroup()->getLocalRepo()){throw new RuntimeException('fixture-file-not-local');}"
             "$repo=$f->getRepo();$widths[]=$f->getWidth();"
@@ -442,7 +479,8 @@ class NativeSmoke:
             }, operator=actor or operator)
             before_effects = self.effects()
             with Journal(self.workspace / ("case-" + label), manifest) as journal:
-                request = self.request(manifest, journal, 1, desired, prerequisites)
+                request = self.request(manifest, journal, 1, desired, prerequisites,
+                                       {"effects_before_sha256": journal.put_artifact(before_effects)})
                 name = self.launch(journal, request, stage, deny_rights)
                 if stage:
                     self.wait(name, stage)
@@ -453,6 +491,23 @@ class NativeSmoke:
                     else:
                         docker("exec", name, "php", "-r", "file_put_contents('/tmp/native-fixture-release','1');")
                 evidence, results = self.collect(journal, request, name, lose_result=lose, allow_error=not success or kill)
+                if crash_before_guard:
+                    journal.close()
+                    del evidence, results, before_effects, request, name
+                    journal = Journal(journal.path)
+                    request = journal.records["intent-000001-001.json"]
+                    before_effects = journal.get_artifact(
+                        journal.get_artifact(request["prerequisite_evidence_sha256"])["effects_before_sha256"])
+                    name = "native-smoke-" + request["worker"]["nonce"]
+                    if journal.accepted:
+                        raise RuntimeError("A save result advanced an unverified prefix.")
+                    try:
+                        journal.intent(self.request(manifest, journal, 1, desired, attempt=2))
+                    except JournalError:
+                        pass
+                    else:
+                        raise RuntimeError("A committed but unverified prefix permitted a new dispatch.")
+                    evidence, results = self.collect(journal, request, name)
                 if not success and not kill and (len(results) != 1 or results[0]["outcome"] != "error"):
                     raise RuntimeError("Native negative case did not report failure: " + label)
                 if error is not None and (len(results) != 1 or results[0]["error"] != error):
@@ -484,18 +539,6 @@ class NativeSmoke:
                 guard = {"scope": "synthetic-native-case", "effects_before": before_effects, "effects_after": after_effects,
                          "delta": delta, "concurrent_fixture_mutation": during is not None}
                 evidence["guard_sha256"] = journal.put_artifact(guard)
-                if crash_before_guard:
-                    journal.close()
-                    with Journal(journal.path) as resumed:
-                        if resumed.accepted:
-                            raise RuntimeError("A save result advanced an unverified prefix.")
-                        try:
-                            resumed.intent(self.request(manifest, resumed, 1, desired, attempt=2))
-                        except JournalError:
-                            pass
-                        else:
-                            raise RuntimeError("A committed but unverified prefix permitted a new dispatch.")
-                    journal = Journal(journal.path)
                 if observe:
                     decision = journal.observe(request, evidence)
                     if decision == "accept":

@@ -20,6 +20,10 @@ approved derivatives must already exist before this observer is used; missing
 derivatives are an explicit preparation failure, not permission to enable web
 writes. Disposable setup prepares source-declared image sizes and retina
 variants using only its synthetic image fixtures before entering the barrier.
+For unscaled images, core transformation returns the source without creating a
+thumbnail object. Disposable preparation explicitly copies those exact synthetic
+source bytes into core-derived thumbnail cache locations, records their hashes,
+and never changes originals. This is not approval to prepare production caches.
 
 ## Exact wire format
 
@@ -147,6 +151,10 @@ barrier evidence; a digest alone is not enough to reconstruct restart guards.
 There is no domain-specific guard interpretation in this store.
 The prerequisite evidence artifact must exist **before** `intent()`, and the
 fresh preservation guard artifact must exist **before** `observe()`/acceptance.
+The quiescence `authority_sha256` must likewise resolve to its durable exact
+completion preimage. Retain the exited worker until acceptance is durable, so a
+save-to-guard coordinator crash can recover its identity and positively recheck
+completion. Removing a worker before preserving completion is not recovery.
 
 1. `intent(request)` durably records `intent-NNNNNN-AAA.json` **before dispatch**.
 2. `event(request,event)` records immutable `start-...` / `result-...`.

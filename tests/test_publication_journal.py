@@ -5,6 +5,8 @@ import hashlib
 import multiprocessing
 import os
 from pathlib import Path
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -14,10 +16,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from publication_journal import (
     Journal, JournalError, canonical_bytes, decode, digest, validate_manifest, validate_request,
 )
-from smoke_native import NativeSmoke
+from smoke_native import NativeSmoke, maintenance_program, php_json
 
 PREREQUISITE = {"fixture": "synthetic prerequisite guard"}
 GUARD = {"fixture": "synthetic preservation guard", "trace": ["before", "after"]}
+COMPLETION = {"fixture": "positive synthetic process and owned DB completion"}
 
 
 def sha(text):
@@ -52,7 +55,7 @@ def fixtures():
         "schema_version": 1, "kind": "native-publication-observation", "request_sha256": digest(request),
         "worker": request["worker"], "start": start,
         "quiescence": {"worker_exited": True, "request_finished": True, "owned_transactions_absent": True,
-                       "authority_sha256": "4" * 64},
+                       "authority_sha256": digest(COMPLETION)},
         "states": [revision, *manifest["preserved"]], "guard_sha256": digest(GUARD), "observation_nonce": "d" * 32,
     }
     return manifest, request, evidence
@@ -114,6 +117,7 @@ class ProtocolTests(unittest.TestCase):
         tables.update(revision={"8": sha("old")}, slots={"8:1": sha("old slot")},
                       content={"1": sha("old content")}, text={"1": sha("old text")}, actor={"2": sha("actor")})
         before = {"tables": tables, "main_role_id": 1, "slot_content": {"8:1": 1}, "content_address": {"1": "tt:1"},
+                  "original_files": {"Synthetic.png": sha("synthetic pixels")},
                   "pages": {"7": {"namespace": 0, "title": "Example", "revision_id": 8,
                                   "touched": "earlier", "metadata_sha256": sha("old page")}},
                   "users": {"1": {"name": "Synthetic operator", "editcount": 0, "metadata_sha256": sha("account")}}}
@@ -135,10 +139,36 @@ class ProtocolTests(unittest.TestCase):
             invalid["tables"][table][key] = sha("Unexpected change")
             with self.assertRaises(RuntimeError):
                 NativeSmoke.check_effects(before, invalid, revision, manifest["operator"])
+        invalid = copy.deepcopy(after)
+        invalid["original_files"]["Synthetic.png"] = sha("changed pixels without a DB change")
+        with self.assertRaisesRegex(RuntimeError, "original image"):
+            NativeSmoke.check_effects(before, invalid, revision, manifest["operator"])
         invalid = copy.deepcopy(before)
         invalid["pages"]["7"]["touched"] = "not a harmless null save"
         with self.assertRaises(RuntimeError):
             NativeSmoke.check_effects(before, invalid, None, manifest["operator"])
+
+
+@unittest.skipUnless(shutil.which("php"), "PHP CLI is required for generated maintenance syntax checks")
+class MaintenanceProgramTests(unittest.TestCase):
+    def test_long_program_survives_mediawiki_console_chunks_without_interpolation(self):
+        value = {"text": "$not_a_php_variable / \u00e9\n" * 200}
+        program = maintenance_program("echo json_encode(" + php_json(value) + ",JSON_THROW_ON_ERROR);")
+        self.assertTrue(all(len(line) < 1023 for line in program.splitlines()))
+        completed = subprocess.run(["php", "-r", "while(($line=fgets(STDIN,1024))!==false){eval($line);}"],
+                                   input=program, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        import json
+        self.assertEqual(json.loads(completed.stdout), value)
+
+    def test_generated_full_effects_program_is_valid_php(self):
+        native = NativeSmoke.__new__(NativeSmoke)
+        programs = []
+        native.evaluate = lambda code: programs.append(code) or b"{}"
+        native.effects()
+        for program in programs:
+            result = subprocess.run(["php", "-l"], input=("<?php " + program).encode(),
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.assertEqual(result.returncode, 0, result.stdout.decode() + result.stderr.decode())
 
 
 @unittest.skipUnless(os.name == "posix", "POSIX durability is intentionally unsupported on Windows")
@@ -153,6 +183,7 @@ class JournalTests(unittest.TestCase):
         journal = Journal(path or self.path, self.manifest)
         journal.put_artifact(PREREQUISITE)
         journal.put_artifact(GUARD)
+        journal.put_artifact(COMPLETION)
         return journal
 
     def test_lost_committed_response_reconciles_without_resending(self):
@@ -283,6 +314,9 @@ class JournalTests(unittest.TestCase):
             with self.assertRaisesRegex(JournalError, "artifact"):
                 journal.observe(self.request, self.evidence)
             journal.put_artifact(GUARD)
+            with self.assertRaisesRegex(JournalError, "artifact"):
+                journal.observe(self.request, self.evidence)
+            journal.put_artifact(COMPLETION)
             journal.observe(self.request, self.evidence)
             journal.accept(self.request)
         with Journal(self.path) as reopened:
