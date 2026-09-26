@@ -78,6 +78,10 @@ def display_entry(entry, catalog):
     shown = {**entry, **{key: value for key, value in override.items() if key != "entry"}}
     if "steps" in override:
         shown["details"] = dict(entry["details"], steps=override["steps"])
+    if entry["kind"] == "merchant":
+        profile = next((row for row in catalog.get("merchant_profiles", []) if row["entity"] == entry["details"]["merchant"]), None)
+        if profile is not None:
+            shown["conditions"] = profile["conditions"]
     return shown
 
 
@@ -410,10 +414,13 @@ def shared_field(entries, getter):
     return all(value == values[0] for value in values), values[0]
 
 
-def merchant_table(entries, images, entities, locations, standard_prices=False):
+def merchant_table(entries, images, entities, locations, standard_prices=False, stock_view=None, story_spoiler=False):
     headers = ["Seller", "Item"]
     getters = []
-    notes = []
+    notes = [
+        "<noinclude>" + stock_view + "</noinclude><includeonly>"
+        "[[Currency and trading#currency-trade-stock-and-funds|Shared stock and merchant-funds rules]]</includeonly>"
+    ] if stock_view else []
     unknown = []
     normal_only = []
     has_vendor_prices = any(entry["details"]["price"] is not None for entry in entries)
@@ -431,7 +438,7 @@ def merchant_table(entries, images, entities, locations, standard_prices=False):
         if any(entry["details"][field] is not None for entry in entries):
             headers.append(label)
             getters.append(lambda entry, field=field: known(entry["details"][field]))
-        elif field != "currency":
+        elif field != "currency" and not (field == "quantity" and stock_view):
             unknown.append(label.lower())
     if unknown:
         notes.append(" and ".join(unknown).capitalize() + " are not established." if len(unknown) > 1 else unknown[0].capitalize() + " is not established.")
@@ -443,7 +450,12 @@ def merchant_table(entries, images, entities, locations, standard_prices=False):
         getters.append(lambda entry: known(entry["details"]["location"]))
     same_conditions, conditions = shared_field(entries, lambda entry: entry["conditions"])
     if same_conditions and conditions:
-        notes.append(literal(conditions))
+        note = literal(conditions)
+        if story_spoiler:
+            note = ('<div class="mw-collapsible mw-collapsed">\n'
+                    "'''[[Quests and journal|Story availability (spoilers)]].'''\n"
+                    '<div class="mw-collapsible-content">\n' + note + "\n</div></div>")
+        notes.append(note)
     elif not same_conditions:
         headers.append("Conditions")
         getters.append(lambda entry: known(entry["conditions"]))
@@ -633,6 +645,21 @@ def source_page(data, catalog, details, locations, facts, entries):
             [literal(row["id"]), f'[[{target(row)}|{literal(target(row).split("#")[0])}]]',
              literal(row["confidence"]), evidence_text(row["evidence"])]
             for row in sorted(records, key=lambda row: row["id"])
+        ])])
+    supplements = [row for row in catalog.get("entry_display", []) if "evidence" in row]
+    if supplements:
+        lines.extend(["", "== Editorial entry evidence ==",
+                      "These reviewed additions support the current reader wording without replacing the historical research references.",
+                      table(["Record", "Editable owner", "Confidence", "Evidence"], [
+                          [literal(row["entry"]), f'[[{entries[row["entry"]]}#entry-{row["entry"]}|{literal(entries[row["entry"]])}]]',
+                           literal(row["confidence"]), evidence_text(row["evidence"])]
+                          for row in sorted(supplements, key=lambda row: row["entry"])
+                      ])])
+    if catalog.get("merchant_profiles"):
+        lines.extend(["", "== Merchant availability evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+            [f'[[{locations[row["entity"]]}#Wares|{literal(locations[row["entity"]])}]]',
+             literal(row["confidence"]), evidence_text(row["evidence"])]
+            for row in sorted(catalog["merchant_profiles"], key=lambda row: row["entity"])
         ])])
     lines.extend(["", "== Property definitions ==", table(["Property", "Label", "Unit", "Interpretation"], [
         [literal(row["id"]), literal(row["label"]), known(row["unit"]), literal(row["description"])]
@@ -828,6 +855,8 @@ def currency_page(currency, entities, locations):
             text += "\n".join("{{:" + locations[coin["entity"]] + "}}" for coin in coins) + "\n"
         elif rule["id"] == "coin-weight-units":
             text += "A coin stack's weight is its per-coin weight multiplied by the quantity. Consolidating equal value into higher denominations reduces carried weight.\n"
+        elif rule["id"] == "trade-stock-and-funds":
+            text += selective_view(literal(rule["text"]), "stock") + "\n"
         else:
             text += literal(rule["text"]) + "\n"
         qualification = CURRENCY_QUALIFICATIONS.get(rule["id"], rule.get("qualification"))
@@ -871,6 +900,7 @@ def build_pages(root, data, catalog=None, details=None):
     entries = sorted((display_entry(row, catalog) for row in data.get("entries", [])), key=lambda row: row["id"])
     images = sorted(data.get("illustrations", []), key=lambda row: row["id"])
     prices = {row["entity"]: row for row in catalog.get("unit_prices", {}).get("prices", [])}
+    merchant_profiles = {row["entity"]: row for row in catalog.get("merchant_profiles", [])}
     price_items = ({entry["details"]["item"] for entry in entries if entry["kind"] == "merchant"} | prices.keys()) if "unit_prices" in catalog else set()
     coins = {row["entity"]: row for row in catalog.get("currency", {}).get("coins", [])}
     acquisition_sources = catalog.get("acquisition", {}).get("sources", [])
@@ -890,6 +920,7 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Main Page"] = pages["Main Page"].replace("== Read the caveats ==", navigation + "\n== Read the caveats ==")
         pages["Game mechanics"] += navigation
     classified = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+    classification_summaries = {row["entity"]: row["summary"] for row in catalog["classifications"] if "summary" in row}
     stations = {method: row for row in catalog.get("stations", []) for method in row["methods"]}
     if "Loot mechanics" in owners.values():
         pages["Loot mechanics"] = "[[Loot tables]] | [[Main Page]]\n\nHow quantities, treasure budgets, and corpse contents are selected.\n"
@@ -903,6 +934,8 @@ def build_pages(root, data, catalog=None, details=None):
         entity = entities[row["entity"]]
         index = "NPCs" if classified.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
         text = f'[[Main Page]] | [[{index}]]\n\n' + anchor("entity", entity["id"]) + f"'''{literal(entity['name'])}'''\n"
+        if entity["id"] in classification_summaries:
+            text += "\n" + literal(classification_summaries[entity["id"]]) + "\n"
         if entity["category"] == "skill":
             group = skill_category_title(entities[entity["group"]])
             text += f"\nGroup: [[:Category:{group}|{literal(entities[entity['group']]['name'])}]] | "
@@ -1078,6 +1111,7 @@ def build_pages(root, data, catalog=None, details=None):
 
     for title in list(pages):
         entity_ids = {row["entity"] for row in catalog["pages"] if row["title"] == title}
+        merchant_profile = next((merchant_profiles[identity] for identity in entity_ids if identity in merchant_profiles), None)
         matching_facts = [row for row in data["facts"] if facts[row["id"]] == title]
         matching_profiles = sorted(
             (row for row in details["profiles"] if row["entity"] in entity_ids),
@@ -1098,12 +1132,30 @@ def build_pages(root, data, catalog=None, details=None):
         if coin is not None:
             pages[title] += coin_summary(coin, entities, locations)
         for kind, renderer in (
-            ("merchant", lambda rows: merchant_table(rows, images, entities, locations, "unit_prices" in catalog)),
+            ("merchant", lambda rows: merchant_table(
+                rows, images, entities, locations, "unit_prices" in catalog,
+                "{{:Currency and trading|view=stock}}" if entity_ids & set(catalog.get("currency", {}).get("standard_merchants", [])) else None,
+                merchant_profile["spoiler"] if merchant_profile is not None else False,
+            )),
             ("loot", lambda rows: loot_table(rows, images, entities, locations, title)),
         ):
             matching = [row for row in matching_entries if row["kind"] == kind]
             if matching and not (kind == "loot" and any(entities[identity]["category"] == "item" for identity in entity_ids)):
                 pages[title] += renderer(matching)
+        if merchant_profile is not None and "compare_with" in merchant_profile:
+            compared = merchant_profile["compare_with"]
+            own_offers = {row["details"]["item"]: row for row in matching_entries if row["kind"] == "merchant"}
+            other_offers = {row["details"]["item"]: row for row in entries
+                            if row["kind"] == "merchant" and row["details"]["merchant"] == compared}
+            pages[title] += ("\n== Comparing stock ==\nSome wares are shared, but these two lists are not identical. "
+                             "The links below lead to the merchant-owned offer rows, not additional stock or price records.\n")
+            for merchant, offers, other in ((merchant_profile["entity"], own_offers, other_offers),
+                                            (compared, other_offers, own_offers)):
+                pages[title] += "\n=== Only in " + literal(entities[merchant]["name"]) + "'s list ===\n"
+                pages[title] += "\n".join(
+                    f'* [[{locations[merchant]}#entry-{offers[item]["id"]}|{literal(entities[item]["name"])}]]'
+                    for item in sorted(offers.keys() - other.keys(), key=lambda identity: entities[identity]["name"])
+                ) + "\n"
         prose = [row for row in matching_entries if row["kind"] in {"quest", "algorithm"}]
         if title == "Quests and journal":
             prose.sort(key=quest_order)

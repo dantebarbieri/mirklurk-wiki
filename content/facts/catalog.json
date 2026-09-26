@@ -3403,12 +3403,47 @@
           "source": "game-data",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[35].sprite/team"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_target.team0-player-exclusion/target_is_hostile.teams0-1"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_aftermath.damage-retaliation-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "all-class-selection-tables"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "dungeonlike_areas.creature-creation"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.being-index-switch.no-case35"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.merchants8/12/20/19/26/33;menu_psynch[127].choices6/8/12/19"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "The base friendly faction and player-target exclusion are source-observed, not a quest-specific override. NPC placement remains an editorial inference: the inspected creation, dialogue and merchant routes do not establish an ordinary encounter or story role. Generic retaliation is distinct from normal target acquisition.",
+      "summary": "Unwanted Guard has a friendly base faction that does not normally target the player, but it can retaliate if attacked. Its aggression chance concerns eligible targets, not hostility toward the player. An ordinary encounter, dedicated dialogue, merchant stock, quest role or normal summoning route has not been verified. Its NPC grouping is an editorial inference."
     }
   ],
   "entry_links": [
+    {
+      "entry": "journal-1",
+      "entities": ["item-75", "being-9", "being-6"]
+    },
     {
       "entry": "crafting-station-modifiers",
       "entities": [
@@ -3544,6 +3579,47 @@
     }
   ],
   "entry_display": [
+    {
+      "entry": "journal-1",
+      "summary": "Take the Wooden Recorder recovered from Dead Unwanted at the dead camp to Captain Eir. Speaking to Eir while carrying it automatically hands over one recorder and advances the investigation; this is not a sale.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "dialogue_action[being9/action113].item75/main1"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch[being6/item75].consume-one/local200/main2"
+        }
+      ]
+    },
+    {
+      "entry": "journal-2",
+      "summary": "Eir has received the recorder. Wait until the next midnight before returning to her.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_day_Step_0",
+          "key": "midnight[main2->3]"
+        }
+      ]
+    },
+    {
+      "entry": "journal-3",
+      "summary": "After the midnight rollover, speak with Captain Eir again to continue the investigation.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch[being6/main3].local202/main4"
+        }
+      ]
+    },
     {
       "entry": "skill-0-0-mechanics",
       "title": "Effects",
@@ -3734,258 +3810,6 @@
     {
       "entry": "journal-26-location",
       "title": "Finding the rift destination"
-    },
-    {
-      "entry": "merchant-8-item-140",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-32",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-84",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-85",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-86",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-27",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-45",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-14",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-57",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-44",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-41",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-113",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-115",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-114",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-112",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-8-item-156",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-113",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-115",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-114",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-144",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-105",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-106",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-45",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-46",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-148",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-153",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-250",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-12-item-249",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-20-item-252",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-140",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-32",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-138",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-84",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-139",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-85",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-86",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-45",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-41",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-113",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-115",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-114",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-112",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-156",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-19-item-252",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-138",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-139",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-86",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-112",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-172",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-179",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-206",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-248",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-26-item-251",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-55",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-54",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-56",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-8",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-10",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-58",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-189",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-191",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-187",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
-    },
-    {
-      "entry": "merchant-33-item-185",
-      "conditions": "The character's trading dialogue must be available. Other story restrictions are not established."
     },
     {
       "entry": "recipe-personal-crafting-menu-36",
@@ -4436,9 +4260,16 @@
           "source": "beings-en",
           "section": "Eir",
           "key": "208"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.being19.MAINQUESTSTAGE>=27.trade101"
         }
       ],
-      "notes": [],
+      "notes": [
+        "Crafting access and Viend's trading unlock are separate. A nearby alchemy workstation does not establish that his shop is open; see his merchant page for availability."
+      ],
       "related_stations": [
         "field-kit"
       ],
@@ -4539,6 +4370,79 @@
           "section": "gml_Object_UI_Draw_64",
           "key": "CRAFTINDEX171.mutate-existing-station-to171/image1/clear-menu/exit-before-item-receive"
         }
+      ]
+    }
+  ],
+  "merchant_profiles": [
+    {
+      "entity": "being-8",
+      "conditions": "Clay trades from the Fort Solid undercroft when his ordinary Trade dialogue is available. The explosion ends access to that shop. Clay survives outside, but his post-explosion conversation does not offer trading; he departs later in that conversation sequence.",
+      "spoiler": true,
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being8.local-1.trade101"},
+        {"source": "game-data", "section": "gml_Object_manager_area_Step_0", "key": "MAINQUESTSTAGE22->23/fort-destruction/Clay-special-state23"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.being8.main24.dialogue211"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "being8.prevState217.departure/main25/item132"}
+      ]
+    },
+    {
+      "entity": "being-12",
+      "conditions": "Bhato's Trade option can be temporarily hidden by quest conversations. No permanent main-story closure was found in the reviewed routes; that is not a guarantee of access in every state.",
+      "spoiler": false,
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being12.quest-conversations/trade101"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.being12/menu_psynch"}
+      ]
+    },
+    {
+      "entity": "being-19",
+      "conditions": "Viend is already with Clay before the explosion, after his escort and reunion, but is not yet a merchant. He begins trading only after Clay has departed, the Ward Breaker has been picked up and Eir announces that Viend will take over supplies. His presence and the nearby alchemy workstation immediately after the explosion do not unlock his shop.",
+      "spoiler": true,
+      "compare_with": "being-8",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_being_Alarm_10", "key": "being8/area30/main>=13.create-being19"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_smartones", "key": "Viend-escort.main12->14->13"},
+        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being19.local[-1,0]/MAINQUESTSTAGE>=27.trade101"},
+        {"source": "game-data", "section": "gml_Object_manager_area_Step_0", "key": "main23.outside-stash/alchemy-station/Viend"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "being8.prevState217.main25;being6.dialogue213.main27"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item132.pickup.main25->26"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.being8/19.stock-comparison"}
+      ]
+    },
+    {
+      "entity": "being-20",
+      "conditions": "Tain's shop requires access to his Fort Solid interior and an available Trade conversation. Commander Tain dies in the explosion, and the interior entrance is removed; his shop is no longer accessible afterward. This is a story closure, not a normal corpse-loot source.",
+      "spoiler": true,
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_RoomCC_rm_fortsolid_0_Create", "key": "being20"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.being6.fort-access/menu_add.being20"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "being20.dialogue205.main21/exit.main22"},
+        {"source": "game-data", "section": "gml_Object_manager_area_Step_0", "key": "main23.fort-destruction/interior-entrance-removal"},
+        {"source": "beings-en", "section": "Eir", "key": "208"}
+      ]
+    },
+    {
+      "entity": "being-26",
+      "conditions": "Gurb-Gurb's ordinary trading dialogue and access are required. No permanent main-story closure was found in the reviewed routes, but other causes of unavailability have not been ruled out.",
+      "spoiler": false,
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being26.trade101"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.being26/menu_psynch"}
+      ]
+    },
+    {
+      "entity": "being-33",
+      "conditions": "Complete Ihar's introductory conversation before using Trade. No permanent main-story closure was found in the reviewed routes; ordinary dialogue and access are still required.",
+      "spoiler": false,
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being33.introduction/trade101"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.being33/menu_psynch"}
       ]
     }
   ],
@@ -5585,7 +5489,7 @@
       },
       {
         "id": "trade-standard-value",
-        "text": "The trading screen does not apply a buy/sell markup. Purchases use the standard item-definition value per unit; selling uses the same value adjusted for the offered item's condition. Newly purchased items are constructed at full durability and, where applicable, with a full fuel supply.",
+        "text": "The documented shops share the same rates, with no merchant-specific, player or difficulty markup in the standard trade calculation. Purchases use the final item-definition value per unit; selling uses that value adjusted for the offered item's condition. Newly purchased items have full durability and, where applicable, full fuel. Quest items cannot be sold. Rift Weave is also blocked until the main quest advances beyond Clay's initial sample investigation.",
         "qualification": "An unchanged, full-condition item therefore has the same underlying buy and sell value. The affordability check and copper change involve rounding, so do not promise exact conservation of arbitrary sub-copper fractions.",
         "evidence": [
           {
@@ -5602,6 +5506,43 @@
             "source": "game-data",
             "section": "gml_GlobalScript_scr_items",
             "key": "item.constructor.durability/burnTimeLeft"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.sale-selection.type26/item107.MAINQUESTSTAGE>6"
+          }
+        ]
+      },
+      {
+        "id": "trade-stock-and-funds",
+        "text": "While a documented shop is available, purchases do not deplete its listed stock and accepted sales are not limited by the merchant's funds. Shop display quantities are samples, not finite stock. This applies to the standard trading screen, not story gifts or exchanges, and does not bypass item-sale restrictions or dialogue availability. Summoned characters cannot be interacted with, so summoning does not provide a portable or reopened shop.",
+        "qualification": "The six populated stock branches belong to Magus Clay, Ranger Bhato, Commander Tain, Viend, Gurb-Gurb and Ihar. Wilda has a Trade dialogue option but no populated stock branch in the inspected menu; neither an additional stock list nor normal encounter availability is inferred.",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_text_related",
+            "key": "dialogue_action101.myTradeMenu"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_menu_related",
+            "key": "menu_add.type8.merchants8/12/20/19/26/33"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.cart-quantity/confirmation.fresh-items/change/no-stock-or-purse-decrement"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "dialogue.being34.trade-option101"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_smartones",
+            "key": "player_interact.turnLimit>=0/SummonBlock"
           }
         ]
       },
@@ -5647,6 +5588,7 @@
         ]
       }
     ],
+    "standard_merchants": ["being-8", "being-12", "being-20", "being-19", "being-26", "being-33"],
     "confidence": "inferred"
   },
   "guides": [

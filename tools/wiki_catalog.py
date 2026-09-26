@@ -22,6 +22,7 @@ CURRENCY_RULE_TITLES = {
     "coin-consolidation": "Converting and consolidating coins",
     "coin-weight-units": "Weight and carrying",
     "trade-standard-value": "Buying and selling",
+    "trade-stock-and-funds": "Stock and merchant funds",
     "trade-durability": "Durability and resale value",
     "trade-fuel": "Fuel takes priority",
     "trade-rounding": "Change and rounding",
@@ -122,7 +123,7 @@ def validate_category_graph(categories):
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
             {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides",
-             "damage_sources", "item_effects", "acquisition", "construction_recipes"}, "catalog")
+             "damage_sources", "item_effects", "acquisition", "construction_recipes", "merchant_profiles"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -221,7 +222,7 @@ def validate_catalog(catalog, data):
         _evidence(effect["evidence"], sources, "item effect.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
-        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, set(), "classification")
+        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, {"summary"}, "classification")
         identity = row["entity"]
         if (
             not isinstance(identity, str) or identity not in entities
@@ -234,6 +235,8 @@ def validate_catalog(catalog, data):
         _confidence(row["confidence"], "classification.confidence")
         _evidence(row["evidence"], sources, "classification.evidence")
         _text(row["note"], "classification.note", 500)
+        if "summary" in row:
+            _text(row["summary"], "classification.summary", 500)
     entry_ids = {entry["id"] for entry in data.get("entries", [])}
     linked = set()
     for row in _records(catalog["entry_links"], "catalog.entry_links"):
@@ -248,12 +251,39 @@ def validate_catalog(catalog, data):
             if not isinstance(identity, str) or identity not in entities or identity in found:
                 raise DataError("entry link: missing or duplicate entity")
             found.add(identity)
+    merchant_ids = {row["details"]["merchant"] for row in data.get("entries", []) if row["kind"] == "merchant"}
+    profiled_merchants = set()
+    for row in _records(catalog.get("merchant_profiles", []), "merchant profiles"):
+        _object(row, {"entity", "conditions", "spoiler", "confidence", "evidence"}, {"compare_with"}, "merchant profile")
+        identity = row["entity"]
+        if not isinstance(identity, str) or identity not in merchant_ids or identity in profiled_merchants:
+            raise DataError("merchant profile: expected one record per documented stock owner")
+        profiled_merchants.add(identity)
+        _text(row["conditions"], "merchant profile.conditions", 500)
+        if type(row["spoiler"]) is not bool:
+            raise DataError("merchant profile: spoiler must be boolean")
+        if "compare_with" in row and (
+            not isinstance(row["compare_with"], str) or row["compare_with"] not in merchant_ids or row["compare_with"] == identity
+        ):
+            raise DataError("merchant profile: comparison requires another documented stock owner")
+        _confidence(row["confidence"], "merchant profile.confidence")
+        _evidence(row["evidence"], sources, "merchant profile.evidence")
+    if "merchant_profiles" in catalog and profiled_merchants != merchant_ids:
+        raise DataError("merchant profiles: cover every documented stock owner")
     displayed = set()
     for row in _records(catalog.get("entry_display", []), "catalog.entry_display"):
-        _object(row, {"entry"}, {"title", "summary", "conditions", "steps"}, "entry display")
+        _object(row, {"entry"}, {"title", "summary", "conditions", "steps", "confidence", "evidence"}, "entry display")
         if not isinstance(row["entry"], str) or row["entry"] not in entry_ids or row["entry"] in displayed or len(row) == 1:
             raise DataError("entry display: expected one nonempty override per known entry")
         displayed.add(row["entry"])
+        entry = next(entry for entry in data["entries"] if entry["id"] == row["entry"])
+        if entry["kind"] == "merchant" and entry["details"]["merchant"] in profiled_merchants and "conditions" in row:
+            raise DataError("entry display: merchant conditions already have a profile owner")
+        if ("confidence" in row) != ("evidence" in row):
+            raise DataError("entry display: supplementary evidence and confidence must appear together")
+        if "evidence" in row:
+            _confidence(row["confidence"], "entry display.confidence")
+            _evidence(row["evidence"], sources, "entry display.evidence")
         for field, maximum in (("title", 160), ("summary", 1200), ("conditions", 500)):
             if field in row and row[field] is not None:
                 _text(row[field], f"entry display.{field}", maximum)
@@ -472,7 +502,7 @@ def validate_catalog(catalog, data):
                 raise DataError(f"unit prices.{field}: must exactly match the offer-to-item references")
     if "currency" in catalog:
         currency = catalog["currency"]
-        _object(currency, {"schema_version", "documented_build", "coins", "rules", "confidence"}, set(), "currency")
+        _object(currency, {"schema_version", "documented_build", "coins", "rules", "confidence"}, {"standard_merchants"}, "currency")
         if type(currency["schema_version"]) is not int or currency["schema_version"] != 1:
             raise DataError("currency: expected schema version 1")
         _confidence(currency["confidence"], "currency.confidence")
@@ -510,8 +540,18 @@ def validate_catalog(catalog, data):
             _text(rule["text"], "currency rule.text", 1200)
             _nullable_text(rule.get("qualification"), "currency rule.qualification", 1200)
             _evidence(rule["evidence"], sources, "currency rule.evidence")
-        if seen_rules != CURRENCY_RULE_TITLES.keys():
+        if not CURRENCY_RULE_TITLES.keys() - {"trade-stock-and-funds"} <= seen_rules:
             raise DataError("currency guide must retain every reviewed rule")
+        if ("trade-stock-and-funds" in seen_rules) != ("standard_merchants" in currency):
+            raise DataError("currency: stock rules require an explicit merchant scope")
+        if "standard_merchants" in currency:
+            merchants = _records(currency["standard_merchants"], "currency.standard_merchants")
+            offers = [row for row in data.get("entries", []) if row["kind"] == "merchant"]
+            expected = {row["details"]["merchant"] for row in offers}
+            if any(not isinstance(identity, str) for identity in merchants) or len(merchants) != len(set(merchants)) or set(merchants) != expected:
+                raise DataError("currency: standard merchant scope must match the documented stock owners")
+            if any(row["details"]["quantity"] is not None for row in offers):
+                raise DataError("currency: unlimited stock cannot override an explicit offer quantity")
     station_by_id = {station["id"]: station for station in catalog.get("stations", [])}
     for recipe in construction:
         station = station_by_id.get(recipe["station_id"])

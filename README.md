@@ -76,6 +76,14 @@ are owned by Finish Raft, not copied into Raft Base or duplicated in its stats.
 Item acquisition sections likewise select seller availability
 from merchant-owned rows without copying stock or conditions.
 
+Reviewed merchant profiles distinguish dialogue access from stock availability.
+The shared trading screen does not deplete listed stock or cap accepted sales
+by a merchant purse; Currency and trading owns that rule and its named stock
+view. Story-sensitive availability stays in collapsed merchant-owned notes.
+Viend is present before the explosion but starts trading only after the later
+supplies announcement. His comparison index links to the differing original
+offers rather than copying another stock or price table.
+
 Twenty-one source pages own 130 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree
 harvesting, insects, story rewards, and mapmaking. All 27 historical world-loot

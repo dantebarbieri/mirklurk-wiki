@@ -461,6 +461,16 @@ def check_price_cell(cell, value):
         raise RuntimeError("A merchant price differs from its canonical item value.")
 
 
+def check_seller_context(result, merchant, item, text, stock_text=None):
+    if item is not None:
+        if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in text:
+            raise RuntimeError("A seller view has missing dependencies or recursively transcluded item prices.")
+    if stock_text is not None:
+        expected = stock_text if item is None else "Shared stock and merchant-funds rules"
+        if plain(expected) not in plain(text) or "Quantity is not established." in text:
+            raise RuntimeError("A seller view lost its stock rule/reference or retained an unknown-quantity claim.")
+
+
 def smoke_canonical_views(run, api, pages, data, catalog, token):
     locations = page_locations(data, catalog)
     owners = entry_owners(data, locations, entry_relations(data, catalog), catalog)
@@ -509,6 +519,9 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     for merchant in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "merchant"}:
         offered = [display_entry(entry, catalog) for entry in data["entries"]
                    if entry["kind"] == "merchant" and owners[entry["id"]] == merchant]
+        stock_text = None
+        if merchant in {locations[identity] for identity in catalog.get("currency", {}).get("standard_merchants", [])}:
+            stock_text = next(rule["text"] for rule in catalog["currency"]["rules"] if rule["id"] == "trade-stock-and-funds")
         for item in [None, *sorted({entry["details"]["item"] for entry in offered})]:
             query = {"action": "parse", "page": merchant, "prop": "text|templates"} if item is None else {
                 "action": "parse", "title": "Synthetic seller view",
@@ -521,8 +534,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             wanted = {entry["id"]: entry for entry in offered if item is None or entry["details"]["item"] == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != wanted.keys() or len(parsed.rows) != len(wanted):
                 raise RuntimeError("A seller view lost or duplicated an exact offer.")
-            if item is not None and ({row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in rendered):
-                raise RuntimeError("A seller view recursively transcluded item prices.")
+            check_seller_context(result, merchant, item, parsed.text, stock_text)
             for row in parsed.rows:
                 entry = wanted[next(iter(row["entries"]))]
                 detail, cells = entry["details"], row["cells"]
@@ -533,7 +545,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                     if plain(cells[index]["text"]) != scalar(detail["quantity"]):
                         raise RuntimeError("An offer changed its documented quantity.")
                     index += 1
-                elif "Quantity is not established." not in parsed.text:
+                elif stock_text is None and "Quantity is not established." not in parsed.text:
                     raise RuntimeError("An offer invented stock quantity or lost the unknown-quantity note.")
                 if item is None:
                     check_price_cell(cells[index], prices[detail["item"]])
@@ -1269,13 +1281,13 @@ def smoke(evidence_dir=None):
                 "final_categories_and_reader_release": "passed",
                 "final_prerequisite_stability": "passed",
             })
-            if len(rehearsal.prefixes) != 450 or len(native.release_journal.accepted) != 449:
+            if len(rehearsal.prefixes) != 454 or len(native.release_journal.accepted) != 453:
                 raise RuntimeError("Native full-prefix proof is incomplete.")
             native.release_journal.verify_resume(native.states(native.release_journal.manifest,
                                                                 native.release_journal.accepted))
             native.release_journal.close()
             with Journal(workspace / "native-release-journal") as replayed:
-                if len(replayed.accepted) != 449:
+                if len(replayed.accepted) != 453:
                     raise RuntimeError("Native durable release replay is incomplete.")
             evidence["native-publication-proof.json"] = native.proof
             evidence["native-journal-proof.json"] = {

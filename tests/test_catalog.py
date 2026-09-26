@@ -24,7 +24,7 @@ from wiki_details import (
 )
 from wiki_render import PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
-from smoke_deploy import refreshed_transclusion
+from smoke_deploy import check_seller_context, refreshed_transclusion
 from wiki_views import available_views, selective_view, transclusions
 
 
@@ -249,6 +249,30 @@ class CatalogTests(unittest.TestCase):
             self.assertIn(f"[[{name}|", self.pages["NPCs"])
             self.assertNotIn(name, self.pages["Bestiary"].split("Characters now listed")[0])
 
+    def test_unwanted_guard_grouping_does_not_invent_hostility_or_encounters(self):
+        guard = next(row for row in self.catalog["classifications"] if row["entity"] == "being-35")
+        self.assertEqual(guard["kind"], "npc")
+        self.assertEqual(guard["confidence"], "inferred")
+        self.assertIn("friendly base faction", self.pages["Unwanted Guard"])
+        self.assertIn("retaliate if attacked", self.pages["Unwanted Guard"])
+        self.assertIn("has not been verified", self.pages["Unwanted Guard"])
+        self.assertIn("aggression chance concerns eligible targets", self.pages["Unwanted Guard"])
+        self.assertIn("<nowiki>85</nowiki>%", self.pages["Unwanted Guard"])
+        self.assertIn("inferred character grouping", self.pages["NPCs"])
+        self.assertIn("[[Category:NPCs]]", self.pages["Unwanted Guard"])
+        self.assertNotIn("[[Category:Bestiary]]", self.pages["Unwanted Guard"])
+        self.assertIn("[[Unwanted Guard|", self.pages["NPCs"])
+        self.assertIn("[[Unwanted Guard|", self.pages["Category:NPCs"])
+        self.assertNotIn("Unwanted Guard", self.pages["Category:Unwanted creatures"])
+        self.assertNotIn("Unwanted Guard", self.pages["Category:Bestiary"])
+        self.assertNotIn("Unwanted Guard", self.pages["Bestiary"].split("Characters now listed")[0])
+        self.assertIn(literal(guard["note"]), self.pages["Source provenance"])
+        self.assertNotIn(literal(guard["note"]), self.pages["Unwanted Guard"])
+        catalog = copy.deepcopy(self.catalog)
+        next(row for row in catalog["classifications"] if row["entity"] == "being-35")["summary"] = ""
+        with self.assertRaises(DataError):
+            validate_catalog(catalog, self.data)
+
     def test_ambiguous_fact_identity_cannot_silently_select_a_page(self):
         data = synthetic_data()
         data["entities"][0]["name"] = "Same"
@@ -290,7 +314,8 @@ class CatalogTests(unittest.TestCase):
         bhato = self.pages["Ranger Bhato"]
         self.assertEqual(bhato.count('{| class="wikitable"') + bhato.count('<table class="wikitable">'), 2)
         self.assertEqual(bhato.count('id="entry-merchant-12-'), 12)
-        self.assertEqual(bhato.count("{{:"), 12)
+        self.assertEqual(bhato.count("{{:"), 13)
+        self.assertEqual(bhato.count("{{:Currency and trading|view=stock}}"), 1)
         self.assertIn("[[Ranger Bhato|", self.pages["Merchants"])
         self.assertIn("[[Ranger Bhato|", self.pages["NPCs"])
         for identity in ("journal-7", "journal-7-location", "journal-8", "journal-9"):
@@ -504,6 +529,37 @@ class CatalogTests(unittest.TestCase):
         catalog["currency"]["coins"][0]["value_in_silver"] = 0.02
         with self.assertRaises(DataError):
             build_pages(ROOT, self.data, catalog, self.details)
+
+    def test_editorial_evidence_and_shared_stock_scope_fail_closed(self):
+        for change in (
+            lambda c: c["entry_display"][0].pop("confidence"),
+            lambda c: c["entry_display"][0].update(evidence=[]),
+            lambda c: c["currency"]["standard_merchants"].append("being-34"),
+            lambda c: c["currency"]["standard_merchants"].pop(),
+            lambda c: c["currency"].pop("standard_merchants"),
+        ):
+            catalog = copy.deepcopy(self.catalog)
+            change(catalog)
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, self.data)
+        data = copy.deepcopy(self.data)
+        next(row for row in data["entries"] if row["kind"] == "merchant")["details"]["quantity"] = 1
+        with self.assertRaises(DataError):
+            validate_catalog(self.catalog, data)
+
+    def test_merchant_profiles_reject_missing_owners_and_competing_conditions(self):
+        for change in (
+            lambda c: c["merchant_profiles"].pop(),
+            lambda c: c["merchant_profiles"][0].update(entity="being-35"),
+            lambda c: c["merchant_profiles"][0].update(spoiler="yes"),
+            lambda c: c["merchant_profiles"][0].update(compare_with="being-8"),
+            lambda c: c["merchant_profiles"][0].update(evidence=[]),
+            lambda c: c["entry_display"].append({"entry": "merchant-8-item-140", "conditions": "Conflicting owner."}),
+        ):
+            catalog = copy.deepcopy(self.catalog)
+            change(catalog)
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, self.data)
 
     def test_taxonomy_is_complete_and_preserves_primary_and_cross_navigation(self):
         locations = page_locations(self.data, self.catalog)
@@ -892,6 +948,23 @@ def synthetic_details():
 
 
 class ProfileTests(unittest.TestCase):
+    def test_seller_smoke_keeps_filtered_views_leaf_and_checks_stock_rule_references(self):
+        stock = "Purchases do not deplete listed stock."
+        reference = "Shared stock and merchant-funds rules"
+        result = {"templates": [{"*": "Merchant"}]}
+        check_seller_context(result, "Merchant", "item-0", reference, stock)
+        check_seller_context(result, "Merchant", None, stock, stock)
+        check_seller_context({"templates": [{"*": "Merchant"}]}, "Merchant", "item-0", "Quantity is not established.")
+        for templates in ([], ["Currency and trading"], ["Merchant", "Currency and trading"], ["Merchant", "Item"],
+                          ["Merchant", "Currency and trading", "Copper Coin"]):
+            with self.assertRaises(RuntimeError):
+                check_seller_context({"templates": [{"*": title} for title in templates]}, "Merchant", "item-0", reference, stock)
+        for text in ("A different stock rule.", reference + " Unit price", reference + " Quantity is not established."):
+            with self.assertRaises(RuntimeError):
+                check_seller_context(result, "Merchant", "item-0", text, stock)
+        with self.assertRaises(RuntimeError):
+            check_seller_context(result, "Merchant", None, reference, stock)
+
     def test_transclusion_smoke_waits_for_jobs_but_never_masks_leaks_or_timeout(self):
         outputs = iter(("old price", "new price"))
         calls = []

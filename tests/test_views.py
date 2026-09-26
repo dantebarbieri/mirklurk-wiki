@@ -93,6 +93,70 @@ class SelectiveViewTests(unittest.TestCase):
                 self.assertIn((owner, (("item", item), ("view", "loot"))), transclusions(self.pages[locations[item]]))
             self.assertEqual(self.pages[owner].count('id="entry-' + entry["id"] + '"'), 1)
 
+    def test_shared_stock_rule_has_one_owner_and_reaches_filtered_sellers(self):
+        locations = page_locations(self.data, self.catalog)
+        rule = next(row for row in self.catalog["currency"]["rules"] if row["id"] == "trade-stock-and-funds")
+        self.assertIn(selective_view("<nowiki>" + rule["text"] + "</nowiki>", "stock"),
+                      self.pages["Currency and trading"])
+        self.assertEqual(available_views(self.pages["Currency and trading"]), {"stock"})
+        merchants = set(self.catalog["currency"]["standard_merchants"])
+        self.assertEqual(merchants, {"being-8", "being-12", "being-19", "being-20", "being-26", "being-33"})
+        for identity in merchants:
+            page = self.pages[locations[identity]]
+            self.assertNotIn(rule["text"], page)
+            self.assertNotIn("Quantity is not established", page)
+            self.assertIn(("Currency and trading", (("view", "stock"),)), transclusions(page))
+            self.assertIn("<noinclude>{{:Currency and trading|view=stock}}</noinclude><includeonly>", page)
+            self.assertIn("[[Currency and trading#currency-trade-stock-and-funds|Shared stock and merchant-funds rules]]", page)
+            self.assertIn("<onlyinclude>{{#switch:", page)
+            self.assertEqual(available_views(page), {"offers"})
+        self.assertIn("Quest items cannot be sold", self.pages["Currency and trading"])
+        self.assertIn("Rift Weave is also blocked", self.pages["Currency and trading"])
+        self.assertIn("no merchant-specific, player or difficulty markup", self.pages["Currency and trading"])
+        self.assertNotIn("Wares", self.pages["Wilda"])
+
+    def test_merchant_story_availability_is_owned_inside_offer_views(self):
+        locations = page_locations(self.data, self.catalog)
+        profiles = {row["entity"]: row for row in self.catalog["merchant_profiles"]}
+        self.assertEqual(set(profiles), set(self.catalog["currency"]["standard_merchants"]))
+        for identity, profile in profiles.items():
+            page = self.pages[locations[identity]]
+            self.assertEqual(page.count(profile["conditions"]), 1)
+            offers_view = page.split("<onlyinclude>", 1)[1].split("</onlyinclude>", 1)[0]
+            self.assertIn(profile["conditions"], offers_view)
+            if profile["spoiler"]:
+                self.assertIn('class="mw-collapsible mw-collapsed"', offers_view)
+                self.assertIn("Story availability (spoilers)", offers_view)
+            for original in self.data["entries"]:
+                if original["kind"] == "merchant" and original["details"]["merchant"] == identity:
+                    self.assertEqual(display_entry(original, self.catalog)["conditions"], profile["conditions"])
+                    self.assertNotIn(profile["conditions"], self.pages[locations[original["details"]["item"]]])
+        self.assertIn("already with Clay before the explosion", profiles["being-19"]["conditions"])
+        self.assertIn("only after Clay has departed", profiles["being-19"]["conditions"])
+        self.assertIn("Eir announces", profiles["being-19"]["conditions"])
+        self.assertTrue(any("MAINQUESTSTAGE>=27" in row["key"] for row in profiles["being-19"]["evidence"]))
+        self.assertIn("Clay survives outside", profiles["being-8"]["conditions"])
+        self.assertIn("Tain dies in the explosion", profiles["being-20"]["conditions"])
+        self.assertIn("Summoned characters cannot be interacted with", self.pages["Currency and trading"])
+        self.assertIn("Crafting access and Viend", self.pages["Alchemy workstation"])
+        self.assertFalse(any("Other story restrictions are not established" in page for page in self.pages.values()))
+
+    def test_viend_clay_stock_comparison_links_exact_original_offers(self):
+        offers = {merchant: {row["details"]["item"]: row["id"] for row in self.data["entries"]
+                            if row["kind"] == "merchant" and row["details"]["merchant"] == merchant}
+                  for merchant in ("being-8", "being-19", "being-20")}
+        clay, viend = offers["being-8"], offers["being-19"]
+        self.assertEqual((len(clay), len(viend), len(clay.keys() & viend.keys())), (16, 15, 12))
+        self.assertEqual(viend.keys() - clay.keys(), {"item-138", "item-139", "item-252"})
+        self.assertEqual(clay.keys() - viend.keys(), {"item-14", "item-27", "item-44", "item-57"})
+        self.assertEqual(set(offers["being-20"]), {"item-252"})
+        comparison = self.pages["Viend"].split("== Comparing stock ==", 1)[1].split("\n== ", 1)[0]
+        for merchant, rows, other in (("Magus Clay", clay, viend), ("Viend", viend, clay)):
+            for item in rows.keys() - other.keys():
+                self.assertIn("[[" + merchant + "#entry-" + rows[item] + "|", comparison)
+        self.assertNotIn("<table", comparison)
+        self.assertNotIn("{{:", comparison)
+
     def test_explicit_vendor_prices_stay_visible_without_price_recursion(self):
         offers = copy.deepcopy([entry for entry in self.data["entries"] if entry["kind"] == "merchant"][:2])
         offers[0]["details"].update(price=19, currency="silver")

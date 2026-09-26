@@ -574,6 +574,13 @@ class Rehearsal:
             for item, condition in pool["item_conditions"].items():
                 if (self.checks.plain(condition) in parsed.text) != (item in members):
                     raise RuntimeError("A prerequisite pool lost or leaked an item-specific story gate.")
+        elif view == "stock":
+            rules = {row["id"]: row for row in self.catalog.get("currency", {}).get("rules", [])}
+            rule = rules.get("trade-stock-and-funds")
+            if (owner != "Currency and trading" or parameters != {"view": "stock"} or rule is None
+                    or parsed.text != self.checks.plain(rule["text"]) or parsed.rows or parsed.anchors
+                    or parsed.links or parsed.non_wiki_links or re.search(r"<(?:table|img|h[1-6])\b", html, re.I)):
+                raise RuntimeError("A prerequisite stock view changed its exact rule-only contract.")
         elif view == "pool-source":
             reference = next(row for row in self.sources[owner]["pool_refs"] if row["pool"] == parameters["pool"])
             if parsed.text != owner + ": " + self.checks.plain(reference["condition"]) or parsed.rows:
@@ -647,8 +654,8 @@ class Rehearsal:
                                                     "expected_cells": row["cells"],
                                                     "observed_rows": [actual for actual in parsed.rows if ids & set(actual["ids"])],
                                                 })
-            if probe["parameters"]["view"] == "pool-source" and selected.text not in parsed.text:
-                raise RuntimeError("A consumer omitted its source-owned pool condition.")
+            if probe["parameters"]["view"] in {"pool-source", "stock"} and selected.text not in parsed.text:
+                raise RuntimeError("A consumer omitted its source-owned condition or stock rule.")
         self.check_merchant_rows(title, parsed, result["text"]["*"])
         return {"consumer": dict(self.metadata[title]), "html_sha256": text_hash(result["text"]["*"]),
                 "templates": templates, "dependency_revisions": self.dependency_revisions(templates),

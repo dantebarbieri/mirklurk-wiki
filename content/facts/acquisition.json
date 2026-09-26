@@ -315,7 +315,7 @@
       "summary": "The destroyed camp in the starting area has deliberately scripted supplies, not just a draw from the general corpse-loot pool. Its two loot containers have different fixed contents.",
       "conditions": [
         "Check the dead-body pile and the second wooden container separately. The Apprentice Herbalist's Belt belongs to the body-pile container, not the second container.",
-        "A separate interactable dead Unwanted is involved in the camp's quest events. The torn central tent is another distinct object, not a generic cart holding all the camp's supplies.",
+        "The separately interactive Dead Unwanted has a quest pickup documented at Story rewards and finds. The torn central tent is another distinct object, not a generic cart holding all the camp's supplies.",
         "The guarantees below apply to the initial contents of this particular scripted camp. They do not describe every random skeleton or corpse, and do not promise replenishment after looting."
       ],
       "rows": [
@@ -435,7 +435,9 @@
       ],
       "related_pages": [
         "Starting equipment",
-        "Resting"
+        "Resting",
+        "Story rewards and finds",
+        "Quests and journal"
       ],
       "image_entity": "item-13",
       "image_caption": "The Apprentice Herbalist's Belt is a fixed initial find in the camp's body pile.",
@@ -2531,7 +2533,7 @@
             "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
           },
           "odds_note": null,
-          "condition": "Harvest Calmia; base amount before Green Fingers.",
+          "condition": "Harvest purple-flowered Calmia growing in the overworld. The base quantity counts roots from one harvest, not plants in a clump. Green Fingers can add one extra root; insects are separate.",
           "coverage": "conditional",
           "confidence": "inferred",
           "evidence": [
@@ -2539,6 +2541,21 @@
               "source": "game-data",
               "section": "gml_GlobalScript_scr_items",
               "key": "loot_generate.case63"
+            },
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_2",
+              "key": "nature15/Hinderance147-placement"
+            },
+            {
+              "source": "game-data",
+              "section": "spr_ts_hinderance",
+              "key": "frame0/tile147"
+            },
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances/loot_generate.first-main-item-bonus/extra-bugs"
             }
           ]
         },
@@ -3733,7 +3750,7 @@
             "scope": "Conditional on the source and stage described in this row."
           },
           "odds_note": null,
-          "condition": "Complete the recorder-taking interaction with the dead Unwanted at the abandoned camp.",
+          "condition": "At the start of the main quest, choose Pick Up when interacting with Dead Unwanted at the camp. This is a scripted quest pickup, not ordinary corpse loot; see Quests and journal for the hand-in.",
           "coverage": "conditional",
           "confidence": "inferred",
           "evidence": [
@@ -3741,6 +3758,21 @@
               "source": "game-data",
               "section": "gml_GlobalScript_scr_text_related",
               "key": "NPC9.dialogue113.grant75"
+            },
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_2",
+              "key": "areaType0.Camp.obj_interactable9/separate-containers"
+            },
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_menu_related",
+              "key": "menu_psynch[being9/main<=0].local0"
+            },
+            {
+              "source": "game-data",
+              "section": "gml_Object_UI_Draw_64",
+              "key": "dialogue_options[being9/local0/action113]"
             }
           ]
         },
@@ -3897,7 +3929,8 @@
       ],
       "related_pages": [
         "Dead camp",
-        "Random treasure"
+        "Random treasure",
+        "Quests and journal"
       ],
       "confidence": "observed",
       "evidence": [
@@ -4821,6 +4854,33 @@
     }
   ],
   "item_notes": [
+    {
+      "item": "item-142",
+      "kind": "gathering",
+      "text": "Gathering Calmia Root can provide useful early income. An intact root sells for 25 copper coins per item, not per patch. This is the amount received when selling it, not a quoted shop purchase price. No fixed patch density, respawn schedule or income rate is established.",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[142].price/durabilityMax/type/recipe-postprocessing"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item.constructor.durability/item_get_price[142]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "trade.totalSell/item_get_price/amount/change"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "trade.sale-selection.type26/item107-gate"
+        }
+      ]
+    },
     {
       "item": "item-31",
       "kind": "built-in",

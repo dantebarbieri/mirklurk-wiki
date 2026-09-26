@@ -58,7 +58,7 @@ class AcquisitionTests(unittest.TestCase):
                       "night-fireflies", "story-acquisition", "mapmaking"}
         rows = [row for source in self.catalog["acquisition"]["sources"] if source["id"] in identities for row in source["rows"]]
         self.assertEqual(hashlib.sha256((json.dumps(rows, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "89b3d7b7456d8e25379e6d065fdc357150c3b8cd83e58bf70f5779c54cb2dc0c")
+                         "baa5c96faa99b0711601c18dce7b029e16453a6d6a6b5dcd23fab1caa1df15f0")
         for path in ("ground", "berries"):
             insects = [row for row in sources["harvested-insects"]["rows"] if row["id"].startswith("extra-bug-" + path + "-")]
             self.assertEqual(len(insects), 7)
@@ -77,6 +77,55 @@ class AcquisitionTests(unittest.TestCase):
         self.assertIn("differ from the single", self.pages["Creepy-Crawlies"])
         self.assertIn("[[Green Fingers", self.pages["Plant harvesting"])
         self.assertIn("[[Creepy-Crawlies", self.pages["Harvested insects"])
+
+    def test_calmia_world_harvest_keeps_yield_separate_from_plant_placement(self):
+        source = next(row for row in self.catalog["acquisition"]["sources"] if row["id"] == "plant-harvesting")
+        row = next(row for row in source["rows"] if row["id"] == "harvest-calmia-root")
+        self.assertEqual(row["quantity"], {"min": 1, "max": 3})
+        self.assertIn("overworld", row["condition"])
+        self.assertIn("purple-flowered", row["condition"])
+        self.assertIn("not plants in a clump", row["condition"])
+        self.assertIn("Green Fingers can add one extra root", row["condition"])
+        self.assertIn("insects are separate", row["condition"])
+        self.assertEqual({reference["section"] for reference in row["evidence"]},
+                         {"gml_GlobalScript_scr_items", "gml_Object_manager_area_Alarm_2", "spr_ts_hinderance"})
+        self.assertIn(literal(row["condition"]), self.pages["Plant harvesting"])
+        self.assertIn(("Plant harvesting", (("item", "item-142"), ("view", "loot"))),
+                      transclusions(self.pages["Calmia Root"]))
+        self.assertNotIn("clumps of", self.pages["Calmia Root"])
+        self.assertNotIn("clumps of", self.pages["Plant harvesting"])
+
+    def test_calmia_sale_guidance_does_not_create_a_purchase_price_contract(self):
+        note = next(row for row in self.catalog["acquisition"]["item_notes"] if row["item"] == "item-142")
+        self.assertEqual(note["kind"], "gathering")
+        self.assertIn("intact root sells for 25 copper coins per item", note["text"])
+        self.assertIn("not a quoted shop purchase price", note["text"])
+        self.assertIn(literal(note["text"]), self.pages["Calmia Root"])
+        self.assertNotIn(literal(note["text"]), self.pages["Plant harvesting"])
+        self.assertNotIn("item-142", {row["entity"] for row in self.catalog["unit_prices"]["prices"]})
+        self.assertNotIn("", available_views(self.pages["Calmia Root"]))
+        self.assertNotIn("price", available_views(self.pages["Calmia Root"]))
+        self.assertNotIn("=== Buying ===", self.pages["Calmia Root"])
+
+    def test_recorder_scripted_pickup_and_eir_hand_in_have_distinct_owners(self):
+        source = next(row for row in self.catalog["acquisition"]["sources"] if row["id"] == "story-acquisition")
+        row = next(row for row in source["rows"] if row["id"] == "story-wooden-recorder")
+        self.assertEqual(row["item"], "item-75")
+        self.assertEqual(row["quantity"], {"min": 1, "max": 1})
+        self.assertIn("Dead Unwanted", row["condition"])
+        self.assertIn("scripted quest pickup, not ordinary corpse loot", row["condition"])
+        self.assertIn(literal(row["condition"]), self.pages["Story rewards and finds"])
+        self.assertIn(("Story rewards and finds", (("item", "item-75"), ("view", "loot"))),
+                      transclusions(self.pages["Wooden Recorder"]))
+        self.assertIn("[[Story rewards and finds]]", self.pages["Dead camp"])
+        self.assertIn("automatically hands over one recorder", self.pages["Quests and journal"])
+        self.assertIn("next midnight", self.pages["Quests and journal"])
+        self.assertNotIn("recovered flute", self.pages["Quests and journal"])
+        for title in ("Wooden Recorder", "Dead Unwanted", "Captain Eir"):
+            self.assertIn("[[Quests and journal#entry-journal-1|", self.pages[title])
+            self.assertNotIn("automatically hands over one recorder", self.pages[title])
+        self.assertIn("Editorial entry evidence", self.pages["Source provenance"])
+        self.assertIn("menu_psynch[being6/item75]", self.pages["Source provenance"])
 
     def test_fixed_sources_are_conditional_and_have_single_editable_rows(self):
         sources = {row["id"]: row for row in self.catalog["acquisition"]["sources"]}

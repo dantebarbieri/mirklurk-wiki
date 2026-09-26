@@ -13,6 +13,21 @@ from wiki_catalog import default_catalog
 
 
 class PublicationTests(unittest.TestCase):
+    def test_ci_runs_fast_pr_checks_and_requires_full_main_or_manual_smoke(self):
+        workflow = (ROOT / ".github" / "workflows" / "validate.yml").read_text(encoding="utf-8")
+        self.assertIn("  push:\n    branches: [main]\n  pull_request:\n  workflow_dispatch:\n", workflow)
+        self.assertIn("group: ${{ github.workflow }}-${{ github.ref }}", workflow)
+        self.assertIn("cancel-in-progress: true", workflow)
+        publication, smoke = workflow.split("  publication:\n", 1)[1].split("  docker-smoke:\n", 1)
+        self.assertNotIn("\n    if:", publication)
+        self.assertIn("python3 -m unittest discover -s tests -v", publication)
+        self.assertIn("php tests/test_runtime.php", publication)
+        self.assertIn("needs: publication", smoke)
+        self.assertIn("if: github.event_name != 'pull_request'", smoke)
+        self.assertIn("python3 tools/smoke_deploy.py --run --evidence-dir", smoke)
+        self.assertIn("if-no-files-found: error", smoke)
+        self.assertIn("github.event.pull_request.head.sha || github.sha", smoke)
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
