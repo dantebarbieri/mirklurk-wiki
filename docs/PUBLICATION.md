@@ -45,6 +45,9 @@ The full disposable Docker smoke runs on pushes to `main` or explicit manual
 dispatch, not on pull requests or feature-branch pushes. Workflow/ref concurrency
 cancels obsolete runs. A skipped pull-request smoke job is **not** smoke evidence:
 a release still requires a successful full run bound to its exact merged source.
+Only the Docker job has a 90-minute budget: main run `36266637565` was cancelled
+at the former 60-minute limit after progress 452/460. All checks, internal
+deadlines and coverage remain unchanged; that cancelled run is not a smoke pass.
 CI is **after publication** and cannot prevent an initial
 leak. The local pre-publication gate is mandatory. No check can automatically
 establish authorship, fair use, or that an arbitrary new secret pattern is absent.
