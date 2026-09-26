@@ -297,6 +297,16 @@ The digests cover the expected word-count object and sorted
 the complete required check map; missing evidence fails rather than disappearing
 from the guard.
 
+Direct previews are reused only while their observed managed-link existence
+matches the current corpus. Creating a linked title can change a redlink without
+changing the consumer revision: MediaWiki's missing-page URL omits the fragment,
+while the existing-page URL retains it. A stale preview triggers a fresh direct
+parse in the same consumer context, not fragment removal or an inferred link.
+Each replacement is appended to `direct_previews`; earlier preimages and checks
+keep their original IDs. A still-stale reparse is retained, evicted from the cache
+and rejected through the existing bounded settling loop. Restoring a baseline
+preview under a later corpus does not relabel its observed existence.
+
 `endpoint-link-view-candidates.json` retains measured selected/context/direct/full
 endpoint HTML and expansion preimages. `consumer-html.json` maps each actual
 consumer HTML digest to its preimage. The normal artifact manifest hashes all

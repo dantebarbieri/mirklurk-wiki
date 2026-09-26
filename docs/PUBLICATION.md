@@ -75,8 +75,9 @@ for their focused link and failure-evidence regressions;
 `tools/smoke_deploy.py` has a 100 KiB cap for their integration with the current
 landmark and seller-context checks.
 The incremental disposable adapter and its synthetic controls have
-exact exceptions for `tools/smoke_incremental.py` (48 KiB) and
-`tests/test_incremental.py` (60 KiB). No private input, XML, measurement, artwork,
+exact exceptions for `tools/smoke_incremental.py` (50 KiB) and
+`tests/test_incremental.py` (64 KiB), including managed-link preview refresh
+and its failure/retention controls. No private input, XML, measurement, artwork,
 or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
 20 KiB for metadata, rights, portrait preservation, seller projections and
 synthetic-image regressions. No media exclusion is widened.

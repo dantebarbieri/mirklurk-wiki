@@ -723,6 +723,7 @@ class OfferContextTests(unittest.TestCase):
         rehearsal = IncrementalRehearsal.__new__(IncrementalRehearsal)
         rehearsal.current = {"Consumer": "Introduction. {{:Old seller|view=offers|item=item-1}} {{:New seller|view=offers|item=item-1}}",
                              "Old seller": "B", "New seller": "D"}
+        rehearsal.desired = dict(rehearsal.current)
         rehearsal.metadata = metadata(rehearsal.current)
         rehearsal.context_previews, rehearsal.context_cache, rehearsal.context_checks = [], {}, {}
         rehearsal.checks = SimpleNamespace(check_parser_errors=checks.check_parser_errors,
@@ -800,6 +801,117 @@ class OfferContextTests(unittest.TestCase):
             rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True))
         self.assertEqual(len(drains), 9)
         self.assertEqual(rehearsal.settling[-1]["status"], "failed")
+
+    def target_creation_fixture(self):
+        rehearsal, inspect, full, _, calls = self.fixture()
+        target = "Category:Merchants"
+        red = (' <a href="/index.php?title=Category:Merchants&amp;action=edit&amp;redlink=1"'
+               ' class="new" title="Category:Merchants (page does not exist)">Shared trading rules</a> ')
+        blue = (' <a href="/index.php?title=Category:Merchants#Trading_rules"'
+                ' title="Category:Merchants">Shared trading rules</a> ')
+        rehearsal.current["Consumer"] += " [[:Category:Merchants#Trading_rules|Shared trading rules]]"
+        rehearsal.metadata = metadata(rehearsal.current)
+        rehearsal.desired.update(rehearsal.current)
+        rehearsal.desired[target] = "== Trading rules =="
+        state = {"html": red}
+        original_api = rehearsal.api
+        def api(query, **kwargs):
+            result = original_api(query, **kwargs)
+            if query.get("action") == "parse":
+                result["parse"]["text"]["*"] += state["html"]
+            return result
+        rehearsal.api = api
+        return rehearsal, inspect, full, calls, state, target, red, blue
+
+    def test_created_target_refreshes_direct_preview_and_preserves_old_context(self):
+        from smoke_incremental import context_key
+        rehearsal, inspect, full, calls, state, target, red, blue = self.target_creation_fixture()
+        previous = inspect(full + red)
+        old_preview = copy.deepcopy(rehearsal.context_previews[0])
+        old_check = copy.deepcopy(rehearsal.context_checks[context_key(previous)])
+        rehearsal.current[target] = rehearsal.desired[target]
+        state["html"] = blue
+        current = inspect(full + blue)
+        self.assertEqual(current["consumer"], previous["consumer"])
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(rehearsal.context_previews[0], old_preview)
+        self.assertEqual(rehearsal.context_checks[context_key(previous)], old_check)
+        self.assertEqual(rehearsal.context_checks[context_key(current)]["direct_context_id"], 1)
+        inspect(full + blue)
+        self.assertEqual(len(calls), 2)
+        # Private callers can restore old B previews after setting a newer current corpus.
+        rehearsal.context_cache.clear()
+        rehearsal.remember_context(old_preview)
+        inspect(full + blue)
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(rehearsal.context_previews[0], old_preview)
+
+    def test_stale_direct_reparses_settle_or_fail_with_every_preimage_retained(self):
+        rehearsal, inspect, full, calls, state, target, red, blue = self.target_creation_fixture()
+        inspect(full + red)
+        rehearsal.current[target] = rehearsal.desired[target]
+        rehearsal.prefixes, rehearsal.settling = [], []
+        reads, drains = [], []
+        def consumer(title):
+            reads.append(title)
+            if len(reads) == 3:
+                state["html"] = blue
+            return inspect(full + blue)
+        rehearsal.inspect_consumer = consumer
+        with patch("smoke_prefix.time.sleep"):
+            rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True))
+        self.assertEqual(len(drains), 2)
+        self.assertEqual(len(calls), 4)
+        self.assertEqual(len(rehearsal.context_previews), 4)
+        self.assertEqual(rehearsal.settling[-1]["status"], "settled")
+        self.assertEqual(rehearsal.settling[0]["details"]["direct_context_id"], 1)
+        self.assertIn(red, rehearsal.context_previews[1]["html"])
+        rehearsal.context_cache.clear()
+        state["html"] = red
+        rehearsal.inspect_consumer = lambda title: inspect(full + blue)
+        drains.clear()
+        with patch("smoke_prefix.time.sleep"), self.assertRaises(PendingConsumerUpdate):
+            rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True))
+        self.assertEqual(len(drains), 9)
+        self.assertEqual(len(rehearsal.context_previews), 14)
+        self.assertEqual(rehearsal.settling[-1]["status"], "failed")
+
+    def test_refreshed_context_still_rejects_wrong_destination_fragment_existence_and_scope(self):
+        rehearsal, inspect, full, _, state, target, red, blue = self.target_creation_fixture()
+        inspect(full + red)
+        rehearsal.current[target] = rehearsal.desired[target]
+        state["html"] = blue
+        inspect(full + blue)
+        for invalid in (blue.replace("Merchants#Trading_rules", "NPCs#Trading_rules"),
+                        blue.replace("#Trading_rules", "#Wrong"), blue.replace("#Trading_rules", ""),
+                        " Shared trading rules ", red):
+            with self.subTest(html=invalid), self.assertRaises(PendingConsumerUpdate):
+                inspect(full + invalid)
+        old = copy.deepcopy(rehearsal.context_previews[-1])
+        old["parse_title"] = "Wrong consumer"
+        with self.assertRaisesRegex(RuntimeError, "context"):
+            rehearsal.remember_context(old)
+        for invalid in (blue.replace('title="Category:Merchants"', 'class="new" title="Category:Merchants"'),
+                        blue.replace("#Trading_rules", "&amp;redlink=1#Trading_rules")):
+            rehearsal.context_cache.clear()
+            state["html"] = invalid
+            with self.subTest(html=invalid), self.assertRaises(PendingConsumerUpdate):
+                inspect(full + blue)
+        del rehearsal.current[target]
+        rehearsal.context_cache.clear()
+        state["html"] = blue
+        with self.assertRaises(PendingConsumerUpdate):
+            inspect(full + blue)
+        rehearsal.current[target] = rehearsal.desired[target]
+        rehearsal.current["Consumer"] = "Direct source"
+        rehearsal.metadata = metadata(rehearsal.current)
+        rehearsal.check_merchant_rows = lambda *args: None
+        rehearsal.api = lambda *args, **kwargs: {"parse": {
+            "text": {"*": blue.replace('title="Category:Merchants"', 'class="new" title="Category:Merchants"')},
+            "revid": rehearsal.metadata["Consumer"]["revid"], "templates": [], "links": [],
+        }}
+        with self.assertRaisesRegex(PendingConsumerUpdate, "cached redlink"):
+            Rehearsal.inspect_consumer(rehearsal, "Consumer")
 
 
 class IncrementalNativeTests(unittest.TestCase):
