@@ -861,7 +861,10 @@ def smoke_images(run, api, base, data, *corpora):
 
 
 def smoke(evidence_dir=None):
-    from smoke_prefix import Rehearsal, SETTINGS_KEYS, canonical_bytes, reconstruct_baseline, settings_hash
+    from smoke_prefix import (
+        Rehearsal, SETTINGS_KEYS, canonical_bytes, capture_installer_welcome, managed_titles,
+        materialize_desired, reconstruct_baseline, settings_hash,
+    )
 
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
@@ -948,7 +951,7 @@ def smoke(evidence_dir=None):
             if "uploadsenabled" in general:
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
             data, catalog, details = load_publication_inputs(ROOT)
-            pages = build_pages(ROOT, data, catalog, details)
+            authored = build_pages(ROOT, data, catalog, details)
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
             parser_functions = next((row for row in extensions if row["name"] == "ParserFunctions"), None)
             if not parser_functions or not parser_functions.get("version"):
@@ -972,7 +975,6 @@ def smoke(evidence_dir=None):
                 "generator": general["generator"], "ParserFunctions_version": parser_functions["version"],
                 "runtime_image_id": image_id, "effective_settings_sha256": settings_hash(projection),
             }
-            image_hashes = smoke_images(run, api, base, data, baseline, pages)
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -1008,15 +1010,35 @@ def smoke(evidence_dir=None):
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
-            edit = api({"action": "edit", "title": "Main Page", "text": baseline["Main Page"], "token": csrf}, post=True)
-            if edit.get("edit", {}).get("result") != "Success":
-                raise RuntimeError("Authenticated editing failed.")
-
+            user = api({"action": "query", "meta": "userinfo", "uiprop": "groups|rights"})["query"]["userinfo"]
+            if user["name"] != "WikiAdmin" or "sysop" not in user["groups"]:
+                raise RuntimeError("Disposable materialization requires the authenticated test operator.")
+            actor = {"id": user["id"], "name": user["name"]}
+            welcome_messages = json.loads(run(
+                "exec", "-T", "mirklurk", "php", "-r",
+                "$messages = json_decode(file_get_contents('includes/installer/i18n/en.json'), true, 512, JSON_THROW_ON_ERROR);"
+                "echo json_encode([$messages['mainpagetext'], $messages['mainpagedocfooter']], JSON_THROW_ON_ERROR);",
+            ))
+            welcome = capture_installer_welcome(api, "\n\n".join(welcome_messages), actor)
+            deletion = api({"action": "delete", "title": "Main Page", "token": csrf,
+                            "reason": "Replace only the fresh disposable installer's welcome before frozen baseline import."},
+                           post=True).get("delete", {})
+            if deletion.get("title") != "Main Page" or not isinstance(deletion.get("logid"), int) or managed_titles(api):
+                raise RuntimeError("Disposable welcome replacement did not remove exactly the one verified page.")
+            evidence["bootstrap-welcome.json"] = {
+                "schema_version": 1, "scope": "fresh-disposable-before-prefix-zero-only",
+                "source_head_sha": source_head, "runtime": runtime, "actor": actor,
+                "welcome": welcome, "deletion_logid": deletion["logid"],
+                "baseline_seed_sha256": hashlib.sha256(baseline_payload).hexdigest(),
+            }
             current = workspace / "current.xml"
-            current.write_bytes(run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "dumpBackup", "--current"))
-            excluded = existing_titles(current)
-            missing = {title: text for title, text in baseline.items() if title_key(title) not in excluded}
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=build_xml(missing))
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=baseline_payload)
+            if managed_titles(api) != set(baseline):
+                raise RuntimeError("The initial import is not exactly the frozen baseline title set.")
+            pages, evidence["storage-materialization.json"] = materialize_desired(
+                api, baseline, authored, source_head, runtime, actor,
+            )
+            image_hashes = smoke_images(run, api, base, data, baseline, authored, pages)
             wait_for_server_tick(api)
             baseline_titles = sorted(baseline)
             for offset in range(0, len(baseline_titles), 50):
@@ -1028,11 +1050,7 @@ def smoke(evidence_dir=None):
                                   baseline_catalog, runtime, source_head)
             rehearsal.run(csrf, wait_for_server_tick, drain_jobs)
             evidence.update(rehearsal.artifacts())
-            indexed = []
-            for namespace in (0, 14):
-                indexed.extend(api({"action": "query", "list": "allpages", "apnamespace": namespace,
-                                    "aplimit": "max"})["query"]["allpages"])
-            if set(pages) != {page["title"] for page in indexed}:
+            if set(pages) != managed_titles(api):
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
@@ -1129,7 +1147,8 @@ def smoke(evidence_dir=None):
                 for name, value in evidence.items():
                     with (evidence_dir / name).open("xb") as stream:
                         stream.write(canonical_bytes(value))
-                for name, payload in (("baseline-seed.xml", baseline_payload), ("desired-seed.xml", build_xml(pages))):
+                for name, payload in (("baseline-seed.xml", baseline_payload), ("authored-seed.xml", build_xml(authored)),
+                                      ("desired-seed.xml", build_xml(pages))):
                     with (evidence_dir / name).open("xb") as stream:
                         stream.write(payload)
                 hashes = {path.name: {"bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}

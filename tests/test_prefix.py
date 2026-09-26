@@ -10,8 +10,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 from smoke_deploy import RenderedRows, check_parser_errors, item_links, require_image_coverage, synthetic_image_specs
-from smoke_prefix import COHORT, Rehearsal, baseline_metadata, canonical_bytes, dom, linked_titles, planned_order, settings_hash
-from build_wiki import build_pages
+from smoke_prefix import (
+    COHORT, Rehearsal, baseline_metadata, canonical_bytes, capture_installer_welcome, dom,
+    linked_titles, materialize_desired, planned_order, settings_hash, verify_materialization,
+)
+from build_wiki import build_pages, build_xml
 from wiki_catalog import page_locations
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
@@ -160,6 +163,97 @@ class PrefixTests(unittest.TestCase):
         self.assertEqual({key: candidate[key] for key in shared}, {key: receipt[key] for key in shared})
         self.assertEqual(candidate["evidence_kind"], "disposable-mediawiki")
         self.assertEqual(candidate["prefixes"], [])  # Deliberately incomplete synthetic data, never runtime evidence.
+
+
+class MaterializationTests(unittest.TestCase):
+    actor = {"id": 1, "name": "Synthetic writer"}
+    head = "0" * 40
+    kind = "synthetic-unit-fixture"
+
+    def inputs(self):
+        return {"Stable": "same\n", "Changed": "old\n"}, {
+            "Stable": "same\n", "Changed": "new\r\n\r\n", "New": "created\n",
+        }
+
+    def api(self, query, post=False):
+        self.assertTrue(post)
+        self.assertEqual(query["onlypst"], 1)
+        self.assertEqual(query["assertuser"], self.actor["name"])
+        self.assertNotEqual(query["title"], "Stable")
+        return {"parse": {"text": {"*": query["text"].rstrip("\r\n")},
+                          "wikitext": {"*": query["text"]}}}
+
+    def test_actual_transformed_text_is_used_and_unchanged_pages_are_not_trimmed(self):
+        baseline, authored = self.inputs()
+        desired, receipt = materialize_desired(self.api, baseline, authored, self.head, {}, self.actor, self.kind)
+        self.assertEqual(desired, {"Changed": "new", "New": "created", "Stable": "same\n"})
+        stable = next(row for row in receipt["pages"] if row["title"] == "Stable")
+        self.assertIsNone(stable["only_pst_output"])
+        self.assertEqual(stable["removed_suffix"], "")
+        self.assertEqual(receipt["pages"][0]["removed_suffix"], "\r\n\r\n")
+        self.assertEqual(receipt["evidence_kind"], self.kind)
+
+    def test_wrong_onlypst_return_field_cannot_substitute_for_transformed_text(self):
+        def wrong_field(query, post=False):
+            return {"parse": {"wikitext": {"*": query["text"].rstrip("\r\n")}}}
+        with self.assertRaisesRegex(RuntimeError, "transformed text"):
+            materialize_desired(wrong_field, {}, {"New": "created\n"}, self.head, {}, self.actor, self.kind)
+
+    def test_broader_trims_internal_changes_substitution_and_signature_fail(self):
+        for authored, forbidden in [
+            ("word \n", "word"), ("word\t\n", "word"), ("word\0\n", "word"),
+            ("word\v\n", "word"), ("word\u00a0\n", "word"),
+            ("a\r\nb\n", "a\nb"), ("{{subst:Example}}\n", "expanded"), ("~~~~\n", "signature"),
+        ]:
+            with self.subTest(authored=repr(authored)):
+                def changed(query, post=False):
+                    return {"parse": {"text": {"*": forbidden}}}
+                with self.assertRaisesRegex(RuntimeError, "more than terminal"):
+                    materialize_desired(changed, {}, {"New": authored}, self.head, {}, self.actor, self.kind)
+
+    def test_source_runtime_actor_hash_and_suffix_mismatches_fail(self):
+        baseline, authored = self.inputs()
+        desired, receipt = materialize_desired(self.api, baseline, authored, self.head, {}, self.actor, self.kind)
+        for field, value in (
+            ("source_head_sha", "1" * 40), ("authored_seed_sha256", "1" * 64),
+            ("baseline_seed_sha256", "1" * 64), ("desired_seed_sha256", "1" * 64),
+            ("runtime", {"different": True}), ("actor", {"id": 2, "name": "Different"}),
+            ("acceptance", "php-rtrim"), ("schema_version", True),
+            ("actor", {"id": True, "name": "Synthetic writer"}),
+        ):
+            with self.subTest(field=field):
+                changed = {**receipt, field: value}
+                with self.assertRaisesRegex(RuntimeError, "pins differ"):
+                    verify_materialization(baseline, authored, desired, changed, self.head, {}, self.actor, self.kind)
+        changed = copy.deepcopy(receipt)
+        changed["pages"][0]["removed_suffix"] = ""
+        with self.assertRaisesRegex(RuntimeError, "per-title hashes"):
+            verify_materialization(baseline, authored, desired, changed, self.head, {}, self.actor, self.kind)
+
+    def test_unchanged_page_trimming_is_forbidden_even_with_recomputed_seed_hash(self):
+        baseline, authored = self.inputs()
+        desired, receipt = materialize_desired(self.api, baseline, authored, self.head, {}, self.actor, self.kind)
+        desired["Stable"] = "same"
+        receipt["desired_seed_sha256"] = hashlib.sha256(build_xml(desired)).hexdigest()
+        with self.assertRaisesRegex(RuntimeError, "unchanged page"):
+            verify_materialization(baseline, authored, desired, receipt, self.head, {}, self.actor, self.kind)
+
+    def test_bootstrap_capture_refuses_changed_or_extra_pages(self):
+        def fixture(raw="Welcome\n\nFooter", user="MediaWiki default", parentid=0, extra=False):
+            def api(query, post=False):
+                if query["action"] == "parse":
+                    return {"parse": {"text": {"*": query["text"]}}}
+                if query.get("list") == "allpages":
+                    names = ["Main Page", *(["Unexpected"] if extra else [])] if query["apnamespace"] == 0 else []
+                    return {"query": {"allpages": [{"title": title} for title in names]}}
+                return {"query": {"pages": {"1": {"title": "Main Page", "pageid": 1, "revisions": [{
+                    "revid": 1, "parentid": parentid, "user": user, "slots": {"main": {"*": raw}},
+                }]}}}}
+            return api
+        self.assertEqual(capture_installer_welcome(fixture(), "Welcome\n\nFooter", self.actor)["revid"], 1)
+        for change in ({"raw": "Changed"}, {"user": "Editor"}, {"parentid": 1}, {"extra": True}):
+            with self.subTest(change=change), self.assertRaises(RuntimeError):
+                capture_installer_welcome(fixture(**change), "Welcome\n\nFooter", self.actor)
 
 
 if __name__ == "__main__":

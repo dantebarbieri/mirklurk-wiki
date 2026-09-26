@@ -173,8 +173,12 @@ template dependencies and owner hashes before mutation tests. Their synthetic
 artwork URLs/cache metadata are not portable, and these records are not live
 readiness or baseline-prefix receipts.
 The rehearsal first reconstructs the pinned 401-title baseline and verifies its
-exact frozen XML hash. Only baseline pages are initially imported. One explicit
-baseline cache refresh occurs before prefix zero; no purge or reseed occurs
+exact frozen XML hash. A bootstrap check captures the untouched installer's welcome Main Page against
+its installed English message source, removes only that default page by the
+normal API, and imports all 401 baseline titles exactly. This is exclusively
+fresh disposable setup, never a live migration step. A separate receipt retains
+the welcome identity/raw text and deletion log ID.
+One baseline cache refresh occurs before prefix zero; no purge or reseed occurs
 during the planned transition or ordinary-editor propagation checks. Every
 changed/new page is then saved once, after actual revision-bound leaf-view
 checks, with all affected consumers observed at each prefix. Ready new pages
@@ -195,6 +199,18 @@ Canonical bytes use UTF-8 sorted compact JSON, preserve types, and have no
 trailing newline; secrets and CAPTCHA questions/answers are never projected.
 CI checks out the exact source head with history and retains successful,
 nonsecret rehearsal artifacts for seven days.
+`authored-seed.xml` retains generator output A unchanged. Before any rehearsal
+save, changed/new titles undergo actual `ApiParse onlypst=1` in the operator's
+title/user context. Its transformed `parse.text` must equal A with terminal
+CR/LF removed, and nothing else; broader whitespace trimming, internal changes,
+substitution and signatures fail. Unchanged baseline titles are never
+transformed. The exact results form materialized desired snapshot D in
+`desired-seed.xml`; all subsequent raw hashes, comparisons and migration/receipt
+pins use D, without normalized equality. `storage-materialization.json` binds
+source/runtime/actor, baseline/A/D hashes and each title's exact output and
+removed suffix. Independent review must approve this linkage. A later live
+operation must explicitly target reviewed D, not silently reuse raw-A writer
+assumptions; no live operation is authorized by these artifacts.
 It also generates unique original synthetic PNGs outside the checkout for all
 326 active and four preserved tree File titles, plus a separate 64x32 thumbnail
 fixture. It imports them by CLI as `www-data` and anonymously fetches and decodes

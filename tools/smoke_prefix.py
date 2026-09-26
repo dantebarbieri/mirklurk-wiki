@@ -43,6 +43,96 @@ def baseline_metadata(raw):
     return json.loads(raw.decode("utf-8"), parse_float=Decimal)
 
 
+def only_pst(api, title, text, actor):
+    result = api({"action": "parse", "title": title, "text": text, "contentmodel": "wikitext",
+                  "onlypst": 1, "prop": "text", "assert": "user", "assertuser": actor["name"]}, post=True)
+    transformed = result.get("parse", {}).get("text")
+    if not isinstance(transformed, dict) or not isinstance(transformed.get("*"), str):
+        raise RuntimeError("The only-PST response lacks its transformed text field.")
+    return transformed["*"]
+
+
+def materialization_header(baseline, authored, desired, source_head, runtime, actor, evidence_kind):
+    if not isinstance(evidence_kind, str) or evidence_kind not in {"disposable-mediawiki", "synthetic-unit-fixture"}:
+        raise RuntimeError("Storage materialization is not live execution authority.")
+    return {
+        "schema_version": 1, "receipt_type": "mediawiki-storage-materialization",
+        "evidence_kind": evidence_kind, "acceptance": "terminal-crlf-only",
+        "source_head_sha": source_head, "checkout_sha": source_head, "runtime": runtime, "actor": actor,
+        "baseline_seed_sha256": hashlib.sha256(build_xml(baseline)).hexdigest(),
+        "authored_seed_sha256": hashlib.sha256(build_xml(authored)).hexdigest(),
+        "desired_seed_sha256": hashlib.sha256(build_xml(desired)).hexdigest(),
+    }
+
+
+def verify_materialization(baseline, authored, desired, receipt, source_head, runtime, actor, evidence_kind):
+    header = materialization_header(baseline, authored, desired, source_head, runtime, actor, evidence_kind)
+    if (not isinstance(receipt, dict) or set(receipt) != set(header) | {"pages"}
+            or canonical_bytes({key: receipt[key] for key in header}) != canonical_bytes(header)):
+        raise RuntimeError("Materialization source, runtime, actor, hash or schema pins differ.")
+    if not baseline.keys() <= authored.keys() or set(desired) != set(authored):
+        raise RuntimeError("Materialization changed the complete managed title set.")
+    if (not isinstance(receipt["pages"], list) or not all(isinstance(row, dict) for row in receipt["pages"])
+            or [row.get("title") for row in receipt["pages"]] != sorted(authored)):
+        raise RuntimeError("Materialization has incomplete or duplicate title records.")
+    for row in receipt["pages"]:
+        title = row["title"]
+        text = authored[title]
+        unchanged = baseline.get(title) == text
+        expected = text if unchanged else text.rstrip("\r\n")
+        if desired[title] != expected:
+            raise RuntimeError("Materialization changed more than approved terminal CR/LF or rewrote an unchanged page.")
+        expected_row = {
+            "title": title, "classification": "unchanged" if unchanged else "update" if title in baseline else "create",
+            "baseline_sha256": text_hash(baseline.get(title)), "authored_sha256": text_hash(text),
+            "desired_sha256": text_hash(desired[title]), "removed_suffix": text[len(expected):],
+            "only_pst_output": None if unchanged else desired[title],
+        }
+        if row != expected_row:
+            raise RuntimeError("Materialization output, classification, suffix or per-title hashes differ.")
+
+
+def materialize_desired(api, baseline, authored, source_head, runtime, actor, evidence_kind="disposable-mediawiki"):
+    desired, records = {}, []
+    for title, text in sorted(authored.items()):
+        unchanged = baseline.get(title) == text
+        output = text if unchanged else only_pst(api, title, text, actor)
+        if output != (text if unchanged else text.rstrip("\r\n")):
+            raise RuntimeError("Actual only-PST changed more than terminal CR/LF: " + title)
+        desired[title] = output
+        records.append({
+            "title": title, "classification": "unchanged" if unchanged else "update" if title in baseline else "create",
+            "baseline_sha256": text_hash(baseline.get(title)), "authored_sha256": text_hash(text),
+            "desired_sha256": text_hash(output), "removed_suffix": text[len(output):],
+            "only_pst_output": None if unchanged else output,
+        })
+    receipt = {**materialization_header(baseline, authored, desired, source_head, runtime, actor, evidence_kind),
+               "pages": records}
+    verify_materialization(baseline, authored, desired, receipt, source_head, runtime, actor, evidence_kind)
+    return desired, receipt
+
+
+def managed_titles(api):
+    return {row["title"] for namespace in (0, 14) for row in api({
+        "action": "query", "list": "allpages", "apnamespace": namespace, "aplimit": "max",
+    })["query"]["allpages"]}
+
+
+def capture_installer_welcome(api, core_text, actor):
+    if managed_titles(api) != {"Main Page"}:
+        raise RuntimeError("Disposable bootstrap has unexpected preexisting managed pages.")
+    page = next(iter(api({"action": "query", "titles": "Main Page", "prop": "revisions",
+                          "rvprop": "ids|content|user", "rvslots": "main"})["query"]["pages"].values()))
+    revision = page["revisions"][0]
+    raw = revision["slots"]["main"]["*"]
+    expected = only_pst(api, "Main Page", core_text, actor)
+    if raw != expected or revision["parentid"] != 0 or revision["user"] != "MediaWiki default":
+        raise RuntimeError("The disposable installer's welcome Main Page is not untouched; refusing deletion.")
+    return {"title": page["title"], "pageid": page["pageid"], "revid": revision["revid"],
+            "parentid": revision["parentid"], "user": revision["user"],
+            "raw_sha256": text_hash(raw), "raw_wikitext": raw}
+
+
 def settings_hash(value):
     if not isinstance(value, dict) or set(value) != set(SETTINGS_KEYS):
         raise RuntimeError("The effective-settings projection has unexpected keys.")
@@ -262,7 +352,11 @@ class Rehearsal:
                 revision = page["revisions"][0]
                 raw = revision["slots"]["main"]["*"]
                 if raw != self.current[title]:
-                    raise RuntimeError("A current page differs from its exact planned prefix text: " + title)
+                    expected = self.current[title]
+                    raise RuntimeError(f"Current text differs for {title}: lengths {len(raw)}/{len(expected)}, "
+                                       f"hashes {text_hash(raw)}/{text_hash(expected)}, "
+                                       f"tails {raw[-100:]!r}/{expected[-100:]!r}, "
+                                       f"trailing-whitespace-only={raw.rstrip() == expected.rstrip()}")
                 record = {"title": title, "pageid": page["pageid"], "revid": revision["revid"],
                           "parentid": revision["parentid"], "raw_sha256": text_hash(raw)}
                 old = self.metadata.get(title)

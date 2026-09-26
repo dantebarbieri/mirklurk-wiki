@@ -170,6 +170,16 @@ pending planned-new-title redlinks. Endpoint-composed expectation candidates
 must be reviewed independently before a downstream validator trusts them.
 An offline baseline rehearsal cannot replace a fresh live export, conflict
 review, writer freeze, or explicit operator authorization.
+For this ordinary-edit release, distinguish authored generator seed A from
+materialized desired snapshot D. The disposable preflight records actual
+only-PST output for changed/new pages and permits only removal of terminal
+CR/LF; unchanged baseline pages retain their exact bytes. The separately
+reviewed materialization receipt binds A to D. Migration comparisons and the
+scoped compatibility/full-prefix proofs use exact D bytes, never a
+normalization fallback. Any later authorized writer must deliberately use
+reviewed D rather than assume that submitting raw A preserves its trailing
+newlines. The disposable installer's welcome-page replacement has no
+production counterpart.
 Never
 reseed edited owner pages on a schedule; regenerated repository output is
 not authority over subsequent live edits.
