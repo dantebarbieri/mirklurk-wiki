@@ -86,7 +86,7 @@ An absent/unknown view is still reported, never silently skipped. A declaration
 is a structural check, not proof that live markup parses correctly or approval
 of its contents. A matching hash is not authorization to overwrite a page.
 
-Do not expose a new station, seller, merchant, or currency view until its
+Do not expose a new station, seller, merchant, loot, pool, or currency view until its
 existing community-owned source has the reviewed selective contract; otherwise
 MediaWiki may leak a full article or return the wrong view. Merge owner blocks
 through normal conflict-aware edits while preserving community content.
@@ -151,6 +151,13 @@ update. Confirm filtered sellers omit price back-transclusions and all views
 are free of parser loops, expansion limits, and owner-article leaks. The
 disposable smoke waits across MediaWiki's whole-second cache boundary and
 drains deferred jobs; it does not purge or reseed readers to fake propagation.
+It also checks every offer and loot outcome, all pool memberships and their
+conditional context, and the in-place raft action. Acquisition quantity, pool
+story-gate, source-condition, and construction AP edits must reach their exact
+consumer cells through ordinary editing. A named source context is not itself
+a promise of an item drop, and a pool's empty filtered result is not an
+inventory item. Desired-seed fixtures alone are not baseline-transition or
+prefix compatibility evidence.
 Never
 reseed edited owner pages on a schedule; regenerated repository output is
 not authority over subsequent live edits.

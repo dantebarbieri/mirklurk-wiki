@@ -8,7 +8,8 @@ from pathlib import Path
 
 from wiki_data import (
     CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES,
-    _confidence, _evidence, _identifier, _nullable_text, _number, _object, _records, _text, _title, entry_page, title_key,
+    _confidence, _entity_reference, _evidence, _identifier, _item_quantities, _nullable_text, _number,
+    _object, _records, _text, _title, entry_page, title_key,
 )
 from wiki_acquisition import validate_acquisition
 
@@ -49,7 +50,8 @@ def default_catalog(data):
 
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
-            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides", "damage_sources", "item_effects", "acquisition"}, "catalog")
+            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides",
+             "damage_sources", "item_effects", "acquisition", "construction_recipes"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -245,6 +247,29 @@ def validate_catalog(catalog, data):
             raise DataError("state history: expected ISO date") from error
         if "evidence" in history:
             _evidence(history["evidence"], sources, "state history.evidence")
+    construction = _records(catalog.get("construction_recipes", []), "catalog.construction_recipes")
+    construction_ids = set()
+    for recipe in construction:
+        _object(recipe, {"id", "owner_item", "station_id", "station_title", "station_item", "inputs",
+                         "base_ap_cost", "result", "condition", "confidence", "evidence"}, set(), "construction recipe")
+        identity = _identifier(recipe["id"], "construction recipe.id")
+        if identity in construction_ids or identity in {entry["id"] for entry in data.get("entries", [])}:
+            raise DataError("construction recipe: duplicate record")
+        construction_ids.add(identity)
+        _identifier(recipe["station_id"], "construction recipe.station_id")
+        _title(recipe["station_title"])
+        for field in ("owner_item", "station_item"):
+            _entity_reference(recipe[field], entities, "item", "construction recipe." + field)
+        _item_quantities(recipe["inputs"], entities, "construction recipe.inputs", require_items=True)
+        _number(recipe["base_ap_cost"], "construction recipe.base_ap_cost")
+        _object(recipe["result"], {"kind", "description", "quantity"}, set(), "construction recipe.result")
+        if recipe["result"]["kind"] != "in-place":
+            raise DataError("construction recipe: only in-place outcomes are supported, never inventory outputs")
+        _text(recipe["result"]["description"], "construction recipe.result.description", 500)
+        _number(recipe["result"]["quantity"], "construction recipe.result.quantity", minimum=1, integer=True)
+        _text(recipe["condition"], "construction recipe.condition", 1200)
+        _confidence(recipe["confidence"], "construction recipe.confidence")
+        _evidence(recipe["evidence"], sources, "construction recipe.evidence")
     methods = set()
     station_ids = set()
     canonical = {row["entity"]: row["title"] for row in catalog["pages"]}
@@ -266,7 +291,9 @@ def validate_catalog(catalog, data):
             raise DataError("station: duplicate or reserved page title")
         else:
             titles.add(title)
-        if not isinstance(row["methods"], list) or not row["methods"]:
+        if not isinstance(row["methods"], list) or not row["methods"] and not any(
+            recipe["station_id"] == row["id"] for recipe in construction
+        ):
             raise DataError("station: expected evidenced recipe methods")
         for method in row["methods"]:
             if not isinstance(method, str) or method not in available_methods or method in methods:
@@ -388,6 +415,11 @@ def validate_catalog(catalog, data):
             _evidence(rule["evidence"], sources, "currency rule.evidence")
         if seen_rules != CURRENCY_RULE_TITLES.keys():
             raise DataError("currency guide must retain every reviewed rule")
+    station_by_id = {station["id"]: station for station in catalog.get("stations", [])}
+    for recipe in construction:
+        station = station_by_id.get(recipe["station_id"])
+        if station is None or station["entity"] != recipe["station_item"] or station["title"] != recipe["station_title"]:
+            raise DataError("construction recipe: station identity does not match the canonical registry")
     if "acquisition" in catalog:
         existing_titles = (
             set(PAGE_FILES) | {"NPCs", "Source provenance"}
@@ -402,6 +434,10 @@ def validate_catalog(catalog, data):
         if any(row["kind"] == "loot" for row in data.get("entries", [])):
             existing_titles.add("Loot mechanics")
         validate_acquisition(catalog["acquisition"], data, existing_titles)
+        construction_notes = {note["item"] for note in catalog["acquisition"].get("item_notes", [])
+                              if note["kind"] == "construction-action"}
+        if construction_notes != {recipe["owner_item"] for recipe in construction}:
+            raise DataError("construction recipes and construction-action notes must have the same canonical owners")
     return catalog
 
 

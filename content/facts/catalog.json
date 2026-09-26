@@ -4138,6 +4138,32 @@
         "journal-9",
         "journal-10"
       ]
+    },
+    {
+      "id": "raft-base",
+      "title": "Raft Base",
+      "entity": "item-170",
+      "methods": [],
+      "summary": "A placed Raft Base offers an in-place completion action rather than producing a new inventory item.",
+      "acquisition": null,
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[171].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_station_Alarm_0",
+          "key": "station170.localMenu.action171"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "CRAFTINDEX171.mutate-existing-station-to171/image1/clear-menu/exit-before-item-receive"
+        }
+      ]
     }
   ],
   "unit_prices": {
@@ -5793,6 +5819,54 @@
       "paragraphs": ["Eating Bursthopper immediately restores 15 percentage points of stamina, in addition to the ordinary food effect."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[243].first-reachable-branch"}]
+    }
+  ],
+  "construction_recipes": [
+    {
+      "id": "construction-raft-completion",
+      "owner_item": "item-171",
+      "station_id": "raft-base",
+      "station_title": "Raft Base",
+      "station_item": "item-170",
+      "inputs": [
+        {
+          "item": "item-92",
+          "quantity": 8
+        },
+        {
+          "item": "item-35",
+          "quantity": 6
+        },
+        {
+          "item": "item-169",
+          "quantity": 1
+        }
+      ],
+      "base_ap_cost": 8,
+      "result": {
+        "kind": "in-place",
+        "description": "Completes the existing raft in place; no inventory item is created.",
+        "quantity": 1
+      },
+      "condition": "Use the Finish Raft option at a placed Raft Base, with the ingredients and sufficient AP. The listed AP cost is before crafting-skill modifiers.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[171].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_station_Alarm_0",
+          "key": "station170.localMenu.action171"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "CRAFTINDEX171.mutate-existing-station-to171/image1/clear-menu/exit-before-item-receive"
+        }
+      ]
     }
   ]
 }

@@ -42,7 +42,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
-        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 366)
+        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 385)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 44)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
@@ -108,7 +108,7 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(page.count(f'id="profile-{profile["id"]}"'), 1)
                 self.assertIn(literal(profile["context"]), self.pages["Source provenance"])
                 self.assertNotIn(literal(profile["context"]), page)
-                folded = recipe_profile_values(profile, recipes)
+                folded = recipe_profile_values(profile, recipes, self.catalog.get("construction_recipes", []))
                 for key, value in profile["values"].items():
                     grids = [grid for grid in self.details["grids"] if grid["entity"] == profile["entity"]]
                     if key == "being-armor" and any(g["kind"] == "health" for g in grids):
@@ -442,7 +442,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_station_images_and_operator_reports_have_valid_explicit_targets(self):
         stations = {row["id"]: row for row in self.catalog["stations"]}
-        self.assertEqual(len(stations), 7)
+        self.assertEqual(len(stations), 8)
         station_images = [row for row in self.data["illustrations"] if "station" in row]
         self.assertEqual(len(station_images), 3)
         self.assertNotIn("Maybe unused", self.pages["Armor workstation"])

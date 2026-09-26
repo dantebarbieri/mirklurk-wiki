@@ -356,6 +356,8 @@ no longer a valid readiness check.
 | Workstation recipe table | `{{:Item|view=recipes|station=station-id}}` | Output item's recipe rows |
 | Item seller table | `{{:Merchant|view=offers|item=item-id}}` | Merchant's stock and conditions |
 | Item loot table | `{{:Source|view=loot|item=item-id}}` | Creature or other documented loot owner |
+| Item random-source context | `{{:Source|view=pool-source|pool=pool-id}}` | Source's condition, including tier/attempt qualifications |
+| Item pool eligibility | `{{:Random treasure|view=pool|pool=pool-id|item=item-id}}` | Pool membership and shared story gates |
 | Currency guide | `{{:Coin}}` | Coin's value/weight/stack summary |
 
 `acquisition.json` is a separately bounded, build-matched source register
@@ -374,6 +376,42 @@ Historical loot records can be assigned to a named source through
 their previous owner retains a compatibility anchor and link. Source titles,
 item references, inherited entry ownership, related pages, evidence, and
 contextual approved image references are validated before publication.
+
+The complete acquisition register has 21 source pages, 130 new rows, and ten
+pools with 538 memberships. The original 43 enemy-loot rows remain in place;
+all 27 historical world-loot entries acquire explicit source owners and retain
+compatibility anchors. Source `loot_context` is a single editable shared block:
+the boulder's pre-loot Viper interruption and conditional insect-distribution
+scope therefore survive item filtering, including inherited historical rows.
+Being/nature illustrations reuse existing approved entity records just as item
+illustrations do; no source image creates a synthetic entity or a new upload.
+
+Pool membership means eligibility under at least one valid source budget,
+not an equal or guaranteed final chance. Quantities and probabilities remain
+explicitly unresolved where the budget-filling process prevents a constant
+answer. Item-specific gates have one canonical shared block, selected alongside
+the applicable member: Summoning Stone's story requirement is present in its
+filtered chest-pool views. Source context and pool tables use separate constant
+arguments, so their dependencies are statically visible without dynamic
+forwarding or recursive inclusions. Tier odds, bonus-generation checks, and
+retention checks must not be relabeled as per-item probabilities.
+
+Six `item_notes` cover built-in equipment, the in-place construction action,
+and four explicitly unverified items. The latter distinguish absent item
+definitions from valid definitions without a verified ordinary route. These
+are limits of this inspected build, not universal impossibility claims.
+Context on a related entity can explain a distinct caller, such as the
+single berry-insect check versus Creepy-Crawlies' repeated ground checks.
+
+`catalog.construction_recipes` records in-place outcomes separately from the
+unchanged 96 inventory-producing recipe variants. Each record has a validated
+action owner, registered station, ingredient quantities, base AP, and an
+explicit `result.kind = in-place`; an inventory output field is rejected.
+Raft Base's completion row is transcluded from Finish Raft with `view=recipes`.
+Matching literal initializer AP/yield fields are folded into that canonical row,
+including the stronger directly observed construction evidence. Profile
+records and provenance are preserved; the completed structure is not
+Survivor's Field Kit and no fictitious completed-raft item is introduced.
 
 Recipe inclusions return HTML table rows, not a second table or owner article.
 Each row filters the requested station; its ingredients, output, AP, conditions,

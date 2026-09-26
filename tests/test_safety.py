@@ -171,7 +171,7 @@ class PublicationTests(unittest.TestCase):
 
     def test_acquisition_has_no_second_embedded_catalog_owner(self):
         catalog = json.loads((ROOT / "content" / "facts" / "catalog.json").read_bytes())
-        catalog["acquisition"] = json.loads((ROOT / "content" / "facts" / "acquisition.json").read_bytes())
+        catalog["acquisition"] = {}
         self.stage("content/facts/game.json", (ROOT / "content" / "facts" / "game.json").read_bytes())
         self.stage("content/facts/catalog.json", json.dumps(catalog).encode())
         self.assertTrue(any("acquisition records must be stored only" in error for error in audit_index(self.repo)[1]))

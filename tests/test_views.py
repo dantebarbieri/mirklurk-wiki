@@ -49,6 +49,8 @@ class SelectiveViewTests(unittest.TestCase):
                 if dict(arguments) == {"view": "recipes", "station": station["id"]}
             }
             expected = {owners[entry["id"]] for entry in recipes if entry["details"]["station"] in station["methods"]}
+            expected.update(locations[recipe["owner_item"]] for recipe in self.catalog.get("construction_recipes", [])
+                            if recipe["station_id"] == station["id"])
             self.assertEqual(refs, expected)
             for owner in expected:
                 self.assertIn("recipes", available_views(self.pages[owner]))

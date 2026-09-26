@@ -165,6 +165,13 @@ available, run `python tools/smoke_deploy.py --run`. The latter creates its own
 randomly named Compose project and temporary generated credentials; it checks
 installation refusal on reuse, health, anonymous permissions, CAPTCHA-protected
 self-registration, ordinary account editing, seed import, and preservation of live edits.
+The ordinary-editor checks bind recipe inputs, outputs and AP to their ordered
+cells, cover every merchant offer and loot outcome, and verify the documented
+pool memberships, story gates and in-place construction result. Logged
+`VIEW_CONTRACT_JSON` records capture desired-seed expansions, rendered HTML,
+template dependencies and owner hashes before mutation tests. Their synthetic
+artwork URLs/cache metadata are not portable, and these records are not live
+readiness or baseline-prefix receipts.
 It also generates an original synthetic PNG outside the checkout, imports it by
 CLI as `www-data`, and anonymously fetches and decodes a 16x8 thumbnail of the
 64x32 original, rejecting original-URL fallbacks. Administrator and ordinary-user

@@ -17,7 +17,7 @@ The expanded reference retains that baseline and now contains **107 numeric fact
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-366 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
+385 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
 redirect. Another 44 ordinary MediaWiki category pages support grouped browsing.
 Only `game.build` changed in the original dataset; all source
@@ -69,14 +69,22 @@ workstation behavior on its own page. Identical recipes across stations share
 one row; 96 original variants form 77 condition-preserving recipe groups.
 Workstations show the complete applicable recipe rows by selective transclusion
 from their output-item owners; editing ingredients or AP there updates every
-station view. Item acquisition sections likewise select seller availability
+station view. A separately evidenced Finish Raft action adds an in-place
+construction recipe at the eighth workstation, Raft Base; it changes the
+placed raft rather than producing an inventory item. Its inputs, result and AP
+are owned by Finish Raft, not copied into Raft Base or duplicated in its stats.
+Item acquisition sections likewise select seller availability
 from merchant-owned rows without copying stock or conditions.
 
-Starting equipment and Dead camp own 17 additional acquisition records:
-difficulty-specific starting grants and the separate initial contents of the
-camp's dead-body pile and wooden container. Item pages select the relevant
-source-owned quantity and condition rows, never implying a universal skeleton
-loot pool or a replenishing cache.
+Twenty-one source pages own 130 additional acquisition rows, covering starting
+equipment, separate dead-camp containers, environmental searches, plant/tree
+harvesting, insects, story rewards, and mapmaking. All 27 historical world-loot
+records move to named owners without changing their evidence or losing old
+anchors. Random treasure owns ten source-specific pools with 538 verified
+eligibility memberships, not invented per-item probabilities. Shared interruption
+and story gates remain visible in filtered item views. All 247 item pages have
+documented methods or explicit notes: 243 cover acquisition, built-in equipment,
+or construction actions; four explain the limits of the available evidence.
 
 Forty-two verified standard unit prices cover all 63 offers. Each offered
 item owns one `<onlyinclude>` price value, and
@@ -98,10 +106,11 @@ merchant offers, station-specific recipes, loot-selection observations, and
 weather, progression, skill, and world-seed summaries. Each narrow claim carries
 evidence and confidence. New topic pages appear only when backed by reviewed
 entries or facts; schema support is not a claim that a subsystem is fully documented.
-Reviewed death-handler cases now document base creature loot, and lit campfire/
-field-kit menus are traced. Runtime harvesting/recovery modifiers, some merchant
-locations and prices, and world-seed reproducibility remain limited or unverified.
-The current loot reference is not an exhaustive loot-table catalogue.
+Reviewed death-handler cases document base creature loot, and lit campfire/
+field-kit menus are traced. Some procedural quantities, final item-specific
+treasure probabilities, merchant locations, and world-seed reproducibility
+remain explicitly limited or unverified. Eligibility is exhaustive for the ten
+documented pools, not a measurement of each item's final drop rate.
 
 ## Contents
 
@@ -112,8 +121,10 @@ The current loot reference is not an exhaustive loot-table catalogue.
 | `content/facts/catalog.json` | Stable ordinary page titles, evidence-backed classifications, and editorial crosslinks |
 | `content/facts/entity_details.json` | Bounded typed profiles with shared original property explanations |
 | `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
+| `content/facts/acquisition.json` | Reviewed source rows, exact eligibility pools, conditional context, and scoped item notes |
 | `tools/build_wiki.py` | Deterministic MediaWiki XML for reviewed seeding |
 | `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
+| `tools/wiki_acquisition.py` | Bounded source, probability, membership, and ownership validation |
 | `tools/plan_migration.py` | Three-way review report that never modifies a wiki |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |

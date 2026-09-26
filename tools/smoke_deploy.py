@@ -17,12 +17,14 @@ import urllib.parse
 import urllib.request
 import zlib
 from html.parser import HTMLParser
+from decimal import Decimal
+from fractions import Fraction
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, existing_titles, title_key
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
-from wiki_render import display_entry, image_for, recipe_groups
+from wiki_render import display_entry, image_for, literal, recipe_groups
 from wiki_views import selective_view
 
 
@@ -228,30 +230,140 @@ def check_parser_errors(rendered):
 
 
 class RenderedRows(HTMLParser):
-    def __init__(self, prefix="entry-recipe-", strip_prefix="entry-"):
+    def __init__(self, prefix="entry-recipe-", strip_prefix="entry-", page_title=None):
         super().__init__()
         self.prefix = prefix
         self.strip_prefix = strip_prefix
         self.rows = []
+        self.text = ""
         self.current = None
+        self.cell = None
+        self.link = None
+        self.link_tag = None
+        self.page_title = page_title
 
     def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
         if tag == "tr":
-            self.current = {"entries": set(), "text": ""}
+            self.current = {"entries": set(), "text": "", "cells": []}
         elif self.current is not None:
-            identity = dict(attrs).get("id", "")
+            identity = attrs.get("id", "")
             if identity.startswith(self.prefix):
                 self.current["entries"].add(identity.removeprefix(self.strip_prefix))
+            if tag in {"td", "th"}:
+                self.cell = {"text": "", "links": []}
+                self.current["cells"].append(self.cell)
+            elif tag == "br":
+                self.handle_data(" ")
+            elif self.cell is not None and (tag == "a" or "selflink" in attrs.get("class", "")):
+                if "selflink" in attrs.get("class", "") or attrs.get("href", "").startswith("#"):
+                    attrs.setdefault("title", self.page_title)
+                self.link = {"attrs": attrs, "text": ""}
+                self.link_tag = tag
+                self.cell["links"].append(self.link)
 
     def handle_endtag(self, tag):
+        if tag == self.link_tag:
+            self.link = self.link_tag = None
+        if tag in {"td", "th"}:
+            self.cell = None
         if tag == "tr" and self.current is not None:
             if self.current["entries"]:
                 self.rows.append(self.current)
             self.current = None
 
     def handle_data(self, value):
+        self.text += value
         if self.current is not None:
             self.current["text"] += value
+        if self.cell is not None:
+            self.cell["text"] += value
+        if self.link is not None:
+            self.link["text"] += value
+
+
+def plain(value):
+    return " ".join(value.split())
+
+
+def scalar(value):
+    if value is None:
+        return "Not established"
+    if isinstance(value, (int, float, Decimal)):
+        return format(Decimal(str(value)).normalize(), "f")
+    return str(value)
+
+
+def interval(value):
+    return "Not established" if value is None else (
+        str(value["min"]) if value["min"] == value["max"] else f'{value["min"]} to {value["max"]}')
+
+
+def item_links(cell, locations):
+    return [link["attrs"].get("title") for link in cell["links"]
+            if link["text"].strip() and link["attrs"].get("title") in locations.values()]
+
+
+def check_recipe_cells(row, group, locations, stations, quantity_override=None, ap_override=None):
+    cells = row["cells"]
+    if len(cells) != 5:
+        raise RuntimeError("A recipe lost its five ordered data cells.")
+    for index, field in enumerate(("inputs", "outputs")):
+        entries = sorted(group[0]["details"][field], key=lambda entry: entry["item"])
+        quantities = [entry["quantity"] for entry in entries]
+        if index == 0 and quantity_override is not None:
+            quantities[0] = quantity_override
+        if item_links(cells[index], locations) != [locations[entry["item"]] for entry in entries]:
+            raise RuntimeError("A recipe changed its ordered ingredient/output links.")
+        if [int(value) for value in re.findall(r"\bx\s+(\d+)", cells[index]["text"])] != quantities:
+            raise RuntimeError("A recipe changed its exact ingredient/output quantities.")
+    wanted_stations = sorted({stations[entry["details"]["station"]]["title"] for entry in group})
+    actual_stations = [link["attrs"].get("title") for link in cells[2]["links"] if link["text"].strip()]
+    if actual_stations != wanted_stations:
+        raise RuntimeError("A recipe changed its ordered workstation links.")
+    cost = group[0]["details"]["cost"]
+    expected = "Not established" if cost is None else scalar(ap_override if ap_override is not None else cost["amount"]) + " " + cost["unit"]
+    if plain(cells[3]["text"]) != expected or plain(cells[4]["text"]) != plain(scalar(group[0]["conditions"])):
+        raise RuntimeError("A recipe changed its numeric AP cell or condition cell.")
+
+
+def check_probability(cell, expected, scope=None, note=None):
+    text = plain(cell["text"])
+    if expected is None:
+        if not text.startswith("Not established") or note and plain(note) not in text:
+            raise RuntimeError("An unknown probability lost its explicit qualification.")
+    else:
+        match = re.match(r"^(?:(\d+(?:\.\d+)?)%|(\d+)/(\d+))", text)
+        actual = None if match is None else (
+            Fraction(match[1]) / 100 if match[1] is not None else Fraction(int(match[2]), int(match[3])))
+        if actual != expected:
+            raise RuntimeError("A loot probability is not the exact documented rational value.")
+    if scope and plain(scope) not in text:
+        raise RuntimeError("A probability lost its conditional scope.")
+
+
+def check_construction_cells(row, recipe, locations, ap_override=None):
+    expected = {
+        "conditions": recipe["condition"], "details": {
+            "inputs": recipe["inputs"], "outputs": [], "station": recipe["station_id"],
+            "cost": {"amount": recipe["base_ap_cost"], "unit": "base AP"},
+        },
+    }
+    check_recipe_cells(row, [expected], locations, {recipe["station_id"]: {"title": recipe["station_title"]}},
+                       ap_override=ap_override)
+    if plain(row["cells"][1]["text"]) != str(recipe["result"]["quantity"]) + " in-place completion " + recipe["result"]["description"]:
+        raise RuntimeError("The construction action lost its explicit in-place, no-inventory outcome.")
+
+
+def check_price_cell(cell, value):
+    text = plain(cell["text"])
+    terms = re.findall(r"(\d+) (gold|silver|copper)", text)
+    if " ".join(amount + " " + unit for amount, unit in terms) != text:
+        raise RuntimeError("A price cell contains unexpected or missing denomination text.")
+    total = sum(Decimal(amount) * {"gold": Decimal(10), "silver": Decimal(1), "copper": Decimal("0.01")}[unit]
+                for amount, unit in terms)
+    if total != Decimal(str(value)):
+        raise RuntimeError("A merchant price differs from its canonical item value.")
 
 
 def smoke_canonical_views(run, api, pages, data, catalog, token):
@@ -259,10 +371,13 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     owners = entry_owners(data, locations, entry_relations(data, catalog), catalog)
     recipes = [display_entry(entry, catalog) for entry in data["entries"] if entry["kind"] == "recipe"]
     groups = recipe_groups(recipes)
+    stations = {method: station for station in catalog["stations"] for method in station["methods"]}
+    entities = {entity["id"]: entity for entity in data["entities"]}
+    prices = {row["entity"]: row["value"] for row in catalog["unit_prices"]["prices"]}
     for station in catalog["stations"]:
         rendered = api({"action": "parse", "page": station["title"], "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
-        parsed = RenderedRows()
+        parsed = RenderedRows(page_title=station["title"])
         parsed.feed(rendered)
         expected = [group for group in groups if any(entry["details"]["station"] in station["methods"] for entry in group)]
         # Item workstations also retain the recipe used to make the workstation itself.
@@ -273,9 +388,16 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         } or len(parsed.rows) != len(expected):
             raise RuntimeError(f"{station['title']} lost a recipe variant, added a foreign row, or duplicated a row.")
         for row in parsed.rows:
-            entry = next(entry for entry in recipes if entry["id"] in row["entries"])
-            if entry["details"]["cost"] is not None and "AP" not in row["text"]:
-                raise RuntimeError("A workstation recipe lost its action-point cost.")
+            group = next(group for group in groups if group[0]["id"] in row["entries"])
+            check_recipe_cells(row, group, locations, stations)
+        construction = RenderedRows("entry-construction-", "entry-", page_title=station["title"])
+        construction.feed(rendered)
+        wanted = {recipe["id"]: recipe for recipe in catalog.get("construction_recipes", [])
+                  if recipe["station_id"] == station["id"]}
+        if {identity for row in construction.rows for identity in row["entries"]} != wanted.keys() or len(construction.rows) != len(wanted):
+            raise RuntimeError("A workstation lost or duplicated an in-place construction action.")
+        for row in construction.rows:
+            check_construction_cells(row, wanted[next(iter(row["entries"]))], locations)
     price_owners = {locations[entry["details"]["item"]] for entry in data["entries"] if entry["kind"] == "merchant"}
     default_text = "\n".join("<div>{{:" + title + "}}</div>" for title in sorted(price_owners))
     rendered = api({"action": "parse", "title": "Synthetic default views", "text": default_text, "prop": "text"}, post=True)["parse"]["text"]["*"]
@@ -290,30 +412,89 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         if 'id="How_to_acquire"' not in rendered or 'id="entity-' not in rendered:
             raise RuntimeError("A normal item article lost its acquisition section or identity.")
     for merchant in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "merchant"}:
-        offered = [entry for entry in data["entries"] if entry["kind"] == "merchant" and owners[entry["id"]] == merchant]
-        entry = offered[0]
-        text = "{{:" + merchant + "|view=offers|item=" + entry["details"]["item"] + "}}"
-        result = api({"action": "parse", "title": "Synthetic seller view", "text": text, "prop": "text|templates"}, post=True)["parse"]
-        rendered = result["text"]["*"]
-        check_parser_errors(rendered)
-        wanted = {row["id"] for row in offered if row["details"]["item"] == entry["details"]["item"]}
-        if set(re.findall(r'id="entry-(merchant-[^"]+)"', rendered)) != wanted:
-            raise RuntimeError("An item seller view leaked another item's stock or omitted an offer.")
-        if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in rendered:
-            raise RuntimeError("A seller view recursively transcluded item prices.")
+        offered = [display_entry(entry, catalog) for entry in data["entries"]
+                   if entry["kind"] == "merchant" and owners[entry["id"]] == merchant]
+        for item in [None, *sorted({entry["details"]["item"] for entry in offered})]:
+            query = {"action": "parse", "page": merchant, "prop": "text|templates"} if item is None else {
+                "action": "parse", "title": "Synthetic seller view",
+                "text": "{{:" + merchant + "|view=offers|item=" + item + "}}", "prop": "text|templates"}
+            result = api(query, post=item is not None)["parse"]
+            rendered = result["text"]["*"]
+            check_parser_errors(rendered)
+            parsed = RenderedRows("entry-merchant-", "entry-", page_title=merchant if item is None else None)
+            parsed.feed(rendered)
+            wanted = {entry["id"]: entry for entry in offered if item is None or entry["details"]["item"] == item}
+            if {identity for row in parsed.rows for identity in row["entries"]} != wanted.keys() or len(parsed.rows) != len(wanted):
+                raise RuntimeError("A seller view lost or duplicated an exact offer.")
+            if item is not None and ({row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in rendered):
+                raise RuntimeError("A seller view recursively transcluded item prices.")
+            for row in parsed.rows:
+                entry = wanted[next(iter(row["entries"]))]
+                detail, cells = entry["details"], row["cells"]
+                if plain(cells[0]["text"]) != entities[detail["merchant"]]["name"] or item_links(cells[1], locations) != [locations[detail["item"]]]:
+                    raise RuntimeError("An offer changed its seller or item cell.")
+                index = 2
+                if any(entry["details"]["quantity"] is not None for entry in offered):
+                    if plain(cells[index]["text"]) != scalar(detail["quantity"]):
+                        raise RuntimeError("An offer changed its documented quantity.")
+                    index += 1
+                elif "Quantity is not established." not in parsed.text:
+                    raise RuntimeError("An offer invented stock quantity or lost the unknown-quantity note.")
+                if item is None:
+                    check_price_cell(cells[index], prices[detail["item"]])
+                    index += 1
+                for field in ("location", "conditions"):
+                    values = [entry["conditions"] if field == "conditions" else entry["details"][field] for entry in offered]
+                    expected = entry["conditions"] if field == "conditions" else detail[field]
+                    if len(set(values)) > 1:
+                        if plain(cells[index]["text"]) != plain(scalar(expected)):
+                            raise RuntimeError("An offer changed its location/condition cell.")
+                        index += 1
+                    elif expected is not None and plain(expected) not in plain(parsed.text):
+                        raise RuntimeError("A filtered offer lost its shared location/condition.")
+                if len(cells) != index:
+                    raise RuntimeError("An offer has unexpected ordered data cells.")
     for owner in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "loot"}:
-        loot = [entry for entry in data["entries"] if entry["kind"] == "loot"
-                and owners[entry["id"]] == owner and entry["details"]["outcome"] is not None]
-        if not loot:
-            continue
-        item = loot[0]["details"]["outcome"]
-        text = "{{:" + owner + "|view=loot|item=" + item + "}}"
-        rendered = api({"action": "parse", "title": "Synthetic loot view", "text": text, "prop": "text"}, post=True)["parse"]["text"]["*"]
-        check_parser_errors(rendered)
-        expected = {entry["id"] for entry in loot if entry["details"]["outcome"] == item}
-        found = set(re.findall(r'id="entry-([^"]+)"', rendered))
-        if found != expected or 'id="entity-' in rendered or "Conditional probability" not in rendered:
-            raise RuntimeError("A loot view lost its exact outcome rows or leaked the source article.")
+        loot = [display_entry(entry, catalog) for entry in data["entries"]
+                if entry["kind"] == "loot" and owners[entry["id"]] == owner]
+        for item in sorted({entry["details"]["outcome"] or "empty" for entry in loot}):
+            text = "{{:" + owner + "|view=loot|item=" + item + "}}"
+            rendered = api({"action": "parse", "title": "Synthetic loot view", "text": text, "prop": "text"}, post=True)["parse"]["text"]["*"]
+            check_parser_errors(rendered)
+            parsed = RenderedRows(("entry-loot-", "entry-corpse-"), "entry-")
+            parsed.feed(rendered)
+            expected = {entry["id"]: entry for entry in loot if (entry["details"]["outcome"] or "empty") == item}
+            if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys() or len(parsed.rows) != len(expected):
+                raise RuntimeError("A loot view lost, duplicated or leaked an outcome row.")
+            for row in parsed.rows:
+                entry = expected[next(iter(row["entries"]))]
+                detail, cells = entry["details"], row["cells"]
+                if item != "empty" and item_links(cells[1], locations) != [locations[item]]:
+                    raise RuntimeError("A historical loot row changed its item link.")
+                if item == "empty" and plain(cells[1]["text"]) != "No items":
+                    raise RuntimeError("An empty-result row implies an inventory item.")
+                if plain(cells[2]["text"]) != interval(detail["quantity"]):
+                    raise RuntimeError("A historical loot row changed its quantity.")
+                check_probability(cells[3], None if detail["probability"] is None else Fraction(Decimal(str(detail["probability"]))))
+                index = 4
+                for field in ("weight", "rolls"):
+                    if any(entry["details"][field] is not None for entry in loot):
+                        expected_value = interval(detail[field]) if field == "rolls" else scalar(detail[field])
+                        if plain(cells[index]["text"]) != expected_value:
+                            raise RuntimeError("A historical loot row changed its rolls or weight.")
+                        index += 1
+                for field in ("conditions", "summary"):
+                    if len({entry[field] for entry in loot}) > 1:
+                        if plain(cells[index]["text"]) != plain(scalar(entry[field])):
+                            raise RuntimeError("A historical loot row changed its condition or notes.")
+                        index += 1
+                    elif entry[field] and plain(entry[field]) not in plain(parsed.text):
+                        raise RuntimeError("A historical loot view lost its shared condition or notes.")
+                if len(cells) != index:
+                    raise RuntimeError("A historical loot row has unexpected ordered cells.")
+            source = next((source for source in catalog["acquisition"]["sources"] if source["title"] == owner), None)
+            if source and source.get("loot_context") and plain(source["loot_context"]) not in plain(parsed.text):
+                raise RuntimeError("A historical loot outcome lost its shared interruption qualifier.")
     for source in catalog.get("acquisition", {}).get("sources", []):
         for item in sorted({row["item"] for row in source["rows"]}):
             text = "{{:" + source["title"] + "|view=loot|item=" + item + "}}"
@@ -323,6 +504,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             check_parser_errors(rendered)
             parsed = RenderedRows("acquisition-", "acquisition-")
             parsed.feed(rendered)
+            if source.get("loot_context") and source["loot_context"] not in parsed.text:
+                raise RuntimeError("A filtered acquisition view omitted its shared interruption/eligibility qualifier.")
             expected = {row["id"]: row for row in source["rows"] if row["item"] == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys():
                 raise RuntimeError("A fixed acquisition view leaked another item or omitted a documented condition.")
@@ -332,10 +515,59 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                 raise RuntimeError("An acquisition view leaked the source article.")
             for rendered_row in parsed.rows:
                 row = expected[next(iter(rendered_row["entries"]))]
-                if row["condition"] not in rendered_row["text"]:
+                cells = rendered_row["cells"]
+                if len(cells) != 5 or item_links(cells[1], locations) != [locations[item]] or plain(cells[2]["text"]) != interval(row["quantity"]):
+                    raise RuntimeError("An acquisition row changed its ordered item/quantity cells.")
+                probability = row["probability"]
+                check_probability(cells[3], None if probability is None else Fraction(probability["numerator"], probability["denominator"]),
+                                  probability["scope"] if probability else None, row.get("odds_note"))
+                if plain(row["condition"]) != plain(cells[4]["text"]):
                     raise RuntimeError("An acquisition view lost its exact difficulty/location condition.")
                 if row["coverage"] == "fixed" and "100%" not in rendered_row["text"]:
                     raise RuntimeError("A fixed acquisition view lost its explicitly conditional certainty.")
+    original = pages["Dead camp"]
+    row = next(row for row in re.findall(r"<tr>.*?</tr>", original, re.DOTALL)
+               if 'id="acquisition-dead-camp-item-41"' in row)
+    changed = row.replace("<nowiki>1</nowiki>", "<nowiki>703</nowiki>", 1)
+    if changed == row:
+        raise RuntimeError("The synthetic acquisition edit missed the canonical quantity.")
+    api({"action": "parse", "page": locations["item-41"], "prop": "text"})
+    wait_for_server_tick(api)
+    edit = api({"action": "edit", "title": "Dead camp", "text": original.replace(row, changed, 1), "token": token}, post=True)
+    if edit.get("edit", {}).get("result") != "Success":
+        raise RuntimeError("The canonical acquisition quantity edit failed.")
+    rendered = refreshed_transclusion(run, api, locations["item-41"], "703", 'id="source-dead-camp"', "Dead camp")
+    parsed = RenderedRows("acquisition-", "acquisition-")
+    parsed.feed(rendered)
+    if not any("dead-camp-item-41" in row["entries"] and plain(row["cells"][2]["text"]) == "703" for row in parsed.rows):
+        raise RuntimeError("The changed quantity did not reach the item's exact acquisition row.")
+    restored = api({"action": "edit", "title": "Dead camp", "text": original, "token": token}, post=True)
+    if restored.get("edit", {}).get("result") != "Success":
+        raise RuntimeError("The synthetic acquisition edit could not be restored.")
+    smoke_acquisition_pools(run, api, pages, data, catalog, token)
+    for recipe in catalog.get("construction_recipes", []):
+        owner = locations[recipe["owner_item"]]
+        original = pages[owner]
+        row = next(row for row in re.findall(r"<tr>.*?</tr>", original, re.DOTALL)
+                   if 'id="entry-' + recipe["id"] + '"' in row)
+        before = "<nowiki>" + scalar(recipe["base_ap_cost"]) + "</nowiki> base [[Action points|AP]]"
+        changed = row.replace(before, "<nowiki>991</nowiki> base [[Action points|AP]]", 1)
+        if changed == row:
+            raise RuntimeError("The construction AP edit did not identify its exact cost cell.")
+        api({"action": "parse", "page": recipe["station_title"], "prop": "text"})
+        wait_for_server_tick(api)
+        edit = api({"action": "edit", "title": owner, "text": original.replace(row, changed, 1), "token": token}, post=True)
+        if edit.get("edit", {}).get("result") != "Success":
+            raise RuntimeError("The ordinary-editor construction edit failed.")
+        rendered = refreshed_transclusion(run, api, recipe["station_title"], "991", 'id="entity-item-171"', owner)
+        parsed = RenderedRows("entry-construction-", "entry-", page_title=recipe["station_title"])
+        parsed.feed(rendered)
+        if len(parsed.rows) != 1:
+            raise RuntimeError("The changed construction row was not retained exactly once.")
+        check_construction_cells(parsed.rows[0], recipe, locations, 991)
+        restored = api({"action": "edit", "title": owner, "text": original, "token": token}, post=True)
+        if restored.get("edit", {}).get("result") != "Success":
+            raise RuntimeError("The construction fixture could not be restored.")
     fixture = next(group for group in groups if locations[group[0]["details"]["outputs"][0]["item"]] == "Simple Burn Remedy" and len(group) > 1)
     owner = owners[fixture[0]["id"]]
     targets = {station["title"] for station in catalog["stations"] if any(
@@ -361,16 +593,131 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         for target in targets:
             rendered = refreshed_transclusion(run, api, target, expected, 'id="entity-item-141"', owner)
             check_parser_errors(rendered)
-            parsed = RenderedRows()
+            parsed = RenderedRows(page_title=target)
             parsed.feed(rendered)
             if not any(fixture[0]["id"] in row["entries"] and expected in row["text"] for row in parsed.rows):
                 raise RuntimeError("The changed recipe value did not reach its exact station row.")
+            changed_row = next(row for row in parsed.rows if fixture[0]["id"] in row["entries"])
+            check_recipe_cells(changed_row, fixture, locations, stations, 701, 997 if expected == "997" else None)
         rendered = api({"action": "parse", "page": owner, "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
         if expected not in rendered or 'id="entity-item-141"' not in rendered:
             raise RuntimeError("A selective recipe edit broke the normal owner article.")
         block = replacement
     print("Named views passed: every workstation variant, default prices, filtered sellers/loot, separate quantity/AP edits.")
+
+
+def smoke_acquisition_pools(run, api, pages, data, catalog, token):
+    locations = page_locations(data, catalog)
+    sources = {source["id"]: source for source in catalog.get("acquisition", {}).get("sources", [])}
+    pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
+    for pool in pools.values():
+        owner = sources[pool["owner_source"]]["title"]
+        for item in sorted({*pool["eligible_item_ids"], "item-48"}):
+            text = "{{:" + owner + "|view=pool|pool=" + pool["id"] + "|item=" + item + "}}"
+            result = api({"action": "parse", "title": "Synthetic pool view", "text": text,
+                          "prop": "text|templates"}, post=True)["parse"]
+            rendered = result["text"]["*"]
+            check_parser_errors(rendered)
+            parsed = RenderedRows("pool-item-", "pool-item-")
+            parsed.feed(rendered)
+            expected = {pool["id"] + "-" + item} if item in pool["eligible_item_ids"] else set()
+            actual = {identity for row in parsed.rows for identity in row["entries"]}
+            if actual != expected or len(parsed.rows) != len(expected):
+                raise RuntimeError("A pool view omitted an eligible item or admitted an ineligible member.")
+            if {row["*"] for row in result.get("templates", [])} != {owner} or pool["summary"] in parsed.text:
+                raise RuntimeError("A pool view added dependencies or copied its full budget explanation.")
+            if expected and ("Budget-dependent" not in parsed.text or "Not established" not in parsed.text):
+                raise RuntimeError("A pool view lost its quantity/odds qualification.")
+            for row in parsed.rows:
+                cells = row["cells"]
+                if len(cells) != 4 or item_links(cells[0], locations) != [locations[item]]:
+                    raise RuntimeError("A pool member changed its ordered item cell.")
+                if plain(cells[1]["text"]) != "Budget-dependent" or plain(cells[2]["text"]) != "Not established":
+                    raise RuntimeError("A pool member gained an invented quantity or probability.")
+            for identity, condition in pool["item_conditions"].items():
+                if (condition in parsed.text) != (item == identity):
+                    raise RuntimeError("The canonical story gate did not follow the filtered pool member.")
+    for source in sources.values():
+        for reference in source.get("pool_refs", []):
+            text = "{{:" + source["title"] + "|view=pool-source|pool=" + reference["pool"] + "}}"
+            result = api({"action": "parse", "title": "Synthetic pool source", "text": text,
+                          "prop": "text|templates"}, post=True)["parse"]
+            check_parser_errors(result["text"]["*"])
+            parsed = RenderedRows("pool-item-", "pool-item-")
+            parsed.feed(result["text"]["*"])
+            if reference["condition"] not in parsed.text or parsed.rows:
+                raise RuntimeError("A source-context view lost its condition or included pool member tables.")
+            if {row["*"] for row in result.get("templates", [])} != {source["title"]}:
+                raise RuntimeError("A source-context view introduced an unexpected nested dependency.")
+    if not pools:
+        return
+    counts = {entity["id"]: sum(entity["id"] in pools[reference["pool"]]["eligible_item_ids"]
+                              for source in sources.values() for reference in source.get("pool_refs", []))
+              for entity in data["entities"] if entity["category"] == "item"}
+    for item in {max(counts, key=counts.get), "item-127"}:
+        rendered = api({"action": "parse", "page": locations[item], "prop": "text"})["parse"]["text"]["*"]
+        check_parser_errors(rendered)
+        parsed = RenderedRows("pool-item-", "pool-item-")
+        parsed.feed(rendered)
+        expected = {reference["pool"] + "-" + item for source in sources.values()
+                    for reference in source.get("pool_refs", []) if item in pools[reference["pool"]]["eligible_item_ids"]}
+        if {identity for row in parsed.rows for identity in row["entries"]} != expected:
+            raise RuntimeError("A complete item page lost a pool variant or exceeded its expansion budget.")
+    gate = next(pool["item_conditions"]["item-127"] for pool in pools.values() if "item-127" in pool["item_conditions"])
+    chest_condition = sources["treasure-chests"]["pool_refs"][0]["condition"]
+    for owner, before, after, expected, targets in (
+        ("Random treasure", gate, "Synthetic story requirement 997", "Synthetic story requirement 997",
+         ["Summoning Stone", "Treasure chests"]),
+        ("Treasure chests", chest_condition, chest_condition.replace("88.2%", "81.7%"), "81.7%", ["Summoning Stone"]),
+    ):
+        original = pages[owner]
+        if original.count(literal(before)) != 1:
+            raise RuntimeError("A synthetic pool edit did not identify exactly one canonical value.")
+        for target in targets:
+            api({"action": "parse", "page": target, "prop": "text"})
+        wait_for_server_tick(api)
+        edit = api({"action": "edit", "title": owner, "text": original.replace(literal(before), literal(after), 1), "token": token}, post=True)
+        if edit.get("edit", {}).get("result") != "Success":
+            raise RuntimeError("The canonical pool/source edit failed.")
+        for target in targets:
+            refreshed_transclusion(run, api, target, expected, 'id="source-' + ("random-treasure" if owner == "Random treasure" else "treasure-chests") + '"', owner)
+        wait_for_server_tick(api)
+        restored = api({"action": "edit", "title": owner, "text": original, "token": token}, post=True)
+        if restored.get("edit", {}).get("result") != "Success":
+            raise RuntimeError("The synthetic pool/source edit could not be restored.")
+    print("Acquisition pools passed: exact members, rejected members, story gates, source conditions and canonical edit propagation.")
+
+
+def capture_view_fixtures(api, pages, catalog):
+    station = next(row["id"] for row in catalog["stations"] if row["title"] == "Alchemy workstation")
+    cases = [
+        ("price", "Longbow (Cypress)", {}),
+        ("coin", "Copper Coin", {}),
+        ("recipes", "Simple Burn Remedy", {"view": "recipes", "station": station}),
+        ("construction", "Finish Raft", {"view": "recipes", "station": "raft-base"}),
+        ("offers", "Ranger Bhato", {"view": "offers", "item": "item-105"}),
+        ("fixed-loot", "Dead camp", {"view": "loot", "item": "item-13"}),
+        ("world-loot", "Searching boulders", {"view": "loot", "item": "item-60"}),
+        ("insect-loot", "Harvested insects", {"view": "loot", "item": "item-243"}),
+        ("pool-source", "Treasure chests", {"view": "pool-source", "pool": "chest-common"}),
+        ("pool-story-gate", "Random treasure", {"view": "pool", "pool": "chest-common", "item": "item-127"}),
+    ]
+    for name, owner, parameters in cases:
+        original = api({"action": "parse", "page": owner, "prop": "wikitext"})["parse"]["wikitext"]["*"]
+        if original != pages[owner]:
+            raise RuntimeError("A named-view fixture owner differs from the frozen desired seed.")
+        invocation = "{{:" + owner + "".join("|" + key + "=" + value for key, value in parameters.items()) + "}}"
+        expanded = api({"action": "expandtemplates", "text": invocation, "prop": "wikitext"}, post=True)["expandtemplates"]["wikitext"]
+        result = api({"action": "parse", "title": "Synthetic contract view", "text": invocation,
+                      "prop": "text|templates"}, post=True)["parse"]
+        check_parser_errors(result["text"]["*"])
+        print("VIEW_CONTRACT_JSON=" + json.dumps({
+            "name": name, "owner": owner, "owner_sha256": hashlib.sha256(original.encode()).hexdigest(),
+            "parameters": parameters, "invocation": invocation, "expanded_wikitext": expanded,
+            "html": result["text"]["*"], "templates": sorted(row["*"] for row in result.get("templates", [])),
+            "scope": "Disposable MediaWiki with synthetic artwork; image URLs and cache metadata are not portable.",
+        }, ensure_ascii=False), flush=True)
 
 
 def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
@@ -416,6 +763,8 @@ def smoke_images(run, api, base, data, catalog):
                          if "image_entity" in guide})
     contextual += [image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
                    for identity in MATURE_TREES]
+    contextual += [image_for(coin["entity"], data["illustrations"])["file_title"].removeprefix("File:")
+                   for coin in catalog.get("currency", {}).get("coins", [])]
     specs.update({filename: (64, 64, bytes((130 + index, 91, 73, 255)), 32)
                   for index, filename in enumerate(contextual)})
     for identity, (width, height) in MATURE_TREES.items():
@@ -617,7 +966,6 @@ def smoke():
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
-            smoke_canonical_views(run, api, pages, data, catalog, csrf)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
@@ -645,6 +993,8 @@ def smoke():
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+            capture_view_fixtures(api, pages, catalog)
+            smoke_canonical_views(run, api, pages, data, catalog, csrf)
             price_title = "Longbow (Cypress)"
             original_item = pages[price_title]
             price_blocks = [block for block in re.findall(r"<onlyinclude>.*?</onlyinclude>", original_item, re.DOTALL)
