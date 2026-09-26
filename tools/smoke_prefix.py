@@ -696,6 +696,12 @@ class Rehearsal:
                                                     "observed_rows": [actual for actual in parsed.rows if ids & set(actual["ids"])],
                                                 })
             if probe["parameters"]["view"] in {"pool-source", "stock"} and selected.text not in parsed.text:
+                if getattr(self, "incremental", False):
+                    raise PendingConsumerUpdate(
+                        "A consumer omitted its current source-owned condition or stock rule.",
+                        title, probe["owner"]["title"], result["text"]["*"],
+                        {"parameters": probe["parameters"], "expected_text": selected.text, "observed_text": parsed.text},
+                    )
                 raise RuntimeError("A consumer omitted its source-owned condition or stock rule.")
         self.check_merchant_rows(title, parsed, result["text"]["*"])
         return {"consumer": dict(self.metadata[title]), "html_sha256": text_hash(result["text"]["*"]),

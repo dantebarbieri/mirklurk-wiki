@@ -310,12 +310,12 @@ class IncrementalProjectionTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             rehearsal.validate_projection("Owner", parameters, result(old), "Consumer")
 
-    def fixture(self):
+    def fixture(self, old="Old", new="New"):
         rehearsal = IncrementalRehearsal.__new__(IncrementalRehearsal)
         rehearsal.incremental = True
-        rehearsal.baseline = {"Owner": selective_view("Old", "stock"), "Consumer": "{{:Owner|view=stock}}"}
+        rehearsal.baseline = {"Owner": selective_view(old, "stock"), "Consumer": "{{:Owner|view=stock}}"}
         rehearsal.current = dict(rehearsal.baseline)
-        rehearsal.desired = {**rehearsal.current, "Owner": selective_view("New", "stock")}
+        rehearsal.desired = {**rehearsal.current, "Owner": selective_view(new, "stock")}
         rehearsal.metadata = metadata(rehearsal.current)
         rehearsal.cache, rehearsal.probes, rehearsal.link_candidates = {}, [], {}
         rehearsal.registry = {"prices": {}, "coins": {}}
@@ -329,7 +329,7 @@ class IncrementalProjectionTests(unittest.TestCase):
             calls.append(query)
             if query["action"] == "query":
                 return {"query": {"userinfo": {"id": 1, "name": "Synthetic"}}}
-            value = "Old" if rehearsal.current["Owner"] == rehearsal.baseline["Owner"] else "New"
+            value = old if rehearsal.current["Owner"] == rehearsal.baseline["Owner"] else new
             if query["action"] == "expandtemplates":
                 return {"expandtemplates": {"wikitext": value}}
             text = query.get("text")
@@ -412,6 +412,49 @@ class IncrementalProjectionTests(unittest.TestCase):
         rehearsal.api = stale
         with self.assertRaisesRegex(RuntimeError, "omitted"):
             rehearsal.inspect_consumer("Consumer")
+
+    def test_shorter_stock_rule_settles_B_consumer_or_fails_bounded_with_diagnostics(self):
+        previous_catalog = json.loads(subprocess.check_output(
+            ["git", "show", "899a3f20a00aea7ca35a80aa49c0b6247e8c7a57:content/facts/catalog.json"], cwd=ROOT))
+        old = next(row["text"] for row in previous_catalog["currency"]["rules"]
+                   if row["id"] == "trade-stock-and-funds")
+        new = "Listed wares do not run out, and merchants have unlimited buying funds."
+        for stale_reads in (2, 100):
+            rehearsal, _ = self.fixture(old=old, new=new)
+            rehearsal.capture_link_endpoint("baseline")
+            rehearsal.current["Owner"] = rehearsal.desired["Owner"]
+            rehearsal.metadata["Owner"] = {**rehearsal.metadata["Owner"], "revid": 99,
+                                           "raw_sha256": hashlib.sha256(rehearsal.current["Owner"].encode()).hexdigest()}
+            rehearsal.prefixes, rehearsal.settling = [], []
+            rehearsal.checks = SimpleNamespace(check_parser_errors=checks.check_parser_errors,
+                                                wait_for_server_tick=lambda *args, **kwargs: None)
+            api, reads, drains, diagnostics = rehearsal.api, [], [], []
+            def cached(query, **kwargs):
+                if query.get("curtimestamp"):
+                    return {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+                result = api(query, **kwargs)
+                if query.get("page") == "Consumer":
+                    reads.append(True)
+                    if len(reads) <= stale_reads:
+                        result["parse"]["text"]["*"] = "<p>" + old + "</p>"
+                return result
+            rehearsal.api = cached
+            with patch("smoke_prefix.time.sleep"):
+                if stale_reads == 2:
+                    records = rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True))
+                    self.assertEqual(records[0]["consumer"], rehearsal.metadata["Consumer"])
+                    self.assertEqual(len(drains), 2)
+                    self.assertEqual(rehearsal.settling[-1]["status"], "settled")
+                else:
+                    with self.assertRaises(PendingConsumerUpdate):
+                        rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True),
+                                                    lambda **kwargs: diagnostics.append(kwargs) or "0")
+                    self.assertEqual(len(drains), 9)
+                    self.assertEqual(len(diagnostics), 1)
+                    self.assertEqual(rehearsal.settling[-1]["status"], "failed")
+            pending = rehearsal.settling[0]
+            self.assertEqual(pending["details"]["expected_text"], new)
+            self.assertEqual(pending["html"], "<p>" + old + "</p>")
 
 
 class IncrementalNativeTests(unittest.TestCase):
