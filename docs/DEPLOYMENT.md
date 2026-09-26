@@ -183,9 +183,13 @@ during the planned transition or ordinary-editor propagation checks. Every
 changed/new page is then saved once, after actual revision-bound leaf-view
 checks, with all affected consumers observed at each prefix. Ready new pages
 are preferred. Deferred stale consumer rows or redlinks receive at most ten
-natural job-drain observations; arbitrary parser/schema errors are not retried.
+natural job-drain observations within a 90-second settling budget, with verified
+server-clock boundaries; arbitrary parser/schema errors are not retried.
 Separate settling evidence retains the observed HTML, identities and server
-times instead of replacing stale DOM with database existence flags. Ordinary
+times instead of replacing stale DOM with database existence flags. HTTP reads
+and job subprocesses are bounded by the remaining retry budget; an in-container
+timeout also bounds maintenance after a client disconnect. Exhaustion records
+current queue diagnostics within a separate five-second bound. Ordinary
 new-title links may remain explicit, verified redlinks
 at intermediate prefixes; they are not selector prerequisites and must resolve
 at the final prefix.
@@ -215,6 +219,18 @@ source/runtime/actor, baseline/A/D hashes and each title's exact output and
 removed suffix. Independent review must approve this linkage. A later live
 operation must explicitly target reviewed D, not silently reuse raw-A writer
 assumptions; no live operation is authorized by these artifacts.
+`endpoint-link-view-candidates.json` separately captures both exact endpoints.
+Direct previews remove every explicit colon inclusion by recorded UTF-8 byte
+span, retaining duplicates and all other source bytes, and must have no
+remaining template dependencies. Selected views are freshly expanded and
+parsed in a neutral title and every actual consumer title, with unsupported
+baseline named views explicitly recorded. Full endpoint HTML, API links,
+DOM links (including href/classes) and non-wiki links are retained. Direct plus
+projected API-link unions, context invariance and API/DOM differences are
+reported explicitly; discrepancies block candidate promotion, and even a clean
+candidate requires independent review. Endpoint owner/consumer revisions and
+the parser user must remain unchanged across the read-only batch. No endpoint
+preview edits a page, purges a cache, or substitutes for the prefix sequence.
 It also generates unique original synthetic PNGs outside the checkout for all
 326 active and four preserved tree File titles, plus a separate 64x32 thumbnail
 fixture. It imports them by CLI as `www-data` and anonymously fetches and decodes

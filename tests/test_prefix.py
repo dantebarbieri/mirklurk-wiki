@@ -2,6 +2,8 @@
 
 import copy
 import hashlib
+import re
+import subprocess
 import sys
 import unittest
 from decimal import Decimal
@@ -11,10 +13,13 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
-from smoke_deploy import RenderedRows, check_parser_errors, item_links, require_image_coverage, synthetic_image_specs
+from smoke_deploy import (
+    RenderedRows, bounded_maintenance, check_parser_errors, drain_jobs_bounded, item_links,
+    require_image_coverage, synthetic_image_specs, wait_for_server_tick,
+)
 from smoke_prefix import (
     COHORT, PendingConsumerUpdate, Rehearsal, baseline_metadata, canonical_bytes, capture_installer_welcome, dom,
-    linked_titles, materialize_desired, planned_order, settings_hash, verify_materialization,
+    linked_titles, materialize_desired, planned_order, settings_hash, strip_colon_invocations, verify_materialization,
 )
 from build_wiki import build_pages, build_xml
 from wiki_catalog import page_locations
@@ -102,8 +107,18 @@ class PrefixTests(unittest.TestCase):
         self.assertEqual(parsed.rows[0]["ids"], ["entry-merchant-x"])
         self.assertEqual(parsed.links, [{"target": "New item", "text": "New item"},
                                         {"target": "Example owner#Some_anchor", "text": "Self"}])
-        self.assertEqual(parsed.wiki_links[0], {"target": "New item", "redlink": True})
+        self.assertEqual(parsed.wiki_links[0], {"target": "New item", "redlink": True,
+                                              "href": "/index.php?title=New_item&redlink=1", "classes": ["new"]})
         self.assertEqual(parsed.rows[0]["cells"][1]["text"], "2 gold")
+
+    def test_nonwiki_urls_are_retained_not_invented_as_selflinks(self):
+        parsed = dom('<p><a href="https://example.invalid/?title=Other">External</a>'
+                     '<a href="/images/example.png">Binary</a><a href="#Details">Section</a></p>', "Owner")
+        self.assertEqual(parsed.links, [{"target": "Owner#Details", "text": "Section"}])
+        self.assertEqual(parsed.non_wiki_links, [
+            {"href": "https://example.invalid/?title=Other", "text": "External"},
+            {"href": "/images/example.png", "text": "Binary"},
+        ])
 
     def test_recipe_identity_uses_canonical_href_not_redlink_tooltip(self):
         parsed = RenderedRows()
@@ -170,7 +185,9 @@ class PrefixTests(unittest.TestCase):
         rehearsal = Rehearsal.__new__(Rehearsal)
         rehearsal.prefixes, rehearsal.settling = [], []
         rehearsal.metadata = {"Consumer": {"title": "Consumer"}, "Owner": {"title": "Owner"}}
-        rehearsal.api = lambda query: {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+        rehearsal.api = lambda query, **kwargs: {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+        ticks = []
+        rehearsal.checks = SimpleNamespace(wait_for_server_tick=lambda api, minimum=None: ticks.append(True))
         calls, drains = [], []
         def inspect(title):
             calls.append(title)
@@ -179,26 +196,163 @@ class PrefixTests(unittest.TestCase):
             return {"title": title}
         rehearsal.inspect_consumer = inspect
         with patch("smoke_prefix.time.sleep"):
-            self.assertEqual(rehearsal.observe_consumers({"Consumer"}, lambda: drains.append(True)),
+            self.assertEqual(rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True)),
                              [{"title": "Consumer"}])
         self.assertEqual(len(drains), 2)
+        self.assertEqual(len(ticks), 2)
         self.assertEqual([event["status"] for event in rehearsal.settling], ["pending", "pending", "settled"])
         rehearsal.inspect_consumer = lambda title: (_ for _ in ()).throw(RuntimeError("Invalid selector"))
         with self.assertRaisesRegex(RuntimeError, "Invalid selector"):
-            rehearsal.observe_consumers({"Consumer"}, lambda: self.fail("Must not retry arbitrary failures"))
+            rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: self.fail("Must not retry arbitrary failures"))
 
     def test_deferred_consumer_retry_exhaustion_fails_with_diagnostics(self):
         rehearsal = Rehearsal.__new__(Rehearsal)
         rehearsal.prefixes, rehearsal.settling = [], []
         rehearsal.metadata = {"Consumer": {"title": "Consumer"}, "Owner": {"title": "Owner"}}
         diagnostics, drains = [], []
-        rehearsal.api = lambda query: {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
-        rehearsal.checks = SimpleNamespace(cache_diagnostics=lambda *args: diagnostics.append(args))
+        rehearsal.api = lambda query, **kwargs: {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+        rehearsal.checks = SimpleNamespace(wait_for_server_tick=lambda api, minimum=None: None)
         rehearsal.inspect_consumer = lambda title: (_ for _ in ()).throw(PendingConsumerUpdate("Still pending", title, "Owner", "HTML"))
         with patch("smoke_prefix.time.sleep"), self.assertRaises(PendingConsumerUpdate):
-            rehearsal.observe_consumers({"Consumer"}, lambda: drains.append(True))
+            rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True),
+                                        lambda **kwargs: diagnostics.append(kwargs) or "0")
         self.assertEqual(len(drains), 9)
         self.assertEqual(len(diagnostics), 1)
+
+    def test_elapsed_settling_budget_stops_further_attempts(self):
+        rehearsal = Rehearsal.__new__(Rehearsal)
+        rehearsal.prefixes, rehearsal.settling = [], []
+        rehearsal.metadata = {"Consumer": {"title": "Consumer"}, "Owner": {"title": "Owner"}}
+        rehearsal.api = lambda query, **kwargs: {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+        rehearsal.checks = SimpleNamespace(wait_for_server_tick=lambda api, minimum=None: None)
+        rehearsal.inspect_consumer = lambda title: (_ for _ in ()).throw(PendingConsumerUpdate("Pending", title, "Owner", "HTML"))
+        with patch("smoke_prefix.time.monotonic", side_effect=[0, 91]), self.assertRaises(TimeoutError):
+            rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: self.fail("Elapsed budget must stop job drains"))
+
+    def test_server_clock_boundary_records_ticks_and_rejects_frozen_or_backward_time(self):
+        before, after = "2000-01-01T00:00:00Z", "2000-01-01T00:00:01Z"
+        values = iter([before, before, after])
+        with patch("smoke_deploy.time.sleep"):
+            self.assertEqual(wait_for_server_tick(lambda query: {"curtimestamp": next(values)}, minimum=before),
+                             {"before": before, "after": after})
+            with self.assertRaisesRegex(RuntimeError, "did not advance"):
+                wait_for_server_tick(lambda query: {"curtimestamp": before})
+            with self.assertRaisesRegex(RuntimeError, "backwards"):
+                wait_for_server_tick(lambda query: {"curtimestamp": before}, minimum=after)
+            values = iter([after, before])
+            with self.assertRaisesRegex(RuntimeError, "backwards"):
+                wait_for_server_tick(lambda query: {"curtimestamp": next(values)})
+
+    def test_job_drain_has_remote_and_subprocess_deadlines_and_never_retries_timeout(self):
+        calls = []
+        def run(*args, **kwargs):
+            calls.append((args, kwargs))
+            return b"0"
+        result = drain_jobs_bounded(run, timeout=10)
+        self.assertEqual(result["remaining_jobs"], "0")
+        self.assertEqual(len(calls), 2)
+        for args, kwargs in calls:
+            self.assertEqual(args[3:5], ("timeout", "--kill-after=1s"))
+            self.assertTrue(0 < kwargs["timeout"] <= 10)
+        def expired(*args, **kwargs):
+            raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+        with self.assertRaises(subprocess.TimeoutExpired):
+            drain_jobs_bounded(expired, timeout=10)
+        calls.clear()
+        with patch("smoke_deploy.time.monotonic", side_effect=[0, 1, 11]), self.assertRaises(TimeoutError):
+            drain_jobs_bounded(run, timeout=10)
+        self.assertEqual(len(calls), 1)
+        def remote_expired(*args, **kwargs):
+            raise subprocess.CalledProcessError(124, args)
+        with self.assertRaisesRegex(TimeoutError, "exhausted"):
+            bounded_maintenance(remote_expired, ("runJobs",), 10)
+
+
+class EndpointCandidateTests(unittest.TestCase):
+    def test_span_removal_is_byte_exact_duplicate_preserving_and_leaves_other_markup(self):
+        text = "\u00e9<noinclude>{{:Owner|view=loot|item=item-1}}</noinclude>\n{{#switch:x|x=y}}\n{{:Owner|view=loot|item=item-1}}\n"
+        transformed, spans = strip_colon_invocations(text)
+        self.assertEqual(transformed, "\u00e9<noinclude></noinclude>\n{{#switch:x|x=y}}\n\n")
+        self.assertEqual(len(spans), 2)
+        raw, parts, previous = text.encode("utf-8"), [], 0
+        for span in spans:
+            self.assertEqual(raw[span["start_byte"]:span["end_byte"]].decode(), span["invocation"])
+            parts.append(raw[previous:span["start_byte"]])
+            previous = span["end_byte"]
+        parts.append(raw[previous:])
+        self.assertEqual(b"".join(parts).decode(), transformed)
+        for invalid in ("{{:Unclosed", "{{:Owner|view={{{view}}}}}", "{{:Owner|view=loot}}\n{{:bad"):
+            with self.subTest(invalid=invalid), self.assertRaises(RuntimeError):
+                strip_colon_invocations(invalid)
+        with self.assertRaises(DataError):
+            strip_colon_invocations("{{:Owner|positional}}")
+
+    def fixture(self, context_difference=False, change_revision=False):
+        rehearsal = Rehearsal.__new__(Rehearsal)
+        rehearsal.current = {"Owner": "<onlyinclude>1 silver</onlyinclude>", "Consumer": "A{{:Owner}}B{{:Owner}}"}
+        rehearsal.baseline = dict(rehearsal.current)
+        rehearsal.desired = dict(rehearsal.current)
+        rehearsal.metadata = {title: {"title": title, "pageid": i, "revid": i, "parentid": 0,
+                                     "raw_sha256": hashlib.sha256(text.encode()).hexdigest()}
+                              for i, (title, text) in enumerate(rehearsal.current.items(), 1)}
+        rehearsal.checks = SimpleNamespace(check_parser_errors=check_parser_errors)
+        rehearsal.validate_projection = lambda owner, parameters, result, title: self.assertEqual(result["templates"], [{"*": owner}])
+        rehearsal.link_candidates = {}
+        calls = []
+        def api(query, **kwargs):
+            calls.append(query)
+            self.assertIn(query["action"], {"query", "parse", "expandtemplates"})
+            if query["action"] == "query":
+                return {"query": {"userinfo": {"id": 1, "name": "Synthetic operator"}}}
+            if query["action"] == "expandtemplates":
+                value = "context difference" if context_difference and query["title"] == "Consumer" else "1 silver"
+                return {"expandtemplates": {"wikitext": value}}
+            text = query.get("text", rehearsal.current.get(query.get("page")))
+            templates = [{"*": "Owner"}] if "{{:Owner}}" in text else []
+            visible = re.sub("</?onlyinclude>", "", text.replace("{{:Owner}}", "1 silver"))
+            result = {"text": {"*": "<p>" + visible + "</p>"}, "templates": templates, "links": []}
+            if "page" in query:
+                result["revid"] = rehearsal.metadata[query["page"]]["revid"]
+            return {"parse": result}
+        rehearsal.api = api
+        def refresh():
+            if change_revision:
+                rehearsal.metadata["Owner"] = {**rehearsal.metadata["Owner"], "revid": 99}
+        rehearsal.refresh_metadata = refresh
+        return rehearsal, calls
+
+    def test_endpoint_capture_uses_original_context_and_retains_duplicate_spans(self):
+        rehearsal, calls = self.fixture()
+        rehearsal.capture_link_endpoint("desired")
+        result = rehearsal.link_candidates["desired"]
+        self.assertFalse(result["candidate_promotion_blocked"])
+        self.assertEqual({row["parse_title"] for row in result["selected"]}, {"Prefix projection", "Consumer"})
+        direct = next(row for row in result["direct"] if row["consumer"]["title"] == "Consumer")
+        self.assertEqual(direct["transformed_text"], "AB")
+        self.assertEqual(len(direct["removed_invocations"]), 2)
+        self.assertEqual(result["revisions_before"], result["revisions_after"])
+        self.assertTrue(all(row["templates"] == [] for row in result["direct"]))
+
+    def test_context_variation_is_retained_and_blocks_candidate_promotion(self):
+        rehearsal, _ = self.fixture(context_difference=True)
+        rehearsal.capture_link_endpoint("desired")
+        result = rehearsal.link_candidates["desired"]
+        self.assertTrue(result["candidate_promotion_blocked"])
+        self.assertTrue(any(row["kind"] == "projection-context" for row in result["discrepancies"]))
+
+    def test_endpoint_revision_drift_fails_instead_of_binding_new_content(self):
+        rehearsal, _ = self.fixture(change_revision=True)
+        with self.assertRaisesRegex(RuntimeError, "changed during"):
+            rehearsal.capture_link_endpoint("desired")
+
+    def test_baseline_named_views_are_explicitly_unsupported_not_old_defaults(self):
+        rehearsal, calls = self.fixture()
+        rehearsal.desired["Consumer"] = "{{:Owner|view=loot|item=item-1}}"
+        rehearsal.capture_link_endpoint("baseline")
+        unsupported = rehearsal.link_candidates["baseline"]["unsupported"]
+        self.assertEqual(len(unsupported), 1)
+        self.assertEqual(unsupported[0]["reason"], "view-not-declared")
+        self.assertFalse(any("|view=loot" in query.get("text", "") for query in calls))
 
 
 class MaterializationTests(unittest.TestCase):

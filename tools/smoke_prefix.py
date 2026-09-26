@@ -35,9 +35,10 @@ SETTINGS_KEYS = ("EnableUploads", "AllowCopyUploads", "AllowExternalImages",
 
 
 class PendingConsumerUpdate(RuntimeError):
-    def __init__(self, message, consumer, owner, html):
+    def __init__(self, message, consumer, owner, html, details=None):
         super().__init__(message)
         self.consumer, self.owner, self.html = consumer, owner, html
+        self.details = details
 
 
 def canonical_bytes(value):
@@ -225,6 +226,7 @@ class ProjectionDOM(HTMLParser):
         self.title = title
         self.text = ""
         self.links = []
+        self.non_wiki_links = []
         self.anchors = []
         self.rows = []
         self.wiki_links = []
@@ -253,13 +255,24 @@ class ProjectionDOM(HTMLParser):
         if tag == "a" or "selflink" in attrs.get("class", "").split():
             url = urllib.parse.urlsplit(attrs.get("href", ""))
             query = urllib.parse.parse_qs(url.query)
-            target = query.get("title", [None])[0] or attrs.get("title") or self.title
+            selflink = "selflink" in attrs.get("class", "").split()
+            href = attrs.get("href", "")
+            if url.scheme or url.netloc or not (query.get("title") or href.startswith("#") or selflink):
+                if href:
+                    self.link = {"href": href, "text": ""}
+                    self.link_tag = tag
+                    self.non_wiki_links.append(self.link)
+                    if self.cell is not None:
+                        self.cell.setdefault("non_wiki_links", []).append(self.link)
+                return
+            target = query.get("title", [None])[0] or self.title
             if url.fragment:
                 target = target.split("#", 1)[0] + "#" + urllib.parse.unquote(url.fragment)
             name, separator, fragment = target.partition("#")
             self.link = {"target": name.replace("_", " ") + separator + fragment, "text": ""}
             self.wiki_links.append({"target": self.link["target"].split("#", 1)[0],
-                                    "redlink": "new" in attrs.get("class", "").split() or query.get("redlink") == ["1"]})
+                                    "redlink": "new" in attrs.get("class", "").split() or query.get("redlink") == ["1"],
+                                    "href": href, "classes": attrs.get("class", "").split()})
             self.link_tag = tag
             self.links.append(self.link)
             if self.cell is not None:
@@ -288,7 +301,7 @@ class ProjectionDOM(HTMLParser):
 
     def normalize(self):
         self.text = " ".join(self.text.split())
-        for link in self.links:
+        for link in [*self.links, *self.non_wiki_links]:
             link["text"] = " ".join(link["text"].split())
         for row in self.rows:
             for cell in row["cells"]:
@@ -305,6 +318,24 @@ def dom(html, title):
 def linked_titles(text):
     return {title_key(target.lstrip(":").split("#", 1)[0]) for target in re.findall(r"\[\[([^\]|]+)", text)
             if target.lstrip(":").split("#", 1)[0]}
+
+
+def strip_colon_invocations(text):
+    matches = list(re.finditer(r"\{\{:([^{}\n]+)\}\}", text))
+    if len(matches) != text.count("{{:"):
+        raise RuntimeError("Endpoint source contains unmatched or dynamic colon-inclusion syntax.")
+    pieces, spans, previous = [], [], 0
+    for match in matches:
+        owner, arguments = transclusions(match.group())[0]
+        start = len(text[:match.start()].encode("utf-8"))
+        spans.append({
+            "start_byte": start, "end_byte": start + len(match.group().encode("utf-8")),
+            "invocation": match.group(), "owner": owner, "parameters": dict(arguments),
+        })
+        pieces.append(text[previous:match.start()])
+        previous = match.end()
+    pieces.append(text[previous:])
+    return "".join(pieces), spans
 
 
 class Rehearsal:
@@ -340,6 +371,7 @@ class Rehearsal:
         self.compatibility = []
         self.snapshots = []
         self.settling = []
+        self.link_candidates = {}
         self.endpoint_rows = {}
         self.endpoint_projections = {}
         self.provenance = {
@@ -389,18 +421,18 @@ class Rehearsal:
         return [{key: self.metadata[title][key] for key in ("title", "pageid", "revid", "raw_sha256")}
                 for title in sorted(set(templates))]
 
-    def validate_projection(self, owner, parameters, result):
+    def validate_projection(self, owner, parameters, result, parse_title="Prefix projection"):
         html = result["text"]["*"]
         self.checks.check_parser_errors(html)
         templates = sorted(row["*"] for row in result.get("templates", []))
         if templates != [owner]:
             raise RuntimeError("A selected projection is not a parser-proven leaf: " + owner + str(parameters))
-        parsed = dom(html, "Prefix projection")
+        parsed = dom(html, parse_title)
         view = parameters.get("view", "")
         identity = self.entities.get(owner)
         if not parameters:
             if identity in self.coins:
-                rows = self.checks.RenderedRows("coin-", "coin-")
+                rows = self.checks.RenderedRows("coin-", "coin-", page_title=parse_title)
                 rows.feed(html)
                 coin = self.coins[identity]
                 wanted = [self.locations[identity], self.checks.scalar(coin["value_in_silver"]),
@@ -421,7 +453,7 @@ class Rehearsal:
             station = next(row for row in self.catalog["stations"] if row["id"] == parameters["station"])
             expected = [group for group in self.groups if self.owners[group[0]["id"]] == owner
                         and any(row["details"]["station"] in station["methods"] for row in group)]
-            rows = self.checks.RenderedRows()
+            rows = self.checks.RenderedRows(page_title=parse_title)
             rows.feed(html)
             if {frozenset(row["entries"]) for row in rows.rows} != {
                 frozenset(row["id"] for row in group) for group in expected
@@ -432,7 +464,7 @@ class Rehearsal:
                 self.checks.check_recipe_cells(row, group, self.locations, self.stations)
             expected_actions = {row["id"]: row for row in self.catalog.get("construction_recipes", [])
                                 if self.locations[row["owner_item"]] == owner and row["station_id"] == station["id"]}
-            actions = self.checks.RenderedRows("entry-construction-", "entry-")
+            actions = self.checks.RenderedRows("entry-construction-", "entry-", page_title=parse_title)
             actions.feed(html)
             if {key for row in actions.rows for key in row["entries"]} != expected_actions.keys() or len(actions.rows) != len(expected_actions):
                 raise RuntimeError("A prerequisite in-place action view has incorrect membership.")
@@ -527,7 +559,7 @@ class Rehearsal:
             if link["target"] in self.desired and link["redlink"] != (link["target"] not in self.current):
                 if link["target"] in self.current and link["redlink"]:
                     raise PendingConsumerUpdate("A created target still has cached redlink HTML: " + title + " -> " + link["target"],
-                                                title, link["target"], result["text"]["*"])
+                                                title, link["target"], result["text"]["*"], {"link": link})
                 raise RuntimeError("A consumer has a stale or dishonest planned-title link: " + title + " -> " + link["target"])
         for probe in probes:
             if not probe["parameters"]:
@@ -537,7 +569,11 @@ class Rehearsal:
                 ids = set(row["ids"])
                 if ids and not any(ids <= set(actual["ids"]) and row["cells"] == actual["cells"] for actual in parsed.rows):
                     raise PendingConsumerUpdate("A cached consumer row differs from its current selected view: " + title + str(probe["parameters"]),
-                                                title, probe["owner"]["title"], result["text"]["*"])
+                                                title, probe["owner"]["title"], result["text"]["*"], {
+                                                    "parameters": probe["parameters"], "row_ids": sorted(ids),
+                                                    "expected_cells": row["cells"],
+                                                    "observed_rows": [actual for actual in parsed.rows if ids & set(actual["ids"])],
+                                                })
             if probe["parameters"]["view"] == "pool-source" and selected.text not in parsed.text:
                 raise RuntimeError("A consumer omitted its source-owned pool condition.")
         self.check_merchant_rows(title, parsed, result["text"]["*"])
@@ -563,36 +599,92 @@ class Rehearsal:
             else:
                 if item not in self.old_prices and cell["text"] == "Not established":
                     raise PendingConsumerUpdate("An established price still has its old cached unknown value.",
-                                                title, owner, html)
+                                                title, owner, html, {"entry_id": entry["id"],
+                                                                   "expected_price": self.checks.scalar(self.prices[item]),
+                                                                   "observed_cell": cell})
                 self.checks.check_price_cell(cell, self.prices[item])
 
-    def observe_consumers(self, titles, drain_jobs):
-        for attempt in range(10):
-            try:
-                observations = [self.inspect_consumer(title) for title in sorted(titles)]
-                if attempt:
-                    self.settling.append({
-                        "prefix_index": len(self.prefixes), "status": "settled", "attempt": attempt + 1,
-                        "observed_at": self.api({"action": "query", "curtimestamp": 1})["curtimestamp"],
-                        "consumers": sorted(titles),
-                    })
-                return observations
-            except PendingConsumerUpdate as error:
-                status = self.api({"action": "query", "titles": error.consumer + "|" + error.owner,
-                                   "prop": "info", "curtimestamp": 1})
-                self.settling.append({
-                    "prefix_index": len(self.prefixes), "status": "pending", "attempt": attempt + 1,
-                    "observed_at": status["curtimestamp"], "reason": str(error),
-                    "consumer": dict(self.metadata[error.consumer]), "owner": dict(self.metadata[error.owner]),
-                    "html": error.html, "html_sha256": text_hash(error.html),
-                    "page_info": [{key: row[key] for key in ("title", "pageid", "lastrevid", "touched") if key in row}
-                                  for row in sorted(status["query"]["pages"].values(), key=lambda row: row["title"])],
-                })
-                if attempt == 9:
-                    self.checks.cache_diagnostics(self.api, error.consumer, error.owner, error.html)
-                    raise
-                time.sleep(2)
-                drain_jobs()
+    def observe_consumers(self, titles, drain_jobs, job_status=None):
+        deadline = time.monotonic() + 90
+        original_api = self.api
+        last_pending = None
+        last_drain = None
+
+        def remaining():
+            seconds = deadline - time.monotonic()
+            if seconds <= 0:
+                raise TimeoutError("The 90-second consumer observation budget expired.")
+            return seconds
+
+        def bounded_api(parameters, **kwargs):
+            result = original_api(parameters, timeout=min(30, remaining()), **kwargs)
+            remaining()
+            return result
+
+        def diagnose(reason):
+            queue = None
+            if job_status is not None:
+                try:
+                    queue = job_status(timeout=5)
+                except (TimeoutError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+                    queue = {"unavailable": type(error).__name__}
+            report = {
+                "prefix_index": len(self.prefixes), "status": "failed", "reason": reason,
+                "budget_seconds": 90, "queue_diagnostic_budget_seconds": 5, "queue": queue,
+                "last_job_drain": last_drain,
+                "last_observed_mismatch": None if last_pending is None else {
+                    key: value for key, value in last_pending.items() if key != "html"
+                },
+            }
+            self.settling.append(report)
+            print("Settlement diagnostics:", json.dumps(report), flush=True)
+
+        self.api = bounded_api
+        try:
+            for attempt in range(10):
+                try:
+                    observations = []
+                    for title in sorted(titles):
+                        remaining()
+                        observations.append(self.inspect_consumer(title))
+                        remaining()
+                    if attempt:
+                        self.settling.append({
+                            "prefix_index": len(self.prefixes), "status": "settled", "attempt": attempt + 1,
+                            "observed_at": self.api({"action": "query", "curtimestamp": 1})["curtimestamp"],
+                            "consumers": sorted(titles),
+                        })
+                    return observations
+                except PendingConsumerUpdate as error:
+                    status = self.api({"action": "query", "titles": error.consumer + "|" + error.owner,
+                                       "prop": "info|revisions", "rvprop": "ids|timestamp", "curtimestamp": 1})
+                    last_pending = {
+                        "prefix_index": len(self.prefixes), "status": "pending", "attempt": attempt + 1,
+                        "observed_at": status["curtimestamp"], "reason": str(error), "details": error.details,
+                        "consumer": dict(self.metadata[error.consumer]), "owner": dict(self.metadata[error.owner]),
+                        "html": error.html, "html_sha256": text_hash(error.html),
+                        "cache_timestamps": re.findall(r"(?:Cached time:|timestamp)\s*(\d{14})", error.html),
+                        "page_info": [{key: row[key] for key in ("title", "pageid", "lastrevid", "touched", "revisions") if key in row}
+                                      for row in sorted(status["query"]["pages"].values(), key=lambda row: row["title"])],
+                    }
+                    self.settling.append(last_pending)
+                    if attempt == 9:
+                        diagnose(str(error))
+                        raise
+                    time.sleep(min(2, remaining()))
+                    remaining()
+                    last_drain = drain_jobs(timeout=remaining())
+                    remaining()
+                    last_pending["job_drain"] = last_drain
+                    last_pending["server_tick"] = self.checks.wait_for_server_tick(
+                        self.api, minimum=last_pending["observed_at"],
+                    )
+                    remaining()
+        except (TimeoutError, subprocess.TimeoutExpired) as error:
+            diagnose(type(error).__name__ + ": " + str(error))
+            raise
+        finally:
+            self.api = original_api
 
     def compatibility_observation(self, consumer, owner):
         projection = self.probe(consumer, owner, (), fresh=True)
@@ -640,9 +732,129 @@ class Rehearsal:
                 key: observed[key] for key in ("expanded_wikitext", "price_text", "price_links", "price_anchors", "projection_templates")
             }
 
-    def run(self, token, wait_tick, drain_jobs):
+    def capture_link_endpoint(self, endpoint):
+        before = {title: dict(record) for title, record in self.metadata.items()}
+        user = self.api({"action": "query", "meta": "userinfo"})["query"]["userinfo"]
+        actor = {"id": user["id"], "name": user["name"]}
+        if actor["id"] <= 0:
+            raise RuntimeError("Endpoint candidates require the authenticated test operator context.")
+        captures = {"revisions_before": before, "direct": [], "originals": [], "selected": [],
+                    "unsupported": [], "discrepancies": [], "actor": actor}
+        queries = {}
+        for corpus in (self.baseline, self.desired):
+            for consumer, text in corpus.items():
+                for owner, arguments in transclusions(text):
+                    queries.setdefault((owner, arguments), set()).add(consumer)
+
+        def targets(links):
+            return {row["*"] for row in links if row["*"] in self.desired}
+
+        def rendered(result, title, reference):
+            html = result["text"]["*"]
+            self.checks.check_parser_errors(html)
+            parsed = dom(html, title)
+            api_targets = targets(result.get("links", []))
+            dom_targets = {row["target"] for row in parsed.wiki_links if row["target"] in self.desired}
+            if api_targets != dom_targets:
+                captures["discrepancies"].append({
+                    "kind": "api-dom-targets", "reference": reference,
+                    "api_only": sorted(api_targets - dom_targets), "dom_only": sorted(dom_targets - api_targets),
+                })
+            for link in parsed.wiki_links:
+                if link["target"] in self.desired and link["redlink"] != (link["target"] not in self.current):
+                    captures["discrepancies"].append({
+                        "kind": "dom-existence", "reference": reference, "link": link,
+                        "target_exists": link["target"] in self.current,
+                    })
+            return {"html": html, "links": result.get("links", []),
+                    "templates": sorted({row["*"] for row in result.get("templates", [])}),
+                    "dom_links": parsed.wiki_links, "non_wiki_links": parsed.non_wiki_links}
+
+        selected = {}
+        for (owner, arguments), consumers in sorted(queries.items()):
+            parameters = dict(arguments)
+            contexts = sorted({"Prefix projection", *consumers}, key=lambda title: (title != "Prefix projection", title))
+            if owner not in self.current or parameters.get("view", "") not in available_views(self.current[owner]):
+                captures["unsupported"].append({
+                    "owner": owner, "parameters": parameters, "parse_titles": contexts,
+                    "owner_revision": self.metadata.get(owner),
+                    "reason": "owner-absent" if owner not in self.current else "view-not-declared",
+                })
+                continue
+            if endpoint == "baseline" and parameters:
+                raise RuntimeError("The reviewed baseline may expose only its genuine default contracts.")
+            neutral = None
+            invocation = projection_invocation(owner, parameters)
+            parse_input = "<table>" + invocation + "</table>" if parameters.get("view") == "recipes" else invocation
+            for title in contexts:
+                expanded = self.api({"action": "expandtemplates", "title": title, "text": invocation,
+                                     "prop": "wikitext", "assert": "user", "assertuser": actor["name"]}, post=True)["expandtemplates"]["wikitext"]
+                result = self.api({"action": "parse", "title": title, "text": parse_input,
+                                   "prop": "text|templates|links", "assert": "user", "assertuser": actor["name"]}, post=True)["parse"]
+                self.validate_projection(owner, parameters, result, title)
+                record = {
+                    "owner": dict(self.metadata[owner]), "parameters": parameters, "parse_title": title,
+                    "invocation": invocation, "expanded_wikitext": expanded, "projection_sha256": text_hash(expanded),
+                    "parse_input": parse_input, "parse_input_sha256": text_hash(parse_input),
+                    "render_context": "table" if parameters.get("view") == "recipes" else "block",
+                    **rendered(result, title, {"kind": "selected", "owner": owner, "parameters": parameters, "parse_title": title}),
+                }
+                if neutral is None:
+                    neutral = record
+                elif (expanded != neutral["expanded_wikitext"] or targets(record["links"]) != targets(neutral["links"])):
+                    captures["discrepancies"].append({
+                        "kind": "projection-context", "owner": owner, "parameters": parameters, "parse_title": title,
+                        "neutral_sha256": neutral["projection_sha256"], "context_sha256": record["projection_sha256"],
+                        "neutral_targets": sorted(targets(neutral["links"])), "context_targets": sorted(targets(record["links"])),
+                    })
+                selected[(owner, arguments, title)] = record
+                captures["selected"].append(record)
+
+        for title, text in sorted(self.current.items()):
+            transformed, spans = strip_colon_invocations(text)
+            result = self.api({"action": "parse", "title": title, "text": transformed,
+                               "prop": "text|templates|links", "assert": "user", "assertuser": actor["name"]}, post=True)["parse"]
+            direct = {
+                "consumer": dict(self.metadata[title]), "parse_title": title,
+                "transformed_text": transformed, "transformed_sha256": text_hash(transformed),
+                "removed_invocations": spans,
+                **rendered(result, title, {"kind": "direct", "consumer": title}),
+            }
+            if direct["templates"]:
+                raise RuntimeError("A span-exact direct endpoint preview still transcludes another page.")
+            captures["direct"].append(direct)
+            result = self.api({"action": "parse", "page": title, "prop": "text|templates|links|revid"})["parse"]
+            if result.get("revid") != self.metadata[title]["revid"]:
+                raise RuntimeError("An endpoint original parse is not bound to its captured revision.")
+            original = {"consumer": dict(self.metadata[title]),
+                        **rendered(result, title, {"kind": "original", "consumer": title})}
+            captures["originals"].append(original)
+            combined = targets(direct["links"])
+            for owner, arguments in transclusions(text):
+                key = (owner, arguments, title)
+                if key not in selected:
+                    raise RuntimeError("An endpoint consumer requires an unsupported selected view.")
+                combined |= targets(selected[key]["links"])
+            if combined != targets(original["links"]):
+                captures["discrepancies"].append({
+                    "kind": "direct-projected-union", "consumer": title, "combined_targets": sorted(combined),
+                    "original_targets": sorted(targets(original["links"])),
+                })
+        self.refresh_metadata()
+        after = {title: dict(record) for title, record in self.metadata.items()}
+        user = self.api({"action": "query", "meta": "userinfo"})["query"]["userinfo"]
+        if before != after or actor != {"id": user["id"], "name": user["name"]}:
+            raise RuntimeError("An endpoint owner, consumer revision or parser user changed during read-only capture.")
+        captures["revisions_after"] = after
+        captures["candidate_promotion_blocked"] = bool(captures["discrepancies"])
+        self.link_candidates[endpoint] = captures
+        print(f"ENDPOINT_CANDIDATE {endpoint}: {len(captures['selected'])} context projections, "
+              f"{len(captures['discrepancies'])} explicit discrepancies; independent review required.", flush=True)
+
+    def run(self, token, wait_tick, drain_jobs, job_status=None):
         self.refresh_metadata()
         self.capture_endpoint("baseline")
+        self.capture_link_endpoint("baseline")
         baseline_observations = [self.inspect_consumer(title) for title in sorted(self.current)]
         self.prefixes.append({"index": 0, "saved": None, "prerequisites": [], "observations": baseline_observations,
                               "pending_new_link_edges": self.pending_link_edges()})
@@ -668,7 +880,7 @@ class Rehearsal:
             affected = {title}
             affected.update(consumer for consumer, text in self.current.items()
                             if title in {owner for owner, _ in transclusions(text)} or title in linked_titles(text))
-            observations = self.observe_consumers(affected, drain_jobs)
+            observations = self.observe_consumers(affected, drain_jobs, job_status)
             self.prefixes.append({"index": index, "saved": dict(self.metadata[title]),
                                   "prerequisites": [probe["id"] for probe in prerequisites], "observations": observations,
                                   "pending_new_link_edges": self.pending_link_edges()})
@@ -681,6 +893,7 @@ class Rehearsal:
         if self.current != self.desired or cohort_index != 9:
             raise RuntimeError("The full planned sequence did not reach the exact desired corpus.")
         self.capture_endpoint("desired")
+        self.capture_link_endpoint("desired")
         self.final_observations = [self.inspect_consumer(title) for title in sorted(self.current)]
         final_projections = {}
         for probe in list(self.probes):
@@ -755,6 +968,14 @@ class Rehearsal:
             "consumer-settling.json": {
                 **self.provenance, "scope": "Observed deferred-cache reads before coherent prefix observation; never purge or overwrite observed DOM.",
                 "events": self.settling,
+            },
+            "endpoint-link-view-candidates.json": {
+                **self.provenance, "requires_independent_review": True,
+                "scope": "Read-only disposable endpoint candidates, not trusted link contracts or live authority.",
+                "span_encoding": "UTF-8 byte offsets, end exclusive; no other source transformation",
+                "corpus_sha256": {"baseline": hashlib.sha256(canonical_bytes(self.baseline)).hexdigest(),
+                                  "desired": hashlib.sha256(canonical_bytes(self.desired)).hexdigest()},
+                "endpoints": self.link_candidates,
             },
             "migration-plan.json": plan_migration(self.baseline, self.baseline, self.desired),
         }

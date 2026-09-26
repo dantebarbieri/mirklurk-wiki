@@ -717,17 +717,21 @@ class ProfileTests(unittest.TestCase):
     def test_transclusion_smoke_waits_for_jobs_but_never_masks_leaks_or_timeout(self):
         outputs = iter(("old price", "new price"))
         calls = []
-        run = lambda *args: calls.append(args)
+        def run(*args, **kwargs):
+            calls.append((args, kwargs))
+            return b"0"
         api = lambda args: {"parse": {"text": {"*": next(outputs)}}}
         with patch("smoke_deploy.time.sleep"):
             self.assertEqual(refreshed_transclusion(run, api, "Merchant", "new price", "owner-anchor"), "new price")
-        self.assertEqual(len(calls), 2)
+        self.assertEqual(len(calls), 4)
+        self.assertEqual(sum("runJobs" in args for args, _ in calls), 2)
+        self.assertTrue(all(0 < kwargs["timeout"] <= 90 for _, kwargs in calls))
         for response in ("old price", "new price owner-anchor"):
             calls.clear()
             api = lambda args: {"parse": {"text": {"*": response}}}
             with patch("smoke_deploy.time.sleep"), self.assertRaises(RuntimeError):
                 refreshed_transclusion(run, api, "Merchant", "new price", "owner-anchor")
-            self.assertEqual(len(calls), 1 if "owner-anchor" in response else 10)
+            self.assertEqual(sum("runJobs" in args for args, _ in calls), 1 if "owner-anchor" in response else 10)
 
     def test_damage_class_ids_link_to_the_canonical_damage_page(self):
         data = synthetic_data()

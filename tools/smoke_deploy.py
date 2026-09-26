@@ -215,15 +215,41 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
             raise RuntimeError("A required canonical guide is missing.")
 
 
-def wait_for_server_tick(api):
+def wait_for_server_tick(api, minimum=None):
     # MediaWiki invalidates only when cache time < page_touched, both whole seconds.
     query = {"action": "query", "curtimestamp": 1}
     before = api(query)["curtimestamp"]
+    if minimum is not None and before < minimum:
+        raise RuntimeError("The wiki server clock moved backwards across the recorded cache boundary.")
     for _ in range(20):
         time.sleep(0.1)
-        if api(query)["curtimestamp"] > before:
-            return
-    raise RuntimeError("The wiki server clock did not advance before the synthetic edit.")
+        after = api(query)["curtimestamp"]
+        if after < before:
+            raise RuntimeError("The wiki server clock moved backwards while waiting for its boundary.")
+        if after > before:
+            return {"before": before, "after": after}
+    raise RuntimeError("The wiki server clock did not advance before the operation.")
+
+
+def bounded_maintenance(run, arguments, timeout):
+    if timeout <= 2:
+        raise TimeoutError("Insufficient remaining maintenance budget.")
+    try:
+        return run("exec", "-T", "mirklurk", "timeout", "--kill-after=1s", f"{timeout - 2:.3f}s",
+                   "php", "maintenance/run.php", *arguments, timeout=timeout)
+    except subprocess.CalledProcessError as error:
+        if error.returncode in {124, 137}:
+            raise TimeoutError("The bounded maintenance command exhausted its budget.") from error
+        raise
+
+
+def drain_jobs_bounded(run, timeout=90):
+    deadline = time.monotonic() + timeout
+    output = bounded_maintenance(run, ("runJobs", "--maxjobs", "1000"), deadline - time.monotonic())
+    remaining = bounded_maintenance(run, ("showJobs",), deadline - time.monotonic())
+    return {"command": "maintenance/run.php runJobs --maxjobs 1000",
+            "budget_seconds": timeout, "output_tail": output.decode(errors="replace")[-2000:],
+            "remaining_jobs": remaining.decode(errors="replace").strip()}
 
 
 def check_parser_errors(rendered):
@@ -736,7 +762,7 @@ def capture_view_fixtures(api, pages, catalog):
 def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
     # Imports and edits enqueue deferred link updates; allow their bounded completion.
     for attempt in range(10):
-        run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+        drain_jobs_bounded(run)
         rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
         if forbidden_anchor in rendered:
@@ -887,10 +913,10 @@ def smoke(evidence_dir=None):
         questions.chmod(0o444)
         compose = ["docker", "compose", "--project-name", project, "--file", str(ROOT / "deploy" / "compose.dev.yml")]
 
-        def run(*args, input_bytes=None):
+        def run(*args, input_bytes=None, timeout=None):
             return subprocess.run(
                 [*compose, *args], cwd=ROOT, env=environment, input=input_bytes,
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=timeout,
             ).stdout
 
         opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
@@ -898,14 +924,14 @@ def smoke(evidence_dir=None):
         minimum_edit_interval = 0
         last_edit_at = 0
 
-        def api(parameters, post=False, expected_error=None):
+        def api(parameters, post=False, expected_error=None, timeout=30):
             nonlocal last_edit_at
             if parameters.get("action") == "edit" and minimum_edit_interval:
                 time.sleep(max(0, minimum_edit_interval - (time.monotonic() - last_edit_at)))
                 last_edit_at = time.monotonic()
             encoded = urllib.parse.urlencode(dict(format="json", **parameters)).encode()
             url = base + "/api.php" + ("" if post else "?" + encoded.decode())
-            with opener.open(url, data=encoded if post else None, timeout=30) as response:
+            with opener.open(url, data=encoded if post else None, timeout=timeout) as response:
                 value = json.load(response)
             if expected_error is not None:
                 if value.get("error", {}).get("code") != expected_error:
@@ -1038,21 +1064,26 @@ def smoke(evidence_dir=None):
             pages, evidence["storage-materialization.json"] = materialize_desired(
                 api, baseline, authored, source_head, runtime, actor,
             )
+            if evidence["storage-materialization.json"]["baseline_seed_sha256"] != hashlib.sha256(baseline_payload).hexdigest():
+                raise RuntimeError("Materialization no longer binds the exact frozen baseline XML.")
             image_hashes = smoke_images(run, api, base, data, baseline, authored, pages)
             wait_for_server_tick(api)
             baseline_titles = sorted(baseline)
             for offset in range(0, len(baseline_titles), 50):
                 api({"action": "purge", "titles": "|".join(baseline_titles[offset:offset + 50]),
                      "forcelinkupdate": 1}, post=True)
-            drain_jobs = lambda: run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            def drain_jobs(timeout=90):
+                return drain_jobs_bounded(run, timeout)
+            def job_status(timeout=5):
+                return bounded_maintenance(run, ("showJobs",), timeout).decode(errors="replace").strip()
             drain_jobs()
             rehearsal = Rehearsal(api, sys.modules[__name__], baseline, pages, data, catalog,
                                   baseline_catalog, runtime, source_head)
-            rehearsal.run(csrf, wait_for_server_tick, drain_jobs)
+            rehearsal.run(csrf, wait_for_server_tick, drain_jobs, job_status)
             evidence.update(rehearsal.artifacts())
             if set(pages) != managed_titles(api):
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            drain_jobs()
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
