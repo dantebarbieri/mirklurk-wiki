@@ -167,7 +167,9 @@ installation refusal on reuse, health, anonymous permissions, CAPTCHA-protected
 self-registration, ordinary account editing, seed import, and preservation of live edits.
 The ordinary-editor checks bind recipe inputs, outputs and AP to their ordered
 cells, cover every merchant offer and loot outcome, and verify the documented
-pool memberships, story gates and in-place construction result. Logged
+pool memberships, story gates and in-place construction result. They pace writes
+within the unchanged newcomer limit of three edits per minute, without granting
+the account a rate-limit exemption. Logged
 `VIEW_CONTRACT_JSON` records capture desired-seed expansions, rendered HTML,
 template dependencies and owner hashes before mutation tests. Their synthetic
 artwork URLs/cache metadata are not portable, and these records are not live

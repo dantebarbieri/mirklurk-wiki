@@ -1111,8 +1111,8 @@ def smoke(evidence_dir=None):
             editor = api({"action": "query", "meta": "userinfo", "uiprop": "rights|groups"})["query"]["userinfo"]
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
-            # Respect the unchanged ten-edits/minute policy rather than exempting the test account.
-            minimum_edit_interval = 7
+            # Respect the stricter three-edits/minute newcomer policy without exempting the account.
+            minimum_edit_interval = 21
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
             evidence["desired-view-contracts.json"] = capture_view_fixtures(api, pages, catalog)
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
