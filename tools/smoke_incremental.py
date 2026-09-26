@@ -268,9 +268,9 @@ def default_registry(baseline, desired, previous_inputs, current_inputs):
     registries = []
     for data, catalog, _ in (previous_inputs, current_inputs):
         locations = page_locations(data, catalog)
-        prices = {locations[row["entity"]]: {"entity": row["entity"], "value": str(row["value"])}
+        prices = {locations[row["entity"]]: {"entity": row["entity"], "value": row["value"]}
                   for row in catalog["unit_prices"]["prices"]}
-        coins = {locations[row["entity"]]: {key: str(row[key]) for key in
+        coins = {locations[row["entity"]]: {key: row[key] for key in
                  ("entity", "value_in_silver", "weight_grams", "stack_limit")} for row in catalog["currency"]["coins"]}
         if prices.keys() & coins.keys():
             raise RuntimeError("A default owner has two registry contracts.")

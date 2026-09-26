@@ -216,6 +216,7 @@ class IncrementalDefaultsTests(unittest.TestCase):
         registry = default_registry(self.pages, self.pages, self.inputs, self.inputs)
         self.assertEqual(len(registry["prices"]), 42)
         self.assertEqual(len(registry["coins"]), 3)
+        self.assertTrue(any(isinstance(row["value"], Decimal) for row in registry["prices"].values()))
         prices = {row["entity"]: row["value"] for row in self.inputs[1]["unit_prices"]["prices"]}
         for identity, value in (("item-32", "0.6"), ("item-84", "0.3"), ("item-138", "1.5"),
                                 ("item-139", "1"), ("item-140", "0.25"), ("item-248", "1")):
