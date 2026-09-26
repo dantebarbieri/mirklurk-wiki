@@ -13,10 +13,13 @@ import unittest
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+from build_wiki import build_pages
 from publication_journal import (
     Journal, JournalError, canonical_bytes, decode, digest, validate_manifest, validate_request,
 )
 from smoke_native import NativeSmoke, maintenance_program, php_json
+from smoke_prefix import PREVIOUS_AUTHORED_COMMIT, Rehearsal, materialize_desired, reconstruct_baseline
+from wiki_details import load_publication_inputs
 
 PREREQUISITE = {"fixture": "synthetic prerequisite guard"}
 GUARD = {"fixture": "synthetic preservation guard", "trace": ["before", "after"]}
@@ -64,6 +67,60 @@ def fixtures():
 def crash_writer(path, request, edge):
     with Journal(path, edge=lambda point: os._exit(91) if point == edge else None) as journal:
         journal.intent(request)
+
+
+class NativeReleaseCoverageTests(unittest.TestCase):
+    def test_current_corpus_native_coverage(self):
+        """Real corpus planning, synthetic PST/metadata, and no native dispatch."""
+        root = Path(__file__).resolve().parents[1]
+        data, catalog, details = load_publication_inputs(root)
+        authored = build_pages(root, data, catalog, details)
+        with tempfile.TemporaryDirectory() as folder:
+            workspace = Path(folder)
+            previous, _, baseline, _, old_catalog = reconstruct_baseline(root, workspace)
+            desired, _ = materialize_desired(
+                lambda query, **kwargs: {"parse": {"text": {"*": query["text"].rstrip("\r\n")}}},
+                previous, baseline, authored, "0" * 40, {}, {"id": 1, "name": "Synthetic operator"},
+                previous_source_head=PREVIOUS_AUTHORED_COMMIT, evidence_kind="synthetic-unit-fixture",
+            )
+            rehearsal = Rehearsal(None, None, baseline, desired, data, catalog, old_catalog, {}, "0" * 40)
+            rehearsal.metadata = {
+                title: {"pageid": index, "revid": index, "raw_sha256": sha(text)}
+                for index, (title, text) in enumerate(sorted(baseline.items()), 1)
+            }
+            native = NativeSmoke(root, workspace, None, None, {}, "0" * 40)
+            corpora = {key: digest(corpus) for key, corpus in (
+                ("previous_authored", previous), ("baseline", baseline), ("authored", authored), ("desired", desired)
+            )}
+            with (patch.object(rehearsal, "refresh_metadata"),
+                  patch.object(native, "operator", return_value={"id": 1, "name": "Synthetic operator", "actor_id": 2}),
+                  patch.object(native, "effects", return_value={}),
+                  patch("smoke_native.Journal") as journal):
+                native.full_run(rehearsal, corpora)
+                journal.assert_called_once()
+                manifest = journal.call_args.args[1]
+                validate_manifest(manifest)
+                operations, preserved = manifest["operations"], manifest["preserved"]
+                self.assertEqual(len(operations), 453)
+                self.assertEqual(len(preserved), 12)
+                self.assertEqual(sum(row["expected"]["page_id"] != 0 for row in operations), 389)
+                self.assertEqual(sum(row["expected"]["page_id"] == 0 for row in operations), 64)
+                self.assertEqual([row["title"] for row in operations], rehearsal.order)
+                self.assertEqual({row["title"] for row in operations},
+                                 {title for title in desired if desired[title] != baseline.get(title)})
+                self.assertEqual({row["title"] for row in preserved},
+                                 {title for title in baseline if baseline[title] == desired[title]})
+                self.assertEqual(len(desired), 465)
+                for field, incomplete in (
+                    ("order", rehearsal.order[:-1]),
+                    ("metadata", {title: row for title, row in rehearsal.metadata.items()
+                                  if title != preserved[0]["title"]}),
+                ):
+                    with self.subTest(incomplete=field), patch.object(rehearsal, field, incomplete):
+                        journal.reset_mock()
+                        with self.assertRaisesRegex(RuntimeError, "453 writes plus 12 preserved"):
+                            native.full_run(rehearsal, corpora)
+                        journal.assert_not_called()
 
 
 class ProtocolTests(unittest.TestCase):
