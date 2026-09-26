@@ -24,6 +24,7 @@ from smoke_incremental import (
 from smoke_native import HISTORICAL_OPERATIONS, HISTORICAL_PRESERVED, NativeSmoke, require_historical_coverage
 from smoke_prefix import PendingConsumerUpdate, Rehearsal, materialize_desired
 from plan_migration import read_snapshot
+from publication_journal import Journal, JournalError
 from wiki_details import load_publication_inputs
 from wiki_views import selective_view, transclusions
 
@@ -262,6 +263,32 @@ class IncrementalDefaultsTests(unittest.TestCase):
 
 
 class IncrementalProjectionTests(unittest.TestCase):
+    def test_mixed_prefix_run_observes_unchanged_B_consumer_and_no_compatibility_trace(self):
+        rehearsal, _ = self.fixture()
+        rehearsal.order = ["Owner"]
+        rehearsal.base_meta = copy.deepcopy(rehearsal.metadata)
+        rehearsal.provenance = {}
+        rehearsal.prefixes, rehearsal.default_prefixes, rehearsal.settling = [], [], []
+        rehearsal.default_endpoints = {}
+        rehearsal.binding = {"input_sha256": "a" * 64}
+        saved = []
+        def save(title, records, text, probes):
+            saved.append(title)
+            rehearsal.metadata[title] = {**records[title], "revid": 99, "parentid": records[title]["revid"],
+                                         "raw_sha256": hashlib.sha256(text.encode()).hexdigest()}
+            return 99
+        rehearsal.run(save, lambda api: None, lambda **kwargs: None, lambda **kwargs: None,
+                      lambda *args: self.fail("Final acceptance must wait for endpoint/reader guards."))
+        self.assertEqual(saved, ["Owner"])
+        self.assertEqual(len(rehearsal.prefixes), 2)
+        consumer = next(row for row in rehearsal.prefixes[1]["observations"] if row["consumer"]["title"] == "Consumer")
+        self.assertEqual(consumer["consumer"], rehearsal.base_meta["Consumer"])
+        self.assertEqual(rehearsal.probes[consumer["probe_ids"][0]]["kind"], "desired-leaf-projection")
+        artifacts = rehearsal.artifacts()
+        self.assertNotIn("price-compatibility-receipt.json", artifacts)
+        self.assertNotIn("price_prefix", rehearsal.pending_final_guard)
+        self.assertTrue(artifacts["consumer-html.json"])
+
     def test_actual_owner_state_selects_legacy_B_or_compact_D_pool_checker(self):
         rehearsal = IncrementalRehearsal.__new__(IncrementalRehearsal)
         pool = {"id": "test", "title": "Test pool", "eligible_item_ids": ["item-1"], "item_conditions": {}}
@@ -388,6 +415,46 @@ class IncrementalProjectionTests(unittest.TestCase):
 
 
 class IncrementalNativeTests(unittest.TestCase):
+    def test_multiple_operations_cold_replay_exact_prerequisites_and_preservation(self):
+        from test_publication_journal import fixtures
+        rehearsal = small_rehearsal()
+        operations, preserved = plan(rehearsal)
+        manifest, _, template = fixtures()
+        manifest.update(operations=operations, preserved=preserved,
+                        prerequisites_sha256=digest([row["prerequisites"] for row in operations]))
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "journal"
+            with Journal(path, manifest) as journal:
+                states = journal.expected_states([])
+                completion = journal.put_artifact({"kind": "synthetic-completion"})
+                for index, title in enumerate(rehearsal.order, 1):
+                    prerequisites = [{key: states[(0, owner["title"])][key] for key in
+                                      ("namespace", "title", "page_id", "revision_id", "raw_sha256")}
+                                     for owner in operations[index - 1]["prerequisites"]]
+                    request = NativeSmoke.request(manifest, journal, index, rehearsal.desired[title], prerequisites)
+                    journal.intent(request)
+                    before = states[(0, title)]
+                    revision = {"namespace": 0, "title": title, "page_id": before["page_id"] or 100 + index,
+                                "revision_id": 200 + index, "parent_id": before["revision_id"],
+                                "raw_sha256": operations[index - 1]["desired_sha256"], "actor_id": manifest["operator"]["actor_id"],
+                                "comment": "native-publication/v1:" + digest(request)}
+                    states[(0, title)] = revision
+                    evidence = {**template, "request_sha256": digest(request), "worker": request["worker"],
+                                "states": list(states.values()), "guard_sha256": journal.put_artifact({"synthetic_prefix": index}),
+                                "quiescence": {**template["quiescence"], "authority_sha256": completion}}
+                    self.assertEqual(journal.observe(request, evidence), "accept")
+                    journal.accept(request)
+                expected = copy.deepcopy(journal.accepted)
+                journal.verify_resume(list(states.values()))
+            with Journal(path) as replay:
+                self.assertEqual(replay.accepted, expected)
+                self.assertEqual(len(replay.accepted), 3)
+                replay.verify_resume(list(states.values()))
+                changed = copy.deepcopy(list(states.values()))
+                next(row for row in changed if row["title"] == "Keep")["revision_id"] += 1
+                with self.assertRaisesRegex(JournalError, "Fresh state"):
+                    replay.verify_resume(changed)
+
     def test_historical_planning_acceptance_and_replay_share_one_count_gate(self):
         require_historical_coverage(HISTORICAL_OPERATIONS, preserved=HISTORICAL_PRESERVED)
         require_historical_coverage(HISTORICAL_OPERATIONS, prefixes=HISTORICAL_OPERATIONS + 1)
@@ -458,9 +525,27 @@ class IncrementalNativeTests(unittest.TestCase):
 
     def test_missing_prefix_guard_and_prerequisite_state_reject(self):
         rehearsal = small_rehearsal()
-        rehearsal.prefixes = [{"index": 0}, {"index": 1}]
+        rehearsal.current = dict(rehearsal.desired)
+        rehearsal.metadata = metadata(rehearsal.current)
+        rehearsal.registry = {"prices": {}, "coins": {}}
+        rehearsal.default_prefixes = [[], [], [], []]
+        owner = rehearsal.metadata["Owner"]
+        probe = {"id": 0, "owner": owner, "parameters": {"view": "stock"}, "parse_title": "Consumer"}
+        rehearsal.probes = [probe]
+        rehearsal.prefixes = [{"index": index} for index in range(3)]
+        rehearsal.prefixes.append({"index": 3, "saved": rehearsal.metadata["Consumer"], "prerequisites": [0],
+                                   "observations": [{"consumer": rehearsal.metadata["Consumer"]}]})
+        guard = {"prefix": rehearsal.prefixes[-1], "prerequisite_checks": [probe], "default_probe_ids": [],
+                 "incremental_input_sha256": rehearsal.binding["input_sha256"]}
+        validate_prefix_guard(rehearsal, 3, guard)
         with self.assertRaisesRegex(RuntimeError, "guard"):
-            validate_prefix_guard(rehearsal, 1, {})
+            validate_prefix_guard(rehearsal, 3, {})
+        for key, value in (("prerequisite_checks", []), ("default_probe_ids", [1])):
+            with self.subTest(key=key), self.assertRaisesRegex(RuntimeError, "guard"):
+                validate_prefix_guard(rehearsal, 3, {**guard, key: value})
+        rehearsal.prefixes[-1]["observations"] = []
+        with self.assertRaisesRegex(RuntimeError, "affected consumer"):
+            validate_prefix_guard(rehearsal, 3, guard)
 
 
 if __name__ == "__main__":

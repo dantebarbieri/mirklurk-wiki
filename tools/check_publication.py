@@ -40,7 +40,7 @@ ALLOWED_FILES = {
     "tools/plan_migration.py": 32 * 1024,
     "tools/build_wiki.py": 32 * 1024,
     "tools/smoke_deploy.py": 96 * 1024,
-    "tools/smoke_prefix.py": 66 * 1024,
+    "tools/smoke_prefix.py": 70 * 1024,
     "tools/native_publication.php": 24 * 1024,
     "tools/publication_journal.py": 32 * 1024,
     "tools/smoke_native.py": 48 * 1024,
