@@ -156,7 +156,7 @@ def smoke_category_memberships(api, pages):
             raise RuntimeError(f"Category browse links did not resolve on {title}: {sorted(targets - resolved)}")
 
 
-def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
+def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media=urllib.request.urlopen):
     smoke_category_memberships(api, pages)
     locations = page_locations(data, catalog)
     for identity in MATURE_TREES:
@@ -171,7 +171,7 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
             raise RuntimeError("A mature-tree caption lost its assembly qualification.")
         info = next(iter(api({"action": "query", "titles": "File:" + old_filename,
                               "prop": "imageinfo", "iiprop": "url"})["query"]["pages"].values()))
-        with urllib.request.urlopen(info["imageinfo"][0]["url"], timeout=30) as response:
+        with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
             if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
                 raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
     for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]:
@@ -314,8 +314,10 @@ def drain_jobs_bounded(run, timeout=90):
 
 
 def check_parser_errors(rendered):
-    if re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded|mw-broken-media|typeof="[^"]*mw:Error[^"]*mw:File', rendered):
-        raise RuntimeError("A canonical view produced a MediaWiki parser error, expansion limit, or missing image.")
+    match = re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded|mw-broken-media|typeof="[^"]*mw:Error[^"]*mw:File', rendered)
+    if match:
+        raise RuntimeError("A canonical view produced a MediaWiki parser error, expansion limit, or missing image: "
+                           + rendered[max(0, match.start() - 120):match.end() + 400])
 
 
 class RenderedRows(HTMLParser):
@@ -948,18 +950,21 @@ def smoke_images(run, api, base, data, *corpora):
 
 
 def smoke(evidence_dir=None):
+    from smoke_native import NativeSmoke, docker
+    from publication_journal import Journal
     from smoke_prefix import (
-        Rehearsal, SETTINGS_KEYS, canonical_bytes, capture_installer_welcome, managed_titles,
+        PREVIOUS_AUTHORED_COMMIT, STORED_BASELINE_BINDING, Rehearsal, SETTINGS_KEYS,
+        canonical_bytes, capture_installer_welcome, managed_titles,
         materialize_desired, reconstruct_baseline, settings_hash,
     )
 
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
         workspace = Path(folder)
-        baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
+        previous_authored, previous_payload, baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
         source_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
         subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=True)
-        evidence = {}
+        evidence = {"stored-baseline-binding.json": STORED_BASELINE_BINDING}
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
@@ -973,8 +978,23 @@ def smoke(evidence_dir=None):
         questions.write_text(json.dumps({question: [secrets.token_hex(8)]}), encoding="utf-8")
         questions.chmod(0o444)
         compose = ["docker", "compose", "--project-name", project, "--file", str(ROOT / "deploy" / "compose.dev.yml")]
+        override = workspace / "native-compose.json"
+        override.write_text(json.dumps({"services": {"mirklurk": {"volumes": [
+            "native-images:/var/www/html/images", f"{ROOT / 'tools'}:/native/tools:ro",
+            f"{ROOT / 'tests'}:/native/tests:ro",
+        ]}}, "volumes": {"native-images": {}}}), encoding="utf-8")
+        compose += ["--file", str(override)]
+        observer = None
+        native = None
 
         def run(*args, input_bytes=None, timeout=None):
+            if observer and args[0] == "exec" and "mirklurk" in args:
+                arguments = list(args[1:])
+                arguments[arguments.index("-T")] = "-i"
+                arguments[arguments.index("mirklurk")] = observer
+                if "runJobs" in arguments:
+                    arguments = ["-e", "MW_READ_ONLY=", *arguments]
+                return docker("exec", *arguments, input_bytes=input_bytes, timeout=timeout or 120)
             return subprocess.run(
                 [*compose, *args], cwd=ROOT, env=environment, input=input_bytes,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=timeout,
@@ -1118,16 +1138,24 @@ def smoke(evidence_dir=None):
                 "welcome": welcome, "deletion_logid": deletion["logid"],
                 "baseline_seed_sha256": hashlib.sha256(baseline_payload).hexdigest(),
             }
+            native = NativeSmoke(ROOT, workspace, run, api, runtime, source_head)
+            native.faults(csrf)
+            if managed_titles(api):
+                raise RuntimeError("Native synthetic fault fixtures left managed pages behind.")
             current = workspace / "current.xml"
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=baseline_payload)
             if managed_titles(api) != set(baseline):
                 raise RuntimeError("The initial import is not exactly the frozen baseline title set.")
             pages, evidence["storage-materialization.json"] = materialize_desired(
-                api, baseline, authored, source_head, runtime, actor,
+                api, previous_authored, baseline, authored, source_head, runtime, actor,
+                previous_source_head=PREVIOUS_AUTHORED_COMMIT,
             )
-            if evidence["storage-materialization.json"]["baseline_seed_sha256"] != hashlib.sha256(baseline_payload).hexdigest():
-                raise RuntimeError("Materialization no longer binds the exact frozen baseline XML.")
+            if (evidence["storage-materialization.json"]["baseline_seed_sha256"] != hashlib.sha256(baseline_payload).hexdigest()
+                    or evidence["storage-materialization.json"]["previous_authored_seed_sha256"]
+                    != hashlib.sha256(previous_payload).hexdigest()):
+                raise RuntimeError("Materialization no longer binds the exact previous-authored and stored baseline XML.")
             image_hashes = smoke_images(run, api, base, data, baseline, authored, pages)
+            native.prepare_thumbnails(baseline, authored, pages)
             wait_for_server_tick(api)
             baseline_titles = sorted(baseline)
             for offset in range(0, len(baseline_titles), 50):
@@ -1138,14 +1166,87 @@ def smoke(evidence_dir=None):
             def job_status(timeout=5):
                 return bounded_maintenance(run, ("showJobs",), timeout).decode(errors="replace").strip()
             drain_jobs()
+            public_base = base
+            run("stop", "mirklurk")
+            public_state = json.loads(docker("inspect", "--format", "{{json .State}}", container))
+            public_sessions = native.root_sql("SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE USER='mirklurk';"
+                                              "SELECT COUNT(*) FROM information_schema.INNODB_TRX;")
+            if public_state["Running"] or public_sessions.split() != [b"0", b"0"]:
+                raise RuntimeError("Public PHP/DB requests are not positively drained.")
+            try:
+                urllib.request.urlopen(public_base + "/api.php", timeout=3)
+            except (OSError, urllib.error.URLError):
+                pass
+            else:
+                raise RuntimeError("Stopped public frontend still accepts requests.")
+            with socket.socket() as probe:
+                probe.bind(("127.0.0.1", 0))
+                observer_port = probe.getsockname()[1]
+            observer_name = project + "-private-observer"
+            run("run", "-d", "--no-deps", "--name", observer_name,
+                "--publish", f"127.0.0.1:{observer_port}:80", "--env",
+                "MW_READ_ONLY=Disposable native publication barrier", "mirklurk")
+            observer = observer_name
+            base = f"http://localhost:{observer_port}"
+            deadline = time.monotonic() + 60
+            while True:
+                try:
+                    api({"action": "query", "meta": "siteinfo"})
+                    break
+                except (OSError, urllib.error.URLError):
+                    if time.monotonic() > deadline:
+                        raise RuntimeError("Private read-only observer did not become responsive.")
+                    time.sleep(0.2)
+            api({"action": "edit", "title": "Native denied frontend", "text": "Must not save",
+                 "token": csrf}, post=True, expected_error="readonly")
+            observer_projection = json.loads(run("exec", "-T", "mirklurk", "php", "maintenance/run.php",
+                                                 "eval", "--quiet", input_bytes=projection_code.encode()))
+            worker_projection = json.loads(run("run", "--rm", "--no-deps", "-T", "--env", "MW_READ_ONLY=",
+                                               "mirklurk", "php", "maintenance/run.php", "eval", "--quiet",
+                                               input_bytes=projection_code.encode()))
+            if (canonical_bytes(worker_projection) != canonical_bytes(projection)
+                    or observer_projection["ReadOnly"] != "Disposable native publication barrier"
+                    or any(canonical_bytes(observer_projection[key]) != canonical_bytes(worker_projection[key])
+                           for key in SETTINGS_KEYS if key != "ReadOnly")):
+                raise RuntimeError("Observed CLI/observer runtime differs beyond the explicit read-only phase.")
+            observer_runtime = {**runtime, "effective_settings_sha256": settings_hash(observer_projection)}
+            evidence["native-runtime-phases.json"] = {
+                "schema_version": 1, "source_head_sha": source_head,
+                "worker": {"runtime": runtime, "projection": worker_projection},
+                "observer": {"runtime": observer_runtime, "projection": observer_projection},
+                "allowed_projection_difference": ["ReadOnly"], "canonical_server": public_base,
+                "observer_connection_origin": base,
+            }
+            evidence["prebarrier-storage-materialization.json"] = evidence["storage-materialization.json"]
+            observer_pages, evidence["storage-materialization.json"] = materialize_desired(
+                api, previous_authored, baseline, authored, source_head, observer_runtime, actor,
+                previous_source_head=PREVIOUS_AUTHORED_COMMIT,
+            )
+            if observer_pages != pages:
+                raise RuntimeError("Authoritative read-only PST changed the desired corpus bytes.")
+            native.proof["barrier"] = {"public_php_exited": not public_state["Running"],
+                                       "public_db_requests": 0, "public_transactions": 0,
+                                       "public_http_unreachable": True, "private_observer_edit_error": "readonly",
+                                       "worker_surface": "CLI-only; no published ports"}
             rehearsal = Rehearsal(api, sys.modules[__name__], baseline, pages, data, catalog,
-                                  baseline_catalog, runtime, source_head)
-            rehearsal.run(csrf, wait_for_server_tick, drain_jobs, job_status)
+                                  baseline_catalog, observer_runtime, source_head)
+            save, accept = native.full_run(rehearsal, {
+                key: hashlib.sha256(canonical_bytes(corpus)).hexdigest()
+                for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
+                                    ("authored", authored), ("desired", pages))
+            })
+            rehearsal.run(save, wait_for_server_tick, drain_jobs, job_status, accept)
             evidence.update(rehearsal.artifacts())
             if set(pages) != managed_titles(api):
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
             drain_jobs()
-            smoke_reader_release(api, pages, data, catalog, details, image_hashes)
+            def open_media(url, timeout=30):
+                parsed = urllib.parse.urlsplit(url)
+                if parsed[:2] != urllib.parse.urlsplit(public_base)[:2]:
+                    raise RuntimeError("A media URL escaped the unchanged canonical wiki origin.")
+                return urllib.request.urlopen(base + urllib.parse.urlunsplit(("", "", parsed.path, parsed.query, "")),
+                                              timeout=timeout)
+            smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
@@ -1162,6 +1263,33 @@ def smoke(evidence_dir=None):
                 rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
                 if f'id="{anchor}"' not in rendered:
                     raise RuntimeError("MediaWiki did not render the entity page's primary record anchor.")
+            accept(len(rehearsal.order), {
+                **rehearsal.pending_final_guard, "final_observations": rehearsal.final_observations,
+                "mixed_price_expectations": evidence["price-expectations-candidate.json"],
+                "final_categories_and_reader_release": "passed",
+                "final_prerequisite_stability": "passed",
+            })
+            if len(rehearsal.prefixes) != 450 or len(native.release_journal.accepted) != 449:
+                raise RuntimeError("Native full-prefix proof is incomplete.")
+            native.release_journal.verify_resume(native.states(native.release_journal.manifest,
+                                                                native.release_journal.accepted))
+            native.release_journal.close()
+            with Journal(workspace / "native-release-journal") as replayed:
+                if len(replayed.accepted) != 449:
+                    raise RuntimeError("Native durable release replay is incomplete.")
+            evidence["native-publication-proof.json"] = native.proof
+            evidence["native-journal-proof.json"] = {
+                "schema_version": 1, "source_head_sha": source_head,
+                "scope": "Synthetic-only replayable guard preimages; never a production journal.",
+                "records": replayed.records,
+            }
+            docker("stop", observer)
+            docker("rm", observer)
+            observer = None
+            base = public_base
+            # Only the same final-capable disposable image resumes for ordinary-editor behavior tests.
+            run("start", "mirklurk")
+            run("up", "-d", "--wait", "mirklurk")
             opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
             token = api({"action": "query", "meta": "tokens", "type": "login"})["query"]["tokens"]["logintoken"]
             login = api({
@@ -1230,6 +1358,9 @@ def smoke(evidence_dir=None):
             parsed = api({"action": "parse", "page": "Game mechanics", "prop": "wikitext"})
             if parsed["parse"]["wikitext"]["*"] != preserved:
                 raise RuntimeError("Additive reimport changed a live edit.")
+            drain_jobs()
+            run("stop", "mirklurk")
+            evidence["native-recovery-proof.json"] = native.recovery()
             print(
                 "Disposable Docker smoke passed: install, health, access policy, CAPTCHA, seed, "
                 "edit preservation, CLI image import, resized thumbnail, web uploads disabled."
@@ -1239,7 +1370,8 @@ def smoke(evidence_dir=None):
                 for name, value in evidence.items():
                     with (evidence_dir / name).open("xb") as stream:
                         stream.write(canonical_bytes(value))
-                for name, payload in (("baseline-seed.xml", baseline_payload), ("authored-seed.xml", build_xml(authored)),
+                for name, payload in (("previous-authored-seed.xml", previous_payload),
+                                      ("baseline-seed.xml", baseline_payload), ("authored-seed.xml", build_xml(authored)),
                                       ("desired-seed.xml", build_xml(pages))):
                     with (evidence_dir / name).open("xb") as stream:
                         stream.write(payload)
@@ -1254,6 +1386,10 @@ def smoke(evidence_dir=None):
             sys.stderr.write(error.stderr.decode(errors="replace"))
             raise
         finally:
+            if native is not None:
+                native.close()
+            if observer:
+                docker("rm", "-f", observer)
             run("down", "--volumes", "--remove-orphans")
 
 

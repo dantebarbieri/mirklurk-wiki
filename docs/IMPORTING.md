@@ -65,10 +65,14 @@ scheduled import, or force-update mode in this tool.
 ## Conflict-aware encyclopedia migration
 
 The encyclopedia is a separate reviewed publication, not an automatic update
-to an existing wiki. Keep the complete old generated seed as the **base**,
-the frozen complete current-page dump as **current**, and the new full seed
-as **desired**. Hash and retain all three privately. The read-only planner
-compares page contents, never revision timestamps:
+to an existing wiki. Keep previous authored output **A0**, the approved
+published/stored baseline **B**, new authored output **A1**, and materialized
+desired output **D** separately. B is the prior publication's exact stored
+corpus (the prior D for subsequent releases), not its authored seed. Retain
+and hash all four, with their source commits and materialization/baseline
+receipts. Separately capture a fresh frozen complete live dump as **current**.
+The read-only planner uses B as **base** and D as **desired**, comparing exact
+page contents, never revision timestamps:
 
 ```powershell
 python tools\plan_migration.py --base-export BASE_XML --current-export CURRENT_XML --desired-export DESIRED_XML --output PRIVATE_PLAN_JSON
@@ -170,15 +174,25 @@ pending planned-new-title redlinks. Endpoint-composed expectation candidates
 must be reviewed independently before a downstream validator trusts them.
 An offline baseline rehearsal cannot replace a fresh live export, conflict
 review, writer freeze, or explicit operator authorization.
-For this ordinary-edit release, distinguish authored generator seed A from
-materialized desired snapshot D. The disposable preflight records actual
-only-PST output for changed/new pages and permits only removal of terminal
-CR/LF; unchanged baseline pages retain their exact bytes. The separately
-reviewed materialization receipt binds A to D. Migration comparisons and the
-scoped compatibility/full-prefix proofs use exact D bytes, never a
-normalization fallback. Any later authorized writer must deliberately use
-reviewed D rather than assume that submitting raw A preserves its trailing
-newlines. The disposable installer's welcome-page replacement has no
+Source-change intent is determined by **A1 versus A0**, never A1 versus B.
+When A1 equals A0, D is exact B: no PST and no write, including legacy storage
+whitespace differences. Never reintroduce storage-only whitespace or classify
+an existing authored/stored difference as a community edit. Actual live
+changes are still compared strictly with B; conflicts, collisions, deletions,
+and community changes retain the planner's safeguards.
+For changed/new source only, the disposable preflight records actual
+`ApiParse onlypst=1` output in the title/operator context and requires
+`parse.text['*']` to equal A1 with only terminal CR/LF removed. It never uses
+`parse.wikitext` as the transformed result. Spaces, tabs, NUL, Unicode,
+internal line endings, substitution and signatures have no normalization
+waiver. A source-changed result already equal to B is explicitly
+`storage-noop`, with PST evidence but no redundant revision.
+The schema-2 materialization receipt binds A0/B/A1/D and both source commits;
+missing or inconsistent previous-authored identities fail, never default
+to B. Migration comparisons and the scoped compatibility/full-prefix proofs
+use exact D bytes. Any later authorized writer must deliberately use reviewed
+D rather than submit raw A1. Retain A1 and D separately as the next release's
+A0 and B. The disposable installer's welcome-page replacement has no
 production counterpart.
 Never
 reseed edited owner pages on a schedule; regenerated repository output is

@@ -126,6 +126,8 @@ documented pools, not a measurement of each item's final drop rate.
 | `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
 | `tools/wiki_acquisition.py` | Bounded source, probability, membership, and ownership validation |
 | `tools/plan_migration.py` | Three-way review report that never modifies a wiki |
+| `tools/native_publication.php` | Strict manifest-bound, single-operation CLI publication |
+| `tools/publication_journal.py` | Private POSIX immutable intent/result/accepted-prefix journal |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
 | `tests` | Publication, facts, escaping, deterministic export, and runtime-policy tests |
@@ -185,6 +187,11 @@ uploads remain disabled.
 The hostname is supplied at runtime. This repository does not configure DNS,
 certificates, a reverse proxy, a homeserver, or any existing credentials.
 Development Compose binds only to loopback and is **not** a production stack.
+
+[Native publication](docs/NATIVE_PUBLICATION.md) specifies the reusable one-op
+CAS and durable journal interface. It confers no deployment authorization;
+the private coordinator owns runtime binding, quiescence and preservation
+guards. The disposable smoke harness uses synthetic accounts/images only.
 
 ## Publication and rights
 

@@ -9,6 +9,7 @@ import sys
 import tarfile
 import time
 import urllib.parse
+from collections import Counter
 from decimal import Decimal
 from html.parser import HTMLParser
 from pathlib import Path
@@ -21,8 +22,22 @@ from wiki_render import display_entry, recipe_groups
 from wiki_views import available_views, transclusions
 
 
-BASELINE_COMMIT = "67c690fb6b32617f33947bd5de217fd2077dc6ef"
-BASELINE_SHA256 = "4715cafa65bdca206a8315d084a97d89b0b0275dbefe650f92b59e9c0c1f0e33"
+PREVIOUS_AUTHORED_COMMIT = "67c690fb6b32617f33947bd5de217fd2077dc6ef"
+STORED_BASELINE_BINDING = {
+    "schema_version": 1, "binding_type": "historical-stored-release",
+    "previous_source_head_sha": PREVIOUS_AUTHORED_COMMIT,
+    "previous_source_tree_sha": "a2bfb891b38ed0af5bce74142120f8d6a0ce7081",
+    "previous_authored_seed_bytes": 2542913,
+    "previous_authored_seed_sha256": "4715cafa65bdca206a8315d084a97d89b0b0275dbefe650f92b59e9c0c1f0e33",
+    "baseline_seed_bytes": 2542511,
+    "baseline_seed_sha256": "68f4ce8263570e4d28da8679c49f82a982d7e34d2b35fd1d3331d2431e05ed78",
+    "baseline_corpus_sha256": "ea08accc34f121bfbf0279b8b59af55a1c4fde08ec39872dbc6e0ad4a4cbf0cc",
+    "managed_title_count": 401,
+    "historical_transform": "published-67c690f-terminal-lf-except-exact-titles",
+    "exact_titles": ["Evidence and spoilers"],
+    "removed_lf_counts": {"0": 1, "1": 399, "2": 1},
+    "scope": "Reconstruct this exact independently observed release only; not a fresh live export or normalization authority.",
+}
 COHORT = ("being-8", "being-19", "being-26", "item-32", "item-84", "item-138",
           "item-139", "item-140", "item-248")
 COMPATIBILITY = {
@@ -60,25 +75,59 @@ def only_pst(api, title, text, actor):
     return transformed["*"]
 
 
-def materialization_header(baseline, authored, desired, source_head, runtime, actor, evidence_kind):
+def validate_materialization_inputs(previous_authored, baseline, authored):
+    for name, pages in (("previous authored", previous_authored), ("stored baseline", baseline), ("authored", authored)):
+        if not isinstance(pages, dict):
+            raise RuntimeError("Materialization requires an explicit " + name + " corpus.")
+        if any(not isinstance(title, str) or not title or title_key(title) != title or not isinstance(text, str)
+               for title, text in pages.items()):
+            raise RuntimeError("Materialization has invalid or duplicate normalized " + name + " identities.")
+    if previous_authored.keys() != baseline.keys() or not baseline.keys() <= authored.keys():
+        raise RuntimeError("Materialization has missing or unknown previous-authored/stored baseline identities.")
+
+
+def materialization_header(previous_authored, baseline, authored, desired, source_head, runtime, actor,
+                           previous_source_head, evidence_kind):
+    validate_materialization_inputs(previous_authored, baseline, authored)
+    if any(not isinstance(head, str) or not re.fullmatch(r"[0-9a-f]{40}", head)
+           for head in (previous_source_head, source_head)):
+        raise RuntimeError("Materialization requires exact previous and current authored source commits.")
     if not isinstance(evidence_kind, str) or evidence_kind not in {"disposable-mediawiki", "synthetic-unit-fixture"}:
         raise RuntimeError("Storage materialization is not live execution authority.")
     return {
-        "schema_version": 1, "receipt_type": "mediawiki-storage-materialization",
+        "schema_version": 2, "receipt_type": "mediawiki-storage-materialization",
         "evidence_kind": evidence_kind, "acceptance": "terminal-crlf-only",
         "source_head_sha": source_head, "checkout_sha": source_head, "runtime": runtime, "actor": actor,
+        "previous_source_head_sha": previous_source_head,
+        "previous_authored_seed_sha256": hashlib.sha256(build_xml(previous_authored)).hexdigest(),
         "baseline_seed_sha256": hashlib.sha256(build_xml(baseline)).hexdigest(),
         "authored_seed_sha256": hashlib.sha256(build_xml(authored)).hexdigest(),
         "desired_seed_sha256": hashlib.sha256(build_xml(desired)).hexdigest(),
     }
 
 
-def verify_materialization(baseline, authored, desired, receipt, source_head, runtime, actor, evidence_kind):
-    header = materialization_header(baseline, authored, desired, source_head, runtime, actor, evidence_kind)
+def materialization_record(title, previous_authored, baseline, authored, desired):
+    unchanged = title in previous_authored and previous_authored[title] == authored[title]
+    classification = ("unchanged" if unchanged else "create" if title not in baseline
+                      else "storage-noop" if desired[title] == baseline[title] else "update")
+    return {
+        "title": title, "classification": classification,
+        "previous_authored_sha256": text_hash(previous_authored.get(title)),
+        "baseline_sha256": text_hash(baseline.get(title)), "authored_sha256": text_hash(authored[title]),
+        "desired_sha256": text_hash(desired[title]),
+        "removed_suffix": None if unchanged else authored[title][len(desired[title]):],
+        "only_pst_output": None if unchanged else desired[title],
+    }
+
+
+def verify_materialization(previous_authored, baseline, authored, desired, receipt, source_head, runtime, actor,
+                           *, previous_source_head, evidence_kind):
+    header = materialization_header(previous_authored, baseline, authored, desired, source_head, runtime, actor,
+                                    previous_source_head, evidence_kind)
     if (not isinstance(receipt, dict) or set(receipt) != set(header) | {"pages"}
             or canonical_bytes({key: receipt[key] for key in header}) != canonical_bytes(header)):
         raise RuntimeError("Materialization source, runtime, actor, hash or schema pins differ.")
-    if not baseline.keys() <= authored.keys() or set(desired) != set(authored):
+    if set(desired) != set(authored):
         raise RuntimeError("Materialization changed the complete managed title set.")
     if (not isinstance(receipt["pages"], list) or not all(isinstance(row, dict) for row in receipt["pages"])
             or [row.get("title") for row in receipt["pages"]] != sorted(authored)):
@@ -86,37 +135,32 @@ def verify_materialization(baseline, authored, desired, receipt, source_head, ru
     for row in receipt["pages"]:
         title = row["title"]
         text = authored[title]
-        unchanged = baseline.get(title) == text
-        expected = text if unchanged else text.rstrip("\r\n")
+        unchanged = title in previous_authored and previous_authored[title] == text
+        expected = baseline[title] if unchanged else text.rstrip("\r\n")
         if desired[title] != expected:
             raise RuntimeError("Materialization changed more than approved terminal CR/LF or rewrote an unchanged page.")
-        expected_row = {
-            "title": title, "classification": "unchanged" if unchanged else "update" if title in baseline else "create",
-            "baseline_sha256": text_hash(baseline.get(title)), "authored_sha256": text_hash(text),
-            "desired_sha256": text_hash(desired[title]), "removed_suffix": text[len(expected):],
-            "only_pst_output": None if unchanged else desired[title],
-        }
+        expected_row = materialization_record(title, previous_authored, baseline, authored, desired)
         if row != expected_row:
             raise RuntimeError("Materialization output, classification, suffix or per-title hashes differ.")
 
 
-def materialize_desired(api, baseline, authored, source_head, runtime, actor, evidence_kind="disposable-mediawiki"):
+def materialize_desired(api, previous_authored, baseline, authored, source_head, runtime, actor,
+                        *, previous_source_head, evidence_kind="disposable-mediawiki"):
+    materialization_header(previous_authored, baseline, authored, {}, source_head, runtime, actor,
+                           previous_source_head, evidence_kind)
     desired, records = {}, []
     for title, text in sorted(authored.items()):
-        unchanged = baseline.get(title) == text
-        output = text if unchanged else only_pst(api, title, text, actor)
-        if output != (text if unchanged else text.rstrip("\r\n")):
+        unchanged = title in previous_authored and previous_authored[title] == text
+        output = baseline[title] if unchanged else only_pst(api, title, text, actor)
+        if output != (baseline[title] if unchanged else text.rstrip("\r\n")):
             raise RuntimeError("Actual only-PST changed more than terminal CR/LF: " + title)
         desired[title] = output
-        records.append({
-            "title": title, "classification": "unchanged" if unchanged else "update" if title in baseline else "create",
-            "baseline_sha256": text_hash(baseline.get(title)), "authored_sha256": text_hash(text),
-            "desired_sha256": text_hash(output), "removed_suffix": text[len(output):],
-            "only_pst_output": None if unchanged else output,
-        })
-    receipt = {**materialization_header(baseline, authored, desired, source_head, runtime, actor, evidence_kind),
+        records.append(materialization_record(title, previous_authored, baseline, authored, desired))
+    receipt = {**materialization_header(previous_authored, baseline, authored, desired, source_head, runtime, actor,
+                                       previous_source_head, evidence_kind),
                "pages": records}
-    verify_materialization(baseline, authored, desired, receipt, source_head, runtime, actor, evidence_kind)
+    verify_materialization(previous_authored, baseline, authored, desired, receipt, source_head, runtime, actor,
+                           previous_source_head=previous_source_head, evidence_kind=evidence_kind)
     return desired, receipt
 
 
@@ -154,10 +198,39 @@ def settings_hash(value):
     return hashlib.sha256(canonical_bytes(value)).hexdigest()
 
 
+def reconstruct_stored_baseline(previous_authored, previous_payload):
+    binding = STORED_BASELINE_BINDING
+    validate_materialization_inputs(previous_authored, previous_authored, previous_authored)
+    if (len(previous_payload) != binding["previous_authored_seed_bytes"]
+            or hashlib.sha256(previous_payload).hexdigest() != binding["previous_authored_seed_sha256"]
+            or build_xml(previous_authored) != previous_payload
+            or len(previous_authored) != binding["managed_title_count"]):
+        raise RuntimeError("Previous authored corpus differs from the exact reviewed release seed.")
+    exact = binding["exact_titles"]
+    if (binding["historical_transform"] != "published-67c690f-terminal-lf-except-exact-titles"
+            or len(set(exact)) != len(exact) or not set(exact) <= previous_authored.keys()):
+        raise RuntimeError("The historical stored-baseline transform has unknown or duplicate identities.")
+    # This exception is observed release evidence, not a generic MediaWiki storage rule.
+    pages = {title: text if title in exact else text.rstrip("\n") for title, text in previous_authored.items()}
+    removed = Counter(str(len(text) - len(pages[title])) for title, text in previous_authored.items())
+    payload = build_xml(pages)
+    if (dict(removed) != binding["removed_lf_counts"]
+            or len(payload) != binding["baseline_seed_bytes"]
+            or hashlib.sha256(payload).hexdigest() != binding["baseline_seed_sha256"]
+            or hashlib.sha256(canonical_bytes(pages)).hexdigest() != binding["baseline_corpus_sha256"]):
+        raise RuntimeError("Reconstructed stored baseline differs from the independently observed release binding.")
+    return pages, payload
+
+
 def reconstruct_baseline(root, workspace):
+    tree = subprocess.check_output(["git", "rev-parse", PREVIOUS_AUTHORED_COMMIT + "^{tree}"],
+                                   cwd=root, text=True).strip()
+    if (tree != STORED_BASELINE_BINDING["previous_source_tree_sha"]
+            or PREVIOUS_AUTHORED_COMMIT != STORED_BASELINE_BINDING["previous_source_head_sha"]):
+        raise RuntimeError("The previous authored source tree differs from the release binding.")
     destination = workspace / "baseline-source"
     destination.mkdir()
-    archive = subprocess.run(["git", "archive", BASELINE_COMMIT], cwd=root,
+    archive = subprocess.run(["git", "archive", PREVIOUS_AUTHORED_COMMIT], cwd=root,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout
     with tarfile.open(fileobj=io.BytesIO(archive)) as bundle:
         for member in bundle:
@@ -170,16 +243,16 @@ def reconstruct_baseline(root, workspace):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 with target.open("xb") as stream:
                     stream.write(bundle.extractfile(member).read())
-    output = workspace / "baseline-seed.xml"
+    output = workspace / "previous-authored-seed.xml"
     subprocess.run([sys.executable, str(destination / "tools" / "build_wiki.py"),
                     "--fresh", "--output", str(output)], check=True, stdout=subprocess.PIPE)
-    payload = output.read_bytes()
-    if len(payload) != 2542913 or hashlib.sha256(payload).hexdigest() != BASELINE_SHA256:
-        raise RuntimeError("Reconstructed baseline differs from the reviewed 401-title seed.")
-    pages = read_snapshot(output)
-    if len(pages) != 401:
-        raise RuntimeError("The frozen baseline title count changed.")
-    return pages, payload, baseline_metadata((destination / "content" / "facts" / "catalog.json").read_bytes())
+    previous_payload = output.read_bytes()
+    previous_authored = read_snapshot(output)
+    pages, payload = reconstruct_stored_baseline(previous_authored, previous_payload)
+    with (workspace / "baseline-seed.xml").open("xb") as stream:
+        stream.write(payload)
+    return (previous_authored, previous_payload, pages, payload,
+            baseline_metadata((destination / "content" / "facts" / "catalog.json").read_bytes()))
 
 
 def planned_order(baseline, desired, locations, baseline_prices, coins):
@@ -377,7 +450,7 @@ class Rehearsal:
         self.provenance = {
             "schema_version": 1, "evidence_kind": "disposable-mediawiki",
             "source_head_sha": source_head, "checkout_sha": source_head,
-            "baseline_seed_sha256": BASELINE_SHA256,
+            "baseline_seed_sha256": hashlib.sha256(build_xml(baseline)).hexdigest(),
             "desired_seed_sha256": hashlib.sha256(build_xml(desired)).hexdigest(), "runtime": runtime,
         }
 
@@ -851,7 +924,7 @@ class Rehearsal:
         print(f"ENDPOINT_CANDIDATE {endpoint}: {len(captures['selected'])} context projections, "
               f"{len(captures['discrepancies'])} explicit discrepancies; independent review required.", flush=True)
 
-    def run(self, token, wait_tick, drain_jobs, job_status=None):
+    def run(self, save, wait_tick, drain_jobs, job_status, accept):
         self.refresh_metadata()
         self.capture_endpoint("baseline")
         self.capture_link_endpoint("baseline")
@@ -863,19 +936,11 @@ class Rehearsal:
         for index, title in enumerate(self.order, 1):
             prerequisites = [self.probe(title, owner, arguments) for owner, arguments in transclusions(self.desired[title])]
             wait_tick(self.api)
-            parameters = {"action": "edit", "title": title, "text": self.desired[title], "token": token}
-            if title in self.metadata:
-                parameters["baserevid"] = self.metadata[title]["revid"]
-                parameters["nocreate"] = 1
-            else:
-                parameters["createonly"] = 1
-            edit = self.api(parameters, post=True).get("edit", {})
-            if edit.get("result") != "Success" or "newrevid" not in edit or "nochange" in edit:
-                raise RuntimeError("A planned prefix save did not create exactly one normal revision.")
+            revision_id = save(title, self.metadata, self.desired[title], prerequisites)
             self.current[title] = self.desired[title]
             drain_jobs()
             self.refresh_metadata()
-            if edit["newrevid"] != self.metadata[title]["revid"]:
+            if revision_id != self.metadata[title]["revid"]:
                 raise RuntimeError("The saved revision is not the observed current pointer.")
             affected = {title}
             affected.update(consumer for consumer, text in self.current.items()
@@ -889,6 +954,12 @@ class Rehearsal:
                     raise RuntimeError("The actual sequence violated the frozen compatibility cohort order.")
                 cohort_index += 1
                 self.capture_cohort(cohort_index)
+            guard = {"prefix": self.prefixes[-1], "price_prefix": self.compatibility[-1],
+                     "prerequisite_checks": prerequisites}
+            if index < len(self.order):
+                accept(index, guard)
+            else:
+                self.pending_final_guard = guard
             print(f"PREFIX_PROGRESS {index}/{len(self.order)} {title}", flush=True)
         if self.current != self.desired or cohort_index != 9:
             raise RuntimeError("The full planned sequence did not reach the exact desired corpus.")
