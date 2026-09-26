@@ -2,6 +2,7 @@
 
 import copy
 import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -16,11 +17,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 from smoke_deploy import (
     RenderedRows, bounded_maintenance, check_parser_errors, drain_jobs_bounded, item_links,
-    plain, require_image_coverage, synthetic_image_specs, wait_for_server_tick,
+    plain, require_image_coverage, smoke, synthetic_image_specs, wait_for_server_tick, write_smoke_evidence,
 )
 from smoke_prefix import (
     COHORT, STORED_BASELINE_BINDING, PendingConsumerUpdate, Rehearsal, baseline_metadata, canonical_bytes,
-    capture_installer_welcome, dom, linked_titles, materialize_desired, planned_order, reconstruct_stored_baseline,
+    capture_installer_welcome, dom, endpoint_targets, linked_titles, materialize_desired, planned_order, reconstruct_stored_baseline,
     settings_hash, strip_colon_invocations, verify_materialization,
 )
 from build_wiki import build_pages, build_xml
@@ -296,6 +297,96 @@ class PrefixTests(unittest.TestCase):
 
 
 class EndpointCandidateTests(unittest.TestCase):
+    def mediawiki_fixture(self, fault=None):
+        rehearsal, _ = self.fixture()
+        rehearsal.current = {"Owner": "<onlyinclude>[[Consumer#row]]</onlyinclude>", "Consumer": "{{:Owner}}"}
+        rehearsal.baseline = dict(rehearsal.current)
+        rehearsal.desired = dict(rehearsal.current)
+        rehearsal.validate_projection = lambda *args: None
+        original_api = rehearsal.api
+        def api(query, **kwargs):
+            if query["action"] == "query":
+                return original_api(query)
+            if query["action"] == "expandtemplates":
+                return {"expandtemplates": {"wikitext": "[[Consumer#row]]"}}
+            title = query.get("title", query.get("page"))
+            selected = "{{:Owner}}" in query.get("text", "")
+            linked = selected or query.get("page") in rehearsal.current or query.get("text") == rehearsal.current["Owner"]
+            html = (f'<div id="toc" class="toc"><a href="#Top">Top</a></div>'
+                    f'<span class="mw-editsection"><a href="?title={title}&amp;action=edit&amp;section=1">edit</a></span>')
+            links = []
+            if linked:
+                href = "#row" if title == "Consumer" else "?title=Consumer#row"
+                css = ' class="mw-selflink-fragment"' if title == "Consumer" else ""
+                html += f'<a{css} href="{href}">Consumer</a>'
+                if title != "Consumer":
+                    links = [{"ns": 0, "*": "Consumer"}]
+            result = {"text": {"*": html}, "templates": [{"*": "Owner"}] if selected else [],
+                      "links": links, "revid": rehearsal.metadata.get(title, {}).get("revid")}
+            if fault:
+                fault(query, result)
+            return {"parse": result}
+        rehearsal.api = api
+        return rehearsal
+
+    def test_mediawiki_self_fragments_and_navigation_are_not_parser_dependencies(self):
+        rehearsal = self.mediawiki_fixture()
+        rehearsal.capture_link_endpoint("baseline")
+        result = rehearsal.link_candidates["baseline"]
+        self.assertTrue(result["capture_complete"])
+        self.assertFalse(result["candidate_promotion_blocked"])
+        neutral, contextual = result["selected"]
+        self.assertNotEqual(neutral["links"], contextual["links"])
+        self.assertEqual(neutral["semantic_targets"], ["Consumer#row"])
+        self.assertEqual(contextual["semantic_targets"], ["Consumer#row"])
+        parsed = dom('<a class="mw-selflink selflink">Consumer</a>'
+                     '<a class="mw-selflink-fragment" href="#row">row</a>'
+                     '<a href="?title=Consumer"><img alt="linked image"></a>', "Consumer")
+        self.assertEqual(endpoint_targets(parsed, rehearsal.current), ({"Consumer"}, {"Consumer", "Consumer#row"}))
+        self.assertEqual(len(parsed.wiki_links), 3)
+        ordinary = dom('<a href="#Top">Content fragment</a>'
+                       '<a href="?title=Consumer&amp;action=edit&amp;section=1">Content edit link</a>', "Consumer")
+        self.assertEqual(endpoint_targets(ordinary, rehearsal.current), ({"Consumer"}, {"Consumer", "Consumer#Top"}))
+
+    def test_contextual_wrong_missing_self_links_fragments_and_redlinks_still_block(self):
+        for replacement in ('<a href="#wrong">Consumer</a>', "", '<a href="?title=Owner">Owner</a>',
+                            '<a class="new" href="#row">Consumer</a>'):
+            def fault(query, result):
+                if query.get("title") == "Consumer" and query.get("text") == "{{:Owner}}":
+                    result["text"]["*"] = replacement
+            with self.subTest(replacement=replacement):
+                rehearsal = self.mediawiki_fixture(fault)
+                rehearsal.capture_link_endpoint("baseline")
+                self.assertTrue(rehearsal.link_candidates["baseline"]["candidate_promotion_blocked"])
+        def wrong_union(query, result):
+            if query.get("page") == "Consumer":
+                result["text"]["*"] += '<a href="#wrong">Wrong original</a>'
+        rehearsal = self.mediawiki_fixture(wrong_union)
+        rehearsal.capture_link_endpoint("baseline")
+        self.assertIn("direct-projected-union", {row["kind"] for row in rehearsal.link_candidates["baseline"]["discrepancies"]})
+
+    def test_navigation_classes_do_not_hide_unexpected_cross_page_links(self):
+        def fault(query, result):
+            if query.get("title") == "Consumer" and query.get("text") == "{{:Owner}}":
+                result["text"]["*"] += '<div id="toc" class="toc"><a href="?title=Owner">Wrong</a></div>'
+        rehearsal = self.mediawiki_fixture(fault)
+        rehearsal.capture_link_endpoint("baseline")
+        self.assertIn("api-dom-targets", {row["kind"] for row in rehearsal.link_candidates["baseline"]["discrepancies"]})
+
+    def test_projection_failure_retains_active_raw_parse_and_incomplete_capture(self):
+        rehearsal = self.mediawiki_fixture()
+        def invalid(*args):
+            raise RuntimeError("Synthetic invalid projection")
+        rehearsal.validate_projection = invalid
+        with self.assertRaisesRegex(RuntimeError, "Synthetic invalid"):
+            rehearsal.capture_link_endpoint("baseline")
+        captures = rehearsal.link_candidates["baseline"]
+        self.assertFalse(captures["capture_complete"])
+        self.assertTrue(captures["candidate_promotion_blocked"])
+        self.assertEqual(captures["active_capture"]["expanded_wikitext"], "[[Consumer#row]]")
+        self.assertIn("mw-editsection", captures["active_capture"]["parse_result"]["text"]["*"])
+        self.assertNotIn("revisions_after", captures)
+
     def test_span_removal_is_byte_exact_duplicate_preserving_and_leaves_other_markup(self):
         text = "\u00e9<noinclude>{{:Owner|view=loot|item=item-1}}</noinclude>\n{{#switch:x|x=y}}\n{{:Owner|view=loot|item=item-1}}\n"
         transformed, spans = strip_colon_invocations(text)
@@ -371,6 +462,9 @@ class EndpointCandidateTests(unittest.TestCase):
         rehearsal, _ = self.fixture(change_revision=True)
         with self.assertRaisesRegex(RuntimeError, "changed during"):
             rehearsal.capture_link_endpoint("desired")
+        result = rehearsal.link_candidates["desired"]
+        self.assertFalse(result["capture_complete"])
+        self.assertNotEqual(result["revisions_before"], result["revisions_after"])
 
     def test_baseline_named_views_are_explicitly_unsupported_not_old_defaults(self):
         rehearsal, calls = self.fixture()
@@ -380,6 +474,98 @@ class EndpointCandidateTests(unittest.TestCase):
         self.assertEqual(len(unsupported), 1)
         self.assertEqual(unsupported[0]["reason"], "view-not-declared")
         self.assertFalse(any("|view=loot" in query.get("text", "") for query in calls))
+
+
+class FailureEvidenceTests(unittest.TestCase):
+    def test_failure_preserves_partial_preimages_without_success_artifact_names(self):
+        rehearsal = SimpleNamespace(link_candidates={"baseline": {"discrepancies": [{"kind": "api-dom-targets"}],
+                                    "selected": [{"html": "<p>Actual captured preimage</p>"}]}}, prefixes=[])
+        native = SimpleNamespace(proof={"operations": []},
+                                 release_journal=SimpleNamespace(records={"manifest.json": {"synthetic": True}}))
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "failed"
+            write_smoke_evidence(path, "a" * 40, {"full-prefix-proof.json": {"not_final": True}},
+                                 {"baseline-seed.xml": b"synthetic"}, RuntimeError("endpoint mismatch"), rehearsal, native)
+            manifest = json.loads((path / "artifact-manifest.json").read_bytes())
+            self.assertEqual(manifest["status"], "failed")
+            self.assertFalse(manifest["complete"])
+            self.assertFalse((path / "full-prefix-proof.json").exists())
+            failure = json.loads((path / "failed-rehearsal.json").read_bytes())
+            self.assertEqual(failure["rehearsal"]["link_candidates"], rehearsal.link_candidates)
+            self.assertEqual(failure["native_partial"]["release_journal_records"], native.release_journal.records)
+            self.assertEqual(failure["failure"], {"type": "RuntimeError", "message": "endpoint mismatch"})
+            for name, pin in manifest["artifacts"].items():
+                raw = (path / name).read_bytes()
+                self.assertEqual((len(raw), hashlib.sha256(raw).hexdigest()), (pin["bytes"], pin["sha256"]))
+            with self.assertRaises(FileExistsError):
+                write_smoke_evidence(path, "a" * 40, {}, {})
+
+    def test_success_writer_keeps_existing_artifacts_and_manifest_hashes(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "passed"
+            write_smoke_evidence(path, "a" * 40, {"proof.json": {"synthetic": True}}, {"baseline-seed.xml": b"seed"})
+            manifest = json.loads((path / "artifact-manifest.json").read_bytes())
+            self.assertEqual(manifest["status"], "passed")
+            self.assertTrue(manifest["complete"])
+            self.assertEqual(set(manifest["artifacts"]), {"proof.json", "baseline-seed.xml"})
+            self.assertFalse((path / "failed-rehearsal.json").exists())
+
+    def test_interruption_before_release_journal_is_explicitly_partial(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "interrupted"
+            write_smoke_evidence(path, "a" * 40, {}, {}, KeyboardInterrupt(), native=SimpleNamespace(proof={"faults": []}))
+            result = json.loads((path / "failed-rehearsal.json").read_bytes())
+            self.assertEqual(result["failure"]["type"], "KeyboardInterrupt")
+            self.assertIsNone(result["native_partial"]["release_journal_records"])
+            self.assertFalse(result["complete"])
+
+    def test_smoke_writes_before_cleanup_and_propagates_original_failure(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / "failure"
+            calls = []
+            failure = RuntimeError("Synthetic config failure before native initialization")
+            def command(args, **kwargs):
+                calls.append(args)
+                if "config" in args:
+                    raise failure
+                if "down" in args:
+                    self.assertTrue((output / "failed-rehearsal.json").exists())
+                return SimpleNamespace(stdout=b"")
+            with (patch("smoke_prefix.reconstruct_baseline", return_value=({}, b"A0", {}, b"B", {})),
+                  patch("smoke_deploy.subprocess.check_output", return_value="a" * 40 + "\n"),
+                  patch("smoke_deploy.subprocess.run", side_effect=command),
+                  patch("smoke_deploy.socket.socket") as socket):
+                socket.return_value.__enter__.return_value.getsockname.return_value = ("127.0.0.1", 12345)
+                with self.assertRaises(RuntimeError) as raised:
+                    smoke(output)
+            self.assertIs(raised.exception, failure)
+            self.assertEqual(sum("down" in args for args in calls), 1)
+            result = json.loads((output / "failed-rehearsal.json").read_bytes())
+            self.assertIsNone(result["rehearsal"])
+            self.assertIsNone(result["native_partial"])
+            with patch("smoke_deploy.subprocess.run") as command, self.assertRaises(FileExistsError):
+                smoke(output)
+            command.assert_not_called()
+
+    def test_evidence_io_failure_does_not_skip_disposable_cleanup(self):
+        calls = []
+        original = RuntimeError("Synthetic failed run")
+        def command(args, **kwargs):
+            calls.append(args)
+            if "config" in args:
+                raise original
+            return SimpleNamespace(stdout=b"")
+        with tempfile.TemporaryDirectory() as folder:
+            with (patch("smoke_prefix.reconstruct_baseline", return_value=({}, b"A0", {}, b"B", {})),
+                  patch("smoke_deploy.subprocess.check_output", return_value="a" * 40),
+                  patch("smoke_deploy.subprocess.run", side_effect=command),
+                  patch("smoke_deploy.write_smoke_evidence", side_effect=OSError("Synthetic disk failure")),
+                  patch("smoke_deploy.socket.socket") as socket):
+                socket.return_value.__enter__.return_value.getsockname.return_value = ("127.0.0.1", 12345)
+                with self.assertRaises(OSError) as raised:
+                    smoke(Path(folder) / "unwritten")
+        self.assertIs(raised.exception.__context__, original)
+        self.assertEqual(sum("down" in args for args in calls), 1)
 
 
 class StoredBaselineTests(unittest.TestCase):

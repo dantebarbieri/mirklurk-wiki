@@ -1026,6 +1026,41 @@ def smoke_images(run, api, base, data, *corpora):
     return {filename: hashlib.sha256(payload).hexdigest() for filename, payload in originals.items()}
 
 
+def write_smoke_evidence(directory, source_head, evidence, seeds, failure=None, rehearsal=None, native=None):
+    from smoke_prefix import canonical_bytes
+    directory.mkdir(parents=True, exist_ok=False)
+    status = "failed" if failure is not None else "passed"
+    if failure is not None:
+        partial = None if rehearsal is None else {
+            key: getattr(rehearsal, key, None) for key in (
+                "provenance", "binding", "order", "base_meta", "metadata", "prefixes", "probes", "link_candidates",
+                "default_endpoints", "default_prefixes", "used_baseline_defaults",
+                "context_previews", "context_checks", "consumer_html", "settling",
+            )
+        }
+        evidence = {"failed-rehearsal.json": {
+            "schema_version": 1, "kind": "failed-disposable-rehearsal", "status": "failed", "complete": False,
+            "source_head_sha": source_head, "failure": {"type": type(failure).__name__, "message": str(failure)},
+            "partial_evidence": evidence, "rehearsal": partial,
+            "native_partial": None if native is None else {
+                "proof": native.proof,
+                "release_journal_records": None if getattr(native, "release_journal", None) is None else native.release_journal.records,
+            },
+            "notice": "Partial observations only; no completed rehearsal, replay, cleanup or publication admission is claimed.",
+        }}
+    for name, value in evidence.items():
+        with (directory / name).open("xb") as stream:
+            stream.write(canonical_bytes(value))
+    for name, payload in seeds.items():
+        with (directory / name).open("xb") as stream:
+            stream.write(payload)
+    hashes = {path.name: {"bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+              for path in sorted(directory.iterdir())}
+    with (directory / "artifact-manifest.json").open("xb") as stream:
+        stream.write(canonical_bytes({"source_head_sha": source_head, "status": status, "complete": failure is None,
+                                     "artifacts": hashes, "notice": "Disposable observations only; no live writes authorized."}))
+
+
 def smoke(evidence_dir=None, incremental_inputs=None):
     from smoke_native import NativeSmoke, docker, require_historical_coverage
     from publication_journal import Journal
@@ -1035,6 +1070,8 @@ def smoke(evidence_dir=None, incremental_inputs=None):
         materialize_desired, reconstruct_baseline, settings_hash,
     )
 
+    if evidence_dir is not None and evidence_dir.exists():
+        raise FileExistsError("Smoke evidence directory must be new; preserve previous attempts.")
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
         workspace = Path(folder)
@@ -1053,6 +1090,8 @@ def smoke(evidence_dir=None, incremental_inputs=None):
         subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=True)
         evidence = ({"stored-baseline-binding.json": STORED_BASELINE_BINDING} if incremental is None else
                     {"incremental-input-binding.json": incremental})
+        seeds = {"previous-authored-seed.xml": previous_payload, "baseline-seed.xml": baseline_payload}
+        rehearsal = failure = None
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
@@ -1147,6 +1186,7 @@ def smoke(evidence_dir=None, incremental_inputs=None):
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
             data, catalog, details = load_publication_inputs(ROOT)
             authored = build_pages(ROOT, data, catalog, details)
+            seeds["authored-seed.xml"] = build_xml(authored)
             if incremental is not None and authored != inputs["authored"]:
                 raise RuntimeError("Incremental authored source changed after input validation.")
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
@@ -1314,6 +1354,7 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             )
             if observer_pages != pages:
                 raise RuntimeError("Authoritative read-only PST changed the desired corpus bytes.")
+            seeds["desired-seed.xml"] = build_xml(pages)
             native.proof["barrier"] = {"public_php_exited": not public_state["Running"],
                                        "public_db_requests": 0, "public_transactions": 0,
                                        "public_http_unreachable": True, "private_observer_edit_error": "readonly",
@@ -1486,32 +1527,23 @@ def smoke(evidence_dir=None, incremental_inputs=None):
                 "Disposable Docker smoke passed: install, health, access policy, CAPTCHA, seed, "
                 "edit preservation, CLI image import, resized thumbnail, web uploads disabled."
             )
-            if evidence_dir is not None:
-                evidence_dir.mkdir(parents=True, exist_ok=False)
-                for name, value in evidence.items():
-                    with (evidence_dir / name).open("xb") as stream:
-                        stream.write(canonical_bytes(value))
-                for name, payload in (("previous-authored-seed.xml", previous_payload),
-                                      ("baseline-seed.xml", baseline_payload), ("authored-seed.xml", build_xml(authored)),
-                                      ("desired-seed.xml", build_xml(pages))):
-                    with (evidence_dir / name).open("xb") as stream:
-                        stream.write(payload)
-                hashes = {path.name: {"bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
-                          for path in sorted(evidence_dir.iterdir())}
-                with (evidence_dir / "artifact-manifest.json").open("xb") as stream:
-                    stream.write(canonical_bytes({"source_head_sha": source_head, "artifacts": hashes,
-                                                 "notice": "Disposable rehearsal only. Expectations require independent review; no live writes authorized."}))
-        except subprocess.CalledProcessError as error:
-            # The child only receives mounted secret paths, never literal secrets in argv.
-            sys.stderr.write(error.stdout.decode(errors="replace"))
-            sys.stderr.write(error.stderr.decode(errors="replace"))
+        except BaseException as error:
+            # Retain available observations on failure/interrupt, then propagate the original error.
+            failure = error
+            if isinstance(error, subprocess.CalledProcessError):
+                sys.stderr.write((error.stdout or b"").decode(errors="replace"))
+                sys.stderr.write((error.stderr or b"").decode(errors="replace"))
             raise
         finally:
-            if native is not None:
-                native.close()
-            if observer:
-                docker("rm", "-f", observer)
-            run("down", "--volumes", "--remove-orphans")
+            try:
+                if evidence_dir is not None:
+                    write_smoke_evidence(evidence_dir, source_head, evidence, seeds, failure, rehearsal, native)
+            finally:
+                if native is not None:
+                    native.close()
+                if observer:
+                    docker("rm", "-f", observer)
+                run("down", "--volumes", "--remove-orphans")
 
 
 def main():

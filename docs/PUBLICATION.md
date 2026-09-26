@@ -66,7 +66,9 @@ introduce a fixture containing a real secret.
 The catalog validator's named-file cap is 48 KiB, including the bounded
 recipe-input/source joins used to derive acquisition browsing without another
 stored dataset. `tests/test_catalog.py` retains its 66 KiB cap;
-`tools/smoke_prefix.py` has a 70 KiB cap for the explicit incremental hooks;
+`tools/smoke_prefix.py` has a 72 KiB cap for the explicit incremental hooks and
+MediaWiki endpoint-link classification; `tests/test_prefix.py` has a 50 KiB cap
+for their focused link and failure-evidence regressions;
 `tools/smoke_deploy.py` has a 100 KiB cap for their integration with the current
 landmark and seller-context checks.
 The incremental disposable adapter and its synthetic controls have
