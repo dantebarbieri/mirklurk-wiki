@@ -225,6 +225,12 @@ lists. Category pages link to their parents, children, direct articles and
 readable index; no fake main-namespace category links or extra fact owners are
 created.
 
+The disposable reader smoke also compares actual MediaWiki category memberships
+and namespace existence for every generated article/category with the exact
+seed tags. It batches category queries, follows continuation, and verifies parsed
+Skills and category browse links, rather than treating raw category text as proof
+that the parser and category indexes agree.
+
 `skill_groups` optionally supplies `{entity,summary}` once for each existing
 skill-group entity. Category titles and all skill memberships are derived from
 the localized group names and `game.json` group references, never a second

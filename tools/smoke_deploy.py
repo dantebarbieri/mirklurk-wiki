@@ -96,7 +96,68 @@ def check_shield_icon(images, links, styles, armor):
         raise RuntimeError("MediaWiki stripped the shield's pixel rendering style.")
 
 
+def smoke_category_memberships(api, pages):
+    expected = {
+        title: {title_key(target) for target in re.findall(r"\[\[(Category:[^\]|]+)(?:\|[^\]]*)?\]\]", text)}
+        for title, text in pages.items()
+    }
+    titles = sorted(expected)
+    for start in range(0, len(titles), 50):
+        batch = titles[start:start + 50]
+        actual = {title: set() for title in batch}
+        seen = set()
+        continuation = {}
+        tokens = set()
+        for _ in range(100):
+            result = api({
+                "action": "query", "titles": "|".join(batch), "prop": "categories", "cllimit": "max",
+                **continuation,
+            })
+            for row in result["query"]["pages"].values():
+                title = title_key(row["title"])
+                namespace = 14 if title.startswith("Category:") else 0
+                if title not in actual or "missing" in row or "invalid" in row or row["ns"] != namespace:
+                    raise RuntimeError(f"Category query returned a missing, unexpected or wrong-namespace page: {title}")
+                seen.add(title)
+                for category in row.get("categories", []):
+                    if category["ns"] != 14:
+                        raise RuntimeError(f"Category query returned a non-category membership for {title}.")
+                    actual[title].add(title_key(category["title"]))
+            if "continue" not in result:
+                break
+            continuation = result["continue"]
+            if (not isinstance(continuation, dict) or "clcontinue" not in continuation
+                    or not set(continuation) <= {"continue", "clcontinue"}
+                    or not all(isinstance(value, str) for value in continuation.values())):
+                raise RuntimeError("Category query returned invalid continuation parameters.")
+            token = tuple(sorted(continuation.items()))
+            if token in tokens:
+                raise RuntimeError("Category query repeated its continuation token.")
+            tokens.add(token)
+        else:
+            raise RuntimeError("Category query exceeded its 100-response continuation bound.")
+        if seen != set(batch):
+            raise RuntimeError(f"Category query omitted generated pages: {sorted(set(batch) - seen)}")
+        for title in batch:
+            if actual[title] != expected[title]:
+                raise RuntimeError(
+                    f"Category membership mismatch for {title}: "
+                    f"missing={sorted(expected[title] - actual[title])}, extra={sorted(actual[title] - expected[title])}"
+                )
+    for title in titles:
+        if title != "Skills" and not title.startswith("Category:"):
+            continue
+        targets = {title_key(target) for target in re.findall(r"\[\[:(Category:[^\]|]+)(?:\|[^\]]*)?\]\]", pages[title])} - {title}
+        if not targets <= set(pages):
+            raise RuntimeError(f"Category browse links on {title} target pages outside the generated release.")
+        parsed = api({"action": "parse", "page": title, "prop": "links"})["parse"]
+        resolved = {title_key(link["*"]) for link in parsed["links"] if link["ns"] == 14 and "exists" in link}
+        if not targets <= resolved:
+            raise RuntimeError(f"Category browse links did not resolve on {title}: {sorted(targets - resolved)}")
+
+
 def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
+    smoke_category_memberships(api, pages)
     locations = page_locations(data, catalog)
     for identity in MATURE_TREES:
         image = image_for(identity, data["illustrations"])
