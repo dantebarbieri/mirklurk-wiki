@@ -14,6 +14,9 @@ from publication_journal import (
     Journal, JournalError, canonical_bytes, decode, digest, validate_manifest, validate_request,
 )
 
+PREREQUISITE = {"fixture": "synthetic prerequisite guard"}
+GUARD = {"fixture": "synthetic preservation guard", "trace": ["before", "after"]}
+
 
 def sha(text):
     return hashlib.sha256(text.encode()).hexdigest()
@@ -37,7 +40,7 @@ def fixtures():
         "schema_version": 1, "kind": "native-publication-request", "manifest_sha256": digest(manifest),
         "run_nonce": manifest["run_nonce"], "index": 1, "attempt": 1, "operation_nonce": "b" * 32,
         "worker": {"nonce": "c" * 32, "identity": "synthetic-worker"}, "desired_text": "New",
-        "prerequisites": [], "prerequisite_evidence_sha256": "3" * 64, "previous_accepted_sha256": digest(manifest),
+        "prerequisites": [], "prerequisite_evidence_sha256": digest(PREREQUISITE), "previous_accepted_sha256": digest(manifest),
     }
     start = {"pid": 123, "boot_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
              "process_start_ticks": 100, "db_connection_id": 77}
@@ -48,7 +51,7 @@ def fixtures():
         "worker": request["worker"], "start": start,
         "quiescence": {"worker_exited": True, "request_finished": True, "owned_transactions_absent": True,
                        "authority_sha256": "4" * 64},
-        "states": [revision, *manifest["preserved"]], "guard_sha256": "5" * 64, "observation_nonce": "d" * 32,
+        "states": [revision, *manifest["preserved"]], "guard_sha256": digest(GUARD), "observation_nonce": "d" * 32,
     }
     return manifest, request, evidence
 
@@ -102,8 +105,14 @@ class JournalTests(unittest.TestCase):
         self.path = Path(self.temporary.name) / "run"
         self.manifest, self.request, self.evidence = fixtures()
 
+    def new(self, path=None):
+        journal = Journal(path or self.path, self.manifest)
+        journal.put_artifact(PREREQUISITE)
+        journal.put_artifact(GUARD)
+        return journal
+
     def test_lost_committed_response_reconciles_without_resending(self):
-        with Journal(self.path, self.manifest) as journal:
+        with self.new() as journal:
             journal.intent(self.request)
             with self.assertRaises(JournalError):
                 journal.intent(self.request)
@@ -117,7 +126,7 @@ class JournalTests(unittest.TestCase):
                 reopened.accept(self.request)
 
     def test_missing_stdout_timeout_and_false_quiescence_cannot_retry(self):
-        with Journal(self.path, self.manifest) as journal:
+        with self.new() as journal:
             journal.intent(self.request)
             retry = {**self.request, "attempt": 2, "worker": {"nonce": "e" * 32, "identity": "retry-worker"}}
             with self.assertRaisesRegex(JournalError, "noncommit"):
@@ -130,7 +139,7 @@ class JournalTests(unittest.TestCase):
             self.assertEqual(len(journal.accepted), 0)
 
     def test_positive_old_state_permits_fresh_attempt_but_not_reused_nonce(self):
-        with Journal(self.path, self.manifest) as journal:
+        with self.new() as journal:
             journal.intent(self.request)
             self.evidence["states"] = list(journal.expected_states([]).values())
             self.assertEqual(journal.observe(self.request, self.evidence), "retry")
@@ -145,7 +154,7 @@ class JournalTests(unittest.TestCase):
             self.assertEqual(sum(name.startswith("intent-") for name in journal.records), 2)
 
     def test_foreign_identical_text_and_mixed_preservation_fail_closed(self):
-        with Journal(self.path, self.manifest) as journal:
+        with self.new() as journal:
             journal.intent(self.request)
             for field, value in (("comment", "Somebody else's identical edit"), ("parent_id", 4),
                                  ("actor_id", 3), ("page_id", 22), ("parent_id", True)):
@@ -162,7 +171,7 @@ class JournalTests(unittest.TestCase):
                 journal.observe(self.request, evidence)
 
     def test_result_and_observation_bind_same_process(self):
-        with Journal(self.path, self.manifest) as journal:
+        with self.new() as journal:
             journal.intent(self.request)
             event = {key: self.evidence[key] for key in ("schema_version", "request_sha256", "worker", "start")}
             event.update(kind="native-publication-start", manifest_sha256=digest(self.manifest))
@@ -179,7 +188,7 @@ class JournalTests(unittest.TestCase):
             self.assertEqual(len(journal.accepted), 1)
 
     def test_exclusive_lock_and_no_overwrite(self):
-        with Journal(self.path, self.manifest) as journal:
+        with self.new() as journal:
             with self.assertRaises(BlockingIOError):
                 Journal(self.path)
             journal.intent(self.request)
@@ -189,7 +198,7 @@ class JournalTests(unittest.TestCase):
             self.assertEqual((self.path / Journal.name("intent", self.request)).read_bytes(), raw)
 
     def test_aliases_damage_and_unknown_records_are_rejected(self):
-        with Journal(self.path, self.manifest):
+        with self.new():
             pass
         os.link(self.path / "manifest.json", self.path.parent / "alias")
         with self.assertRaisesRegex(JournalError, "aliased"):
@@ -206,7 +215,7 @@ class JournalTests(unittest.TestCase):
     def test_process_crashes_at_each_publication_edge_never_invent_progress(self):
         for edge in ("written", "file-synced", "published", "unlinked", "directory-synced"):
             path = self.path.parent / edge
-            with Journal(path, self.manifest):
+            with self.new(path):
                 pass
             process = multiprocessing.get_context("fork").Process(
                 target=crash_writer, args=(path, self.request, edge))
@@ -220,6 +229,24 @@ class JournalTests(unittest.TestCase):
                 with Journal(path) as journal:
                     self.assertEqual(len(journal.accepted), 0)
                     self.assertIn(Journal.name("intent", self.request), journal.records)
+
+    def test_guard_preimages_are_durable_required_and_hash_checked_on_restart(self):
+        with Journal(self.path, self.manifest) as journal:
+            with self.assertRaisesRegex(JournalError, "artifact"):
+                journal.intent(self.request)
+            self.assertEqual(journal.put_artifact(PREREQUISITE), digest(PREREQUISITE))
+            journal.intent(self.request)
+            with self.assertRaisesRegex(JournalError, "artifact"):
+                journal.observe(self.request, self.evidence)
+            journal.put_artifact(GUARD)
+            journal.observe(self.request, self.evidence)
+            journal.accept(self.request)
+        with Journal(self.path) as reopened:
+            self.assertEqual(reopened.get_artifact(digest(GUARD)), GUARD)
+            reopened.put_artifact(GUARD)
+        (self.path / f"artifact-{digest(GUARD)}.json").write_bytes(canonical_bytes({"changed": True}))
+        with self.assertRaisesRegex(JournalError, "artifact"):
+            Journal(self.path)
 
 
 if __name__ == "__main__":

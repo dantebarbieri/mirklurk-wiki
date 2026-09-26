@@ -151,6 +151,7 @@ def validate_request(manifest, request):
             "Request manifest binding differs.")
     positive(request["index"])
     positive(request["attempt"])
+    require(request["attempt"] <= 999, "Attempt limit exceeded.")
     require(request["index"] <= len(manifest["operations"]), "Unknown operation.")
     operation = manifest["operations"][request["index"] - 1]
     require(request["operation_nonce"] == operation["operation_nonce"], "Operation nonce differs.")
@@ -187,7 +188,7 @@ def validate_start(start):
 def validate_event(event, request, kind):
     common = "schema_version kind request_sha256 manifest_sha256 worker start"
     shape(event, common if kind == "native-publication-start" else common + " outcome stage revision error")
-    require(event["schema_version"] == 1 and event["kind"] == kind
+    require(type(event["schema_version"]) is int and event["schema_version"] == 1 and event["kind"] == kind
             and event["request_sha256"] == digest(request)
             and event["manifest_sha256"] == request["manifest_sha256"]
             and event["worker"] == request["worker"], "Worker event binding differs.")
@@ -199,6 +200,9 @@ def validate_event(event, request, kind):
         require((event["outcome"] == "committed") == (event["stage"] == "verified" and event["error"] is None),
                 "Inconsistent worker result.")
         require(event["error"] is None or isinstance(event["error"], str), "Invalid worker error.")
+        if event["outcome"] == "error":
+            require(isinstance(event["error"], str) and event["error"] and event["revision"] is None,
+                    "Failure must contain an explicit error and no successful revision.")
 
 
 def committed_state(manifest, request, state):
@@ -267,6 +271,7 @@ class Journal:
 
     def _publish(self, name, value):
         raw = canonical_bytes(value)
+        require(len(raw) <= 32 * 1024 * 1024, "Journal record exceeds the replay size bound.")
         temporary = "." + name + ".pending"
         file = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
                        0o600, dir_fd=self.fd)
@@ -291,7 +296,8 @@ class Journal:
         records = {}
         for name in os.listdir(self.fd):
             require(name == "manifest.json" or re.fullmatch(
-                r"(?:intent|start|result|evidence)-[0-9]{6}-[0-9]{3}\.json|accepted-[0-9]{6}\.json", name),
+                r"(?:intent|start|result|evidence)-[0-9]{6}-[0-9]{3}\.json|accepted-[0-9]{6}\.json"
+                r"|artifact-[0-9a-f]{64}\.json", name),
                 "Unknown or interrupted journal entry; no automatic repair.")
             file = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=self.fd)
             with os.fdopen(file, "rb") as stream:
@@ -311,6 +317,22 @@ class Journal:
         self._publish(name, value)
         self.records[name] = decode(canonical_bytes(value))
 
+    def put_artifact(self, value):
+        """Durably retain an opaque, caller-reviewed guard preimage before its reference."""
+        fingerprint = digest(value)
+        name = f"artifact-{fingerprint}.json"
+        if name in self.records:
+            require(canonical_bytes(self.records[name]) == canonical_bytes(value), "Artifact digest collision.")
+        else:
+            self._put(name, value)
+        return fingerprint
+
+    def get_artifact(self, fingerprint):
+        hex_value(fingerprint)
+        name = f"artifact-{fingerprint}.json"
+        require(name in self.records and digest(self.records[name]) == fingerprint, "Missing or damaged guard artifact.")
+        return decode(canonical_bytes(self.records[name]))
+
     def expected_states(self, accepted):
         states = {identity(row): {**{key: row[key] for key in ("namespace", "title")}, **row["expected"]}
                   for row in self.manifest["operations"]}
@@ -321,7 +343,8 @@ class Journal:
 
     def _decision(self, request, evidence, accepted):
         shape(evidence, "schema_version kind request_sha256 worker start quiescence states guard_sha256 observation_nonce")
-        require(evidence["schema_version"] == 1 and evidence["kind"] == "native-publication-observation"
+        require(type(evidence["schema_version"]) is int and evidence["schema_version"] == 1
+                and evidence["kind"] == "native-publication-observation"
                 and evidence["request_sha256"] == digest(request) and evidence["worker"] == request["worker"],
                 "Observation binding differs.")
         validate_start(evidence["start"])
@@ -331,6 +354,7 @@ class Journal:
                 "Positive worker/request/transaction quiescence is required.")
         hex_value(evidence["quiescence"]["authority_sha256"])
         hex_value(evidence["guard_sha256"])
+        self.get_artifact(evidence["guard_sha256"])
         hex_value(evidence["observation_nonce"], 32)
         start = self.records.get(self.name("start", request))
         result = self.records.get(self.name("result", request))
@@ -360,6 +384,10 @@ class Journal:
 
     def replay(self):
         accepted, used_workers, known = [], set(), {"manifest.json"}
+        for name, value in self.records.items():
+            if name.startswith("artifact-"):
+                require(name == f"artifact-{digest(value)}.json", "Guard artifact hash differs.")
+                known.add(name)
         previous = digest(self.manifest)
         pending = False
         for operation in self.manifest["operations"]:
@@ -372,6 +400,7 @@ class Journal:
                 require(index == len(accepted) + 1, "Intent skips a missing prefix.")
                 request = self.records[name]
                 validate_request(self.manifest, request)
+                self.get_artifact(request["prerequisite_evidence_sha256"])
                 require(request["index"] == index and request["attempt"] == attempt
                         and request["previous_accepted_sha256"] == previous, "Intent chain differs.")
                 require(request["worker"]["nonce"] not in used_workers, "Worker nonce reused.")
@@ -409,6 +438,7 @@ class Journal:
 
     def intent(self, request):
         validate_request(self.manifest, request)
+        self.get_artifact(request["prerequisite_evidence_sha256"])
         require(request["index"] == len(self.accepted) + 1 and request["previous_accepted_sha256"] == self.previous,
                 "Only the next unaccepted operation can be dispatched.")
         require(request["attempt"] <= 999, "Attempt limit exceeded.")
@@ -419,7 +449,7 @@ class Journal:
         attempts = [row for row in intents if row["index"] == request["index"]]
         require(request["attempt"] == len(attempts) + 1, "Attempt sequence differs.")
         if attempts:
-            prior = attempts[-1]
+            prior = max(attempts, key=lambda row: row["attempt"])
             evidence = self.records.get(self.name("evidence", prior))
             require(evidence is not None and self._decision(prior, evidence, self.accepted)[0] == "retry",
                     "Retry lacks positive noncommit evidence.")
@@ -434,6 +464,9 @@ class Journal:
         validate_event(event, request, kind)
         if kind == "native-publication-result" and event["outcome"] == "committed":
             committed_state(self.manifest, request, event["revision"])
+        other_kind = "start" if kind == "native-publication-result" else "result"
+        other = self.records.get(self.name(other_kind, request))
+        require(other is None or other["start"] == event["start"], "Worker event process identity differs.")
         self._put(self.name(kind.removeprefix("native-publication-"), request), event)
 
     def observe(self, request, evidence):

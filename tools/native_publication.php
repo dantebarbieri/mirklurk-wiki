@@ -20,6 +20,9 @@ if (PHP_SAPI !== 'cli') {
 }
 require_once (getenv('MW_INSTALL_PATH') ?: '/var/www/html') . '/maintenance/Maintenance.php';
 
+class NativePublicationError extends RuntimeException {
+}
+
 class NativePublication extends Maintenance {
     private string $stage = 'validated';
 
@@ -36,7 +39,7 @@ class NativePublication extends Maintenance {
 
     private function check(bool $condition, string $code): void {
         if (!$condition) {
-            throw new RuntimeException($code);
+            throw new NativePublicationError($code);
         }
     }
 
@@ -69,6 +72,7 @@ class NativePublication extends Maintenance {
             }
             $this->check(is_string($item) || is_int($item) || is_bool($item) || $item === null,
                 'unsupported-json-value');
+            $this->check(!is_int($item) || abs($item) <= 9007199254740991, 'noninteroperable-json-integer');
             return $item;
         };
         return json_encode($sort($value), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
@@ -164,6 +168,7 @@ class NativePublication extends Maintenance {
         }
         $this->positive($request['index']);
         $this->positive($request['attempt']);
+        $this->check($request['attempt'] <= 999, 'attempt-limit-exceeded');
         $this->fields($request['worker'], 'nonce identity');
         $this->hex($request['worker']['nonce'], 32);
         $this->check(is_string($request['worker']['identity'])
@@ -183,6 +188,25 @@ class NativePublication extends Maintenance {
             $this->hex($row['desired_sha256']);
             $this->hex($row['prerequisites_sha256']);
             $this->check($row['desired_sha256'] !== $row['expected']['raw_sha256'], 'dispatched-storage-noop');
+            $this->check(is_array($row['prerequisites']) && array_is_list($row['prerequisites']),
+                'invalid-static-prerequisites');
+            $owners = [];
+            foreach ($row['prerequisites'] as $owner) {
+                $this->fields($owner, 'namespace title raw_sha256');
+                $ownerTitle = $this->title($owner);
+                $this->hex($owner['raw_sha256']);
+                $this->check(!isset($owners[$ownerTitle->getPrefixedText()]), 'duplicate-prerequisite');
+                $owners[$ownerTitle->getPrefixedText()] = true;
+            }
+        }
+        $this->check(is_array($manifest['preserved']) && array_is_list($manifest['preserved']), 'invalid-preserved-list');
+        foreach ($manifest['preserved'] as $row) {
+            $this->fields($row, 'namespace title page_id revision_id raw_sha256');
+            $preservedTitle = $this->title($row);
+            $this->check(!isset($seen[$preservedTitle->getPrefixedText()]), 'duplicate-preserved-title');
+            $seen[$preservedTitle->getPrefixedText()] = true;
+            $this->positive($row['page_id']);
+            $this->tuple(array_intersect_key($row, array_flip(['page_id', 'revision_id', 'raw_sha256'])));
         }
         $operation = $manifest['operations'][$request['index'] - 1];
         $title = $this->title($operation);
@@ -204,6 +228,7 @@ class NativePublication extends Maintenance {
             && $actor->actor_name === $manifest['operator']['name'], 'existing-operator-mismatch');
         $user = $services->getUserFactory()->newFromId($manifest['operator']['id']);
         $this->check($user->getName() === $manifest['operator']['name'], 'operator-name-mismatch');
+        $services->getUserEditTracker()->setCachedUserEditCount($user, (int)$userRow->user_editcount);
         RequestContext::getMain()->setUser($user);
         $stat = file_get_contents('/proc/self/stat');
         $this->check($stat !== false, 'worker-identity-unavailable');
@@ -257,6 +282,7 @@ class NativePublication extends Maintenance {
                 && $revision !== null, 'save-failed-or-null');
             $saved = $this->state($title, $revision);
             $this->check($saved['parent_id'] === $operation['expected']['revision_id']
+                && $saved['revision_id'] > $operation['expected']['revision_id'] && $saved['page_id'] > 0
                 && $saved['raw_sha256'] === $operation['desired_sha256']
                 && $saved['actor_id'] === $manifest['operator']['actor_id']
                 && $saved['comment'] === 'native-publication/v1:' . $requestHash
@@ -281,7 +307,7 @@ class NativePublication extends Maintenance {
             }
             $this->emit([...$event, 'kind' => 'native-publication-result', 'outcome' => 'error',
                 'stage' => $this->stage, 'revision' => null,
-                'error' => $error instanceof RuntimeException ? $error->getMessage() : get_class($error)]);
+                'error' => $error instanceof NativePublicationError ? $error->getMessage() : get_class($error)]);
             // Even an error is not a noncommit certificate. The coordinator must prove quiescence.
             $this->fatalError('Native publication stopped; reconcile the durable intent.', 1);
         }

@@ -124,6 +124,18 @@ is re-fsynced before replay. No acknowledged record is overwritten.
 
 Public methods:
 
+`put_artifact(value)` durably writes opaque canonical JSON as
+`artifact-<sha256>.json` and returns its digest; `get_artifact(sha256)` returns
+the hash-verified preimage. Same-content puts are idempotent, never overwrites.
+Replay verifies every artifact's filename/content digest. An artifact is at most
+32 MiB; larger guard sets should retain separate captures plus a manifest of
+their digests. The coordinator retains its full private guard preimages,
+including capture/trace, account/log/history/File chronology, price review and
+barrier evidence; a digest alone is not enough to reconstruct restart guards.
+There is no domain-specific guard interpretation in this store.
+The prerequisite evidence artifact must exist **before** `intent()`, and the
+fresh preservation guard artifact must exist **before** `observe()`/acceptance.
+
 1. `intent(request)` durably records `intent-NNNNNN-AAA.json` **before dispatch**.
 2. `event(request,event)` records immutable `start-...` / `result-...`.
 3. `observe(request,evidence)` records immutable `evidence-...`; returns

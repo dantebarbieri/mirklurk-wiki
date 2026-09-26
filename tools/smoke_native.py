@@ -3,6 +3,8 @@
 import hashlib
 import io
 import json
+import multiprocessing
+import os
 import secrets
 import subprocess
 import tarfile
@@ -24,6 +26,11 @@ def sha(raw):
 def docker(*args, input_bytes=None, timeout=120):
     return subprocess.run(["docker", *args], input=input_bytes, stdout=subprocess.PIPE,
                           stderr=subprocess.PIPE, check=True, timeout=timeout).stdout
+
+
+def crash_acceptance(path, request, edge):
+    with Journal(path, edge=lambda point: os._exit(91) if point == edge else None) as journal:
+        journal.accept(request)
 
 
 class NativeSmoke:
@@ -80,7 +87,7 @@ class NativeSmoke:
             "operation_nonce": operation["operation_nonce"],
             "worker": {"nonce": secrets.token_hex(16), "identity": "disposable-cli"},
             "desired_text": text, "prerequisites": list(prerequisites),
-            "prerequisite_evidence_sha256": digest(evidence or []), "previous_accepted_sha256": journal.previous,
+            "prerequisite_evidence_sha256": journal.put_artifact(evidence or []), "previous_accepted_sha256": journal.previous,
         }
 
     def states(self, manifest, accepted=()):
@@ -105,13 +112,15 @@ class NativeSmoke:
         return [{key: row[key] for key in expected[row["title"]]}
                 if projection(row) == projection(expected[row["title"]]) else row for row in actual]
 
-    def launch(self, journal, request, fixture_stage=None, deny_rights=False):
-        journal.intent(request)
-        folder = self.workspace / ("native-" + request["worker"]["nonce"])
+    def launch(self, journal, request, fixture_stage=None, deny_rights=None, *, record_intent=True):
+        if record_intent:
+            journal.intent(request)
+        dispatch_id = request["worker"]["nonce"] + "-" + secrets.token_hex(4)
+        folder = self.workspace / ("native-" + dispatch_id)
         folder.mkdir(mode=0o700)
         (folder / "manifest.json").write_bytes(canonical_bytes(journal.manifest))
         (folder / "request.json").write_bytes(canonical_bytes(request))
-        name = "native-smoke-" + request["worker"]["nonce"]
+        name = "native-smoke-" + dispatch_id
         args = ["run", "-d", "--no-deps", "--name", name, "--env", "MW_READ_ONLY=",
                 "--volume", f"{folder}:/native-input:ro"]
         script = "/native/tools/native_publication.php"
@@ -123,9 +132,11 @@ class NativeSmoke:
         if fixture_stage:
             args += ["--fixture-stage", fixture_stage]
         if deny_rights:
+            if deny_rights not in ("edit", "createpage"):
+                raise RuntimeError("Unknown synthetic rights case.")
             (folder / "denied.php").write_text(
                 "<?php require '/var/www/html/LocalSettings.php';"
-                "$wgRevokePermissions['user']['edit'] = true;\n", encoding="utf-8")
+                "$wgRevokePermissions['user'][" + json.dumps(deny_rights) + "] = true;\n", encoding="utf-8")
             args += ["--conf", "/native-input/denied.php"]
         self.run(*args)
         self.containers.append(name)
@@ -182,7 +193,8 @@ class NativeSmoke:
             "quiescence": {"worker_exited": True, "request_finished": True, "owned_transactions_absent": True,
                            "authority_sha256": digest({"container": name, "state": status, "owned_remaining": [0, 0]})},
             "states": self.states(journal.manifest, journal.accepted),
-            "guard_sha256": digest({"scope": "disposable-fresh-managed-state", "manifest": digest(journal.manifest)}),
+            "guard_sha256": journal.put_artifact({"scope": "disposable-fresh-managed-state",
+                                                 "manifest": digest(journal.manifest)}),
             "observation_nonce": secrets.token_hex(16),
         }
         return evidence, results
@@ -260,13 +272,15 @@ class NativeSmoke:
                     "raw_sha256": sha(revision["slots"]["main"]["*"])}
 
         def case(label, *, stage=None, during=None, text=None, expected=None, actor=None, success=False,
-                 lose=False, kill=False, observe=True, deny_rights=False):
+                 lose=False, kill=False, observe=True, deny_rights=None, error=None, duplicate=False,
+                 edge=None, retry_after=False, prerequisites=()):
             desired = text if text is not None else "Native desired " + label
             initial = state_for(title)
-            operation = self.operation(1, title, expected if expected is not None else initial, desired)
+            static_owners = [{key: owner[key] for key in ("namespace", "title", "raw_sha256")} for owner in prerequisites]
+            operation = self.operation(1, title, expected if expected is not None else initial, desired, static_owners)
             manifest = self.manifest([operation], operator=actor or operator)
             with Journal(self.workspace / ("case-" + label), manifest) as journal:
-                request = self.request(manifest, journal, 1, desired)
+                request = self.request(manifest, journal, 1, desired, prerequisites)
                 name = self.launch(journal, request, stage, deny_rights)
                 if stage:
                     self.wait(name, stage)
@@ -279,58 +293,121 @@ class NativeSmoke:
                 evidence, results = self.collect(journal, request, name, lose_result=lose, allow_error=not success or kill)
                 if not success and not kill and (len(results) != 1 or results[0]["outcome"] != "error"):
                     raise RuntimeError("Native negative case did not report failure: " + label)
+                if error is not None and (len(results) != 1 or results[0]["error"] != error):
+                    raise RuntimeError("Native negative case reached the wrong guard: " + label + ": " + repr(results))
                 current = state_for(title)
                 if success and current["raw_sha256"] != sha(desired):
                     raise RuntimeError("Native success did not store exact bytes.")
                 if not success and not during and current != initial:
                     raise RuntimeError("Rejected native operation changed target state: " + label)
                 decision = None
+                recovery_decision = None
+                damaged = False
                 if observe:
                     decision = journal.observe(request, evidence)
                     if decision == "accept":
-                        journal.accept(request)
+                        if edge:
+                            journal.close()
+                            process = multiprocessing.get_context("fork").Process(
+                                target=crash_acceptance, args=(journal.path, request, edge))
+                            process.start()
+                            process.join(15)
+                            if process.is_alive():
+                                process.terminate()
+                                process.join()
+                                raise RuntimeError("Disposable journal crash fixture did not stop.")
+                            if process.exitcode != 91:
+                                raise RuntimeError("Disposable journal crash edge was not reached.")
+                            damaged = edge in ("written", "file-synced", "published")
+                            recovery_decision = "fail-closed-damaged-journal" if damaged else "accepted-after-restart"
+                        else:
+                            journal.accept(request)
+                    elif retry_after:
+                        retry = self.request(manifest, journal, 1, desired, prerequisites, attempt=2)
+                        retry_name = self.launch(journal, retry)
+                        retry_evidence, retry_results = self.collect(journal, retry, retry_name)
+                        recovery_decision = journal.observe(retry, retry_evidence)
+                        if recovery_decision != "accept":
+                            raise RuntimeError("Positively quiesced retry did not commit.")
+                        journal.accept(retry)
+                        results.extend(retry_results)
+                        docker("rm", retry_name)
+                        self.containers.remove(retry_name)
+                if duplicate:
+                    duplicate_name = self.launch(journal, request, record_intent=False)
+                    duplicate_status = self.wait(duplicate_name)
+                    duplicate_results = [json.loads(line) for line in docker("logs", duplicate_name).decode().splitlines()
+                                         if line.startswith("{") and json.loads(line).get("kind") == "native-publication-result"]
+                    if (duplicate_status["ExitCode"] == 0 or len(duplicate_results) != 1
+                            or duplicate_results[0]["error"] != "expected-parent-mismatch" or state_for(title) != current):
+                        raise RuntimeError("Actual duplicate dispatch was not rejected by strict CAS.")
+                    self.proof["cases"].append({"name": "actual-duplicate-dispatch", "result": duplicate_results[0]})
+                    docker("rm", duplicate_name)
+                    self.containers.remove(duplicate_name)
                 self.proof["cases"].append({"name": label, "decision": decision, "results": results,
-                                           "quiescence": evidence["quiescence"], "states_sha256": digest(evidence["states"])})
+                                           "recovery_decision": recovery_decision, "quiescence": evidence["quiescence"],
+                                           "states_sha256": digest(evidence["states"])})
                 docker("rm", name)
                 self.containers.remove(name)
-            with Journal(self.workspace / ("case-" + label)) as reopened:
-                if decision == "accept":
-                    reopened.verify_resume(self.states(manifest, reopened.accepted))
+            if damaged:
+                try:
+                    with Journal(self.workspace / ("case-" + label)):
+                        pass
+                except JournalError:
+                    pass
+                else:
+                    raise RuntimeError("Interrupted journal publication was silently adopted.")
+            else:
+                with Journal(self.workspace / ("case-" + label)) as reopened:
+                    if reopened.accepted:
+                        reopened.verify_resume(self.states(manifest, reopened.accepted))
             return decision
 
-        case("ordinary-update", actor=ordinary, success=True)
-        case("wrong-edit-rights", actor=ordinary, deny_rights=True)
-        case("duplicate-before-parent", expected={"page_id": 0, "revision_id": 0, "raw_sha256": None}, observe=False)
-        case("before-grab-race", stage="before-parent", observe=False, during=lambda: self.api(
+        case("ordinary-update", actor=ordinary, success=True, duplicate=True)
+        case("wrong-edit-rights", actor=ordinary, deny_rights="edit", error="permission-denied-edit")
+        case("create-already-exists", expected={"page_id": 0, "revision_id": 0, "raw_sha256": None},
+             observe=False, error="expected-parent-mismatch")
+        case("before-grab-race", stage="before-parent", observe=False, error="expected-parent-mismatch", during=lambda: self.api(
             {"action": "edit", "title": title, "text": "Competing before parent", "token": csrf}, post=True))
-        case("after-grab-race", stage="after-parent", observe=False, during=lambda: self.api(
+        case("after-grab-race", stage="after-parent", observe=False, error="save-failed-or-null", during=lambda: self.api(
             {"action": "edit", "title": title, "text": "Competing after parent", "token": csrf}, post=True))
-        case("update-gone-missing", stage="before-parent", observe=False, during=lambda: self.api(
+        case("update-gone-missing", stage="before-parent", observe=False, error="expected-parent-mismatch", during=lambda: self.api(
             {"action": "delete", "title": title, "reason": "Disposable create/update mismatch", "token": csrf}, post=True))
         self.api({"action": "protect", "title": title, "protections": "create=sysop", "expiry": "infinite",
                   "token": csrf}, post=True)
-        case("protected-creation", actor=ordinary)
+        case("protected-creation", actor=ordinary, error="permission-denied-create")
         self.api({"action": "protect", "title": title, "protections": "create=all", "expiry": "infinite",
                   "token": csrf}, post=True)
+        case("wrong-create-rights", actor=ordinary, deny_rights="createpage", error="permission-denied-create")
+        case("after-grab-create-race", stage="after-parent", observe=False, error="save-failed-or-null", during=lambda: self.api(
+            {"action": "edit", "title": title, "text": "Competing create", "token": csrf}, post=True))
+        self.api({"action": "delete", "title": title, "reason": "Reset synthetic creation fixture", "token": csrf}, post=True)
         case("ordinary-create", actor=ordinary, success=True)
         self.api({"action": "protect", "title": title, "protections": "edit=sysop", "expiry": "infinite", "token": csrf}, post=True)
-        case("protected-target", actor=ordinary)
+        case("protected-target", actor=ordinary, error="permission-denied-edit")
         self.api({"action": "protect", "title": title, "protections": "edit=all", "expiry": "infinite", "token": csrf}, post=True)
         self.api({"action": "block", "user": "TestEditor", "expiry": "1 hour", "reason": "Disposable native block test",
                   "token": csrf}, post=True)
-        case("blocked-operator", actor=ordinary)
+        case("blocked-operator", actor=ordinary, error="operator-blocked")
         self.api({"action": "unblock", "user": "TestEditor", "token": csrf}, post=True)
-        case("pst-byte-mismatch", text="Native changed trailing LF\n")
+        case("stale-prerequisite", prerequisites=[{"namespace": 0, "title": "Native synthetic editor",
+             **state_for("Native synthetic editor"), "raw_sha256": sha("Stale owner")}], error="expected-parent-mismatch")
+        case("pst-byte-mismatch", text="Native changed trailing LF\n", error="saved-revision-mismatch")
         current = state_for(title)
         raw = next(iter(self.api({"action": "query", "titles": title, "prop": "revisions",
                                  "rvprop": "content", "rvslots": "main"})["query"]["pages"].values()))["revisions"][0]["slots"]["main"]["*"]
-        case("pst-null-save", text=raw + "\n")
+        case("pst-null-save", text=raw + "\n", error="save-failed-or-null")
         if state_for(title) != current:
             raise RuntimeError("Null save was not rejected.")
-        if case("lost-before-commit", stage="before-commit", lose=True, kill=True) != "retry":
+        if case("lost-before-commit", stage="before-commit", lose=True, kill=True, retry_after=True) != "retry":
             raise RuntimeError("Quiesced precommit crash is not retryable.")
         if case("lost-after-commit", stage="after-commit", lose=True, kill=True, success=True) != "accept":
             raise RuntimeError("Postcommit lost response was not reconciled.")
+        case("fresh-postcommit-mismatch", stage="after-commit", observe=False, error="fresh-revision-mismatch",
+             during=lambda: self.api({"action": "edit", "title": title, "text": "Foreign postcommit revision",
+                                     "token": csrf}, post=True))
+        for edge in ("written", "file-synced", "published", "unlinked", "directory-synced"):
+            case("journal-edge-" + edge, success=True, edge=edge)
         for name in (title, "Native synthetic editor"):
             self.api({"action": "delete", "title": name, "reason": "Remove disposable native fixture", "token": csrf}, post=True)
 
@@ -340,6 +417,10 @@ class NativeSmoke:
                 raise RuntimeError("Recovery proof cannot run with an active worker.")
         before = self.root_sql(dump=True)
         table_hashes = {table: sha(self.root_sql(dump=True, tables=(table,))) for table in RECOVERY_TABLES}
+        counts = {table: int(self.root_sql(f"SELECT COUNT(*) FROM `{table}`;")) for table in RECOVERY_TABLES}
+        if any(counts[table] <= 0 for table in ("page", "revision", "slots", "content", "text", "actor",
+                                               "logging", "archive", "user", "image", "comment")):
+            raise RuntimeError("SQL restore coverage lacks populated core tables.")
         self.root_sql("CREATE DATABASE native_disposable_restore;")
         self.root_sql(database="native_disposable_restore", input_bytes=before)
         restored = self.root_sql(database="native_disposable_restore", dump=True)
@@ -362,6 +443,7 @@ class NativeSmoke:
         return {"schema_version": 1, "kind": "disposable-native-recovery-proof", "source_head_sha": self.source_head,
                 "sql_backup_sha256": sha(before), "sql_restored_sha256": sha(restored),
                 "table_backup_sha256": table_hashes, "table_restored_sha256": restored_tables,
+                "table_rows": counts,
                 "image_backup_manifest_sha256": digest(files(image_backup)),
                 "image_restored_manifest_sha256": digest(files(restored_images)), "image_files": len(files(image_backup)),
                 "scope": "Actual isolated synthetic SQL and image restore; no production backup data retained."}
