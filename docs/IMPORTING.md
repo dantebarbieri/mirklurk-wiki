@@ -78,15 +78,22 @@ The new output contains title, action, and content SHA-256 values, not page
 texts or permission to edit. It refuses to overwrite an existing report.
 It cannot prove a supplied dump is complete; that remains an operator gate.
 
-The report also lists selective-transclusion dependencies with the historical
-field names `price_dependencies`, `price_owner`, and
-`current_price_block_ready`; these apply to both item-price blocks and
-coin-summary blocks. A missing or ambiguous live `<onlyinclude>` pair requires
-review. Do not expose a new merchant or currency guide while its existing
-community-owned item page lacks the reviewed selective block: otherwise
-MediaWiki could transclude that entire article. Merge the block through the
-normal conflict-aware editing workflow, preserving surrounding community
-content. Exact presence is a structural check, not approval of the content.
+Report schema version 2 lists every `transclusion_dependencies` edge with
+`page`, `owner`, exact named `parameters`, `current_view_declared`, and
+`current_owner_matches_desired`. It replaces the historical price-only field
+names and does not assume a fixed dependency count or one `onlyinclude` pair.
+An absent/unknown view is still reported, never silently skipped. A declaration
+is a structural check, not proof that live markup parses correctly or approval
+of its contents. A matching hash is not authorization to overwrite a page.
+
+Do not expose a new station, seller, merchant, or currency view until its
+existing community-owned source has the reviewed selective contract; otherwise
+MediaWiki may leak a full article or return the wrong view. Merge owner blocks
+through normal conflict-aware edits while preserving community content.
+Rebuild and recreate only the app from the approved ParserFunctions runtime
+under fresh guarded backups before switching readers. No database, backup,
+provider, or authentication configuration change is part of that runtime step.
+Keep the unchanged default `{{:Item}}` price and `{{:Coin}}` summary contracts.
 
 `new_page_dependencies` records links and memberships targeting pages absent
 from the base seed, including new damage guides and Category pages. Review
@@ -138,6 +145,13 @@ classification, all page counts, and preservation of unrelated live edits.
 For transcluded information, edit the owner page rather than generated copies.
 Verify a canonical price edit updates the merchant view and a coin-weight edit
 updates the guide, without importing full item prose into either. Never
+skip recipe verification: change a canonical ingredient quantity and AP cost
+separately and confirm all corresponding station rows and the normal item page
+update. Confirm filtered sellers omit price back-transclusions and all views
+are free of parser loops, expansion limits, and owner-article leaks. The
+disposable smoke waits across MediaWiki's whole-second cache boundary and
+drains deferred jobs; it does not purge or reseed readers to fake propagation.
+Never
 reseed edited owner pages on a schedule; regenerated repository output is
 not authority over subsequent live edits.
 Rights-reviewed images have their own backed-up operator import; metadata

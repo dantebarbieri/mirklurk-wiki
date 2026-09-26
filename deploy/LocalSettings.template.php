@@ -65,6 +65,7 @@ $wgPasswordAttemptThrottle = [
 
 wfLoadSkin('Vector');
 $wgDefaultSkin = 'vector-2022';
+wfLoadExtension('ParserFunctions');
 wfLoadExtension('ConfirmEdit');
 wfLoadExtension('ConfirmEdit/QuestyCaptcha');
 $wgCaptchaClass = 'QuestyCaptcha';

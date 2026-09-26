@@ -213,8 +213,12 @@ generated in namespace 14; arbitrary namespace titles remain forbidden in the
 entity registry. Groupings are editorial navigation, not biological claims.
 
 `guides` contains bounded original paragraphs, existing related-entity IDs,
-confidence and evidence for the seven damage owners, Health and armor, and
-Action points. Reverse damage links are derived from profiles, never guessed
+confidence and evidence for the seven damage owners and the finite mechanics
+owners: Health and armor, Action points, Satiation, Stamina, Focus, Temperature,
+Wellbeing, Foods, Resting, and Weather. Optional `related_pages` links only to
+other existing reviewed guide records. New mechanics owners are generated only
+when their evidence-backed guide exists, never as empty schema placeholders.
+Reverse damage links are derived from profiles, never guessed
 from weapon names. Remedies and related skills link back to the rule owner.
 `state_history` links two being records and a canonical quest, with attributed
 operator confirmation and optional source evidence. Revival instructions stay
@@ -244,9 +248,10 @@ copied skill formulas.
 Typed merchant/item/input/output/outcome references and exact matching entity
 identity evidence produce bidirectional links. No substring guessing or
 weight-to-probability normalization is used. Each complete record has one
-primary editable wiki owner. Acquisition, ingredient, NPC, and workstation
-catalog links do not repeat prices, ingredient quantities, AP costs, or quest
-prose. Identical recipes may share one row with all applicable stations, but
+primary editable wiki owner. Acquisition and workstation tables transclude
+named views of those owners instead of creating editable copies of prices,
+ingredient quantities, AP costs, or stock conditions. Ingredient and NPC links
+do not copy quest prose. Identical recipes may share one row with all applicable stations, but
 different inputs, outputs, costs, or conditions remain distinct. Legacy
 `entity-`, `fact-`, and `entry-` anchors remain
 on old indexes as links, so old bookmarks are not silently broken.
@@ -279,8 +284,9 @@ Optional `notes`, `related_entities`, `related_stations`, and `quest_entries` pr
 station behavior and verified crosslinks. Optional `variants` have `{id,title}`.
 
 One Alchemy workstation article covers early-game and later-game variants,
-with a shared illustrated output catalog; both variants' identical recipes
-are fully documented only on output-item pages. Armor workstation is identified
+with a shared illustrated recipe table; both variants' identical recipes
+are edited only on output-item pages and displayed through selected rows.
+Armor workstation is identified
 at Bhato's hideout with an evidenced follow-up-conversation unlock; it is not
 marked unused merely because the item-title table lacks an entry.
 
@@ -300,11 +306,44 @@ The offer coverage is validated against actual merchant-to-item references.
 
 The 36 verified standard prices do not depend on unresolved recipe-price
 postprocessing; they cover 52 offers, leaving 11 offers unresolved. The
-42 distinct offered items each own one selective `<onlyinclude>` price value.
+42 distinct offered items each own one selective price value in their
+How to acquire / Buying section.
 The same item's matching raw initializer-value row is folded into it rather
 than rendered twice. Merchant wares use `{{:Canonical item title}}`; the rest
 of the item article is not transcluded. Actual vendor-specific prices, if
 separately documented, remain owned by the vendor offer instead.
+
+### Named selective views
+
+The pinned runtime explicitly loads bundled ParserFunctions. A shared block uses
+`<onlyinclude>{{#switch:{{{view|<noinclude>page</noinclude>}}}|page|VIEW=CONTENT|#default=}}</onlyinclude>`.
+On its own article the default is `page`; during inclusion it is empty.
+Price blocks also accept an empty case, preserving `{{:Item}}` exactly.
+Coin summaries retain their existing unparameterized selective block.
+Multiple balanced blocks are intentional; counting one pair per article is
+no longer a valid readiness check.
+
+| Reader | Inclusion | Editable owner |
+| --- | --- | --- |
+| Merchant wares | `{{:Item}}` | Item's single Buying price |
+| Workstation recipe table | `{{:Item|view=recipes|station=station-id}}` | Output item's recipe rows |
+| Item seller table | `{{:Merchant|view=offers|item=item-id}}` | Merchant's stock and conditions |
+| Currency guide | `{{:Coin}}` | Coin's value/weight/stack summary |
+
+Recipe inclusions return HTML table rows, not a second table or owner article.
+Each row filters the requested station; its ingredients, output, AP, conditions,
+and legacy anchors occur once in the editable owner. Shared table markup is
+ordinary MediaWiki-supported HTML, avoiding table-pipe escaping in parser
+functions. Merchant offer inclusions return a filtered table. Standard price
+cells are enclosed in `noinclude`, so an item selecting its sellers does not
+recursively transclude itself for a price. The item's own single price is shown
+beside seller availability, not copied into Stats.
+
+The builder validates every generated transclusion owner and declared view.
+The migration planner records all parameterized dependencies rather than
+silently skipping unknown or missing contracts. Structural checks do not
+execute MediaWiki; the disposable integration test separately proves normal,
+default, filtered, and live-edit behavior without cache purges or reimports.
 
 `currency` preserves the reviewed build confirmation, three coin definitions,
 and seven original rule explanations with evidence and confidence. It

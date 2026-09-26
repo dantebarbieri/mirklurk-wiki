@@ -7,7 +7,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from wiki_data import (
-    CATEGORY_PAGES, DataError, PAGE_FILES, RESEARCH_PAGE_FILES,
+    CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES,
     _confidence, _evidence, _identifier, _nullable_text, _number, _object, _records, _text, entry_page,
 )
 
@@ -25,6 +25,7 @@ CURRENCY_RULE_TITLES = {
     "trade-rounding": "Change and rounding",
 }
 RESERVED_TITLES.add("Currency and trading")
+RESERVED_TITLES.update(MECHANIC_GUIDE_TITLES)
 
 
 def title_key(title):
@@ -102,10 +103,10 @@ def validate_catalog(catalog, data):
         _text(row["summary"], "damage source.summary", 1200)
         _confidence(row["confidence"], "damage source.confidence")
         _evidence(row["evidence"], sources, "damage source.evidence")
-    guide_titles = {row["title"] for row in catalog["pages"] if entities[row["entity"]]["category"] == "damage_class"} | {"Action points", "Health and armor"}
+    guide_titles = {row["title"] for row in catalog["pages"] if entities[row["entity"]]["category"] == "damage_class"} | MECHANIC_GUIDE_TITLES
     guides_seen = set()
     for guide in _records(catalog.get("guides", []), "guides"):
-        _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"}, set(), "guide")
+        _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"}, {"related_pages"}, "guide")
         title = _title(guide["title"])
         if title not in guide_titles or title in guides_seen:
             raise DataError("guide: duplicate or unsupported canonical owner")
@@ -121,6 +122,14 @@ def validate_catalog(catalog, data):
             raise DataError("guide: expected at most sixteen known related entities")
         if len(related) != len(set(related)):
             raise DataError("guide: duplicate related entity")
+        related_pages = guide.get("related_pages", [])
+        if not isinstance(related_pages, list) or len(related_pages) > len(guide_titles) or any(
+            not isinstance(target, str) or target not in guide_titles or target == title
+            for target in related_pages
+        ) or len(related_pages) != len(set(related_pages)):
+            raise DataError("guide: expected unique related canonical guide titles")
+        if not set(related_pages) <= {row["title"] for row in catalog.get("guides", [])}:
+            raise DataError("guide: related guide has no reviewed content")
         _confidence(guide["confidence"], "guide.confidence")
         _evidence(guide["evidence"], sources, "guide.evidence")
     classified = set()

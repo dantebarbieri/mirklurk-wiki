@@ -37,6 +37,12 @@ web uploads remain disabled. The runtime explicitly uses the pinned image's
 
 The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
+The template loads bundled ParserFunctions for named, canonical recipe and
+seller views as well as ConfirmEdit/QuestyCaptcha. The Docker build asserts
+that the bundled extension exists; no extension download, new namespace, or
+database migration is introduced. Existing live sites need a separately
+approved app-only rebuild/recreation under fresh verified backups before
+publishing the named-view content. This is not authorization to deploy.
 
 ## Runtime variables
 

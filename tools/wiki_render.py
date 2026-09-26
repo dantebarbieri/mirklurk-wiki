@@ -10,8 +10,9 @@ from wiki_catalog import (
     CURRENCY_RULE_TITLES, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
     validate_catalog,
 )
-from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
 from wiki_details import empty_details, validate_coin_profiles, validate_details
+from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
 
 
 def literal(value):
@@ -231,7 +232,7 @@ def recipe_profile_values(profile, recipes):
 
 
 def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=()):
-    if not facts and not profiles and price_item is None:
+    if not facts and not profiles:
         return ""
     rows = []
     coalesced = set()
@@ -295,12 +296,6 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
                 anchor("fact", fact["id"]) + literal(label),
                 fact_value(fact), literal(note),
             ])
-    if price_item is not None:
-        rows.append([
-            anchor("price", price_item) + "Standard unit price",
-            "<onlyinclude>" + price_text(price, images) + "</onlyinclude>",
-            "Purchase price per item; not resale value.",
-        ])
     notes = []
     if profiles and coin is None:
         notes.append("Equipment, condition, and other effects may change effective values.")
@@ -401,13 +396,13 @@ def shared_field(entries, getter):
 
 
 def merchant_table(entries, images, entities, locations, standard_prices=False):
-    headers = ["Item"]
+    headers = ["Seller", "Item"]
     getters = []
     notes = []
     unknown = []
     for field, label in (("quantity", "Quantity"), ("price", "Unit price"), ("currency", "Currency")):
         if field == "price" and standard_prices:
-            headers.append(label)
+            headers.append("<noinclude>" + label + "</noinclude>")
             getters.append(lambda entry: "{{:" + locations[entry["details"]["item"]] + "}}"
                            if entry["details"]["price"] is None
                            else known(entry["details"]["price"]) + " " + known(entry["details"]["currency"]))
@@ -435,22 +430,30 @@ def merchant_table(entries, images, entities, locations, standard_prices=False):
         getters.append(lambda entry: known(entry["conditions"]))
     rows = []
     for entry in entries:
-        rows.append([
-            anchor("entry", entry["id"]) + item_cell(entry["details"]["item"], images, entities, locations),
+        merchant = entry["details"]["merchant"]
+        cells = [
+            anchor("entry", entry["id"]) + f'[[{locations[merchant]}#entry-{entry["id"]}|{literal(entities[merchant]["name"])}]]',
+            item_cell(entry["details"]["item"], images, entities, locations),
             *(getter(entry) for getter in getters),
-        ])
-    return "\n== Wares ==\n" + "\n\n".join(notes) + "\n\n" + table(headers, rows)
+        ]
+        row = html_row(cells)
+        if standard_prices:
+            price_index = headers.index("<noinclude>Unit price</noinclude>")
+            price_cell = "<td>" + cells[price_index] + "</td>"
+            row = row.replace(price_cell, "<noinclude>" + price_cell + "</noinclude>", 1)
+        rows.append(filtered_row(row, "item", [entry["details"]["item"]]))
+    rendered = html_table(headers, rows).replace(
+        '<th scope="col"><noinclude>Unit price</noinclude></th>',
+        '<noinclude><th scope="col">Unit price</th></noinclude>',
+    )
+    return "\n== Wares ==\n" + selective_view(
+        "\n\n".join(notes) + "\n\n" + rendered, "offers",
+    ) + "\n"
 
 
 def recipe_table(entries, stations, images, entities, locations):
     groups = recipe_groups(entries)
-    headers = ["Ingredients", "Output", "Crafting method"]
-    has_cost = any(group[0]["details"]["cost"] is not None for group in groups)
-    if has_cost:
-        headers.append("Base cost")
-    same_conditions, conditions = shared_field(entries, lambda entry: entry["conditions"])
-    if not same_conditions:
-        headers.append("Conditions")
+    headers = ["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"]
     rows = []
     for group in groups:
         first = group[0]
@@ -463,21 +466,15 @@ def recipe_table(entries, stations, images, entities, locations):
         row = [
             "".join(anchor("entry", entry["id"]) for entry in group)
             + quantities(details["inputs"], images, entities, locations),
-            quantities(details["outputs"], images, entities, locations), " | ".join(sorted(links)),
+            quantities(details["outputs"], images, entities, locations), " &middot; ".join(sorted(links)),
         ]
-        if has_cost:
-            cost = details["cost"]
-            row.append("Not established" if cost is None else known(cost["amount"]) + (
-                " base [[Action points|AP]]" if cost["unit"] == "base AP" else " " + literal(cost["unit"])))
-        if not same_conditions:
-            row.append(known(first["conditions"]))
-        rows.append(row)
-    notes = ["These are base recipes; skill and station effects may change costs or consumption."]
-    if not has_cost:
-        notes.append("Additional costs are not established.")
-    if same_conditions and conditions:
-        notes.append(literal(conditions))
-    return "\n== Recipes ==\n" + " ".join(notes) + "\n\n" + table(headers, rows)
+        cost = details["cost"]
+        row.append("Not established" if cost is None else known(cost["amount"]) + (
+            " base [[Action points|AP]]" if cost["unit"] == "base AP" else " " + literal(cost["unit"])))
+        row.append(known(first["conditions"]))
+        station_ids = [stations[entry["details"]["station"]]["id"] for entry in group if entry["details"]["station"] in stations]
+        rows.append(selective_view(filtered_row(html_row(row), "station", station_ids), "recipes"))
+    return "\n=== Recipes ===\nThese are base recipes; skill and station effects may change costs or consumption.\n\n" + html_table(headers, rows)
 
 
 def loot_table(entries, images, entities, locations):
@@ -576,7 +573,7 @@ def source_page(data, catalog, details, locations, facts, entries):
                           {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[11].sprite/beingDB[29].sprite"}
                       ])])
     if catalog.get("guides"):
-        lines.extend(["", "== Combat and action guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+        lines.extend(["", "== Guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
             [f'[[{guide["title"]}]]', literal(guide["confidence"]), evidence_text(guide["evidence"])]
             for guide in sorted(catalog["guides"], key=lambda row: row["title"])
         ])])
@@ -730,7 +727,8 @@ def build_pages(root, data, catalog=None, details=None):
     base = {key: value for key, value in data.items() if key != "illustrations"}
     validate_data(base)
     catalog = validate_catalog(default_catalog(base) if catalog is None else catalog, base)
-    validate_data(data, stations={row["id"]: row for row in catalog.get("stations", [])})
+    validate_data(data, stations={row["id"]: row for row in catalog.get("stations", [])},
+                  guides={row["title"] for row in catalog.get("guides", [])})
     details = validate_details(empty_details() if details is None else details, data)
     validate_coin_profiles(catalog, details)
     entities = {row["id"]: row for row in data["entities"]}
@@ -787,13 +785,27 @@ def build_pages(root, data, catalog=None, details=None):
         for alias in row["aliases"]:
             pages[alias] = f'#REDIRECT [[{row["title"]}]]\n'
     for guide in sorted(catalog.get("guides", []), key=lambda row: row["title"]):
+        if guide["title"] not in pages:
+            pages[guide["title"]] = "[[Game mechanics]] | [[Main Page]]\n"
+            pages["Game mechanics"] += f'\n[[{guide["title"]}]]\n'
+            pages["Main Page"] += f'\n[[{guide["title"]}]]\n'
+        for image in images:
+            if image.get("guide") == guide["title"]:
+                pages[guide["title"]] += anchor("illustration", image["id"])
+                pages[guide["title"]] += (
+                    f'\n[[{image["file_title"]}|thumb|{literal(image["caption"])}]]\n'
+                    if image["rights_status"] == "approved" else "\nNo reviewed picture is available yet.\n"
+                )
         pages[guide["title"]] += "\n== How it works ==\n" + "\n\n".join(literal(p) for p in guide["paragraphs"]) + "\n"
+        if guide.get("related_pages"):
+            pages[guide["title"]] += "\nRelated guides: " + " | ".join(
+                f"[[{target}]]" for target in guide["related_pages"]) + "\n"
         if guide["related_entities"]:
             pages[guide["title"]] += "\nRelated skills and remedies: " + " | ".join(
                 entity_link(identity, entities, locations) for identity in guide["related_entities"]) + "\n"
             for identity in guide["related_entities"]:
                 pages[locations[identity]] += f'\n[[{guide["title"]}|{guide["title"]}: effects and related rules]]\n'
-        if guide["title"] not in {"Action points", "Health and armor"}:
+        if guide["title"] not in MECHANIC_GUIDE_TITLES:
             pages[guide["title"]] += "\n[[Health and armor|Health shapes and armor layers]] | [[Action points]]\n"
 
     # Each overview groups historical anchors with its canonical destination.
@@ -883,7 +895,6 @@ def build_pages(root, data, catalog=None, details=None):
             pages[title] += coin_summary(coin, entities, locations)
         for kind, renderer in (
             ("merchant", lambda rows: merchant_table(rows, images, entities, locations, "unit_prices" in catalog)),
-            ("recipe", lambda rows: recipe_table(rows, stations, images, entities, locations)),
             ("loot", lambda rows: loot_table(rows, images, entities, locations)),
         ):
             matching = [row for row in matching_entries if row["kind"] == kind]
@@ -920,15 +931,30 @@ def build_pages(root, data, catalog=None, details=None):
             else:
                 other.append(f"* [[{target}|{literal(entry['title'])}]]")
         if entities[identity]["category"] == "item":
-            pages[title] += "\n== Obtaining ==\n"
-            if any(entry["kind"] == "recipe" and owners[entry["id"]] == title for entry in entries):
-                pages[title] += "See [[#Recipes|Recipes]] for the documented crafting options.\n"
-            if acquisition:
-                pages[title] += "\n".join(sorted(set(acquisition))) + "\n"
+            pages[title] += '\n<span id="Obtaining"></span>\n== How to acquire ==\n'
+            own_recipes = [entry for entry in entries if entry["kind"] == "recipe" and owners[entry["id"]] == title]
+            if own_recipes:
+                pages[title] += recipe_table(own_recipes, stations, images, entities, locations)
+            offers = [entry for entry in entries if entry["kind"] == "merchant" and entry["details"]["item"] == identity]
+            if identity in price_items:
+                pages[title] += (
+                    "\n=== Buying ===\n" + anchor("price", identity) + "Standard unit price: "
+                    + selective_view(price_text(prices.get(identity), images), "price", default=True)
+                    + ". Purchase price per item; not resale value.\n"
+                )
+            if offers:
+                pages[title] += "\n".join(
+                    "{{:" + owner + "|view=offers|item=" + identity + "}}"
+                    for owner in sorted({owners[entry["id"]] for entry in offers})
+                ) + "\n"
+            loot_links = [link for link in acquisition if not any(
+                "#entry-" + offer["id"] + "|" in link for offer in offers)]
+            if loot_links:
+                pages[title] += "\n=== Loot sources ===\n" + "\n".join(sorted(set(loot_links))) + "\n"
             elif identity in coins:
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
-            elif not any(entry["kind"] == "recipe" and owners[entry["id"]] == title for entry in entries):
-                pages[title] += "Acquisition is not established.\n"
+            elif not own_recipes and not offers:
+                pages[title] += "No documented acquisition source is available yet.\n"
         if recipes:
             pages[title] += "\n== Used in ==\n" + "\n".join(sorted(set(recipes))) + "\n"
         if quests:
@@ -1017,16 +1043,14 @@ def build_pages(root, data, catalog=None, details=None):
                 f'[[Quests and journal#entry-{identity}|{literal(next(entry["title"] for entry in entries if entry["id"] == identity))}]]'
                 for identity in station["quest_entries"]
             ) + "\n"
-        targets = {}
+        targets = set()
         for entry in entries:
             if entry["kind"] == "recipe" and entry["details"]["station"] in station["methods"]:
-                for output in entry["details"]["outputs"]:
-                    targets.setdefault(output["item"], entry)
-        rows = []
-        for identity, entry in sorted(targets.items(), key=lambda pair: entities[pair[0]]["name"]):
-            target = owners[entry["id"]] + "#entry-" + entry["id"]
-            rows.append([icon(identity, images, entities, locations), f'[[{target}|{literal(entities[identity]["name"])}]]'])
-        pages[title] += "\n== What you can craft ==\n" + table(["Picture", "Recipe"], rows)
+                targets.add(owners[entry["id"]])
+        rows = ["{{:" + owner + "|view=recipes|station=" + station["id"] + "}}\n" for owner in sorted(targets)]
+        pages[title] += "\n== What you can craft ==\n" + html_table(
+            ["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], rows,
+        )
     pages["Source provenance"] = source_page(data, catalog, details, locations, facts, owners)
     if "currency" in catalog:
         pages["Currency and trading"] = currency_page(catalog["currency"], entities, locations)
@@ -1059,4 +1083,5 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Category:" + category] = f"[[{index}|Readable index]] | [[Main Page]]\n\nPages in this browsing group keep their own editable facts.\n"
         if parent:
             pages["Category:" + category] += f"\n[[Category:{parent}]]\n"
+    validate_transclusions(pages)
     return pages

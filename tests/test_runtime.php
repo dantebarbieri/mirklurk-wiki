@@ -51,6 +51,7 @@ try {
     check($wgAccountCreationThrottle[0]['count'] === 3, 'Signup rate limit missing.');
     check(count($wgCdnServersNoPurge) === 2, 'Trusted proxy configuration missing.');
     check(in_array('ConfirmEdit/QuestyCaptcha', $loaded, true), 'CAPTCHA extension not loaded.');
+    check(in_array('ParserFunctions', $loaded, true), 'Selective canonical views require ParserFunctions.');
 
     foreach (['http://public.example.invalid', 'https://wiki.example.invalid/', 'https://wiki.example.invalid?x=1'] as $url) {
         putenv('MW_SERVER_URL=' . $url);

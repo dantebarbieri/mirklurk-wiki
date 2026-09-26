@@ -93,12 +93,13 @@ class MigrationTests(unittest.TestCase):
         desired = {"Item": "Full article <onlyinclude>2 silver</onlyinclude>",
                    "Merchant": "{{:Item}}"}
         report = plan_migration(base, live, desired)
-        self.assertEqual(report["price_dependencies"], [{
-            "page": "Merchant", "price_owner": "Item", "current_price_block_ready": False,
+        self.assertEqual(report["transclusion_dependencies"], [{
+            "page": "Merchant", "owner": "Item", "parameters": {},
+            "current_view_declared": False, "current_owner_matches_desired": False,
         }])
         self.assertEqual(next(row["action"] for row in report["pages"] if row["title"] == "Item"), "conflict")
         live["Item"] = "Community article <onlyinclude>3 silver</onlyinclude>"
-        self.assertTrue(plan_migration(base, live, desired)["price_dependencies"][0]["current_price_block_ready"])
+        self.assertTrue(plan_migration(base, live, desired)["transclusion_dependencies"][0]["current_view_declared"])
 
 
 if __name__ == "__main__":

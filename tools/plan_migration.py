@@ -10,6 +10,7 @@ from pathlib import Path
 
 from build_wiki import EXPORT_NAMESPACES, title_key
 from wiki_data import DataError
+from wiki_views import available_views, transclusions
 
 
 def read_snapshot(path):
@@ -78,15 +79,13 @@ def plan_migration(base, current, desired):
     dependencies = []
     new_page_dependencies = []
     for title, text in sorted(desired.items()):
-        targets = sorted({title_key(target) for target in re.findall(r"\{\{:([^{}\n|]+)\}\}", text)})
-        for target in targets:
-            wanted = desired.get(target, "")
-            if "<onlyinclude>" not in wanted:
-                continue
+        for owner, arguments in transclusions(text):
+            target = title_key(owner)
             live = current.get(target, "")
             dependencies.append({
-                "page": title, "price_owner": target,
-                "current_price_block_ready": live.count("<onlyinclude>") == 1 and live.count("</onlyinclude>") == 1,
+                "page": title, "owner": target, "parameters": dict(arguments),
+                "current_view_declared": dict(arguments).get("view", "") in available_views(live),
+                "current_owner_matches_desired": target in current and live == desired.get(target),
             })
         linked_titles = {title_key(target.lstrip(":").split("#", 1)[0])
                          for target in re.findall(r"\[\[([^\]|]+)", text)}
@@ -96,10 +95,10 @@ def plan_migration(base, current, desired):
                     "page": title, "target": target, "current_target_exists": target in current,
                 })
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "notice": "Review only. No writes authorized. Freeze writers and verify current hashes before any operator action.",
         "pages": records,
-        "price_dependencies": dependencies,
+        "transclusion_dependencies": dependencies,
         "new_page_dependencies": new_page_dependencies,
     }
 

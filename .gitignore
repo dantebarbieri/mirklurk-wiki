@@ -44,6 +44,7 @@
 !/tools/wiki_catalog.py
 !/tools/wiki_details.py
 !/tools/wiki_render.py
+!/tools/wiki_views.py
 !/tools/plan_migration.py
 !/tools/build_wiki.py
 !/tools/smoke_deploy.py
@@ -51,6 +52,7 @@
 !/tests/test_safety.py
 !/tests/test_wiki.py
 !/tests/test_catalog.py
+!/tests/test_views.py
 !/tests/test_migration.py
 !/tests/test_runtime.php
 !/deploy/

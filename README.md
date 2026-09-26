@@ -56,14 +56,20 @@ citations kept in Source provenance. Each detail has **one editable wiki owner**
 recipes on output items, offers on merchants, quest prose in the journal, and
 workstation behavior on its own page. Identical recipes across stations share
 one row; 96 original variants form 77 condition-preserving recipe groups.
-Indexes and acquisition crosslinks do not copy those details.
+Workstations show the complete applicable recipe rows by selective transclusion
+from their output-item owners; editing ingredients or AP there updates every
+station view. Item acquisition sections likewise select seller availability
+from merchant-owned rows without copying stock or conditions.
 
 Thirty-six verified standard unit prices cover 52 of 63 offers. Each offered
 item owns one `<onlyinclude>` price value (unknown where unresolved), and
-merchant tables transclude it with core MediaWiki rather than copying prices.
+merchant tables transclude it rather than copying prices.
 The Currency and trading guide likewise transcludes coin-owned denomination,
-weight, and stack tables. No template extension or synchronization service is
-required; live edits to the owner propagate to readers of that information.
+weight, and stack tables. The bundled ParserFunctions extension selects named recipe and seller views;
+no new namespace, recipe subpage, synchronization service, or hidden data store
+is required. Unparameterized item and coin inclusions retain their original
+price-only and coin-summary contracts. Live edits to the owner propagate to
+readers of that information.
 Exact decimal price formatting uses gold, silver, and copper with the fewest
 whole coins, preserving the item-owned selective blocks. Initializer values
 remain explicitly distinct from shop prices and finalized recipe weights.
@@ -90,6 +96,7 @@ The current loot reference is not an exhaustive loot-table catalogue.
 | `content/facts/entity_details.json` | Bounded typed profiles with shared original property explanations |
 | `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
 | `tools/build_wiki.py` | Deterministic MediaWiki XML for reviewed seeding |
+| `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
 | `tools/plan_migration.py` | Three-way review report that never modifies a wiki |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |

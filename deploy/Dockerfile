@@ -5,6 +5,7 @@ COPY deploy/mirklurk-runtime.php /var/www/html/mirklurk-runtime.php
 COPY deploy/install.php deploy/healthcheck.php /usr/local/lib/mirklurk/
 
 RUN test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
+    && test -f /var/www/html/extensions/ParserFunctions/extension.json \
     && test -f /var/www/html/skins/Vector/skin.json \
     && php -l /var/www/html/LocalSettings.php \
     && php -l /var/www/html/mirklurk-runtime.php \

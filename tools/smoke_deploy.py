@@ -19,8 +19,10 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, existing_titles, title_key
-from wiki_catalog import page_locations
+from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
+from wiki_render import display_entry, recipe_groups
+from wiki_views import selective_view
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -186,11 +188,124 @@ def wait_for_server_tick(api):
     raise RuntimeError("The wiki server clock did not advance before the synthetic edit.")
 
 
+def check_parser_errors(rendered):
+    if re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded', rendered):
+        raise RuntimeError("A canonical view produced a MediaWiki parser error or expansion limit.")
+
+
+class RecipeRows(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.rows = []
+        self.current = None
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "tr":
+            self.current = {"entries": set(), "text": ""}
+        elif self.current is not None:
+            identity = dict(attrs).get("id", "")
+            if identity.startswith("entry-recipe-"):
+                self.current["entries"].add(identity.removeprefix("entry-"))
+
+    def handle_endtag(self, tag):
+        if tag == "tr" and self.current is not None:
+            if self.current["entries"]:
+                self.rows.append(self.current)
+            self.current = None
+
+    def handle_data(self, value):
+        if self.current is not None:
+            self.current["text"] += value
+
+
+def smoke_canonical_views(run, api, pages, data, catalog, token):
+    locations = page_locations(data, catalog)
+    owners = entry_owners(data, locations, entry_relations(data, catalog), catalog)
+    recipes = [display_entry(entry, catalog) for entry in data["entries"] if entry["kind"] == "recipe"]
+    groups = recipe_groups(recipes)
+    for station in catalog["stations"]:
+        rendered = api({"action": "parse", "page": station["title"], "prop": "text"})["parse"]["text"]["*"]
+        check_parser_errors(rendered)
+        parsed = RecipeRows()
+        parsed.feed(rendered)
+        expected = [group for group in groups if any(entry["details"]["station"] in station["methods"] for entry in group)]
+        # Item workstations also retain the recipe used to make the workstation itself.
+        expected += [group for group in groups if owners[group[0]["id"]] == station["title"]
+                     and not any(entry["details"]["station"] in station["methods"] for entry in group)]
+        if {frozenset(row["entries"]) for row in parsed.rows} != {
+            frozenset(entry["id"] for entry in group) for group in expected
+        } or len(parsed.rows) != len(expected):
+            raise RuntimeError(f"{station['title']} lost a recipe variant, added a foreign row, or duplicated a row.")
+        for row in parsed.rows:
+            entry = next(entry for entry in recipes if entry["id"] in row["entries"])
+            if entry["details"]["cost"] is not None and "AP" not in row["text"]:
+                raise RuntimeError("A workstation recipe lost its action-point cost.")
+    price_owners = {locations[entry["details"]["item"]] for entry in data["entries"] if entry["kind"] == "merchant"}
+    default_text = "\n".join("<div>{{:" + title + "}}</div>" for title in sorted(price_owners))
+    rendered = api({"action": "parse", "title": "Synthetic default views", "text": default_text, "prop": "text"}, post=True)["parse"]["text"]["*"]
+    check_parser_errors(rendered)
+    if re.search(r'id="(?:entity-|entry-|profile-|Recipes|How_to_acquire)', rendered) or "Ingredients" in rendered:
+        raise RuntimeError("A default price view leaked owner content, a recipe, or merchant availability.")
+    for title in price_owners:
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        check_parser_errors(rendered)
+        if 'id="How_to_acquire"' not in rendered or 'id="entity-' not in rendered:
+            raise RuntimeError("A normal item article lost its acquisition section or identity.")
+    for merchant in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "merchant"}:
+        offered = [entry for entry in data["entries"] if entry["kind"] == "merchant" and owners[entry["id"]] == merchant]
+        entry = offered[0]
+        text = "{{:" + merchant + "|view=offers|item=" + entry["details"]["item"] + "}}"
+        result = api({"action": "parse", "title": "Synthetic seller view", "text": text, "prop": "text|templates"}, post=True)["parse"]
+        rendered = result["text"]["*"]
+        check_parser_errors(rendered)
+        wanted = {row["id"] for row in offered if row["details"]["item"] == entry["details"]["item"]}
+        if set(re.findall(r'id="entry-(merchant-[^"]+)"', rendered)) != wanted:
+            raise RuntimeError("An item seller view leaked another item's stock or omitted an offer.")
+        if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in rendered:
+            raise RuntimeError("A seller view recursively transcluded item prices.")
+    fixture = next(group for group in groups if locations[group[0]["details"]["outputs"][0]["item"]] == "Simple Burn Remedy" and len(group) > 1)
+    owner = owners[fixture[0]["id"]]
+    targets = {station["title"] for station in catalog["stations"] if any(
+        entry["details"]["station"] in station["methods"] for entry in fixture)}
+    original = pages[owner]
+    block = next(block for block in re.findall(r"<onlyinclude>.*?</onlyinclude>", original, re.DOTALL)
+                 if f'id="entry-{fixture[0]["id"]}"' in block)
+    changed = original
+    for before, after, expected in (
+        (" x <nowiki>1</nowiki>", " x <nowiki>701</nowiki>", "701"),
+        ("<nowiki>2.4</nowiki> base", "<nowiki>997</nowiki> base", "997"),
+    ):
+        replacement = block.replace(before, after, 1)
+        if replacement == block:
+            raise RuntimeError("The synthetic recipe edit missed its canonical value.")
+        changed = changed.replace(block, replacement, 1)
+        for target in targets:
+            api({"action": "parse", "page": target, "prop": "text"})
+        wait_for_server_tick(api)
+        edit = api({"action": "edit", "title": owner, "text": changed, "token": token}, post=True)
+        if edit.get("edit", {}).get("result") != "Success":
+            raise RuntimeError("The canonical recipe edit failed.")
+        for target in targets:
+            rendered = refreshed_transclusion(run, api, target, expected, 'id="entity-item-141"', owner)
+            check_parser_errors(rendered)
+            parsed = RecipeRows()
+            parsed.feed(rendered)
+            if not any(fixture[0]["id"] in row["entries"] and expected in row["text"] for row in parsed.rows):
+                raise RuntimeError("The changed recipe value did not reach its exact station row.")
+        rendered = api({"action": "parse", "page": owner, "prop": "text"})["parse"]["text"]["*"]
+        check_parser_errors(rendered)
+        if expected not in rendered or 'id="entity-item-141"' not in rendered:
+            raise RuntimeError("A selective recipe edit broke the normal owner article.")
+        block = replacement
+    print("Named views passed: every workstation variant, default prices, filtered sellers, separate quantity/AP edits.")
+
+
 def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
     # Imports and edits enqueue deferred link updates; allow their bounded completion.
     for attempt in range(10):
         run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
         rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        check_parser_errors(rendered)
         if forbidden_anchor in rendered:
             raise RuntimeError("Selective transclusion leaked the full owner article.")
         if expected in rendered:
@@ -416,6 +531,7 @@ def smoke():
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
             smoke_reader_release(api, pages, data, catalog, details)
+            smoke_canonical_views(run, api, pages, data, catalog, csrf)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
@@ -445,21 +561,24 @@ def smoke():
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
             price_title = "Longbow (Cypress)"
             original_item = pages[price_title]
-            if original_item.count("<onlyinclude>") != 1 or original_item.count("</onlyinclude>") != 1:
-                raise RuntimeError("The item does not expose exactly one canonical price block.")
-            before_price, _, rest = original_item.partition("<onlyinclude>")
-            _, _, after_price = rest.partition("</onlyinclude>")
+            price_blocks = [block for block in re.findall(r"<onlyinclude>.*?</onlyinclude>", original_item, re.DOTALL)
+                            if "|page|price|=" in block]
+            if len(price_blocks) != 1:
+                raise RuntimeError("The item does not expose exactly one canonical price view.")
             cached_merchant = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
             if "111.23 silver" in cached_merchant or 'id="entity-item-105"' in cached_merchant:
                 raise RuntimeError("The merchant price-edit precondition is invalid.")
             cache_diagnostics(api, "Ranger Bhato", price_title, cached_merchant)
-            updated_item = before_price + "<onlyinclude>111.23 silver</onlyinclude>" + after_price
+            updated_item = original_item.replace(price_blocks[0], selective_view("111.23 silver", "price", True), 1)
             wait_for_server_tick(api)
             price_edit = api({"action": "edit", "title": price_title, "text": updated_item, "token": csrf}, post=True)
             if price_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
             print("Owner edit timestamp:", price_edit["edit"]["newtimestamp"], flush=True)
-            refreshed_transclusion(run, api, "Ranger Bhato", "111.23 silver", 'id="entity-item-105"', price_title)
+            sellers = {page_locations(data, catalog)[entry["details"]["merchant"]] for entry in data["entries"]
+                       if entry["kind"] == "merchant" and page_locations(data, catalog)[entry["details"]["item"]] == price_title}
+            for seller in sellers:
+                refreshed_transclusion(run, api, seller, "111.23 silver", 'id="entity-item-105"', price_title)
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
             if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
                 raise RuntimeError("Selective price transclusion removed the item's normal full article.")

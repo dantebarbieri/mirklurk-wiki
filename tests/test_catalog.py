@@ -25,6 +25,7 @@ from wiki_details import (
 from wiki_render import PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
 from smoke_deploy import refreshed_transclusion
+from wiki_views import available_views, selective_view, transclusions
 
 
 class CatalogTests(unittest.TestCase):
@@ -69,6 +70,12 @@ class CatalogTests(unittest.TestCase):
                     if entry["kind"] in {"quest", "algorithm", "recipe", "merchant"} and locations[identity] != entries[entry["id"]]:
                         self.assertIn(f'[[{locations[identity]}', page)
                     if locations[identity] != entries[entry["id"]] and "#" not in locations[identity] and entry["kind"] != "loot":
+                        if entry["kind"] == "merchant" and identity == entry["details"]["item"]:
+                            self.assertIn(
+                                (entries[entry["id"]], (("item", identity), ("view", "offers"))),
+                                transclusions(self.pages[locations[identity]]),
+                            )
+                            continue
                         fragment = "Recipes" if entry["kind"] == "recipe" else "entry-" + entry["id"]
                         self.assertIn(f'[[{entries[entry["id"]]}#{fragment}|', self.pages[locations[identity]])
         for entity in self.data["entities"]:
@@ -117,7 +124,7 @@ class CatalogTests(unittest.TestCase):
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
                         self.assertIn(known(coins[profile["entity"]][field]), page)
                     elif key == "initial-price" and profile["entity"] in prices:
-                        self.assertIn("<onlyinclude>" + price_text(prices[profile["entity"]]) + "</onlyinclude>", page)
+                        self.assertIn(selective_view(price_text(prices[profile["entity"]]), "price", True), page)
                     else:
                         self.assertIn(profile_value(key, value, entities, locations), page)
         for name in ("Flax", "Linen"):
@@ -273,7 +280,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_bhato_has_compact_wares_and_journal_links_without_copied_prose(self):
         bhato = self.pages["Ranger Bhato"]
-        self.assertEqual(bhato.count('{| class="wikitable"'), 2)
+        self.assertEqual(bhato.count('{| class="wikitable"') + bhato.count('<table class="wikitable">'), 2)
         self.assertEqual(bhato.count('id="entry-merchant-12-'), 12)
         self.assertEqual(bhato.count("{{:"), 12)
         self.assertIn("[[Ranger Bhato|", self.pages["Merchants"])
@@ -294,10 +301,10 @@ class CatalogTests(unittest.TestCase):
         recipes = [display_entry(row, self.catalog) for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual(len(recipes), 96)
         self.assertEqual(len(recipe_groups(recipes)), 77)
-        self.assertEqual(self.pages["Alchemy workstation"].count('{| class="wikitable"'), 1)
-        self.assertEqual(self.pages["Alchemy workstation"].count("|-\n"), 15)
-        self.assertNotIn("Ingredients", self.pages["Alchemy workstation"])
-        self.assertNotIn("Base cost", self.pages["Alchemy workstation"])
+        self.assertEqual(self.pages["Alchemy workstation"].count('<table class="wikitable">'), 1)
+        self.assertEqual(len(transclusions(self.pages["Alchemy workstation"])), 15)
+        self.assertIn("Ingredients", self.pages["Alchemy workstation"])
+        self.assertIn("Base cost", self.pages["Alchemy workstation"])
         self.assertNotIn("Maybe unused", self.pages["Armor workstation"])
         self.assertNotIn("{|", self.pages["Crafting"])
         self.assertIn("[[Inventory crafting]]", self.pages["Crafting"])
@@ -385,11 +392,12 @@ class CatalogTests(unittest.TestCase):
         known_prices = {row["entity"]: row for row in prices["prices"]}
         items = {row["details"]["item"] for row in self.data["entries"] if row["kind"] == "merchant"}
         self.assertEqual(len(items), 42)
-        self.assertEqual(sum(page.count("<onlyinclude>") for page in self.pages.values()), 45)
+        expected_default_owners = {locations[identity] for identity in items} | {
+            locations[row["entity"]] for row in self.catalog["currency"]["coins"]}
+        self.assertEqual({title for title, page in self.pages.items() if "" in available_views(page)}, expected_default_owners)
         for identity in items:
             page = self.pages[locations[identity]]
-            self.assertEqual(page.count("<onlyinclude>"), 1)
-            self.assertIn("<onlyinclude>" + price_text(known_prices.get(identity)) + "</onlyinclude>", page)
+            self.assertIn(selective_view(price_text(known_prices.get(identity)), "price", True), page)
             if identity in known_prices:
                 self.assertNotIn("Base value (not a shop price)", page)
         for entry in self.data["entries"]:
@@ -397,7 +405,7 @@ class CatalogTests(unittest.TestCase):
                 continue
             page = self.pages[locations[entry["details"]["merchant"]]]
             self.assertIn("{{:" + locations[entry["details"]["item"]] + "}}", page)
-            self.assertNotIn("<onlyinclude>", page)
+            self.assertEqual(available_views(page), {"offers"})
 
     def test_unit_price_validation_rejects_wrong_currency_or_coverage(self):
         for change in (
@@ -543,7 +551,7 @@ class CatalogTests(unittest.TestCase):
         self.assertTrue(any(row["value"] == Decimal("0.25000000000000000000000000000000001")
                             for row in exact["unit_prices"]["prices"]))
         field_kit = self.pages["Survivor's Field Kit"]
-        self.assertIn("2 gold</onlyinclude>", field_kit)
+        self.assertIn(selective_view(price_text({"value": 20}, self.data["illustrations"]), "price", True), field_kit)
         self.assertIn("{{:Survivor's Field Kit}}", self.pages["Gurb-Gurb"])
         self.assertIn("[[Alchemy workstation|Alternative crafting method]]", field_kit)
         self.assertIn("only while the fire remains active", field_kit)
