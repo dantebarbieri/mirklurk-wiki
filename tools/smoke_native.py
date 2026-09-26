@@ -60,6 +60,8 @@ class NativeSmoke:
         return json.loads(self.evaluate(code))
 
     def manifest(self, operations, preserved=(), corpora=None, operator=None):
+        if corpora is None:
+            raise RuntimeError("Explicit canonical corpus-map digests are required.")
         return {
             "schema_version": 1, "kind": "native-publication-manifest", "run_nonce": secrets.token_hex(16),
             "source": {"head_sha": self.source_head, "tree_sha": subprocess.check_output(
@@ -67,7 +69,7 @@ class NativeSmoke:
             "runtime": {"mediawiki_version": "1.43.9", "primitive_sha256": sha(
                 (self.root / "tools" / "native_publication.php").read_bytes()), "fingerprint_sha256": digest(self.runtime)},
             "operator": operator or self.operator(), "binding_sha256": digest({"scope": "disposable", "runtime": self.runtime}),
-            "corpora": corpora or dict.fromkeys(("previous_authored", "baseline", "authored", "desired"), digest(operations)),
+            "corpora": corpora,
             "prerequisites_sha256": digest([row["prerequisites"] for row in operations]),
             "operations": operations, "preserved": list(preserved),
         }
@@ -169,6 +171,84 @@ class NativeSmoke:
         return self.run("exec", "-T", "mirklurk-db", "sh", "-c", command,
                         input_bytes=query.encode() if query is not None else input_bytes)
 
+    def effects(self):
+        keys = {"revision": ["rev_id"], "slots": ["slot_revision_id", "slot_role_id"],
+                "content": ["content_id"], "text": ["old_id"], "actor": ["actor_id"], "logging": ["log_id"],
+                "archive": ["ar_id"], "image": ["img_name"], "oldimage": ["oi_name", "oi_timestamp"],
+                "filearchive": ["fa_id"], "comment": ["comment_id"], "user_groups": ["ug_user", "ug_group"]}
+        code = (
+            "$s=MediaWiki\\MediaWikiServices::getInstance();$d=$s->getConnectionProvider()->getPrimaryDatabase();"
+            "$out=['tables'=>[],'pages'=>[],'users'=>[],'slot_content'=>[],'content_address'=>[]];"
+            "$keys=json_decode(" + json.dumps(json.dumps(keys)) + ",true);"
+            "foreach($keys as $table=>$columns){$rows=[];"
+            "foreach($d->newSelectQueryBuilder()->select('*')->from($table)->caller(__METHOD__)->fetchResultSet() as $r){"
+            "$v=(array)$r;ksort($v);$id=implode(':',array_map(static fn($c)=>$v[$c],$columns));"
+            "$rows[$id]=hash('sha256',serialize($v));"
+            "if($table==='slots'){$out['slot_content'][$id]=(int)$r->slot_content_id;}"
+            "if($table==='content'){$out['content_address'][$id]=$r->content_address;}"
+            "}$out['tables'][$table]=(object)$rows;}"
+            "foreach($d->newSelectQueryBuilder()->select(['page_id','page_namespace','page_title','page_latest','page_touched',"
+            "'page_content_model','page_is_redirect','page_len'])->from('page')->caller(__METHOD__)->fetchResultSet() as $r){"
+            "$v=(array)$r;unset($v['page_touched']);"
+            "$out['pages'][$r->page_id]=['namespace'=>(int)$r->page_namespace,'title'=>$r->page_title,"
+            "'revision_id'=>(int)$r->page_latest,'touched'=>$r->page_touched,'metadata_sha256'=>hash('sha256',serialize($v))];}"
+            "foreach($d->newSelectQueryBuilder()->select('*')->from('user')->caller(__METHOD__)->fetchResultSet() as $r){"
+            "$v=(array)$r;unset($v['user_editcount']);ksort($v);"
+            "$out['users'][$r->user_id]=['name'=>$r->user_name,'editcount'=>$r->user_editcount===null?null:(int)$r->user_editcount,"
+            "'metadata_sha256'=>hash('sha256',serialize($v))];}"
+            "$out['main_role_id']=(int)$d->newSelectQueryBuilder()->select('role_id')->from('slot_roles')"
+            "->where(['role_name'=>'main'])->caller(__METHOD__)->fetchField();"
+            "foreach(['pages','users','slot_content','content_address'] as $k){$out[$k]=(object)$out[$k];}"
+            "echo json_encode($out,JSON_THROW_ON_ERROR);"
+        )
+        return json.loads(self.evaluate(code))
+
+    @staticmethod
+    def check_effects(before, after, revision, operator):
+        if revision is None:
+            if canonical_bytes(before) != canonical_bytes(after):
+                raise RuntimeError("Rejected operation changed history/log/account/File state.")
+            return {"operator_delta": 0, "history_rows_added": {}}
+        if before["main_role_id"] != after["main_role_id"]:
+            raise RuntimeError("Main slot identity changed.")
+        additions = {}
+        for table, rows in before["tables"].items():
+            actual = after["tables"][table]
+            if any(actual.get(key) != value for key, value in rows.items()):
+                raise RuntimeError("An existing history/log/account/File row changed: " + table)
+            additions[table] = sorted(actual.keys() - rows.keys())
+        expected_exact = {
+            "revision": [str(revision["revision_id"])],
+            "slots": [f"{revision['revision_id']}:{after['main_role_id']}"],
+            "actor": [], "archive": [], "image": [], "oldimage": [], "filearchive": [], "user_groups": [],
+        }
+        if any(additions[table] != expected for table, expected in expected_exact.items()):
+            raise RuntimeError("A native revision has extra or missing history/actor/File rows.")
+        if len(additions["comment"]) != 1 or len(additions["logging"]) != (1 if revision["parent_id"] == 0 else 0):
+            raise RuntimeError("Native comment/create-log delta differs.")
+        content_id = after["slot_content"][expected_exact["slots"][0]]
+        address = after["content_address"][str(content_id)]
+        if (len(additions["content"]) > 1 or len(additions["text"]) > 1
+                or any(key != str(content_id) for key in additions["content"])
+                or any(address != "tt:" + key for key in additions["text"])):
+            raise RuntimeError("Native content/text additions are not the saved main slot.")
+        page_id = str(revision["page_id"])
+        expected_pages = {key: {field: item for field, item in value.items() if field != "touched"}
+                          for key, value in before["pages"].items() if key != page_id}
+        actual_pages = {key: {field: item for field, item in value.items() if field != "touched"}
+                        for key, value in after["pages"].items() if key != page_id}
+        if (expected_pages != actual_pages or after["pages"][page_id]["revision_id"] != revision["revision_id"]
+                or after["pages"][page_id]["namespace"] != revision["namespace"]):
+            raise RuntimeError("Native page pointers changed outside the target.")
+        expected_users = json.loads(json.dumps(before["users"]))
+        count = expected_users[str(operator["id"])]["editcount"]
+        if type(count) is not int:
+            raise RuntimeError("Operator edit count was not initialized before dispatch.")
+        expected_users[str(operator["id"])]["editcount"] = count + 1
+        if canonical_bytes(expected_users) != canonical_bytes(after["users"]):
+            raise RuntimeError("Native operator/account delta is incomplete or unexpected.")
+        return {"operator_delta": 1, "history_rows_added": additions}
+
     def collect(self, journal, request, name, *, lose_result=False, allow_error=False):
         status = self.wait(name)
         events = [json.loads(line) for line in docker("logs", name).decode().splitlines() if line.startswith("{")]
@@ -194,8 +274,7 @@ class NativeSmoke:
             "quiescence": {"worker_exited": True, "request_finished": True, "owned_transactions_absent": True,
                            "authority_sha256": digest({"container": name, "state": status, "owned_remaining": [0, 0]})},
             "states": self.states(journal.manifest, journal.accepted),
-            "guard_sha256": journal.put_artifact({"scope": "disposable-fresh-managed-state",
-                                                 "manifest": digest(journal.manifest)}),
+            "guard_sha256": "",
             "observation_nonce": secrets.token_hex(16),
         }
         return evidence, results
@@ -222,8 +301,14 @@ class NativeSmoke:
         manifest = self.manifest(operations, preserved, corpora)
         journal = Journal(self.workspace / "native-release-journal", manifest)
         self.release_journal = journal
+        previous_effects = self.effects()
+        journal.put_artifact(previous_effects)
+        pending = None
 
         def save(title, metadata, text, probes):
+            nonlocal pending
+            if pending is not None:
+                raise RuntimeError("Previous native dispatch has not passed its prefix guards.")
             index = len(journal.accepted) + 1
             if operations[index - 1]["title"] != title:
                 raise RuntimeError("Native dispatch differs from the frozen full-prefix order.")
@@ -235,15 +320,32 @@ class NativeSmoke:
             request = self.request(manifest, journal, index, text, prerequisites, probes)
             name = self.launch(journal, request)
             evidence, results = self.collect(journal, request, name)
-            if journal.observe(request, evidence) != "accept":
-                raise RuntimeError("Native full-prefix operation did not advance.")
-            accepted = journal.accept(request)
-            self.proof["operations"].append({"index": index, "request_sha256": digest(request),
-                                            "result": results[0], "accepted_sha256": digest(accepted)})
+            pending = (request, evidence, results[0])
             docker("rm", name)
             self.containers.remove(name)
             return results[0]["revision"]["revision_id"]
-        return save
+
+        def accept(index, guards):
+            nonlocal pending, previous_effects
+            if pending is None or pending[0]["index"] != index:
+                raise RuntimeError("No matching guarded native dispatch.")
+            request, evidence, result = pending
+            guards = json.loads(canonical_bytes(guards))
+            current_effects = self.effects()
+            delta = self.check_effects(previous_effects, current_effects, result["revision"], manifest["operator"])
+            evidence["states"] = self.states(manifest, journal.accepted)
+            guard = {"prefix_guards": guards, "effects_before_sha256": journal.put_artifact(previous_effects),
+                     "effects_after_sha256": journal.put_artifact(current_effects), "delta": delta}
+            evidence["guard_sha256"] = journal.put_artifact(guard)
+            if journal.observe(request, evidence) != "accept":
+                raise RuntimeError("Native full-prefix operation did not advance.")
+            accepted = journal.accept(request)
+            self.proof["operations"].append({"index": index, "request_sha256": digest(request), "result": result,
+                                            "guard_sha256": digest(guard), "accepted_sha256": digest(accepted),
+                                            "effects": delta, "prefix_guards": guards})
+            previous_effects = current_effects
+            pending = None
+        return save, accept
 
     def prepare_thumbnails(self, *corpora):
         operator = self.operator()
@@ -260,19 +362,37 @@ class NativeSmoke:
                     if width is not None:
                         for scaled in (width, (width * 3 + 1) // 2, width * 2):
                             widths.setdefault(scaled, set()).add(filename)
-        count = 0
+        requested = {}
         for width, titles in sorted(widths.items()):
-            titles = sorted(titles)
-            for offset in range(0, len(titles), 50):
-                rows = self.api({"action": "query", "titles": "|".join(titles[offset:offset + 50]),
-                                 "prop": "imageinfo", "iiprop": "url|size", "iiurlwidth": width})["query"]["pages"]
-                for row in rows.values():
-                    info = row.get("imageinfo", [{}])[0]
-                    if "missing" in row or "thumberror" in info or not info.get("thumburl"):
-                        raise RuntimeError("Declared synthetic derivative could not be prepared before read-only freeze.")
-                    count += 1
+            for title in titles:
+                requested.setdefault(title, []).append(width)
+        code = (
+            "$s=MediaWiki\\MediaWikiServices::getInstance();$out=[];"
+            "foreach(json_decode(" + json.dumps(json.dumps(requested)) + ",true) as $name=>$widths){"
+            "$f=$s->getRepoGroup()->findFile(MediaWiki\\Title\\Title::newFromText($name));"
+            "if(!$f || $f->getRepo()!==$s->getRepoGroup()->getLocalRepo()){throw new RuntimeException('fixture-file-not-local');}"
+            "$repo=$f->getRepo();$widths[]=$f->getWidth();"
+            "foreach(array_unique($widths) as $width){$p=['width'=>$width];"
+            "if(!$f->getHandler()->normaliseParams($f,$p)){throw new RuntimeException('fixture-transform-parameters');}"
+            "$namePart=$f->thumbName($p);$dest=$f->getThumbPath($namePart);"
+            "$t=$f->transform($p,File::RENDER_NOW);"
+            "if(!$t || $t->isError()){throw new RuntimeException('fixture-transform-error');}"
+            "$copied=false;if(!$repo->fileExists($dest)){"
+            "if(!$t->fileIsSource() || $dest===$f->getPath()){throw new RuntimeException('fixture-unexpected-transform');}"
+            "$status=$repo->quickImport($f->getLocalRefPath(),$dest,$f->getThumbDisposition($namePart));"
+            "if(!$status->isOK()){throw new RuntimeException('fixture-source-sized-copy-failed');}$copied=true;}"
+            "$local=$repo->getLocalReference($dest);"
+            "if(!$local){throw new RuntimeException('fixture-derivative-missing');}"
+            "$hash=hash_file('sha256',$local->getPath());"
+            "if($copied && $hash!==hash_file('sha256',$f->getLocalRefPath())){throw new RuntimeException('fixture-original-copy-differs');}"
+            "$out[]=['title'=>$name,'width'=>$p['width'],'source_sized_copy'=>$copied,'sha256'=>$hash];}}"
+            "echo json_encode($out,JSON_THROW_ON_ERROR);"
+        )
+        prepared = json.loads(self.evaluate(code))
+        if not prepared:
+            raise RuntimeError("No declared synthetic derivatives were prepared.")
         self.proof["thumbnail_preparation"] = {
-            "default_width": default_width, "transform_requests": count,
+            "default_width": default_width, "transforms": prepared,
             "declared_widths_sha256": digest({str(width): sorted(titles) for width, titles in widths.items()}),
             "scope": "Synthetic derivatives prepared before barrier; no page save, purge or touch.",
         }
@@ -306,12 +426,21 @@ class NativeSmoke:
 
         def case(label, *, stage=None, during=None, text=None, expected=None, actor=None, success=False,
                  lose=False, kill=False, observe=True, deny_rights=None, error=None, duplicate=False,
-                 edge=None, retry_after=False, prerequisites=()):
+                 edge=None, retry_after=False, prerequisites=(), partial_effects=False, crash_before_guard=False):
             desired = text if text is not None else "Native desired " + label
             initial = state_for(title)
             static_owners = [{key: owner[key] for key in ("namespace", "title", "raw_sha256")} for owner in prerequisites]
             operation = self.operation(1, title, expected if expected is not None else initial, desired, static_owners)
-            manifest = self.manifest([operation], operator=actor or operator)
+            before_corpus = {}
+            if initial["page_id"]:
+                current_page = next(iter(self.api({"action": "query", "titles": title, "prop": "revisions",
+                    "rvprop": "content", "rvslots": "main"})["query"]["pages"].values()))
+                before_corpus[title] = current_page["revisions"][0]["slots"]["main"]["*"]
+            manifest = self.manifest([operation], corpora={
+                "previous_authored": digest(before_corpus), "baseline": digest(before_corpus),
+                "authored": digest({title: desired}), "desired": digest({title: desired}),
+            }, operator=actor or operator)
+            before_effects = self.effects()
             with Journal(self.workspace / ("case-" + label), manifest) as journal:
                 request = self.request(manifest, journal, 1, desired, prerequisites)
                 name = self.launch(journal, request, stage, deny_rights)
@@ -336,6 +465,37 @@ class NativeSmoke:
                 decision = None
                 recovery_decision = None
                 damaged = False
+                after_effects = self.effects()
+                revision = next((row for row in evidence["states"]
+                                 if row["title"] == title and "comment" in row
+                                 and row["comment"] == "native-publication/v1:" + digest(request)), None)
+                delta = None
+                if during is None:
+                    try:
+                        delta = self.check_effects(before_effects, after_effects, revision, manifest["operator"])
+                    except RuntimeError as effects_error:
+                        if not partial_effects or str(effects_error) != "Native operator/account delta is incomplete or unexpected.":
+                            raise
+                        recovery_decision = "blocked-incomplete-deferred-effects"
+                        observe = False
+                    else:
+                        if partial_effects:
+                            raise RuntimeError("Postcommit/pre-deferred crash did not demonstrate the intended incomplete effects.")
+                guard = {"scope": "synthetic-native-case", "effects_before": before_effects, "effects_after": after_effects,
+                         "delta": delta, "concurrent_fixture_mutation": during is not None}
+                evidence["guard_sha256"] = journal.put_artifact(guard)
+                if crash_before_guard:
+                    journal.close()
+                    with Journal(journal.path) as resumed:
+                        if resumed.accepted:
+                            raise RuntimeError("A save result advanced an unverified prefix.")
+                        try:
+                            resumed.intent(self.request(manifest, resumed, 1, desired, attempt=2))
+                        except JournalError:
+                            pass
+                        else:
+                            raise RuntimeError("A committed but unverified prefix permitted a new dispatch.")
+                    journal = Journal(journal.path)
                 if observe:
                     decision = journal.observe(request, evidence)
                     if decision == "accept":
@@ -359,6 +519,11 @@ class NativeSmoke:
                         retry = self.request(manifest, journal, 1, desired, prerequisites, attempt=2)
                         retry_name = self.launch(journal, retry)
                         retry_evidence, retry_results = self.collect(journal, retry, retry_name)
+                        retry_effects = self.effects()
+                        retry_delta = self.check_effects(after_effects, retry_effects, retry_results[0]["revision"],
+                                                        manifest["operator"])
+                        retry_evidence["guard_sha256"] = journal.put_artifact({
+                            "effects_before": after_effects, "effects_after": retry_effects, "delta": retry_delta})
                         recovery_decision = journal.observe(retry, retry_evidence)
                         if recovery_decision != "accept":
                             raise RuntimeError("Positively quiesced retry did not commit.")
@@ -379,9 +544,11 @@ class NativeSmoke:
                     self.containers.remove(duplicate_name)
                 self.proof["cases"].append({"name": label, "decision": decision, "results": results,
                                            "recovery_decision": recovery_decision, "quiescence": evidence["quiescence"],
-                                           "states_sha256": digest(evidence["states"])})
+                                           "states_sha256": digest(evidence["states"]), "guards": guard})
                 docker("rm", name)
                 self.containers.remove(name)
+                if crash_before_guard:
+                    journal.close()
             if damaged:
                 try:
                     with Journal(self.workspace / ("case-" + label)):
@@ -435,8 +602,10 @@ class NativeSmoke:
             raise RuntimeError("Null save was not rejected.")
         if case("lost-before-commit", stage="before-commit", lose=True, kill=True, retry_after=True) != "retry":
             raise RuntimeError("Quiesced precommit crash is not retryable.")
-        if case("lost-after-commit", stage="after-commit", lose=True, kill=True, success=True) != "accept":
-            raise RuntimeError("Postcommit lost response was not reconciled.")
+        case("partial-postcommit-effects", stage="after-commit", lose=True, kill=True, success=True, partial_effects=True)
+        if case("lost-final-response", stage="after-effects", lose=True, kill=True, success=True) != "accept":
+            raise RuntimeError("Lost final response with complete effects was not reconciled.")
+        case("result-before-guard-crash", success=True, crash_before_guard=True)
         case("fresh-postcommit-mismatch", stage="after-commit", observe=False, error="fresh-revision-mismatch",
              during=lambda: self.api({"action": "edit", "title": title, "text": "Foreign postcommit revision",
                                      "token": csrf}, post=True))

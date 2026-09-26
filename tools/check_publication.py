@@ -43,7 +43,7 @@ ALLOWED_FILES = {
     "tools/smoke_prefix.py": 64 * 1024,
     "tools/native_publication.php": 24 * 1024,
     "tools/publication_journal.py": 32 * 1024,
-    "tools/smoke_native.py": 40 * 1024,
+    "tools/smoke_native.py": 48 * 1024,
     "tests/test_safety.py": 48 * 1024,
     "tests/test_wiki.py": 48 * 1024,
     "tests/test_catalog.py": 64 * 1024,

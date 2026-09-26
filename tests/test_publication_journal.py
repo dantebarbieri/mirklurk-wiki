@@ -8,11 +8,13 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from publication_journal import (
     Journal, JournalError, canonical_bytes, decode, digest, validate_manifest, validate_request,
 )
+from smoke_native import NativeSmoke
 
 PREREQUISITE = {"fixture": "synthetic prerequisite guard"}
 GUARD = {"fixture": "synthetic preservation guard", "trace": ["before", "after"]}
@@ -95,6 +97,48 @@ class ProtocolTests(unittest.TestCase):
                                      "revision_id": 2, "raw_sha256": sha("Old")}]
         with self.assertRaisesRegex(JournalError, "Prerequisite"):
             validate_request(manifest, request)
+
+    def test_wire_integer_types_and_attempt_bound_are_not_coerced(self):
+        manifest, request, _ = fixtures()
+        for key, value in (("schema_version", True), ("index", True), ("attempt", True), ("attempt", 1000)):
+            with self.assertRaises(JournalError):
+                validate_request(manifest, {**request, key: value})
+        with self.assertRaises(JournalError):
+            validate_manifest({**manifest, "schema_version": True})
+
+    def test_complete_effect_guards_reject_partial_deferred_and_extra_history(self):
+        manifest, _, evidence = fixtures()
+        revision = evidence["states"][0]
+        tables = {name: {} for name in ("revision", "slots", "content", "text", "actor", "logging",
+                                        "archive", "image", "oldimage", "filearchive", "comment", "user_groups")}
+        tables.update(revision={"8": sha("old")}, slots={"8:1": sha("old slot")},
+                      content={"1": sha("old content")}, text={"1": sha("old text")}, actor={"2": sha("actor")})
+        before = {"tables": tables, "main_role_id": 1, "slot_content": {"8:1": 1}, "content_address": {"1": "tt:1"},
+                  "pages": {"7": {"namespace": 0, "title": "Example", "revision_id": 8,
+                                  "touched": "earlier", "metadata_sha256": sha("old page")}},
+                  "users": {"1": {"name": "Synthetic operator", "editcount": 0, "metadata_sha256": sha("account")}}}
+        after = copy.deepcopy(before)
+        for table, key in (("revision", "11"), ("slots", "11:1"), ("content", "2"), ("text", "2"), ("comment", "2")):
+            after["tables"][table][key] = sha(table + key)
+        after["slot_content"]["11:1"] = 2
+        after["content_address"]["2"] = "tt:2"
+        after["pages"]["7"].update(revision_id=11, touched="later", metadata_sha256=sha("new page"))
+        after["users"]["1"]["editcount"] = 1
+        self.assertEqual(NativeSmoke.check_effects(before, after, revision, manifest["operator"])["operator_delta"], 1)
+        for count in (0, None, True, 2):
+            invalid = copy.deepcopy(after)
+            invalid["users"]["1"]["editcount"] = count
+            with self.assertRaisesRegex(RuntimeError, "account delta"):
+                NativeSmoke.check_effects(before, invalid, revision, manifest["operator"])
+        for table, key in (("slots", "8:1"), ("actor", "2"), ("archive", "9"), ("logging", "9"), ("image", "Unexpected.png")):
+            invalid = copy.deepcopy(after)
+            invalid["tables"][table][key] = sha("Unexpected change")
+            with self.assertRaises(RuntimeError):
+                NativeSmoke.check_effects(before, invalid, revision, manifest["operator"])
+        invalid = copy.deepcopy(before)
+        invalid["pages"]["7"]["touched"] = "not a harmless null save"
+        with self.assertRaises(RuntimeError):
+            NativeSmoke.check_effects(before, invalid, None, manifest["operator"])
 
 
 @unittest.skipUnless(os.name == "posix", "POSIX durability is intentionally unsupported on Windows")
@@ -247,6 +291,52 @@ class JournalTests(unittest.TestCase):
         (self.path / f"artifact-{digest(GUARD)}.json").write_bytes(canonical_bytes({"changed": True}))
         with self.assertRaisesRegex(JournalError, "artifact"):
             Journal(self.path)
+
+    def test_reversed_directory_order_cannot_reuse_earlier_retry_evidence(self):
+        second = {**self.request, "attempt": 2, "worker": {"nonce": "e" * 32, "identity": "second"}}
+        with self.new() as journal:
+            journal.intent(self.request)
+            self.evidence["states"] = list(journal.expected_states([]).values())
+            journal.observe(self.request, self.evidence)
+            journal.intent(second)
+        names = sorted(os.listdir(self.path), reverse=True)
+        with patch("publication_journal.os.listdir", return_value=names), Journal(self.path) as reopened:
+            third = {**self.request, "attempt": 3, "worker": {"nonce": "f" * 32, "identity": "third"}}
+            with self.assertRaisesRegex(JournalError, "noncommit"):
+                reopened.intent(third)
+            with self.assertRaisesRegex(JournalError, "latest"):
+                reopened.observe(self.request, self.evidence)
+
+    def test_boolean_accepted_record_aliases_are_not_integer_fields(self):
+        with self.new() as journal:
+            journal.intent(self.request)
+            journal.observe(self.request, self.evidence)
+            record = journal.accept(self.request)
+        path = self.path / "accepted-000001.json"
+        for key in ("schema_version", "index"):
+            path.write_bytes(canonical_bytes({**record, key: True}))
+            with self.assertRaisesRegex(JournalError, "damaged"):
+                Journal(self.path)
+        path.write_bytes(canonical_bytes(record))
+        with Journal(self.path) as reopened:
+            self.assertEqual(len(reopened.accepted), 1)
+
+    def test_crash_after_result_before_guards_does_not_advance_or_redispatch(self):
+        with self.new() as journal:
+            journal.intent(self.request)
+            event = {key: self.evidence[key] for key in ("schema_version", "request_sha256", "worker", "start")}
+            event.update(kind="native-publication-result", manifest_sha256=digest(self.manifest), outcome="committed",
+                         stage="verified", revision=self.evidence["states"][0], error=None)
+            journal.event(self.request, event)
+        with Journal(self.path) as reopened:
+            self.assertEqual(reopened.accepted, [])
+            with self.assertRaises(KeyError):
+                reopened.accept(self.request)
+            with self.assertRaisesRegex(JournalError, "noncommit"):
+                reopened.intent({**self.request, "attempt": 2,
+                                 "worker": {"nonce": "f" * 32, "identity": "unauthorized-retry"}})
+            reopened.observe(self.request, self.evidence)
+            reopened.accept(self.request)
 
 
 if __name__ == "__main__":

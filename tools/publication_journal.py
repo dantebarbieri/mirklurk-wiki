@@ -425,7 +425,7 @@ class Journal:
                 require(attempt > 1 and last is not None and last[0] == "accept", "Unproven accepted prefix.")
                 record = self.records[prefix_name]
                 expected_record = self._acceptance(request, last[1], previous)
-                require(record == expected_record, "Accepted prefix chain is damaged.")
+                require(canonical_bytes(record) == canonical_bytes(expected_record), "Accepted prefix chain is damaged.")
                 accepted.append(record)
                 previous = digest(record)
                 known.add(prefix_name)
@@ -456,9 +456,16 @@ class Journal:
         self._put(name, request)
         return digest(request)
 
+    def _pending(self, request):
+        require(request["index"] == len(self.accepted) + 1, "Not the next unaccepted operation.")
+        intents = [row for name, row in self.records.items()
+                   if name.startswith("intent-") and row["index"] == request["index"]]
+        require(intents and canonical_bytes(max(intents, key=lambda row: row["attempt"])) == canonical_bytes(request),
+                "Not the latest pending attempt.")
+
     def event(self, request, event):
         require(self.records.get(self.name("intent", request)) == request, "Intent must be durable before dispatch.")
-        require(request["index"] == len(self.accepted) + 1, "Late event for an accepted operation.")
+        self._pending(request)
         kind = event.get("kind")
         require(kind in ("native-publication-start", "native-publication-result"), "Unexpected worker event.")
         validate_event(event, request, kind)
@@ -471,7 +478,7 @@ class Journal:
 
     def observe(self, request, evidence):
         require(self.records.get(self.name("intent", request)) == request, "Unknown intent.")
-        require(request["index"] == len(self.accepted) + 1, "Observation is not for the pending operation.")
+        self._pending(request)
         decision, _ = self._decision(request, evidence, self.accepted)
         self._put(self.name("evidence", request), evidence)
         return decision
@@ -485,6 +492,7 @@ class Journal:
                 "revision": revision, "states_sha256": digest(evidence["states"])}
 
     def accept(self, request):
+        self._pending(request)
         evidence = self.records[self.name("evidence", request)]
         decision, revision = self._decision(request, evidence, self.accepted)
         require(decision == "accept" and request["index"] == len(self.accepted) + 1, "No next committed prefix.")

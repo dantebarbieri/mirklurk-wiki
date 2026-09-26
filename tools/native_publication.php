@@ -269,6 +269,7 @@ class NativePublication extends Maintenance {
             $this->guard($operation['expected'], $parent);
             $this->checkpoint('after-parent');
             // One operation, not a batch transaction. Never perform conflict resolution.
+            $deferredGuard = DeferredUpdates::preventOpportunisticUpdates();
             $db->startAtomic(__METHOD__, IDatabase::ATOMIC_CANCELABLE);
             $atomic = true;
             $updater->setContent(SlotRecord::MAIN,
@@ -296,9 +297,12 @@ class NativePublication extends Maintenance {
             $this->checkpoint('after-commit');
             DeferredUpdates::doUpdates();
             $services->getDBLoadBalancerFactory()->commitPrimaryChanges(__METHOD__);
+            $this->check(DeferredUpdates::pendingUpdatesCount() === 0, 'deferred-effects-incomplete');
+            unset($deferredGuard);
             $fresh = $store->getRevisionByTitle($this->title($operation), 0, IDBAccessObject::READ_LATEST);
             $this->check($fresh !== null && $this->state($title, $fresh) === $saved, 'fresh-revision-mismatch');
             $this->stage = 'verified';
+            $this->checkpoint('after-effects');
             $this->emit([...$event, 'kind' => 'native-publication-result', 'outcome' => 'committed',
                 'stage' => $this->stage, 'revision' => $saved, 'error' => null]);
         } catch (Throwable $error) {

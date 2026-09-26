@@ -42,7 +42,7 @@ Manifest fields (all required; no extra fields):
 | `runtime` | `{mediawiki_version:"1.43.9", primitive_sha256, fingerprint_sha256}` |
 | `operator` | `{id, name, actor_id}`; positive IDs, existing exact identities |
 | `binding_sha256` | Independently validated deployment/approval/preservation binding |
-| `corpora` | `{previous_authored, baseline, authored, desired}`; exact caller-approved hashes |
+| `corpora` | `{previous_authored, baseline, authored, desired}`; SHA256 of canonical title-to-raw-text JSON maps, not XML seed bytes |
 | `prerequisites_sha256` | Static approved requirement/contract digest, not future revision evidence |
 | `operations` | Ordered operation objects below |
 | `preserved` | Exact unchanged managed states: `{namespace,title,page_id,revision_id,raw_sha256}` |
@@ -88,6 +88,13 @@ The operation's cancellable atomic section is not a batch transaction.
 Status, revision creation, parent, actor, comment and exact stored D are checked.
 Ordinary commit and deferred updates precede a fresh primary raw revision read.
 A null/no-op save is an error, even if core reports an OK status.
+Opportunistic deferred execution is held until the explicit lifecycle boundary;
+the verified result requires the deferred queue to be empty. A process killed
+after the revision transaction but before deferred account/index effects is
+**not** fully recoverable merely because the raw page matches D. Full
+preservation/effect guards must pass, or that partial committed state remains
+blocked. The lost-final-response fixture kills only after complete effects;
+the separate partial-effects fixture must fail closed.
 
 The exact revision comment is `native-publication/v1:<request_sha256>`.
 Reconciliation must never adopt another request's identical text.
@@ -172,6 +179,9 @@ Run/op nonces stay fixed on retry; request/worker nonce and ordinal change.
 Accepted records bind request, previous acceptance, result (or null), observation,
 revision and full observed-state digest. Replay validates all records but
 advances progress **only** through accepted records.
+The latest attempt is selected by numeric ordinal, never directory enumeration
+order. Earlier attempts cannot receive new observations/events after a later
+attempt exists; boolean aliases are not integer schema/index values.
 
 ## Evidence boundary
 
@@ -182,6 +192,23 @@ self omissions and block flags remain unchanged. The native/recovery proof is
 additional, not replacement approval. Synthetic accounts/images and isolated
 SQL/image restore belong only to disposable smoke resources; no production
 backup, game image, account data or private capture is published.
+
+The disposable save callback only dispatches and captures the result. Acceptance
+is a separate callback after the corresponding actual consumer/price/prerequisite
+checks and full history/log/account/File effect guards. The final acceptance
+also follows all final observations, mixed-price comparisons, categories and
+reader-release checks. A save-to-guard crash has a durable intent/result but no
+accepted prefix and cannot authorize the next dispatch.
+
+`native-runtime-phases.json` records both actual six-field settings projections.
+Only `ReadOnly` may differ; image, code, extensions, source and canonical server
+remain the same. The worker manifest binds the writable CLI runtime. Authoritative
+schema-2 PST and schema-1 full-prefix/endpoint/price artifacts bind the actual
+read-only observer runtime. A separately named pre-barrier PST receipt describes
+thumbnail/setup preparation only. The observer's private connection port is a
+transport address, not a change to MediaWiki's canonical server origin.
+`native-journal-proof.json` retains the synthetic run's canonical records and
+guard preimages for independent replay; no production journal is uploaded.
 
 MediaWiki source references:
 [PageUpdater](https://doc.wikimedia.org/mediawiki-core/1.43.9/php/classMediaWiki_1_1Storage_1_1PageUpdater.html)

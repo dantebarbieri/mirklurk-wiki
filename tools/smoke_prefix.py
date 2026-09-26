@@ -924,7 +924,7 @@ class Rehearsal:
         print(f"ENDPOINT_CANDIDATE {endpoint}: {len(captures['selected'])} context projections, "
               f"{len(captures['discrepancies'])} explicit discrepancies; independent review required.", flush=True)
 
-    def run(self, save, wait_tick, drain_jobs, job_status=None):
+    def run(self, save, wait_tick, drain_jobs, job_status, accept):
         self.refresh_metadata()
         self.capture_endpoint("baseline")
         self.capture_link_endpoint("baseline")
@@ -954,6 +954,12 @@ class Rehearsal:
                     raise RuntimeError("The actual sequence violated the frozen compatibility cohort order.")
                 cohort_index += 1
                 self.capture_cohort(cohort_index)
+            guard = {"prefix": self.prefixes[-1], "price_prefix": self.compatibility[-1],
+                     "prerequisite_checks": prerequisites}
+            if index < len(self.order):
+                accept(index, guard)
+            else:
+                self.pending_final_guard = guard
             print(f"PREFIX_PROGRESS {index}/{len(self.order)} {title}", flush=True)
         if self.current != self.desired or cohort_index != 9:
             raise RuntimeError("The full planned sequence did not reach the exact desired corpus.")

@@ -156,7 +156,7 @@ def smoke_category_memberships(api, pages):
             raise RuntimeError(f"Category browse links did not resolve on {title}: {sorted(targets - resolved)}")
 
 
-def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
+def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media=urllib.request.urlopen):
     smoke_category_memberships(api, pages)
     locations = page_locations(data, catalog)
     for identity in MATURE_TREES:
@@ -171,7 +171,7 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
             raise RuntimeError("A mature-tree caption lost its assembly qualification.")
         info = next(iter(api({"action": "query", "titles": "File:" + old_filename,
                               "prop": "imageinfo", "iiprop": "url"})["query"]["pages"].values()))
-        with urllib.request.urlopen(info["imageinfo"][0]["url"], timeout=30) as response:
+        with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
             if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
                 raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
     for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]:
@@ -1166,8 +1166,6 @@ def smoke(evidence_dir=None):
             def job_status(timeout=5):
                 return bounded_maintenance(run, ("showJobs",), timeout).decode(errors="replace").strip()
             drain_jobs()
-            rehearsal = Rehearsal(api, sys.modules[__name__], baseline, pages, data, catalog,
-                                  baseline_catalog, runtime, source_head)
             public_base = base
             run("stop", "mirklurk")
             public_state = json.loads(docker("inspect", "--format", "{{json .State}}", container))
@@ -1187,8 +1185,7 @@ def smoke(evidence_dir=None):
             observer_name = project + "-private-observer"
             run("run", "-d", "--no-deps", "--name", observer_name,
                 "--publish", f"127.0.0.1:{observer_port}:80", "--env",
-                "MW_READ_ONLY=Disposable native publication barrier", "--env",
-                f"MW_SERVER_URL=http://localhost:{observer_port}", "mirklurk")
+                "MW_READ_ONLY=Disposable native publication barrier", "mirklurk")
             observer = observer_name
             base = f"http://localhost:{observer_port}"
             deadline = time.monotonic() + 60
@@ -1202,31 +1199,54 @@ def smoke(evidence_dir=None):
                     time.sleep(0.2)
             api({"action": "edit", "title": "Native denied frontend", "text": "Must not save",
                  "token": csrf}, post=True, expected_error="readonly")
+            observer_projection = json.loads(run("exec", "-T", "mirklurk", "php", "maintenance/run.php",
+                                                 "eval", "--quiet", input_bytes=projection_code.encode()))
+            worker_projection = json.loads(run("run", "--rm", "--no-deps", "-T", "--env", "MW_READ_ONLY=",
+                                               "mirklurk", "php", "maintenance/run.php", "eval", "--quiet",
+                                               input_bytes=projection_code.encode()))
+            if (canonical_bytes(worker_projection) != canonical_bytes(projection)
+                    or observer_projection["ReadOnly"] != "Disposable native publication barrier"
+                    or any(canonical_bytes(observer_projection[key]) != canonical_bytes(worker_projection[key])
+                           for key in SETTINGS_KEYS if key != "ReadOnly")):
+                raise RuntimeError("Observed CLI/observer runtime differs beyond the explicit read-only phase.")
+            observer_runtime = {**runtime, "effective_settings_sha256": settings_hash(observer_projection)}
+            evidence["native-runtime-phases.json"] = {
+                "schema_version": 1, "source_head_sha": source_head,
+                "worker": {"runtime": runtime, "projection": worker_projection},
+                "observer": {"runtime": observer_runtime, "projection": observer_projection},
+                "allowed_projection_difference": ["ReadOnly"], "canonical_server": public_base,
+                "observer_connection_origin": base,
+            }
+            evidence["prebarrier-storage-materialization.json"] = evidence["storage-materialization.json"]
+            observer_pages, evidence["storage-materialization.json"] = materialize_desired(
+                api, previous_authored, baseline, authored, source_head, observer_runtime, actor,
+                previous_source_head=PREVIOUS_AUTHORED_COMMIT,
+            )
+            if observer_pages != pages:
+                raise RuntimeError("Authoritative read-only PST changed the desired corpus bytes.")
             native.proof["barrier"] = {"public_php_exited": not public_state["Running"],
                                        "public_db_requests": 0, "public_transactions": 0,
                                        "public_http_unreachable": True, "private_observer_edit_error": "readonly",
                                        "worker_surface": "CLI-only; no published ports"}
-            save = native.full_run(rehearsal, {
-                key: evidence["storage-materialization.json"][field]
-                for key, field in (("previous_authored", "previous_authored_seed_sha256"),
-                                   ("baseline", "baseline_seed_sha256"), ("authored", "authored_seed_sha256"),
-                                   ("desired", "desired_seed_sha256"))
+            rehearsal = Rehearsal(api, sys.modules[__name__], baseline, pages, data, catalog,
+                                  baseline_catalog, observer_runtime, source_head)
+            save, accept = native.full_run(rehearsal, {
+                key: hashlib.sha256(canonical_bytes(corpus)).hexdigest()
+                for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
+                                    ("authored", authored), ("desired", pages))
             })
-            rehearsal.run(save, wait_for_server_tick, drain_jobs, job_status)
+            rehearsal.run(save, wait_for_server_tick, drain_jobs, job_status, accept)
             evidence.update(rehearsal.artifacts())
-            if len(rehearsal.prefixes) != 450 or len(native.release_journal.accepted) != 449:
-                raise RuntimeError("Native full-prefix proof is incomplete.")
-            native.release_journal.verify_resume(native.states(native.release_journal.manifest,
-                                                                native.release_journal.accepted))
-            native.release_journal.close()
-            with Journal(workspace / "native-release-journal") as replayed:
-                if len(replayed.accepted) != 449:
-                    raise RuntimeError("Native durable release replay is incomplete.")
-            evidence["native-publication-proof.json"] = native.proof
             if set(pages) != managed_titles(api):
                 raise RuntimeError("Imported page titles differ from the deterministic bundle.")
             drain_jobs()
-            smoke_reader_release(api, pages, data, catalog, details, image_hashes)
+            def open_media(url, timeout=30):
+                parsed = urllib.parse.urlsplit(url)
+                if parsed[:2] != urllib.parse.urlsplit(public_base)[:2]:
+                    raise RuntimeError("A media URL escaped the unchanged canonical wiki origin.")
+                return urllib.request.urlopen(base + urllib.parse.urlunsplit(("", "", parsed.path, parsed.query, "")),
+                                              timeout=timeout)
+            smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
@@ -1243,6 +1263,26 @@ def smoke(evidence_dir=None):
                 rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
                 if f'id="{anchor}"' not in rendered:
                     raise RuntimeError("MediaWiki did not render the entity page's primary record anchor.")
+            accept(len(rehearsal.order), {
+                **rehearsal.pending_final_guard, "final_observations": rehearsal.final_observations,
+                "mixed_price_expectations": evidence["price-expectations-candidate.json"],
+                "final_categories_and_reader_release": "passed",
+                "final_prerequisite_stability": "passed",
+            })
+            if len(rehearsal.prefixes) != 450 or len(native.release_journal.accepted) != 449:
+                raise RuntimeError("Native full-prefix proof is incomplete.")
+            native.release_journal.verify_resume(native.states(native.release_journal.manifest,
+                                                                native.release_journal.accepted))
+            native.release_journal.close()
+            with Journal(workspace / "native-release-journal") as replayed:
+                if len(replayed.accepted) != 449:
+                    raise RuntimeError("Native durable release replay is incomplete.")
+            evidence["native-publication-proof.json"] = native.proof
+            evidence["native-journal-proof.json"] = {
+                "schema_version": 1, "source_head_sha": source_head,
+                "scope": "Synthetic-only replayable guard preimages; never a production journal.",
+                "records": replayed.records,
+            }
             docker("stop", observer)
             docker("rm", observer)
             observer = None
