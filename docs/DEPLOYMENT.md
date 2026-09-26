@@ -178,7 +178,7 @@ Fresh production observation, conflict reconciliation, writer freeze and
 publication approval remain operator responsibilities.
 
 The input is a closed JSON object with `schema_version: 1` and
-`kind: "disposable-incremental-inputs"`, containing exactly these additional keys:
+`kind: "disposable-incremental-inputs"`, containing these additional required keys:
 
 | Key | Required value |
 | --- | --- |
@@ -200,10 +200,26 @@ source-changed/new titles; source-unchanged titles retain exact B without PST.
 Incremental order is exactly the changed B/D set, once each, deterministically
 preferring ready creates and then lexical title order. Every transclusion owner
 must be at D before saving its changed consumer; unchanged owners are already
-ready. Missing views and affected cycles fail. There are no historical nine-save
-cohorts, six unknown-price exceptions, source-equivalence waivers or cycle escapes.
+ready, unless the following closed default policy is explicitly approved.
+Missing views and affected cycles still fail. There are no historical nine-save
+cohorts, six unknown-price exceptions, named-view waivers or ignored cycles.
 Zero operations produces explicit `no-publication`, one baseline prefix and no
 release journal/accepted operation.
+
+The only optional input key is `default_readiness`, with exactly
+`{"schema_version":1,"policy":"registered-default-source-and-measurement","source_contracts_sha256":"<sha256>"}`.
+It permits an **empty-argument registered default only** to use its actual B
+owner until that owner reaches D. Named, parameterized and self references remain
+owner-at-D prerequisites. All 45 typed registry entries must be unchanged. The
+ordered full literal `<onlyinclude>...</onlyinclude>` blocks must be identical
+across reproduced A0, exact B and materialized D, with unambiguous inclusion
+structure and only the existing closed view/station switches: templates, mutable
+magic and transclusion dependencies are rejected. The approval digest binds the
+owner-keyed source-contract map described below. Source equality never replaces
+genuine measured B expansion/image-aware DOM in each consumer context, a fresh
+pre-save probe/current revision, or all-45 final D equality. Native prerequisites
+pin the actual B or D raw/CAS, never an anticipated D revision. Without this
+object, strict owner-at-D ordering remains mandatory.
 
 Baseline named projections are measured from MediaWiki in neutral and complete
 B/D consumer contexts, using the baseline catalog and the genuine old pool shape.
@@ -220,6 +236,16 @@ if the owner's article/revision changed. Prices permit only their exact 20px
 denomination icons with no links, including empty links; coin summaries permit
 only the exact owner link/table and no images.
 
+Selected offers use their actual B/D stock-reference and location semantics.
+Outside table rows, each affected merchant/offer consumer must equal the combined
+word/link multisets of its actual direct-source MediaWiki preview and selected
+named projections, including repeated invocations. This retains legitimate
+consumer-owned B notes while rejecting stale/missing selected notes or location
+links even when table rows are unchanged. Direct previews remove only recorded
+literal colon invocations, have no remaining template dependencies, and are
+cached by consumer title/revision/raw. Mismatches use the existing bounded
+settling and fail if they persist; no synthetic HTML is runtime evidence.
+
 `full-prefix-proof.json` retains the existing baseline/desired revision maps,
 `order`, `prefixes`, `view_evidence`, `final_observations` and `default_contracts`.
 Each view adds `parse_title`. Its additive `incremental` envelope has:
@@ -232,6 +258,7 @@ Each view adds `parse_title`. Its additive `incremental` envelope has:
 - `default_endpoint_probe_ids` (`baseline`, `desired`) and
   `default_prefix_probe_ids` (one list per prefix); each list covers all default
   owners in sorted title order, in the neutral `Prefix projection` context.
+- `default_readiness_sha256`: canonical digest of `default-readiness.json`.
 - `corpora` and `seeds`, each mapping `previous_authored`, `baseline`, `authored`,
   `desired` to canonical corpus-map and deterministic XML digests respectively;
   `order_sha256`; and `native`, binding the manifest, exact prerequisite-plan,
@@ -239,14 +266,36 @@ Each view adds `parse_title`. Its additive `incremental` envelope has:
   `cold_replay` is `passed` or `not-applicable-no-publication`.
 
 `native-publication-proof.json.incremental` independently records input, dynamic
-coverage, manifest and prerequisite-plan hashes. The plan hash covers the ordered
+coverage, manifest, prerequisite-plan and `default_source_contracts_sha256`
+hashes. The plan hash covers the ordered
 list of operation prerequisite arrays from the native manifest retained in
 `native-journal-proof.json.records["manifest.json"]`. Native operation guards have
-`prefix`, `prerequisite_checks`, `default_probe_ids` and `incremental_input_sha256`;
+`prefix`, `prerequisite_checks`, `default_probe_ids`, `incremental_input_sha256`,
+`baseline_default_edges` and `offer_context_checks`;
 the final guard also binds final observations and the pre-native-binding envelope.
 The envelope's native hashes are attached afterward to avoid a circular digest.
 The unchanged native executor/journal still require one launch/collection/whole
 exit, exact CAS/prerequisites/effects and full cold replay for each accepted write.
+
+`default-readiness.json` has `schema_version: 1`, kind
+`registered-default-readiness`, the selected `policy` (or `strict-owner-D`),
+`source_contracts`, `used_baseline_edges` and `default_endpoint_probe_ids`.
+Each owner source contract has `previous_authored_raw_sha256`,
+`baseline_raw_sha256`, `desired_raw_sha256` and `transcludable_source_sha256`
+(canonical digest of the ordered full literal inclusion-block list).
+Each actually used B-default edge records `index`, `consumer`, `owner`,
+`parameters: {}`, those four source digests, exact `owner_revision` metadata and
+`probe_id`; operation guards must contain the same annotations.
+
+`offer-context-evidence.json` has `schema_version: 1`, `direct_previews` and
+`checks`. Check keys are canonical digests of
+`{consumer, html_sha256, probe_ids}`, preserving revision/context evidence even
+when HTML is unchanged. Each check contains those fields, `direct_context_id`
+(index into `direct_previews`), `outside_words_sha256` and `outside_links_sha256`.
+The digests cover the expected word-count object and sorted
+`[[[target,text],count],...]` link-count list respectively. Native guards retain
+the complete required check map; missing evidence fails rather than disappearing
+from the guard.
 
 `endpoint-link-view-candidates.json` retains measured selected/context/direct/full
 endpoint HTML and expansion preimages. `consumer-html.json` maps each actual

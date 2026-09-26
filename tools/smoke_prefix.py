@@ -300,6 +300,8 @@ class ProjectionDOM(HTMLParser):
         self.text = ""
         self.links = []
         self.non_wiki_links = []
+        self.outside_text = ""
+        self.outside_links = []
         self.anchors = []
         self.rows = []
         self.wiki_links = []
@@ -348,6 +350,8 @@ class ProjectionDOM(HTMLParser):
                                     "href": href, "classes": attrs.get("class", "").split()})
             self.link_tag = tag
             self.links.append(self.link)
+            if self.row is None:
+                self.outside_links.append(self.link)
             if self.cell is not None:
                 self.cell["links"].append(self.link)
 
@@ -367,6 +371,8 @@ class ProjectionDOM(HTMLParser):
 
     def handle_data(self, text):
         self.text += text
+        if self.row is None:
+            self.outside_text += text
         if self.cell is not None:
             self.cell["text"] += text
         if self.link is not None:
@@ -374,6 +380,7 @@ class ProjectionDOM(HTMLParser):
 
     def normalize(self):
         self.text = " ".join(self.text.split())
+        self.outside_text = " ".join(self.outside_text.split())
         for link in [*self.links, *self.non_wiki_links]:
             link["text"] = " ".join(link["text"].split())
         for row in self.rows:
@@ -451,7 +458,7 @@ def strip_colon_invocations(text):
 
 class Rehearsal:
     def __init__(self, api, checks, baseline, desired, data, catalog, old_catalog, runtime, source_head,
-                 *, incremental=False):
+                 *, incremental=False, incremental_defaults=None):
         self.incremental = incremental
         self.api, self.checks = api, checks
         self.baseline, self.desired, self.current = baseline, desired, dict(baseline)
@@ -472,7 +479,7 @@ class Rehearsal:
         self.pools = {row["id"]: row for row in catalog["acquisition"]["pools"]}
         if incremental:
             from smoke_incremental import incremental_order
-            self.order = incremental_order(baseline, desired)
+            self.order = incremental_order(baseline, desired, incremental_defaults)
         else:
             self.order = planned_order(baseline, desired, self.locations, self.old_prices.keys(), self.coins.keys())
         self.cohort = [] if incremental else [self.locations[identity] for identity in COHORT]

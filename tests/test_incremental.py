@@ -17,7 +17,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 import smoke_deploy as checks
 from build_wiki import build_pages, build_xml
 from smoke_incremental import (
-    IncrementalRehearsal, archive_source, catalog_pins, coverage, default_registry, digest, incremental_order,
+    DEFAULT_POLICY, IncrementalRehearsal, archive_source, catalog_pins, coverage, default_approval,
+    default_blocks, default_registry, default_source_contracts, digest, incremental_order,
     load_incremental_inputs, pinned_bytes, reviewed_drift, source_pin,
     validate_native_plan, validate_owned, validate_prefix_guard, verify_native_completion,
 )
@@ -26,7 +27,7 @@ from smoke_prefix import PendingConsumerUpdate, Rehearsal, materialize_desired
 from plan_migration import read_snapshot
 from publication_journal import Journal, JournalError
 from wiki_details import load_publication_inputs
-from wiki_views import selective_view, transclusions
+from wiki_views import available_views, selective_view, transclusions
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,11 +53,13 @@ def plan(rehearsal):
         before = rehearsal.metadata.get(title)
         expected = ({"page_id": before["pageid"], "revision_id": before["revid"], "raw_sha256": before["raw_sha256"]}
                     if before else {"page_id": 0, "revision_id": 0, "raw_sha256": None})
-        prerequisites = [{"namespace": 0, "title": owner, "raw_sha256": hashlib.sha256(current[owner].encode()).hexdigest()}
+        prerequisites = [{"namespace": 14 if owner.startswith("Category:") else 0, "title": owner,
+                          "raw_sha256": hashlib.sha256(current[owner].encode()).hexdigest()}
                          for owner in sorted({owner for owner, _ in transclusions(rehearsal.desired[title])})]
         operations.append(NativeSmoke.operation(index, title, expected, rehearsal.desired[title], prerequisites))
         current[title] = rehearsal.desired[title]
-    preserved = [{"namespace": 0, "title": title, "page_id": row["pageid"], "revision_id": row["revid"],
+    preserved = [{"namespace": 14 if title.startswith("Category:") else 0, "title": title,
+                  "page_id": row["pageid"], "revision_id": row["revid"],
                   "raw_sha256": row["raw_sha256"]} for title, row in sorted(rehearsal.metadata.items())
                  if title not in rehearsal.order]
     return operations, preserved
@@ -396,6 +399,9 @@ class IncrementalProjectionTests(unittest.TestCase):
         rehearsal.metadata = metadata(rehearsal.current)
         rehearsal.cache, rehearsal.probes, rehearsal.link_candidates = {}, [], {}
         rehearsal.registry = {"prices": {}, "coins": {}}
+        rehearsal.catalog, rehearsal.locations = {"currency": {}}, {}
+        rehearsal.default_sources, rehearsal.used_baseline_defaults = {}, []
+        rehearsal.context_previews, rehearsal.context_cache, rehearsal.context_checks = [], {}, {}
         rehearsal.checks = checks
         rehearsal.validate_projection = lambda *args: None
         rehearsal.refresh_metadata = lambda: None
@@ -532,6 +538,268 @@ class IncrementalProjectionTests(unittest.TestCase):
             pending = rehearsal.settling[0]
             self.assertEqual(pending["details"]["expected_text"], new)
             self.assertEqual(pending["html"], "<p>" + old + "</p>")
+
+
+class ClosedDefaultTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.inputs = load_publication_inputs(ROOT)
+        cls.pages = build_pages(ROOT, *cls.inputs)
+        cls.baseline = {**cls.pages, "Antidote": cls.pages["Antidote"] + "\nOld item article",
+                        "Gurb-Gurb": cls.pages["Gurb-Gurb"] + "\nOld merchant article"}
+        cls.registry = default_registry(cls.baseline, cls.pages, cls.inputs, cls.inputs)
+        cls.sources = default_source_contracts(cls.pages, cls.baseline, cls.pages, cls.registry)
+        cls.binding = {"input_sha256": "a" * 64, "default_readiness": {
+            "schema_version": 1, "policy": DEFAULT_POLICY, "source_contracts_sha256": digest(cls.sources)}}
+
+    def rehearsal(self, binding=None, desired=None):
+        return IncrementalRehearsal(None, checks, self.baseline, desired or self.pages, *self.inputs[:2],
+                                    self.inputs[1], {}, "a" * 40, previous_inputs=self.inputs,
+                                    binding=binding or self.binding, previous_authored=self.pages)
+
+    def test_real_merchant_price_cycle_requires_exact_explicit_closed_approval(self):
+        with self.assertRaisesRegex(RuntimeError, "cycle"):
+            self.rehearsal({"input_sha256": "a" * 64})
+        rehearsal = self.rehearsal()
+        self.assertEqual(rehearsal.order, ["Gurb-Gurb", "Antidote"])
+        rehearsal.metadata = metadata(rehearsal.baseline)
+        operations, preserved = plan(rehearsal)
+        validate_native_plan(rehearsal, operations, preserved)
+        price = next(row for row in operations[0]["prerequisites"] if row["title"] == "Antidote")
+        self.assertEqual(price["raw_sha256"], hashlib.sha256(self.baseline["Antidote"].encode()).hexdigest())
+        self.assertNotEqual(price["raw_sha256"], hashlib.sha256(self.pages["Antidote"].encode()).hexdigest())
+        bad_operations = copy.deepcopy(operations)
+        next(row for row in bad_operations[0]["prerequisites"] if row["title"] == "Antidote")["raw_sha256"] = hashlib.sha256(
+            self.pages["Antidote"].encode()).hexdigest()
+        bad_operations[0]["prerequisites_sha256"] = digest(bad_operations[0]["prerequisites"])
+        with self.assertRaisesRegex(RuntimeError, "CAS/prerequisite"):
+            validate_native_plan(rehearsal, bad_operations, preserved)
+        seller = next(row for row in operations[1]["prerequisites"] if row["title"] == "Gurb-Gurb")
+        self.assertEqual(seller["raw_sha256"], hashlib.sha256(self.pages["Gurb-Gurb"].encode()).hexdigest())
+        bad = copy.deepcopy(self.binding)
+        bad["default_readiness"]["source_contracts_sha256"] = "0" * 64
+        with self.assertRaisesRegex(RuntimeError, "approval digest"):
+            self.rehearsal(bad)
+
+    def test_named_or_parameterized_default_edges_never_use_B_readiness(self):
+        for arguments in ("view=price", "view=", "extra=ignored"):
+            desired = {**self.pages, "Gurb-Gurb": self.pages["Gurb-Gurb"].replace(
+                "{{:Antidote}}", "{{:Antidote|" + arguments + "}}")}
+            self.assertNotEqual(desired["Gurb-Gurb"], self.pages["Gurb-Gurb"])
+            with self.subTest(arguments=arguments), self.assertRaisesRegex(RuntimeError, "cycle"):
+                self.rehearsal(desired=desired)
+
+    def test_closed_shape_rejects_mutable_magic_hidden_tags_and_dependencies(self):
+        block = next(block for block in default_blocks(self.pages["Antidote"], "prices") if "" in available_views(block))
+        for insertion in ("{{REVISIONID}}", "{{CURRENTTIMESTAMP}}", "{{:Other}}", "{{Other}}",
+                          "{{{{{item|Other}}}}}", "{{{unreviewed|Other}}}"):
+            changed = block.replace("|#default=}}", insertion + "|#default=}}", 1)
+            with self.subTest(insertion=insertion), self.assertRaises(RuntimeError):
+                default_blocks(changed, "prices")
+            bad = {**self.pages, "Antidote": self.pages["Antidote"].replace(block, changed)}
+            with self.assertRaises(RuntimeError):
+                default_source_contracts(bad, bad, bad, self.registry)
+        for invalid in ("<nowiki>" + block + "</nowiki>", "<noinclude>" + block + "</noinclude>",
+                        "<NOINCLUDE>" + block + "</NOINCLUDE>", "<noinclude class='x'>" + block + "</noinclude>",
+                        "<!--" + block + "-->", block + block, block.replace("</onlyinclude>", "")):
+            with self.assertRaises(RuntimeError):
+                default_blocks(invalid, "prices")
+        changed = {**self.pages, "Antidote": self.pages["Antidote"].replace(block, block.replace("silver", "SILVER"))}
+        with self.assertRaisesRegex(RuntimeError, "sources differ"):
+            default_source_contracts(self.pages, changed, changed, self.registry)
+        with self.assertRaisesRegex(RuntimeError, "reproduced"):
+            default_source_contracts(None, self.baseline, self.pages, self.registry)
+
+    def test_source_approval_never_replaces_fresh_measured_B_context(self):
+        rehearsal = self.rehearsal()
+        rehearsal.metadata = metadata(rehearsal.baseline)
+        html = '<p><img src="/images/20px-Item-73.png" alt="Silver coin" width="20" height="20"> 1 silver</p>'
+        def api(query, **kwargs):
+            if query["action"] == "expandtemplates":
+                return {"expandtemplates": {"wikitext": "Synthetic B expansion"}}
+            return {"parse": {"text": {"*": html}, "templates": [{"*": "Antidote"}]}}
+        rehearsal.api = api
+        original_html = html
+        with self.assertRaisesRegex(RuntimeError, "Missing measured"):
+            rehearsal.probe("Gurb-Gurb", "Antidote", (), fresh=True)
+        rehearsal.baseline_contracts[("Antidote", (), "Gurb-Gurb")] = {
+            "owner": dict(rehearsal.metadata["Antidote"]), "expanded_wikitext": "Synthetic B expansion", "html": html}
+        probe = rehearsal.probe("Gurb-Gurb", "Antidote", (), fresh=True)
+        from smoke_incremental import baseline_default_edges
+        edge = baseline_default_edges(rehearsal, 1, "Gurb-Gurb", [probe])[0]
+        self.assertEqual(edge["owner_revision"], rehearsal.metadata["Antidote"])
+        self.assertEqual(edge["probe_id"], probe["id"])
+        self.assertEqual(edge["parameters"], {})
+        self.assertEqual(edge["transcludable_source_sha256"], self.sources["Antidote"]["transcludable_source_sha256"])
+        html += '<a href="?title=Wrong"></a>'
+        with self.assertRaises(RuntimeError):
+            rehearsal.probe("Gurb-Gurb", "Antidote", (), fresh=True)
+        html = original_html
+        with self.assertRaisesRegex(RuntimeError, "Missing measured"):
+            rehearsal.probe("Wrong context", "Antidote", (), fresh=True)
+
+    def test_default_approval_schema_is_closed(self):
+        self.assertIsNone(default_approval({}))
+        self.assertEqual(default_approval(self.binding), self.binding["default_readiness"])
+        for field, value in (("policy", "all-views"), ("schema_version", True),
+                             ("source_contracts_sha256", "x"), ("extra", True)):
+            bad = copy.deepcopy(self.binding)
+            bad["default_readiness"][field] = value
+            with self.assertRaises(RuntimeError):
+                default_approval(bad)
+
+    def test_missing_or_tampered_actual_B_edge_and_context_guards_reject(self):
+        from smoke_incremental import baseline_default_edges, context_guards, context_key
+        from smoke_prefix import linked_titles
+        rehearsal = self.rehearsal()
+        rehearsal.metadata = metadata(rehearsal.current)
+        title = rehearsal.order[0]
+        prerequisites = [{"id": index, "owner": dict(rehearsal.metadata[owner]), "parameters": dict(arguments),
+                          "parse_title": title} for index, (owner, arguments) in enumerate(transclusions(self.pages[title]))]
+        edges = baseline_default_edges(rehearsal, 1, title, prerequisites)
+        self.assertEqual([row["owner"] for row in edges], ["Antidote"])
+        rehearsal.current[title] = rehearsal.desired[title]
+        rehearsal.metadata[title]["revid"] += 1000
+        rehearsal.metadata[title]["raw_sha256"] = hashlib.sha256(rehearsal.current[title].encode()).hexdigest()
+        rehearsal.probes = prerequisites[:]
+        defaults = []
+        for owner in sorted(self.registry["prices"].keys() | self.registry["coins"].keys()):
+            defaults.append(len(rehearsal.probes))
+            rehearsal.probes.append({"id": defaults[-1], "owner": rehearsal.metadata[owner],
+                                     "parameters": {}, "parse_title": "Prefix projection"})
+        rehearsal.default_prefixes = [[], defaults]
+        affected = {title} | {consumer for consumer, text in rehearsal.current.items()
+                              if title in {owner for owner, _ in transclusions(text)} or title in linked_titles(text)}
+        observations = [{"consumer": dict(rehearsal.metadata[consumer]), "html_sha256": "e" * 64, "probe_ids": []}
+                        for consumer in sorted(affected)]
+        rehearsal.context_checks = {context_key(row): {**row, "direct_context_id": index}
+                                    for index, row in enumerate(observations)}
+        rehearsal.prefixes = [{"index": 0}, {"index": 1, "saved": rehearsal.metadata[title],
+                              "prerequisites": [row["id"] for row in prerequisites], "observations": observations}]
+        guard = {"prefix": rehearsal.prefixes[-1], "prerequisite_checks": prerequisites, "default_probe_ids": defaults,
+                 "incremental_input_sha256": rehearsal.binding["input_sha256"], "baseline_default_edges": edges,
+                 "offer_context_checks": context_guards(rehearsal, observations)}
+        validate_prefix_guard(rehearsal, 1, guard)
+        self.assertTrue(guard["offer_context_checks"])
+        for key in ("baseline_default_edges", "offer_context_checks"):
+            bad = copy.deepcopy(guard)
+            del bad[key]
+            with self.subTest(key=key), self.assertRaisesRegex(RuntimeError, "omitted"):
+                validate_prefix_guard(rehearsal, 1, bad)
+        bad = copy.deepcopy(guard)
+        bad["baseline_default_edges"][0]["owner_revision"]["revid"] += 1
+        with self.assertRaisesRegex(RuntimeError, "B-default"):
+            validate_prefix_guard(rehearsal, 1, bad)
+
+
+class OfferContextTests(unittest.TestCase):
+    legacy_target = "Currency and trading#currency-trade-stock-and-funds"
+    legacy_label = "Shared stock and merchant-funds rules"
+
+    def test_selected_offer_context_uses_actual_B_or_D_owner_semantics(self):
+        rehearsal = IncrementalRehearsal.__new__(IncrementalRehearsal)
+        legacy = "<includeonly>[[" + self.legacy_target + "|" + self.legacy_label + "]]</includeonly>"
+        modern = "<noinclude>[[:Category:Merchants#Trading_rules|Shared trading rules]]</noinclude>"
+        rehearsal.baseline, rehearsal.desired = {"Owner": legacy}, {"Owner": modern}
+        rehearsal.current = dict(rehearsal.baseline)
+        rehearsal.checks, rehearsal.locations = checks, {"npc": "Owner"}
+        rehearsal.catalog = {"currency": {"standard_merchants": ["npc"], "rules": [
+            {"id": "trade-stock-and-funds", "text": "New stock rule."}]},
+            "classifications": [{"entity": "npc", "location": {}}]}
+        rehearsal.baseline_checker = SimpleNamespace(
+            locations=rehearsal.locations, catalog={"currency": rehearsal.catalog["currency"], "classifications": []})
+        old = f'<p><a href="?title={self.legacy_target}">{self.legacy_label}</a> Location: Not established.</p>'
+        new = '<p>Location: <a href="?title=Owner#Location_and_access">Location and access</a>.</p>'
+        rehearsal.validate_offer_context("Owner", old, "Consumer")
+        with self.assertRaises(RuntimeError):
+            rehearsal.validate_offer_context("Owner", new, "Consumer")
+        rehearsal.current["Owner"] = modern
+        rehearsal.validate_offer_context("Owner", new, "Consumer")
+        for invalid in (old, new + old, new + " New stock rule.", new.replace("#Location_and_access", "#Wrong")):
+            with self.assertRaises(RuntimeError):
+                rehearsal.validate_offer_context("Owner", invalid, "Consumer")
+
+    def fixture(self):
+        rehearsal = IncrementalRehearsal.__new__(IncrementalRehearsal)
+        rehearsal.current = {"Consumer": "Introduction. {{:Old seller|view=offers|item=item-1}} {{:New seller|view=offers|item=item-1}}",
+                             "Old seller": "B", "New seller": "D"}
+        rehearsal.metadata = metadata(rehearsal.current)
+        rehearsal.context_previews, rehearsal.context_cache, rehearsal.context_checks = [], {}, {}
+        rehearsal.checks = SimpleNamespace(check_parser_errors=checks.check_parser_errors,
+                                            wait_for_server_tick=lambda *args, **kwargs: None)
+        link = f'<a href="?title={self.legacy_target}">{self.legacy_label}</a>'
+        direct = "<p>Introduction. " + link + "</p>"
+        table = '<table><tr><td><span id="unchanged-row"></span>Unchanged row</td></tr></table>'
+        old = "<p>" + link + " Location: Not established.</p>" + table
+        new = '<p>Location: <a href="?title=New_seller#Location_and_access">Location and access</a>.</p>' + table
+        rehearsal.probes = [
+            {"id": index, "parameters": {"view": "offers", "item": "item-1"},
+             "owner": rehearsal.metadata[owner], "html": html,
+             "kind": "baseline-leaf-projection" if index == 0 else "desired-leaf-projection"}
+            for index, (owner, html) in enumerate((("Old seller", old), ("New seller", new)))
+        ]
+        calls = []
+        def api(query, **kwargs):
+            if query.get("curtimestamp"):
+                return {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+            calls.append(query)
+            return {"parse": {"text": {"*": direct}, "templates": []}}
+        rehearsal.api = api
+        correct = direct + "\n" + old + "\n" + new
+        stale = direct + "\n" + old + "\n" + old
+        def inspect(html):
+            rehearsal.last_consumer_html = html
+            record = {"consumer": dict(rehearsal.metadata["Consumer"]),
+                      "html_sha256": hashlib.sha256(html.encode()).hexdigest(), "probe_ids": [0, 1]}
+            from smoke_prefix import dom
+            rehearsal.inspect_offer_context("Consumer", record, dom(html, "Consumer"))
+            return record
+        return rehearsal, inspect, correct, stale, calls
+
+    def test_mixed_offer_context_composes_direct_and_B_D_fragments_not_global_bans(self):
+        rehearsal, inspect, correct, stale, calls = self.fixture()
+        record = inspect(correct)
+        from smoke_incremental import context_guards, context_key
+        original_key = context_key(record)
+        self.assertIn(original_key, rehearsal.context_checks)
+        self.assertEqual(context_guards(rehearsal, [record]), {original_key: rehearsal.context_checks[original_key]})
+        self.assertEqual(len(calls), 1)
+        for invalid in (stale, correct + "<p>Obsolete stock note.</p>",
+                        correct.replace("#Location_and_access", "#Wrong")):
+            with self.assertRaises(PendingConsumerUpdate):
+                inspect(invalid)
+        self.assertEqual(len(calls), 1)
+        rehearsal.metadata["Consumer"]["revid"] += 1
+        updated = inspect(correct)
+        self.assertEqual(len(calls), 2)
+        self.assertNotEqual(context_key(updated), original_key)
+        self.assertEqual(len(rehearsal.context_checks), 2)
+        self.assertEqual(rehearsal.context_checks[original_key]["consumer"], record["consumer"])
+        del rehearsal.context_checks[context_key(updated)]
+        with self.assertRaisesRegex(RuntimeError, "revision-bound"):
+            context_guards(rehearsal, [updated])
+
+    def test_stale_outside_row_notes_settle_without_changing_identical_rows(self):
+        rehearsal, inspect, correct, stale, _ = self.fixture()
+        rehearsal.prefixes, rehearsal.settling = [], []
+        reads, drains = [], []
+        def consumer(title):
+            reads.append(title)
+            return inspect(stale if len(reads) < 3 else correct)
+        rehearsal.inspect_consumer = consumer
+        with patch("smoke_prefix.time.sleep"):
+            result = rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True))
+        self.assertEqual(len(result), 1)
+        self.assertEqual(len(drains), 2)
+        self.assertEqual(rehearsal.settling[-1]["status"], "settled")
+        self.assertTrue(rehearsal.settling[0]["details"]["extra_links"])
+        self.assertEqual(rehearsal.settling[0]["html"], stale)
+        drains.clear()
+        rehearsal.inspect_consumer = lambda title: inspect(stale)
+        with patch("smoke_prefix.time.sleep"), self.assertRaises(PendingConsumerUpdate):
+            rehearsal.observe_consumers({"Consumer"}, lambda **kwargs: drains.append(True))
+        self.assertEqual(len(drains), 9)
+        self.assertEqual(rehearsal.settling[-1]["status"], "failed")
 
 
 class IncrementalNativeTests(unittest.TestCase):

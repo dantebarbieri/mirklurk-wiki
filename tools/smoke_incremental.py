@@ -10,6 +10,7 @@ import sys
 import tarfile
 import urllib.parse
 from pathlib import Path
+from collections import Counter
 
 from build_wiki import build_pages, build_xml
 from plan_migration import read_snapshot, text_hash
@@ -20,20 +21,56 @@ from smoke_prefix import (
 from wiki_catalog import entry_owners, entry_relations, page_locations, title_key
 from wiki_details import load_publication_inputs, parse_document
 from wiki_render import display_entry, recipe_groups
-from wiki_views import available_views, transclusions
+from wiki_views import VIEW_SELECTOR, available_views, transclusions
 
 
 CATALOG_FILES = ("game.json", "catalog.json", "acquisition.json", "entity_details.json", "illustrations.json")
 INPUT_KIND = "disposable-incremental-inputs"
+DEFAULT_POLICY = "registered-default-source-and-measurement"
 
 
 def digest(value):
     return hashlib.sha256(canonical_bytes(value)).hexdigest()
 
 
+def context_key(row):
+    return digest({key: row[key] for key in ("consumer", "html_sha256", "probe_ids")})
+
+
+def needs_offer_context(rehearsal, title, probe_ids):
+    standard = {rehearsal.locations[identity] for identity in
+                getattr(rehearsal, "catalog", {}).get("currency", {}).get("standard_merchants", [])}
+    return title in standard or any(rehearsal.probes[identity]["parameters"].get("view") == "offers" for identity in probe_ids)
+
+
+def context_guards(rehearsal, observations):
+    result = {}
+    for row in observations:
+        if not needs_offer_context(rehearsal, row["consumer"]["title"], row.get("probe_ids", [])):
+            continue
+        key = context_key(row)
+        check = getattr(rehearsal, "context_checks", {}).get(key)
+        if check is None or context_key(check) != key:
+            raise RuntimeError("Missing revision-bound outside-row offer-context check.")
+        result[key] = check
+    return result
+
+
 def exact_keys(value, keys, label):
     if not isinstance(value, dict) or set(value) != set(keys):
         raise RuntimeError("Unsupported incremental " + label + " shape.")
+
+
+def default_approval(binding):
+    if "default_readiness" not in binding:
+        return None
+    approval = binding["default_readiness"]
+    exact_keys(approval, ("schema_version", "policy", "source_contracts_sha256"), "default readiness")
+    if (type(approval["schema_version"]) is not int or approval["schema_version"] != 1
+            or approval["policy"] != DEFAULT_POLICY or not isinstance(approval["source_contracts_sha256"], str)
+            or not re.fullmatch("[0-9a-f]{64}", approval["source_contracts_sha256"])):
+        raise RuntimeError("Unsupported registered-default readiness approval.")
+    return approval
 
 
 def source_pin(root, pin, *, current=False):
@@ -113,9 +150,11 @@ def load_incremental_inputs(root, workspace, path):
     raw = path.read_bytes()
     parse_document(raw, 4 * 1024 * 1024)
     binding = json.loads(raw)
-    exact_keys(binding, ("schema_version", "kind", "previous_source", "candidate_source",
+    fields = ("schema_version", "kind", "previous_source", "candidate_source",
                          "previous_authored", "baseline", "authored", "provenance", "owned_titles",
-                         "community_titles", "reviewed_drift_sha256", "catalog_inputs"), "input")
+                         "community_titles", "reviewed_drift_sha256", "catalog_inputs")
+    exact_keys(binding, (*fields, *(("default_readiness",) if "default_readiness" in binding else ())), "input")
+    default_approval(binding)
     if type(binding["schema_version"]) is not int or binding["schema_version"] != 1 or binding["kind"] != INPUT_KIND:
         raise RuntimeError("Unsupported incremental input version/kind.")
     source_pin(root, binding["previous_source"])
@@ -150,7 +189,7 @@ def load_incremental_inputs(root, workspace, path):
     return pages, payloads, previous_inputs, public_binding
 
 
-def incremental_order(baseline, desired):
+def incremental_order(baseline, desired, default_sources=None):
     validate_materialization_inputs(baseline, baseline, desired)
     for corpus in (baseline, desired):
         for title, text in corpus.items():
@@ -163,7 +202,8 @@ def incremental_order(baseline, desired):
     order = []
     while pending:
         candidates = sorted((title for title in pending
-                             if {owner for owner, _ in transclusions(desired[title])} <= ready),
+                             if {owner for owner, arguments in transclusions(desired[title])
+                                 if arguments or owner == title or owner not in (default_sources or {})} <= ready),
                             key=lambda title: (title in baseline, title))
         if not candidates:
             blocked = {title: sorted({owner for owner, _ in transclusions(desired[title])} - ready)
@@ -176,8 +216,8 @@ def incremental_order(baseline, desired):
     return order
 
 
-def coverage(baseline, desired, order):
-    expected = incremental_order(baseline, desired)
+def coverage(baseline, desired, order, default_sources=None):
+    expected = incremental_order(baseline, desired, default_sources)
     if order != expected:
         raise RuntimeError("Incremental order omitted, resent or reordered an operation.")
     titles = {"create": sorted(desired.keys() - baseline.keys()),
@@ -188,7 +228,7 @@ def coverage(baseline, desired, order):
 
 
 def validate_native_plan(rehearsal, operations, preserved):
-    summary = coverage(rehearsal.baseline, rehearsal.desired, rehearsal.order)
+    summary = coverage(rehearsal.baseline, rehearsal.desired, rehearsal.order, getattr(rehearsal, "default_sources", None))
     metadata = rehearsal.metadata
     if set(metadata) != set(rehearsal.baseline):
         raise RuntimeError("Incremental native baseline metadata coverage differs.")
@@ -197,18 +237,22 @@ def validate_native_plan(rehearsal, operations, preserved):
             raise RuntimeError("Incremental native baseline raw differs.")
     if [row["title"] for row in operations] != rehearsal.order:
         raise RuntimeError("Incremental native operation coverage differs.")
+    current = dict(rehearsal.baseline)
     for index, row in enumerate(operations, 1):
         title = row["title"]
         expected = ({"page_id": metadata[title]["pageid"], "revision_id": metadata[title]["revid"],
                      "raw_sha256": metadata[title]["raw_sha256"]} if title in metadata
                     else {"page_id": 0, "revision_id": 0, "raw_sha256": None})
+        for owner, arguments in transclusions(rehearsal.desired[title]):
+            require_prerequisite(rehearsal, title, owner, arguments, current)
         prerequisites = [{"namespace": 14 if owner.startswith("Category:") else 0, "title": owner,
-                          "raw_sha256": text_hash(rehearsal.desired[owner])}
+                          "raw_sha256": text_hash(current[owner])}
                          for owner in sorted({owner for owner, _ in transclusions(rehearsal.desired[title])})]
         if (row["index"] != index or row["expected"] != expected
                 or row["desired_sha256"] != text_hash(rehearsal.desired[title])
                 or row["prerequisites"] != prerequisites or row["prerequisites_sha256"] != digest(prerequisites)):
             raise RuntimeError("Incremental native CAS/prerequisite plan differs.")
+        current[title] = rehearsal.desired[title]
     expected_preserved = [{"namespace": 14 if title.startswith("Category:") else 0, "title": title,
                            "page_id": metadata[title]["pageid"], "revision_id": metadata[title]["revid"],
                            "raw_sha256": text_hash(rehearsal.baseline[title])}
@@ -231,9 +275,13 @@ def validate_prefix_guard(rehearsal, index, guards):
             or prefix["saved"]["raw_sha256"] != text_hash(rehearsal.desired[title])
             or [(row["owner"]["title"], tuple(sorted(row["parameters"].items()))) for row in probes] != expected
             or prefix["prerequisites"] != [row["id"] for row in probes]
-            or any(row["owner"] != rehearsal.metadata[row["owner"]["title"]]
-                   or row["owner"]["raw_sha256"] != text_hash(rehearsal.desired[row["owner"]["title"]]) for row in probes)):
+            or any(row["owner"] != rehearsal.metadata[row["owner"]["title"]] for row in probes)):
         raise RuntimeError("Incremental prefix guard has wrong saved/prerequisite state.")
+    for owner, arguments in expected:
+        require_prerequisite(rehearsal, title, owner, arguments, rehearsal.current)
+    edges = baseline_default_edges(rehearsal, index, title, probes)
+    if guards.get("baseline_default_edges", []) != edges:
+        raise RuntimeError("Incremental prefix omitted its actual B-default prerequisite evidence.")
     if guards.get("default_probe_ids") != rehearsal.default_prefixes[index]:
         raise RuntimeError("Incremental prefix guard omitted its complete default checks.")
     owners = sorted(rehearsal.registry["prices"].keys() | rehearsal.registry["coins"].keys())
@@ -250,10 +298,12 @@ def validate_prefix_guard(rehearsal, index, guards):
                           if title in {owner for owner, _ in transclusions(text)} or title in linked_titles(text)}
     if [row["consumer"]["title"] for row in prefix["observations"]] != sorted(affected):
         raise RuntimeError("Incremental prefix omitted affected consumer guards.")
+    if guards.get("offer_context_checks", {}) != context_guards(rehearsal, prefix["observations"]):
+        raise RuntimeError("Incremental prefix omitted its outside-row context evidence.")
 
 
 def verify_native_completion(rehearsal, proof, accepted):
-    summary = coverage(rehearsal.baseline, rehearsal.desired, rehearsal.order)
+    summary = coverage(rehearsal.baseline, rehearsal.desired, rehearsal.order, getattr(rehearsal, "default_sources", None))
     if (len(rehearsal.prefixes) != summary["prefixes"] or len(accepted) != summary["operations"]
             or len(proof["operations"]) != summary["operations"]
             or [row["index"] for row in rehearsal.prefixes] != list(range(summary["prefixes"]))
@@ -291,6 +341,79 @@ def default_registry(baseline, desired, previous_inputs, current_inputs):
     return registry
 
 
+def default_blocks(text, kind):
+    literal = r"<!--.*?-->|<(nowiki|pre|source|syntaxhighlight)\b[^>]*>.*?</\1\s*>"
+    for region in re.finditer(literal, text, re.I | re.S):
+        if re.search(r"</?(?:onlyinclude|noinclude|includeonly)\b", region.group(), re.I):
+            raise RuntimeError("A default inclusion tag is hidden in a literal region.")
+    blocks = re.findall(r"<onlyinclude>.*?</onlyinclude>", text, re.S)
+    if not blocks or len(re.findall(r"</?\s*onlyinclude\b", text, re.I)) != 2 * len(blocks):
+        raise RuntimeError("Missing or ambiguous default inclusion blocks.")
+    for tag in re.findall(r"</?\s*(?:onlyinclude|noinclude|includeonly)\b[^>]*>", text, re.I):
+        if not re.fullmatch(r"</?(?:onlyinclude|noinclude|includeonly)>", tag):
+            raise RuntimeError("Unsupported default inclusion tag spelling or attributes.")
+    stack = []
+    for match in re.finditer(r"<(/?)(onlyinclude|noinclude|includeonly)>", text):
+        closing, tag = match.groups()
+        if closing:
+            if not stack or stack.pop() != tag:
+                raise RuntimeError("Unsupported default inclusion context.")
+        else:
+            if tag == "onlyinclude" and stack:
+                raise RuntimeError("A default block has an outer inclusion context.")
+            stack.append(tag)
+    if stack:
+        raise RuntimeError("Unclosed default inclusion context.")
+    defaults = [block for block in blocks if "" in available_views(block)]
+    wanted = {"", "price"} if kind == "prices" else {""}
+    if len(defaults) != 1 or available_views(defaults[0]) != wanted or "" not in available_views(text):
+        raise RuntimeError("An owner lacks its one canonical registered default view.")
+    source = "".join(blocks).replace(VIEW_SELECTOR, "").replace("{{{station|}}}", "")
+    if re.search(r"\{\{(?!#switch:)", source):
+        raise RuntimeError("A default source has templates, mutable magic or dependencies.")
+    return blocks
+
+
+def default_source_contracts(previous_authored, baseline, desired, registry):
+    if not isinstance(previous_authored, dict):
+        raise RuntimeError("Default readiness requires reproduced previous-authored A0.")
+    result = {}
+    for kind in ("prices", "coins"):
+        for owner in sorted(registry[kind]):
+            if owner not in previous_authored or owner not in baseline or owner not in desired:
+                raise RuntimeError("A registered default source is missing.")
+            sources = [default_blocks(corpus[owner], kind) for corpus in (previous_authored, baseline, desired)]
+            if sources[0] != sources[1] or sources[1] != sources[2]:
+                raise RuntimeError("Registered A0/B/D default transcludable sources differ: " + owner)
+            result[owner] = {
+                "previous_authored_raw_sha256": text_hash(previous_authored[owner]),
+                "baseline_raw_sha256": text_hash(baseline[owner]), "desired_raw_sha256": text_hash(desired[owner]),
+                "transcludable_source_sha256": digest(sources[0]),
+            }
+    return result
+
+
+def require_prerequisite(rehearsal, consumer, owner, arguments, current):
+    if current.get(owner) == rehearsal.desired[owner]:
+        return
+    source = getattr(rehearsal, "default_sources", {}).get(owner)
+    if (arguments or owner == consumer or source is None or current.get(owner) != rehearsal.baseline.get(owner)
+            or text_hash(current.get(owner)) != source["baseline_raw_sha256"]):
+        raise RuntimeError("Incremental prerequisite is neither D nor an approved registered B default.")
+
+
+def baseline_default_edges(rehearsal, index, consumer, probes):
+    result = []
+    for probe in probes:
+        owner = probe["owner"]["title"]
+        if probe["owner"]["raw_sha256"] == text_hash(rehearsal.desired[owner]):
+            continue
+        require_prerequisite(rehearsal, consumer, owner, tuple(probe["parameters"].items()), rehearsal.current)
+        result.append({"index": index, "consumer": consumer, "owner": owner, "parameters": {},
+                       **rehearsal.default_sources[owner], "owner_revision": dict(probe["owner"]), "probe_id": probe["id"]})
+    return result
+
+
 def projection_signature(html, title):
     from smoke_deploy import RenderedGrids
     parsed = dom(html, title)
@@ -304,12 +427,18 @@ def projection_signature(html, title):
 
 class IncrementalRehearsal(Rehearsal):
     def __init__(self, api, checks, baseline, desired, data, catalog, old_catalog, runtime, source_head,
-                 *, previous_inputs, binding):
+                 *, previous_inputs, binding, previous_authored=None):
+        registry = default_registry(baseline, desired, previous_inputs, (data, catalog, None))
+        approval = default_approval(binding)
+        sources = default_source_contracts(previous_authored, baseline, desired, registry) if approval else {}
+        if approval and digest(sources) != approval["source_contracts_sha256"]:
+            raise RuntimeError("Registered default source approval digest differs.")
         super().__init__(api, checks, baseline, desired, data, catalog, old_catalog, runtime, source_head,
-                         incremental=True)
+                         incremental=True, incremental_defaults=sources)
         self.binding = binding
         self.previous_inputs = previous_inputs
-        self.registry = default_registry(baseline, desired, previous_inputs, (data, catalog, None))
+        self.registry, self.default_sources = registry, sources
+        self.used_baseline_defaults = []
         self.baseline_checker = copy.copy(self)
         old_data, old_catalog, _ = previous_inputs
         checker = self.baseline_checker
@@ -325,6 +454,7 @@ class IncrementalRehearsal(Rehearsal):
         self.default_endpoints = {}
         self.default_prefixes = []
         self.consumer_html = {}
+        self.context_previews, self.context_cache, self.context_checks = [], {}, {}
 
     def validate_projection(self, owner, parameters, result, parse_title="Prefix projection"):
         if self.current[owner] == self.baseline.get(owner) and parameters.get("view") == "pool":
@@ -354,6 +484,8 @@ class IncrementalRehearsal(Rehearsal):
         else:
             checker = self.baseline_checker if self.current[owner] == self.baseline.get(owner) else self
             Rehearsal.validate_projection(checker, owner, parameters, result, parse_title)
+        if parameters.get("view") == "offers":
+            self.validate_offer_context(owner, result["text"]["*"], parse_title)
         if not parameters:
             parsed = dom(result["text"]["*"], parse_title)
             media = self.checks.RenderedGrids()
@@ -380,6 +512,31 @@ class IncrementalRehearsal(Rehearsal):
                             or image.get("alt") != unit.capitalize() + " coin"
                             or image.get("width") != "20" or image.get("height") != "20"):
                         raise RuntimeError("A default price changed its exact denomination icon.")
+
+    def validate_offer_context(self, owner, html, parse_title):
+        checker = self.baseline_checker if self.current[owner] == self.baseline.get(owner) else self
+        parsed = dom(html, parse_title)
+        standard = {checker.locations[identity] for identity in checker.catalog.get("currency", {}).get("standard_merchants", [])}
+        if owner in standard:
+            legacy_target = "Currency and trading#currency-trade-stock-and-funds"
+            modern_target = "Category:Merchants#Trading_rules"
+            legacy_label = "Shared stock and merchant-funds rules"
+            source = self.current[owner]
+            legacy = "<includeonly>[[" + legacy_target + "|" + legacy_label + "]]</includeonly>" in source
+            modern = "<noinclude>[[:" + modern_target + "|Shared trading rules]]</noinclude>" in source
+            if legacy == modern:
+                raise RuntimeError("An offer owner has an unsupported or ambiguous stock-reference shape.")
+            references = [row for row in parsed.links if row["target"] in {legacy_target, modern_target}]
+            wanted = [{"target": legacy_target, "text": legacy_label}] if legacy else []
+            rule = next(row["text"] for row in checker.catalog["currency"]["rules"] if row["id"] == "trade-stock-and-funds")
+            if (references != wanted or self.checks.plain(rule) in parsed.text
+                    or "Quantity is not established." in parsed.text
+                    or (modern and (legacy_label in parsed.text or "Shared trading rules" in parsed.text))):
+                raise RuntimeError("A selected offer lost its B/D stock-reference contract.")
+        locations = {checker.locations[row["entity"]] for row in checker.catalog.get("classifications", []) if "location" in row}
+        if owner in locations and (not any(row["target"] == owner + "#Location_and_access" for row in parsed.links)
+                                   or "Location: Not established" in parsed.text):
+            raise RuntimeError("A selected offer lost its current reviewed location context.")
 
     def probe(self, consumer, owner, arguments, fresh=False):
         if owner not in self.current or dict(arguments).get("view", "") not in available_views(self.current[owner]):
@@ -427,6 +584,8 @@ class IncrementalRehearsal(Rehearsal):
                 (row["owner"]["title"], tuple(sorted(row["parameters"].items())), row["parse_title"]): row
                 for row in captures["selected"]
             }
+            for row in captures["direct"]:
+                self.remember_context(row)
 
     def capture_defaults(self, endpoint):
         records = []
@@ -458,7 +617,64 @@ class IncrementalRehearsal(Rehearsal):
                     from smoke_prefix import PendingConsumerUpdate
                     raise PendingConsumerUpdate("A consumer lacks its current compact pool/context contract.",
                                                 title, probe["owner"]["title"], self.last_consumer_html)
+        if needs_offer_context(self, title, record["probe_ids"]):
+            self.inspect_offer_context(title, record, parsed)
         return record
+
+    def remember_context(self, record):
+        metadata = record["consumer"]
+        key = (metadata["title"], metadata["revid"], metadata["raw_sha256"])
+        if key not in self.context_cache:
+            self.context_cache[key] = len(self.context_previews)
+            self.context_previews.append(record)
+        return self.context_cache[key]
+
+    def inspect_offer_context(self, title, observation, parsed):
+        metadata = self.metadata[title]
+        key = (title, metadata["revid"], metadata["raw_sha256"])
+        if key not in self.context_cache:
+            text, spans = strip_colon_invocations(self.current[title])
+            result = self.api({"action": "parse", "title": title, "text": text,
+                               "prop": "text|templates"}, post=True)["parse"]
+            self.checks.check_parser_errors(result["text"]["*"])
+            if result.get("templates"):
+                raise RuntimeError("A direct offer-context preview still has a transclusion dependency.")
+            self.remember_context({"consumer": dict(metadata), "parse_title": title,
+                                   "transformed_text": text, "transformed_sha256": text_hash(text),
+                                   "removed_invocations": spans, "templates": [], "html": result["text"]["*"]})
+        identity = self.context_cache[key]
+        direct = dom(self.context_previews[identity]["html"], title)
+        expected_words = Counter(direct.outside_text.split())
+        expected_links = Counter((row["target"], row["text"]) for row in direct.outside_links)
+        probes = [self.probes[identity] for identity in observation["probe_ids"]]
+        occurrences = Counter((row["owner"], tuple(sorted(row["parameters"].items())))
+                              for row in self.context_previews[identity]["removed_invocations"])
+        for probe in probes:
+            if not probe["parameters"]:
+                continue
+            selected = dom(probe["html"], title)
+            count = occurrences[(probe["owner"]["title"], tuple(sorted(probe["parameters"].items())))]
+            for _ in range(count):
+                expected_words.update(selected.outside_text.split())
+                expected_links.update((row["target"], row["text"]) for row in selected.outside_links)
+        actual_words = Counter(parsed.outside_text.split())
+        actual_links = Counter((row["target"], row["text"]) for row in parsed.outside_links)
+        if expected_words != actual_words or expected_links != actual_links:
+            from smoke_prefix import PendingConsumerUpdate
+            owner = next((row["owner"]["title"] for row in probes if row["parameters"].get("view") == "offers"), title)
+            raise PendingConsumerUpdate("A consumer has stale or missing outside-row offer context.", title, owner,
+                                        self.last_consumer_html, {
+                                            "direct_context_id": identity,
+                                            "missing_words": dict(expected_words - actual_words),
+                                            "extra_words": dict(actual_words - expected_words),
+                                            "missing_links": sorted((expected_links - actual_links).items()),
+                                            "extra_links": sorted((actual_links - expected_links).items()),
+                                        })
+        self.context_checks[context_key(observation)] = {
+            "consumer": dict(metadata), "html_sha256": observation["html_sha256"],
+            "direct_context_id": identity, "probe_ids": observation["probe_ids"],
+            "outside_words_sha256": digest(dict(expected_words)), "outside_links_sha256": digest(sorted(expected_links.items())),
+        }
 
     def check_merchant_rows(self, title, parsed, html):
         checker = self.baseline_checker if self.current[title] == self.baseline.get(title) else self
@@ -475,8 +691,9 @@ class IncrementalRehearsal(Rehearsal):
         for index, title in enumerate(self.order, 1):
             prerequisites = [self.probe(title, owner, arguments, fresh=True)
                              for owner, arguments in transclusions(self.desired[title])]
-            if any(self.current[owner] != self.desired[owner] for owner, _ in transclusions(self.desired[title])):
-                raise RuntimeError("Incremental save has an owner not at D.")
+            for owner, arguments in transclusions(self.desired[title]):
+                require_prerequisite(self, title, owner, arguments, self.current)
+            baseline_edges = baseline_default_edges(self, index, title, prerequisites)
             wait_tick(self.api)
             revision = save(title, self.metadata, self.desired[title], prerequisites)
             self.current[title] = self.desired[title]
@@ -493,8 +710,11 @@ class IncrementalRehearsal(Rehearsal):
                                   "prerequisites": [row["id"] for row in prerequisites], "observations": observations,
                                   "pending_new_link_edges": self.pending_link_edges()})
             guard = {"prefix": self.prefixes[-1], "prerequisite_checks": prerequisites,
+                     "baseline_default_edges": baseline_edges,
+                     "offer_context_checks": context_guards(self, observations),
                      "default_probe_ids": self.default_prefixes[-1],
                      "incremental_input_sha256": self.binding["input_sha256"]}
+            self.used_baseline_defaults.extend(baseline_edges)
             if index < len(self.order):
                 accept(index, guard)
             else:
@@ -519,6 +739,10 @@ class IncrementalRehearsal(Rehearsal):
                 raise RuntimeError("An unchanged incremental page identity/raw changed.")
 
     def artifacts(self):
+        readiness = {**self.provenance, "schema_version": 1, "kind": "registered-default-readiness",
+                     "policy": DEFAULT_POLICY if self.default_sources else "strict-owner-D",
+                     "source_contracts": self.default_sources, "used_baseline_edges": self.used_baseline_defaults,
+                     "default_endpoint_probe_ids": self.default_endpoints}
         result = {
             "full-prefix-proof.json": {
                 **self.provenance, "scope": "complete-incremental-rehearsal-not-live-authorization",
@@ -528,11 +752,15 @@ class IncrementalRehearsal(Rehearsal):
                 "default_contracts": {"preserved_price_owners": sorted(self.registry["prices"]),
                                       "coin_owners": sorted(self.registry["coins"]), "compatibility_edges": []},
                 "incremental": {"schema_version": 1, "kind": "disposable-incremental-envelope",
-                                "inputs": self.binding, "coverage": coverage(self.baseline, self.desired, self.order),
+                                "inputs": self.binding, "coverage": coverage(self.baseline, self.desired, self.order, self.default_sources),
                                 "outcome": "rehearsed" if self.order else "no-publication",
                                 "default_endpoint_probe_ids": self.default_endpoints,
-                                "default_prefix_probe_ids": self.default_prefixes},
+                                "default_prefix_probe_ids": self.default_prefixes,
+                                "default_readiness_sha256": digest(readiness)},
             },
+            "default-readiness.json": readiness,
+            "offer-context-evidence.json": {**self.provenance, "schema_version": 1,
+                                            "direct_previews": self.context_previews, "checks": self.context_checks},
             "endpoint-link-view-candidates.json": {
                 **self.provenance, "requires_independent_review": True, "endpoints": self.link_candidates,
                 "corpus_sha256": {"baseline": digest(self.baseline), "desired": digest(self.desired)},

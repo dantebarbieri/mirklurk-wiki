@@ -1321,7 +1321,8 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             rehearsal_type = Rehearsal if incremental is None else IncrementalRehearsal
             rehearsal = rehearsal_type(
                 api, sys.modules[__name__], baseline, pages, data, catalog, baseline_catalog, observer_runtime, source_head,
-                **({} if incremental is None else {"previous_inputs": previous_inputs, "binding": incremental}),
+                **({} if incremental is None else {"previous_inputs": previous_inputs, "binding": incremental,
+                                                    "previous_authored": previous_authored}),
             )
             save, accept = native.full_run(rehearsal, {
                 key: hashlib.sha256(canonical_bytes(corpus)).hexdigest()

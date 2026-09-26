@@ -347,6 +347,7 @@ class NativeSmoke:
             summary = validate_native_plan(rehearsal, operations, preserved)
             self.proof["incremental"] = {
                 "schema_version": 1, "input_sha256": rehearsal.binding["input_sha256"], "coverage": summary,
+                "default_source_contracts_sha256": digest(getattr(rehearsal, "default_sources", {})),
                 "prerequisite_plan_sha256": digest([row["prerequisites"] for row in operations]),
                 "journal_implementation_sha256": sha((self.root / "tools" / "publication_journal.py").read_bytes()),
             }
