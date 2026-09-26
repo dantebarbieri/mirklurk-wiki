@@ -147,7 +147,6 @@ def parse_illustrations(raw, data, catalog=None):
         {source["id"]: source for source in data["sources"]},
         {entity["id"]: entity for entity in data["entities"]},
         {row["id"]: row for row in catalog.get("stations", [])} if catalog else None,
-        {row["title"] for row in catalog.get("guides", [])} if catalog else None,
     )
     return images
 

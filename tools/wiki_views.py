@@ -25,14 +25,22 @@ def filtered_row(content, parameter, values):
     )
 
 
-def html_row(cells):
-    return "<tr>" + "".join("<td>" + cell + "</td>" for cell in cells) + "</tr>\n"
+def html_row(cells, normal_only=()):
+    return "<tr>" + "".join(
+        ("<noinclude>" if index in normal_only else "") + "<td>" + cell + "</td>"
+        + ("</noinclude>" if index in normal_only else "")
+        for index, cell in enumerate(cells)
+    ) + "</tr>\n"
 
 
-def html_table(headers, rows):
+def html_table(headers, rows, normal_only=()):
     return (
         '<table class="wikitable">\n<tr>'
-        + "".join('<th scope="col">' + heading + "</th>" for heading in headers)
+        + "".join(
+            ("<noinclude>" if index in normal_only else "") + '<th scope="col">' + heading + "</th>"
+            + ("</noinclude>" if index in normal_only else "")
+            for index, heading in enumerate(headers)
+        )
         + "</tr>\n" + "".join(rows) + "</table>\n"
     )
 

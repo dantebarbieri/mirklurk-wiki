@@ -241,7 +241,7 @@ def _validate_entries(records, sources, entities, facts):
                 references.add(reference)
 
 
-def _validate_illustrations(records, sources, entities, stations=None, guides=None):
+def _validate_illustrations(records, sources, entities, stations=None):
     seen = set()
     titles = set()
     armor_levels = set()
@@ -251,14 +251,14 @@ def _validate_illustrations(records, sources, entities, stations=None, guides=No
             illustration,
             {"id", "file_title", "caption", "creator", "sha256", "rights_status",
              "rights_basis", "rights_note", "confidence", "evidence"},
-            {"entity", "station", "variant", "health_armor", "guide"}, where,
+            {"entity", "station", "variant", "health_armor"}, where,
         )
         identity = _identifier(illustration["id"], f"{where}.id")
         if identity in seen:
             raise DataError(f"{where}: duplicate illustration ID")
         seen.add(identity)
-        if sum(key in illustration for key in ("entity", "station", "health_armor", "guide")) != 1:
-            raise DataError(f"{where}: provide exactly one entity, station, health_armor, or guide target")
+        if sum(key in illustration for key in ("entity", "station", "health_armor")) != 1:
+            raise DataError(f"{where}: provide exactly one entity, station, or health_armor target")
         if "variant" in illustration and "station" not in illustration:
             raise DataError(f"{where}: a variant belongs only to a station")
         if "entity" in illustration:
@@ -273,10 +273,6 @@ def _validate_illustrations(records, sources, entities, stations=None, guides=No
                 variant = _identifier(illustration["variant"], f"{where}.variant")
                 if variant not in {row["id"] for row in stations[station_id].get("variants", [])}:
                     raise DataError(f"{where}.variant: must reference a reviewed station variant")
-        elif "guide" in illustration:
-            title = illustration["guide"]
-            if not isinstance(title, str) or title not in MECHANIC_GUIDE_TITLES or not guides or title not in guides:
-                raise DataError(f"{where}.guide: must reference an existing reviewed mechanics guide")
         else:
             armor = illustration["health_armor"]
             if type(armor) is not int or armor not in HEALTH_ARMOR_ICONS:
@@ -310,7 +306,7 @@ def _validate_illustrations(records, sources, entities, stations=None, guides=No
         _evidence(illustration["evidence"], sources, f"{where}.evidence")
 
 
-def validate_data(data, stations=None, guides=None):
+def validate_data(data, stations=None):
     _object(data, {"schema_version", "game", "sources", "entities", "facts"}, {"entries", "illustrations"}, "root")
     if type(data["schema_version"]) is not int or data["schema_version"] != 1:
         raise DataError("schema_version: expected integer 1")
@@ -401,7 +397,7 @@ def validate_data(data, stations=None, guides=None):
         _confidence(fact["confidence"], f"{where}.confidence")
         _evidence(fact["evidence"], sources, f"{where}.evidence")
     _validate_entries(data.get("entries", []), sources, entities, facts)
-    _validate_illustrations(data.get("illustrations", []), sources, entities, stations, guides)
+    _validate_illustrations(data.get("illustrations", []), sources, entities, stations)
     return data
 
 

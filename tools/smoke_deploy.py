@@ -263,6 +263,19 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             raise RuntimeError("An item seller view leaked another item's stock or omitted an offer.")
         if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in rendered:
             raise RuntimeError("A seller view recursively transcluded item prices.")
+    for owner in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "loot"}:
+        loot = [entry for entry in data["entries"] if entry["kind"] == "loot"
+                and owners[entry["id"]] == owner and entry["details"]["outcome"] is not None]
+        if not loot:
+            continue
+        item = loot[0]["details"]["outcome"]
+        text = "{{:" + owner + "|view=loot|item=" + item + "}}"
+        rendered = api({"action": "parse", "title": "Synthetic loot view", "text": text, "prop": "text"}, post=True)["parse"]["text"]["*"]
+        check_parser_errors(rendered)
+        expected = {entry["id"] for entry in loot if entry["details"]["outcome"] == item}
+        found = set(re.findall(r'id="entry-([^"]+)"', rendered))
+        if found != expected or 'id="entity-' in rendered or "Conditional probability" not in rendered:
+            raise RuntimeError("A loot view lost its exact outcome rows or leaked the source article.")
     fixture = next(group for group in groups if locations[group[0]["details"]["outputs"][0]["item"]] == "Simple Burn Remedy" and len(group) > 1)
     owner = owners[fixture[0]["id"]]
     targets = {station["title"] for station in catalog["stations"] if any(
@@ -297,7 +310,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         if expected not in rendered or 'id="entity-item-141"' not in rendered:
             raise RuntimeError("A selective recipe edit broke the normal owner article.")
         block = replacement
-    print("Named views passed: every workstation variant, default prices, filtered sellers, separate quantity/AP edits.")
+    print("Named views passed: every workstation variant, default prices, filtered sellers/loot, separate quantity/AP edits.")
 
 
 def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):

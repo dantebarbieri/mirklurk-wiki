@@ -104,9 +104,14 @@ def validate_catalog(catalog, data):
         _confidence(row["confidence"], "damage source.confidence")
         _evidence(row["evidence"], sources, "damage source.evidence")
     guide_titles = {row["title"] for row in catalog["pages"] if entities[row["entity"]]["category"] == "damage_class"} | MECHANIC_GUIDE_TITLES
+    registered_guides = {
+        row["title"] for row in _records(catalog.get("guides", []), "guides")
+        if isinstance(row, dict) and isinstance(row.get("title"), str)
+    }
     guides_seen = set()
     for guide in _records(catalog.get("guides", []), "guides"):
-        _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"}, {"related_pages"}, "guide")
+        _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"},
+                {"related_pages", "image_entity", "image_caption"}, "guide")
         title = _title(guide["title"])
         if title not in guide_titles or title in guides_seen:
             raise DataError("guide: duplicate or unsupported canonical owner")
@@ -128,8 +133,15 @@ def validate_catalog(catalog, data):
             for target in related_pages
         ) or len(related_pages) != len(set(related_pages)):
             raise DataError("guide: expected unique related canonical guide titles")
-        if not set(related_pages) <= {row["title"] for row in catalog.get("guides", [])}:
+        if not set(related_pages) <= registered_guides:
             raise DataError("guide: related guide has no reviewed content")
+        if ("image_entity" in guide) != ("image_caption" in guide):
+            raise DataError("guide: contextual pictures require both an entity and an original caption")
+        if "image_entity" in guide:
+            identity = guide["image_entity"]
+            if not isinstance(identity, str) or identity not in required or entities[identity]["category"] == "damage_class":
+                raise DataError("guide: image must reference a documented illustrated entity")
+            _text(guide["image_caption"], "guide.image_caption", 500)
         _confidence(guide["confidence"], "guide.confidence")
         _evidence(guide["evidence"], sources, "guide.evidence")
     classified = set()

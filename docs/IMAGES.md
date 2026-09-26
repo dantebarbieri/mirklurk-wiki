@@ -27,15 +27,16 @@ uploads in these records.
 
 Every record contains `id`, `file_title`, `caption`, `creator`,
 `sha256`, `rights_status`, `rights_basis`, `rights_note`, `confidence`, and
-`evidence`, plus exactly one target: `entity`, `station`, `health_armor`, or `guide`.
+`evidence`, plus exactly one target: `entity`, `station`, or `health_armor`.
 Only station targets may have `variant`. Evidence uses the existing source/section/key format; the SHA-256
 identifies the exact separately reviewed **image** bytes, not the original game
 container. Captions and rights notes are original writing.
 
-A `guide` is a registered, evidence-backed mechanics guide title from the
-finite set documented in PROVENANCE.md. An unknown guide or one without a
-reviewed guide record is rejected; no placeholder entity is manufactured for
-an icon. Guide images use the same individual rights, identity, and hash gates.
+Mechanics guides may reuse an existing approved entity image through
+`image_entity` and an original `image_caption` in the guide record. This creates
+no duplicate illustration record, image bytes, or import. The caption must
+describe the pictured item in context, not relabel item artwork as a stat glyph.
+Missing, pending, and unknown image associations are rejected explicitly.
 
 The current reviewed batch attributes game artwork to **Edym Pixels** and
 records operator-reported permission for public-wiki display, confirmed on

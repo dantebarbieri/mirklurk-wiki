@@ -1,5 +1,4 @@
 import copy
-import json
 import sys
 import unittest
 from pathlib import Path
@@ -10,8 +9,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 from plan_migration import plan_migration
 from wiki_catalog import entry_owners, entry_relations, page_locations, validate_catalog
 from wiki_data import DataError, MECHANIC_GUIDE_TITLES
-from wiki_details import load_publication_inputs, parse_illustrations
-from wiki_render import build_pages, display_entry, recipe_groups
+from wiki_details import load_publication_inputs
+from wiki_render import build_pages, display_entry, merchant_table, recipe_groups
 from wiki_views import available_views, selective_view, transclusions, validate_transclusions
 
 
@@ -78,6 +77,30 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertIn("== How to acquire ==", page)
             self.assertNotIn("Standard unit price", page.split("== How to acquire ==", 1)[0])
 
+    def test_verified_loot_sources_are_selected_by_exact_outcome(self):
+        locations = page_locations(self.data, self.catalog)
+        owners = entry_owners(self.data, locations, entry_relations(self.data, self.catalog), self.catalog)
+        for entry in self.data["entries"]:
+            if entry["kind"] != "loot" or entry["details"]["outcome"] is None:
+                continue
+            item = entry["details"]["outcome"]
+            owner = owners[entry["id"]]
+            self.assertIn("loot", available_views(self.pages[owner]))
+            if owner != locations[item]:
+                self.assertIn((owner, (("item", item), ("view", "loot"))), transclusions(self.pages[locations[item]]))
+            self.assertEqual(self.pages[owner].count('id="entry-' + entry["id"] + '"'), 1)
+
+    def test_explicit_vendor_prices_stay_visible_without_price_recursion(self):
+        offers = copy.deepcopy([entry for entry in self.data["entries"] if entry["kind"] == "merchant"][:2])
+        offers[0]["details"].update(price=19, currency="silver")
+        entities = {row["id"]: row for row in self.data["entities"]}
+        locations = page_locations(self.data, self.catalog)
+        rendered = merchant_table(offers, [], entities, locations, True)
+        self.assertIn("<td><nowiki>19</nowiki> <nowiki>silver</nowiki></td>", rendered)
+        self.assertNotIn("<noinclude><td><nowiki>19", rendered)
+        self.assertIn("<includeonly>[[", rendered)
+        self.assertIn("|Standard item price]]</includeonly>", rendered)
+
     def test_planner_tracks_every_parameterized_edge_and_unknown_contract(self):
         base = {"Item": "<onlyinclude>old price</onlyinclude>"}
         desired = {
@@ -122,25 +145,22 @@ class SelectiveViewTests(unittest.TestCase):
             with self.assertRaises(DataError):
                 validate_catalog(modified, self.data)
 
-    def test_guide_images_use_real_registered_guides_not_fake_entities(self):
-        image = copy.deepcopy(self.data["illustrations"][0])
-        image.pop("entity")
-        image.update(id="synthetic-guide-image", guide="Action points", file_title="File:Synthetic-guide.png")
-        payload = {"schema_version": 1, "illustrations": [image]}
-        images = parse_illustrations(json.dumps(payload).encode(), self.data, self.catalog)
-        data = dict(self.data, illustrations=[*self.data["illustrations"], *images])
-        pages = build_pages(ROOT, data, self.catalog, self.details)
-        self.assertIn("[[File:Synthetic-guide.png|thumb|", pages["Action points"])
+    def test_guide_images_reuse_approved_records_with_context(self):
+        catalog = copy.deepcopy(self.catalog)
+        guide = next(row for row in catalog["guides"] if row["title"] == "Action points")
+        guide.update(image_entity="item-68", image_caption="A bedroll used as a contextual illustration.")
+        pages = build_pages(ROOT, self.data, catalog, self.details)
+        self.assertIn("[[File:Item-68.png|thumb|<nowiki>A bedroll used as a contextual illustration.", pages["Action points"])
         for change in (
-            lambda i: i.update(guide="Unreviewed"),
-            lambda i: i.update(guide="Focus"),
-            lambda i: i.update(entity="item-0"),
-            lambda i: i.update(variant="unreviewed"),
+            lambda g: g.update(image_entity="unknown"),
+            lambda g: g.update(image_entity="item-31"),
+            lambda g: g.pop("image_caption"),
+            lambda g: g.pop("image_entity"),
         ):
-            modified = copy.deepcopy(payload)
-            change(modified["illustrations"][0])
+            modified = copy.deepcopy(catalog)
+            change(next(row for row in modified["guides"] if row["title"] == "Action points"))
             with self.assertRaises(DataError):
-                parse_illustrations(json.dumps(modified).encode(), self.data, self.catalog)
+                build_pages(ROOT, self.data, modified, self.details)
 
 
 if __name__ == "__main__":

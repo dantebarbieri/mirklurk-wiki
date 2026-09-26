@@ -218,6 +218,9 @@ owners: Health and armor, Action points, Satiation, Stamina, Focus, Temperature,
 Wellbeing, Foods, Resting, and Weather. Optional `related_pages` links only to
 other existing reviewed guide records. New mechanics owners are generated only
 when their evidence-backed guide exists, never as empty schema placeholders.
+Optional `image_entity` and `image_caption` must appear together and reuse an
+already approved illustration with a contextual caption, not a fabricated stat
+icon or duplicate image record.
 Reverse damage links are derived from profiles, never guessed
 from weapon names. Remedies and related skills link back to the rule owner.
 `state_history` links two being records and a canonical quest, with attributed
@@ -328,6 +331,7 @@ no longer a valid readiness check.
 | Merchant wares | `{{:Item}}` | Item's single Buying price |
 | Workstation recipe table | `{{:Item|view=recipes|station=station-id}}` | Output item's recipe rows |
 | Item seller table | `{{:Merchant|view=offers|item=item-id}}` | Merchant's stock and conditions |
+| Item loot table | `{{:Source|view=loot|item=item-id}}` | Creature or other documented loot owner |
 | Currency guide | `{{:Coin}}` | Coin's value/weight/stack summary |
 
 Recipe inclusions return HTML table rows, not a second table or owner article.
