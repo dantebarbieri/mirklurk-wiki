@@ -45,6 +45,9 @@ The full disposable Docker smoke runs on pushes to `main` or explicit manual
 dispatch, not on pull requests or feature-branch pushes. Workflow/ref concurrency
 cancels obsolete runs. A skipped pull-request smoke job is **not** smoke evidence:
 a release still requires a successful full run bound to its exact merged source.
+Only the Docker job has a 90-minute budget: main run `36266637565` was cancelled
+at the former 60-minute limit after progress 452/460. All checks, internal
+deadlines and coverage remain unchanged; that cancelled run is not a smoke pass.
 CI is **after publication** and cannot prevent an initial
 leak. The local pre-publication gate is mandatory. No check can automatically
 establish authorship, fair use, or that an arbitrary new secret pattern is absent.
@@ -66,7 +69,9 @@ introduce a fixture containing a real secret.
 The catalog validator's named-file cap is 48 KiB, including the bounded
 recipe-input/source joins used to derive acquisition browsing without another
 stored dataset. `tests/test_catalog.py` retains its 66 KiB cap;
-`tools/smoke_prefix.py` has a 70 KiB cap for the explicit incremental hooks;
+`tools/smoke_prefix.py` has a 72 KiB cap for the explicit incremental hooks and
+MediaWiki endpoint-link classification; `tests/test_prefix.py` has a 52 KiB cap
+for their focused link and failure-evidence regressions;
 `tools/smoke_deploy.py` has a 100 KiB cap for their integration with the current
 landmark and seller-context checks.
 The incremental disposable adapter and its synthetic controls have

@@ -305,12 +305,21 @@ class ProjectionDOM(HTMLParser):
         self.anchors = []
         self.rows = []
         self.wiki_links = []
+        self.content_links = []
+        self.content_wiki_links = []
+        self.elements = []
         self.tables = []
         self.row = self.cell = self.link = None
         self.link_tag = None
 
     def handle_starttag(self, tag, attributes):
         attrs = dict(attributes)
+        classes = attrs.get("class", "").split()
+        in_toc = (self.elements[-1][1] if self.elements else False) or (
+            attrs.get("id") == "toc" and "toc" in classes)
+        in_edit = (self.elements[-1][2] if self.elements else False) or "mw-editsection" in classes
+        if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}:
+            self.elements.append((tag, in_toc, in_edit))
         if tag == "table":
             self.tables.append([])
         elif tag == "tr":
@@ -348,6 +357,11 @@ class ProjectionDOM(HTMLParser):
             self.wiki_links.append({"target": self.link["target"].split("#", 1)[0],
                                     "redlink": "new" in attrs.get("class", "").split() or query.get("redlink") == ["1"],
                                     "href": href, "classes": attrs.get("class", "").split()})
+            navigation = (in_toc and href.startswith("#")) or (in_edit and
+                self.wiki_links[-1]["target"] == self.title and query.get("action") == ["edit"] and "section" in query)
+            if not navigation:
+                self.content_links.append(self.link)
+                self.content_wiki_links.append(self.wiki_links[-1])
             self.link_tag = tag
             self.links.append(self.link)
             if self.row is None:
@@ -356,6 +370,10 @@ class ProjectionDOM(HTMLParser):
                 self.cell["links"].append(self.link)
 
     def handle_endtag(self, tag):
+        for index in range(len(self.elements) - 1, -1, -1):
+            if self.elements[index][0] == tag:
+                del self.elements[index:]
+                break
         if tag == self.link_tag:
             self.link = self.link_tag = None
         if tag in {"td", "th"}:
@@ -393,6 +411,14 @@ def dom(html, title):
     result = ProjectionDOM(title)
     result.feed(html)
     return result.normalize()
+
+
+def endpoint_targets(parsed, desired):
+    # Parser links omit local fragments/selflinks and generated navigation, not their semantic destinations.
+    parser = {row["target"] for row in parsed.content_wiki_links
+              if row["target"] in desired and row["href"] and not row["href"].startswith("#")}
+    semantic = {row["target"] for row in parsed.content_links if row["target"].split("#", 1)[0] in desired}
+    return parser, semantic
 
 
 def check_pool_projection(html, pool, owner, locations, catalog, item=None, parse_title="Pool projection"):
@@ -873,7 +899,9 @@ class Rehearsal:
         if actor["id"] <= 0:
             raise RuntimeError("Endpoint candidates require the authenticated test operator context.")
         captures = {"revisions_before": before, "direct": [], "originals": [], "selected": [],
-                    "unsupported": [], "discrepancies": [], "actor": actor}
+                    "unsupported": [], "discrepancies": [], "actor": actor,
+                    "capture_complete": False, "candidate_promotion_blocked": True}
+        self.link_candidates[endpoint] = captures
         queries = {}
         for corpus in (self.baseline, self.desired):
             for consumer, text in corpus.items():
@@ -891,7 +919,7 @@ class Rehearsal:
             self.checks.check_parser_errors(html)
             parsed = dom(html, title)
             api_targets = targets(result.get("links", []))
-            dom_targets = {row["target"] for row in parsed.wiki_links if row["target"] in self.desired}
+            dom_targets, semantic_targets = endpoint_targets(parsed, self.desired)
             if api_targets != dom_targets:
                 captures["discrepancies"].append({
                     "kind": "api-dom-targets", "reference": reference,
@@ -905,7 +933,8 @@ class Rehearsal:
                     })
             return {"html": html, "links": result.get("links", []),
                     "templates": sorted({row["*"] for row in result.get("templates", [])}),
-                    "dom_links": parsed.wiki_links, "non_wiki_links": parsed.non_wiki_links}
+                    "dom_links": parsed.wiki_links, "non_wiki_links": parsed.non_wiki_links,
+                    "semantic_targets": sorted(semantic_targets)}
 
         selected = {}
         for (owner, arguments), consumers in sorted(queries.items()):
@@ -924,10 +953,14 @@ class Rehearsal:
             invocation = projection_invocation(owner, parameters)
             parse_input = "<table>" + invocation + "</table>" if parameters.get("view") == "recipes" else invocation
             for title in contexts:
+                captures["active_capture"] = {"kind": "selected", "owner": dict(self.metadata[owner]),
+                                              "parameters": parameters, "parse_title": title, "parse_input": parse_input}
                 expanded = self.api({"action": "expandtemplates", "title": title, "text": invocation,
                                      "prop": "wikitext", "assert": "user", "assertuser": actor["name"]}, post=True)["expandtemplates"]["wikitext"]
+                captures["active_capture"]["expanded_wikitext"] = expanded
                 result = self.api({"action": "parse", "title": title, "text": parse_input,
                                    "prop": "text|templates|links", "assert": "user", "assertuser": actor["name"]}, post=True)["parse"]
+                captures["active_capture"]["parse_result"] = result
                 self.validate_projection(owner, parameters, result, title)
                 record = {
                     "owner": dict(self.metadata[owner]), "parameters": parameters, "parse_title": title,
@@ -938,19 +971,23 @@ class Rehearsal:
                 }
                 if neutral is None:
                     neutral = record
-                elif (expanded != neutral["expanded_wikitext"] or targets(record["links"]) != targets(neutral["links"])):
+                elif (expanded != neutral["expanded_wikitext"] or record["semantic_targets"] != neutral["semantic_targets"]):
                     captures["discrepancies"].append({
                         "kind": "projection-context", "owner": owner, "parameters": parameters, "parse_title": title,
                         "neutral_sha256": neutral["projection_sha256"], "context_sha256": record["projection_sha256"],
-                        "neutral_targets": sorted(targets(neutral["links"])), "context_targets": sorted(targets(record["links"])),
+                        "neutral_targets": neutral["semantic_targets"], "context_targets": record["semantic_targets"],
                     })
                 selected[(owner, arguments, title)] = record
                 captures["selected"].append(record)
+                captures.pop("active_capture")
 
         for title, text in sorted(self.current.items()):
             transformed, spans = strip_colon_invocations(text)
+            captures["active_capture"] = {"kind": "direct", "consumer": dict(self.metadata[title]),
+                                          "transformed_text": transformed, "removed_invocations": spans}
             result = self.api({"action": "parse", "title": title, "text": transformed,
                                "prop": "text|templates|links", "assert": "user", "assertuser": actor["name"]}, post=True)["parse"]
+            captures["active_capture"]["parse_result"] = result
             direct = {
                 "consumer": dict(self.metadata[title]), "parse_title": title,
                 "transformed_text": transformed, "transformed_sha256": text_hash(transformed),
@@ -960,31 +997,34 @@ class Rehearsal:
             if direct["templates"]:
                 raise RuntimeError("A span-exact direct endpoint preview still transcludes another page.")
             captures["direct"].append(direct)
+            captures["active_capture"] = {"kind": "original", "consumer": dict(self.metadata[title])}
             result = self.api({"action": "parse", "page": title, "prop": "text|templates|links|revid"})["parse"]
+            captures["active_capture"]["parse_result"] = result
             if result.get("revid") != self.metadata[title]["revid"]:
                 raise RuntimeError("An endpoint original parse is not bound to its captured revision.")
             original = {"consumer": dict(self.metadata[title]),
                         **rendered(result, title, {"kind": "original", "consumer": title})}
             captures["originals"].append(original)
-            combined = targets(direct["links"])
+            captures.pop("active_capture")
+            combined = set(direct["semantic_targets"])
             for owner, arguments in transclusions(text):
                 key = (owner, arguments, title)
                 if key not in selected:
                     raise RuntimeError("An endpoint consumer requires an unsupported selected view.")
-                combined |= targets(selected[key]["links"])
-            if combined != targets(original["links"]):
+                combined |= set(selected[key]["semantic_targets"])
+            if combined != set(original["semantic_targets"]):
                 captures["discrepancies"].append({
                     "kind": "direct-projected-union", "consumer": title, "combined_targets": sorted(combined),
-                    "original_targets": sorted(targets(original["links"])),
+                    "original_targets": original["semantic_targets"],
                 })
         self.refresh_metadata()
         after = {title: dict(record) for title, record in self.metadata.items()}
         user = self.api({"action": "query", "meta": "userinfo"})["query"]["userinfo"]
+        captures["revisions_after"] = after
         if before != after or actor != {"id": user["id"], "name": user["name"]}:
             raise RuntimeError("An endpoint owner, consumer revision or parser user changed during read-only capture.")
-        captures["revisions_after"] = after
+        captures["capture_complete"] = True
         captures["candidate_promotion_blocked"] = bool(captures["discrepancies"])
-        self.link_candidates[endpoint] = captures
         print(f"ENDPOINT_CANDIDATE {endpoint}: {len(captures['selected'])} context projections, "
               f"{len(captures['discrepancies'])} explicit discrepancies; independent review required.", flush=True)
 

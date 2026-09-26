@@ -306,6 +306,45 @@ tests and historical CI are separate evidence, never incremental DOM/native proo
 Offline unit tests use explicitly synthetic fixtures; only an authorized real
 disposable MediaWiki run can provide measured incremental evidence.
 
+Endpoint captures keep the raw MediaWiki `links` inventory and full `dom_links`
+unchanged. These inventories are not interchangeable: the parser omits same-page
+fragments and unlinked selflinks, while HTML also contains generated navigation.
+Only local TOC links inside `id="toc" class="toc"` and current-page section-edit
+links inside `mw-editsection` are classified as navigation. Ordinary content
+fragment/edit links are retained. The additive `semantic_targets` list contains
+normalized content destinations **including fragments**; selected-context and
+direct-plus-projected-union checks compare these destinations, not the raw
+parser inventory. API/DOM parser-inventory agreement, content links, expansion,
+existence and contextual destination/fragment checks still apply. No same-title
+or named-view exemption is granted.
+
+### Failed disposable evidence
+
+`--evidence-dir` must name a new directory; existing destinations, including
+dangling symlinks, are rejected before loading inputs or starting Docker.
+Previous attempts are never replaced.
+The existing writer now runs before disposable cleanup on failure or interruption,
+as well as on success. Success artifact names remain unchanged; the manifest adds
+`status: "passed"` and `complete: true`. A failed run instead writes
+`failed-rehearsal.json` with `schema_version: 1`, kind
+`failed-disposable-rehearsal`, `status: "failed"`, `complete: false`, source head,
+failure type/message, `partial_evidence`, `rehearsal` and `native_partial`.
+Previously gathered named evidence is nested inside `partial_evidence`, never
+emitted as a successful full-prefix proof. Available seed bytes are retained and
+hashed by `artifact-manifest.json`, whose status is `failed`/incomplete.
+
+The partial rehearsal includes captured endpoints, revisions, prefixes, probes,
+default/context checks, consumer HTML and settling observations when available;
+uninitialized fields are `null`. Endpoint `capture_complete` is false until the
+ending revision/actor checks pass. `active_capture` retains the in-flight
+projection/direct/original input, expansion and parser result, if received, when
+validation aborts. `candidate_promotion_blocked` stays true for incomplete or
+discrepant captures. Native proof/journal records are snapshots only, not completed
+replay or acceptance claims. The exception still propagates and cleanup still
+runs; neither cleanup success nor a release is certified by a failed artifact.
+Operators must separately retain stdout, stderr and exit status. Lost diagnostics
+from earlier runs cannot be reconstructed by this change.
+
 ### Historical and ordinary-editor checks
 
 Run `php tests/test_runtime.php` for isolated configuration tests. With Docker
