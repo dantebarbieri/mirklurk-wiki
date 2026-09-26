@@ -623,6 +623,8 @@ class IncrementalRehearsal(Rehearsal):
 
     def remember_context(self, record):
         metadata = record["consumer"]
+        if record["parse_title"] != metadata["title"]:
+            raise RuntimeError("A direct offer preview has the wrong consumer context.")
         key = (metadata["title"], metadata["revid"], metadata["raw_sha256"])
         if key not in self.context_cache:
             self.context_cache[key] = len(self.context_previews)
@@ -632,18 +634,31 @@ class IncrementalRehearsal(Rehearsal):
     def inspect_offer_context(self, title, observation, parsed):
         metadata = self.metadata[title]
         key = (title, metadata["revid"], metadata["raw_sha256"])
-        if key not in self.context_cache:
+        def stale_links(preview):
+            return [link for link in preview.wiki_links if link["target"] in self.desired
+                    and link["redlink"] != (link["target"] not in self.current)]
+        identity = self.context_cache.get(key)
+        direct = None if identity is None else dom(self.context_previews[identity]["html"], title)
+        if direct is None or stale_links(direct):
             text, spans = strip_colon_invocations(self.current[title])
             result = self.api({"action": "parse", "title": title, "text": text,
                                "prop": "text|templates"}, post=True)["parse"]
             self.checks.check_parser_errors(result["text"]["*"])
             if result.get("templates"):
                 raise RuntimeError("A direct offer-context preview still has a transclusion dependency.")
-            self.remember_context({"consumer": dict(metadata), "parse_title": title,
-                                   "transformed_text": text, "transformed_sha256": text_hash(text),
-                                   "removed_invocations": spans, "templates": [], "html": result["text"]["*"]})
-        identity = self.context_cache[key]
-        direct = dom(self.context_previews[identity]["html"], title)
+            self.context_cache.pop(key, None)
+            identity = self.remember_context({
+                "consumer": dict(metadata), "parse_title": title, "transformed_text": text,
+                "transformed_sha256": text_hash(text), "removed_invocations": spans,
+                "templates": [], "html": result["text"]["*"],
+            })
+            direct = dom(result["text"]["*"], title)
+        if mismatches := stale_links(direct):
+            self.context_cache.pop(key)
+            from smoke_prefix import PendingConsumerUpdate
+            raise PendingConsumerUpdate("A direct offer preview has stale managed-link existence.",
+                                        title, title, self.last_consumer_html,
+                                        {"direct_context_id": identity, "stale_links": mismatches})
         expected_words = Counter(direct.outside_text.split())
         expected_links = Counter((row["target"], row["text"]) for row in direct.outside_links)
         probes = [self.probes[identity] for identity in observation["probe_ids"]]
