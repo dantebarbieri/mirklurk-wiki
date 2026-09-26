@@ -223,23 +223,44 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertIn("Raving and Mutated Unwanted loot|view=pool-source", self.pages["Calmia Root"])
         self.assertIn("Treasure chests|view=pool-source", self.pages["Summoning Stone"])
 
-    def test_shared_stock_rule_has_one_owner_and_reaches_filtered_sellers(self):
+    def test_shared_stock_rule_has_one_owner_and_one_browse_level_display(self):
         locations = page_locations(self.data, self.catalog)
         rule = next(row for row in self.catalog["currency"]["rules"] if row["id"] == "trade-stock-and-funds")
         self.assertIn(selective_view("<nowiki>" + rule["text"] + "</nowiki>", "stock"),
                       self.pages["Currency and trading"])
         self.assertEqual(available_views(self.pages["Currency and trading"]), {"stock"})
+        self.assertEqual(rule["text"], "Listed wares do not run out, and merchants have unlimited buying funds.")
+        self.assertEqual(expand_selective_view(self.pages["Currency and trading"], {"view": "stock"}), rule["text"])
+        self.assertIn('id="currency-trade-stock-and-funds"', self.pages["Currency and trading"])
+        readers = {title for title, page in self.pages.items()
+                   if ("Currency and trading", (("view", "stock"),)) in transclusions(page)}
+        self.assertEqual(readers, {"Category:Merchants"})
+        self.assertIn("[[:Category:Merchants#Trading_rules|shared trading rules]]", self.pages["Merchants"])
+        self.assertNotIn("{{:Currency and trading|view=stock}}", self.pages["Merchants"])
         merchants = set(self.catalog["currency"]["standard_merchants"])
         self.assertEqual(merchants, {"being-8", "being-12", "being-19", "being-20", "being-26", "being-33"})
         for identity in merchants:
             page = self.pages[locations[identity]]
             self.assertNotIn(rule["text"], page)
             self.assertNotIn("Quantity is not established", page)
-            self.assertIn(("Currency and trading", (("view", "stock"),)), transclusions(page))
-            self.assertIn("<noinclude>{{:Currency and trading|view=stock}}</noinclude><includeonly>", page)
-            self.assertIn("[[Currency and trading#currency-trade-stock-and-funds|Shared stock and merchant-funds rules]]", page)
+            self.assertNotIn(("Currency and trading", (("view", "stock"),)), transclusions(page))
+            self.assertEqual(page.count("<noinclude>[[:Category:Merchants#Trading_rules|Shared trading rules]]</noinclude>"), 1)
+            self.assertIn("[[Category:Merchants]]", page)
+            self.assertIn("[[" + locations[identity] + "|", self.pages["Category:Merchants"])
             self.assertIn("<onlyinclude>{{#switch:", page)
             self.assertEqual(available_views(page), {"offers"})
+            for offer in self.data["entries"]:
+                if offer["kind"] == "merchant" and offer["details"]["merchant"] == identity:
+                    rendered = expand_selective_view(page, {"view": "offers", "item": offer["details"]["item"]})
+                    parsed = dom(rendered, "Filtered seller")
+                    self.assertNotIn(rule["text"], parsed.text)
+                    self.assertNotIn("Shared trading rules", parsed.text)
+                    self.assertNotIn("Shared stock and merchant-funds rules", parsed.text)
+                    self.assertNotIn("Quantity is not established", parsed.text)
+                    self.assertFalse(any(link["target"].startswith("Category:Merchants") for link in parsed.links))
+        self.assertIn("[[Category:NPCs]]", self.pages["Category:Merchants"])
+        self.assertNotIn("[[Category:Merchants]]", self.pages["Wilda"])
+        self.assertNotIn("[[Wilda|", self.pages["Category:Merchants"])
         self.assertIn("Quest items cannot be sold", self.pages["Currency and trading"])
         self.assertIn("Rift Weave is also blocked", self.pages["Currency and trading"])
         self.assertIn("no merchant-specific, player or difficulty markup", self.pages["Currency and trading"])
@@ -446,7 +467,8 @@ class SelectiveViewTests(unittest.TestCase):
             "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
             "nature-20": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
         }
-        self.assertEqual(len(self.data["illustrations"]), 326)
+        self.assertEqual(len(self.data["illustrations"]), 329)
+        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 326)
         for identity, digest in hashes.items():
             images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
             self.assertEqual(len(images), 1)

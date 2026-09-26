@@ -70,7 +70,9 @@ stored dataset. `tests/test_catalog.py` retains its 66 KiB cap;
 The incremental disposable adapter and its synthetic controls have
 exact exceptions for `tools/smoke_incremental.py` (48 KiB) and
 `tests/test_incremental.py` (44 KiB). No private input, XML, measurement, artwork,
-or broad directory exception is allowed.
+or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
+20 KiB for metadata, rights, portrait preservation, seller projections and
+synthetic-image regressions. No media exclusion is widened.
 
 Runtime files belong outside the checkout, even when ignored. Actual
 `LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original

@@ -49,6 +49,7 @@ ALLOWED_FILES = {
     "tests/test_wiki.py": 48 * 1024,
     "tests/test_catalog.py": 66 * 1024,
     "tests/test_views.py": 32 * 1024,
+    "tests/test_landmarks.py": 20 * 1024,
     "tests/test_acquisition.py": 32 * 1024,
     "tests/test_migration.py": 32 * 1024,
     "tests/test_prefix.py": 40 * 1024,

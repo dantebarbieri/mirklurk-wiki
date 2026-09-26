@@ -19,7 +19,7 @@ and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 original algorithm/skill summaries. The encyclopedia presentation generates
 385 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
-redirect. Another 86 ordinary MediaWiki category pages support hierarchical browsing.
+redirect. Another 87 ordinary MediaWiki category pages support hierarchical browsing.
 Only `game.build` changed in the original dataset; all source
 fingerprints, entities, facts, and research entries remain unchanged.
 
@@ -42,15 +42,17 @@ Explicit projectile evidence adds poison-ammunition and thrown-flask links,
 including the flasks' armor-bypass exceptions. Ammunition bonus ranges are
 decoded per attack cell, not shown as misleading fractional damage.
 
-The metadata-only artwork register covers 326 reviewed selections: 243 items,
+The metadata-only artwork register covers 329 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
+Three supplementary NPC-location exteriors preserve the existing portraits.
 Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
 Four item images are deliberately
 omitted rather than replaced with placeholders or guessed frames. Willow, Cypress,
 Trollgnarl, and Elderwort Shrub now use distinct reviewed mature compositions
-assembled from native parts and the verified tree rules. Only their four
-metadata records change; the other 322 selections are preserved. Older tree
+assembled from native parts and the verified tree rules. That earlier replacement
+preserved the other 322 selections. All 326 prior records remain unchanged when
+the three NPC exteriors are added. Older tree
 File pages and bytes remain live history, not overwritten artwork. Other nature
 pictures retain their explicit ground-tile or branch qualifications. Image bytes
 stay in separately approved server storage.
@@ -77,12 +79,19 @@ Item acquisition sections likewise select seller availability
 from merchant-owned rows without copying stock or conditions.
 
 Reviewed merchant profiles distinguish dialogue access from stock availability.
-The shared trading screen does not deplete listed stock or cap accepted sales
-by a merchant purse; Currency and trading owns that rule and its named stock
-view. Story-sensitive availability stays in collapsed merchant-owned notes.
+Currency and trading owns the concise stock/funds rule and its named stock
+view. The Merchants category displays it; the merchant index and individual
+NPCs link there instead of repeating it in every shop or item seller view.
+Story-sensitive availability stays in collapsed merchant-owned notes.
 Viend is present before the explosion but starts trading only after the later
 supplies announcement. His comparison index links to the differing original
 offers rather than copying another stock or price table.
+
+Ranger Bhato, Gurb-Gurb and Ihar have location/access sections with their reviewed
+hut, hollow and shipwreck exteriors. Bhato's directions link to Captain Eir;
+Gurb-Gurb's one-time smoke cue and Ihar's conditional shoreline placement retain
+their source qualifications. These are supplementary native sprites, not
+screenshots or replacements for dialogue portraits.
 
 Twenty-one source pages own 130 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree

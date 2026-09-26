@@ -19,7 +19,7 @@ from wiki_views import transclusions
 
 RECOVERY_TABLES = ("page", "revision", "slots", "content", "text", "actor", "logging",
                    "archive", "user", "image", "oldimage", "filearchive", "comment")
-HISTORICAL_OPERATIONS = 459
+HISTORICAL_OPERATIONS = 460
 HISTORICAL_PRESERVED = 12
 
 
