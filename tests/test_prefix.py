@@ -6,12 +6,14 @@ import sys
 import unittest
 from decimal import Decimal
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 from smoke_deploy import RenderedRows, check_parser_errors, item_links, require_image_coverage, synthetic_image_specs
 from smoke_prefix import (
-    COHORT, Rehearsal, baseline_metadata, canonical_bytes, capture_installer_welcome, dom,
+    COHORT, PendingConsumerUpdate, Rehearsal, baseline_metadata, canonical_bytes, capture_installer_welcome, dom,
     linked_titles, materialize_desired, planned_order, settings_hash, verify_materialization,
 )
 from build_wiki import build_pages, build_xml
@@ -163,6 +165,40 @@ class PrefixTests(unittest.TestCase):
         self.assertEqual({key: candidate[key] for key in shared}, {key: receipt[key] for key in shared})
         self.assertEqual(candidate["evidence_kind"], "disposable-mediawiki")
         self.assertEqual(candidate["prefixes"], [])  # Deliberately incomplete synthetic data, never runtime evidence.
+
+    def test_only_deferred_consumer_mismatches_receive_bounded_job_retries(self):
+        rehearsal = Rehearsal.__new__(Rehearsal)
+        rehearsal.prefixes, rehearsal.settling = [], []
+        rehearsal.metadata = {"Consumer": {"title": "Consumer"}, "Owner": {"title": "Owner"}}
+        rehearsal.api = lambda query: {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+        calls, drains = [], []
+        def inspect(title):
+            calls.append(title)
+            if len(calls) < 3:
+                raise PendingConsumerUpdate("Pending", title, "Owner", "<p>cached</p>")
+            return {"title": title}
+        rehearsal.inspect_consumer = inspect
+        with patch("smoke_prefix.time.sleep"):
+            self.assertEqual(rehearsal.observe_consumers({"Consumer"}, lambda: drains.append(True)),
+                             [{"title": "Consumer"}])
+        self.assertEqual(len(drains), 2)
+        self.assertEqual([event["status"] for event in rehearsal.settling], ["pending", "pending", "settled"])
+        rehearsal.inspect_consumer = lambda title: (_ for _ in ()).throw(RuntimeError("Invalid selector"))
+        with self.assertRaisesRegex(RuntimeError, "Invalid selector"):
+            rehearsal.observe_consumers({"Consumer"}, lambda: self.fail("Must not retry arbitrary failures"))
+
+    def test_deferred_consumer_retry_exhaustion_fails_with_diagnostics(self):
+        rehearsal = Rehearsal.__new__(Rehearsal)
+        rehearsal.prefixes, rehearsal.settling = [], []
+        rehearsal.metadata = {"Consumer": {"title": "Consumer"}, "Owner": {"title": "Owner"}}
+        diagnostics, drains = [], []
+        rehearsal.api = lambda query: {"curtimestamp": "2000-01-01T00:00:00Z", "query": {"pages": {}}}
+        rehearsal.checks = SimpleNamespace(cache_diagnostics=lambda *args: diagnostics.append(args))
+        rehearsal.inspect_consumer = lambda title: (_ for _ in ()).throw(PendingConsumerUpdate("Still pending", title, "Owner", "HTML"))
+        with patch("smoke_prefix.time.sleep"), self.assertRaises(PendingConsumerUpdate):
+            rehearsal.observe_consumers({"Consumer"}, lambda: drains.append(True))
+        self.assertEqual(len(drains), 9)
+        self.assertEqual(len(diagnostics), 1)
 
 
 class MaterializationTests(unittest.TestCase):

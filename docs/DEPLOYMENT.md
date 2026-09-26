@@ -182,7 +182,11 @@ One baseline cache refresh occurs before prefix zero; no purge or reseed occurs
 during the planned transition or ordinary-editor propagation checks. Every
 changed/new page is then saved once, after actual revision-bound leaf-view
 checks, with all affected consumers observed at each prefix. Ready new pages
-are preferred. Ordinary new-title links may remain explicit, verified redlinks
+are preferred. Deferred stale consumer rows or redlinks receive at most ten
+natural job-drain observations; arbitrary parser/schema errors are not retried.
+Separate settling evidence retains the observed HTML, identities and server
+times instead of replacing stale DOM with database existence flags. Ordinary
+new-title links may remain explicit, verified redlinks
 at intermediate prefixes; they are not selector prerequisites and must resolve
 at the final prefix.
 

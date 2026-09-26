@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import tarfile
+import time
 import urllib.parse
 from decimal import Decimal
 from html.parser import HTMLParser
@@ -31,6 +32,12 @@ COMPATIBILITY = {
 }
 SETTINGS_KEYS = ("EnableUploads", "AllowCopyUploads", "AllowExternalImages",
                  "ReadOnly", "GroupPermissions", "CaptchaTriggers")
+
+
+class PendingConsumerUpdate(RuntimeError):
+    def __init__(self, message, consumer, owner, html):
+        super().__init__(message)
+        self.consumer, self.owner, self.html = consumer, owner, html
 
 
 def canonical_bytes(value):
@@ -332,6 +339,7 @@ class Rehearsal:
         self.prefixes = []
         self.compatibility = []
         self.snapshots = []
+        self.settling = []
         self.endpoint_rows = {}
         self.endpoint_projections = {}
         self.provenance = {
@@ -517,6 +525,9 @@ class Rehearsal:
                                 if link["target"] in self.desired and link["target"] not in self.current})
         for link in parsed.wiki_links:
             if link["target"] in self.desired and link["redlink"] != (link["target"] not in self.current):
+                if link["target"] in self.current and link["redlink"]:
+                    raise PendingConsumerUpdate("A created target still has cached redlink HTML: " + title + " -> " + link["target"],
+                                                title, link["target"], result["text"]["*"])
                 raise RuntimeError("A consumer has a stale or dishonest planned-title link: " + title + " -> " + link["target"])
         for probe in probes:
             if not probe["parameters"]:
@@ -525,17 +536,18 @@ class Rehearsal:
             for row in selected.rows:
                 ids = set(row["ids"])
                 if ids and not any(ids <= set(actual["ids"]) and row["cells"] == actual["cells"] for actual in parsed.rows):
-                    raise RuntimeError("A cached consumer row differs from its actual current selected view: " + title + str(probe["parameters"]))
+                    raise PendingConsumerUpdate("A cached consumer row differs from its current selected view: " + title + str(probe["parameters"]),
+                                                title, probe["owner"]["title"], result["text"]["*"])
             if probe["parameters"]["view"] == "pool-source" and selected.text not in parsed.text:
                 raise RuntimeError("A consumer omitted its source-owned pool condition.")
-        self.check_merchant_rows(title, parsed)
+        self.check_merchant_rows(title, parsed, result["text"]["*"])
         return {"consumer": dict(self.metadata[title]), "html_sha256": text_hash(result["text"]["*"]),
                 "templates": templates, "dependency_revisions": self.dependency_revisions(templates),
                 "probe_ids": [probe["id"] for probe in probes],
                 "pending_planned_new_targets": pending_links,
                 "links": [{"title": row["*"], "exists": "exists" in row} for row in result.get("links", [])]}
 
-    def check_merchant_rows(self, title, parsed):
+    def check_merchant_rows(self, title, parsed, html):
         for entry in self.data["entries"]:
             if entry["kind"] != "merchant" or self.owners[entry["id"]] != title:
                 continue
@@ -549,7 +561,38 @@ class Rehearsal:
                 if (title, owner) not in self.allowed or cell["text"] != "Not established":
                     raise RuntimeError("An unknown merchant price escaped its eleven-edge compatibility scope.")
             else:
+                if item not in self.old_prices and cell["text"] == "Not established":
+                    raise PendingConsumerUpdate("An established price still has its old cached unknown value.",
+                                                title, owner, html)
                 self.checks.check_price_cell(cell, self.prices[item])
+
+    def observe_consumers(self, titles, drain_jobs):
+        for attempt in range(10):
+            try:
+                observations = [self.inspect_consumer(title) for title in sorted(titles)]
+                if attempt:
+                    self.settling.append({
+                        "prefix_index": len(self.prefixes), "status": "settled", "attempt": attempt + 1,
+                        "observed_at": self.api({"action": "query", "curtimestamp": 1})["curtimestamp"],
+                        "consumers": sorted(titles),
+                    })
+                return observations
+            except PendingConsumerUpdate as error:
+                status = self.api({"action": "query", "titles": error.consumer + "|" + error.owner,
+                                   "prop": "info", "curtimestamp": 1})
+                self.settling.append({
+                    "prefix_index": len(self.prefixes), "status": "pending", "attempt": attempt + 1,
+                    "observed_at": status["curtimestamp"], "reason": str(error),
+                    "consumer": dict(self.metadata[error.consumer]), "owner": dict(self.metadata[error.owner]),
+                    "html": error.html, "html_sha256": text_hash(error.html),
+                    "page_info": [{key: row[key] for key in ("title", "pageid", "lastrevid", "touched") if key in row}
+                                  for row in sorted(status["query"]["pages"].values(), key=lambda row: row["title"])],
+                })
+                if attempt == 9:
+                    self.checks.cache_diagnostics(self.api, error.consumer, error.owner, error.html)
+                    raise
+                time.sleep(2)
+                drain_jobs()
 
     def compatibility_observation(self, consumer, owner):
         projection = self.probe(consumer, owner, (), fresh=True)
@@ -625,7 +668,7 @@ class Rehearsal:
             affected = {title}
             affected.update(consumer for consumer, text in self.current.items()
                             if title in {owner for owner, _ in transclusions(text)} or title in linked_titles(text))
-            observations = [self.inspect_consumer(consumer) for consumer in sorted(affected)]
+            observations = self.observe_consumers(affected, drain_jobs)
             self.prefixes.append({"index": index, "saved": dict(self.metadata[title]),
                                   "prerequisites": [probe["id"] for probe in prerequisites], "observations": observations,
                                   "pending_new_link_edges": self.pending_link_edges()})
@@ -709,5 +752,9 @@ class Rehearsal:
             },
             "price-expectations-candidate.json": reviewed,
             "price-prefix-snapshots.json": self.snapshots,
+            "consumer-settling.json": {
+                **self.provenance, "scope": "Observed deferred-cache reads before coherent prefix observation; never purge or overwrite observed DOM.",
+                "events": self.settling,
+            },
             "migration-plan.json": plan_migration(self.baseline, self.baseline, self.desired),
         }
