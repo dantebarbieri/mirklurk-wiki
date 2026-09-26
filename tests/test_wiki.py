@@ -19,7 +19,7 @@ from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILE
 from check_publication import blob_errors
 from wiki_catalog import entry_owners, entry_relations, default_catalog, page_locations
 from wiki_render import recipe_groups
-from smoke_deploy import wait_for_server_tick
+from smoke_deploy import smoke_category_memberships, smoke_reader_release, wait_for_server_tick
 
 
 def synthetic_data():
@@ -120,8 +120,139 @@ class SmokeClockTests(unittest.TestCase):
                            + [{"curtimestamp": later}] * 20)
                 with patch("smoke_deploy.time.sleep") as sleep, self.assertRaisesRegex(RuntimeError, "clock"):
                     wait_for_server_tick(api)
-                self.assertEqual(api.call_count, 21)
-                self.assertEqual(sleep.call_count, 20)
+                self.assertEqual(api.call_count, 2 if later.endswith("50Z") else 21)
+                self.assertEqual(sleep.call_count, 1 if later.endswith("50Z") else 20)
+
+
+class SmokeCategoryTests(unittest.TestCase):
+    def setUp(self):
+        groups = ["Category:" + name for name in ("Wanderer", "Survivor", "Hunter", "Warrior", "Forager")]
+        self.memberships = {
+            "Skills": [], "Sample skill": ["Category:Skills", "Category:Wanderer"],
+            "Browse only": [], "Category:Skills": [],
+            **{group: ["Category:Skills"] for group in groups},
+            **{f"Uncategorized {number}": [] for number in range(55)},
+        }
+        self.browse = {
+            "Skills": ["Category:Skills", *groups],
+            "Category:Skills": groups,
+            **{group: ["Category:Skills"] for group in groups},
+        }
+        self.pages = {
+            title: " ".join(f"[[{category}]]" for category in categories)
+                   + " ".join(f"[[:{category}|Browse]]" for category in self.browse.get(title, []))
+            for title, categories in self.memberships.items()
+        }
+        self.pages["Browse only"] = "[[:Category:Wanderer|Not a membership]]"
+        self.pages["Category:Skills"] += "[[:Category:Skills|Self-link]]"
+        self.calls = []
+
+    def api(self, parameters):
+        self.calls.append(parameters)
+        if parameters["action"] == "parse":
+            return {"parse": {"links": [
+                {"ns": 14, "*": title, "exists": ""} for title in self.browse.get(parameters["page"], [])
+            ]}}
+        titles = parameters["titles"].split("|")
+        category_slice = slice(1, None) if parameters.get("clcontinue") else slice(0, 1)
+        result = {"query": {"pages": {
+            str(number): {
+                "title": title, "ns": 14 if title.startswith("Category:") else 0,
+                "categories": [{"ns": 14, "title": category} for category in self.memberships[title][category_slice]],
+            }
+            for number, title in enumerate(titles, 1)
+        }}}
+        if not parameters.get("clcontinue"):
+            result["continue"] = {"continue": "||", "clcontinue": "second-page"}
+        return result
+
+    def test_actual_memberships_are_batched_continued_and_not_browse_links(self):
+        smoke_category_memberships(self.api, self.pages)
+        queries = [call for call in self.calls if call["action"] == "query"]
+        self.assertEqual(len(queries), 4)
+        self.assertTrue(all(len(call["titles"].split("|")) <= 50 for call in queries))
+        self.assertTrue(all(call["prop"] == "categories" and call["cllimit"] == "max" for call in queries))
+        self.assertEqual(sum(call.get("clcontinue") == "second-page" for call in queries), 2)
+        for call in queries:
+            if "clcontinue" in call:
+                self.assertEqual(call["continue"], "||")
+        self.assertEqual({call["page"] for call in self.calls if call["action"] == "parse"}, set(self.browse))
+
+    def test_continuation_can_omit_already_completed_pages(self):
+        def api(parameters):
+            result = self.api(parameters)
+            if parameters.get("clcontinue"):
+                result["query"]["pages"] = {
+                    key: row for key, row in result["query"]["pages"].items() if row["categories"]
+                }
+            return result
+        smoke_category_memberships(api, self.pages)
+
+    def test_missing_extra_and_wrong_namespace_results_fail_explicitly(self):
+        for mutation in ("omit", "missing", "namespace", "category-namespace", "missing-category", "extra-category"):
+            with self.subTest(mutation=mutation):
+                def api(parameters):
+                    result = self.api(parameters)
+                    if parameters["action"] == "query":
+                        rows = result["query"]["pages"]
+                        key = next((key for key, row in rows.items() if row["title"] == "Sample skill"), None)
+                        if key is not None:
+                            if mutation == "omit":
+                                del rows[key]
+                            elif mutation == "missing":
+                                rows[key]["missing"] = ""
+                            elif mutation == "namespace":
+                                rows[key]["ns"] = 14
+                            elif mutation == "category-namespace":
+                                rows[key]["categories"] = [{"ns": 0, "title": "Category:Skills"}]
+                            elif mutation == "missing-category":
+                                rows[key]["categories"] = []
+                            else:
+                                rows[key]["categories"].append({"ns": 14, "title": "Category:Unexpected"})
+                    return result
+                with self.assertRaisesRegex(RuntimeError, "Category"):
+                    smoke_category_memberships(api, self.pages)
+        self.memberships["Category:Wanderer"] = []
+        with self.assertRaisesRegex(RuntimeError, "membership mismatch for Category:Wanderer"):
+            smoke_category_memberships(self.api, self.pages)
+
+    def test_skills_and_category_parent_child_browse_links_must_exist(self):
+        for title in ("Skills", "Category:Skills", "Category:Wanderer"):
+            for mutation in ("omit", "missing"):
+                with self.subTest(title=title, mutation=mutation):
+                    def api(parameters):
+                        result = self.api(parameters)
+                        if parameters["action"] == "parse" and parameters["page"] == title:
+                            if mutation == "omit":
+                                result["parse"]["links"] = []
+                            else:
+                                for link in result["parse"]["links"]:
+                                    link.pop("exists")
+                        return result
+                    with self.assertRaisesRegex(RuntimeError, "browse links did not resolve"):
+                        smoke_category_memberships(api, self.pages)
+
+    def test_continuation_cannot_repeat_override_queries_or_run_forever(self):
+        for mutation in ("repeat", "override", "unbounded"):
+            with self.subTest(mutation=mutation):
+                calls = 0
+                def api(parameters):
+                    nonlocal calls
+                    calls += 1
+                    result = self.api(parameters)
+                    result["continue"] = {"continue": "||", "clcontinue": str(calls) if mutation == "unbounded" else "repeat"}
+                    if mutation == "override":
+                        result["continue"]["titles"] = "Unrelated"
+                    return result
+                with self.assertRaisesRegex(RuntimeError, "continuation"):
+                    smoke_category_memberships(api, self.pages)
+                self.assertLessEqual(calls, 100)
+
+    def test_reader_release_invokes_actual_category_verification(self):
+        with patch("smoke_deploy.smoke_category_memberships", side_effect=RuntimeError("category probe")) as probe:
+            with self.assertRaisesRegex(RuntimeError, "category probe"):
+                smoke_reader_release(self.api, self.pages, {}, {}, {}, {})
+        probe.assert_called_once_with(self.api, self.pages)
 
 
 class DataTests(unittest.TestCase):

@@ -47,6 +47,10 @@ CATEGORY_PAGES = {
 }
 FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES}
 CONFIDENCES = {"observed", "inferred", "localization-described"}
+MECHANIC_GUIDE_TITLES = {
+    "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
+    "Temperature", "Wellbeing", "Foods", "Resting", "Weather",
+}
 HEALTH_ARMOR_ICONS = {
     1: ("File:Health-armor-1.png", "Bronze"),
     2: ("File:Health-armor-2.png", "Silver"),
@@ -81,6 +85,24 @@ def _text(value, location, limit=160):
         or any(0xD800 <= ord(c) <= 0xDFFF for c in value)
     ):
         raise DataError(f"{location}: expected short, single-line, trimmed text")
+    return value
+
+
+def title_key(title):
+    normalized = " ".join(title.replace("_", " ").split())
+    if normalized.lower().startswith("category:"):
+        name = normalized.split(":", 1)[1].strip()
+        return "Category:" + name[:1].upper() + name[1:]
+    return normalized[:1].upper() + normalized[1:]
+
+
+def _title(value):
+    _text(value, "catalog title")
+    if (
+        value != title_key(value) or re.search(r"[\[\]{}|<>#:/\\]", value)
+        or value in {".", ".."} or value.startswith(".")
+    ):
+        raise DataError("catalog title: expected a canonical, plain main-namespace title")
     return value
 
 

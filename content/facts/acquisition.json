@@ -1,0 +1,4935 @@
+{
+  "schema_version": 1,
+  "build": "0.8.1.5",
+  "sources": [
+    {
+      "id": "starting-equipment",
+      "title": "Starting equipment",
+      "kind": "starting",
+      "summary": "Normal starting equipment comes from two places: clothes equipped when the character is created, and Captain Eir's initial handover. The rows distinguish these steps and the difficulty-specific supplies.",
+      "conditions": [
+        "The initial clothing applies to every normal new character. Captain Eir's later handover supplies shared equipment and additional items determined by difficulty.",
+        "The Small Backpack is equipped during the handover; the other supplied items are received into inventory. This is a one-time starting grant, not merchant stock or a random treasure roll.",
+        "Developer quick-start inventory is a separate code path and is not included in the normal starting set."
+      ],
+      "rows": [
+        {
+          "id": "starting-equipment-item-20",
+          "item": "item-20",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: equipped on normal character creation.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_player_Create_0",
+              "key": "starter-equipment[20].outside-QUICKMODE"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-22",
+          "item": "item-22",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: equipped on normal character creation.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_player_Create_0",
+              "key": "starter-equipment[22].outside-QUICKMODE"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-16",
+          "item": "item-16",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: equipped on normal character creation.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_player_Create_0",
+              "key": "starter-equipment[16].outside-QUICKMODE"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-15",
+          "item": "item-15",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: equipped on normal character creation.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_player_Create_0",
+              "key": "starter-equipment[15].outside-QUICKMODE"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-12",
+          "item": "item-12",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: Captain Eir's initial equipment handover.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.starting-item[12]"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-25",
+          "item": "item-25",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: Captain Eir's initial equipment handover.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.starting-item[25]"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-68",
+          "item": "item-68",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: Captain Eir's initial equipment handover.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.starting-item[68]"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-89",
+          "item": "item-89",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "All difficulties: Captain Eir's initial equipment handover.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.starting-item[89]"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-39",
+          "item": "item-39",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Easy only: Captain Eir's initial equipment handover.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.GAMEDIFF1.item[39]"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-36",
+          "item": "item-36",
+          "quantity": {
+            "min": 3,
+            "max": 3
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Easy only: Captain Eir's initial equipment handover.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.GAMEDIFF1.item[36]"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-3",
+          "item": "item-3",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Easy only: Captain Eir's initial equipment handover.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.GAMEDIFF1.item[3]"
+            }
+          ]
+        },
+        {
+          "id": "starting-equipment-item-2",
+          "item": "item-2",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Medium and Hard: Captain Eir's initial equipment handover, instead of the Easy dagger.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "dialogue.being6/state3.GAMEDIFF-not1.item[2]"
+            }
+          ]
+        }
+      ],
+      "related_entities": [
+        "being-6"
+      ],
+      "related_pages": [
+        "Action points",
+        "Resting",
+        "Foods",
+        "Weather"
+      ],
+      "image_entity": "item-12",
+      "image_caption": "Captain Eir supplies a Small Backpack at the start on every difficulty.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "starterPants/starterShirt/starterSocks/starterShoes;QUICKMODE-guard"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "dialogue.being6/state3.starting-gear/GAMEDIFF"
+        },
+        {
+          "source": "ui-en",
+          "section": "Menus",
+          "key": "Diffs1/Diffs2/Diffs3"
+        }
+      ]
+    },
+    {
+      "id": "dead-camp",
+      "title": "Dead camp",
+      "kind": "fixed-location",
+      "summary": "The destroyed camp in the starting area has deliberately scripted supplies, not just a draw from the general corpse-loot pool. Its two loot containers have different fixed contents.",
+      "conditions": [
+        "Check the dead-body pile and the second wooden container separately. The Apprentice Herbalist's Belt belongs to the body-pile container, not the second container.",
+        "A separate interactable dead Unwanted is involved in the camp's quest events. The torn central tent is another distinct object, not a generic cart holding all the camp's supplies.",
+        "The guarantees below apply to the initial contents of this particular scripted camp. They do not describe every random skeleton or corpse, and do not promise replenishment after looting."
+      ],
+      "rows": [
+        {
+          "id": "dead-camp-item-13",
+          "item": "item-13",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Initially in the dead-body pile at the scripted starting-area camp.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_2",
+              "key": "areaType0.camp.quest-frame0.lootArr[13]"
+            }
+          ]
+        },
+        {
+          "id": "dead-camp-item-32",
+          "item": "item-32",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Initially in the dead-body pile at the scripted starting-area camp.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_2",
+              "key": "areaType0.camp.quest-frame0.lootArr[32]"
+            }
+          ]
+        },
+        {
+          "id": "dead-camp-item-95",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Initially in the dead-body pile at the scripted starting-area camp.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_2",
+              "key": "areaType0.camp.quest-frame0.lootArr[95]"
+            }
+          ]
+        },
+        {
+          "id": "dead-camp-item-41",
+          "item": "item-41",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Initially in the second, wooden container at the scripted starting-area camp.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_2",
+              "key": "areaType0.camp.quest-frame2.lootArr[41]"
+            }
+          ]
+        },
+        {
+          "id": "dead-camp-item-25",
+          "item": "item-25",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "the stated initial-population or normal-start condition"
+          },
+          "condition": "Initially in the second, wooden container at the scripted starting-area camp.",
+          "coverage": "fixed",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_2",
+              "key": "areaType0.camp.quest-frame2.lootArr[25]"
+            }
+          ]
+        }
+      ],
+      "related_entities": [
+        "being-9"
+      ],
+      "related_pages": [
+        "Starting equipment",
+        "Resting"
+      ],
+      "image_entity": "item-13",
+      "image_caption": "The Apprentice Herbalist's Belt is a fixed initial find in the camp's body pile.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "areaType0.camp.quest-frames[0/1/2]/fixed-loot/status[-215]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.container.status[-215]->[-211]"
+        },
+        {
+          "source": "game-data",
+          "section": "spr_found_16x16_quest",
+          "key": "visually-reviewed.frame0-body-pile/frame1-interactable-body/frame2-wooden-container"
+        },
+        {
+          "source": "game-data",
+          "section": "spr_found_32x32",
+          "key": "visually-reviewed.central-torn-tent"
+        }
+      ]
+    },
+    {
+      "id": "random-treasure",
+      "title": "Random treasure",
+      "kind": "loot-rules",
+      "summary": "Random treasure uses constrained value-budget pools. Being eligible means an item can be selected in at least one valid roll for that source; it does not mean the item is guaranteed, or that every candidate has equal final odds.",
+      "conditions": [
+        "The generator rejects explicitly excluded items and items that do not fit the remaining value budget. It stops after filling the budget or exhausting the candidate-attempt limit documented below. Coins are exempt from the minimum-value test, but not the total budget.",
+        "Ordinary skeleton, chest, ruin and nest treasure excludes the game's food and material/ignition-item classes. These exclusions include food, wood, rocks, flint, feathers, pelts and several potion ingredients. Do not assume that all inventory items can appear on a skeleton.",
+        "The Raving Unwanted and Mutated Unwanted corpse pool deliberately lacks those ordinary type exclusions, but has a much smaller fixed budget. Specific enemy meat/gland drops and the dead camp's fixed supplies are separate systems.",
+        "Budget rolls favor smaller outcomes: the game mixes several uniform integer ranges rather than choosing the final budget uniformly. Sampling an item number uniformly at the start does not make final item drop rates uniform after all rejection tests.",
+        "Coin selections can grow into a stack through repeated 80% continuation checks, subject to the stack limit and remaining budget. Non-coin items generally receive wear when generated; a full-condition merchant price is therefore not a promise of equal resale value for random loot.",
+        "Some otherwise eligible items also have story conditions, shown below. Other explicitly non-lootable records remain excluded even when they have a valid item definition."
+      ],
+      "rows": [],
+      "pool_ids": [
+        "skeleton-outdoors",
+        "skeleton-indoors",
+        "chest-common",
+        "chest-middle",
+        "chest-rich",
+        "ruins-large",
+        "ruins-small",
+        "nest-tiny",
+        "cracks-tiny",
+        "unwanted-remains"
+      ],
+      "related_pages": [
+        "Skeletons and corpses",
+        "Treasure chests",
+        "Searching ruins",
+        "Bird nests",
+        "Cave-floor cracks",
+        "Dead camp"
+      ],
+      "related_entities": [
+        "item-72",
+        "item-73",
+        "item-74",
+        "item-127",
+        "being-31",
+        "being-32"
+      ],
+      "image_entity": "item-73",
+      "image_caption": "Coins can appear in random treasure, but the generator is not a guaranteed coin payout.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray;loot_amountchances"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.unopened-treasure.budgets"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "corpse.31/32.treasure_get_lootarray[1,1,0.1]"
+        },
+        {
+          "source": "ui-en",
+          "section": "Journal",
+          "key": "15"
+        }
+      ]
+    },
+    {
+      "id": "skeletons-and-corpses",
+      "title": "Skeletons and corpses",
+      "kind": "random-container",
+      "summary": "The randomly placed skeletal remains and partially clothed bodies share the ordinary treasure generator. Their contents are generated when the unopened container is first accessed, rather than being a guaranteed list of equipment or food.",
+      "conditions": [
+        "Outdoor and indoor remains use different value budgets. The same item may qualify indoors but be too valuable for an outdoor body, or too cheap for an indoor body's minimum non-coin value.",
+        "The three visual variations are appearances of the same container class, not three independently verified loot tables.",
+        "Reopening a searched container does not reroll fresh treasure. Existing contents can deteriorate or disappear as time passes, so eligibility is not a promise about a previously opened body.",
+        "These randomly placed remains are not the same as a freshly killed creature's fixed meat/gland drops, the Raving or Mutated Unwanted pool, or the scripted dead-camp containers."
+      ],
+      "rows": [],
+      "pool_refs": [
+        {
+          "pool": "skeleton-outdoors",
+          "condition": "Random remains outside."
+        },
+        {
+          "pool": "skeleton-indoors",
+          "condition": "Random remains indoors."
+        }
+      ],
+      "related_pages": [
+        "Random treasure",
+        "Dead camp",
+        "Treasure chests"
+      ],
+      "related_entities": [
+        "item-73"
+      ],
+      "image_entity": "item-73",
+      "image_caption": "Silver is one possible find, not a guaranteed reward from every body.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_create_treasure[0].index152/spr_found_16x16.frames[0..2]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.status[-214].maxam/indoors/minValue/status-transition"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "container_time_pass"
+        }
+      ]
+    },
+    {
+      "id": "treasure-chests",
+      "title": "Treasure chests",
+      "kind": "random-container",
+      "summary": "Some treasure placements become chests instead of skeletal remains. A chest's generated tier controls its value-budget range; those budgets allow a different selection from ordinary bodies.",
+      "conditions": [
+        "The nominal tier-selection rates accompany each pool below. These percentages describe the chest tier, not the odds of finding a particular item.",
+        "All three tiers use the same placed-chest sprite in this creation path. The code does not establish a different visible appearance for each tier.",
+        "Chests use the ordinary treasure type exclusions. A richer budget does not allow food or every crafting material, and the minimum non-coin value rises with the rolled budget.",
+        "The container-kind argument is not the treasure-pool argument: these chests still call the ordinary pool. Do not apply the unused reduced-wear pool branch merely because chest creation uses a numeric kind of two."
+      ],
+      "rows": [],
+      "pool_refs": [
+        {
+          "pool": "chest-common",
+          "condition": "Common generated chest tier; 88.2% of generated chests."
+        },
+        {
+          "pool": "chest-middle",
+          "condition": "Middle generated chest tier; 9.8% of generated chests."
+        },
+        {
+          "pool": "chest-rich",
+          "condition": "Rich generated chest tier; 2% of generated chests."
+        }
+      ],
+      "related_pages": [
+        "Random treasure",
+        "Skeletons and corpses"
+      ],
+      "related_entities": [
+        "item-74"
+      ],
+      "image_entity": "item-74",
+      "image_caption": "A larger treasure budget can admit more valuable items; it is not a fixed gold reward.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_create_treasure[2].index149/150/151.sequential-chances"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.chest-indices[149/150/151].budgets/lootType0"
+        }
+      ]
+    },
+    {
+      "id": "unwanted-remains",
+      "title": "Raving and Mutated Unwanted loot",
+      "kind": "enemy",
+      "summary": "Raving Unwanted and Mutated Unwanted each generate a small random treasure selection when their loot corpse is created. They do not use the same restricted item classes as ordinary world skeletons.",
+      "conditions": [
+        "Eligible food and materials are allowed here, unlike ordinary skeleton treasure. The pool's value-budget and minimum-value rules are documented on Random treasure.",
+        "Quantity and final odds depend on the random budget-filling process. No particular eligible item is guaranteed. Recovered stuck arrows are additional to the generated pool, not free newly generated ammunition."
+      ],
+      "rows": [],
+      "pool_refs": [
+        {
+          "pool": "unwanted-remains",
+          "condition": "Loot corpse of Raving Unwanted or Mutated Unwanted."
+        }
+      ],
+      "related_entities": [
+        "being-31",
+        "being-32"
+      ],
+      "related_pages": [
+        "Random treasure",
+        "Skeletons and corpses"
+      ],
+      "image_entity": "being-31",
+      "image_caption": "Raving Unwanted uses a small, less type-restricted corpse treasure pool.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "case31/case32.treasure_get_lootarray[1,1,0.1]/stuckArrows"
+        }
+      ]
+    },
+    {
+      "id": "fallen-twigs",
+      "title": "Fallen twigs",
+      "kind": "world-feature",
+      "summary": "Search loose twig piles for Willow or Cypress twigs, with separate chances for small animals, flint and other ground finds.",
+      "conditions": [
+        "Normally the twig species is Willow on 85% of selections and Cypress on 15%. In shade with a Cypress as the nearest tree, Cypress is forced instead. Twig quantities are uniformly one to three; do not treat the 15% as universal across every location.",
+        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+      ],
+      "rows": [
+        {
+          "id": "fallen-twigs-beetle-bonus",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 8,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus; separate from any base beetle quantity.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.beetle"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-glowing-bug",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Strange Glowing Bug bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.glowing-bug"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-dragon-flint-low",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1000,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Lower terrain: elevation/dryness scalar below 0.195. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-dragon-flint-middle",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 500,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-dragon-flint-high",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 250,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-wakebug",
+          "item": "item-241",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-bursthopper",
+          "item": "item-243",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-baby-firelouse",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 200,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Baby Firelouse bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.baby-firelouse"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-fools-gold-low",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 50,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar below 0.195. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-fools-gold-middle",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 11,
+            "denominator": 100,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "fallen-twigs-fools-gold-high",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 4,
+            "denominator": 25,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        }
+      ],
+      "existing_entry_ids": [
+        "loot-50-willow",
+        "loot-50-cypress",
+        "loot-50-flint-bonus",
+        "loot-50-frog-bonus",
+        "loot-50-maggot-bonus"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "item-19",
+      "image_caption": "Willow twigs are the usual result outside the Cypress-shade override.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[50];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Create_0",
+          "key": "dryTresh=0.195;dryestTresh=0.425"
+        }
+      ]
+    },
+    {
+      "id": "pebbles",
+      "title": "Pebbles",
+      "kind": "world-feature",
+      "summary": "Search a pebble pile to collect a small stack of Rock. Independent bonus checks can add flint, bugs and other small finds.",
+      "conditions": [
+        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+      ],
+      "rows": [
+        {
+          "id": "pebbles-beetle-bonus",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 8,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus; separate from any base beetle quantity.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.beetle"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-glowing-bug",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Strange Glowing Bug bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.glowing-bug"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-dragon-flint-low",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1000,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Lower terrain: elevation/dryness scalar below 0.195. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-dragon-flint-middle",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 500,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-dragon-flint-high",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 250,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-wakebug",
+          "item": "item-241",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-bursthopper",
+          "item": "item-243",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-baby-firelouse",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 200,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Baby Firelouse bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.baby-firelouse"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-fools-gold-low",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 50,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar below 0.195. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-fools-gold-middle",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 11,
+            "denominator": 100,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "pebbles-fools-gold-high",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 4,
+            "denominator": 25,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        }
+      ],
+      "existing_entry_ids": [
+        "loot-54-rock",
+        "loot-54-flint-bonus",
+        "loot-54-frog-bonus",
+        "loot-54-maggot-bonus"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "item-37",
+      "image_caption": "Rock is the guaranteed primary item in an ordinary pebble-pile loot generation.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[54];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Create_0",
+          "key": "dryTresh=0.195;dryestTresh=0.425"
+        }
+      ]
+    },
+    {
+      "id": "mixed-ground-debris",
+      "title": "Mixed ground debris",
+      "kind": "world-feature",
+      "summary": "Mixed twig-and-rock piles generate both a twig stack and a Rock stack, then perform the same small-find checks as other ground debris.",
+      "conditions": [
+        "Normally the twig species is Willow on 85% of selections and Cypress on 15%. In shade with a Cypress as the nearest tree, Cypress is forced instead. Twig quantities are uniformly one to three; do not treat the 15% as universal across every location.",
+        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+      ],
+      "rows": [
+        {
+          "id": "mixed-ground-debris-beetle-bonus",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 8,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus; separate from any base beetle quantity.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.beetle"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-glowing-bug",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Strange Glowing Bug bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.glowing-bug"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-dragon-flint-low",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1000,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Lower terrain: elevation/dryness scalar below 0.195. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-dragon-flint-middle",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 500,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-dragon-flint-high",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 250,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-wakebug",
+          "item": "item-241",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-bursthopper",
+          "item": "item-243",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-baby-firelouse",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 200,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Baby Firelouse bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.baby-firelouse"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-fools-gold-low",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 50,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar below 0.195. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-fools-gold-middle",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 11,
+            "denominator": 100,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "mixed-ground-debris-fools-gold-high",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 4,
+            "denominator": 25,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        }
+      ],
+      "existing_entry_ids": [
+        "loot-55-rock",
+        "loot-55-willow",
+        "loot-55-cypress",
+        "loot-55-flint-bonus",
+        "loot-55-frog-bonus",
+        "loot-55-maggot-bonus"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "item-78",
+      "image_caption": "Cypress twigs can occur in mixed debris, particularly in Cypress shade.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[55];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Create_0",
+          "key": "dryTresh=0.195;dryestTresh=0.425"
+        }
+      ]
+    },
+    {
+      "id": "boulders",
+      "title": "Searching boulders",
+      "kind": "world-feature",
+      "summary": "Searchable boulders can conceal maggots, beetles, eggs and other small finds. They are not the generic skeleton treasure table.",
+      "conditions": [
+        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows.",
+        "The base maggot and beetle checks are separate from the additional one-creature bonus checks. Multiple successes can therefore produce more than one stack of the same creature."
+      ],
+      "rows": [
+        {
+          "id": "boulders-beetle-bonus",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 8,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus; separate from any base beetle quantity.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.beetle"
+            }
+          ]
+        },
+        {
+          "id": "boulders-glowing-bug",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Strange Glowing Bug bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.glowing-bug"
+            }
+          ]
+        },
+        {
+          "id": "boulders-dragon-flint-low",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1000,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Lower terrain: elevation/dryness scalar below 0.195. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "boulders-dragon-flint-middle",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 500,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "boulders-dragon-flint-high",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 250,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "boulders-wakebug",
+          "item": "item-241",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "boulders-bursthopper",
+          "item": "item-243",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 800,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "A 3.25% bonus check chooses equally between Wakebug and Bursthopper.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.choose[241,243]"
+            }
+          ]
+        },
+        {
+          "id": "boulders-baby-firelouse",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 200,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Baby Firelouse bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.baby-firelouse"
+            }
+          ]
+        },
+        {
+          "id": "boulders-fools-gold-low",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 50,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar below 0.195. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "boulders-fools-gold-middle",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 11,
+            "denominator": 100,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "boulders-fools-gold-high",
+          "item": "item-94",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 4,
+            "denominator": 25,
+            "scope": "Conditional on passing the boulder's interruption check; this is one independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.31. The thresholds describe terrain, not recent rainfall.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.pyrChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "boulders-base-maggot",
+          "item": "item-60",
+          "quantity": {
+            "min": 1,
+            "max": 4
+          },
+          "probability": {
+            "numerator": 163,
+            "denominator": 300,
+            "scope": "Conditional on no snake interruption; base roll only, not combined with the independent bonus."
+          },
+          "odds_note": null,
+          "condition": "Base quantity roll. Its zero outcome means this base stack is absent; a separate one-creature bonus may still succeed.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case51.loot_amountchances[0,5]"
+            }
+          ]
+        },
+        {
+          "id": "boulders-base-beetle",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 4
+          },
+          "probability": {
+            "numerator": 163,
+            "denominator": 300,
+            "scope": "Conditional on no snake interruption; base roll only, not combined with the independent bonus."
+          },
+          "odds_note": null,
+          "condition": "Base quantity roll. Its zero outcome means this base stack is absent; a separate one-creature bonus may still succeed.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case51.loot_amountchances[0,5]"
+            }
+          ]
+        },
+        {
+          "id": "boulders-base-frog",
+          "item": "item-64",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 40,
+            "scope": "Conditional on no snake interruption; base roll only, not combined with the independent bonus."
+          },
+          "odds_note": null,
+          "condition": "The 5% base bonus chooses Frog or Egg equally; the separate shared Frog bonus is additional.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case51.choose[64,87]"
+            }
+          ]
+        },
+        {
+          "id": "boulders-base-egg",
+          "item": "item-87",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 40,
+            "scope": "Conditional on no snake interruption; base roll only, not combined with the independent bonus."
+          },
+          "odds_note": null,
+          "condition": "The 5% base bonus chooses Frog or Egg equally; the separate shared Frog bonus is additional.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case51.choose[64,87]"
+            }
+          ]
+        }
+      ],
+      "existing_entry_ids": [
+        "loot-51-flint-bonus",
+        "loot-51-frog-bonus",
+        "loot-51-maggot-bonus"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "nature-2",
+      "image_caption": "Boulders can hide small creatures or trigger a Viper interruption.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[51];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Create_0",
+          "key": "dryTresh=0.195;dryestTresh=0.425"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_solid_Alarm_1",
+          "key": "searchable-boulder-sprites.LootData51"
+        }
+      ],
+      "loot_context": "Before normal loot generation, searching a boulder has a nominal 10% chance to reveal a Viper instead. That interruption skips the usual loot checks; all normal-loot row percentages are conditional on reaching them."
+    },
+    {
+      "id": "mossy-logs",
+      "title": "Searching mossy logs",
+      "kind": "world-feature",
+      "summary": "Rotting or mossy logs produce Moldy Wood and Mold, with independent checks for several small creatures.",
+      "conditions": [
+        "Newly found Moldy Wood has randomized wetness in this search path; a stack is not necessarily ready dry fuel."
+      ],
+      "rows": [
+        {
+          "id": "mossy-logs-maggot",
+          "item": "item-60",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 8,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.L58"
+            }
+          ]
+        },
+        {
+          "id": "mossy-logs-beetle",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 8,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.L58"
+            }
+          ]
+        },
+        {
+          "id": "mossy-logs-glowing-bug",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.L58"
+            }
+          ]
+        },
+        {
+          "id": "mossy-logs-wakebug",
+          "item": "item-241",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "A separate 3% check chooses equally among these three creatures.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.L58"
+            }
+          ]
+        },
+        {
+          "id": "mossy-logs-bursthopper",
+          "item": "item-243",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "A separate 3% check chooses equally among these three creatures.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.L58"
+            }
+          ]
+        },
+        {
+          "id": "mossy-logs-baby-firelouse",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "A separate 3% check chooses equally among these three creatures.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.L58"
+            }
+          ]
+        }
+      ],
+      "existing_entry_ids": [
+        "loot-58-wood",
+        "loot-58-mold"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "nature-3",
+      "image_caption": "Mossy Log: a source of decaying wood, mold and occasional bugs.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[58];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        }
+      ]
+    },
+    {
+      "id": "bird-nests",
+      "title": "Bird nests",
+      "kind": "world-feature",
+      "summary": "Search a bird nest for feathers and possible eggs. A rare separate bonus can contain a tiny treasure item.",
+      "conditions": [],
+      "rows": [],
+      "existing_entry_ids": [
+        "loot-56-feather",
+        "loot-56-egg"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "item-77",
+      "image_caption": "Feathers are the primary nest find.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[56];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "nest.Hinderance[145/146].LootData56"
+        }
+      ],
+      "pool_refs": [
+        {
+          "pool": "nest-tiny",
+          "condition": "A 5% check attempts tiny treasure generation, then each generated entry is independently kept on a 33% check. These are not a final per-item drop percentage."
+        }
+      ]
+    },
+    {
+      "id": "cave-floor-cracks",
+      "title": "Cave-floor cracks",
+      "kind": "world-feature",
+      "summary": "Search the distinctive cracks in cave floors for Cave Creepers, Drake Jasper and occasional bonus items. This is separate from treasure chests and skeletons.",
+      "conditions": [
+        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+      ],
+      "rows": [
+        {
+          "id": "cave-floor-cracks-beetle-bonus",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 8,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent bonus; separate from any base beetle quantity.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.beetle"
+            }
+          ]
+        },
+        {
+          "id": "cave-floor-cracks-glowing-bug",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Independent Strange Glowing Bug bonus.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.glowing-bug"
+            }
+          ]
+        },
+        {
+          "id": "cave-floor-cracks-dragon-flint-low",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1000,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Lower terrain: elevation/dryness scalar below 0.195. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "cave-floor-cracks-dragon-flint-middle",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 500,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.195 but below 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "cave-floor-cracks-dragon-flint-high",
+          "item": "item-183",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 250,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Terrain scalar at least 0.403. These are terrain thresholds, not current weather or a dry-spell counter.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.dragonChance;dryTresh/dryestTresh"
+            }
+          ]
+        },
+        {
+          "id": "cave-floor-cracks-baby-firelouse",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 13,
+            "denominator": 200,
+            "scope": "One independent normal-loot check."
+          },
+          "odds_note": null,
+          "condition": "Cave cracks use this larger Baby Firelouse bonus instead of the ordinary debris branch.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.shared.L64.baby-firelouse"
+            }
+          ]
+        },
+        {
+          "id": "cracks-cave-creeper",
+          "item": "item-180",
+          "quantity": {
+            "min": 1,
+            "max": 2
+          },
+          "probability": {
+            "numerator": 559,
+            "denominator": 900,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "The mixed zero-to-two quantity roll gets a 38% rescue chance when it initially selects zero.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case64.creeperAmount"
+            }
+          ]
+        },
+        {
+          "id": "cracks-drake-jasper",
+          "item": "item-182",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 29,
+            "denominator": 80,
+            "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
+          },
+          "odds_note": null,
+          "condition": "The mixed zero-or-one quantity roll gets a 15% rescue chance when it initially selects zero.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case64.jasperAmount"
+            }
+          ]
+        }
+      ],
+      "existing_entry_ids": [
+        "loot-64-flint-bonus"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "item-180",
+      "image_caption": "Cave Creepers are a characteristic find in these floor cracks.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[64];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Create_0",
+          "key": "dryTresh=0.195;dryestTresh=0.425"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "Dungeon[105..109].LootData64"
+        }
+      ],
+      "pool_refs": [
+        {
+          "pool": "cracks-tiny",
+          "condition": "A separate 33% check attempts tiny treasure generation. Each particular eligible item's final probability is not resolved."
+        }
+      ]
+    },
+    {
+      "id": "searching-ruins",
+      "title": "Searching ruins",
+      "kind": "world-feature",
+      "summary": "Searchable ruin debris uses size-limited random treasure pools. Smaller and larger ruin objects have different budgets; neither is a skeleton loot table.",
+      "conditions": [
+        "The existing empty-result rows own the initial failure probabilities. Passing that check does not guarantee an item: the budgeted treasure generator may also return no items. Ancient-library quest shelves are a different source."
+      ],
+      "rows": [],
+      "existing_entry_ids": [
+        "loot-59-empty-normal",
+        "loot-59-empty-ruins",
+        "loot-60-empty-normal",
+        "loot-60-empty-ruins"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Random treasure"
+      ],
+      "image_entity": "item-73",
+      "image_caption": "Silver may qualify for ruin treasure, but an empty search is possible.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[59/60];loot_data_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.search-target"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_solid_Alarm_1",
+          "key": "ruin-sprites.LootData59/60"
+        }
+      ],
+      "pool_refs": [
+        {
+          "pool": "ruins-large",
+          "condition": "Larger searchable ruin objects, after the source's initial empty-result check."
+        },
+        {
+          "pool": "ruins-small",
+          "condition": "Smaller searchable ruin objects, after the source's initial empty-result check."
+        }
+      ]
+    },
+    {
+      "id": "plant-harvesting",
+      "title": "Plant harvesting",
+      "kind": "gathering",
+      "summary": "Harvest plants and ash deposits for specific ingredients rather than rolling the skeleton treasure pool. Yield depends on the plant and, for several species, its growth stage.",
+      "image_entity": "nature-9",
+      "image_caption": "Ferns provide Plant Fiber; their growth stage affects the amount.",
+      "conditions": [
+        "Creepy-Crawlies can add insects through its repeated ground-harvest checks. The conditional insect selection is documented at Harvested insects.",
+        "Lilypads supply Water Lily only at their two flower-bearing stages. Young Cranberry stages can be searched but do not produce Cranberries before the berry-bearing stage.",
+        "Other than the explicitly flowering Lilypad restriction, the harvestability predicate permits the listed plant classes without a universal full-growth gate. Waiting for a larger plant can nevertheless increase its base yield.",
+        "Ash yields Lump of Coal according to the amount of ash on its tile. This branch does not receive the plant-yield or extra-insect bonuses."
+      ],
+      "rows": [
+        {
+          "id": "harvest-calmia-root",
+          "item": "item-142",
+          "quantity": {
+            "min": 1,
+            "max": 3
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
+          },
+          "odds_note": null,
+          "condition": "Harvest Calmia; base amount before Green Fingers.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case63"
+            }
+          ]
+        },
+        {
+          "id": "harvest-vile-bulb",
+          "item": "item-173",
+          "quantity": {
+            "min": 1,
+            "max": 2
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
+          },
+          "odds_note": null,
+          "condition": "Harvest Vile Bulb (Mushroom); base amount before Green Fingers.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case1064"
+            }
+          ]
+        },
+        {
+          "id": "harvest-water-lily",
+          "item": "item-175",
+          "quantity": {
+            "min": 1,
+            "max": 2
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
+          },
+          "odds_note": null,
+          "condition": "Harvest a flowering Lilypad. Its earlier flower stage gives one Water Lily and its later stage gives two, before Green Fingers.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case1065.HT[73/78,74/79]"
+            }
+          ]
+        },
+        {
+          "id": "harvest-fern-fiber",
+          "item": "item-91",
+          "quantity": {
+            "min": 1,
+            "max": 14
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
+          },
+          "odds_note": null,
+          "condition": "Harvest Fern. Growth-stage base ranges from one to five; the mixed quantity roll spans that base through three times that base minus one. Before Green Fingers.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case57"
+            }
+          ]
+        },
+        {
+          "id": "harvest-turnip",
+          "item": "item-221",
+          "quantity": {
+            "min": 1,
+            "max": 2
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
+          },
+          "odds_note": null,
+          "condition": "Harvest Turnip. Later growth stages produce two rather than one; before Green Fingers.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case1067.HT[153/154/158/159]"
+            }
+          ]
+        },
+        {
+          "id": "harvest-cranberries",
+          "item": "item-225",
+          "quantity": {
+            "min": 2,
+            "max": 11
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
+          },
+          "odds_note": null,
+          "condition": "Harvest the three berry-producing Cranberry stages. Earlier stages do not produce berries. Before Green Fingers.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case1068.HT[162..164]"
+            }
+          ]
+        },
+        {
+          "id": "harvest-watercress",
+          "item": "item-226",
+          "quantity": {
+            "min": 1,
+            "max": 12
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
+          },
+          "odds_note": null,
+          "condition": "Harvest Watercress. The mixed quantity range depends on growth stage; before Green Fingers.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case1069.HT[170..179]/round-ties-to-even"
+            }
+          ]
+        },
+        {
+          "id": "harvest-ash-coal",
+          "item": "item-177",
+          "quantity": null,
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Harvest ash. Each ash-density step adds an independently rolled one or two lumps; total amount is density-dependent, not a fixed per-tile count.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_generate.case1066"
+            }
+          ]
+        }
+      ],
+      "related_entities": [
+        "nature-8",
+        "nature-9",
+        "nature-18",
+        "nature-19",
+        "item-142",
+        "item-173",
+        "item-226",
+        "skill-4-0",
+        "skill-4-1"
+      ],
+      "related_pages": [
+        "Harvested insects",
+        "Tree and shrub harvesting"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_autotiling",
+          "key": "tile_is_harvestable"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Hinderance/Grass"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.harvest-table-routing"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.plant-cases/first-item-bonus/extra-bugs"
+        }
+      ],
+      "loot_context": "The listed plant quantities are base yields before any extra main-item bonus from Green Fingers. That bonus affects the first main harvest item, not every additional insect stack."
+    },
+    {
+      "id": "tree-shrub-harvesting",
+      "title": "Tree and shrub harvesting",
+      "kind": "gathering",
+      "summary": "Fallen tree and shrub segments produce their species' wood or berries. Trunks, side branches, size and maturity determine which primary item appears.",
+      "image_entity": "nature-4",
+      "image_caption": "Mature Willow, shown as a representative assembly of its native trunk, branch and leaf sprites.",
+      "conditions": [
+        "For ordinary trees, the number of generated pieces is the segment's scaled sprite height divided into 16-pixel units, rounded up, plus one. Elderwort uses one piece per fallen segment instead.",
+        "Willow and Cypress switch their thin-versus-developed primary wood at a growth factor of 0.2. Bark also requires a trunk or a side branch whose growth factor is above 0.33.",
+        "Bramble and Rift Vine berry success increases with growth; there is no single fixed berry percentage for all bushes. Elderwort instead switches to berries at its berry-producing foliage stage.",
+        "Green Fingers can add one berry to a successful Bramble, Rift Vine or Elderwort berry drop. Only Bramble and Elderwort berry drops use the special extra-insect path described at Harvested insects.",
+        "Living fuel pieces can be wet when they fall. Chopping yields the listed twigs, branches and logs; Firewood is the result of its separate crafting recipes, not the automatic primary yield of every chopped tree.",
+        "A branch carrying a beehive has additional Honey and Beeswax; see Beehives."
+      ],
+      "rows": [
+        {
+          "id": "chop-willow-twig",
+          "item": "item-19",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a thin Willow side branch.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-willow-branch",
+          "item": "item-34",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a thin Willow trunk or a developed Willow side branch.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-willow-log",
+          "item": "item-35",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a developed Willow trunk.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-cypress-twig",
+          "item": "item-78",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a thin Cypress side branch.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-cypress-thin-trunk",
+          "item": "item-79",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a thin Cypress trunk.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-cypress-branch",
+          "item": "item-79",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 17,
+            "denominator": 20,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "Normal Branch result from a developed Cypress side branch; mutually exclusive with its Heavy Branch result.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-cypress-heavy-branch",
+          "item": "item-169",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3,
+            "denominator": 20,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "Heavy Branch result from a developed Cypress side branch; mutually exclusive with its normal Branch result.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-cypress-log",
+          "item": "item-80",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a developed Cypress trunk.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-trollgnarl-branch",
+          "item": "item-213",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a Trollgnarl side branch.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-trollgnarl-log",
+          "item": "item-214",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Per generated piece from the specified segment, not per whole tree."
+          },
+          "odds_note": null,
+          "condition": "One per piece from a Trollgnarl trunk.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.primary-item"
+            }
+          ]
+        },
+        {
+          "id": "chop-bark-210",
+          "item": "item-210",
+          "quantity": null,
+          "probability": {
+            "numerator": 33,
+            "denominator": 100,
+            "scope": "Per qualifying wood piece, independent of the guaranteed primary wood; not a whole-tree chance."
+          },
+          "odds_note": null,
+          "condition": "Bonus on each qualifying Willow trunk/developed-branch piece. Amount depends on segment growth: the mixed roll ranges from one through the rounded-up doubled growth factor.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.bark"
+            }
+          ]
+        },
+        {
+          "id": "chop-bark-211",
+          "item": "item-211",
+          "quantity": null,
+          "probability": {
+            "numerator": 33,
+            "denominator": 100,
+            "scope": "Per qualifying wood piece, independent of the guaranteed primary wood; not a whole-tree chance."
+          },
+          "odds_note": null,
+          "condition": "Bonus on each qualifying Cypress trunk/developed-branch piece. Amount depends on segment growth: the mixed roll ranges from one through the rounded-up doubled growth factor.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.bark"
+            }
+          ]
+        },
+        {
+          "id": "chop-bark-216",
+          "item": "item-216",
+          "quantity": null,
+          "probability": {
+            "numerator": 33,
+            "denominator": 100,
+            "scope": "Per qualifying wood piece, independent of the guaranteed primary wood; not a whole-tree chance."
+          },
+          "odds_note": null,
+          "condition": "Bonus on each qualifying Trollgnarl trunk/developed-branch piece. Amount depends on segment growth: the mixed roll ranges from one through the rounded-up doubled growth factor plus one.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.bark"
+            }
+          ]
+        },
+        {
+          "id": "bramble-berries",
+          "item": "item-217",
+          "quantity": {
+            "min": 1,
+            "max": 2
+          },
+          "probability": null,
+          "odds_note": "Growth, stage or skill dependent; no constant whole-source drop rate is asserted.",
+          "condition": "Bramble segment growth must exceed 0.35, then its success check is growth multiplied by 0.33. A success gives one berry, with a possible Green Fingers extra.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.berries"
+            }
+          ]
+        },
+        {
+          "id": "riftvine-berries",
+          "item": "item-218",
+          "quantity": {
+            "min": 1,
+            "max": 2
+          },
+          "probability": null,
+          "odds_note": "Growth, stage or skill dependent; no constant whole-source drop rate is asserted.",
+          "condition": "Rift Vine segment growth must exceed 0.45, then its success check is growth multiplied by 0.2. A success gives one berry, with a possible Green Fingers extra.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.berries"
+            }
+          ]
+        },
+        {
+          "id": "elderwort-berries",
+          "item": "item-223",
+          "quantity": {
+            "min": 1,
+            "max": 2
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "A fallen Elderwort segment at its berry-producing foliage stage gives one berry, with a possible Green Fingers extra.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.index20.leafFrame>=7"
+            }
+          ]
+        },
+        {
+          "id": "elderwort-young-branch",
+          "item": "item-224",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": null,
+          "odds_note": "Growth, stage or skill dependent; no constant whole-source drop rate is asserted.",
+          "condition": "Before the berry-producing foliage stage, an Elderwort segment attempts a Branch drop with success threshold twice its growth factor, becoming certain when that threshold reaches one.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.index20.young-branch"
+            }
+          ]
+        },
+        {
+          "id": "elderwort-berry-branch",
+          "item": "item-224",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 9,
+            "denominator": 20,
+            "scope": "Conditional on the Elderwort berry piece already being generated."
+          },
+          "odds_note": null,
+          "condition": "An additional Branch may accompany a successfully generated Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "fallen-segment.index20.extraBranch"
+            }
+          ]
+        }
+      ],
+      "related_entities": [
+        "nature-4",
+        "nature-7",
+        "nature-17",
+        "nature-20",
+        "nature-6",
+        "nature-13",
+        "skill-4-0"
+      ],
+      "related_pages": [
+        "Plant harvesting",
+        "Harvested insects",
+        "Beehives"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "fallen-segment.splutches/primary-item/bark/berries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_is_tree"
+        }
+      ],
+      "loot_context": "Each qualifying generated wood piece contributes one primary item. A larger fallen segment can create several pieces, so there is no fixed item count for a whole tree."
+    },
+    {
+      "id": "beehives",
+      "title": "Beehives",
+      "kind": "gathering",
+      "summary": "Break the tree branch carrying a beehive to release Honey and Beeswax alongside the branch's ordinary yield.",
+      "image_entity": "item-51",
+      "image_caption": "Honey is one of the two fixed kinds of hive produce.",
+      "conditions": [
+        "The first generated piece from the hive-bearing segment receives both products. Their one-to-four quantity rolls are independent mixtures, not a uniform final one-to-four roll.",
+        "The hive products are attached to that first piece, not repeated on every wood piece from the segment."
+      ],
+      "rows": [
+        {
+          "id": "beehive-honey",
+          "item": "item-51",
+          "quantity": {
+            "min": 1,
+            "max": 4
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Produced on the first piece from the fallen hive-bearing segment.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "j0.tree-feature11.loot_amountchances[1,4]"
+            }
+          ]
+        },
+        {
+          "id": "beehive-beeswax",
+          "item": "item-52",
+          "quantity": {
+            "min": 1,
+            "max": 4
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Produced on the first piece from the fallen hive-bearing segment.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "j0.tree-feature11.loot_amountchances[1,4]"
+            }
+          ]
+        }
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Tree and shrub harvesting"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "j0.tree-feature11.honey/wax"
+        }
+      ]
+    },
+    {
+      "id": "harvested-insects",
+      "title": "Harvested insects",
+      "kind": "gathering",
+      "summary": "Plant harvesting and certain berry drops can add insects. Ground plants and Bramble/Elderwort berries deliberately use different checks, so their rules must not be interchanged.",
+      "image_entity": "item-243",
+      "image_caption": "Bursthopper is one of the possible extra creatures.",
+      "conditions": [
+        "Ground plants use the repeated Creepy-Crawlies checks described on that skill page. Each successful check adds one creature; several checks can succeed during one harvest.",
+        "Bramble and Elderwort berry pieces instead make one check whose chance is 20%, plus 5 percentage points per skill rank, plus 20 percentage points per completed three-rank milestone, capped at certainty. Thus the berry path can find a bug even at rank zero, and reaches certainty at rank eight.",
+        "Rare choices are evaluated in order. Later choices require the earlier rare checks to fail; the percentages below include those preceding failures.",
+        "The Baby Firelouse selection check is 3% in the ground-plant path but 2.5% in the berry path, before the preceding Glowing Bug failure is included. Do not substitute one path's odds for the other.",
+        "Rift Vine berries, beehive products and ash do not use this extra-insect path."
+      ],
+      "rows": [
+        {
+          "id": "extra-bug-ground-95",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "Conditional on one ground extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a supported ground-plant harvest.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "plant-extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-ground-242",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 297,
+            "denominator": 10000,
+            "scope": "Conditional on one ground extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a supported ground-plant harvest.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "plant-extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-ground-247",
+          "item": "item-247",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 9603,
+            "denominator": 200000,
+            "scope": "Conditional on one ground extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a supported ground-plant harvest.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "plant-extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-ground-241",
+          "item": "item-241",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 182457,
+            "denominator": 2000000,
+            "scope": "Conditional on one ground extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a supported ground-plant harvest.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "plant-extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-ground-243",
+          "item": "item-243",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 182457,
+            "denominator": 2000000,
+            "scope": "Conditional on one ground extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a supported ground-plant harvest.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "plant-extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-ground-60",
+          "item": "item-60",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 182457,
+            "denominator": 500000,
+            "scope": "Conditional on one ground extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a supported ground-plant harvest.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "plant-extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-ground-62",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 182457,
+            "denominator": 500000,
+            "scope": "Conditional on one ground extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a supported ground-plant harvest.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "plant-extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-berries-95",
+          "item": "item-95",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 100,
+            "scope": "Conditional on one berries extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a successful Bramble or Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "primary217/223.extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-berries-242",
+          "item": "item-242",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 99,
+            "denominator": 4000,
+            "scope": "Conditional on one berries extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a successful Bramble or Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "primary217/223.extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-berries-247",
+          "item": "item-247",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 3861,
+            "denominator": 80000,
+            "scope": "Conditional on one berries extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a successful Bramble or Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "primary217/223.extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-berries-241",
+          "item": "item-241",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 73359,
+            "denominator": 800000,
+            "scope": "Conditional on one berries extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a successful Bramble or Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "primary217/223.extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-berries-243",
+          "item": "item-243",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 73359,
+            "denominator": 800000,
+            "scope": "Conditional on one berries extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a successful Bramble or Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "primary217/223.extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-berries-60",
+          "item": "item-60",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 73359,
+            "denominator": 200000,
+            "scope": "Conditional on one berries extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a successful Bramble or Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "primary217/223.extra-bugs"
+            }
+          ]
+        },
+        {
+          "id": "extra-bug-berries-62",
+          "item": "item-62",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 73359,
+            "denominator": 200000,
+            "scope": "Conditional on one berries extra-creature check succeeding; not the chance of finding this item per plant."
+          },
+          "odds_note": null,
+          "condition": "Extra insect from a successful Bramble or Elderwort berry piece.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_obj_tree_Step_0",
+              "key": "primary217/223.extra-bugs"
+            }
+          ]
+        }
+      ],
+      "related_entities": [
+        "skill-4-1"
+      ],
+      "related_pages": [
+        "Plant harvesting",
+        "Tree and shrub harvesting"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.plant-extra-bugs"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "primary217/223.bugChance+searches/5;conditional-override-chain"
+        }
+      ],
+      "loot_context": "The table percentages are the distribution conditional on an extra-creature check succeeding, not the chance per harvested plant, per bush or per turn. Ground plants use repeated checks; Bramble and Elderwort berries use one check. See Harvested insects for their different trigger rules.",
+      "entity_context": {
+        "skill-4-1": "The repeated ground-plant searches described here differ from the single extra-insect check on Bramble and Elderwort berry drops. The berry rules and conditional creature distribution are documented separately."
+      }
+    },
+    {
+      "id": "night-fireflies",
+      "title": "Night fireflies",
+      "kind": "world-feature",
+      "summary": "At night outdoors, collectible Firefly patches can appear near the player.",
+      "image_entity": "item-247",
+      "image_caption": "A successfully spawned patch contains a small group of Fireflies.",
+      "conditions": [
+        "The outdoor dark-time update can attempt a patch when fewer than five Firefly containers are present. It uses a 50% placement-attempt check and a bounded location search.",
+        "Placement still needs a free, non-solid, unoccupied tile within the required distance of the player. A failed search creates no patch.",
+        "That percentage is a spawn-attempt check in that update path, not an item drop chance on every player action. Once a patch exists, its initial inventory contains the quantity below."
+      ],
+      "rows": [
+        {
+          "id": "night-firefly-patch",
+          "item": "item-247",
+          "quantity": {
+            "min": 1,
+            "max": 4
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Initial contents of a successfully spawned collectible Firefly patch.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_Object_manager_area_Alarm_4",
+              "key": "firefly-container.loot_amountchances[1,4]"
+            }
+          ]
+        }
+      ],
+      "related_entities": [],
+      "related_pages": [],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "outside/is_dark/flyAmount<5/chance0.5/bounded-placement"
+        }
+      ]
+    },
+    {
+      "id": "story-acquisition",
+      "title": "Story rewards and finds",
+      "kind": "story",
+      "summary": "These scripted story interactions provide particular items. They are separate from ordinary corpse drops, merchant stock and the dead camp's two fixed supply inventories.",
+      "image_entity": "item-130",
+      "image_caption": "Ancient Strongbox is found through the library's designated search target.",
+      "conditions": [
+        "This page contains story spoilers. A guaranteed row means the specified interaction gives that item, not that any NPC conversation or any ruin search does so.",
+        "The Wooden Recorder comes from the separately interactive dead Unwanted at the camp, not the body pile containing the Herbalist's Belt and not the wooden supply container.",
+        "Rift sampling is available at or before Clay's early request for three samples and stops after that quest step. The interaction also requires the player to carry fewer than three Rift Weaves; each successful sample produces one.",
+        "Library shelves are initialized with empty search targets and one selected strongbox target. A retrying 2.5% placement check chooses the target; this is not a flat 2.5% chance each time the player searches a shelf.",
+        "The Summoning Stone story grants listed here are distinct from its conditional membership in random treasure pools."
+      ],
+      "rows": [
+        {
+          "id": "story-wooden-recorder",
+          "item": "item-75",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Complete the recorder-taking interaction with the dead Unwanted at the abandoned camp.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "NPC9.dialogue113.grant75"
+            }
+          ]
+        },
+        {
+          "id": "story-rift-sample",
+          "item": "item-107",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Search the rift at or before Clay's early three-sample quest step, while carrying fewer than three Rift Weaves.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_smartones",
+              "key": "search_specials.obj_rift.inventory<3"
+            }
+          ]
+        },
+        {
+          "id": "story-clays-potion",
+          "item": "item-126",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Receive Clay's potion during his instruction to revive one of the dead Unwanted after the rune investigation.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "NPC8.dialogue205.grant126"
+            }
+          ]
+        },
+        {
+          "id": "story-commander-stone",
+          "item": "item-127",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Receive a Summoning Stone in Commander Tain's relevant post-access story conversation.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "NPC20.dialogue202.grant127"
+            }
+          ]
+        },
+        {
+          "id": "story-eir-stone",
+          "item": "item-127",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Captain Eir grants a Summoning Stone during her later story conversation after the Fort Solid crisis.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "NPC6.dialogue213.grant127"
+            }
+          ]
+        },
+        {
+          "id": "story-ancient-strongbox",
+          "item": "item-130",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Search the designated strongbox target in the ancient library; ordinary empty shelves do not give this item.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_smartones",
+              "key": "player_interact.LootData62"
+            }
+          ]
+        },
+        {
+          "id": "story-ward-breaker",
+          "item": "item-132",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Pick up the Ward Breaker dropped at Clay's position when he disappears during his later story scene.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_text_related",
+              "key": "NPC8.prevState217.drop132"
+            }
+          ]
+        }
+      ],
+      "related_entities": [
+        "being-6",
+        "being-8",
+        "being-9",
+        "being-20"
+      ],
+      "related_pages": [
+        "Dead camp",
+        "Random treasure"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "dialogue-side-effects.NPC6/8/9/20"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "search_specials.quest<=5"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.rift/strongbox"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_solid_Alarm_1",
+          "key": "library-index[-2993].goal62/retry"
+        }
+      ]
+    },
+    {
+      "id": "mapmaking",
+      "title": "Mapmaking",
+      "kind": "item-use",
+      "summary": "A Map Drawing Kit can produce a Map of area when used outdoors.",
+      "image_entity": "item-156",
+      "image_caption": "Map Drawing Kit: an item-use route to a map, separate from Captain Eir's starting supplies.",
+      "conditions": [
+        "Using the kit indoors is refused and does not consume a use. A successful outdoor use follows the kit's normal use/durability consumption.",
+        "This use action is not a workstation recipe and should not be represented as one."
+      ],
+      "rows": [
+        {
+          "id": "map-kit-output",
+          "item": "item-89",
+          "quantity": {
+            "min": 1,
+            "max": 1
+          },
+          "probability": {
+            "numerator": 1,
+            "denominator": 1,
+            "scope": "Conditional on the source and stage described in this row."
+          },
+          "odds_note": null,
+          "condition": "Use a Map Drawing Kit outdoors.",
+          "coverage": "conditional",
+          "confidence": "inferred",
+          "evidence": [
+            {
+              "source": "game-data",
+              "section": "gml_GlobalScript_scr_basic_useful",
+              "key": "use_item.index156.grant89"
+            }
+          ]
+        }
+      ],
+      "related_entities": [
+        "item-156"
+      ],
+      "related_pages": [],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "use_item.index156.area_is_outside/grant89/doRemove"
+        }
+      ]
+    }
+  ],
+  "pools": [
+    {
+      "id": "skeleton-outdoors",
+      "title": "Outdoor skeletons and remains",
+      "owner_source": "random-treasure",
+      "summary": "The rolled budget ranges from 30 copper to 5 silver and 20 copper. The minimum non-coin item value is one quarter of that particular budget.",
+      "eligible_item_ids": [
+        "item-0",
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-9",
+        "item-10",
+        "item-12",
+        "item-13",
+        "item-14",
+        "item-15",
+        "item-17",
+        "item-18",
+        "item-20",
+        "item-21",
+        "item-22",
+        "item-23",
+        "item-24",
+        "item-27",
+        "item-29",
+        "item-32",
+        "item-33",
+        "item-41",
+        "item-42",
+        "item-43",
+        "item-44",
+        "item-46",
+        "item-47",
+        "item-50",
+        "item-57",
+        "item-59",
+        "item-68",
+        "item-72",
+        "item-73",
+        "item-84",
+        "item-85",
+        "item-86",
+        "item-89",
+        "item-90",
+        "item-93",
+        "item-97",
+        "item-98",
+        "item-99",
+        "item-100",
+        "item-101",
+        "item-110",
+        "item-113",
+        "item-114",
+        "item-115",
+        "item-116",
+        "item-117",
+        "item-118",
+        "item-119",
+        "item-137",
+        "item-138",
+        "item-139",
+        "item-140",
+        "item-141",
+        "item-144",
+        "item-145",
+        "item-146",
+        "item-147",
+        "item-153",
+        "item-156",
+        "item-157",
+        "item-158",
+        "item-160",
+        "item-164",
+        "item-165",
+        "item-166",
+        "item-167",
+        "item-168",
+        "item-174",
+        "item-176",
+        "item-190",
+        "item-194",
+        "item-195",
+        "item-196",
+        "item-197",
+        "item-199",
+        "item-200",
+        "item-201",
+        "item-202",
+        "item-203",
+        "item-204",
+        "item-205",
+        "item-207",
+        "item-208",
+        "item-212",
+        "item-219",
+        "item-220",
+        "item-251",
+        "item-253",
+        "item-257"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "skeleton-indoors",
+      "title": "Indoor skeletons and remains",
+      "owner_source": "random-treasure",
+      "summary": "Indoors, the ordinary remains budget receives an extra 2 silver and 50 copper, giving a range of 2 silver and 80 copper to 7 silver and 70 copper. The minimum non-coin value is one quarter of the rolled budget.",
+      "eligible_item_ids": [
+        "item-1",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6",
+        "item-9",
+        "item-10",
+        "item-12",
+        "item-13",
+        "item-14",
+        "item-21",
+        "item-23",
+        "item-24",
+        "item-27",
+        "item-28",
+        "item-29",
+        "item-33",
+        "item-43",
+        "item-44",
+        "item-47",
+        "item-50",
+        "item-57",
+        "item-59",
+        "item-68",
+        "item-72",
+        "item-73",
+        "item-86",
+        "item-89",
+        "item-97",
+        "item-98",
+        "item-99",
+        "item-100",
+        "item-101",
+        "item-105",
+        "item-110",
+        "item-113",
+        "item-115",
+        "item-116",
+        "item-117",
+        "item-119",
+        "item-137",
+        "item-138",
+        "item-139",
+        "item-145",
+        "item-146",
+        "item-147",
+        "item-148",
+        "item-153",
+        "item-155",
+        "item-156",
+        "item-157",
+        "item-158",
+        "item-160",
+        "item-165",
+        "item-166",
+        "item-167",
+        "item-168",
+        "item-176",
+        "item-190",
+        "item-195",
+        "item-196",
+        "item-197",
+        "item-200",
+        "item-201",
+        "item-202",
+        "item-203",
+        "item-205",
+        "item-208",
+        "item-209",
+        "item-251",
+        "item-253",
+        "item-257"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "chest-common",
+      "title": "Common treasure-chest tier",
+      "owner_source": "random-treasure",
+      "summary": "This chest tier rolls a budget from 3 to 22 silver. The minimum non-coin value is one quarter of that particular budget.",
+      "eligible_item_ids": [
+        "item-1",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6",
+        "item-7",
+        "item-8",
+        "item-9",
+        "item-10",
+        "item-11",
+        "item-12",
+        "item-13",
+        "item-14",
+        "item-21",
+        "item-23",
+        "item-24",
+        "item-26",
+        "item-27",
+        "item-28",
+        "item-29",
+        "item-30",
+        "item-33",
+        "item-43",
+        "item-44",
+        "item-47",
+        "item-50",
+        "item-54",
+        "item-55",
+        "item-56",
+        "item-57",
+        "item-58",
+        "item-59",
+        "item-68",
+        "item-72",
+        "item-73",
+        "item-74",
+        "item-86",
+        "item-89",
+        "item-97",
+        "item-98",
+        "item-99",
+        "item-100",
+        "item-101",
+        "item-105",
+        "item-106",
+        "item-110",
+        "item-111",
+        "item-112",
+        "item-113",
+        "item-115",
+        "item-116",
+        "item-117",
+        "item-119",
+        "item-127",
+        "item-137",
+        "item-138",
+        "item-139",
+        "item-145",
+        "item-146",
+        "item-147",
+        "item-148",
+        "item-153",
+        "item-154",
+        "item-155",
+        "item-156",
+        "item-157",
+        "item-158",
+        "item-159",
+        "item-160",
+        "item-161",
+        "item-165",
+        "item-166",
+        "item-167",
+        "item-168",
+        "item-176",
+        "item-184",
+        "item-186",
+        "item-188",
+        "item-190",
+        "item-191",
+        "item-192",
+        "item-193",
+        "item-195",
+        "item-196",
+        "item-197",
+        "item-198",
+        "item-200",
+        "item-201",
+        "item-202",
+        "item-203",
+        "item-205",
+        "item-208",
+        "item-209",
+        "item-251",
+        "item-252",
+        "item-253",
+        "item-256",
+        "item-257"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {
+        "item-127": "Summoning Stone is excluded until the Fort Solid access story milestone."
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "chest-middle",
+      "title": "Middle treasure-chest tier",
+      "owner_source": "random-treasure",
+      "summary": "This chest tier rolls a budget from 5 to 44 silver. The minimum non-coin value is one quarter of that particular budget.",
+      "eligible_item_ids": [
+        "item-1",
+        "item-4",
+        "item-5",
+        "item-6",
+        "item-7",
+        "item-8",
+        "item-9",
+        "item-10",
+        "item-11",
+        "item-12",
+        "item-13",
+        "item-14",
+        "item-26",
+        "item-27",
+        "item-28",
+        "item-29",
+        "item-30",
+        "item-44",
+        "item-47",
+        "item-50",
+        "item-54",
+        "item-55",
+        "item-56",
+        "item-57",
+        "item-58",
+        "item-59",
+        "item-72",
+        "item-73",
+        "item-74",
+        "item-86",
+        "item-89",
+        "item-97",
+        "item-98",
+        "item-99",
+        "item-100",
+        "item-101",
+        "item-105",
+        "item-106",
+        "item-110",
+        "item-111",
+        "item-112",
+        "item-116",
+        "item-117",
+        "item-127",
+        "item-138",
+        "item-145",
+        "item-146",
+        "item-147",
+        "item-148",
+        "item-153",
+        "item-154",
+        "item-155",
+        "item-156",
+        "item-157",
+        "item-158",
+        "item-159",
+        "item-160",
+        "item-161",
+        "item-165",
+        "item-166",
+        "item-167",
+        "item-168",
+        "item-176",
+        "item-184",
+        "item-185",
+        "item-186",
+        "item-187",
+        "item-188",
+        "item-189",
+        "item-190",
+        "item-191",
+        "item-192",
+        "item-193",
+        "item-195",
+        "item-196",
+        "item-197",
+        "item-198",
+        "item-200",
+        "item-201",
+        "item-203",
+        "item-205",
+        "item-209",
+        "item-251",
+        "item-252",
+        "item-253",
+        "item-256"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {
+        "item-127": "Summoning Stone is excluded until the Fort Solid access story milestone."
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "chest-rich",
+      "title": "Rich treasure-chest tier",
+      "owner_source": "random-treasure",
+      "summary": "This chest tier rolls a budget from 10 to 59 silver. The minimum non-coin value is one quarter of that particular budget.",
+      "eligible_item_ids": [
+        "item-4",
+        "item-5",
+        "item-6",
+        "item-7",
+        "item-8",
+        "item-9",
+        "item-10",
+        "item-11",
+        "item-14",
+        "item-26",
+        "item-27",
+        "item-28",
+        "item-29",
+        "item-30",
+        "item-47",
+        "item-50",
+        "item-54",
+        "item-55",
+        "item-56",
+        "item-57",
+        "item-58",
+        "item-72",
+        "item-73",
+        "item-74",
+        "item-89",
+        "item-97",
+        "item-98",
+        "item-99",
+        "item-100",
+        "item-101",
+        "item-105",
+        "item-106",
+        "item-110",
+        "item-111",
+        "item-112",
+        "item-116",
+        "item-117",
+        "item-127",
+        "item-145",
+        "item-147",
+        "item-148",
+        "item-153",
+        "item-154",
+        "item-155",
+        "item-156",
+        "item-158",
+        "item-159",
+        "item-160",
+        "item-161",
+        "item-167",
+        "item-168",
+        "item-176",
+        "item-184",
+        "item-185",
+        "item-186",
+        "item-187",
+        "item-188",
+        "item-189",
+        "item-190",
+        "item-191",
+        "item-192",
+        "item-193",
+        "item-197",
+        "item-198",
+        "item-209",
+        "item-251",
+        "item-252",
+        "item-256"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {
+        "item-127": "Summoning Stone is excluded until the Fort Solid access story milestone."
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "ruins-large",
+      "title": "Larger searchable ruins",
+      "owner_source": "random-treasure",
+      "summary": "The budget ranges from 1 silver to 3 silver and 40 copper. Non-coin items must be worth at least 1 silver, and every item must occupy fewer than four inventory squares.",
+      "eligible_item_ids": [
+        "item-3",
+        "item-5",
+        "item-9",
+        "item-13",
+        "item-27",
+        "item-72",
+        "item-73",
+        "item-86",
+        "item-89",
+        "item-97",
+        "item-98",
+        "item-99",
+        "item-100",
+        "item-101",
+        "item-115",
+        "item-138",
+        "item-139",
+        "item-153",
+        "item-157",
+        "item-166",
+        "item-167",
+        "item-176",
+        "item-253"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "ruins-small",
+      "title": "Smaller searchable ruins",
+      "owner_source": "random-treasure",
+      "summary": "The unadjusted budget ranges from 30 copper to 1 silver and 50 copper. Budgets below the 50-copper minimum item value are raised to 60 copper. Items must occupy fewer than four inventory squares.",
+      "eligible_item_ids": [
+        "item-3",
+        "item-13",
+        "item-32",
+        "item-68",
+        "item-72",
+        "item-73",
+        "item-101",
+        "item-113",
+        "item-115",
+        "item-138",
+        "item-139",
+        "item-257"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "nest-tiny",
+      "title": "Bird-nest bonus treasure",
+      "owner_source": "random-treasure",
+      "summary": "The unadjusted budget ranges from 10 copper to 1 silver and 50 copper. A budget below the 15-copper minimum item value becomes 25 copper. Only one-square items qualify.",
+      "eligible_item_ids": [
+        "item-32",
+        "item-72",
+        "item-73",
+        "item-84",
+        "item-101",
+        "item-140",
+        "item-141"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "cracks-tiny",
+      "title": "Cave-floor crack bonus treasure",
+      "owner_source": "random-treasure",
+      "summary": "The budget ranges from 5 copper to 1 silver and 4 copper. The minimum non-coin item value is half a copper, and only one-square items qualify.",
+      "eligible_item_ids": [
+        "item-32",
+        "item-72",
+        "item-73",
+        "item-84",
+        "item-140",
+        "item-141"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    },
+    {
+      "id": "unwanted-remains",
+      "title": "Raving and Mutated Unwanted corpse treasure",
+      "owner_source": "random-treasure",
+      "summary": "These two enemies use a different pool: a fixed budget of 1 silver and a minimum non-coin value of 10 copper, without the ordinary treasure pool's food, material-class or size exclusions.",
+      "eligible_item_ids": [
+        "item-0",
+        "item-2",
+        "item-3",
+        "item-15",
+        "item-17",
+        "item-18",
+        "item-20",
+        "item-21",
+        "item-22",
+        "item-23",
+        "item-24",
+        "item-25",
+        "item-32",
+        "item-33",
+        "item-41",
+        "item-42",
+        "item-43",
+        "item-46",
+        "item-51",
+        "item-67",
+        "item-68",
+        "item-72",
+        "item-73",
+        "item-80",
+        "item-82",
+        "item-83",
+        "item-84",
+        "item-85",
+        "item-90",
+        "item-93",
+        "item-102",
+        "item-104",
+        "item-113",
+        "item-114",
+        "item-115",
+        "item-118",
+        "item-119",
+        "item-120",
+        "item-134",
+        "item-135",
+        "item-136",
+        "item-137",
+        "item-139",
+        "item-140",
+        "item-141",
+        "item-142",
+        "item-144",
+        "item-162",
+        "item-163",
+        "item-164",
+        "item-178",
+        "item-182",
+        "item-194",
+        "item-199",
+        "item-202",
+        "item-204",
+        "item-207",
+        "item-214",
+        "item-219",
+        "item-220",
+        "item-222",
+        "item-235",
+        "item-236",
+        "item-237",
+        "item-241",
+        "item-242",
+        "item-243",
+        "item-245",
+        "item-246",
+        "item-255",
+        "item-257"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        }
+      ]
+    }
+  ],
+  "item_notes": [
+    {
+      "item": "item-31",
+      "kind": "built-in",
+      "text": "Unarmed is the player's built-in fist attack, initialized when the character is created. It is not a normal pickup, merchant purchase or crafting output.",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myFists=new item[31,1];weapon=myFists"
+        }
+      ]
+    },
+    {
+      "item": "item-171",
+      "kind": "construction-action",
+      "text": "Finish Raft is the completion action offered by a placed Raft Base, not a separate collectible item. Craft and place a Raft Base, then complete it through its menu. This changes the existing raft in place; no new inventory item is received.",
+      "related_items": [
+        "item-170"
+      ],
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_station_Alarm_0",
+          "key": "index170.menu.new-item171"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "item171.NONLOOTABLE/components/craftCost"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "CRAFTINDEX171.station-index170-to171/image-index1/exit-before-item-receive"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.station171.riding-state24"
+        }
+      ]
+    },
+    {
+      "item": "item-48",
+      "kind": "unverified",
+      "text": "This name is present in the English localization, but the inspected build has no corresponding populated item definition. No ordinary acquisition route was verified; a localized name alone does not establish that the item is obtainable.",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "all-populated-itemDB-records.absent48/49"
+        }
+      ]
+    },
+    {
+      "item": "item-49",
+      "kind": "unverified",
+      "text": "This name is present in the English localization, but the inspected build has no corresponding populated item definition. No ordinary acquisition route was verified; a localized name alone does not establish that the item is obtainable.",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "all-populated-itemDB-records.absent48/49"
+        }
+      ]
+    },
+    {
+      "item": "item-40",
+      "kind": "unverified",
+      "text": "This ignition tool has a valid item definition, but no normal acquisition route was verified in this build. Ordinary treasure rejects its item class, and its value exceeds the less restrictive Unwanted corpse pool's budget. No verified recipe, scripted grant or merchant stock entry supplies it.",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "item40/254.type18/price"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.type/budget"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "case31/32.budget1"
+        }
+      ]
+    },
+    {
+      "item": "item-254",
+      "kind": "unverified",
+      "text": "This ignition tool has a valid item definition, but no normal acquisition route was verified in this build. Ordinary treasure rejects its item class, and its value exceeds the less restrictive Unwanted corpse pool's budget. No verified recipe, scripted grant or merchant stock entry supplies it.",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "item40/254.type18/price"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.type/budget"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "case31/32.budget1"
+        }
+      ]
+    }
+  ]
+}

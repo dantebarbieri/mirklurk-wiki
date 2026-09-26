@@ -7,13 +7,15 @@ from decimal import Decimal
 from pathlib import Path
 
 from wiki_data import (
-    CATEGORY_PAGES, DataError, PAGE_FILES, RESEARCH_PAGE_FILES,
-    _confidence, _evidence, _identifier, _nullable_text, _number, _object, _records, _text, entry_page,
+    CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES,
+    _confidence, _entity_reference, _evidence, _identifier, _item_quantities, _nullable_text, _number,
+    _object, _records, _text, _title, entry_page, title_key,
 )
+from wiki_acquisition import validate_acquisition
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
-MAX_CATALOG_BYTES = 192 * 1024
+MAX_CATALOG_BYTES = 224 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs", "Source provenance", "Loot mechanics"}
 CURRENCY_RULE_TITLES = {
     "coin-denominations": "Denominations",
@@ -25,24 +27,7 @@ CURRENCY_RULE_TITLES = {
     "trade-rounding": "Change and rounding",
 }
 RESERVED_TITLES.add("Currency and trading")
-
-
-def title_key(title):
-    normalized = " ".join(title.replace("_", " ").split())
-    if normalized.lower().startswith("category:"):
-        name = normalized.split(":", 1)[1].strip()
-        return "Category:" + name[:1].upper() + name[1:]
-    return normalized[:1].upper() + normalized[1:]
-
-
-def _title(value):
-    _text(value, "catalog title")
-    if (
-        value != title_key(value) or re.search(r"[\[\]{}|<>#:/\\]", value)
-        or value in {".", ".."} or value.startswith(".")
-    ):
-        raise DataError("catalog title: expected a canonical, plain main-namespace title")
-    return value
+RESERVED_TITLES.update(MECHANIC_GUIDE_TITLES)
 
 
 def default_catalog(data):
@@ -63,9 +48,81 @@ def default_catalog(data):
     return {"schema_version": 1, "pages": pages, "classifications": [], "entry_links": []}
 
 
+def skill_category_title(entity):
+    name = title_key(entity["name"])
+    return f'Skill group {entity["id"]}' if re.search(r"[\[\]{}|<>#:/\\]", name) else name
+
+
+def category_definitions(data, catalog):
+    """Resolve the single category graph used by validation and rendering."""
+    entities = {row["id"]: row for row in data["entities"]}
+    kinds = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+    categories = {}
+    for row in catalog["pages"]:
+        entity = entities[row["entity"]]
+        root = "NPCs" if kinds.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
+        category = categories.setdefault(root, {
+            "title": root, "index": root, "parents": [], "members": [],
+            "summary": f"Browse {root} articles and their browsing categories. Each article keeps its own editable facts.",
+        })
+        category["members"].append(entity["id"])
+    taxonomy = catalog.get("taxonomy", {})
+    summaries = {row["entity"]: row["summary"] for row in taxonomy.get("skill_groups", [])}
+    for entity in data["entities"]:
+        if entity["category"] != "skill_group":
+            continue
+        title = skill_category_title(entity)
+        if title in categories:
+            raise DataError("taxonomy: duplicate skill or root category")
+        categories[title] = {
+            "title": title, "index": "Skills", "parents": ["Skills"],
+            "members": [row["id"] for row in data["entities"] if row.get("group") == entity["id"]],
+            "summary": summaries.get(entity["id"], f"Skills assigned to the localized {entity['name']} group. This is not an additional prerequisite tree."),
+            "evidence": entity["evidence"], "confidence": entity["confidence"],
+        }
+    for row in [*taxonomy.get("groups", []), *taxonomy.get("tags", [])]:
+        if row["title"] in categories:
+            raise DataError("taxonomy: duplicate category")
+        categories[row["title"]] = {
+            **row, "parents": row.get("parents", [row["index"]]),
+            "summary": row.get("summary", f"An editorial browsing group within {row['index']}. Membership does not establish availability or guarantee an outcome."),
+        }
+    return categories
+
+
+def validate_category_graph(categories):
+    if len(categories) > 128:
+        raise DataError("taxonomy: expected at most 128 categories")
+    visited = set()
+    active = set()
+
+    def visit(title):
+        if title in active:
+            raise DataError("taxonomy: category cycle")
+        if title in visited:
+            return
+        active.add(title)
+        row = categories[title]
+        if not row["parents"] and title != row["index"]:
+            raise DataError("taxonomy: orphan category")
+        for parent in row["parents"]:
+            if parent not in categories or categories[parent]["index"] != row["index"]:
+                raise DataError("taxonomy: unknown parent or cross-index category")
+            visit(parent)
+        active.remove(title)
+        visited.add(title)
+
+    children = {parent for row in categories.values() for parent in row["parents"]}
+    for title, row in categories.items():
+        visit(title)
+        if not row["members"] and title not in children:
+            raise DataError("taxonomy: empty category leaf")
+
+
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
-            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides", "damage_sources"}, "catalog")
+            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides",
+             "damage_sources", "item_effects", "acquisition", "construction_recipes"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -102,10 +159,15 @@ def validate_catalog(catalog, data):
         _text(row["summary"], "damage source.summary", 1200)
         _confidence(row["confidence"], "damage source.confidence")
         _evidence(row["evidence"], sources, "damage source.evidence")
-    guide_titles = {row["title"] for row in catalog["pages"] if entities[row["entity"]]["category"] == "damage_class"} | {"Action points", "Health and armor"}
+    guide_titles = {row["title"] for row in catalog["pages"] if entities[row["entity"]]["category"] == "damage_class"} | MECHANIC_GUIDE_TITLES
+    registered_guides = {
+        row["title"] for row in _records(catalog.get("guides", []), "guides")
+        if isinstance(row, dict) and isinstance(row.get("title"), str)
+    }
     guides_seen = set()
     for guide in _records(catalog.get("guides", []), "guides"):
-        _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"}, set(), "guide")
+        _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"},
+                {"related_pages", "image_entity", "image_caption", "section_titles"}, "guide")
         title = _title(guide["title"])
         if title not in guide_titles or title in guides_seen:
             raise DataError("guide: duplicate or unsupported canonical owner")
@@ -114,6 +176,12 @@ def validate_catalog(catalog, data):
             raise DataError("guide: expected one to sixteen original paragraphs")
         for paragraph in guide["paragraphs"]:
             _text(paragraph, "guide.paragraph", 1200)
+        if "section_titles" in guide:
+            headings = guide["section_titles"]
+            if not isinstance(headings, list) or len(headings) != len(guide["paragraphs"]):
+                raise DataError("guide: section titles must match its paragraph count")
+            for heading in headings:
+                _nullable_text(heading, "guide.section_title")
         related = guide["related_entities"]
         if not isinstance(related, list) or len(related) > 16 or any(
             not isinstance(identity, str) or identity not in required for identity in related
@@ -121,8 +189,36 @@ def validate_catalog(catalog, data):
             raise DataError("guide: expected at most sixteen known related entities")
         if len(related) != len(set(related)):
             raise DataError("guide: duplicate related entity")
+        related_pages = guide.get("related_pages", [])
+        if not isinstance(related_pages, list) or len(related_pages) > len(guide_titles) or any(
+            not isinstance(target, str) or target not in guide_titles or target == title
+            for target in related_pages
+        ) or len(related_pages) != len(set(related_pages)):
+            raise DataError("guide: expected unique related canonical guide titles")
+        if not set(related_pages) <= registered_guides:
+            raise DataError("guide: related guide has no reviewed content")
+        if ("image_entity" in guide) != ("image_caption" in guide):
+            raise DataError("guide: contextual pictures require both an entity and an original caption")
+        if "image_entity" in guide:
+            identity = guide["image_entity"]
+            if not isinstance(identity, str) or identity not in required or entities[identity]["category"] == "damage_class":
+                raise DataError("guide: image must reference a documented illustrated entity")
+            _text(guide["image_caption"], "guide.image_caption", 500)
         _confidence(guide["confidence"], "guide.confidence")
         _evidence(guide["evidence"], sources, "guide.evidence")
+    effects_seen = set()
+    for effect in _records(catalog.get("item_effects", []), "item effects"):
+        _object(effect, {"entity", "paragraphs", "confidence", "evidence"}, set(), "item effect")
+        identity = effect["entity"]
+        if not isinstance(identity, str) or identity not in required or entities[identity]["category"] != "item" or identity in effects_seen:
+            raise DataError("item effect: expected one record per known item")
+        effects_seen.add(identity)
+        if not isinstance(effect["paragraphs"], list) or not 1 <= len(effect["paragraphs"]) <= 4:
+            raise DataError("item effect: expected one to four original paragraphs")
+        for paragraph in effect["paragraphs"]:
+            _text(paragraph, "item effect.paragraph", 1200)
+        _confidence(effect["confidence"], "item effect.confidence")
+        _evidence(effect["evidence"], sources, "item effect.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
         _object(row, {"entity", "kind", "confidence", "evidence", "note"}, set(), "classification")
@@ -171,20 +267,35 @@ def validate_catalog(catalog, data):
                 _text(step, "entry display step", 500)
     if "taxonomy" in catalog:
         taxonomy = catalog["taxonomy"]
-        _object(taxonomy, {"groups", "tags"}, set(), "taxonomy")
+        _object(taxonomy, {"groups", "tags"}, {"skill_groups"}, "taxonomy")
         grouped = set()
         group_titles = set(CATEGORY_PAGES.values()) | {"NPCs"}
         classified_kind = {row["entity"]: row["kind"] for row in catalog["classifications"]}
         for field in ("groups", "tags"):
             for group in _records(taxonomy[field], f"taxonomy.{field}"):
-                _object(group, {"title", "index", "members"}, set(), "taxonomy group")
+                _object(group, {"title", "index", "members"},
+                        {"parents", "summary", "confidence", "evidence"}, "taxonomy group")
                 title = _title(group["title"])
-                if title in group_titles or group["index"] not in {"Items", "Bestiary", "Nature"}:
+                if title in group_titles or not isinstance(group["index"], str) or group["index"] not in {"Items", "Bestiary", "Nature"}:
                     raise DataError("taxonomy: duplicate category or unsupported index")
                 group_titles.add(title)
+                if "parents" in group:
+                    parents = group["parents"]
+                    if not isinstance(parents, list) or not 1 <= len(parents) <= 4:
+                        raise DataError("taxonomy: expected one to four parents")
+                    if len({_title(parent) for parent in parents}) != len(parents):
+                        raise DataError("taxonomy: duplicate parent")
+                    _text(group.get("summary"), "taxonomy.summary", 1200)
+                if "summary" in group:
+                    _text(group["summary"], "taxonomy.summary", 1200)
+                if ("confidence" in group) != ("evidence" in group):
+                    raise DataError("taxonomy: evidence and confidence must appear together")
+                if "evidence" in group:
+                    _confidence(group["confidence"], "taxonomy.confidence")
+                    _evidence(group["evidence"], sources, "taxonomy.evidence")
                 members = group["members"]
-                if not isinstance(members, list) or not members or len(members) > 500:
-                    raise DataError("taxonomy: expected one to five hundred members")
+                if not isinstance(members, list) or len(members) > 500 or (field == "groups" and not members):
+                    raise DataError("taxonomy: expected at most five hundred members; primary groups cannot be empty")
                 seen_members = set()
                 for identity in members:
                     if not isinstance(identity, str) or identity not in entities or identity in seen_members:
@@ -203,6 +314,17 @@ def validate_catalog(catalog, data):
                     or (e["category"] == "being" and classified_kind.get(e["id"]) == "creature")}
         if grouped != expected:
             raise DataError("taxonomy: primary groups must cover every item, nature record and creature")
+        described = set()
+        for row in _records(taxonomy.get("skill_groups", []), "taxonomy.skill_groups"):
+            _object(row, {"entity", "summary"}, set(), "skill group description")
+            identity = row["entity"]
+            if not isinstance(identity, str) or identity not in entities or entities[identity]["category"] != "skill_group" or identity in described:
+                raise DataError("taxonomy: unknown or duplicate skill group description")
+            described.add(identity)
+            _text(row["summary"], "skill group.summary", 1200)
+        if "skill_groups" in taxonomy and described != {row["id"] for row in entities.values() if row["category"] == "skill_group"}:
+            raise DataError("taxonomy: describe every skill group exactly once")
+    validate_category_graph(category_definitions(data, catalog))
     for history in _records(catalog.get("state_history", []), "state history"):
         _object(history, {"before", "after", "quest", "summary", "attribution", "recorded_on"}, {"evidence"}, "state history")
         for field in ("before", "after"):
@@ -222,6 +344,29 @@ def validate_catalog(catalog, data):
             raise DataError("state history: expected ISO date") from error
         if "evidence" in history:
             _evidence(history["evidence"], sources, "state history.evidence")
+    construction = _records(catalog.get("construction_recipes", []), "catalog.construction_recipes")
+    construction_ids = set()
+    for recipe in construction:
+        _object(recipe, {"id", "owner_item", "station_id", "station_title", "station_item", "inputs",
+                         "base_ap_cost", "result", "condition", "confidence", "evidence"}, set(), "construction recipe")
+        identity = _identifier(recipe["id"], "construction recipe.id")
+        if identity in construction_ids or identity in {entry["id"] for entry in data.get("entries", [])}:
+            raise DataError("construction recipe: duplicate record")
+        construction_ids.add(identity)
+        _identifier(recipe["station_id"], "construction recipe.station_id")
+        _title(recipe["station_title"])
+        for field in ("owner_item", "station_item"):
+            _entity_reference(recipe[field], entities, "item", "construction recipe." + field)
+        _item_quantities(recipe["inputs"], entities, "construction recipe.inputs", require_items=True)
+        _number(recipe["base_ap_cost"], "construction recipe.base_ap_cost")
+        _object(recipe["result"], {"kind", "description", "quantity"}, set(), "construction recipe.result")
+        if recipe["result"]["kind"] != "in-place":
+            raise DataError("construction recipe: only in-place outcomes are supported, never inventory outputs")
+        _text(recipe["result"]["description"], "construction recipe.result.description", 500)
+        _number(recipe["result"]["quantity"], "construction recipe.result.quantity", minimum=1, integer=True)
+        _text(recipe["condition"], "construction recipe.condition", 1200)
+        _confidence(recipe["confidence"], "construction recipe.confidence")
+        _evidence(recipe["evidence"], sources, "construction recipe.evidence")
     methods = set()
     station_ids = set()
     canonical = {row["entity"]: row["title"] for row in catalog["pages"]}
@@ -243,7 +388,9 @@ def validate_catalog(catalog, data):
             raise DataError("station: duplicate or reserved page title")
         else:
             titles.add(title)
-        if not isinstance(row["methods"], list) or not row["methods"]:
+        if not isinstance(row["methods"], list) or not row["methods"] and not any(
+            recipe["station_id"] == row["id"] for recipe in construction
+        ):
             raise DataError("station: expected evidenced recipe methods")
         for method in row["methods"]:
             if not isinstance(method, str) or method not in available_methods or method in methods:
@@ -365,6 +512,29 @@ def validate_catalog(catalog, data):
             _evidence(rule["evidence"], sources, "currency rule.evidence")
         if seen_rules != CURRENCY_RULE_TITLES.keys():
             raise DataError("currency guide must retain every reviewed rule")
+    station_by_id = {station["id"]: station for station in catalog.get("stations", [])}
+    for recipe in construction:
+        station = station_by_id.get(recipe["station_id"])
+        if station is None or station["entity"] != recipe["station_item"] or station["title"] != recipe["station_title"]:
+            raise DataError("construction recipe: station identity does not match the canonical registry")
+    if "acquisition" in catalog:
+        existing_titles = (
+            set(PAGE_FILES) | {"NPCs", "Source provenance"}
+            | {title for row in catalog["pages"] for title in [row["title"], *row["aliases"]]}
+            | {row["title"] for row in catalog.get("guides", [])}
+            | {row["title"] for row in catalog.get("stations", [])}
+            | {entry_page(row) for row in data.get("entries", [])}
+            | {row["page"] for row in data["facts"]}
+        )
+        if "currency" in catalog:
+            existing_titles.add("Currency and trading")
+        if any(row["kind"] == "loot" for row in data.get("entries", [])):
+            existing_titles.add("Loot mechanics")
+        validate_acquisition(catalog["acquisition"], data, existing_titles)
+        construction_notes = {note["item"] for note in catalog["acquisition"].get("item_notes", [])
+                              if note["kind"] == "construction-action"}
+        if construction_notes != {recipe["owner_item"] for recipe in construction}:
+            raise DataError("construction recipes and construction-action notes must have the same canonical owners")
     return catalog
 
 
@@ -384,6 +554,8 @@ def parse_catalog(raw, data):
         value = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_pairs, parse_float=Decimal)
     except (UnicodeDecodeError, ValueError) as error:
         raise DataError("catalog must be valid UTF-8 JSON without duplicate keys") from error
+    if isinstance(value, dict) and "acquisition" in value:
+        raise DataError("acquisition records must be stored only in acquisition.json")
     return validate_catalog(value, data)
 
 
@@ -450,6 +622,8 @@ def entry_relations(data, catalog):
 def entry_owners(data, locations, relations, catalog=None):
     entities = {entity["id"]: entity for entity in data["entities"]}
     result = {}
+    source_owners = {identity: source["title"] for source in (catalog or {}).get("acquisition", {}).get("sources", [])
+                     for identity in source.get("existing_entry_ids", [])}
     for entry in data.get("entries", []):
         details = entry["details"]
         owner = None
@@ -475,5 +649,5 @@ def entry_owners(data, locations, relations, catalog=None):
             row["id"] == "inventory-crafting" for row in catalog.get("stations", [])
         ):
             target = "Inventory crafting"
-        result[entry["id"]] = target
+        result[entry["id"]] = source_owners.get(entry["id"], target)
     return result

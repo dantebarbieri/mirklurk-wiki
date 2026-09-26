@@ -166,9 +166,9 @@ is embedded; entity and File links are relative MediaWiki links.
 
 ## Encyclopedia identities and ownership
 
-`content/facts/catalog.json` (192 KiB maximum) contains `schema_version: 1`,
+`content/facts/catalog.json` (224 KiB maximum) contains `schema_version: 1`,
 `pages`, `classifications`, and `entry_links`, with reviewed `entry_display`,
-`stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, and `guides` additions. It changes presentation
+`stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, `guides`, and `item_effects` additions. It changes presentation
 without rewriting historical evidence:
 
 - `pages`: `{entity, title, aliases}` for every item, being, nature record,
@@ -195,7 +195,8 @@ without rewriting historical evidence:
   ordering, source evidence, or the underlying record. No guessed names for
   unidentified categories are introduced.
 
-Five skill groups remain sections of Skills; seven damage types now have their
+Five localized skill groups remain sections of Skills and have linked category
+pages; seven damage types now have their
 own pages, with Damage types retained as a directory and legacy-anchor owner.
 Facts with an exact,
 unambiguous entity-name/category match move to that entity's page; ambiguous
@@ -204,17 +205,93 @@ in the immutable data but are rendered only on their skill owners.
 The completed-turn clock fact is owned by Action points, with its old Weather
 anchor retained as a link.
 
-`taxonomy` contains `groups` and `tags`, each with `{title,index,members}`.
+`taxonomy` contains `groups` and `tags`, each with `{title,index,members}` and
+optional `{parents,summary,confidence,evidence}`.
 Every item, creature, and nature record belongs to exactly one primary group;
 cross-tags may overlap. NPC classifications cannot be bypassed by taxonomy.
-Each membership points to the same canonical article. Skills and root
-categories use existing entity types/group identities. Category titles are
-generated in namespace 14; arbitrary namespace titles remain forbidden in the
-entity registry. Groupings are editorial navigation, not biological claims.
+Each membership points to the same canonical article.
+
+`index` selects the existing readable index and root category, not necessarily
+the immediate parent. Explicit `parents` contains one to four unique category
+titles within that index and requires a concise original `summary`; omitted
+parents retain the existing direct-to-index relationship. Confidence and
+evidence occur together. Roots, localized skill groups and taxonomy titles
+share one collision-checked graph, bounded to 128 categories. Unknown parents,
+cross-index edges, cycles, orphans and empty leaves are rejected. An empty tag
+may be a hub only when it has populated descendants. Primary groups remain
+nonempty. Articles receive their direct categories and all ancestors, so edible
+ingredients and other dual-role items also appear in the appropriate root
+lists. Category pages link to their parents, children, direct articles and
+readable index; no fake main-namespace category links or extra fact owners are
+created.
+
+The disposable reader smoke also compares actual MediaWiki category memberships
+and namespace existence for every generated article/category with the exact
+seed tags. It batches category queries, follows continuation, and verifies parsed
+Skills and category browse links, rather than treating raw category text as proof
+that the parser and category indexes agree.
+
+`skill_groups` optionally supplies `{entity,summary}` once for each existing
+skill-group entity. Category titles and all skill memberships are derived from
+the localized group names and `game.json` group references, never a second
+editable membership list. Wanderer, Survivor, Hunter, Warrior and Forager each
+retain five skills, with the original Skills anchors preserved. These are the
+game's recorded groups, not a new prerequisite tree.
+
+Equipment categories use the native `item_fits_slot` acceptance rules and
+`myEquips.subSlots` declarations, not inventory dimensions or equip AP costs.
+Fourteen descriptive slot labels cover 102 carried items and 105 memberships:
+the three torches fit either hand. Helmet/hood, shirt/outer torso,
+pants/leg armor and socks/footwear remain distinct slots. Arrows are accepted
+off-hand ammunition, not weapon-family members. Non-ranged two-handed weapons
+occupy both hands without being independently placeable off hand; bows leave
+that slot for arrows. Built-in Unarmed is excluded from inventory equipment.
+
+Weapon and material families are editorial browsing labels based on reviewed
+names, definitions, profiles and recipe roles, not invented native item types.
+Axes retain their cutting/chopping role; Heavy Branch remains a weapon, wood
+material and fire-making supply. Food ingredients are exactly the intersection
+of reviewed food definitions and inventory-recipe inputs. Lamp Oil stays out
+of food. Repair kits, successful outdoor Map Drawing Kit use, and thrown
+Summoning Stone are consumed by their traced handlers; a rejected indoor map
+attempt does not consume a kit. Summoning Stone is not a damaging thrown flask.
+Flax and Linen remain explicitly localization-only. Numeric facts, recipes,
+acquisition rows and illustrations are not rewritten for classification.
+
+Category titles are generated in namespace 14; arbitrary namespace titles
+remain forbidden in the entity registry. Groupings of creatures remain
+editorial navigation, not biological claims.
 
 `guides` contains bounded original paragraphs, existing related-entity IDs,
-confidence and evidence for the seven damage owners, Health and armor, and
-Action points. Reverse damage links are derived from profiles, never guessed
+confidence and evidence for the seven damage owners and the finite mechanics
+owners: Health and armor, Action points, Satiation, Stamina, Focus, Temperature,
+Wellbeing, Foods, Resting, and Weather. Optional `related_pages` links only to
+other existing reviewed guide records. New mechanics owners are generated only
+when their evidence-backed guide exists, never as empty schema placeholders.
+Optional `image_entity` and `image_caption` must appear together and reuse an
+already approved illustration with a contextual caption, not a fabricated stat
+icon or duplicate image record.
+Optional `section_titles` matches the paragraph count, with null for a
+continuation paragraph. Explicit related-guide and related-entity names become
+safe links without treating prose as executable wikitext.
+
+The meter pages own their contribution thresholds and ordinary losses;
+Wellbeing owns the combination, rounding, active-effect and shared difficulty
+rules. Resting owns bed/sleep recovery and natural healing, and Action points
+retains the completed-turn clock. Per-rank values remain on skill pages.
+`item_effects` records `{entity,paragraphs,confidence,evidence}` for a unique item
+and one to four original paragraphs. Those consumption effects render only on
+the item, with source references on Source provenance; overview guides link to
+them rather than copying their amounts.
+
+Personal temperature is a normalized cold-to-hot meter, not a physical-degree
+scale or the same thing as the ambient-temperature interpolation on Weather.
+Accident modifiers belong to relevant action checks, not an automatic roll
+each turn. Bed-state AP refill is suspended, so explicit bed recovery is not
+silently doubled. Rest healing uses the reviewed inclusive wellbeing threshold
+and excludes burned-away cells. An unreachable duplicate food-handler branch
+is not treated as an additional effect.
+Reverse damage links are derived from profiles, never guessed
 from weapon names. Remedies and related skills link back to the rule owner.
 `state_history` links two being records and a canonical quest, with attributed
 operator confirmation and optional source evidence. Revival instructions stay
@@ -244,9 +321,10 @@ copied skill formulas.
 Typed merchant/item/input/output/outcome references and exact matching entity
 identity evidence produce bidirectional links. No substring guessing or
 weight-to-probability normalization is used. Each complete record has one
-primary editable wiki owner. Acquisition, ingredient, NPC, and workstation
-catalog links do not repeat prices, ingredient quantities, AP costs, or quest
-prose. Identical recipes may share one row with all applicable stations, but
+primary editable wiki owner. Acquisition and workstation tables transclude
+named views of those owners instead of creating editable copies of prices,
+ingredient quantities, AP costs, or stock conditions. Ingredient and NPC links
+do not copy quest prose. Identical recipes may share one row with all applicable stations, but
 different inputs, outputs, costs, or conditions remain distinct. Legacy
 `entity-`, `fact-`, and `entry-` anchors remain
 on old indexes as links, so old bookmarks are not silently broken.
@@ -279,8 +357,9 @@ Optional `notes`, `related_entities`, `related_stations`, and `quest_entries` pr
 station behavior and verified crosslinks. Optional `variants` have `{id,title}`.
 
 One Alchemy workstation article covers early-game and later-game variants,
-with a shared illustrated output catalog; both variants' identical recipes
-are fully documented only on output-item pages. Armor workstation is identified
+with a shared illustrated recipe table; both variants' identical recipes
+are edited only on output-item pages and displayed through selected rows.
+Armor workstation is identified
 at Bhato's hideout with an evidenced follow-up-conversation unlock; it is not
 marked unused merely because the item-title table lacks an entry.
 
@@ -298,13 +377,106 @@ is `{entity,value,confidence,evidence}` for a known item. Values are nonnegative
 finite numbers, never booleans. The reviewed unit is silver coin equivalents.
 The offer coverage is validated against actual merchant-to-item references.
 
-The 36 verified standard prices do not depend on unresolved recipe-price
-postprocessing; they cover 52 offers, leaving 11 offers unresolved. The
-42 distinct offered items each own one selective `<onlyinclude>` price value.
+The original 36 price records are preserved. Six additional reviewed values
+retain their initial prices after the actual numeric-ID-ordered recipe-value
+pass, with the game's comparison and rounding behavior, rather than a recursive
+or quantity-multiplied reconstruction. The builder publishes the curated
+results; it does not reimplement the game engine. All 42 standard prices now
+cover the 63 offers, with none unresolved. The
+42 distinct offered items each own one selective price value in their
+How to acquire / Buying section.
 The same item's matching raw initializer-value row is folded into it rather
 than rendered twice. Merchant wares use `{{:Canonical item title}}`; the rest
 of the item article is not transcluded. Actual vendor-specific prices, if
 separately documented, remain owned by the vendor offer instead.
+
+### Named selective views
+
+The pinned runtime explicitly loads bundled ParserFunctions. A shared block uses
+`<onlyinclude>{{#switch:{{{view|<noinclude>page</noinclude>}}}|page|VIEW=CONTENT|#default=}}</onlyinclude>`.
+On its own article the default is `page`; during inclusion it is empty.
+Price blocks also accept an empty case, preserving `{{:Item}}` exactly.
+Coin summaries retain their existing unparameterized selective block.
+Multiple balanced blocks are intentional; counting one pair per article is
+no longer a valid readiness check.
+
+| Reader | Inclusion | Editable owner |
+| --- | --- | --- |
+| Merchant wares | `{{:Item}}` | Item's single Buying price |
+| Workstation recipe table | `{{:Item|view=recipes|station=station-id}}` | Output item's recipe rows |
+| Item seller table | `{{:Merchant|view=offers|item=item-id}}` | Merchant's stock and conditions |
+| Item loot table | `{{:Source|view=loot|item=item-id}}` | Creature or other documented loot owner |
+| Item random-source context | `{{:Source|view=pool-source|pool=pool-id}}` | Source's condition, including tier/attempt qualifications |
+| Item pool eligibility | `{{:Random treasure|view=pool|pool=pool-id|item=item-id}}` | Pool membership and shared story gates |
+| Currency guide | `{{:Coin}}` | Coin's value/weight/stack summary |
+
+`acquisition.json` is a separately bounded, build-matched source register
+(256 KiB maximum). Its named source pages own original context, explicit
+conditions, quantities, rational conditional probabilities, and source evidence.
+Starting equipment and Dead camp contain 17 fixed records, distinguishing
+difficulty-dependent grants from the initial contents of two separate camp
+containers. Certainty is conditional on the recorded event, not repeated stock
+or respawn. Unknown probabilities require an explicit note and never become
+zero or a guessed percentage. Terminating percentages are exact; other
+probabilities retain their exact fraction and selection scope.
+
+Items select these source rows with the existing `view=loot` contract.
+Historical loot records can be assigned to a named source through
+`existing_entry_ids` without modifying or copying the original research entry;
+their previous owner retains a compatibility anchor and link. Source titles,
+item references, inherited entry ownership, related pages, evidence, and
+contextual approved image references are validated before publication.
+
+The complete acquisition register has 21 source pages, 130 new rows, and ten
+pools with 538 memberships. The original 43 enemy-loot rows remain in place;
+all 27 historical world-loot entries acquire explicit source owners and retain
+compatibility anchors. Source `loot_context` is a single editable shared block:
+the boulder's pre-loot Viper interruption and conditional insect-distribution
+scope therefore survive item filtering, including inherited historical rows.
+Being/nature illustrations reuse existing approved entity records just as item
+illustrations do; no source image creates a synthetic entity or a new upload.
+
+Pool membership means eligibility under at least one valid source budget,
+not an equal or guaranteed final chance. Quantities and probabilities remain
+explicitly unresolved where the budget-filling process prevents a constant
+answer. Item-specific gates have one canonical shared block, selected alongside
+the applicable member: Summoning Stone's story requirement is present in its
+filtered chest-pool views. Source context and pool tables use separate constant
+arguments, so their dependencies are statically visible without dynamic
+forwarding or recursive inclusions. Tier odds, bonus-generation checks, and
+retention checks must not be relabeled as per-item probabilities.
+
+Six `item_notes` cover built-in equipment, the in-place construction action,
+and four explicitly unverified items. The latter distinguish absent item
+definitions from valid definitions without a verified ordinary route. These
+are limits of this inspected build, not universal impossibility claims.
+Context on a related entity can explain a distinct caller, such as the
+single berry-insect check versus Creepy-Crawlies' repeated ground checks.
+
+`catalog.construction_recipes` records in-place outcomes separately from the
+unchanged 96 inventory-producing recipe variants. Each record has a validated
+action owner, registered station, ingredient quantities, base AP, and an
+explicit `result.kind = in-place`; an inventory output field is rejected.
+Raft Base's completion row is transcluded from Finish Raft with `view=recipes`.
+Matching literal initializer AP/yield fields are folded into that canonical row,
+including the stronger directly observed construction evidence. Profile
+records and provenance are preserved; the completed structure is not
+Survivor's Field Kit and no fictitious completed-raft item is introduced.
+
+Recipe inclusions return HTML table rows, not a second table or owner article.
+Each row filters the requested station; its ingredients, output, AP, conditions,
+and legacy anchors occur once in the editable owner. Shared table markup is
+ordinary MediaWiki-supported HTML, avoiding table-pipe escaping in parser
+functions. Merchant offer inclusions return a filtered table. Standard price
+cells are enclosed in `noinclude`, so an item selecting its sellers does not
+recursively transclude itself for a price. The item's own single price is shown
+beside seller availability, not copied into Stats.
+
+The builder validates every generated transclusion owner and declared view.
+The migration planner records all parameterized dependencies rather than
+silently skipping unknown or missing contracts. Structural checks do not
+execute MediaWiki; the disposable integration test separately proves normal,
+default, filtered, and live-edit behavior without cache purges or reimports.
 
 `currency` preserves the reviewed build confirmation, three coin definitions,
 and seven original rule explanations with evidence and confidence. It

@@ -1,5 +1,7 @@
 Browse skills and their groups. Open a skill page for its bonuses and mechanics.
 
+The [[:Category:Skills|Skills category]] connects the five localized groups: [[:Category:Wanderer|Wanderer]], [[:Category:Survivor|Survivor]], [[:Category:Hunter|Hunter]], [[:Category:Warrior|Warrior]] and [[:Category:Forager|Forager]]. These follow the game's recorded group assignments, not an editorial prerequisite tree.
+
 Described bonuses and calculated effects may have different conditions; do not assume they stack.
 
 [[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

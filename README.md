@@ -17,9 +17,9 @@ The expanded reference retains that baseline and now contains **107 numeric fact
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-357 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
+385 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
-redirect. Another 44 ordinary MediaWiki category pages support grouped browsing.
+redirect. Another 80 ordinary MediaWiki category pages support hierarchical browsing.
 Only `game.build` changed in the original dataset; all source
 fingerprints, entities, facts, and research entries remain unchanged.
 
@@ -44,26 +44,57 @@ decoded per attack cell, not shown as misleading fractional damage.
 
 The metadata-only artwork register covers 326 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
-The original 323 selections are unchanged; three shared health shields show
+Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
 Four item images are deliberately
-omitted rather than replaced with placeholders or guessed frames. Some nature
-pictures show an explicitly labeled associated ground tile or branch, not a
-fabricated mature plant. Image bytes stay in separately approved server storage.
+omitted rather than replaced with placeholders or guessed frames. Willow, Cypress,
+Trollgnarl, and Elderwort Shrub now use distinct reviewed mature compositions
+assembled from native parts and the verified tree rules. Only their four
+metadata records change; the other 322 selections are preserved. Older tree
+File pages and bytes remain live history, not overwritten artwork. Other nature
+pictures retain their explicit ground-tile or branch qualifications. Image bytes
+stay in separately approved server storage.
+
+Separate Satiation, Stamina, Focus, Temperature, Wellbeing, Foods, and Resting
+guides explain the survival meters, threshold effects, recovery, weather
+exposure, and combat-healing distinction. They reuse approved item pictures in
+context, not invented stat icons. Meter-specific rates stay on meter pages,
+combined effects on Wellbeing, bed recovery and natural healing on Resting,
+and ten reviewed consumption effects on their item owners.
 
 Gameplay pages use compact tables and ordinary names, with machine IDs and
 citations kept in Source provenance. Each detail has **one editable wiki owner**:
 recipes on output items, offers on merchants, quest prose in the journal, and
 workstation behavior on its own page. Identical recipes across stations share
 one row; 96 original variants form 77 condition-preserving recipe groups.
-Indexes and acquisition crosslinks do not copy those details.
+Workstations show the complete applicable recipe rows by selective transclusion
+from their output-item owners; editing ingredients or AP there updates every
+station view. A separately evidenced Finish Raft action adds an in-place
+construction recipe at the eighth workstation, Raft Base; it changes the
+placed raft rather than producing an inventory item. Its inputs, result and AP
+are owned by Finish Raft, not copied into Raft Base or duplicated in its stats.
+Item acquisition sections likewise select seller availability
+from merchant-owned rows without copying stock or conditions.
 
-Thirty-six verified standard unit prices cover 52 of 63 offers. Each offered
-item owns one `<onlyinclude>` price value (unknown where unresolved), and
-merchant tables transclude it with core MediaWiki rather than copying prices.
+Twenty-one source pages own 130 additional acquisition rows, covering starting
+equipment, separate dead-camp containers, environmental searches, plant/tree
+harvesting, insects, story rewards, and mapmaking. All 27 historical world-loot
+records move to named owners without changing their evidence or losing old
+anchors. Random treasure owns ten source-specific pools with 538 verified
+eligibility memberships, not invented per-item probabilities. Shared interruption
+and story gates remain visible in filtered item views. All 247 item pages have
+documented methods or explicit notes: 243 cover acquisition, built-in equipment,
+or construction actions; four explain the limits of the available evidence.
+
+Forty-two verified standard unit prices cover all 63 offers. Each offered
+item owns one `<onlyinclude>` price value, and
+merchant tables transclude it rather than copying prices.
 The Currency and trading guide likewise transcludes coin-owned denomination,
-weight, and stack tables. No template extension or synchronization service is
-required; live edits to the owner propagate to readers of that information.
+weight, and stack tables. The bundled ParserFunctions extension selects named recipe and seller views;
+no new namespace, recipe subpage, synchronization service, or hidden data store
+is required. Unparameterized item and coin inclusions retain their original
+price-only and coin-summary contracts. Live edits to the owner propagate to
+readers of that information.
 Exact decimal price formatting uses gold, silver, and copper with the fewest
 whole coins, preserving the item-owned selective blocks. Initializer values
 remain explicitly distinct from shop prices and finalized recipe weights.
@@ -75,10 +106,11 @@ merchant offers, station-specific recipes, loot-selection observations, and
 weather, progression, skill, and world-seed summaries. Each narrow claim carries
 evidence and confidence. New topic pages appear only when backed by reviewed
 entries or facts; schema support is not a claim that a subsystem is fully documented.
-Reviewed death-handler cases now document base creature loot, and lit campfire/
-field-kit menus are traced. Runtime harvesting/recovery modifiers, some merchant
-locations and prices, and world-seed reproducibility remain limited or unverified.
-The current loot reference is not an exhaustive loot-table catalogue.
+Reviewed death-handler cases document base creature loot, and lit campfire/
+field-kit menus are traced. Some procedural quantities, final item-specific
+treasure probabilities, merchant locations, and world-seed reproducibility
+remain explicitly limited or unverified. Eligibility is exhaustive for the ten
+documented pools, not a measurement of each item's final drop rate.
 
 ## Contents
 
@@ -89,7 +121,10 @@ The current loot reference is not an exhaustive loot-table catalogue.
 | `content/facts/catalog.json` | Stable ordinary page titles, evidence-backed classifications, and editorial crosslinks |
 | `content/facts/entity_details.json` | Bounded typed profiles with shared original property explanations |
 | `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
+| `content/facts/acquisition.json` | Reviewed source rows, exact eligibility pools, conditional context, and scoped item notes |
 | `tools/build_wiki.py` | Deterministic MediaWiki XML for reviewed seeding |
+| `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
+| `tools/wiki_acquisition.py` | Bounded source, probability, membership, and ownership validation |
 | `tools/plan_migration.py` | Three-way review report that never modifies a wiki |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
@@ -122,6 +157,16 @@ Entity pages use ordinary names; only collisions are qualified, such as
 creatures, without assuming either grouping guarantees peacefulness or
 hostility. Skill-specific facts and summaries live on individual skill pages;
 old aggregate anchors remain as links. Initial research records are unchanged.
+
+Items can also be browsed by 14 actual equipment slots, weapon families,
+consumable subcategories and crafting-material families. Categories form a
+validated parent graph and preserve overlapping roles: food can be a recipe
+ingredient, an axe a chopping tool, and a torch either-hand equipment. Arrows
+remain ammunition despite their off-hand slot, and built-in Unarmed is not
+carried equipment. The five localized skill groups have explanatory category
+pages linked from Skills and every individual skill. Category names and
+introductions add navigation, not duplicate numerical facts or an invented
+skill tree.
 
 ## Operate a wiki
 

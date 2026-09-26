@@ -37,6 +37,12 @@ web uploads remain disabled. The runtime explicitly uses the pinned image's
 
 The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
+The template loads bundled ParserFunctions for named, canonical recipe and
+seller views as well as ConfirmEdit/QuestyCaptcha. The Docker build asserts
+that the bundled extension exists; no extension download, new namespace, or
+database migration is introduced. Existing live sites need a separately
+approved app-only rebuild/recreation under fresh verified backups before
+publishing the named-view content. This is not authorization to deploy.
 
 ## Runtime variables
 
@@ -159,9 +165,82 @@ available, run `python tools/smoke_deploy.py --run`. The latter creates its own
 randomly named Compose project and temporary generated credentials; it checks
 installation refusal on reuse, health, anonymous permissions, CAPTCHA-protected
 self-registration, ordinary account editing, seed import, and preservation of live edits.
-It also generates an original synthetic PNG outside the checkout, imports it by
-CLI as `www-data`, and anonymously fetches and decodes a 16x8 thumbnail of the
-64x32 original, rejecting original-URL fallbacks. Administrator and ordinary-user
+The ordinary-editor checks bind recipe inputs, outputs and AP to their ordered
+cells, cover every merchant offer and loot outcome, and verify the documented
+pool memberships, story gates and in-place construction result. They pace writes
+within the unchanged newcomer limit of three edits per minute, without granting
+the account a rate-limit exemption. Logged
+`VIEW_CONTRACT_JSON` records capture desired-seed expansions, rendered HTML,
+template dependencies and owner hashes before mutation tests. Their synthetic
+artwork URLs/cache metadata are not portable, and these records are not live
+readiness or baseline-prefix receipts.
+The rehearsal first reconstructs the pinned 401-title baseline and verifies its
+exact frozen XML hash. A bootstrap check captures the untouched installer's welcome Main Page against
+its installed English message source, removes only that default page by the
+normal API, and imports all 401 baseline titles exactly. This is exclusively
+fresh disposable setup, never a live migration step. A separate receipt retains
+the welcome identity/raw text and deletion log ID.
+One baseline cache refresh occurs before prefix zero; no purge or reseed occurs
+during the planned transition or ordinary-editor propagation checks. Every
+changed/new page is then saved once, after actual revision-bound leaf-view
+checks, with all affected consumers observed at each prefix. Ready new pages
+are preferred. Deferred stale consumer rows or redlinks receive at most ten
+natural job-drain observations within a 90-second settling budget, with verified
+server-clock boundaries; arbitrary parser/schema errors are not retried.
+Separate settling evidence retains the observed HTML, identities and server
+times instead of replacing stale DOM with database existence flags. HTTP reads
+and job subprocesses are bounded by the remaining retry budget; an in-container
+timeout also bounds maintenance after a client disconnect. Exhaustion records
+current queue diagnostics within a separate five-second bound. Ordinary
+new-title links may remain explicit, verified redlinks
+at intermediate prefixes; they are not selector prerequisites and must resolve
+at the final prefix.
+
+`--evidence-dir NEW_DIRECTORY` retains the complete prefix proof, exact seeds,
+schema-2 delta, desired-view fixtures, and a separate eleven-edge/six-price
+compatibility receipt. The compatibility expectation candidate is composed from
+separately captured baseline/desired endpoints, not copied from intermediate
+receipt observations; it still requires independent review. Neither artifact
+authorizes a live migration. Runtime provenance binds the rebuilt image, loaded
+ParserFunctions registry version, configuration-source hashes, and a hash of
+exactly six effective nonsecret settings: `EnableUploads`, `AllowCopyUploads`,
+`AllowExternalImages`, `ReadOnly`, `GroupPermissions`, `CaptchaTriggers`.
+Canonical bytes use UTF-8 sorted compact JSON, preserve types, and have no
+trailing newline; secrets and CAPTCHA questions/answers are never projected.
+CI checks out the exact source head with history and retains successful,
+nonsecret rehearsal artifacts for seven days.
+`authored-seed.xml` retains generator output A unchanged. Before any rehearsal
+save, changed/new titles undergo actual `ApiParse onlypst=1` in the operator's
+title/user context. Its transformed `parse.text` must equal A with terminal
+CR/LF removed, and nothing else; broader whitespace trimming, internal changes,
+substitution and signatures fail. Unchanged baseline titles are never
+transformed. The exact results form materialized desired snapshot D in
+`desired-seed.xml`; all subsequent raw hashes, comparisons and migration/receipt
+pins use D, without normalized equality. `storage-materialization.json` binds
+source/runtime/actor, baseline/A/D hashes and each title's exact output and
+removed suffix. Independent review must approve this linkage. A later live
+operation must explicitly target reviewed D, not silently reuse raw-A writer
+assumptions; no live operation is authorized by these artifacts.
+`endpoint-link-view-candidates.json` separately captures both exact endpoints.
+Direct previews remove every explicit colon inclusion by recorded UTF-8 byte
+span, retaining duplicates and all other source bytes, and must have no
+remaining template dependencies. Selected views are freshly expanded and
+parsed in a neutral title and every actual consumer title, with unsupported
+baseline named views explicitly recorded. Full endpoint HTML, API links,
+DOM links (including href/classes) and non-wiki links are retained. Direct plus
+projected API-link unions, context invariance and API/DOM differences are
+reported explicitly; discrepancies block candidate promotion, and even a clean
+candidate requires independent review. Endpoint owner/consumer revisions and
+the parser user must remain unchanged across the read-only batch. No endpoint
+preview edits a page, purges a cache, or substitutes for the prefix sequence.
+It also generates unique original synthetic PNGs outside the checkout for all
+326 active and four preserved tree File titles, plus a separate 64x32 thumbnail
+fixture. It imports them by CLI as `www-data` and anonymously fetches and decodes
+every original and thumbnail, retaining mature-tree dimensions and translucent
+shield pixels. Generic icons use neutral square fixtures, not game silhouettes.
+Every rendered File reference must be covered; missing-image placeholders are
+rejected rather than stripped from row evidence. The custom thumbnail must be
+16x8, and original-URL fallbacks are rejected. Administrator and ordinary-user
 web-upload attempts must still fail as disabled. No game images are used or retained.
 It removes only its own containers, network, volume, and temporary files.
 

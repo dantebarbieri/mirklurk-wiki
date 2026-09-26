@@ -7421,29 +7421,29 @@
       "confidence": "inferred",
       "id": "nature-4-illustration",
       "entity": "nature-4",
-      "file_title": "File:Nature-4.png",
-      "caption": "Willow associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
-      "sha256": "6a113849891f05d1ebfcda2e8d4542799ac8f8d240313416cbca3939d23dd6f5",
+      "file_title": "File:Nature-4-mature.png",
+      "caption": "Mature Willow; a representative shape assembled from the game's tree sprites.",
+      "sha256": "f73b3ed66aacdf320cdd9e892ce251e767024639c7a0114c0d169554564b17ad",
       "evidence": [
         {
           "source": "game-data",
-          "section": "gml_GlobalScript_scr_tiles_finders",
-          "key": "tile_to_enum.Hinderance[167].nature[4]"
-        },
-        {
-          "source": "game-data",
-          "section": "rm_world",
-          "key": "Layers.Hinderance.TilesData.Background"
-        },
-        {
-          "source": "nature-en",
-          "section": "Titles",
-          "key": "4"
-        },
-        {
-          "source": "game-data",
           "section": "gml_Object_databank_Alarm_2",
-          "key": "natureDB[4].sprTrunk/sprBranch"
+          "key": "natureDB[4].tree-sprites/growth/branch-rules"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_initiate/tree_grow/tree_try_to_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "treeParts.parent-attachment/segment-endpoints"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Draw_0",
+          "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
       ]
     },
@@ -7518,29 +7518,29 @@
       "confidence": "inferred",
       "id": "nature-7-illustration",
       "entity": "nature-7",
-      "file_title": "File:Nature-7.png",
-      "caption": "Cypress associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
-      "sha256": "e607a2354f456718babebdafff8f08508f0847b13cfbbcb5551bfd777614a137",
+      "file_title": "File:Nature-7-mature.png",
+      "caption": "Mature Cypress; a representative shape assembled from the game's tree sprites.",
+      "sha256": "088b42c512242db358a0c34cb9da78208d7522470161e8db3283a5519d866176",
       "evidence": [
         {
           "source": "game-data",
-          "section": "gml_GlobalScript_scr_tiles_finders",
-          "key": "tile_to_enum.Hinderance[168].nature[7]"
-        },
-        {
-          "source": "game-data",
-          "section": "rm_world",
-          "key": "Layers.Hinderance.TilesData.Background"
-        },
-        {
-          "source": "nature-en",
-          "section": "Titles",
-          "key": "7"
-        },
-        {
-          "source": "game-data",
           "section": "gml_Object_databank_Alarm_2",
-          "key": "natureDB[7].sprTrunk/sprBranch"
+          "key": "natureDB[7].tree-sprites/growth/branch-rules"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_initiate/tree_grow/tree_try_to_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "treeParts.parent-attachment/segment-endpoints"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Draw_0",
+          "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
       ]
     },
@@ -7639,29 +7639,29 @@
       "confidence": "inferred",
       "id": "nature-17-illustration",
       "entity": "nature-17",
-      "file_title": "File:Nature-17.png",
-      "caption": "Trollgnarl associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
-      "sha256": "2c9ca1b6c20466add74a4cca60a74290f9d868114bfcf64df7247c8833d5c4eb",
+      "file_title": "File:Nature-17-mature.png",
+      "caption": "Mature Trollgnarl; a representative shape assembled from the game's tree sprites.",
+      "sha256": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
       "evidence": [
         {
           "source": "game-data",
-          "section": "gml_GlobalScript_scr_tiles_finders",
-          "key": "tile_to_enum.Hinderance[169].nature[17]"
-        },
-        {
-          "source": "game-data",
-          "section": "rm_world",
-          "key": "Layers.Hinderance.TilesData.Background"
-        },
-        {
-          "source": "nature-en",
-          "section": "Titles",
-          "key": "17"
-        },
-        {
-          "source": "game-data",
           "section": "gml_Object_databank_Alarm_2",
-          "key": "natureDB[17].sprTrunk/sprBranch"
+          "key": "natureDB[17].tree-sprites/growth/branch-rules"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_initiate/tree_grow/tree_try_to_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "treeParts.parent-attachment/segment-endpoints"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Draw_0",
+          "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
       ]
     },
@@ -7731,29 +7731,29 @@
       "confidence": "inferred",
       "id": "nature-20-illustration",
       "entity": "nature-20",
-      "file_title": "File:Nature-20.png",
-      "caption": "Elderwort Shrub associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
-      "sha256": "9cff211967121badd0a1d9b58bd938963f1b8117297745218ef6928f7750425e",
+      "file_title": "File:Nature-20-mature.png",
+      "caption": "Mature Elderwort Shrub; a representative shape assembled from the game's tree sprites.",
+      "sha256": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
       "evidence": [
         {
           "source": "game-data",
-          "section": "gml_GlobalScript_scr_tiles_finders",
-          "key": "tile_to_enum.Hinderance[165].nature[20]"
-        },
-        {
-          "source": "game-data",
-          "section": "rm_world",
-          "key": "Layers.Hinderance.TilesData.Background"
-        },
-        {
-          "source": "nature-en",
-          "section": "Titles",
-          "key": "20"
-        },
-        {
-          "source": "game-data",
           "section": "gml_Object_databank_Alarm_2",
-          "key": "natureDB[20].sprTrunk/sprBranch"
+          "key": "natureDB[20].tree-sprites/growth/branch-rules"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_initiate/tree_grow/tree_try_to_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "treeParts.parent-attachment/segment-endpoints"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Draw_0",
+          "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
       ]
     },

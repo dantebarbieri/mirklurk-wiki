@@ -32,6 +32,12 @@ Only station targets may have `variant`. Evidence uses the existing source/secti
 identifies the exact separately reviewed **image** bytes, not the original game
 container. Captions and rights notes are original writing.
 
+Mechanics guides may reuse an existing approved entity image through
+`image_entity` and an original `image_caption` in the guide record. This creates
+no duplicate illustration record, image bytes, or import. The caption must
+describe the pictured item in context, not relabel item artwork as a stat glyph.
+Missing, pending, and unknown image associations are rejected explicitly.
+
 The current reviewed batch attributes game artwork to **Edym Pixels** and
 records operator-reported permission for public-wiki display, confirmed on
 2026-09-25. Its notes explicitly exclude asset redistribution through this
@@ -40,7 +46,7 @@ reviewed individually; attribution strings are not a substitute for review.
 
 The original metadata batch contains 323 selections: 243 items, 36 beings,
 25 skills, 16 nature records, and early/later alchemy plus armor workstations.
-The original 320 entity records are unchanged. Unarmed's internal pixel placeholder is not
+Unarmed's internal pixel placeholder is not
 used as artwork. Flax and Linen lack verified initializer image associations.
 Finish Raft requests an out-of-range sprite frame; no wraparound or replacement
 frame is guessed. These four item pages therefore have no image reference.
@@ -50,8 +56,7 @@ not a complete mature specimen; Rift Vine uses a branch detail. Do not relabel
 these crops as full procedurally assembled plants. The metadata only identifies
 the reviewed selection; source files and images remain outside Git.
 
-Three shared shield records bring the total to 326 without changing any of the
-original 323 selections. They use `health_armor`, an integer restricted to 1,
+Three shared shield records originally brought the total to 326. They use `health_armor`, an integer restricted to 1,
 2, or 3, not a fabricated entity. Each level has exactly one reserved File title:
 
 | Armor layers | Shield | File title | Sprite frame | PNG bytes |
@@ -69,6 +74,32 @@ The Health and armor guide owns the three-shield legend.
 The frame association is cited through `hpcell_draw` in Source provenance.
 Actual PNG hashes, rights, and exact evidence keys are in each metadata record.
 No additional health art or other frames are included in this approval.
+
+## Reviewed mature-tree replacements
+
+The acquisition and wellbeing release replaces only the existing illustration
+records for Willow, Cypress, Trollgnarl, and Elderwort Shrub. All other 322 active selections,
+including the three shields, stay unchanged. The replacement captions identify
+representative mature compositions assembled from native trunk, branch, and
+leaf sprites using reviewed growth, attachment, origin, mirroring, and draw
+rules. They are healthy wind-neutral representatives, not single whole-tree
+sprites or a promise to replay one random in-game specimen.
+
+| Preserved old File title | New File title | PNG dimensions | PNG bytes |
+| --- | --- | --- | --- |
+| `File:Nature-4.png` | `File:Nature-4-mature.png` | 588 x 564 | 7512 |
+| `File:Nature-7.png` | `File:Nature-7-mature.png` | 684 x 912 | 15112 |
+| `File:Nature-17.png` | `File:Nature-17-mature.png` | 340 x 540 | 4356 |
+| `File:Nature-20.png` | `File:Nature-20-mature.png` | 256 x 256 | 2441 |
+
+The reviewed hashes and assembly evidence are in `illustrations.json`.
+Elderwort is naturally a small flowering shrub, not a tall-trunk tree.
+Import exactly the four new titles with their attribution sidecars through
+the approved operator workflow; do not overwrite, rename, or delete the old
+File pages or image bytes. The plan therefore retains 326 active authored
+selections while reaching 330 uploaded game images after the separate import.
+Guide pictures reuse existing approved File titles and require no extra
+uploads or duplicate metadata. This document is not deployment authorization.
 
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 entity or station record renders a neutral missing-picture notice, **not** an image or File link.
@@ -154,9 +185,12 @@ The image volume and database must be backed up and restored together. Do not
 copy random exports directly into MediaWiki's hashed image directories.
 The repository neither performs this procedure nor supplies any artwork.
 CI imports only original synthetic PNGs generated inside its disposable test:
-one RGB thumbnail fixture and three RGBA fixtures under the shield File titles.
+an RGB thumbnail fixture and distinct RGBA fixtures under the shield, contextual
+guide, mature-tree, and legacy-tree File titles.
 It reads and decodes resized thumbnails over anonymous HTTP, including 32x32
 shield fixtures, then checks actual MediaWiki-parsed shield cells and the legend
 while web uploads stay disabled. Those fixtures are not game artwork or evidence
 of approved game-image hashes. No image fixture is stored in Git or CI artifacts.
 This does not import game images or establish that any artwork is cleared for publication.
+The same smoke checks guide images and links, mature-tree captions/references,
+and byte-for-byte preservation of the four legacy tree fixtures after seeding.

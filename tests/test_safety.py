@@ -156,6 +156,26 @@ class PublicationTests(unittest.TestCase):
         self.stage("content/facts/entity_details.json", b'{"schema_version":1,"properties":[],"profiles":[]}')
         self.assertTrue(any("valid staged game.json is required" in error for error in audit_index(self.repo)[1]))
 
+    def test_acquisition_references_use_staged_data_not_the_worktree(self):
+        valid = (ROOT / "content" / "facts" / "acquisition.json").read_bytes()
+        self.stage("content/facts/acquisition.json", valid)
+        self.assertTrue(any("valid staged game.json and catalog.json are required" in error for error in audit_index(self.repo)[1]))
+        for filename in ("game.json", "catalog.json"):
+            self.stage("content/facts/" + filename, (ROOT / "content" / "facts" / filename).read_bytes())
+        self.assertEqual(audit_index(self.repo)[1], [])
+        invalid = json.loads(valid)
+        invalid["sources"][0]["rows"][0]["item"] = "not-a-curated-item"
+        self.stage("content/facts/acquisition.json", json.dumps(invalid).encode())
+        (self.repo / "content" / "facts" / "acquisition.json").write_bytes(valid)
+        self.assertTrue(any("acquisition.json: invalid staged references" in error for error in audit_index(self.repo)[1]))
+
+    def test_acquisition_has_no_second_embedded_catalog_owner(self):
+        catalog = json.loads((ROOT / "content" / "facts" / "catalog.json").read_bytes())
+        catalog["acquisition"] = {}
+        self.stage("content/facts/game.json", (ROOT / "content" / "facts" / "game.json").read_bytes())
+        self.stage("content/facts/catalog.json", json.dumps(catalog).encode())
+        self.assertTrue(any("acquisition records must be stored only" in error for error in audit_index(self.repo)[1]))
+
     def test_all_repository_publication_files_pass_content_policy(self):
         for path in ALLOWED_FILES:
             with self.subTest(path=path):

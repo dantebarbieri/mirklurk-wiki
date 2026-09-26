@@ -2,20 +2,33 @@
 
 import html
 import json
+import re
 from collections import defaultdict
 from decimal import Decimal, localcontext
+from fractions import Fraction
 from pathlib import Path
 
 from wiki_catalog import (
-    CURRENCY_RULE_TITLES, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
-    validate_catalog,
+    CURRENCY_RULE_TITLES, category_definitions, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
+    skill_category_title, validate_catalog,
 )
-from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
 from wiki_details import empty_details, validate_coin_profiles, validate_details
+from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
 
 
 def literal(value):
     return "<nowiki>" + html.escape(str(value), quote=False) + "</nowiki>"
+
+
+def linked_prose(text, links):
+    if not links:
+        return literal(text)
+    names = "|".join(re.escape(name) for name in sorted(links, key=len, reverse=True))
+    return "".join(
+        f"[[{links[part]}|{literal(part)}]]" if part in links else literal(part)
+        for part in re.split(r"(?<!\w)(" + names + r")(?!\w)", text) if part
+    )
 
 
 def anchor(kind, identity):
@@ -189,13 +202,18 @@ def price_text(price, images=None):
     return " ".join(parts) or "0 copper"
 
 
-def recipe_profile_values(profile, recipes):
+def recipe_profile_values(profile, recipes, constructions=()):
     if not profile["context"].startswith("Literal initializer values."):
         return {}
-    matches = [
-        entry for entry in recipes
-        if any(output["item"] == profile["entity"] for output in entry["details"]["outputs"])
-    ]
+    matches = [{
+        "confidence": entry["confidence"], "evidence": entry["evidence"],
+        "cost": entry["details"]["cost"], "quantity": output["quantity"], "construction": False,
+    } for entry in recipes for output in entry["details"]["outputs"] if output["item"] == profile["entity"]]
+    matches.extend({
+        "confidence": recipe["confidence"], "evidence": recipe["evidence"],
+        "cost": {"amount": recipe["base_ap_cost"], "unit": "base AP"},
+        "quantity": recipe["result"]["quantity"], "construction": True,
+    } for recipe in constructions if recipe["owner_item"] == profile["entity"])
     if not matches:
         return {}
 
@@ -211,27 +229,25 @@ def recipe_profile_values(profile, recipes):
         if type(value) not in (int, float):
             continue
         if any(
-            entry["confidence"] != profile["confidence"]
+            (entry["confidence"] != profile["confidence"] and not (
+                entry["construction"] and entry["confidence"] == "observed" and profile["confidence"] == "inferred"))
             or not traces(profile["evidence"], field) & traces(entry["evidence"], field)
             for entry in matches
         ):
             continue
         if key == "craft-ap-cost":
-            costs = [entry["details"]["cost"] for entry in matches]
+            costs = [entry["cost"] for entry in matches]
             if all(cost is not None and cost["unit"] == "base AP" and cost["amount"] == value for cost in costs):
                 folded[key] = costs[0]["amount"]
         else:
-            quantities = [
-                output["quantity"] for entry in matches
-                for output in entry["details"]["outputs"] if output["item"] == profile["entity"]
-            ]
+            quantities = [entry["quantity"] for entry in matches]
             if all(quantity == value for quantity in quantities):
                 folded[key] = quantities[0]
     return folded
 
 
-def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=()):
-    if not facts and not profiles and price_item is None:
+def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=(), constructions=()):
+    if not facts and not profiles:
         return ""
     rows = []
     coalesced = set()
@@ -245,7 +261,7 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
             grid_properties.update({f'{grid["kind"]}-pattern-min', f'{grid["kind"]}-pattern-max'})
     for profile in profiles:
         values = profile["values"]
-        folded = recipe_profile_values(profile, recipes)
+        folded = recipe_profile_values(profile, recipes, constructions)
         scope = "Potential" if any(key.endswith("-pattern-min") for key in values) else "Base"
         paired = set(grid_properties)
         for low, high, label, separator in PAIRED_PROPERTIES:
@@ -295,12 +311,6 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
                 anchor("fact", fact["id"]) + literal(label),
                 fact_value(fact), literal(note),
             ])
-    if price_item is not None:
-        rows.append([
-            anchor("price", price_item) + "Standard unit price",
-            "<onlyinclude>" + price_text(price, images) + "</onlyinclude>",
-            "Purchase price per item; not resale value.",
-        ])
     notes = []
     if profiles and coin is None:
         notes.append("Equipment, condition, and other effects may change effective values.")
@@ -401,12 +411,16 @@ def shared_field(entries, getter):
 
 
 def merchant_table(entries, images, entities, locations, standard_prices=False):
-    headers = ["Item"]
+    headers = ["Seller", "Item"]
     getters = []
     notes = []
     unknown = []
+    normal_only = []
+    has_vendor_prices = any(entry["details"]["price"] is not None for entry in entries)
     for field, label in (("quantity", "Quantity"), ("price", "Unit price"), ("currency", "Currency")):
         if field == "price" and standard_prices:
+            if not has_vendor_prices:
+                normal_only.append(len(headers))
             headers.append(label)
             getters.append(lambda entry: "{{:" + locations[entry["details"]["item"]] + "}}"
                            if entry["details"]["price"] is None
@@ -435,22 +449,30 @@ def merchant_table(entries, images, entities, locations, standard_prices=False):
         getters.append(lambda entry: known(entry["conditions"]))
     rows = []
     for entry in entries:
-        rows.append([
-            anchor("entry", entry["id"]) + item_cell(entry["details"]["item"], images, entities, locations),
+        merchant = entry["details"]["merchant"]
+        cells = [
+            anchor("entry", entry["id"]) + f'[[{locations[merchant]}#entry-{entry["id"]}|{literal(entities[merchant]["name"])}]]',
+            item_cell(entry["details"]["item"], images, entities, locations),
             *(getter(entry) for getter in getters),
-        ])
-    return "\n== Wares ==\n" + "\n\n".join(notes) + "\n\n" + table(headers, rows)
+        ]
+        if standard_prices and has_vendor_prices and entry["details"]["price"] is None:
+            index = headers.index("Unit price")
+            cells[index] = (
+                "<noinclude>" + cells[index] + "</noinclude><includeonly>"
+                + f'[[{locations[entry["details"]["item"]]}#price-{entry["details"]["item"]}|Standard item price]]'
+                + "</includeonly>"
+            )
+        row = html_row(cells, normal_only)
+        rows.append(filtered_row(row, "item", [entry["details"]["item"]]))
+    rendered = html_table(headers, rows, normal_only)
+    return "\n== Wares ==\n" + selective_view(
+        "\n\n".join(notes) + "\n\n" + rendered, "offers",
+    ) + "\n"
 
 
 def recipe_table(entries, stations, images, entities, locations):
     groups = recipe_groups(entries)
-    headers = ["Ingredients", "Output", "Crafting method"]
-    has_cost = any(group[0]["details"]["cost"] is not None for group in groups)
-    if has_cost:
-        headers.append("Base cost")
-    same_conditions, conditions = shared_field(entries, lambda entry: entry["conditions"])
-    if not same_conditions:
-        headers.append("Conditions")
+    headers = ["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"]
     rows = []
     for group in groups:
         first = group[0]
@@ -463,29 +485,33 @@ def recipe_table(entries, stations, images, entities, locations):
         row = [
             "".join(anchor("entry", entry["id"]) for entry in group)
             + quantities(details["inputs"], images, entities, locations),
-            quantities(details["outputs"], images, entities, locations), " | ".join(sorted(links)),
+            quantities(details["outputs"], images, entities, locations), " &middot; ".join(sorted(links)),
         ]
-        if has_cost:
-            cost = details["cost"]
-            row.append("Not established" if cost is None else known(cost["amount"]) + (
-                " base [[Action points|AP]]" if cost["unit"] == "base AP" else " " + literal(cost["unit"])))
-        if not same_conditions:
-            row.append(known(first["conditions"]))
-        rows.append(row)
-    notes = ["These are base recipes; skill and station effects may change costs or consumption."]
-    if not has_cost:
-        notes.append("Additional costs are not established.")
-    if same_conditions and conditions:
-        notes.append(literal(conditions))
-    return "\n== Recipes ==\n" + " ".join(notes) + "\n\n" + table(headers, rows)
+        cost = details["cost"]
+        row.append("Not established" if cost is None else known(cost["amount"]) + (
+            " base [[Action points|AP]]" if cost["unit"] == "base AP" else " " + literal(cost["unit"])))
+        row.append(known(first["conditions"]))
+        station_ids = [stations[entry["details"]["station"]]["id"] for entry in group if entry["details"]["station"] in stations]
+        rows.append(selective_view(filtered_row(html_row(row), "station", station_ids), "recipes"))
+    return "\n=== Recipes ===\nThese are base recipes; skill and station effects may change costs or consumption.\n\n" + html_table(headers, rows)
 
 
-def loot_table(entries, images, entities, locations):
-    headers = ["Result", "Quantity"]
+def construction_table(recipe, images, entities, locations):
+    cells = [
+        anchor("entry", recipe["id"]) + quantities(recipe["inputs"], images, entities, locations),
+        known(recipe["result"]["quantity"]) + " in-place completion<br />" + literal(recipe["result"]["description"]),
+        f'[[{recipe["station_title"]}]]', known(recipe["base_ap_cost"]) + " base [[Action points|AP]]",
+        literal(recipe["condition"]),
+    ]
+    row = selective_view(filtered_row(html_row(cells), "station", [recipe["station_id"]]), "recipes")
+    return "\n=== Recipes ===\n" + html_table(["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], [row])
+
+
+def loot_table(entries, images, entities, locations, owner):
+    headers = ["Source", "Result", "Quantity", "Conditional probability"]
     getters = []
     for field, label, formatter in (
         ("weight", "Reported weight", known),
-        ("probability", "Conditional probability", lambda v: known(Decimal(str(v)) * 100) + "%" if v is not None else known(v)),
         ("rolls", "Rolls", count_range),
     ):
         if any(entry["details"][field] is not None for entry in entries):
@@ -501,18 +527,75 @@ def loot_table(entries, images, entities, locations):
     for entry in entries:
         details = entry["details"]
         result = "No items" if details["outcome"] is None else item_cell(details["outcome"], images, entities, locations)
-        row = [anchor("entry", entry["id"]) + result, count_range(details["quantity"]), *(getter(entry) for getter in getters)]
+        probability = details["probability"]
+        row = [
+            anchor("entry", entry["id"]) + f'[[{owner}#entry-{entry["id"]}|{literal(owner)}]]',
+            result, count_range(details["quantity"]),
+            known(Decimal(str(probability)) * 100) + "%" if probability is not None else "Not established",
+            *(getter(entry) for getter in getters),
+        ]
         if not same_conditions:
             row.append(known(entry["conditions"]))
         if not same_summary:
             row.append(literal(entry["summary"]))
-        rows.append(row)
+        rows.append(filtered_row(html_row(row), "item", [details["outcome"] or "empty"]))
     notes = ["Reported weights are not converted to probabilities. A range does not imply equally likely quantities."]
     if same_conditions and conditions:
         notes.append(literal(conditions))
     if same_summary:
         notes.append(literal(summary))
-    return "\n== Loot ==\n" + "\n\n".join(notes) + "\n\n" + table(headers, rows)
+    return "\n== Loot ==\n" + selective_view(
+        "\n\n".join(notes) + "\n\n" + html_table(headers, rows), "loot",
+    ) + "\n"
+
+
+def acquisition_probability(row):
+    probability = row["probability"]
+    if probability is None:
+        return "Not established. " + literal(row["odds_note"])
+    chance = Fraction(probability["numerator"], probability["denominator"])
+    denominator = chance.denominator
+    for prime in (2, 5):
+        while denominator % prime == 0:
+            denominator //= prime
+    if denominator == 1:
+        with localcontext() as context:
+            context.prec = 80
+            value = known(Decimal(chance.numerator) * 100 / Decimal(chance.denominator)) + "%"
+    else:
+        value = known(chance.numerator) + "/" + known(chance.denominator)
+    return value + "<br />" + literal(probability["scope"]) + (
+        "<br />" + literal(row["odds_note"]) if row.get("odds_note") else "")
+
+
+def acquisition_table(source, images, entities, locations):
+    rows = []
+    for row in source["rows"]:
+        cells = [
+            anchor("acquisition", row["id"]) + f'[[{source["title"]}#acquisition-{row["id"]}|{literal(source["title"])}]]',
+            item_cell(row["item"], images, entities, locations), count_range(row["quantity"]),
+            acquisition_probability(row), literal(row["condition"]),
+        ]
+        rows.append(filtered_row(html_row(cells), "item", [row["item"]]))
+    return "\n== Contents and acquisition ==\n" + selective_view(html_table(
+        ["Source", "Item", "Quantity", "Conditional probability", "Condition"], rows,
+    ), "loot") + "\n"
+
+
+def acquisition_pool_table(pool, owner, entities, locations):
+    rows = []
+    for identity in sorted(pool["eligible_item_ids"]):
+        condition = f'Eligible, not guaranteed. [[{owner}#pool-{pool["id"]}|Rules and value budget]].'
+        if identity in pool["item_conditions"]:
+            condition += f' [[{owner}#treasure-condition-{identity}|Additional story condition]].'
+        cells = [
+            anchor("pool-item", pool["id"] + "-" + identity) + entity_link(identity, entities, locations),
+            "Budget-dependent", "Not established", condition,
+        ]
+        rows.append(filtered_row(html_row(cells), "item", [identity]))
+    content = html_table(["Item", "Quantity", "Per-item probability", "Eligibility"], rows)
+    return selective_view(filtered_row(filtered_row(content, "item", pool["eligible_item_ids"]),
+                                       "pool", [pool["id"]]), "pool")
 
 
 def evidence_text(references):
@@ -575,10 +658,56 @@ def source_page(data, catalog, details, locations, facts, entries):
                       "Rodents groups Mirk Runner and Mirk Mauler using their rat sprite associations: " + evidence_text([
                           {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[11].sprite/beingDB[29].sprite"}
                       ])])
+        lines.append(table(["Category", "Confidence", "Evidence"], [
+            [f'[[:Category:{title}|{literal(title)}]]', literal(row["confidence"]), evidence_text(row["evidence"])]
+            for title, row in sorted(category_definitions(data, catalog).items()) if row.get("evidence")
+        ]))
     if catalog.get("guides"):
-        lines.extend(["", "== Combat and action guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+        lines.extend(["", '<span id="Combat_and_action_guide_evidence"></span>', "== Guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
             [f'[[{guide["title"]}]]', literal(guide["confidence"]), evidence_text(guide["evidence"])]
             for guide in sorted(catalog["guides"], key=lambda row: row["title"])
+        ])])
+    if catalog.get("item_effects"):
+        lines.extend(["", "== Consumption effect evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+            [f'[[{locations[row["entity"]]}#Consumption_effects|{literal(locations[row["entity"]])}]]',
+             literal(row["confidence"]), evidence_text(row["evidence"])]
+            for row in sorted(catalog["item_effects"], key=lambda row: row["entity"])
+        ])])
+    acquisition_sources = catalog.get("acquisition", {}).get("sources", [])
+    if acquisition_sources:
+        rows = []
+        for source in acquisition_sources:
+            rows.append([literal(source["id"]), f'[[{source["title"]}]]', literal(source["confidence"]), evidence_text(source["evidence"])])
+            rows.extend([
+                [literal(row["id"]), f'[[{source["title"]}#acquisition-{row["id"]}|{literal(source["title"])}]]',
+                 literal(row.get("confidence", source["confidence"])) + "; " + literal(row["coverage"]), evidence_text(row["evidence"])]
+                for row in source["rows"]
+            ])
+            rows.extend([
+                [literal(source["id"] + "-" + identity), f'[[{locations[identity]}]]',
+                 literal(source["confidence"]), evidence_text(source["evidence"])]
+                for identity in sorted(source.get("entity_context", {}))
+            ])
+        lines.extend(["", "== Acquisition source evidence ==", table(["Record", "Editable owner", "Scope", "Evidence"], rows)])
+        if catalog["acquisition"].get("item_notes"):
+            lines.extend(["", "== Special acquisition evidence ==", table(["Editable owner", "Scope", "Evidence"], [
+                [f'[[{locations[note["item"]]}#How_to_acquire|{literal(locations[note["item"]])}]]',
+                 literal(note["kind"]), evidence_text(note["evidence"])]
+                for note in sorted(catalog["acquisition"]["item_notes"], key=lambda row: row["item"])
+            ])])
+        source_titles = {source["id"]: source["title"] for source in acquisition_sources}
+        if catalog["acquisition"].get("pools"):
+            lines.extend(["", "== Treasure pool evidence ==", table(["Pool", "Editable owner", "Confidence", "Evidence"], [
+                [literal(pool["id"]),
+                 f'[[{source_titles[pool["owner_source"]]}#pool-{pool["id"]}|{literal(pool["title"])}]]',
+                 literal(pool["confidence"]), evidence_text(pool["evidence"])]
+                for pool in sorted(catalog["acquisition"]["pools"], key=lambda row: row["id"])
+            ])])
+    if catalog.get("construction_recipes"):
+        lines.extend(["", "== In-place construction evidence ==", table(["Record", "Editable owner", "Confidence", "Evidence"], [
+            [literal(recipe["id"]), f'[[{locations[recipe["owner_item"]]}#entry-{recipe["id"]}|{literal(locations[recipe["owner_item"]])}]]',
+             literal(recipe["confidence"]), evidence_text(recipe["evidence"])]
+            for recipe in catalog["construction_recipes"]
         ])])
     if catalog.get("damage_sources"):
         lines.extend(["", "== Ammunition and thrown damage evidence ==", table(["Editable owner", "Delivery", "Confidence", "Evidence"], [
@@ -744,6 +873,10 @@ def build_pages(root, data, catalog=None, details=None):
     prices = {row["entity"]: row for row in catalog.get("unit_prices", {}).get("prices", [])}
     price_items = ({entry["details"]["item"] for entry in entries if entry["kind"] == "merchant"} | prices.keys()) if "unit_prices" in catalog else set()
     coins = {row["entity"]: row for row in catalog.get("currency", {}).get("coins", [])}
+    acquisition_sources = catalog.get("acquisition", {}).get("sources", [])
+    acquisition_by_id = {source["id"]: source for source in acquisition_sources}
+    acquisition_pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
+    acquisition_notes = {note["item"]: note for note in catalog.get("acquisition", {}).get("item_notes", [])}
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
     pages = {title: read_authored(root, title, filename) for title, filename in {**PAGE_FILES, "NPCs": "NPCs.wiki", **active}.items()}
@@ -771,7 +904,9 @@ def build_pages(root, data, catalog=None, details=None):
         index = "NPCs" if classified.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
         text = f'[[Main Page]] | [[{index}]]\n\n' + anchor("entity", entity["id"]) + f"'''{literal(entity['name'])}'''\n"
         if entity["category"] == "skill":
-            text += "\nGroup: " + entity_link(entity["group"], entities, locations) + "\n"
+            group = skill_category_title(entities[entity["group"]])
+            text += f"\nGroup: [[:Category:{group}|{literal(entities[entity['group']]['name'])}]] | "
+            text += entity_link(entity["group"], entities, locations) + " in the Skills index\n"
         if entity["category"] == "being" and classified.get(entity["id"]) not in {"npc", "creature"}:
             text += "\nThis being has not been classified.\n"
         matching = [image for image in images if image.get("entity") == entity["id"]]
@@ -786,15 +921,89 @@ def build_pages(root, data, catalog=None, details=None):
         pages[row["title"]] = text
         for alias in row["aliases"]:
             pages[alias] = f'#REDIRECT [[{row["title"]}]]\n'
+    if acquisition_sources and "Loot tables" not in pages:
+        pages["Loot tables"] = read_authored(root, "Loot tables", RESEARCH_PAGE_FILES["Loot tables"])
+    for source in sorted(acquisition_sources, key=lambda row: row["id"]):
+        links = {title: title for title in source["related_pages"]}
+        links[source["title"]] = source["title"]
+        links.update({entities[identity]["name"]: locations[identity] for identity in source["related_entities"]})
+        links.update({entities[row["item"]]["name"]: locations[row["item"]] for row in source["rows"]})
+        text = "[[Loot tables]] | [[Main Page]]\n\n" + anchor("source", source["id"])
+        if "image_entity" in source:
+            image = image_for(source["image_entity"], images)
+            if image is None:
+                raise DataError("acquisition source: contextual picture has no approved image")
+            text += f'\n[[{image["file_title"]}|thumb|{literal(source["image_caption"])}]]\n'
+        text += "\n" + linked_prose(source["summary"], links) + "\n"
+        text += "\n\n".join(linked_prose(condition, links) for condition in source["conditions"]) + "\n"
+        if source.get("loot_context"):
+            text += "\n" + selective_view(linked_prose(source["loot_context"], links), "loot") + "\n"
+        if source["rows"]:
+            text += acquisition_table(source, images, entities, locations)
+        owned_pools = [acquisition_pools[identity] for identity in source.get("pool_ids", [])]
+        conditions = {identity: condition for pool in owned_pools for identity, condition in pool["item_conditions"].items()}
+        if conditions:
+            text += "\n== Item-specific treasure conditions ==\n"
+            for identity, condition in sorted(conditions.items()):
+                gate = "<noinclude>" + anchor("treasure-condition", identity) + "</noinclude>"
+                gate += entity_link(identity, entities, locations) + ": " + literal(condition)
+                pool_ids = [pool["id"] for pool in owned_pools if identity in pool["item_conditions"]]
+                text += selective_view(filtered_row(filtered_row(gate, "item", [identity]), "pool", pool_ids), "pool") + "\n"
+        if owned_pools:
+            text += "\n== Eligibility and odds ==\n"
+            text += "\n\n".join(literal(note) for note in sorted({pool["odds_note"] for pool in owned_pools})) + "\n"
+        for pool in sorted(owned_pools, key=lambda row: row["id"]):
+            text += "\n" + anchor("pool", pool["id"]) + "\n=== " + literal(pool["title"]) + " ===\n"
+            text += literal(pool["summary"]) + "\n\n" + acquisition_pool_table(pool, source["title"], entities, locations) + "\n"
+        for reference in source.get("pool_refs", []):
+            pool = acquisition_pools[reference["pool"]]
+            label = anchor("pool-source", source["id"] + "-" + pool["id"])
+            label += f"'''[[{source['title']}]]''': " + literal(reference["condition"])
+            text += "\n" + selective_view(filtered_row(label, "pool", [pool["id"]]), "pool-source") + "\n"
+            text += "<noinclude>{{:" + acquisition_by_id[pool["owner_source"]]["title"] + "|view=pool|pool=" + pool["id"] + "}}</noinclude>\n"
+        if links:
+            text += "\nRelated pages: " + " | ".join(f"[[{target}]]" for target in sorted(set(links.values()) - {source["title"]})) + "\n"
+        pages[source["title"]] = text
+        pages["Loot tables"] += f'\n* [[{source["title"]}]]\n'
+        if source["kind"] in {"starting", "fixed-location"}:
+            pages["Main Page"] += f'\n[[{source["title"]}]]\n'
+        for identity in source["related_entities"]:
+            context = source.get("entity_context", {}).get(identity)
+            pages[locations[identity]] += (
+                "\n" + literal(context) + f' [[{source["title"]}]]\n' if context
+                else f'\n[[{source["title"]}|Related acquisition guide]]\n'
+            )
     for guide in sorted(catalog.get("guides", []), key=lambda row: row["title"]):
-        pages[guide["title"]] += "\n== How it works ==\n" + "\n\n".join(literal(p) for p in guide["paragraphs"]) + "\n"
+        if guide["title"] not in pages:
+            pages[guide["title"]] = "[[Game mechanics]] | [[Main Page]]\n"
+            pages["Game mechanics"] += f'\n[[{guide["title"]}]]\n'
+            pages["Main Page"] += f'\n[[{guide["title"]}]]\n'
+        if "image_entity" in guide:
+            image = image_for(guide["image_entity"], images)
+            if image is None:
+                raise DataError("guide: contextual picture has no approved image metadata")
+            pages[guide["title"]] += f'\n[[{image["file_title"]}|thumb|{literal(guide["image_caption"])}]]\n'
+        pages[guide["title"]] += "\n== How it works ==\n"
+        links = {target: target for target in guide.get("related_pages", [])}
+        if "section_titles" in guide:
+            links.update({entities[identity]["name"]: locations[identity] for identity in guide["related_entities"]})
+        for heading, paragraph in zip(guide.get("section_titles", [None] * len(guide["paragraphs"])), guide["paragraphs"]):
+            if heading:
+                pages[guide["title"]] += "\n=== " + literal(heading) + " ===\n"
+            pages[guide["title"]] += "\n" + linked_prose(paragraph, links) + "\n"
+        if guide.get("related_pages"):
+            pages[guide["title"]] += "\nRelated guides: " + " | ".join(
+                f"[[{target}]]" for target in guide["related_pages"]) + "\n"
         if guide["related_entities"]:
-            pages[guide["title"]] += "\nRelated skills and remedies: " + " | ".join(
+            pages[guide["title"]] += "\nRelated items and skills: " + " | ".join(
                 entity_link(identity, entities, locations) for identity in guide["related_entities"]) + "\n"
             for identity in guide["related_entities"]:
                 pages[locations[identity]] += f'\n[[{guide["title"]}|{guide["title"]}: effects and related rules]]\n'
-        if guide["title"] not in {"Action points", "Health and armor"}:
+        if guide["title"] not in MECHANIC_GUIDE_TITLES:
             pages[guide["title"]] += "\n[[Health and armor|Health shapes and armor layers]] | [[Action points]]\n"
+        if guide["title"] == "Foods" and any(group["title"] == "Food and drink" for field in ("groups", "tags")
+                                           for group in catalog.get("taxonomy", {}).get(field, [])):
+            pages[guide["title"]] += "\n[[:Category:Food and drink|Browse foods and drinks]] | [[Crafting|Find a preparation recipe]]\n"
 
     # Each overview groups historical anchors with its canonical destination.
     navigation = defaultdict(lambda: defaultdict(set))
@@ -834,6 +1043,7 @@ def build_pages(root, data, catalog=None, details=None):
         if title == "Skills":
             for group in sorted((row for row in data["entities"] if row["category"] == "skill_group"), key=lambda row: (row["name"], row["id"])):
                 pages[title] += "\n" + anchor("entity", group["id"]) + f'\n== {literal(group["name"])} ==\n'
+                pages[title] += f'[[:Category:{skill_category_title(group)}|Browse group category]]\n'
                 matching = {}
                 for entity in data["entities"]:
                     if entity.get("group") == group["id"]:
@@ -859,6 +1069,12 @@ def build_pages(root, data, catalog=None, details=None):
             f'\n<div class="mw-collapsible mw-collapsed">\n{label}\n<div class="mw-collapsible-content">\n'
             + "\n".join(navigation_lines(targets)) + "\n</div></div>\n"
         )
+    previous_owners = entry_owners(data, locations, relations, {key: value for key, value in catalog.items() if key != "acquisition"})
+    for entry in entries:
+        previous = previous_owners[entry["id"]]
+        target = owners[entry["id"]]
+        if previous != target:
+            pages[previous] += "\n" + anchor("entry", entry["id"]) + f"[[{target}#entry-{entry['id']}|Documented loot source]]\n"
 
     for title in list(pages):
         entity_ids = {row["entity"] for row in catalog["pages"] if row["title"] == title}
@@ -875,7 +1091,7 @@ def build_pages(root, data, catalog=None, details=None):
                        key=lambda row: (row["kind"] != "health", row["kind"]))
         pages[title] += stat_table(
             matching_facts, matching_profiles, properties, entities, locations,
-            price_item, prices.get(price_item), coin, recipes, images, grids,
+            price_item, prices.get(price_item), coin, recipes, images, grids, catalog.get("construction_recipes", []),
         )
         for grid in grids:
             pages[title] += cell_grid(grid, entities[grid["entity"]]["category"], images)
@@ -883,11 +1099,10 @@ def build_pages(root, data, catalog=None, details=None):
             pages[title] += coin_summary(coin, entities, locations)
         for kind, renderer in (
             ("merchant", lambda rows: merchant_table(rows, images, entities, locations, "unit_prices" in catalog)),
-            ("recipe", lambda rows: recipe_table(rows, stations, images, entities, locations)),
-            ("loot", lambda rows: loot_table(rows, images, entities, locations)),
+            ("loot", lambda rows: loot_table(rows, images, entities, locations, title)),
         ):
             matching = [row for row in matching_entries if row["kind"] == kind]
-            if matching:
+            if matching and not (kind == "loot" and any(entities[identity]["category"] == "item" for identity in entity_ids)):
                 pages[title] += renderer(matching)
         prose = [row for row in matching_entries if row["kind"] in {"quest", "algorithm"}]
         if title == "Quests and journal":
@@ -920,15 +1135,62 @@ def build_pages(root, data, catalog=None, details=None):
             else:
                 other.append(f"* [[{target}|{literal(entry['title'])}]]")
         if entities[identity]["category"] == "item":
-            pages[title] += "\n== Obtaining ==\n"
-            if any(entry["kind"] == "recipe" and owners[entry["id"]] == title for entry in entries):
-                pages[title] += "See [[#Recipes|Recipes]] for the documented crafting options.\n"
-            if acquisition:
-                pages[title] += "\n".join(sorted(set(acquisition))) + "\n"
-            elif identity in coins:
+            pages[title] += '\n<span id="Obtaining"></span>\n== How to acquire ==\n'
+            if identity in acquisition_notes:
+                note = acquisition_notes[identity]
+                links = {entities[target]["name"]: locations[target] for target in note.get("related_items", [])}
+                pages[title] += linked_prose(note["text"], links) + "\n"
+                if note.get("related_items"):
+                    pages[title] += "\nRelated recipes: " + " | ".join(
+                        f'[[{locations[target]}#Recipes|{literal(locations[target])}]]'
+                        for target in note["related_items"]
+                    ) + "\n"
+            own_recipes = [entry for entry in entries if entry["kind"] == "recipe" and owners[entry["id"]] == title]
+            if own_recipes:
+                pages[title] += recipe_table(own_recipes, stations, images, entities, locations)
+            for recipe in catalog.get("construction_recipes", []):
+                if recipe["owner_item"] == identity:
+                    pages[title] += construction_table(recipe, images, entities, locations)
+            offers = [entry for entry in entries if entry["kind"] == "merchant" and entry["details"]["item"] == identity]
+            if identity in price_items:
+                pages[title] += (
+                    "\n=== Buying ===\n" + anchor("price", identity) + "Standard unit price: "
+                    + selective_view(price_text(prices.get(identity), images), "price", default=True)
+                    + ". Purchase price per item; not resale value.\n"
+                )
+            if offers:
+                pages[title] += "\n".join(
+                    "{{:" + owner + "|view=offers|item=" + identity + "}}"
+                    for owner in sorted({owners[entry["id"]] for entry in offers})
+                ) + "\n"
+            loot = [entry for entry in entries if entry["kind"] == "loot" and entry["details"]["outcome"] == identity]
+            owned_loot = [entry for entry in loot if owners[entry["id"]] == title]
+            if owned_loot:
+                pages[title] += loot_table(owned_loot, images, entities, locations, title)
+            loot_owners = {owners[entry["id"]] for entry in loot if owners[entry["id"]] != title}
+            documented_sources = {source["title"] for source in acquisition_sources if any(
+                row["item"] == identity for row in source["rows"])}
+            loot_owners.update(documented_sources)
+            if loot_owners:
+                pages[title] += "\n=== Loot sources ===\n" + "\n".join(
+                    "{{:" + owner + "|view=loot|item=" + identity + "}}"
+                    for owner in sorted(loot_owners)
+                ) + "\n"
+            eligible_sources = [(source, reference, acquisition_pools[reference["pool"]])
+                                for source in acquisition_sources for reference in source.get("pool_refs", [])
+                                if identity in acquisition_pools[reference["pool"]]["eligible_item_ids"]]
+            if eligible_sources:
+                pages[title] += "\n=== Random treasure sources ===\n"
+                for source, reference, pool in sorted(eligible_sources, key=lambda row: (row[0]["title"], row[2]["id"])):
+                    pages[title] += "\n{{:" + source["title"] + "|view=pool-source|pool=" + pool["id"] + "}}\n"
+                    pages[title] += "{{:" + acquisition_by_id[pool["owner_source"]]["title"] + "|view=pool|pool=" + pool["id"] + "|item=" + identity + "}}\n"
+            if identity in coins:
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
-            elif not any(entry["kind"] == "recipe" and owners[entry["id"]] == title for entry in entries):
-                pages[title] += "Acquisition is not established.\n"
+            elif not own_recipes and not offers and not loot and not documented_sources and not eligible_sources and identity not in acquisition_notes:
+                pages[title] += "No documented acquisition source is available yet.\n"
+        for recipe in catalog.get("construction_recipes", []):
+            if any(component["item"] == identity for component in recipe["inputs"]):
+                recipes.append(f'* [[{locations[recipe["owner_item"]]}#Recipes|{literal(locations[recipe["owner_item"]])}]]')
         if recipes:
             pages[title] += "\n== Used in ==\n" + "\n".join(sorted(set(recipes))) + "\n"
         if quests:
@@ -964,6 +1226,10 @@ def build_pages(root, data, catalog=None, details=None):
             "\n== Damage behavior ==\n" + source["delivery"].capitalize() + ": "
             + entity_link(source["damage_type"], entities, locations) + "\n\n" + literal(source["summary"]) + "\n"
         )
+    for effect in catalog.get("item_effects", []):
+        pages[locations[effect["entity"]]] += "\n== Consumption effects ==\n" + "\n\n".join(
+            literal(paragraph) for paragraph in effect["paragraphs"]
+        ) + "\n"
 
     for history in catalog.get("state_history", []):
         before, after = locations[history["before"]], locations[history["after"]]
@@ -1017,16 +1283,16 @@ def build_pages(root, data, catalog=None, details=None):
                 f'[[Quests and journal#entry-{identity}|{literal(next(entry["title"] for entry in entries if entry["id"] == identity))}]]'
                 for identity in station["quest_entries"]
             ) + "\n"
-        targets = {}
+        targets = set()
         for entry in entries:
             if entry["kind"] == "recipe" and entry["details"]["station"] in station["methods"]:
-                for output in entry["details"]["outputs"]:
-                    targets.setdefault(output["item"], entry)
-        rows = []
-        for identity, entry in sorted(targets.items(), key=lambda pair: entities[pair[0]]["name"]):
-            target = owners[entry["id"]] + "#entry-" + entry["id"]
-            rows.append([icon(identity, images, entities, locations), f'[[{target}|{literal(entities[identity]["name"])}]]'])
-        pages[title] += "\n== What you can craft ==\n" + table(["Picture", "Recipe"], rows)
+                targets.add(owners[entry["id"]])
+        targets.update(locations[recipe["owner_item"]] for recipe in catalog.get("construction_recipes", [])
+                       if recipe["station_id"] == station["id"])
+        rows = ["{{:" + owner + "|view=recipes|station=" + station["id"] + "}}\n" for owner in sorted(targets)]
+        pages[title] += "\n== What you can craft ==\n" + html_table(
+            ["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], rows,
+        )
     pages["Source provenance"] = source_page(data, catalog, details, locations, facts, owners)
     if "currency" in catalog:
         pages["Currency and trading"] = currency_page(catalog["currency"], entities, locations)
@@ -1036,27 +1302,37 @@ def build_pages(root, data, catalog=None, details=None):
         for entry in entries:
             if entry["kind"] == "merchant" and "[[Currency and trading" not in pages[owners[entry["id"]]]:
                 pages[owners[entry["id"]]] += "\n[[Currency and trading|How prices, condition, and change work]]\n"
+    categories = category_definitions(data, catalog)
     memberships = defaultdict(set)
-    category_parents = {}
-    for row in catalog["pages"]:
-        entity = entities[row["entity"]]
-        root_category = "NPCs" if classified.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
-        memberships[row["title"]].add(root_category)
-        if entity["category"] == "skill":
-            group = entities[entity["group"]]["name"]
-            memberships[row["title"]].add(group)
-            category_parents[group] = "Skills"
-    for group in [*catalog.get("taxonomy", {}).get("groups", []), *catalog.get("taxonomy", {}).get("tags", [])]:
-        category_parents[group["title"]] = group["index"]
-        for identity in group["members"]:
-            memberships[locations[identity]].add(group["title"])
-    for title, categories in sorted(memberships.items()):
-        pages[title] += "\n" + " ".join(f"[[Category:{category}]]" for category in sorted(categories)) + "\n"
-    all_categories = {category for categories in memberships.values() for category in categories}
-    for category in sorted(all_categories):
-        parent = category_parents.get(category)
-        index = parent or category
-        pages["Category:" + category] = f"[[{index}|Readable index]] | [[Main Page]]\n\nPages in this browsing group keep their own editable facts.\n"
-        if parent:
-            pages["Category:" + category] += f"\n[[Category:{parent}]]\n"
+
+    def add_membership(title, category):
+        if category in memberships[title]:
+            return
+        memberships[title].add(category)
+        for parent in categories[category]["parents"]:
+            add_membership(title, parent)
+
+    for category, row in categories.items():
+        for identity in row["members"]:
+            add_membership(locations[identity], category)
+    for title, assigned in sorted(memberships.items()):
+        pages[title] += "\n" + " ".join(f"[[Category:{category}]]" for category in sorted(assigned)) + "\n"
+    for category, row in sorted(categories.items()):
+        text = f"[[{row['index']}|Readable index]] | [[Main Page]]\n\n"
+        text += linked_prose(row["summary"], {title: ":Category:" + title for title in categories}) + "\n"
+        if row["parents"]:
+            text += "\nParent categories: " + " | ".join(f"[[:Category:{parent}|{parent}]]" for parent in sorted(row["parents"])) + "\n"
+        children = sorted(title for title, child in categories.items() if category in child["parents"])
+        if children:
+            text += "\n== Subcategories ==\n" + "\n".join(f"* [[:Category:{child}|{child}]]" for child in children) + "\n"
+        if row["members"]:
+            text += "\n== Directly listed articles ==\n" + "\n".join(
+                "* " + entity_link(identity, entities, locations)
+                for identity in sorted(row["members"], key=lambda identity: locations[identity])
+            ) + "\n"
+        text += "\n" + " ".join(f"[[Category:{parent}]]" for parent in sorted(row["parents"])) + "\n"
+        pages["Category:" + category] = text
+        if category == row["index"]:
+            pages[row["index"]] += f'\n[[:Category:{category}|Browse the category hierarchy]]\n'
+    validate_transclusions(pages)
     return pages

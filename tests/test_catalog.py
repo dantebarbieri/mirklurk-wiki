@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from build_wiki import build_pages, build_xml, literal, profile_value
 from wiki_catalog import (
-    default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
+    category_definitions, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
     parse_catalog, validate_catalog,
 )
 from wiki_data import DataError, load_data
@@ -25,6 +25,7 @@ from wiki_details import (
 from wiki_render import PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
 from smoke_deploy import refreshed_transclusion
+from wiki_views import available_views, selective_view, transclusions
 
 
 class CatalogTests(unittest.TestCase):
@@ -41,8 +42,8 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
-        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 357)
-        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 44)
+        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 385)
+        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 80)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
 
@@ -69,6 +70,12 @@ class CatalogTests(unittest.TestCase):
                     if entry["kind"] in {"quest", "algorithm", "recipe", "merchant"} and locations[identity] != entries[entry["id"]]:
                         self.assertIn(f'[[{locations[identity]}', page)
                     if locations[identity] != entries[entry["id"]] and "#" not in locations[identity] and entry["kind"] != "loot":
+                        if entry["kind"] == "merchant" and identity == entry["details"]["item"]:
+                            self.assertIn(
+                                (entries[entry["id"]], (("item", identity), ("view", "offers"))),
+                                transclusions(self.pages[locations[identity]]),
+                            )
+                            continue
                         fragment = "Recipes" if entry["kind"] == "recipe" else "entry-" + entry["id"]
                         self.assertIn(f'[[{entries[entry["id"]]}#{fragment}|', self.pages[locations[identity]])
         for entity in self.data["entities"]:
@@ -101,7 +108,7 @@ class CatalogTests(unittest.TestCase):
                 self.assertEqual(page.count(f'id="profile-{profile["id"]}"'), 1)
                 self.assertIn(literal(profile["context"]), self.pages["Source provenance"])
                 self.assertNotIn(literal(profile["context"]), page)
-                folded = recipe_profile_values(profile, recipes)
+                folded = recipe_profile_values(profile, recipes, self.catalog.get("construction_recipes", []))
                 for key, value in profile["values"].items():
                     grids = [grid for grid in self.details["grids"] if grid["entity"] == profile["entity"]]
                     if key == "being-armor" and any(g["kind"] == "health" for g in grids):
@@ -117,7 +124,7 @@ class CatalogTests(unittest.TestCase):
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
                         self.assertIn(known(coins[profile["entity"]][field]), page)
                     elif key == "initial-price" and profile["entity"] in prices:
-                        self.assertIn("<onlyinclude>" + price_text(prices[profile["entity"]]) + "</onlyinclude>", page)
+                        self.assertIn(selective_view(price_text(prices[profile["entity"]]), "price", True), page)
                     else:
                         self.assertIn(profile_value(key, value, entities, locations), page)
         for name in ("Flax", "Linen"):
@@ -126,15 +133,18 @@ class CatalogTests(unittest.TestCase):
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
         images = self.data["illustrations"]
-        original_batch = {"schema_version": 1, "illustrations": [row for row in images if "health_armor" not in row]}
+        replaced_trees = {"nature-4", "nature-7", "nature-17", "nature-20"}
+        original_batch = {"schema_version": 1, "illustrations": [
+            row for row in images if "health_armor" not in row and row.get("entity") not in replaced_trees]}
         self.assertEqual(
             hashlib.sha256((json.dumps(original_batch, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "c39da5b3edcc0a8ca077b7265fdf7ebc92b44613c23c79f01bbc1d2de51f6459",
+            "d3df203720abfff6fe543008b9a6cdfe02906c3e5079cadaca6268ede9a576c7",
         )
         self.assertEqual(len(images), 326)
-        original = {"schema_version": 1, "illustrations": [row for row in images if "entity" in row]}
+        original = {"schema_version": 1, "illustrations": [
+            row for row in images if "entity" in row and row["entity"] not in replaced_trees]}
         self.assertEqual(hashlib.sha256((json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "d2127f41f5f41dcbe3fb7f04354b97289708c25c60a411487a3ae53cc886399e")
+                         "16e17eb58db7b29c276393755aa73df2a6315607c9e621d1f260f21f84d0b799")
         missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in images if "entity" in row}
         self.assertEqual(missing, {"item-31", "item-48", "item-49", "item-171"})
         locations = page_locations(self.data, self.catalog)
@@ -146,7 +156,7 @@ class CatalogTests(unittest.TestCase):
             self.assertIn(literal(image["sha256"]), self.pages["Source provenance"])
             self.assertNotIn(image["sha256"], page)
             self.assertIn(literal(image["caption"]), page)
-        for identity in ("nature-4", "nature-6", "nature-7", "nature-17", "nature-20"):
+        for identity in ("nature-6",):
             self.assertIn("not a complete mature specimen", self.pages[locations[identity]])
 
     def test_skill_specific_facts_and_algorithms_have_individual_owners(self):
@@ -257,6 +267,11 @@ class CatalogTests(unittest.TestCase):
             details[key].reverse()
         catalog["taxonomy"]["groups"].reverse()
         catalog["taxonomy"]["tags"].reverse()
+        catalog["taxonomy"]["skill_groups"].reverse()
+        for row in [*catalog["taxonomy"]["groups"], *catalog["taxonomy"]["tags"]]:
+            row["members"].reverse()
+            if "parents" in row:
+                row["parents"].reverse()
         self.assertEqual(build_xml(self.pages), build_xml(build_pages(ROOT, self.data, catalog, details)))
 
     def test_player_pages_hide_identifiers_and_evidence_plumbing(self):
@@ -273,7 +288,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_bhato_has_compact_wares_and_journal_links_without_copied_prose(self):
         bhato = self.pages["Ranger Bhato"]
-        self.assertEqual(bhato.count('{| class="wikitable"'), 2)
+        self.assertEqual(bhato.count('{| class="wikitable"') + bhato.count('<table class="wikitable">'), 2)
         self.assertEqual(bhato.count('id="entry-merchant-12-'), 12)
         self.assertEqual(bhato.count("{{:"), 12)
         self.assertIn("[[Ranger Bhato|", self.pages["Merchants"])
@@ -294,10 +309,10 @@ class CatalogTests(unittest.TestCase):
         recipes = [display_entry(row, self.catalog) for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual(len(recipes), 96)
         self.assertEqual(len(recipe_groups(recipes)), 77)
-        self.assertEqual(self.pages["Alchemy workstation"].count('{| class="wikitable"'), 1)
-        self.assertEqual(self.pages["Alchemy workstation"].count("|-\n"), 15)
-        self.assertNotIn("Ingredients", self.pages["Alchemy workstation"])
-        self.assertNotIn("Base cost", self.pages["Alchemy workstation"])
+        self.assertEqual(self.pages["Alchemy workstation"].count('<table class="wikitable">'), 1)
+        self.assertEqual(len(transclusions(self.pages["Alchemy workstation"])), 15)
+        self.assertIn("Ingredients", self.pages["Alchemy workstation"])
+        self.assertIn("Base cost", self.pages["Alchemy workstation"])
         self.assertNotIn("Maybe unused", self.pages["Armor workstation"])
         self.assertNotIn("{|", self.pages["Crafting"])
         self.assertIn("[[Inventory crafting]]", self.pages["Crafting"])
@@ -376,20 +391,28 @@ class CatalogTests(unittest.TestCase):
     def test_global_prices_are_item_owned_selective_transclusions(self):
         prices = self.catalog["unit_prices"]
         raw_prices = json.loads((ROOT / "content" / "facts" / "catalog.json").read_text())["unit_prices"]
-        self.assertEqual(hashlib.sha256((json.dumps(raw_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "cc87a1884a50596233aad3708fd145d636bbe88e8c8bea9fa1867aaff4e198ea")
-        self.assertEqual(len(prices["prices"]), 36)
-        self.assertEqual(len(prices["covered_offers"]), 52)
-        self.assertEqual(len(prices["unresolved_offers"]), 11)
+        resolved = {"item-32", "item-84", "item-138", "item-139", "item-140", "item-248"}
+        original_prices = [row for row in raw_prices["prices"] if row["entity"] not in resolved]
+        self.assertEqual(hashlib.sha256((json.dumps(original_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
+                         "cacc81734f11f214e0bf28c0115050d129fe497112d0e415ba70e8aff4e1dc4e")
+        self.assertEqual(len(prices["prices"]), 42)
+        self.assertEqual(len(prices["covered_offers"]), 63)
+        self.assertEqual(prices["unresolved_offers"], [])
+        self.assertEqual({row["entity"]: row["value"] for row in prices["prices"] if row["entity"] in resolved},
+                         {identity: Decimal(value) for identity, value in {
+                             "item-32": "0.6", "item-84": "0.3", "item-138": "1.5",
+                             "item-139": "1", "item-140": "0.25", "item-248": "1",
+                         }.items()})
         locations = page_locations(self.data, self.catalog)
         known_prices = {row["entity"]: row for row in prices["prices"]}
         items = {row["details"]["item"] for row in self.data["entries"] if row["kind"] == "merchant"}
         self.assertEqual(len(items), 42)
-        self.assertEqual(sum(page.count("<onlyinclude>") for page in self.pages.values()), 45)
+        expected_default_owners = {locations[identity] for identity in items} | {
+            locations[row["entity"]] for row in self.catalog["currency"]["coins"]}
+        self.assertEqual({title for title, page in self.pages.items() if "" in available_views(page)}, expected_default_owners)
         for identity in items:
             page = self.pages[locations[identity]]
-            self.assertEqual(page.count("<onlyinclude>"), 1)
-            self.assertIn("<onlyinclude>" + price_text(known_prices.get(identity)) + "</onlyinclude>", page)
+            self.assertIn(selective_view(price_text(known_prices.get(identity)), "price", True), page)
             if identity in known_prices:
                 self.assertNotIn("Base value (not a shop price)", page)
         for entry in self.data["entries"]:
@@ -397,7 +420,7 @@ class CatalogTests(unittest.TestCase):
                 continue
             page = self.pages[locations[entry["details"]["merchant"]]]
             self.assertIn("{{:" + locations[entry["details"]["item"]] + "}}", page)
-            self.assertNotIn("<onlyinclude>", page)
+            self.assertEqual(available_views(page), {"offers"})
 
     def test_unit_price_validation_rejects_wrong_currency_or_coverage(self):
         for change in (
@@ -424,7 +447,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_station_images_and_operator_reports_have_valid_explicit_targets(self):
         stations = {row["id"]: row for row in self.catalog["stations"]}
-        self.assertEqual(len(stations), 7)
+        self.assertEqual(len(stations), 8)
         station_images = [row for row in self.data["illustrations"] if "station" in row]
         self.assertEqual(len(station_images), 3)
         self.assertNotIn("Maybe unused", self.pages["Armor workstation"])
@@ -525,6 +548,179 @@ class CatalogTests(unittest.TestCase):
             self.assertIn("[[Category:Skills]]", page)
         self.assertIn("Skill description methodology", self.pages["Source provenance"])
 
+    def test_category_graph_links_and_transitive_membership_resolve(self):
+        categories = category_definitions(self.data, self.catalog)
+        locations = page_locations(self.data, self.catalog)
+        expected = {identity: set() for identity in locations}
+
+        def ancestors(title):
+            return {title}.union(*(ancestors(parent) for parent in categories[title]["parents"]))
+
+        for title, row in categories.items():
+            page = self.pages["Category:" + title]
+            children = {name for name, child in categories.items() if title in child["parents"]}
+            self.assertTrue(row["members"] or children)
+            self.assertIn(row["index"], ancestors(title))
+            for parent in row["parents"]:
+                self.assertIn(f"[[Category:{parent}]]", page)
+                self.assertIn(f"[[:Category:{parent}|", page)
+                self.assertIn(f"[[:Category:{title}|", self.pages["Category:" + parent])
+            for identity in row["members"]:
+                expected[identity].update(ancestors(title))
+                self.assertIn(f"[[{locations[identity]}|", page)
+        for row in self.catalog["pages"]:
+            actual = set(re.findall(r"\[\[Category:([^\]|]+)", self.pages[row["title"]]))
+            self.assertEqual(actual, expected[row["entity"]], row["title"])
+        for title, page in self.pages.items():
+            for target in re.findall(r"\[\[:?(Category:[^\]|]+)", page):
+                self.assertIn(target, self.pages, (title, target))
+        self.assertIn("[[:Category:Equipment by slot|", self.pages["Items"])
+        self.assertIn("[[:Category:Skills|", self.pages["Skills"])
+        document = build_xml(self.pages)
+        from xml.etree import ElementTree
+        root = ElementTree.fromstring(document)
+        ns = {"w": "http://www.mediawiki.org/xml/export-0.11/"}
+        for page in root.findall("w:page", ns):
+            title = page.findtext("w:title", namespaces=ns)
+            self.assertEqual(page.findtext("w:ns", namespaces=ns), "14" if title.startswith("Category:") else "0")
+
+    def test_category_graph_rejects_cycles_orphans_empty_leaves_and_collisions(self):
+        def change_row(catalog, target, **values):
+            next(row for row in catalog["taxonomy"]["tags"] if row["title"] == target).update(values)
+
+        changes = (
+            lambda c: change_row(c, "Equipment by slot", parents=["Main-hand equipment"]),
+            lambda c: change_row(c, "Equipment by slot", parents=[]),
+            lambda c: change_row(c, "Equipment by slot", parents=["Missing parent"]),
+            lambda c: change_row(c, "Equipment by slot", parents=["Nature"]),
+            lambda c: change_row(c, "Equipment by slot", parents=["Items", "Items"]),
+            lambda c: change_row(c, "Equipment by slot", parents=["Category:Items"]),
+            lambda c: change_row(c, "Equipment by slot", parents="Items"),
+            lambda c: change_row(c, "Equipment by slot", title="Wanderer"),
+            lambda c: change_row(c, "Equipment by slot", title="Skills"),
+            lambda c: change_row(c, "Equipment by slot", summary=""),
+            lambda c: change_row(c, "Helmet-slot equipment", members=[]),
+            lambda c: change_row(c, "Helmet-slot equipment", confidence="unknown"),
+            lambda c: change_row(c, "Helmet-slot equipment", index=[]),
+            lambda c: change_row(c, "Helmet-slot equipment", evidence=[]),
+            lambda c: c["taxonomy"]["skill_groups"].pop(),
+            lambda c: c["taxonomy"]["skill_groups"][0].update(entity="item-0"),
+            lambda c: c["taxonomy"]["skill_groups"][0].update(members=["skill-0-0"]),
+            lambda c: c["taxonomy"]["tags"].append({
+                "title": "Empty filler", "index": "Items", "members": [],
+                "summary": "No articles.", "parents": ["Items"],
+            }),
+        )
+        for change in changes:
+            catalog = copy.deepcopy(self.catalog)
+            change(catalog)
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, self.data)
+        catalog = copy.deepcopy(self.catalog)
+        catalog["taxonomy"]["tags"].extend(
+            {"title": f"Filler {number}", "index": "Items", "members": ["item-0"]}
+            for number in range(129)
+        )
+        with self.assertRaisesRegex(DataError, "at most 128"):
+            validate_catalog(catalog, self.data)
+
+    def test_equipment_categories_match_native_slot_acceptance_not_dimensions(self):
+        slots = {
+            "Main-hand equipment": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 27, 28, 29, 30, 41, 44, 90, 93, 96, 105, 106, 157, 158, 159, 160, 161, 169, 179, 184, 185, 186, 187, 188, 189, 190, 191, 206, 212],
+            "Off-hand equipment": [0, 1, 41, 45, 46, 50, 58, 76, 96, 110, 111, 118, 174, 212, 219, 220],
+            "Helmet-slot equipment": [54, 116, 117, 119],
+            "Hood-slot equipment": [42, 146, 204, 205],
+            "Shirt-slot equipment": [22, 23, 24],
+            "Outer torso equipment": [43, 55, 147, 194, 196, 197, 198],
+            "Belt-slot equipment": [13, 166, 167, 168],
+            "Cloak-slot equipment": [137, 145, 207, 208, 209],
+            "Backpack-slot equipment": [12, 14, 26, 148],
+            "Glove-slot equipment": [59, 164, 165, 199, 200],
+            "Pants-slot equipment": [20, 21, 33],
+            "Leg-armor-slot equipment": [56, 192, 193, 195],
+            "Sock-slot equipment": [16, 17, 18],
+            "Footwear-slot equipment": [15, 57, 201, 202, 203],
+        }
+        categories = category_definitions(self.data, self.catalog)
+        actual = {title: row for title, row in categories.items() if "Equipment by slot" in row["parents"]}
+        self.assertEqual(set(actual), set(slots))
+        for title, numbers in slots.items():
+            self.assertEqual(set(actual[title]["members"]), {f"item-{number}" for number in numbers})
+            self.assertTrue(actual[title]["evidence"])
+        self.assertEqual(sum(len(row["members"]) for row in actual.values()), 105)
+        self.assertEqual(len(set().union(*(set(row["members"]) for row in actual.values()))), 102)
+        for title in ("Torch", "Improvised Torch", "Improvised Enduring Torch"):
+            self.assertIn("[[Category:Main-hand equipment]]", self.pages[title])
+            self.assertIn("[[Category:Off-hand equipment]]", self.pages[title])
+            self.assertNotIn("[[Category:Weapons]]", self.pages[title])
+        for identity in categories["Ammunition"]["members"]:
+            page = self.pages[page_locations(self.data, self.catalog)[identity]]
+            self.assertIn("[[Category:Off-hand equipment]]", page)
+            self.assertNotIn("[[Category:Weapons]]", page)
+            self.assertNotIn("[[Category:Main-hand equipment]]", page)
+        self.assertNotIn("[[Category:Equipment by slot]]", self.pages["Unarmed"])
+        self.assertIn("[[Category:Weapons]]", self.pages["Unarmed"])
+        self.assertNotIn("[[Category:Off-hand equipment]]", self.pages["Steel Greatsword"])
+        self.assertIn("[[Category:Two-handed weapons]]", self.pages["Steel Greatsword"])
+        self.assertIn("[[Category:Outer torso equipment]]", self.pages["Forager's Vest"])
+        self.assertIn("[[Category:Clothes]]", self.pages["Forager's Vest"])
+        self.assertIn("[[Category:Glove-slot equipment]]", self.pages["Iron Reinforced Gloves"])
+        self.assertIn("[[Category:Armor]]", self.pages["Iron Reinforced Gloves"])
+        self.assertNotIn("[[Category:Equipment by slot]]", self.pages["Jar of Fireflies"])
+
+    def test_skill_categories_derive_the_five_localized_groups(self):
+        categories = category_definitions(self.data, self.catalog)
+        names = ("Wanderer", "Survivor", "Hunter", "Warrior", "Forager")
+        for number, name in enumerate(names):
+            self.assertEqual(set(categories[name]["members"]), {f"skill-{number}-{skill}" for skill in range(5)})
+            self.assertEqual(categories[name]["parents"], ["Skills"])
+            self.assertIn(f"[[:Category:{name}|", self.pages["Skills"])
+            self.assertIn(f'id="entity-skill-group-{number}"', self.pages["Skills"])
+        for entity in self.data["entities"]:
+            if entity["category"] == "skill":
+                page = self.pages[page_locations(self.data, self.catalog)[entity["id"]]]
+                name = names[int(entity["group"].rsplit("-", 1)[1])]
+                self.assertIn(f"[[Category:{name}]]", page)
+                self.assertIn(f"[[:Category:{name}|", page)
+        catalog = copy.deepcopy(self.catalog)
+        catalog["taxonomy"]["skill_groups"][0]["summary"] = "</nowiki>[[Category:Injected]]"
+        rendered = build_pages(ROOT, self.data, catalog, self.details)["Category:Wanderer"]
+        self.assertIn("&lt;/nowiki&gt;", rendered)
+        self.assertNotIn("</nowiki>[[Category:Injected]]", rendered)
+
+    def test_consumables_materials_and_weapons_keep_evidenced_overlapping_roles(self):
+        categories = category_definitions(self.data, self.catalog)
+        expected = {
+            "Steel Hand Axe": {"Weapons", "Axes", "Cutting and chopping tools", "Tools"},
+            "Heavy Branch (Cypress)": {"Weapons", "Wood and bark", "Crafting materials", "Fire-making supplies"},
+            "Honey": {"Food and drink", "Food ingredients", "Consumables", "Crafting materials"},
+            "Riftvine Berries": {"Plant foods", "Food ingredients", "Consumables", "Crafting materials"},
+            "Lamp Oil": {"Consumables", "Repair and refuelling supplies"},
+            "Map Drawing Kit": {"Tools", "Consumables", "Mapping supplies"},
+            "Summoning Stone": {"Consumables", "Summoning supplies"},
+            "Large Scaalmyr Husk": {"Animal materials", "Crafting materials", "Armor", "Off-hand equipment"},
+            "Glow Goo": {"Animal materials", "Crafting materials"},
+            "Flask of Fire": {"Weapons", "Consumables", "Thrown flasks"},
+        }
+        for title, required in expected.items():
+            actual = set(re.findall(r"\[\[Category:([^\]|]+)", self.pages[title]))
+            self.assertTrue(required <= actual, (title, required - actual))
+        for title in ("Lamp Oil", "Wayfarer's Vigor", "Glow Goo", "Mold", "Water Lily"):
+            self.assertNotIn("[[Category:Food and drink]]", self.pages[title])
+        for title in ("Rock", "Summoning Stone", "Map Drawing Kit", "Iron Arrow"):
+            self.assertNotIn("[[Category:Weapons]]", self.pages[title])
+        recipes = [entry for entry in self.data["entries"] if entry["kind"] == "recipe"]
+        inputs = {row["item"] for entry in recipes for row in entry["details"]["inputs"]}
+        food = set(categories["Food and drink"]["members"])
+        self.assertEqual(set(categories["Food ingredients"]["members"]), food & inputs)
+        for parent in ("Consumables", "Crafting materials"):
+            children = [row for row in categories.values() if parent in row["parents"]]
+            self.assertTrue(set(categories[parent]["members"]) <= set().union(*(set(row["members"]) for row in children)))
+        self.assertIn("localized names only", self.pages["Category:Fibers and fabrics"])
+        self.assertEqual(len(recipes), 96)
+        self.assertEqual(sum(entry["kind"] == "merchant" for entry in self.data["entries"]), 63)
+        self.assertEqual(len(self.catalog["unit_prices"]["prices"]), 42)
+
     def test_prices_use_exact_minimum_coin_count_and_approved_icons(self):
         cases = ((20, "2 gold"), (Decimal("3.57"), "3 silver 57 copper"),
                  (Decimal("12.34"), "1 gold 2 silver 34 copper"),
@@ -543,7 +739,7 @@ class CatalogTests(unittest.TestCase):
         self.assertTrue(any(row["value"] == Decimal("0.25000000000000000000000000000000001")
                             for row in exact["unit_prices"]["prices"]))
         field_kit = self.pages["Survivor's Field Kit"]
-        self.assertIn("2 gold</onlyinclude>", field_kit)
+        self.assertIn(selective_view(price_text({"value": 20}, self.data["illustrations"]), "price", True), field_kit)
         self.assertIn("{{:Survivor's Field Kit}}", self.pages["Gurb-Gurb"])
         self.assertIn("[[Alchemy workstation|Alternative crafting method]]", field_kit)
         self.assertIn("only while the fire remains active", field_kit)
@@ -699,17 +895,21 @@ class ProfileTests(unittest.TestCase):
     def test_transclusion_smoke_waits_for_jobs_but_never_masks_leaks_or_timeout(self):
         outputs = iter(("old price", "new price"))
         calls = []
-        run = lambda *args: calls.append(args)
+        def run(*args, **kwargs):
+            calls.append((args, kwargs))
+            return b"0"
         api = lambda args: {"parse": {"text": {"*": next(outputs)}}}
         with patch("smoke_deploy.time.sleep"):
             self.assertEqual(refreshed_transclusion(run, api, "Merchant", "new price", "owner-anchor"), "new price")
-        self.assertEqual(len(calls), 2)
+        self.assertEqual(len(calls), 4)
+        self.assertEqual(sum("runJobs" in args for args, _ in calls), 2)
+        self.assertTrue(all(0 < kwargs["timeout"] <= 90 for _, kwargs in calls))
         for response in ("old price", "new price owner-anchor"):
             calls.clear()
             api = lambda args: {"parse": {"text": {"*": response}}}
             with patch("smoke_deploy.time.sleep"), self.assertRaises(RuntimeError):
                 refreshed_transclusion(run, api, "Merchant", "new price", "owner-anchor")
-            self.assertEqual(len(calls), 1 if "owner-anchor" in response else 10)
+            self.assertEqual(sum("runJobs" in args for args, _ in calls), 1 if "owner-anchor" in response else 10)
 
     def test_damage_class_ids_link_to_the_canonical_damage_page(self):
         data = synthetic_data()
