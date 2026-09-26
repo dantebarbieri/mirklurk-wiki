@@ -163,7 +163,9 @@ def incremental_order(baseline, desired):
                              if {owner for owner, _ in transclusions(desired[title])} <= ready),
                             key=lambda title: (title in baseline, title))
         if not candidates:
-            raise RuntimeError("Affected incremental prerequisite cycle.")
+            blocked = {title: sorted({owner for owner, _ in transclusions(desired[title])} - ready)
+                       for title in sorted(pending)}
+            raise RuntimeError("Affected incremental prerequisite cycle: " + json.dumps(blocked, sort_keys=True))
         title = candidates[0]
         order.append(title)
         ready.add(title)
