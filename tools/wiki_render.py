@@ -86,7 +86,16 @@ def display_entry(entry, catalog):
 
 
 def image_for(identity, images):
-    return next((image for image in images if image.get("entity") == identity and image["rights_status"] == "approved"), None)
+    return next((image for image in images if image.get("entity") == identity
+                 and "role" not in image and image["rights_status"] == "approved"), None)
+
+
+def illustration_markup(image, width=None):
+    text = anchor("illustration", image["id"])
+    if image["rights_status"] == "approved":
+        size = f"|{width}px" if width is not None else ""
+        return text + f'\n[[{image["file_title"]}|thumb{size}|{literal(image["caption"])}]]\n'
+    return text + "\nNo reviewed picture is available yet.\n"
 
 
 def icon(identity, images, entities, locations):
@@ -414,13 +423,10 @@ def shared_field(entries, getter):
     return all(value == values[0] for value in values), values[0]
 
 
-def merchant_table(entries, images, entities, locations, standard_prices=False, stock_view=None, story_spoiler=False):
+def merchant_table(entries, images, entities, locations, standard_prices=False, standard_stock=False, story_spoiler=False, location_page=None):
     headers = ["Seller", "Item"]
     getters = []
-    notes = [
-        "<noinclude>" + stock_view + "</noinclude><includeonly>"
-        "[[Currency and trading#currency-trade-stock-and-funds|Shared stock and merchant-funds rules]]</includeonly>"
-    ] if stock_view else []
+    notes = ["<noinclude>[[:Category:Merchants#Trading_rules|Shared trading rules]]</noinclude>"] if standard_stock else []
     unknown = []
     normal_only = []
     has_vendor_prices = any(entry["details"]["price"] is not None for entry in entries)
@@ -438,12 +444,14 @@ def merchant_table(entries, images, entities, locations, standard_prices=False, 
         if any(entry["details"][field] is not None for entry in entries):
             headers.append(label)
             getters.append(lambda entry, field=field: known(entry["details"][field]))
-        elif field != "currency" and not (field == "quantity" and stock_view):
+        elif field != "currency" and not (field == "quantity" and standard_stock):
             unknown.append(label.lower())
     if unknown:
         notes.append(" and ".join(unknown).capitalize() + " are not established." if len(unknown) > 1 else unknown[0].capitalize() + " is not established.")
     same_location, location = shared_field(entries, lambda entry: entry["details"]["location"])
-    if same_location:
+    if location_page is not None:
+        notes.append(f"Location: [[{location_page}#Location_and_access|Location and access]].")
+    elif same_location:
         notes.append("Location: " + known(location) + ".")
     else:
         headers.append("Location")
@@ -698,6 +706,13 @@ def source_page(data, catalog, details, locations, facts, entries):
             [f'[[{locations[row["entity"]]}#Wares|{literal(locations[row["entity"]])}]]',
              literal(row["confidence"]), evidence_text(row["evidence"])]
             for row in sorted(catalog["merchant_profiles"], key=lambda row: row["entity"])
+        ])])
+    npc_locations = [row for row in catalog["classifications"] if "location" in row]
+    if npc_locations:
+        lines.extend(["", "== NPC location evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+            [f'[[{locations[row["entity"]]}#Location_and_access|{literal(locations[row["entity"]])}]]',
+             literal(row["location"]["confidence"]), evidence_text(row["location"]["evidence"])]
+            for row in sorted(npc_locations, key=lambda row: row["entity"])
         ])])
     lines.extend(["", "== Property definitions ==", table(["Property", "Label", "Unit", "Interpretation"], [
         [literal(row["id"]), literal(row["label"]), known(row["unit"]), literal(row["description"])]
@@ -962,6 +977,9 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Game mechanics"] += navigation
     classified = {row["entity"]: row["kind"] for row in catalog["classifications"]}
     classification_summaries = {row["entity"]: row["summary"] for row in catalog["classifications"] if "summary" in row}
+    npc_locations = {row["entity"]: row["location"] for row in catalog["classifications"] if "location" in row}
+    if any(image.get("role") == "location" and image["entity"] not in npc_locations for image in images):
+        raise DataError("location illustration: requires a reviewed NPC location owner")
     stations = {method: row for row in catalog.get("stations", []) for method in row["methods"]}
     if "Loot mechanics" in owners.values():
         pages["Loot mechanics"] = "[[Loot tables]] | [[Main Page]]\n\nHow quantities, treasure budgets, and corpse contents are selected.\n"
@@ -983,15 +1001,19 @@ def build_pages(root, data, catalog=None, details=None):
             text += entity_link(entity["group"], entities, locations) + " in the Skills index\n"
         if entity["category"] == "being" and classified.get(entity["id"]) not in {"npc", "creature"}:
             text += "\nThis being has not been classified.\n"
-        matching = [image for image in images if image.get("entity") == entity["id"]]
+        matching = [image for image in images if image.get("entity") == entity["id"] and "role" not in image]
         for image in matching:
-            text += anchor("illustration", image["id"])
-            if image["rights_status"] == "approved":
-                text += f'\n[[{image["file_title"]}|thumb|{literal(image["caption"])}]]\n'
-            else:
-                text += "\nNo reviewed picture is available yet.\n"
+            text += illustration_markup(image)
         if not matching and entity["category"] != "damage_class":
             text += "\nNo reviewed picture is available yet.\n"
+        if entity["id"] in npc_locations:
+            location = npc_locations[entity["id"]]
+            text += "\n== Location and access ==\n"
+            for image in images:
+                if image.get("entity") == entity["id"] and image.get("role") == "location":
+                    text += illustration_markup(image, width=220)
+            links = {entities[identity]["name"]: locations[identity] for identity in location["related_entities"]}
+            text += "\n\n".join(linked_prose(paragraph, links) for paragraph in location["paragraphs"]) + "\n"
         pages[row["title"]] = text
         for alias in row["aliases"]:
             pages[alias] = f'#REDIRECT [[{row["title"]}]]\n'
@@ -1205,8 +1227,9 @@ def build_pages(root, data, catalog=None, details=None):
         for kind, renderer in (
             ("merchant", lambda rows: merchant_table(
                 rows, images, entities, locations, "unit_prices" in catalog,
-                "{{:Currency and trading|view=stock}}" if entity_ids & set(catalog.get("currency", {}).get("standard_merchants", [])) else None,
+                bool(entity_ids & set(catalog.get("currency", {}).get("standard_merchants", []))),
                 merchant_profile["spoiler"] if merchant_profile is not None else False,
+                title if entity_ids & npc_locations.keys() else None,
             )),
             ("loot", lambda rows: loot_table(rows, images, entities, locations, title)),
         ):
@@ -1445,6 +1468,10 @@ def build_pages(root, data, catalog=None, details=None):
     for category, row in sorted(categories.items()):
         text = f"[[{row['index']}|Readable index]] | [[Main Page]]\n\n"
         text += linked_prose(row["summary"], {title: ":Category:" + title for title in categories}) + "\n"
+        if category == "Merchants":
+            text += "\n[[Merchants|Merchant index]]\n"
+            if catalog.get("currency", {}).get("standard_merchants"):
+                text += "\n== Trading rules ==\n{{:Currency and trading|view=stock}}\n"
         if row["parents"]:
             text += "\nParent categories: " + " | ".join(f"[[:Category:{parent}|{parent}]]" for parent in sorted(row["parents"])) + "\n"
         children = sorted(title for title, child in categories.items() if category in child["parents"])

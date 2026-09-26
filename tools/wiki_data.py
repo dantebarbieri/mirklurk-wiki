@@ -263,13 +263,14 @@ def _validate_illustrations(records, sources, entities, stations=None):
     seen = set()
     titles = set()
     armor_levels = set()
+    location_entities = set()
     for index, illustration in enumerate(_records(records, "illustrations")):
         where = f"illustrations[{index}]"
         _object(
             illustration,
             {"id", "file_title", "caption", "creator", "sha256", "rights_status",
              "rights_basis", "rights_note", "confidence", "evidence"},
-            {"entity", "station", "variant", "health_armor"}, where,
+            {"entity", "station", "variant", "health_armor", "role"}, where,
         )
         identity = _identifier(illustration["id"], f"{where}.id")
         if identity in seen:
@@ -279,10 +280,16 @@ def _validate_illustrations(records, sources, entities, stations=None):
             raise DataError(f"{where}: provide exactly one entity, station, or health_armor target")
         if "variant" in illustration and "station" not in illustration:
             raise DataError(f"{where}: a variant belongs only to a station")
+        if "role" in illustration and ("entity" not in illustration or illustration["role"] != "location"):
+            raise DataError(f"{where}.role: only entity location illustrations have a role")
         if "entity" in illustration:
             entity_id = _identifier(illustration["entity"], f"{where}.entity")
             if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being", "nature", "skill"}:
                 raise DataError(f"{where}.entity: must reference an item, being, nature record, or skill")
+            if "role" in illustration:
+                if entities[entity_id]["category"] != "being" or entity_id in location_entities:
+                    raise DataError(f"{where}.role: expected one location illustration per being")
+                location_entities.add(entity_id)
         elif "station" in illustration:
             station_id = _identifier(illustration["station"], f"{where}.station")
             if not stations or station_id not in stations:

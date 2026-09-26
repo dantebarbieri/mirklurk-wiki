@@ -28,7 +28,13 @@ uploads in these records.
 Every record contains `id`, `file_title`, `caption`, `creator`,
 `sha256`, `rights_status`, `rights_basis`, `rights_note`, `confidence`, and
 `evidence`, plus exactly one target: `entity`, `station`, or `health_armor`.
-Only station targets may have `variant`. Evidence uses the existing source/section/key format; the SHA-256
+Only station targets may have `variant`. A being-targeted record may additionally
+have `role: "location"`: one supplementary exterior per NPC with a reviewed
+location section. Other roles, non-being targets, duplicate location roles and
+missing location owners are rejected. Records without a role retain their primary
+image behavior; portraits, icons and existing contextual guide lookups never
+select a location image, regardless of record ordering.
+Evidence uses the existing source/section/key format; the SHA-256
 identifies the exact separately reviewed **image** bytes, not the original game
 container. Captions and rights notes are original writing.
 
@@ -96,10 +102,40 @@ The reviewed hashes and assembly evidence are in `illustrations.json`.
 Elderwort is naturally a small flowering shrub, not a tall-trunk tree.
 Import exactly the four new titles with their attribution sidecars through
 the approved operator workflow; do not overwrite, rename, or delete the old
-File pages or image bytes. The plan therefore retains 326 active authored
+File pages or image bytes. That replacement retained 326 active authored
 selections while reaching 330 uploaded game images after the separate import.
 Guide pictures reuse existing approved File titles and require no extra
 uploads or duplicate metadata. This document is not deployment authorization.
+
+## Reviewed NPC landmarks
+
+The 2026-09-26 selection adds exactly three native exterior frames. All 326
+previous metadata records, including the three NPC portraits, remain unchanged.
+These additions bring the active register to 329 and, after the separate import,
+the retained uploaded game-image total to 333. The disposable test's 334 synthetic
+fixtures include its extra thumbnail test image; that is not a production count.
+
+| NPC / preserved portrait | New File title | Native dimensions | PNG bytes | Source frame |
+| --- | --- | --- | --- | --- |
+| Ranger Bhato / `File:Being-12.png` | `File:Ranger-Bhato-hut-exterior.png` | 48 x 48 | 2850 | `spr_built_48x32`, 0 |
+| Gurb-Gurb / `File:Being-26.png` | `File:Gurb-Gurb-hollow-exterior.png` | 80 x 128 | 4558 | `spr_building_80x80`, 0 |
+| Ihar / `File:Being-33.png` | `File:Ihar-shipwreck-exterior.png` | 128 x 96 | 5379 | `spr_building_128x64`, 0 |
+
+Exact native-image hashes, Edym Pixels attribution, original captions, evidence
+and the operator-reported permission basis are in the three `role: "location"`
+records. Gurb-Gurb's smoke is a separate runtime effect, not an overlay in the
+PNG. Bhato's frame 0 is the hut, not the different frame 1 entrance.
+
+The location sections request `thumb|220px` explicitly. MediaWiki must cap these
+small originals at their native dimensions, not enlarge or rewrite the approved
+bytes. No new 32px icon consumer uses these exteriors. The operator must import
+the three exact titles with attribution sidecars and verify both portraits and
+new actual `img` elements, original PNG hashes, and served displayed PNGs before
+publishing page embeds. An existing File title alone is not display evidence.
+If read-only mode prevents uncached thumbnails, any necessary preparation remains
+a separately authorized operator action before publication. Do not reuse old
+thumbnail receipts, overwrite existing Files, or upload smoke components,
+previews or unrelated artwork.
 
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 entity or station record renders a neutral missing-picture notice, **not** an image or File link.
@@ -194,3 +230,5 @@ of approved game-image hashes. No image fixture is stored in Git or CI artifacts
 This does not import game images or establish that any artwork is cleared for publication.
 The same smoke checks guide images and links, mature-tree captions/references,
 and byte-for-byte preservation of the four legacy tree fixtures after seeding.
+Native-sized synthetic landmark fixtures also exercise the explicit 220px request,
+both retained portraits and rendered exterior images, and anonymous PNG reads.

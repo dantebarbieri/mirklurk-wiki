@@ -188,6 +188,11 @@ without rewriting historical evidence:
   `note` text remains in Source provenance. Unwanted Guard retains an inferred
   NPC grouping, with its friendly base faction, possible retaliation and
   unverified encounter/dialogue availability distinguished explicitly.
+  NPCs may have a `location` object with `paragraphs` (one to three, each at most
+  800 characters), `related_entities` (up to eight unique references),
+  `confidence` and `evidence`. It owns original location/access prose separately
+  from trade availability; citations remain in Source provenance. Supplementary
+  `role: "location"` illustrations require that owner and never replace portraits.
 - `entry_links`: `{entry, entities}` for reviewed editorial crosslinks to
   existing records. These are see-also relationships, not a place to add a
   mechanic or unsupported semantic claim.
@@ -532,10 +537,13 @@ default, filtered, and live-edit behavior without cache purges or reimports.
 and seven original rule explanations, plus a reviewed stock/funds rule, with
 evidence and confidence. Optional `standard_merchants` must exactly match the
 documented offer owners and cannot override an explicit finite offer quantity.
-The shared stock rule is owned by Currency and trading and selected through
-`view=stock` on ordinary merchant pages. Filtered item readers link to that
-same owner instead of nesting its transclusion, preserving the offer view's
-parser-proven leaf contract just as omitted purchase-price cells do.
+The concise stock rule retains Currency and trading as owner, `view=stock` and
+the `currency-trade-stock-and-funds` anchor. Only Category:Merchants transcludes
+it at browse level; its six members derive from documented NPC offers.
+The merchant index and full NPC pages link there. NPC links are `noinclude`-only:
+filtered offers repeat neither the stock rule nor its link and remain leaves.
+Reviewed NPC location links replace historical unknown-location display text,
+without rewriting the offers or copying location prose into seller views.
 The finite stock projection must contain exactly its rule, with no article
 links, anchors, tables or extra parser dependencies.
 Quest-item and early Rift Weave sale restrictions remain separate from merchant

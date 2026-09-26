@@ -7916,6 +7916,58 @@
           "key": "hpcell_draw.hpValue[4]/picAdjust[hpValue-2]/spr_ui_16x16.frame[13]"
         }
       ]
+    },
+    {
+      "id": "being-12-location-illustration",
+      "entity": "being-12",
+      "role": "location",
+      "file_title": "File:Ranger-Bhato-hut-exterior.png",
+      "caption": "Ranger Bhato's foliage-roof hut exterior, not the nearby cellar entrance.",
+      "creator": "Edym Pixels",
+      "sha256": "c25cc3db9e4414f8ff9c4349dd6d5b094ff52c2cdd109024dca721beb88b8d7a",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This native exterior selection was reviewed for supplementary NPC-page display on 2026-09-26. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "rangerCamp/marker-2995/spr_built_48x32.frame0/portal31"},
+        {"source": "game-data", "section": "gml_RoomCC_rm_hideout_ranger_0_Create", "key": "being12"}
+      ]
+    },
+    {
+      "id": "being-26-location-illustration",
+      "entity": "being-26",
+      "role": "location",
+      "file_title": "File:Gurb-Gurb-hollow-exterior.png",
+      "caption": "Gurb-Gurb's hollow-tree exterior. Smoke is a separate in-game effect, not part of this image.",
+      "creator": "Edym Pixels",
+      "sha256": "0d6c1233ce177559e4a4246619300fe10db86ecb2c1ab30651dbcb2918932c6f",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This native exterior selection was reviewed for supplementary NPC-page display on 2026-09-26. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_manager_area_Alarm_6", "key": "marker-2990/spr_building_80x80.frame0/portal34"},
+        {"source": "game-data", "section": "gml_RoomCC_rm_hut_gurb_0_Create", "key": "being26"},
+        {"source": "game-data", "section": "gml_Object_obj_solid_Alarm_2", "key": "marker-2990/partFireSmoke-separate-particle-stream"}
+      ]
+    },
+    {
+      "id": "being-33-location-illustration",
+      "entity": "being-33",
+      "role": "location",
+      "file_title": "File:Ihar-shipwreck-exterior.png",
+      "caption": "The shoreline shipwreck where Ihar lives.",
+      "creator": "Edym Pixels",
+      "sha256": "fae9cbf6070fdccd29c765dddd31e160b2c92c75911ecaab5f641881fa702d53",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This native exterior selection was reviewed for supplementary NPC-page display on 2026-09-26. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_manager_area_Alarm_6", "key": "marker-2989/spr_building_128x64.frame0/portal35"},
+        {"source": "game-data", "section": "gml_RoomCC_rm_shipwreck_0_Create", "key": "being33"}
+      ]
     }
   ]
 }

@@ -34,6 +34,11 @@ ROOT = Path(__file__).resolve().parents[1]
 MATURE_TREES = {
     "nature-4": (588, 564), "nature-7": (684, 912), "nature-17": (340, 540), "nature-20": (256, 256),
 }
+LANDMARK_IMAGES = {
+    "Ranger-Bhato-hut-exterior.png": (48, 48),
+    "Gurb-Gurb-hollow-exterior.png": (80, 128),
+    "Ihar-shipwreck-exterior.png": (128, 96),
+}
 
 
 class RenderedGrids(HTMLParser):
@@ -156,8 +161,54 @@ def smoke_category_memberships(api, pages):
             raise RuntimeError(f"Category browse links did not resolve on {title}: {sorted(targets - resolved)}")
 
 
+def smoke_npc_locations(api, data, catalog, image_hashes, open_media=urllib.request.urlopen):
+    locations = page_locations(data, catalog)
+    for image in data["illustrations"]:
+        if image.get("role") != "location" or image["rights_status"] != "approved":
+            continue
+        filename = image["file_title"].removeprefix("File:")
+        if filename not in LANDMARK_IMAGES or filename not in image_hashes:
+            raise RuntimeError("A location illustration lacks exact reviewed dimensions or an imported-image fingerprint.")
+        size = LANDMARK_IMAGES[filename]
+        portrait = image_for(image["entity"], data["illustrations"])
+        if portrait is None:
+            raise RuntimeError("An NPC location illustration must not replace a missing portrait.")
+        parsed = api({"action": "parse", "page": locations[image["entity"]], "prop": "text|images"})["parse"]
+        check_parser_errors(parsed["text"]["*"])
+        if not {filename, portrait["file_title"].removeprefix("File:")} <= set(parsed["images"]):
+            raise RuntimeError("An NPC page lost its portrait or location illustration.")
+        rendered = RenderedGrids()
+        rendered.feed(parsed["text"]["*"])
+        matches = [row for row in rendered.images if filename in urllib.parse.unquote(row.get("src", ""))]
+        if len(matches) != 1 or tuple(matches[0].get(key) for key in ("width", "height")) != tuple(map(str, size)):
+            raise RuntimeError("An NPC location picture did not render once at its native, non-upscaled dimensions.")
+        if not any(portrait["file_title"].removeprefix("File:") in urllib.parse.unquote(row.get("src", ""))
+                   for row in rendered.images):
+            raise RuntimeError("An NPC portrait did not resolve to an actual rendered image.")
+        info_page = next(iter(api({
+            "action": "query", "titles": image["file_title"], "prop": "imageinfo",
+            "iiprop": "url|size|mime", "iiurlwidth": 220,
+        })["query"]["pages"].values()))
+        info = info_page.get("imageinfo", [{}])[0]
+        if info.get("mime") != "image/png" or (info.get("width"), info.get("height")) != size or not info.get("url"):
+            raise RuntimeError("An NPC exterior File page has missing or incorrect native PNG metadata.")
+        displayed_url = urllib.parse.urljoin(info["url"], matches[0]["src"])
+        if displayed_url != info.get("thumburl", info["url"]):
+            raise RuntimeError("An NPC exterior img does not use its File page's requested 220px image.")
+        for url in (info["url"], displayed_url):
+            with open_media(url, timeout=30) as response:
+                if response.status != 200 or response.headers.get_content_type() != "image/png":
+                    raise RuntimeError("An NPC exterior original or displayed image is not anonymously readable as PNG.")
+                body = response.read()
+            if (len(body) < 24 or body[:8] != b"\x89PNG\r\n\x1a\n" or body[12:16] != b"IHDR"
+                    or struct.unpack(">II", body[16:24]) != size
+                    or hashlib.sha256(body).hexdigest() != image_hashes[filename]):
+                raise RuntimeError("An NPC exterior original or displayed PNG differs from its exact native import.")
+
+
 def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media=urllib.request.urlopen):
     smoke_category_memberships(api, pages)
+    smoke_npc_locations(api, data, catalog, image_hashes, open_media)
     locations = page_locations(data, catalog)
     for identity in MATURE_TREES:
         image = image_for(identity, data["illustrations"])
@@ -461,14 +512,27 @@ def check_price_cell(cell, value):
         raise RuntimeError("A merchant price differs from its canonical item value.")
 
 
-def check_seller_context(result, merchant, item, text, stock_text=None):
+def check_seller_context(result, merchant, item, text, stock_text=None, location_page=None):
     if item is not None:
         if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in text:
             raise RuntimeError("A seller view has missing dependencies or recursively transcluded item prices.")
-    if stock_text is not None:
-        expected = stock_text if item is None else "Shared stock and merchant-funds rules"
-        if plain(expected) not in plain(text) or "Quantity is not established." in text:
-            raise RuntimeError("A seller view lost its stock rule/reference or retained an unknown-quantity claim.")
+    if stock_text is not None or location_page is not None:
+        from smoke_prefix import dom
+        parsed = dom(result["text"]["*"], merchant if item is None else "Synthetic seller view")
+        if stock_text is not None:
+            references = [link for link in parsed.links if link["target"] in {
+                "Category:Merchants#Trading_rules", "Currency and trading#currency-trade-stock-and-funds",
+            }]
+            expected = [{"target": "Category:Merchants#Trading_rules", "text": "Shared trading rules"}] if item is None else []
+            if (references != expected or plain(stock_text) in plain(text)
+                    or "Shared stock and merchant-funds rules" in text or "Quantity is not established." in text
+                    or (item is not None and "Shared trading rules" in text)):
+                raise RuntimeError("A seller view lost its category link or repeated a stock rule/reference or unknown-quantity claim.")
+        if location_page is not None and (
+            not any(link["target"] == location_page + "#Location_and_access" for link in parsed.links)
+            or "Location: Not established" in text
+        ):
+            raise RuntimeError("A seller view lost its reviewed location link or retained an unknown-location claim.")
 
 
 def smoke_canonical_views(run, api, pages, data, catalog, token):
@@ -479,6 +543,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     stations = {method: station for station in catalog["stations"] for method in station["methods"]}
     entities = {entity["id"]: entity for entity in data["entities"]}
     prices = {row["entity"]: row["value"] for row in catalog["unit_prices"]["prices"]}
+    location_pages = {locations[row["entity"]] for row in catalog["classifications"] if "location" in row}
     for station in catalog["stations"]:
         rendered = api({"action": "parse", "page": station["title"], "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
@@ -534,7 +599,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             wanted = {entry["id"]: entry for entry in offered if item is None or entry["details"]["item"] == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != wanted.keys() or len(parsed.rows) != len(wanted):
                 raise RuntimeError("A seller view lost or duplicated an exact offer.")
-            check_seller_context(result, merchant, item, parsed.text, stock_text)
+            check_seller_context(result, merchant, item, parsed.text, stock_text,
+                                 merchant if merchant in location_pages else None)
             for row in parsed.rows:
                 entry = wanted[next(iter(row["entries"]))]
                 detail, cells = entry["details"], row["cells"]
@@ -551,6 +617,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                     check_price_cell(cells[index], prices[detail["item"]])
                     index += 1
                 for field in ("location", "conditions"):
+                    if field == "location" and merchant in location_pages:
+                        continue
                     values = [entry["conditions"] if field == "conditions" else entry["details"][field] for entry in offered]
                     expected = entry["conditions"] if field == "conditions" else detail[field]
                     if len(set(values)) > 1:
@@ -866,6 +934,10 @@ def synthetic_image_specs(data):
         specs.setdefault(filename, (64, 64, bytes((index % 256, index // 256, 73, 255)), 32))
     for identity, (width, height) in MATURE_TREES.items():
         filename = image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
+        specs[filename] = (width, height, specs[filename][2], 32)
+    for filename, (width, height) in LANDMARK_IMAGES.items():
+        if filename not in specs:
+            raise RuntimeError("A reviewed NPC landmark is missing its synthetic image fixture.")
         specs[filename] = (width, height, specs[filename][2], 32)
     specs.update({f"Nature-{number}.png": (64, 64, bytes((200 + number, 40, 70, 255)), 32)
                   for number in (4, 7, 17, 20)})
@@ -1274,13 +1346,13 @@ def smoke(evidence_dir=None):
                 "final_categories_and_reader_release": "passed",
                 "final_prerequisite_stability": "passed",
             })
-            if len(rehearsal.prefixes) != 454 or len(native.release_journal.accepted) != 453:
+            if len(rehearsal.prefixes) != 461 or len(native.release_journal.accepted) != 460:
                 raise RuntimeError("Native full-prefix proof is incomplete.")
             native.release_journal.verify_resume(native.states(native.release_journal.manifest,
                                                                 native.release_journal.accepted))
             native.release_journal.close()
             with Journal(workspace / "native-release-journal") as replayed:
-                if len(replayed.accepted) != 453:
+                if len(replayed.accepted) != 460:
                     raise RuntimeError("Native durable release replay is incomplete.")
             evidence["native-publication-proof.json"] = native.proof
             evidence["native-journal-proof.json"] = {
