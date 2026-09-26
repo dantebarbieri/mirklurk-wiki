@@ -42,7 +42,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
-        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 364)
+        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 366)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 44)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
@@ -133,18 +133,18 @@ class CatalogTests(unittest.TestCase):
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
         images = self.data["illustrations"]
-        replaced_trees = {"nature-4", "nature-7", "nature-17"}
+        replaced_trees = {"nature-4", "nature-7", "nature-17", "nature-20"}
         original_batch = {"schema_version": 1, "illustrations": [
             row for row in images if "health_armor" not in row and row.get("entity") not in replaced_trees]}
         self.assertEqual(
             hashlib.sha256((json.dumps(original_batch, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "2d0a8fe2bab9c5d6b74a381fbfe15c838ba3c5d2e3d8ccb8b8cbfcdafc4be7ee",
+            "d3df203720abfff6fe543008b9a6cdfe02906c3e5079cadaca6268ede9a576c7",
         )
         self.assertEqual(len(images), 326)
         original = {"schema_version": 1, "illustrations": [
             row for row in images if "entity" in row and row["entity"] not in replaced_trees]}
         self.assertEqual(hashlib.sha256((json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "4965345a3bdc0a215b4d74fd35d2779f334773f22c128293e891bfecab33f93a")
+                         "16e17eb58db7b29c276393755aa73df2a6315607c9e621d1f260f21f84d0b799")
         missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in images if "entity" in row}
         self.assertEqual(missing, {"item-31", "item-48", "item-49", "item-171"})
         locations = page_locations(self.data, self.catalog)
@@ -156,7 +156,7 @@ class CatalogTests(unittest.TestCase):
             self.assertIn(literal(image["sha256"]), self.pages["Source provenance"])
             self.assertNotIn(image["sha256"], page)
             self.assertIn(literal(image["caption"]), page)
-        for identity in ("nature-6", "nature-20"):
+        for identity in ("nature-6",):
             self.assertIn("not a complete mature specimen", self.pages[locations[identity]])
 
     def test_skill_specific_facts_and_algorithms_have_individual_owners(self):
@@ -386,11 +386,18 @@ class CatalogTests(unittest.TestCase):
     def test_global_prices_are_item_owned_selective_transclusions(self):
         prices = self.catalog["unit_prices"]
         raw_prices = json.loads((ROOT / "content" / "facts" / "catalog.json").read_text())["unit_prices"]
-        self.assertEqual(hashlib.sha256((json.dumps(raw_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "cc87a1884a50596233aad3708fd145d636bbe88e8c8bea9fa1867aaff4e198ea")
-        self.assertEqual(len(prices["prices"]), 36)
-        self.assertEqual(len(prices["covered_offers"]), 52)
-        self.assertEqual(len(prices["unresolved_offers"]), 11)
+        resolved = {"item-32", "item-84", "item-138", "item-139", "item-140", "item-248"}
+        original_prices = [row for row in raw_prices["prices"] if row["entity"] not in resolved]
+        self.assertEqual(hashlib.sha256((json.dumps(original_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
+                         "cacc81734f11f214e0bf28c0115050d129fe497112d0e415ba70e8aff4e1dc4e")
+        self.assertEqual(len(prices["prices"]), 42)
+        self.assertEqual(len(prices["covered_offers"]), 63)
+        self.assertEqual(prices["unresolved_offers"], [])
+        self.assertEqual({row["entity"]: row["value"] for row in prices["prices"] if row["entity"] in resolved},
+                         {identity: Decimal(value) for identity, value in {
+                             "item-32": "0.6", "item-84": "0.3", "item-138": "1.5",
+                             "item-139": "1", "item-140": "0.25", "item-248": "1",
+                         }.items()})
         locations = page_locations(self.data, self.catalog)
         known_prices = {row["entity"]: row for row in prices["prices"]}
         items = {row["details"]["item"] for row in self.data["entries"] if row["kind"] == "merchant"}

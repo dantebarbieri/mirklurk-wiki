@@ -7731,29 +7731,29 @@
       "confidence": "inferred",
       "id": "nature-20-illustration",
       "entity": "nature-20",
-      "file_title": "File:Nature-20.png",
-      "caption": "Elderwort Shrub associated ground tile. The growing plant is assembled separately from procedural segments; this is not a complete mature specimen.",
-      "sha256": "9cff211967121badd0a1d9b58bd938963f1b8117297745218ef6928f7750425e",
+      "file_title": "File:Nature-20-mature.png",
+      "caption": "Mature Elderwort Shrub; a representative shape assembled from the game's tree sprites.",
+      "sha256": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
       "evidence": [
         {
           "source": "game-data",
-          "section": "gml_GlobalScript_scr_tiles_finders",
-          "key": "tile_to_enum.Hinderance[165].nature[20]"
-        },
-        {
-          "source": "game-data",
-          "section": "rm_world",
-          "key": "Layers.Hinderance.TilesData.Background"
-        },
-        {
-          "source": "nature-en",
-          "section": "Titles",
-          "key": "20"
-        },
-        {
-          "source": "game-data",
           "section": "gml_Object_databank_Alarm_2",
-          "key": "natureDB[20].sprTrunk/sprBranch"
+          "key": "natureDB[20].tree-sprites/growth/branch-rules"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_initiate/tree_grow/tree_try_to_create"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Step_0",
+          "key": "treeParts.parent-attachment/segment-endpoints"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_tree_Draw_0",
+          "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
       ]
     },

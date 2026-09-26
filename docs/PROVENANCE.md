@@ -327,8 +327,12 @@ is `{entity,value,confidence,evidence}` for a known item. Values are nonnegative
 finite numbers, never booleans. The reviewed unit is silver coin equivalents.
 The offer coverage is validated against actual merchant-to-item references.
 
-The 36 verified standard prices do not depend on unresolved recipe-price
-postprocessing; they cover 52 offers, leaving 11 offers unresolved. The
+The original 36 price records are preserved. Six additional reviewed values
+retain their initial prices after the actual numeric-ID-ordered recipe-value
+pass, with the game's comparison and rounding behavior, rather than a recursive
+or quantity-multiplied reconstruction. The builder publishes the curated
+results; it does not reimplement the game engine. All 42 standard prices now
+cover the 63 offers, with none unresolved. The
 42 distinct offered items each own one selective price value in their
 How to acquire / Buying section.
 The same item's matching raw initializer-value row is folded into it rather
@@ -353,6 +357,23 @@ no longer a valid readiness check.
 | Item seller table | `{{:Merchant|view=offers|item=item-id}}` | Merchant's stock and conditions |
 | Item loot table | `{{:Source|view=loot|item=item-id}}` | Creature or other documented loot owner |
 | Currency guide | `{{:Coin}}` | Coin's value/weight/stack summary |
+
+`acquisition.json` is a separately bounded, build-matched source register
+(256 KiB maximum). Its named source pages own original context, explicit
+conditions, quantities, rational conditional probabilities, and source evidence.
+Starting equipment and Dead camp contain 17 fixed records, distinguishing
+difficulty-dependent grants from the initial contents of two separate camp
+containers. Certainty is conditional on the recorded event, not repeated stock
+or respawn. Unknown probabilities require an explicit note and never become
+zero or a guessed percentage. Terminating percentages are exact; other
+probabilities retain their exact fraction and selection scope.
+
+Items select these source rows with the existing `view=loot` contract.
+Historical loot records can be assigned to a named source through
+`existing_entry_ids` without modifying or copying the original research entry;
+their previous owner retains a compatibility anchor and link. Source titles,
+item references, inherited entry ownership, related pages, evidence, and
+contextual approved image references are validated before publication.
 
 Recipe inclusions return HTML table rows, not a second table or owner article.
 Each row filters the requested station; its ingredients, output, AP, conditions,

@@ -17,7 +17,7 @@ The expanded reference retains that baseline and now contains **107 numeric fact
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-364 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
+366 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
 redirect. Another 44 ordinary MediaWiki category pages support grouped browsing.
 Only `game.build` changed in the original dataset; all source
@@ -47,9 +47,10 @@ The metadata-only artwork register covers 326 reviewed selections: 243 items,
 Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
 Four item images are deliberately
-omitted rather than replaced with placeholders or guessed frames. Willow, Cypress, and Trollgnarl now use distinct reviewed mature compositions
-assembled from native parts and the verified tree rules. Only their three
-metadata records change; the other 323 selections are preserved. Older tree
+omitted rather than replaced with placeholders or guessed frames. Willow, Cypress,
+Trollgnarl, and Elderwort Shrub now use distinct reviewed mature compositions
+assembled from native parts and the verified tree rules. Only their four
+metadata records change; the other 322 selections are preserved. Older tree
 File pages and bytes remain live history, not overwritten artwork. Other nature
 pictures retain their explicit ground-tile or branch qualifications. Image bytes
 stay in separately approved server storage.
@@ -71,8 +72,14 @@ from their output-item owners; editing ingredients or AP there updates every
 station view. Item acquisition sections likewise select seller availability
 from merchant-owned rows without copying stock or conditions.
 
-Thirty-six verified standard unit prices cover 52 of 63 offers. Each offered
-item owns one `<onlyinclude>` price value (unknown where unresolved), and
+Starting equipment and Dead camp own 17 additional acquisition records:
+difficulty-specific starting grants and the separate initial contents of the
+camp's dead-body pile and wooden container. Item pages select the relevant
+source-owned quantity and condition rows, never implying a universal skeleton
+loot pool or a replenishing cache.
+
+Forty-two verified standard unit prices cover all 63 offers. Each offered
+item owns one `<onlyinclude>` price value, and
 merchant tables transclude it rather than copying prices.
 The Currency and trading guide likewise transcludes coin-owned denomination,
 weight, and stack tables. The bundled ParserFunctions extension selects named recipe and seller views;

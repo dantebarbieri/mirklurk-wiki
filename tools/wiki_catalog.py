@@ -8,8 +8,9 @@ from pathlib import Path
 
 from wiki_data import (
     CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES,
-    _confidence, _evidence, _identifier, _nullable_text, _number, _object, _records, _text, entry_page,
+    _confidence, _evidence, _identifier, _nullable_text, _number, _object, _records, _text, _title, entry_page, title_key,
 )
+from wiki_acquisition import validate_acquisition
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
@@ -26,24 +27,6 @@ CURRENCY_RULE_TITLES = {
 }
 RESERVED_TITLES.add("Currency and trading")
 RESERVED_TITLES.update(MECHANIC_GUIDE_TITLES)
-
-
-def title_key(title):
-    normalized = " ".join(title.replace("_", " ").split())
-    if normalized.lower().startswith("category:"):
-        name = normalized.split(":", 1)[1].strip()
-        return "Category:" + name[:1].upper() + name[1:]
-    return normalized[:1].upper() + normalized[1:]
-
-
-def _title(value):
-    _text(value, "catalog title")
-    if (
-        value != title_key(value) or re.search(r"[\[\]{}|<>#:/\\]", value)
-        or value in {".", ".."} or value.startswith(".")
-    ):
-        raise DataError("catalog title: expected a canonical, plain main-namespace title")
-    return value
 
 
 def default_catalog(data):
@@ -66,7 +49,7 @@ def default_catalog(data):
 
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
-            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides", "damage_sources", "item_effects"}, "catalog")
+            {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides", "damage_sources", "item_effects", "acquisition"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -405,6 +388,20 @@ def validate_catalog(catalog, data):
             _evidence(rule["evidence"], sources, "currency rule.evidence")
         if seen_rules != CURRENCY_RULE_TITLES.keys():
             raise DataError("currency guide must retain every reviewed rule")
+    if "acquisition" in catalog:
+        existing_titles = (
+            set(PAGE_FILES) | {"NPCs", "Source provenance"}
+            | {title for row in catalog["pages"] for title in [row["title"], *row["aliases"]]}
+            | {row["title"] for row in catalog.get("guides", [])}
+            | {row["title"] for row in catalog.get("stations", [])}
+            | {entry_page(row) for row in data.get("entries", [])}
+            | {row["page"] for row in data["facts"]}
+        )
+        if "currency" in catalog:
+            existing_titles.add("Currency and trading")
+        if any(row["kind"] == "loot" for row in data.get("entries", [])):
+            existing_titles.add("Loot mechanics")
+        validate_acquisition(catalog["acquisition"], data, existing_titles)
     return catalog
 
 
@@ -424,6 +421,8 @@ def parse_catalog(raw, data):
         value = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_pairs, parse_float=Decimal)
     except (UnicodeDecodeError, ValueError) as error:
         raise DataError("catalog must be valid UTF-8 JSON without duplicate keys") from error
+    if isinstance(value, dict) and "acquisition" in value:
+        raise DataError("acquisition records must be stored only in acquisition.json")
     return validate_catalog(value, data)
 
 
@@ -490,6 +489,8 @@ def entry_relations(data, catalog):
 def entry_owners(data, locations, relations, catalog=None):
     entities = {entity["id"]: entity for entity in data["entities"]}
     result = {}
+    source_owners = {identity: source["title"] for source in (catalog or {}).get("acquisition", {}).get("sources", [])
+                     for identity in source.get("existing_entry_ids", [])}
     for entry in data.get("entries", []):
         details = entry["details"]
         owner = None
@@ -515,5 +516,5 @@ def entry_owners(data, locations, relations, catalog=None):
             row["id"] == "inventory-crafting" for row in catalog.get("stations", [])
         ):
             target = "Inventory crafting"
-        result[entry["id"]] = target
+        result[entry["id"]] = source_owners.get(entry["id"], target)
     return result

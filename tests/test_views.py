@@ -223,17 +223,19 @@ class SelectiveViewTests(unittest.TestCase):
 
     def test_all_original_titles_survive_the_additive_guides(self):
         new_guides = MECHANIC_GUIDE_TITLES - {"Action points", "Health and armor", "Weather"}
-        old_titles = sorted(set(self.pages) - new_guides)
+        source_titles = {source["title"] for source in self.catalog.get("acquisition", {}).get("sources", [])}
+        old_titles = sorted(set(self.pages) - new_guides - source_titles)
         self.assertEqual(len(old_titles), 401)
         self.assertEqual(hashlib.sha256(("\n".join(old_titles) + "\n").encode()).hexdigest(),
                          "b32b5d0645406b2b6e8073d4c355ebca0eacf1fbd554ba1b6dfdc1bbffc78b75")
 
-    def test_three_tree_references_use_distinct_reviewed_mature_compositions(self):
+    def test_four_tree_references_use_distinct_reviewed_mature_compositions(self):
         locations = page_locations(self.data, self.catalog)
         hashes = {
             "nature-4": "f73b3ed66aacdf320cdd9e892ce251e767024639c7a0114c0d169554564b17ad",
             "nature-7": "088b42c512242db358a0c34cb9da78208d7522470161e8db3283a5519d866176",
             "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
+            "nature-20": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
         }
         self.assertEqual(len(self.data["illustrations"]), 326)
         for identity, digest in hashes.items():
@@ -246,6 +248,7 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertIn("[[" + image["file_title"] + "|thumb|", page)
             self.assertNotIn("[[File:" + identity.capitalize() + ".png", page)
             self.assertIn("representative shape assembled", page)
+            self.assertIn(locations[identity], image["caption"])
             self.assertEqual({row["section"] for row in image["evidence"]}, {
                 "gml_Object_databank_Alarm_2", "gml_GlobalScript_scr_nature",
                 "gml_Object_obj_tree_Step_0", "gml_Object_obj_tree_Draw_0",

@@ -5,6 +5,7 @@ import json
 import re
 from collections import defaultdict
 from decimal import Decimal, localcontext
+from fractions import Fraction
 from pathlib import Path
 
 from wiki_catalog import (
@@ -534,6 +535,39 @@ def loot_table(entries, images, entities, locations, owner):
     ) + "\n"
 
 
+def acquisition_probability(row):
+    probability = row["probability"]
+    if probability is None:
+        return "Not established. " + literal(row["odds_note"])
+    chance = Fraction(probability["numerator"], probability["denominator"])
+    denominator = chance.denominator
+    for prime in (2, 5):
+        while denominator % prime == 0:
+            denominator //= prime
+    if denominator == 1:
+        with localcontext() as context:
+            context.prec = 80
+            value = known(Decimal(chance.numerator) * 100 / Decimal(chance.denominator)) + "%"
+    else:
+        value = known(chance.numerator) + "/" + known(chance.denominator)
+    return value + "<br />" + literal(probability["scope"]) + (
+        "<br />" + literal(row["odds_note"]) if row.get("odds_note") else "")
+
+
+def acquisition_table(source, images, entities, locations):
+    rows = []
+    for row in source["rows"]:
+        cells = [
+            anchor("acquisition", row["id"]) + f'[[{source["title"]}#acquisition-{row["id"]}|{literal(source["title"])}]]',
+            item_cell(row["item"], images, entities, locations), count_range(row["quantity"]),
+            acquisition_probability(row), literal(row["condition"]),
+        ]
+        rows.append(filtered_row(html_row(cells), "item", [row["item"]]))
+    return "\n== Contents and acquisition ==\n" + selective_view(html_table(
+        ["Source", "Item", "Quantity", "Conditional probability", "Condition"], rows,
+    ), "loot") + "\n"
+
+
 def evidence_text(references):
     return "<br />".join(
         f'[[Source provenance#{row["source"]}|{row["source"]}]] / {literal(row["section"])} / {literal(row["key"])}'
@@ -605,6 +639,17 @@ def source_page(data, catalog, details, locations, facts, entries):
              literal(row["confidence"]), evidence_text(row["evidence"])]
             for row in sorted(catalog["item_effects"], key=lambda row: row["entity"])
         ])])
+    acquisition_sources = catalog.get("acquisition", {}).get("sources", [])
+    if acquisition_sources:
+        rows = []
+        for source in acquisition_sources:
+            rows.append([literal(source["id"]), f'[[{source["title"]}]]', literal(source["confidence"]), evidence_text(source["evidence"])])
+            rows.extend([
+                [literal(row["id"]), f'[[{source["title"]}#acquisition-{row["id"]}|{literal(source["title"])}]]',
+                 literal(source["confidence"]) + "; " + literal(row["coverage"]), evidence_text(row["evidence"])]
+                for row in source["rows"]
+            ])
+        lines.extend(["", "== Acquisition source evidence ==", table(["Record", "Editable owner", "Scope", "Evidence"], rows)])
     if catalog.get("damage_sources"):
         lines.extend(["", "== Ammunition and thrown damage evidence ==", table(["Editable owner", "Delivery", "Confidence", "Evidence"], [
             [f'[[{locations[row["entity"]]}#Damage_behavior|{literal(locations[row["entity"]])}]]',
@@ -769,6 +814,7 @@ def build_pages(root, data, catalog=None, details=None):
     prices = {row["entity"]: row for row in catalog.get("unit_prices", {}).get("prices", [])}
     price_items = ({entry["details"]["item"] for entry in entries if entry["kind"] == "merchant"} | prices.keys()) if "unit_prices" in catalog else set()
     coins = {row["entity"]: row for row in catalog.get("currency", {}).get("coins", [])}
+    acquisition_sources = catalog.get("acquisition", {}).get("sources", [])
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
     pages = {title: read_authored(root, title, filename) for title, filename in {**PAGE_FILES, "NPCs": "NPCs.wiki", **active}.items()}
@@ -811,6 +857,30 @@ def build_pages(root, data, catalog=None, details=None):
         pages[row["title"]] = text
         for alias in row["aliases"]:
             pages[alias] = f'#REDIRECT [[{row["title"]}]]\n'
+    if acquisition_sources and "Loot tables" not in pages:
+        pages["Loot tables"] = read_authored(root, "Loot tables", RESEARCH_PAGE_FILES["Loot tables"])
+    for source in acquisition_sources:
+        links = {title: title for title in source["related_pages"]}
+        links.update({entities[identity]["name"]: locations[identity] for identity in source["related_entities"]})
+        links.update({entities[row["item"]]["name"]: locations[row["item"]] for row in source["rows"]})
+        text = "[[Loot tables]] | [[Main Page]]\n\n" + anchor("source", source["id"])
+        if "image_entity" in source:
+            image = image_for(source["image_entity"], images)
+            if image is None:
+                raise DataError("acquisition source: contextual picture has no approved image")
+            text += f'\n[[{image["file_title"]}|thumb|{literal(source["image_caption"])}]]\n'
+        text += "\n" + linked_prose(source["summary"], links) + "\n"
+        text += "\n\n".join(linked_prose(condition, links) for condition in source["conditions"]) + "\n"
+        if source["rows"]:
+            text += acquisition_table(source, images, entities, locations)
+        if links:
+            text += "\nRelated pages: " + " | ".join(f"[[{target}]]" for target in sorted(set(links.values()))) + "\n"
+        pages[source["title"]] = text
+        pages["Loot tables"] += f'\n* [[{source["title"]}]]\n'
+        if source["kind"] in {"starting", "fixed-location"}:
+            pages["Main Page"] += f'\n[[{source["title"]}]]\n'
+        for identity in source["related_entities"]:
+            pages[locations[identity]] += f'\n[[{source["title"]}|Related acquisition guide]]\n'
     for guide in sorted(catalog.get("guides", []), key=lambda row: row["title"]):
         if guide["title"] not in pages:
             pages[guide["title"]] = "[[Game mechanics]] | [[Main Page]]\n"
@@ -906,6 +976,12 @@ def build_pages(root, data, catalog=None, details=None):
             f'\n<div class="mw-collapsible mw-collapsed">\n{label}\n<div class="mw-collapsible-content">\n'
             + "\n".join(navigation_lines(targets)) + "\n</div></div>\n"
         )
+    previous_owners = entry_owners(data, locations, relations, {key: value for key, value in catalog.items() if key != "acquisition"})
+    for entry in entries:
+        previous = previous_owners[entry["id"]]
+        target = owners[entry["id"]]
+        if previous != target:
+            pages[previous] += "\n" + anchor("entry", entry["id"]) + f"[[{target}#entry-{entry['id']}|Documented loot source]]\n"
 
     for title in list(pages):
         entity_ids = {row["entity"] for row in catalog["pages"] if row["title"] == title}
@@ -987,6 +1063,9 @@ def build_pages(root, data, catalog=None, details=None):
             if owned_loot:
                 pages[title] += loot_table(owned_loot, images, entities, locations, title)
             loot_owners = {owners[entry["id"]] for entry in loot if owners[entry["id"]] != title}
+            documented_sources = {source["title"] for source in acquisition_sources if any(
+                row["item"] == identity for row in source["rows"])}
+            loot_owners.update(documented_sources)
             if loot_owners:
                 pages[title] += "\n=== Loot sources ===\n" + "\n".join(
                     "{{:" + owner + "|view=loot|item=" + identity + "}}"
@@ -994,7 +1073,7 @@ def build_pages(root, data, catalog=None, details=None):
                 ) + "\n"
             if identity in coins:
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
-            elif not own_recipes and not offers and not loot:
+            elif not own_recipes and not offers and not loot and not documented_sources:
                 pages[title] += "No documented acquisition source is available yet.\n"
         if recipes:
             pages[title] += "\n== Used in ==\n" + "\n".join(sorted(set(recipes))) + "\n"

@@ -4143,7 +4143,7 @@
   "unit_prices": {
     "schema_version": 1,
     "unit": "silver coin equivalents",
-    "context": "Standard unit purchase cost: the trade menu sums final item-definition price times quantity. These definitions either have no components or are the explicitly excluded Lamp Oil recipe, so their initializer prices are not changed by the recipe postprocessing pass. This is not the resale value of a damaged or partly burned item.",
+    "context": "Standard unit purchase cost: the trade menu sums final item-definition price times quantity. The original definitions either have no components or are the explicitly excluded Lamp Oil recipe. Six additional definitions retain their initializer prices after the actual numeric-ID-ordered recipe-value pass, including its comparison and rounding semantics. These are not resale values of damaged or partly burned items; separately authored vendor-specific prices remain distinct.",
     "prices": [
       {
         "entity": "item-8",
@@ -4936,6 +4936,54 @@
             "key": "trade.change.gold/silver/copper"
           }
         ]
+      },
+      {
+        "entity": "item-32", "value": 0.6, "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[32].price/components;numeric-ID-order.recipe-value-postprocessing"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+        ]
+      },
+      {
+        "entity": "item-84", "value": 0.3, "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[84].price/components;numeric-ID-order.recipe-value-postprocessing"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+        ]
+      },
+      {
+        "entity": "item-138", "value": 1.5, "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[138].price/components;numeric-ID-order.recipe-value-postprocessing"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+        ]
+      },
+      {
+        "entity": "item-139", "value": 1.0, "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[139].price/components;numeric-ID-order.recipe-value-postprocessing"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+        ]
+      },
+      {
+        "entity": "item-140", "value": 0.25, "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[140].price/components;numeric-ID-order.recipe-value-postprocessing"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+        ]
+      },
+      {
+        "entity": "item-248", "value": 1.0, "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[248].price/components;numeric-ID-order.recipe-value-postprocessing"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+        ]
       }
     ],
     "covered_offers": [
@@ -4990,9 +5038,7 @@
       "merchant-33-item-189",
       "merchant-33-item-191",
       "merchant-33-item-187",
-      "merchant-33-item-185"
-    ],
-    "unresolved_offers": [
+      "merchant-33-item-185",
       "merchant-8-item-140",
       "merchant-8-item-32",
       "merchant-8-item-84",
@@ -5004,7 +5050,8 @@
       "merchant-26-item-138",
       "merchant-26-item-139",
       "merchant-26-item-248"
-    ]
+    ],
+    "unresolved_offers": []
   },
   "currency": {
     "schema_version": 1,

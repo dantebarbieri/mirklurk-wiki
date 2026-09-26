@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "build": "0.8.1.5",
+  "sources": [
+    {
+      "id": "starting-equipment",
+      "title": "Starting equipment",
+      "kind": "starting",
+      "summary": "Normal starting equipment comes from two places: clothes equipped when the character is created, and Captain Eir's initial handover. The rows distinguish these steps and the difficulty-specific supplies.",
+      "conditions": [
+        "The initial clothing applies to every normal new character. Captain Eir's later handover supplies shared equipment and additional items determined by difficulty.",
+        "The Small Backpack is equipped during the handover; the other supplied items are received into inventory. This is a one-time starting grant, not merchant stock or a random treasure roll.",
+        "Developer quick-start inventory is a separate code path and is not included in the normal starting set."
+      ],
+      "rows": [
+        {
+          "id": "starting-equipment-item-20", "item": "item-20", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: equipped on normal character creation.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "starter-equipment[20].outside-QUICKMODE"}]
+        },
+        {
+          "id": "starting-equipment-item-22", "item": "item-22", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: equipped on normal character creation.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "starter-equipment[22].outside-QUICKMODE"}]
+        },
+        {
+          "id": "starting-equipment-item-16", "item": "item-16", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: equipped on normal character creation.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "starter-equipment[16].outside-QUICKMODE"}]
+        },
+        {
+          "id": "starting-equipment-item-15", "item": "item-15", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: equipped on normal character creation.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "starter-equipment[15].outside-QUICKMODE"}]
+        },
+        {
+          "id": "starting-equipment-item-12", "item": "item-12", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: Captain Eir's initial equipment handover.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.starting-item[12]"}]
+        },
+        {
+          "id": "starting-equipment-item-25", "item": "item-25", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: Captain Eir's initial equipment handover.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.starting-item[25]"}]
+        },
+        {
+          "id": "starting-equipment-item-68", "item": "item-68", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: Captain Eir's initial equipment handover.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.starting-item[68]"}]
+        },
+        {
+          "id": "starting-equipment-item-89", "item": "item-89", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "All difficulties: Captain Eir's initial equipment handover.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.starting-item[89]"}]
+        },
+        {
+          "id": "starting-equipment-item-39", "item": "item-39", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Easy only: Captain Eir's initial equipment handover.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.GAMEDIFF1.item[39]"}]
+        },
+        {
+          "id": "starting-equipment-item-36", "item": "item-36", "quantity": {"min": 3, "max": 3},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Easy only: Captain Eir's initial equipment handover.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.GAMEDIFF1.item[36]"}]
+        },
+        {
+          "id": "starting-equipment-item-3", "item": "item-3", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Easy only: Captain Eir's initial equipment handover.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.GAMEDIFF1.item[3]"}]
+        },
+        {
+          "id": "starting-equipment-item-2", "item": "item-2", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Medium and Hard: Captain Eir's initial equipment handover, instead of the Easy dagger.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.GAMEDIFF-not1.item[2]"}]
+        }
+      ],
+      "related_entities": ["being-6"],
+      "related_pages": ["Action points", "Resting", "Foods", "Weather"],
+      "image_entity": "item-12",
+      "image_caption": "Captain Eir supplies a Small Backpack at the start on every difficulty.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "starterPants/starterShirt/starterSocks/starterShoes;QUICKMODE-guard"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.being6/state3.starting-gear/GAMEDIFF"},
+        {"source": "ui-en", "section": "Menus", "key": "Diffs1/Diffs2/Diffs3"}
+      ]
+    },
+    {
+      "id": "dead-camp",
+      "title": "Dead camp",
+      "kind": "fixed-location",
+      "summary": "The destroyed camp in the starting area has deliberately scripted supplies, not just a draw from the general corpse-loot pool. Its two loot containers have different fixed contents.",
+      "conditions": [
+        "Check the dead-body pile and the second wooden container separately. The Apprentice Herbalist's Belt belongs to the body-pile container, not the second container.",
+        "A separate interactable dead Unwanted is involved in the camp's quest events. The torn central tent is another distinct object, not a generic cart holding all the camp's supplies.",
+        "The guarantees below apply to the initial contents of this particular scripted camp. They do not describe every random skeleton or corpse, and do not promise replenishment after looting."
+      ],
+      "rows": [
+        {
+          "id": "dead-camp-item-13", "item": "item-13", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Initially in the dead-body pile at the scripted starting-area camp.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType0.camp.quest-frame0.lootArr[13]"}]
+        },
+        {
+          "id": "dead-camp-item-32", "item": "item-32", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Initially in the dead-body pile at the scripted starting-area camp.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType0.camp.quest-frame0.lootArr[32]"}]
+        },
+        {
+          "id": "dead-camp-item-95", "item": "item-95", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Initially in the dead-body pile at the scripted starting-area camp.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType0.camp.quest-frame0.lootArr[95]"}]
+        },
+        {
+          "id": "dead-camp-item-41", "item": "item-41", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Initially in the second, wooden container at the scripted starting-area camp.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType0.camp.quest-frame2.lootArr[41]"}]
+        },
+        {
+          "id": "dead-camp-item-25", "item": "item-25", "quantity": {"min": 1, "max": 1},
+          "probability": {"numerator": 1, "denominator": 1, "scope": "the stated initial-population or normal-start condition"},
+          "condition": "Initially in the second, wooden container at the scripted starting-area camp.", "coverage": "fixed",
+          "evidence": [{"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType0.camp.quest-frame2.lootArr[25]"}]
+        }
+      ],
+      "related_entities": ["being-9"],
+      "related_pages": ["Starting equipment", "Resting"],
+      "image_entity": "item-13",
+      "image_caption": "The Apprentice Herbalist's Belt is a fixed initial find in the camp's body pile.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType0.camp.quest-frames[0/1/2]/fixed-loot/status[-215]"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.container.status[-215]->[-211]"},
+        {"source": "game-data", "section": "spr_found_16x16_quest", "key": "visually-reviewed.frame0-body-pile/frame1-interactable-body/frame2-wooden-container"},
+        {"source": "game-data", "section": "spr_found_32x32", "key": "visually-reviewed.central-torn-tent"}
+      ]
+    }
+  ]
+}

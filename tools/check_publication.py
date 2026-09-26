@@ -7,7 +7,8 @@ import sys
 from pathlib import Path, PurePosixPath
 
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
-from wiki_catalog import MAX_CATALOG_BYTES, parse_catalog
+from wiki_catalog import MAX_CATALOG_BYTES, parse_catalog, validate_catalog
+from wiki_acquisition import MAX_ACQUISITION_BYTES
 from wiki_details import MAX_DETAILS_BYTES, MAX_ILLUSTRATIONS_BYTES, parse_details, parse_document, parse_illustrations, validate_coin_profiles
 
 
@@ -26,6 +27,7 @@ ALLOWED_FILES = {
     "content/facts/catalog.json": MAX_CATALOG_BYTES,
     "content/facts/entity_details.json": MAX_DETAILS_BYTES,
     "content/facts/illustrations.json": MAX_ILLUSTRATIONS_BYTES,
+    "content/facts/acquisition.json": MAX_ACQUISITION_BYTES,
     "content/pages/NPCs.wiki": 32 * 1024,
     "tools/check_publication.py": 32 * 1024,
     "tools/wiki_data.py": 32 * 1024,
@@ -33,6 +35,7 @@ ALLOWED_FILES = {
     "tools/wiki_details.py": 32 * 1024,
     "tools/wiki_render.py": 96 * 1024,
     "tools/wiki_views.py": 16 * 1024,
+    "tools/wiki_acquisition.py": 16 * 1024,
     "tools/plan_migration.py": 32 * 1024,
     "tools/build_wiki.py": 32 * 1024,
     "tools/smoke_deploy.py": 48 * 1024,
@@ -40,6 +43,7 @@ ALLOWED_FILES = {
     "tests/test_wiki.py": 48 * 1024,
     "tests/test_catalog.py": 64 * 1024,
     "tests/test_views.py": 32 * 1024,
+    "tests/test_acquisition.py": 32 * 1024,
     "tests/test_migration.py": 32 * 1024,
     "tests/test_runtime.php": 32 * 1024,
     "deploy/Dockerfile": 8 * 1024,
@@ -184,7 +188,7 @@ def blob_errors(path, raw):
             parse_data(raw)
         except DataError as error:
             problems.append(f"invalid curated facts: {error}")
-    elif path in {"content/facts/catalog.json", "content/facts/entity_details.json", "content/facts/illustrations.json"}:
+    elif path in {"content/facts/catalog.json", "content/facts/entity_details.json", "content/facts/illustrations.json", "content/facts/acquisition.json"}:
         try:
             parse_document(raw, maximum)
         except DataError as error:
@@ -254,6 +258,17 @@ def audit_index(root):
             validate_coin_profiles(catalog, details)
         except DataError as error:
             problems.append(f"staged coin/profile consistency: {error}")
+    acquisition_path = "content/facts/acquisition.json"
+    if acquisition_path in staged_metadata:
+        try:
+            if not all(path in staged_metadata for path in ("content/facts/game.json", "content/facts/catalog.json")):
+                raise DataError("valid staged game.json and catalog.json are required")
+            data = parse_data(staged_metadata["content/facts/game.json"])
+            catalog = parse_catalog(staged_metadata["content/facts/catalog.json"], data)
+            acquisition = parse_document(staged_metadata[acquisition_path], MAX_ACQUISITION_BYTES)
+            validate_catalog(dict(catalog, acquisition=acquisition), data)
+        except DataError as error:
+            problems.append(f"{acquisition_path}: invalid staged references: {error}")
     return count, problems
 
 

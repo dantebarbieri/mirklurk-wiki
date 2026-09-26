@@ -88,6 +88,24 @@ def _text(value, location, limit=160):
     return value
 
 
+def title_key(title):
+    normalized = " ".join(title.replace("_", " ").split())
+    if normalized.lower().startswith("category:"):
+        name = normalized.split(":", 1)[1].strip()
+        return "Category:" + name[:1].upper() + name[1:]
+    return normalized[:1].upper() + normalized[1:]
+
+
+def _title(value):
+    _text(value, "catalog title")
+    if (
+        value != title_key(value) or re.search(r"[\[\]{}|<>#:/\\]", value)
+        or value in {".", ".."} or value.startswith(".")
+    ):
+        raise DataError("catalog title: expected a canonical, plain main-namespace title")
+    return value
+
+
 def _identifier(value, location):
     if not isinstance(value, str) or not IDENTIFIER.fullmatch(value):
         raise DataError(f"{location}: invalid stable identifier")

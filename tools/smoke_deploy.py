@@ -27,6 +27,9 @@ from wiki_views import selective_view
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MATURE_TREES = {
+    "nature-4": (588, 564), "nature-7": (684, 912), "nature-17": (340, 540), "nature-20": (256, 256),
+}
 
 
 class RenderedGrids(HTMLParser):
@@ -91,7 +94,7 @@ def check_shield_icon(images, links, styles, armor):
 
 def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
     locations = page_locations(data, catalog)
-    for identity in ("nature-4", "nature-7", "nature-17"):
+    for identity in MATURE_TREES:
         image = image_for(identity, data["illustrations"])
         filename = image["file_title"].removeprefix("File:")
         old_filename = identity.capitalize() + ".png"
@@ -106,7 +109,7 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes):
         with urllib.request.urlopen(info["imageinfo"][0]["url"], timeout=30) as response:
             if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
                 raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
-    for guide in catalog["guides"]:
+    for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]:
         if "image_entity" not in guide:
             continue
         image = image_for(guide["image_entity"], data["illustrations"])
@@ -224,9 +227,11 @@ def check_parser_errors(rendered):
         raise RuntimeError("A canonical view produced a MediaWiki parser error or expansion limit.")
 
 
-class RecipeRows(HTMLParser):
-    def __init__(self):
+class RenderedRows(HTMLParser):
+    def __init__(self, prefix="entry-recipe-", strip_prefix="entry-"):
         super().__init__()
+        self.prefix = prefix
+        self.strip_prefix = strip_prefix
         self.rows = []
         self.current = None
 
@@ -235,8 +240,8 @@ class RecipeRows(HTMLParser):
             self.current = {"entries": set(), "text": ""}
         elif self.current is not None:
             identity = dict(attrs).get("id", "")
-            if identity.startswith("entry-recipe-"):
-                self.current["entries"].add(identity.removeprefix("entry-"))
+            if identity.startswith(self.prefix):
+                self.current["entries"].add(identity.removeprefix(self.strip_prefix))
 
     def handle_endtag(self, tag):
         if tag == "tr" and self.current is not None:
@@ -257,7 +262,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     for station in catalog["stations"]:
         rendered = api({"action": "parse", "page": station["title"], "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
-        parsed = RecipeRows()
+        parsed = RenderedRows()
         parsed.feed(rendered)
         expected = [group for group in groups if any(entry["details"]["station"] in station["methods"] for entry in group)]
         # Item workstations also retain the recipe used to make the workstation itself.
@@ -277,6 +282,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     check_parser_errors(rendered)
     if re.search(r'id="(?:entity-|entry-|profile-|Recipes|How_to_acquire)', rendered) or "Ingredients" in rendered:
         raise RuntimeError("A default price view leaked owner content, a recipe, or merchant availability.")
+    if not catalog["unit_prices"]["unresolved_offers"] and "Not established" in rendered:
+        raise RuntimeError("A fully documented merchant price still renders as unresolved.")
     for title in price_owners:
         rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
@@ -307,6 +314,28 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         found = set(re.findall(r'id="entry-([^"]+)"', rendered))
         if found != expected or 'id="entity-' in rendered or "Conditional probability" not in rendered:
             raise RuntimeError("A loot view lost its exact outcome rows or leaked the source article.")
+    for source in catalog.get("acquisition", {}).get("sources", []):
+        for item in sorted({row["item"] for row in source["rows"]}):
+            text = "{{:" + source["title"] + "|view=loot|item=" + item + "}}"
+            result = api({"action": "parse", "title": "Synthetic acquisition view", "text": text,
+                          "prop": "text|templates"}, post=True)["parse"]
+            rendered = result["text"]["*"]
+            check_parser_errors(rendered)
+            parsed = RenderedRows("acquisition-", "acquisition-")
+            parsed.feed(rendered)
+            expected = {row["id"]: row for row in source["rows"] if row["item"] == item}
+            if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys():
+                raise RuntimeError("A fixed acquisition view leaked another item or omitted a documented condition.")
+            if len(parsed.rows) != len(expected) or {row["*"] for row in result.get("templates", [])} != {source["title"]}:
+                raise RuntimeError("An acquisition view duplicated rows or included an unexpected owner.")
+            if 'id="source-' in rendered or source["summary"] in rendered:
+                raise RuntimeError("An acquisition view leaked the source article.")
+            for rendered_row in parsed.rows:
+                row = expected[next(iter(rendered_row["entries"]))]
+                if row["condition"] not in rendered_row["text"]:
+                    raise RuntimeError("An acquisition view lost its exact difficulty/location condition.")
+                if row["coverage"] == "fixed" and "100%" not in rendered_row["text"]:
+                    raise RuntimeError("A fixed acquisition view lost its explicitly conditional certainty.")
     fixture = next(group for group in groups if locations[group[0]["details"]["outputs"][0]["item"]] == "Simple Burn Remedy" and len(group) > 1)
     owner = owners[fixture[0]["id"]]
     targets = {station["title"] for station in catalog["stations"] if any(
@@ -332,7 +361,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         for target in targets:
             rendered = refreshed_transclusion(run, api, target, expected, 'id="entity-item-141"', owner)
             check_parser_errors(rendered)
-            parsed = RecipeRows()
+            parsed = RenderedRows()
             parsed.feed(rendered)
             if not any(fixture[0]["id"] in row["entries"] and expected in row["text"] for row in parsed.rows):
                 raise RuntimeError("The changed recipe value did not reach its exact station row.")
@@ -383,18 +412,17 @@ def smoke_images(run, api, base, data, catalog):
     specs.update({f"Health-armor-{armor}.png": (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
                   for armor in (1, 2, 3)})
     contextual = sorted({image_for(guide["image_entity"], data["illustrations"])["file_title"].removeprefix("File:")
-                         for guide in catalog["guides"] if "image_entity" in guide})
+                         for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]
+                         if "image_entity" in guide})
     contextual += [image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
-                   for identity in ("nature-4", "nature-7", "nature-17")]
+                   for identity in MATURE_TREES]
     specs.update({filename: (64, 64, bytes((130 + index, 91, 73, 255)), 32)
                   for index, filename in enumerate(contextual)})
-    for identity, (width, height) in {
-        "nature-4": (588, 564), "nature-7": (684, 912), "nature-17": (340, 540),
-    }.items():
+    for identity, (width, height) in MATURE_TREES.items():
         filename = image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
         specs[filename] = (width, height, specs[filename][2], 32)
     specs.update({f"Nature-{number}.png": (64, 64, bytes((200 + number, 40, 70, 255)), 32)
-                  for number in (4, 7, 17)})
+                  for number in (4, 7, 17, 20)})
     originals = {}
     run("exec", "-T", "--user", "www-data", "mirklurk", "mkdir", "/tmp/mirklurk-smoke-images")
     for filename, (width, height, pixel, _) in specs.items():

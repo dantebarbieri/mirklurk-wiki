@@ -78,7 +78,7 @@ No additional health art or other frames are included in this approval.
 ## Reviewed mature-tree replacements
 
 The acquisition and wellbeing release replaces only the existing illustration
-records for Willow, Cypress, and Trollgnarl. All other 323 active selections,
+records for Willow, Cypress, Trollgnarl, and Elderwort Shrub. All other 322 active selections,
 including the three shields, stay unchanged. The replacement captions identify
 representative mature compositions assembled from native trunk, branch, and
 leaf sprites using reviewed growth, attachment, origin, mirroring, and draw
@@ -90,12 +90,14 @@ sprites or a promise to replay one random in-game specimen.
 | `File:Nature-4.png` | `File:Nature-4-mature.png` | 588 x 564 | 7512 |
 | `File:Nature-7.png` | `File:Nature-7-mature.png` | 684 x 912 | 15112 |
 | `File:Nature-17.png` | `File:Nature-17-mature.png` | 340 x 540 | 4356 |
+| `File:Nature-20.png` | `File:Nature-20-mature.png` | 256 x 256 | 2441 |
 
 The reviewed hashes and assembly evidence are in `illustrations.json`.
-Import exactly the three new titles with their attribution sidecars through
+Elderwort is naturally a small flowering shrub, not a tall-trunk tree.
+Import exactly the four new titles with their attribution sidecars through
 the approved operator workflow; do not overwrite, rename, or delete the old
 File pages or image bytes. The plan therefore retains 326 active authored
-selections while reaching 329 uploaded game images after the separate import.
+selections while reaching 330 uploaded game images after the separate import.
 Guide pictures reuse existing approved File titles and require no extra
 uploads or duplicate metadata. This document is not deployment authorization.
 
@@ -191,4 +193,4 @@ while web uploads stay disabled. Those fixtures are not game artwork or evidence
 of approved game-image hashes. No image fixture is stored in Git or CI artifacts.
 This does not import game images or establish that any artwork is cleared for publication.
 The same smoke checks guide images and links, mature-tree captions/references,
-and byte-for-byte preservation of the three legacy tree fixtures after seeding.
+and byte-for-byte preservation of the four legacy tree fixtures after seeding.
