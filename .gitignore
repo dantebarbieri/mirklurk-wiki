@@ -50,6 +50,7 @@
 !/tools/plan_migration.py
 !/tools/build_wiki.py
 !/tools/smoke_deploy.py
+!/tools/smoke_prefix.py
 !/tests/
 !/tests/test_safety.py
 !/tests/test_wiki.py
@@ -57,6 +58,7 @@
 !/tests/test_views.py
 !/tests/test_acquisition.py
 !/tests/test_migration.py
+!/tests/test_prefix.py
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile

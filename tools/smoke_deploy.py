@@ -256,6 +256,9 @@ class RenderedRows(HTMLParser):
             elif tag == "br":
                 self.handle_data(" ")
             elif self.cell is not None and (tag == "a" or "selflink" in attrs.get("class", "")):
+                query = urllib.parse.parse_qs(urllib.parse.urlsplit(attrs.get("href", "")).query)
+                if query.get("title"):
+                    attrs["title"] = query["title"][0].replace("_", " ")
                 if "selflink" in attrs.get("class", "") or attrs.get("href", "").startswith("#"):
                     attrs.setdefault("title", self.page_title)
                 self.link = {"attrs": attrs, "text": ""}
@@ -704,6 +707,7 @@ def capture_view_fixtures(api, pages, catalog):
         ("pool-source", "Treasure chests", {"view": "pool-source", "pool": "chest-common"}),
         ("pool-story-gate", "Random treasure", {"view": "pool", "pool": "chest-common", "item": "item-127"}),
     ]
+    fixtures = []
     for name, owner, parameters in cases:
         original = api({"action": "parse", "page": owner, "prop": "wikitext"})["parse"]["wikitext"]["*"]
         if original != pages[owner]:
@@ -715,13 +719,16 @@ def capture_view_fixtures(api, pages, catalog):
         result = api({"action": "parse", "title": "Synthetic contract view", "text": render_text,
                       "prop": "text|templates"}, post=True)["parse"]
         check_parser_errors(result["text"]["*"])
-        print("VIEW_CONTRACT_JSON=" + json.dumps({
+        fixture = {
             "name": name, "owner": owner, "owner_sha256": hashlib.sha256(original.encode()).hexdigest(),
             "parameters": parameters, "invocation": invocation, "expanded_wikitext": expanded,
             "render_context": render_context,
             "html": result["text"]["*"], "templates": sorted(row["*"] for row in result.get("templates", [])),
             "scope": "Disposable MediaWiki with synthetic artwork; image URLs and cache metadata are not portable.",
-        }, ensure_ascii=False), flush=True)
+        }
+        fixtures.append(fixture)
+        print("VIEW_CONTRACT_JSON=" + json.dumps(fixture, ensure_ascii=False), flush=True)
+    return fixtures
 
 
 def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
@@ -840,10 +847,16 @@ def smoke_images(run, api, base, data, catalog):
     return {filename: hashlib.sha256(payload).hexdigest() for filename, payload in originals.items()}
 
 
-def smoke():
+def smoke(evidence_dir=None):
+    from smoke_prefix import Rehearsal, SETTINGS_KEYS, canonical_bytes, reconstruct_baseline, settings_hash
+
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
         workspace = Path(folder)
+        baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
+        source_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+        subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=True)
+        evidence = {}
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
@@ -916,6 +929,29 @@ def smoke():
             if "uploadsenabled" in general:
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
             data, catalog, details = load_publication_inputs(ROOT)
+            extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
+            parser_functions = next((row for row in extensions if row["name"] == "ParserFunctions"), None)
+            if not parser_functions or not parser_functions.get("version"):
+                raise RuntimeError("The installed ParserFunctions registry has no loaded version.")
+            projection_code = (
+                "$config = MediaWiki\\MediaWikiServices::getInstance()->getMainConfig();"
+                "$projection = []; foreach (" + json.dumps(list(SETTINGS_KEYS)) + " as $key) {"
+                "$projection[$key] = $config->get($key); } "
+                "echo json_encode($projection, JSON_THROW_ON_ERROR);\n"
+            )
+            projection = json.loads(run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "eval", "--quiet",
+                                        input_bytes=projection_code.encode()))
+            container = run("ps", "--quiet", "mirklurk").decode().strip()
+            image_id = subprocess.check_output(["docker", "inspect", "--format", "{{.Image}}", container], text=True).strip()
+            if not re.fullmatch(r"sha256:[0-9a-f]{64}", image_id):
+                raise RuntimeError("The rebuilt disposable image has no immutable image identity.")
+            runtime = {
+                "mediawiki_image_pin": (ROOT / "deploy" / "Dockerfile").read_text().splitlines()[0].removeprefix("FROM "),
+                "runtime_php_sha256": hashlib.sha256((ROOT / "deploy" / "mirklurk-runtime.php").read_bytes()).hexdigest(),
+                "settings_template_sha256": hashlib.sha256((ROOT / "deploy" / "LocalSettings.template.php").read_bytes()).hexdigest(),
+                "generator": general["generator"], "ParserFunctions_version": parser_functions["version"],
+                "runtime_image_id": image_id, "effective_settings_sha256": settings_hash(projection),
+            }
             image_hashes = smoke_images(run, api, base, data, catalog)
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
@@ -953,15 +989,26 @@ def smoke():
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
             pages = build_pages(ROOT, data, catalog, details)
-            edit = api({"action": "edit", "title": "Main Page", "text": pages["Main Page"], "token": csrf}, post=True)
+            edit = api({"action": "edit", "title": "Main Page", "text": baseline["Main Page"], "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("Authenticated editing failed.")
 
             current = workspace / "current.xml"
             current.write_bytes(run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "dumpBackup", "--current"))
             excluded = existing_titles(current)
-            missing = {title: text for title, text in pages.items() if title_key(title) not in excluded}
+            missing = {title: text for title, text in baseline.items() if title_key(title) not in excluded}
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=build_xml(missing))
+            wait_for_server_tick(api)
+            baseline_titles = sorted(baseline)
+            for offset in range(0, len(baseline_titles), 50):
+                api({"action": "purge", "titles": "|".join(baseline_titles[offset:offset + 50]),
+                     "forcelinkupdate": 1}, post=True)
+            drain_jobs = lambda: run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "runJobs", "--maxjobs", "1000")
+            drain_jobs()
+            rehearsal = Rehearsal(api, sys.modules[__name__], baseline, pages, data, catalog,
+                                  baseline_catalog, runtime, source_head)
+            rehearsal.run(csrf, wait_for_server_tick, drain_jobs)
+            evidence.update(rehearsal.artifacts())
             indexed = []
             for namespace in (0, 14):
                 indexed.extend(api({"action": "query", "list": "allpages", "apnamespace": namespace,
@@ -997,7 +1044,7 @@ def smoke():
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
-            capture_view_fixtures(api, pages, catalog)
+            evidence["desired-view-contracts.json"] = capture_view_fixtures(api, pages, catalog)
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
             price_title = "Longbow (Cypress)"
             original_item = pages[price_title]
@@ -1056,6 +1103,19 @@ def smoke():
                 "Disposable Docker smoke passed: install, health, access policy, CAPTCHA, seed, "
                 "edit preservation, CLI image import, resized thumbnail, web uploads disabled."
             )
+            if evidence_dir is not None:
+                evidence_dir.mkdir(parents=True, exist_ok=False)
+                for name, value in evidence.items():
+                    with (evidence_dir / name).open("xb") as stream:
+                        stream.write(canonical_bytes(value))
+                for name, payload in (("baseline-seed.xml", baseline_payload), ("desired-seed.xml", build_xml(pages))):
+                    with (evidence_dir / name).open("xb") as stream:
+                        stream.write(payload)
+                hashes = {path.name: {"bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+                          for path in sorted(evidence_dir.iterdir())}
+                with (evidence_dir / "artifact-manifest.json").open("xb") as stream:
+                    stream.write(canonical_bytes({"source_head_sha": source_head, "artifacts": hashes,
+                                                 "notice": "Disposable rehearsal only. Expectations require independent review; no live writes authorized."}))
         except subprocess.CalledProcessError as error:
             # The child only receives mounted secret paths, never literal secrets in argv.
             sys.stderr.write(error.stdout.decode(errors="replace"))
@@ -1068,8 +1128,9 @@ def smoke():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", required=True, action="store_true", help="Create and remove test-only Docker resources")
-    parser.parse_args()
-    smoke()
+    parser.add_argument("--evidence-dir", type=Path, help="New output directory for nonsecret disposable evidence")
+    args = parser.parse_args()
+    smoke(args.evidence_dir)
 
 
 if __name__ == "__main__":

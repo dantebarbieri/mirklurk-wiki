@@ -1,0 +1,603 @@
+"""Disposable, revision-bound baseline-to-desired rehearsal; never a live executor."""
+
+import hashlib
+import io
+import json
+import re
+import subprocess
+import sys
+import tarfile
+import urllib.parse
+from html.parser import HTMLParser
+from pathlib import Path
+
+from build_wiki import build_xml
+from plan_migration import plan_migration, read_snapshot, text_hash
+from wiki_catalog import entry_owners, entry_relations, page_locations, title_key
+from wiki_render import display_entry, recipe_groups
+from wiki_views import available_views, transclusions
+
+
+BASELINE_COMMIT = "67c690fb6b32617f33947bd5de217fd2077dc6ef"
+BASELINE_SHA256 = "4715cafa65bdca206a8315d084a97d89b0b0275dbefe650f92b59e9c0c1f0e33"
+COHORT = ("being-8", "being-19", "being-26", "item-32", "item-84", "item-138",
+          "item-139", "item-140", "item-248")
+COMPATIBILITY = {
+    "being-8": ("item-140", "item-32", "item-84"),
+    "being-19": ("item-140", "item-32", "item-84", "item-138", "item-139"),
+    "being-26": ("item-138", "item-139", "item-248"),
+}
+SETTINGS_KEYS = ("EnableUploads", "AllowCopyUploads", "AllowExternalImages",
+                 "ReadOnly", "GroupPermissions", "CaptchaTriggers")
+
+
+def canonical_bytes(value):
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+                      allow_nan=False).encode("utf-8")
+
+
+def settings_hash(value):
+    if not isinstance(value, dict) or set(value) != set(SETTINGS_KEYS):
+        raise RuntimeError("The effective-settings projection has unexpected keys.")
+    if any(value[key] is not False for key in SETTINGS_KEYS[:3]):
+        raise RuntimeError("A disabled-upload runtime invariant changed.")
+    if not isinstance(value["ReadOnly"], (bool, str)) or not all(
+        isinstance(value[key], dict) for key in ("GroupPermissions", "CaptchaTriggers")
+    ):
+        raise RuntimeError("The installed settings projection has unexpected value types.")
+    return hashlib.sha256(canonical_bytes(value)).hexdigest()
+
+
+def reconstruct_baseline(root, workspace):
+    destination = workspace / "baseline-source"
+    destination.mkdir()
+    archive = subprocess.run(["git", "archive", BASELINE_COMMIT], cwd=root,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout
+    with tarfile.open(fileobj=io.BytesIO(archive)) as bundle:
+        for member in bundle:
+            target = destination / member.name
+            if not target.resolve().is_relative_to(destination.resolve()) or not (member.isdir() or member.isfile()):
+                raise RuntimeError("The frozen baseline archive contains an unsafe entry.")
+            if member.isdir():
+                target.mkdir(parents=True, exist_ok=True)
+            else:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with target.open("xb") as stream:
+                    stream.write(bundle.extractfile(member).read())
+    output = workspace / "baseline-seed.xml"
+    subprocess.run([sys.executable, str(destination / "tools" / "build_wiki.py"),
+                    "--fresh", "--output", str(output)], check=True, stdout=subprocess.PIPE)
+    payload = output.read_bytes()
+    if len(payload) != 2542913 or hashlib.sha256(payload).hexdigest() != BASELINE_SHA256:
+        raise RuntimeError("Reconstructed baseline differs from the reviewed 401-title seed.")
+    pages = read_snapshot(output)
+    if len(pages) != 401:
+        raise RuntimeError("The frozen baseline title count changed.")
+    return pages, payload, json.loads((destination / "content" / "facts" / "catalog.json").read_bytes())
+
+
+def planned_order(baseline, desired, locations, baseline_prices, coins):
+    cohort = [locations[identity] for identity in COHORT]
+    allowed = {(locations[consumer], locations[owner]) for consumer, owners in COMPATIBILITY.items() for owner in owners}
+    preserved = {locations[identity] for identity in baseline_prices | coins}
+    pending = {title for title in desired if baseline.get(title) != desired[title]}
+    if not set(baseline) <= set(desired) or not set(cohort) <= pending:
+        raise RuntimeError("The rehearsal must preserve all baseline titles and include the complete cohort.")
+    prerequisites = {}
+    for title in pending:
+        prerequisites[title] = {
+            owner for owner, arguments in transclusions(desired[title])
+            if arguments or not (owner in preserved or (title, owner) in allowed)
+        }
+        if title in cohort:
+            prerequisites[title].update(cohort[:cohort.index(title)])
+        if not prerequisites[title] <= desired.keys():
+            raise RuntimeError("The planned sequence has an unknown selector prerequisite.")
+    ready = {title for title in desired if baseline.get(title) == desired[title]}
+    order = []
+    while pending:
+        candidates = sorted((title for title in pending if prerequisites[title] <= ready),
+                            key=lambda title: (title in baseline, title))
+        if not candidates:
+            blocked = {title: sorted(prerequisites[title] - ready) for title in sorted(pending)}
+            raise RuntimeError("Unresolved view-specific prerequisites: " + json.dumps(blocked))
+        title = candidates[0]
+        order.append(title)
+        pending.remove(title)
+        ready.add(title)
+    return order
+
+
+def projection_invocation(owner, parameters):
+    return "{{:" + owner + "".join("|" + key + "=" + value for key, value in sorted(parameters.items())) + "}}"
+
+
+class ProjectionDOM(HTMLParser):
+    """Ordered visible cells/links for receipts, excluding implementation-specific URLs."""
+
+    def __init__(self, title):
+        super().__init__()
+        self.title = title
+        self.text = ""
+        self.links = []
+        self.anchors = []
+        self.rows = []
+        self.wiki_links = []
+        self.tables = []
+        self.row = self.cell = self.link = None
+        self.link_tag = None
+
+    def handle_starttag(self, tag, attributes):
+        attrs = dict(attributes)
+        if tag == "table":
+            self.tables.append([])
+        elif tag == "tr":
+            self.row = {"headers": list(self.tables[-1]) if self.tables else [], "cells": [], "ids": []}
+        elif tag in {"td", "th"} and self.row is not None:
+            self.cell = {"text": "", "links": [], "anchors": []}
+            self.row["cells"].append(self.cell)
+            self.row["header"] = tag == "th"
+        if identity := attrs.get("id"):
+            self.anchors.append(identity)
+            if self.row is not None:
+                self.row["ids"].append(identity)
+            if self.cell is not None:
+                self.cell["anchors"].append(identity)
+        if tag == "br":
+            self.handle_data(" ")
+        if tag == "a" or "selflink" in attrs.get("class", "").split():
+            url = urllib.parse.urlsplit(attrs.get("href", ""))
+            query = urllib.parse.parse_qs(url.query)
+            target = query.get("title", [None])[0] or attrs.get("title") or self.title
+            if url.fragment:
+                target = target.split("#", 1)[0] + "#" + urllib.parse.unquote(url.fragment)
+            name, separator, fragment = target.partition("#")
+            self.link = {"target": name.replace("_", " ") + separator + fragment, "text": ""}
+            self.wiki_links.append({"target": self.link["target"].split("#", 1)[0],
+                                    "redlink": "new" in attrs.get("class", "").split() or query.get("redlink") == ["1"]})
+            self.link_tag = tag
+            self.links.append(self.link)
+            if self.cell is not None:
+                self.cell["links"].append(self.link)
+
+    def handle_endtag(self, tag):
+        if tag == self.link_tag:
+            self.link = self.link_tag = None
+        if tag in {"td", "th"}:
+            self.cell = None
+        if tag == "tr" and self.row is not None:
+            if self.row.get("header") and self.tables:
+                self.tables[-1] = [" ".join(cell["text"].split()) for cell in self.row["cells"]]
+            else:
+                self.rows.append(self.row)
+            self.row = None
+        if tag == "table" and self.tables:
+            self.tables.pop()
+
+    def handle_data(self, text):
+        self.text += text
+        if self.cell is not None:
+            self.cell["text"] += text
+        if self.link is not None:
+            self.link["text"] += text
+
+    def normalize(self):
+        self.text = " ".join(self.text.split())
+        for link in self.links:
+            link["text"] = " ".join(link["text"].split())
+        for row in self.rows:
+            for cell in row["cells"]:
+                cell["text"] = " ".join(cell["text"].split())
+        return self
+
+
+def dom(html, title):
+    result = ProjectionDOM(title)
+    result.feed(html)
+    return result.normalize()
+
+
+def linked_titles(text):
+    return {title_key(target.lstrip(":").split("#", 1)[0]) for target in re.findall(r"\[\[([^\]|]+)", text)
+            if target.lstrip(":").split("#", 1)[0]}
+
+
+class Rehearsal:
+    def __init__(self, api, checks, baseline, desired, data, catalog, old_catalog, runtime, source_head):
+        self.api, self.checks = api, checks
+        self.baseline, self.desired, self.current = baseline, desired, dict(baseline)
+        self.data, self.catalog = data, catalog
+        self.locations = page_locations(data, catalog)
+        self.entities = {title: identity for identity, title in self.locations.items()}
+        self.old_prices = {row["entity"]: row["value"] for row in old_catalog["unit_prices"]["prices"]}
+        self.prices = {row["entity"]: row["value"] for row in catalog["unit_prices"]["prices"]}
+        self.coins = {row["entity"]: row for row in catalog["currency"]["coins"]}
+        if any(self.prices.get(identity) != value for identity, value in self.old_prices.items()):
+            raise RuntimeError("A preserved baseline standard price changed.")
+        self.owners = entry_owners(data, self.locations, entry_relations(data, catalog), catalog)
+        self.groups = recipe_groups([display_entry(row, catalog) for row in data["entries"] if row["kind"] == "recipe"])
+        self.stations = {method: station for station in catalog["stations"] for method in station["methods"]}
+        self.sources = {row["title"]: row for row in catalog["acquisition"]["sources"]}
+        self.pools = {row["id"]: row for row in catalog["acquisition"]["pools"]}
+        self.order = planned_order(baseline, desired, self.locations, self.old_prices.keys(), self.coins.keys())
+        self.cohort = [self.locations[identity] for identity in COHORT]
+        self.allowed = {(self.locations[consumer], self.locations[owner])
+                        for consumer, owners in COMPATIBILITY.items() for owner in owners}
+        self.base_meta = None
+        self.metadata = {}
+        self.revisions = {}
+        self.pageids = {}
+        self.probes = []
+        self.cache = {}
+        self.prefixes = []
+        self.compatibility = []
+        self.snapshots = []
+        self.endpoint_rows = {}
+        self.endpoint_projections = {}
+        self.provenance = {
+            "schema_version": 1, "source_head_sha": source_head, "checkout_sha": source_head,
+            "baseline_seed_sha256": BASELINE_SHA256,
+            "desired_seed_sha256": hashlib.sha256(build_xml(desired)).hexdigest(), "runtime": runtime,
+        }
+
+    def refresh_metadata(self):
+        previous_max = max(self.revisions, default=0)
+        titles = sorted(self.current)
+        for offset in range(0, len(titles), 50):
+            result = self.api({"action": "query", "titles": "|".join(titles[offset:offset + 50]),
+                               "prop": "revisions", "rvprop": "ids|content", "rvslots": "main"})
+            for page in result["query"]["pages"].values():
+                title = page["title"]
+                revision = page["revisions"][0]
+                raw = revision["slots"]["main"]["*"]
+                if raw != self.current[title]:
+                    raise RuntimeError("A current page differs from its exact planned prefix text: " + title)
+                record = {"title": title, "pageid": page["pageid"], "revid": revision["revid"],
+                          "parentid": revision["parentid"], "raw_sha256": text_hash(raw)}
+                old = self.metadata.get(title)
+                fingerprint = (title, record["pageid"], record["parentid"], record["raw_sha256"])
+                if record["revid"] in self.revisions and self.revisions[record["revid"]] != fingerprint:
+                    raise RuntimeError("A revision identity was reused for different page content.")
+                if title in self.pageids and self.pageids[title] != record["pageid"]:
+                    raise RuntimeError("A page identity moved during the rehearsal.")
+                if old and old != record and (record["revid"] <= previous_max or record["parentid"] != old["revid"]):
+                    raise RuntimeError("A prefix pointer did not advance from its exact prior revision.")
+                if old is None and self.base_meta is not None and record["revid"] <= previous_max:
+                    raise RuntimeError("A newly created title reused an earlier revision identity.")
+                self.revisions[record["revid"]] = fingerprint
+                self.pageids[title] = record["pageid"]
+                self.metadata[title] = record
+        if self.base_meta is None:
+            self.base_meta = dict(self.metadata)
+
+    def dependency_revisions(self, templates):
+        if not set(templates) <= self.metadata.keys():
+            raise RuntimeError("A parser dependency falls outside the frozen managed titles.")
+        return [{key: self.metadata[title][key] for key in ("title", "pageid", "revid", "raw_sha256")}
+                for title in sorted(set(templates))]
+
+    def validate_projection(self, owner, parameters, result):
+        html = result["text"]["*"]
+        self.checks.check_parser_errors(html)
+        templates = sorted(row["*"] for row in result.get("templates", []))
+        if templates != [owner]:
+            raise RuntimeError("A selected projection is not a parser-proven leaf: " + owner + str(parameters))
+        parsed = dom(html, "Prefix projection")
+        view = parameters.get("view", "")
+        identity = self.entities.get(owner)
+        if not parameters:
+            if identity in self.coins:
+                rows = self.checks.RenderedRows("coin-", "coin-")
+                rows.feed(html)
+                coin = self.coins[identity]
+                wanted = [self.locations[identity], self.checks.scalar(coin["value_in_silver"]),
+                          self.checks.scalar(coin["weight_grams"]) + " g", str(coin["stack_limit"])]
+                if len(rows.rows) != 1 or [self.checks.plain(cell["text"]) for cell in rows.rows[0]["cells"]] != wanted:
+                    raise RuntimeError("A default coin summary changed its four canonical cells.")
+            elif identity in self.prices:
+                if self.current[owner] == self.baseline.get(owner) and identity not in self.old_prices:
+                    if parsed.text != "Not established":
+                        raise RuntimeError("A scoped old unknown price leaked content or invented a value.")
+                else:
+                    self.checks.check_price_cell({"text": parsed.text}, self.prices[identity])
+                if parsed.anchors or parsed.rows or any(link["text"] for link in parsed.links):
+                    raise RuntimeError("A default price leaked article links, anchors or tables.")
+            else:
+                raise RuntimeError("An unregistered default inclusion was requested.")
+        elif view == "recipes":
+            station = next(row for row in self.catalog["stations"] if row["id"] == parameters["station"])
+            expected = [group for group in self.groups if self.owners[group[0]["id"]] == owner
+                        and any(row["details"]["station"] in station["methods"] for row in group)]
+            rows = self.checks.RenderedRows()
+            rows.feed(html)
+            if {frozenset(row["entries"]) for row in rows.rows} != {
+                frozenset(row["id"] for row in group) for group in expected
+            } or len(rows.rows) != len(expected):
+                raise RuntimeError("A prerequisite recipe view has incorrect variant membership.")
+            for row in rows.rows:
+                group = next(group for group in expected if group[0]["id"] in row["entries"])
+                self.checks.check_recipe_cells(row, group, self.locations, self.stations)
+            expected_actions = {row["id"]: row for row in self.catalog.get("construction_recipes", [])
+                                if self.locations[row["owner_item"]] == owner and row["station_id"] == station["id"]}
+            actions = self.checks.RenderedRows("entry-construction-", "entry-")
+            actions.feed(html)
+            if {key for row in actions.rows for key in row["entries"]} != expected_actions.keys() or len(actions.rows) != len(expected_actions):
+                raise RuntimeError("A prerequisite in-place action view has incorrect membership.")
+            for row in actions.rows:
+                self.checks.check_construction_cells(row, expected_actions[next(iter(row["entries"]))], self.locations)
+        elif view in {"offers", "loot"}:
+            kind = "merchant" if view == "offers" else "loot"
+            field = "item" if view == "offers" else "outcome"
+            wanted = {"entry-" + row["id"] for row in self.data["entries"] if row["kind"] == kind
+                      and self.owners[row["id"]] == owner and (row["details"][field] or "empty") == parameters["item"]}
+            if view == "loot":
+                wanted |= {"acquisition-" + row["id"] for row in self.sources.get(owner, {}).get("rows", [])
+                           if row["item"] == parameters["item"]}
+            prefixes = ("entry-merchant-",) if view == "offers" else ("entry-loot-", "entry-corpse-", "acquisition-")
+            actual = [identity for identity in parsed.anchors if identity.startswith(prefixes)]
+            if set(actual) != wanted or len(actual) != len(wanted) or not wanted:
+                raise RuntimeError("A prerequisite source view changed its exact record membership.")
+            if view == "offers" and "Unit price" in parsed.text:
+                raise RuntimeError("A selected seller view exposed default-price recursion.")
+            context = self.sources.get(owner, {}).get("loot_context")
+            if view == "loot" and context and self.checks.plain(context) not in parsed.text:
+                raise RuntimeError("A prerequisite source omitted its canonical shared qualification.")
+        elif view == "pool":
+            pool = self.pools[parameters["pool"]]
+            members = {parameters["item"]} & set(pool["eligible_item_ids"]) if "item" in parameters else set(pool["eligible_item_ids"])
+            wanted = {"pool-item-" + pool["id"] + "-" + item for item in members}
+            actual = [identity for identity in parsed.anchors if identity.startswith("pool-item-")]
+            if set(actual) != wanted or len(actual) != len(wanted):
+                raise RuntimeError("A prerequisite pool view changed its exact membership.")
+            for row in parsed.rows:
+                if set(row["ids"]) & wanted and (len(row["cells"]) != 4 or [cell["text"] for cell in row["cells"][1:3]]
+                                               != ["Budget-dependent", "Not established"]):
+                    raise RuntimeError("A prerequisite pool invented quantity or probability.")
+            for item, condition in pool["item_conditions"].items():
+                if (self.checks.plain(condition) in parsed.text) != (item in members):
+                    raise RuntimeError("A prerequisite pool lost or leaked an item-specific story gate.")
+        elif view == "pool-source":
+            reference = next(row for row in self.sources[owner]["pool_refs"] if row["pool"] == parameters["pool"])
+            if parsed.text != owner + ": " + self.checks.plain(reference["condition"]) or parsed.rows:
+                raise RuntimeError("A prerequisite pool-source view changed its exact condition-only contract.")
+        else:
+            raise RuntimeError("An unregistered named inclusion was requested.")
+
+    def probe(self, consumer, owner, arguments, fresh=False):
+        parameters = dict(arguments)
+        if owner not in self.current:
+            raise RuntimeError("A required selector owner does not exist yet.")
+        desired = self.current[owner] == self.desired[owner]
+        if desired:
+            kind = "desired-leaf-projection"
+        elif not parameters and self.entities.get(owner) in self.old_prices.keys() | self.coins.keys():
+            kind = "preserved-baseline-default"
+        elif not parameters and (consumer, owner) in self.allowed:
+            kind = "six-price-compatibility-only"
+        else:
+            raise RuntimeError("A required named view is not ready at this actual prefix.")
+        if parameters.get("view", "") not in available_views(self.current[owner]):
+            raise RuntimeError("A required view is not structurally declared by its current owner.")
+        key = (owner, tuple(arguments), self.metadata[owner]["revid"])
+        if key in self.cache and not fresh:
+            return self.cache[key]
+        invocation = projection_invocation(owner, parameters)
+        expanded = self.api({"action": "expandtemplates", "title": "Prefix projection",
+                             "text": invocation, "prop": "wikitext"}, post=True)["expandtemplates"]["wikitext"]
+        render_text = "<table>" + invocation + "</table>" if parameters.get("view") == "recipes" else invocation
+        result = self.api({"action": "parse", "title": "Prefix projection", "text": render_text,
+                           "prop": "text|templates"}, post=True)["parse"]
+        self.validate_projection(owner, parameters, result)
+        evidence = {
+            "id": len(self.probes), "owner": dict(self.metadata[owner]), "parameters": parameters, "kind": kind,
+            "expanded_wikitext": expanded, "projection_sha256": text_hash(expanded),
+            "html": result["text"]["*"], "render_context": "table" if parameters.get("view") == "recipes" else "block",
+            "templates": sorted(row["*"] for row in result.get("templates", [])),
+        }
+        self.probes.append(evidence)
+        self.cache[key] = evidence
+        return evidence
+
+    def inspect_consumer(self, title):
+        result = self.api({"action": "parse", "page": title, "prop": "text|templates|links|revid"})["parse"]
+        if result.get("revid") != self.metadata[title]["revid"]:
+            raise RuntimeError("A consumer parse is not bound to its captured current revision.")
+        self.checks.check_parser_errors(result["text"]["*"])
+        probes = [self.probe(title, owner, arguments) for owner, arguments in transclusions(self.current[title])]
+        templates = sorted(row["*"] for row in result.get("templates", []))
+        if set(templates) != {probe["owner"]["title"] for probe in probes}:
+            raise RuntimeError("A full consumer has unexpected or missing transclusion dependencies: " + title)
+        parsed = dom(result["text"]["*"], title)
+        pending_links = sorted({link["target"] for link in parsed.wiki_links
+                                if link["target"] in self.desired and link["target"] not in self.current})
+        for link in parsed.wiki_links:
+            if link["target"] in self.desired and link["redlink"] != (link["target"] not in self.current):
+                raise RuntimeError("A consumer has a stale or dishonest planned-title link: " + title + " -> " + link["target"])
+        for probe in probes:
+            if not probe["parameters"]:
+                continue
+            selected = dom(probe["html"], "Prefix projection")
+            for row in selected.rows:
+                ids = set(row["ids"])
+                if ids and not any(ids <= set(actual["ids"]) and row["cells"] == actual["cells"] for actual in parsed.rows):
+                    raise RuntimeError("A cached consumer row differs from its actual current selected view: " + title + str(probe["parameters"]))
+            if probe["parameters"]["view"] == "pool-source" and selected.text not in parsed.text:
+                raise RuntimeError("A consumer omitted its source-owned pool condition.")
+        self.check_merchant_rows(title, parsed)
+        return {"consumer": dict(self.metadata[title]), "html_sha256": text_hash(result["text"]["*"]),
+                "templates": templates, "dependency_revisions": self.dependency_revisions(templates),
+                "probe_ids": [probe["id"] for probe in probes],
+                "pending_planned_new_targets": pending_links,
+                "links": [{"title": row["*"], "exists": "exists" in row} for row in result.get("links", [])]}
+
+    def check_merchant_rows(self, title, parsed):
+        for entry in self.data["entries"]:
+            if entry["kind"] != "merchant" or self.owners[entry["id"]] != title:
+                continue
+            rows = [row for row in parsed.rows if "entry-" + entry["id"] in row["ids"]]
+            if len(rows) != 1 or rows[0]["headers"].count("Unit price") != 1:
+                raise RuntimeError("A current merchant lost its exact offer/price-column identity.")
+            cell = rows[0]["cells"][rows[0]["headers"].index("Unit price")]
+            item = entry["details"]["item"]
+            owner = self.locations[item]
+            if self.current[owner] == self.baseline.get(owner) and item not in self.old_prices:
+                if (title, owner) not in self.allowed or cell["text"] != "Not established":
+                    raise RuntimeError("An unknown merchant price escaped its eleven-edge compatibility scope.")
+            else:
+                self.checks.check_price_cell(cell, self.prices[item])
+
+    def compatibility_observation(self, consumer, owner):
+        projection = self.probe(consumer, owner, (), fresh=True)
+        selected = dom(projection["html"], "Prefix projection")
+        result = self.api({"action": "parse", "page": consumer, "prop": "text|templates|revid"})["parse"]
+        if result.get("revid") != self.metadata[consumer]["revid"]:
+            raise RuntimeError("A price consumer parse is not bound to its captured current revision.")
+        self.checks.check_parser_errors(result["text"]["*"])
+        parsed = dom(result["text"]["*"], consumer)
+        entry = next(row for row in self.data["entries"] if row["kind"] == "merchant"
+                     and self.owners[row["id"]] == consumer and self.locations[row["details"]["item"]] == owner)
+        row = next(row for row in parsed.rows if "entry-" + entry["id"] in row["ids"])
+        templates = sorted({item["*"] for item in result.get("templates", [])})
+        observed = {
+            "expanded_wikitext": projection["expanded_wikitext"], "price_text": selected.text,
+            "price_links": selected.links, "price_anchors": selected.anchors,
+            "headers": row["headers"], "cells": row["cells"],
+            "projection_templates": projection["templates"], "templates": templates,
+        }
+        identities = {}
+        for role, title in (("consumer", consumer), ("owner", owner)):
+            identities[role] = {key: self.metadata[title][key] for key in ("title", "pageid", "revid", "raw_sha256")}
+            identities[role].update(entity=self.entities[title],
+                                    state="desired" if self.current[title] == self.desired[title] else "baseline")
+        return {**identities, "parameters": {}, "observed": observed,
+                "dependency_revisions": self.dependency_revisions(set(templates) | set(projection["templates"]))}
+
+    def capture_cohort(self, index):
+        observations = [self.compatibility_observation(consumer, owner) for consumer, owner in sorted(self.allowed)]
+        dependencies = {row["title"] for observation in observations for row in observation["dependency_revisions"]}
+        self.compatibility.append({"index": index, "applied_titles": self.cohort[:index], "observations": observations})
+        self.snapshots.append({"index": index, "pages": [dict(self.metadata[title]) for title in sorted(dependencies | set(self.cohort))]})
+
+    def capture_endpoint(self, state):
+        # Independent endpoint captures are composed into mixed expectations; never copy intermediate observations.
+        self.endpoint_rows[state] = {}
+        self.endpoint_projections[state] = {}
+        for consumer, owner in sorted(self.allowed):
+            observation = self.compatibility_observation(consumer, owner)
+            observed = observation["observed"]
+            self.endpoint_rows[state][(consumer, owner)] = {
+                key: observed[key] for key in ("headers", "cells", "templates")
+            }
+            self.endpoint_projections[state][owner] = {
+                key: observed[key] for key in ("expanded_wikitext", "price_text", "price_links", "price_anchors", "projection_templates")
+            }
+
+    def run(self, token, wait_tick, drain_jobs):
+        self.refresh_metadata()
+        self.capture_endpoint("baseline")
+        baseline_observations = [self.inspect_consumer(title) for title in sorted(self.current)]
+        self.prefixes.append({"index": 0, "saved": None, "prerequisites": [], "observations": baseline_observations,
+                              "pending_new_link_edges": self.pending_link_edges()})
+        self.capture_cohort(0)
+        cohort_index = 0
+        for index, title in enumerate(self.order, 1):
+            prerequisites = [self.probe(title, owner, arguments) for owner, arguments in transclusions(self.desired[title])]
+            wait_tick(self.api)
+            parameters = {"action": "edit", "title": title, "text": self.desired[title], "token": token}
+            if title in self.metadata:
+                parameters["baserevid"] = self.metadata[title]["revid"]
+                parameters["nocreate"] = 1
+            else:
+                parameters["createonly"] = 1
+            edit = self.api(parameters, post=True).get("edit", {})
+            if edit.get("result") != "Success" or "newrevid" not in edit or "nochange" in edit:
+                raise RuntimeError("A planned prefix save did not create exactly one normal revision.")
+            self.current[title] = self.desired[title]
+            drain_jobs()
+            self.refresh_metadata()
+            if edit["newrevid"] != self.metadata[title]["revid"]:
+                raise RuntimeError("The saved revision is not the observed current pointer.")
+            affected = {title}
+            affected.update(consumer for consumer, text in self.current.items()
+                            if title in {owner for owner, _ in transclusions(text)} or title in linked_titles(text))
+            observations = [self.inspect_consumer(consumer) for consumer in sorted(affected)]
+            self.prefixes.append({"index": index, "saved": dict(self.metadata[title]),
+                                  "prerequisites": [probe["id"] for probe in prerequisites], "observations": observations,
+                                  "pending_new_link_edges": self.pending_link_edges()})
+            if title in self.cohort:
+                if title != self.cohort[cohort_index]:
+                    raise RuntimeError("The actual sequence violated the frozen compatibility cohort order.")
+                cohort_index += 1
+                self.capture_cohort(cohort_index)
+            print(f"PREFIX_PROGRESS {index}/{len(self.order)} {title}", flush=True)
+        if self.current != self.desired or cohort_index != 9:
+            raise RuntimeError("The full planned sequence did not reach the exact desired corpus.")
+        self.capture_endpoint("desired")
+        self.final_observations = [self.inspect_consumer(title) for title in sorted(self.current)]
+        final_projections = {}
+        for probe in list(self.probes):
+            if probe["kind"] != "desired-leaf-projection":
+                continue
+            key = (probe["owner"]["title"], tuple(sorted(probe["parameters"].items())))
+            if key not in final_projections:
+                final_projections[key] = self.probe("", *key, fresh=True)
+            final = final_projections[key]
+            if probe["projection_sha256"] != final["projection_sha256"]:
+                raise RuntimeError("A prerequisite leaf projection changed between its prefix and final desired state.")
+
+    def pending_link_edges(self):
+        return [{"page": title, "target": target} for title, text in sorted(self.current.items())
+                for target in sorted(linked_titles(text) & (self.desired.keys() - self.current.keys()))]
+
+    def artifacts(self):
+        reviewed = {**self.provenance, "order": self.cohort,
+                    "versions": {title: {"baseline": text_hash(self.baseline[title]), "desired": text_hash(self.desired[title])}
+                                 for title in self.cohort},
+                    "projections": {owner: {state: self.endpoint_projections[state][owner] for state in ("baseline", "desired")}
+                                    for owner in self.cohort[3:]}, "prefixes": []}
+        for prefix, snapshot in zip(self.compatibility, self.snapshots):
+            expected = []
+            for observation in prefix["observations"]:
+                consumer, owner = observation["consumer"]["title"], observation["owner"]["title"]
+                consumer_state, owner_state = observation["consumer"]["state"], observation["owner"]["state"]
+                source = self.endpoint_rows[consumer_state][(consumer, owner)]
+                cells = json.loads(json.dumps(source["cells"]))
+                price_index = source["headers"].index("Unit price")
+                price_source = self.endpoint_rows[owner_state][(consumer, owner)]
+                cells[price_index] = json.loads(json.dumps(price_source["cells"][price_source["headers"].index("Unit price")]))
+                projected = self.endpoint_projections[owner_state][owner]
+                observed = {**projected, "headers": source["headers"], "cells": cells, "templates": source["templates"]}
+                dependency_titles = sorted(set(observed["templates"]) | set(observed["projection_templates"]))
+                expected.append({"consumer": consumer, "owner": owner, "observed": observed, "dependency_titles": dependency_titles})
+                if observed != observation["observed"]:
+                    raise RuntimeError("An actual intermediate price row differs from independently composed endpoint expectations.")
+                boundaries = sorted((0, self.cohort.index(consumer) + 1, self.cohort.index(owner) + 1, 10))
+                first, last = next((left, right - 1) for left, right in zip(boundaries, boundaries[1:])
+                                   if left <= prefix["index"] < right)
+                observation.update(
+                    baseline_projection_sha256=text_hash(self.endpoint_projections["baseline"][owner]["expanded_wikitext"]),
+                    desired_projection_sha256=text_hash(self.endpoint_projections["desired"][owner]["expanded_wikitext"]),
+                    prefix_interval={"first": first, "last": last},
+                )
+            reviewed["prefixes"].append({
+                "index": prefix["index"], "observations": expected,
+                "context_hashes": {row["title"]: row["raw_sha256"] for row in snapshot["pages"] if row["title"] not in self.cohort},
+            })
+        return {
+            "full-prefix-proof.json": {
+                **self.provenance, "evidence_kind": "disposable-mediawiki",
+                "scope": "complete-baseline-to-desired-rehearsal-not-live-authorization",
+                "order": self.order, "prefixes": self.prefixes, "view_evidence": self.probes,
+                "baseline_revisions": self.base_meta, "desired_revisions": self.metadata,
+                "final_observations": self.final_observations,
+                "cohort_full_positions": [0, *[self.order.index(title) + 1 for title in self.cohort]],
+            },
+            "price-compatibility-receipt.json": {
+                **self.provenance, "receipt_type": "default-price-prefix-compatibility",
+                "coverage_scope": "six-price-transition-only", "evidence_kind": "disposable-mediawiki",
+                "order": self.cohort, "prefixes": self.compatibility,
+            },
+            "price-expectations-candidate.json": reviewed,
+            "price-prefix-snapshots.json": self.snapshots,
+            "migration-plan.json": plan_migration(self.baseline, self.baseline, self.desired),
+        }

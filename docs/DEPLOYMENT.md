@@ -172,6 +172,29 @@ pool memberships, story gates and in-place construction result. Logged
 template dependencies and owner hashes before mutation tests. Their synthetic
 artwork URLs/cache metadata are not portable, and these records are not live
 readiness or baseline-prefix receipts.
+The rehearsal first reconstructs the pinned 401-title baseline and verifies its
+exact frozen XML hash. Only baseline pages are initially imported. One explicit
+baseline cache refresh occurs before prefix zero; no purge or reseed occurs
+during the planned transition or ordinary-editor propagation checks. Every
+changed/new page is then saved once, after actual revision-bound leaf-view
+checks, with all affected consumers observed at each prefix. Ready new pages
+are preferred. Ordinary new-title links may remain explicit, verified redlinks
+at intermediate prefixes; they are not selector prerequisites and must resolve
+at the final prefix.
+
+`--evidence-dir NEW_DIRECTORY` retains the complete prefix proof, exact seeds,
+schema-2 delta, desired-view fixtures, and a separate eleven-edge/six-price
+compatibility receipt. The compatibility expectation candidate is composed from
+separately captured baseline/desired endpoints, not copied from intermediate
+receipt observations; it still requires independent review. Neither artifact
+authorizes a live migration. Runtime provenance binds the rebuilt image, loaded
+ParserFunctions registry version, configuration-source hashes, and a hash of
+exactly six effective nonsecret settings: `EnableUploads`, `AllowCopyUploads`,
+`AllowExternalImages`, `ReadOnly`, `GroupPermissions`, `CaptchaTriggers`.
+Canonical bytes use UTF-8 sorted compact JSON, preserve types, and have no
+trailing newline; secrets and CAPTCHA questions/answers are never projected.
+CI checks out the exact source head with history and retains successful,
+nonsecret rehearsal artifacts for seven days.
 It also generates an original synthetic PNG outside the checkout, imports it by
 CLI as `www-data`, and anonymously fetches and decodes a 16x8 thumbnail of the
 64x32 original, rejecting original-URL fallbacks. Administrator and ordinary-user

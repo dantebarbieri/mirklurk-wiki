@@ -158,6 +158,18 @@ consumer cells through ordinary editing. A named source context is not itself
 a promise of an item drop, and a pool's empty filtered result is not an
 inventory item. Desired-seed fixtures alone are not baseline-transition or
 prefix compatibility evidence.
+The disposable baseline-to-desired producer records every prefix of its
+deterministic complete write order separately from that limited compatibility
+receipt. It preserves the 36 unchanged baseline price contracts and three coin
+summaries only after actual default-view checks. The six previously unknown
+prices are scoped exceptions on eleven named merchant edges, never general
+view-readiness evidence. Named views require their actual selected projection,
+not merely an owner hash or a declared selector. Full-page observations bind
+current revision identities, parser dependencies, ordered selected rows, and
+pending planned-new-title redlinks. Endpoint-composed expectation candidates
+must be reviewed independently before a downstream validator trusts them.
+An offline baseline rehearsal cannot replace a fresh live export, conflict
+review, writer freeze, or explicit operator authorization.
 Never
 reseed edited owner pages on a schedule; regenerated repository output is
 not authority over subsequent live edits.
