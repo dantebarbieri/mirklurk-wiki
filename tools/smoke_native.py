@@ -332,8 +332,8 @@ class NativeSmoke:
         preserved = [{"namespace": 14 if title.startswith("Category:") else 0, "title": title,
                       "page_id": row["pageid"], "revision_id": row["revid"], "raw_sha256": row["raw_sha256"]}
                      for title, row in sorted(metadata.items()) if title not in rehearsal.order]
-        if len(operations) != 449 or len(preserved) != 16:
-            raise RuntimeError("Native release coverage differs from 449 writes plus 16 preserved pages.")
+        if len(operations) != 453 or len(preserved) != 12:
+            raise RuntimeError("Native release coverage differs from 453 writes plus 12 preserved pages.")
         manifest = self.manifest(operations, preserved, corpora)
         journal = Journal(self.workspace / "native-release-journal", manifest)
         self.release_journal = journal
