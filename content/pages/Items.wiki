@@ -2,6 +2,8 @@ Browse equipment, materials, and supplies. Each item page brings together its do
 
 The groups below are browsing aids. Useful cross-categories connect tools, ingredients, remedies, and other overlapping uses without copying the item article. Consumables include food that may cause sickness, not just safe food.
 
+Browse [[:Category:Equipment by slot|equipment by actual slot]], [[:Category:Weapons|weapon families]], [[:Category:Consumables|consumable subcategories]], or [[:Category:Crafting materials|material families]]. Slot labels describe the supported slots, not invented additional equipment rules. Arrows remain [[:Category:Ammunition|ammunition]] even though they are readied in the off hand.
+
 A missing stat or acquisition method is unknown. A source entry alone does not prove that the item is obtainable in your build.
 
 [[Main Page]] | [[Action points]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]

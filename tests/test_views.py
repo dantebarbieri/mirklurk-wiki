@@ -226,7 +226,20 @@ class SelectiveViewTests(unittest.TestCase):
     def test_all_original_titles_survive_the_additive_guides(self):
         new_guides = MECHANIC_GUIDE_TITLES - {"Action points", "Health and armor", "Weather"}
         source_titles = {source["title"] for source in self.catalog.get("acquisition", {}).get("sources", [])}
-        old_titles = sorted(set(self.pages) - new_guides - source_titles)
+        historical_categories = {
+            "Ammunition", "Aquatic creatures", "Armor", "Bestiary", "Bugs",
+            "Camping and construction", "Carrying equipment", "Clothes", "Coins and valuables",
+            "Consumables", "Crabs", "Crafting materials", "Cutting and chopping tools",
+            "Damage types", "Fire-making supplies", "Food and drink", "Forager",
+            "Gatherable food plants", "Ground cover and water plants", "Hunter", "Items",
+            "Light sources", "Miscellaneous items", "Mollusks", "NPCs", "Nature",
+            "Non-growing nature", "Quest items", "Remedies", "Rift growth", "Rodents",
+            "Scaalmyr", "Seeds", "Skills", "Snakes", "Survivor", "Toadkin", "Tools",
+            "Trees", "Trolls", "Unwanted creatures", "Wanderer", "Warrior", "Weapons",
+        }
+        self.assertTrue({"Category:" + title for title in historical_categories} <= set(self.pages))
+        old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles
+                            if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
         self.assertEqual(len(old_titles), 401)
         self.assertEqual(hashlib.sha256(("\n".join(old_titles) + "\n").encode()).hexdigest(),
                          "b32b5d0645406b2b6e8073d4c355ebca0eacf1fbd554ba1b6dfdc1bbffc78b75")

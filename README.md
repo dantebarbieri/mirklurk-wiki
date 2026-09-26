@@ -19,7 +19,7 @@ and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 original algorithm/skill summaries. The encyclopedia presentation generates
 385 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
-redirect. Another 44 ordinary MediaWiki category pages support grouped browsing.
+redirect. Another 80 ordinary MediaWiki category pages support hierarchical browsing.
 Only `game.build` changed in the original dataset; all source
 fingerprints, entities, facts, and research entries remain unchanged.
 
@@ -157,6 +157,16 @@ Entity pages use ordinary names; only collisions are qualified, such as
 creatures, without assuming either grouping guarantees peacefulness or
 hostility. Skill-specific facts and summaries live on individual skill pages;
 old aggregate anchors remain as links. Initial research records are unchanged.
+
+Items can also be browsed by 14 actual equipment slots, weapon families,
+consumable subcategories and crafting-material families. Categories form a
+validated parent graph and preserve overlapping roles: food can be a recipe
+ingredient, an axe a chopping tool, and a torch either-hand equipment. Arrows
+remain ammunition despite their off-hand slot, and built-in Unarmed is not
+carried equipment. The five localized skill groups have explanatory category
+pages linked from Skills and every individual skill. Category names and
+introductions add navigation, not duplicate numerical facts or an invented
+skill tree.
 
 ## Operate a wiki
 

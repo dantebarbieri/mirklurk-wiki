@@ -166,7 +166,7 @@ is embedded; entity and File links are relative MediaWiki links.
 
 ## Encyclopedia identities and ownership
 
-`content/facts/catalog.json` (192 KiB maximum) contains `schema_version: 1`,
+`content/facts/catalog.json` (224 KiB maximum) contains `schema_version: 1`,
 `pages`, `classifications`, and `entry_links`, with reviewed `entry_display`,
 `stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, `guides`, and `item_effects` additions. It changes presentation
 without rewriting historical evidence:
@@ -195,7 +195,8 @@ without rewriting historical evidence:
   ordering, source evidence, or the underlying record. No guessed names for
   unidentified categories are introduced.
 
-Five skill groups remain sections of Skills; seven damage types now have their
+Five localized skill groups remain sections of Skills and have linked category
+pages; seven damage types now have their
 own pages, with Damage types retained as a directory and legacy-anchor owner.
 Facts with an exact,
 unambiguous entity-name/category match move to that entity's page; ambiguous
@@ -204,13 +205,56 @@ in the immutable data but are rendered only on their skill owners.
 The completed-turn clock fact is owned by Action points, with its old Weather
 anchor retained as a link.
 
-`taxonomy` contains `groups` and `tags`, each with `{title,index,members}`.
+`taxonomy` contains `groups` and `tags`, each with `{title,index,members}` and
+optional `{parents,summary,confidence,evidence}`.
 Every item, creature, and nature record belongs to exactly one primary group;
 cross-tags may overlap. NPC classifications cannot be bypassed by taxonomy.
-Each membership points to the same canonical article. Skills and root
-categories use existing entity types/group identities. Category titles are
-generated in namespace 14; arbitrary namespace titles remain forbidden in the
-entity registry. Groupings are editorial navigation, not biological claims.
+Each membership points to the same canonical article.
+
+`index` selects the existing readable index and root category, not necessarily
+the immediate parent. Explicit `parents` contains one to four unique category
+titles within that index and requires a concise original `summary`; omitted
+parents retain the existing direct-to-index relationship. Confidence and
+evidence occur together. Roots, localized skill groups and taxonomy titles
+share one collision-checked graph, bounded to 128 categories. Unknown parents,
+cross-index edges, cycles, orphans and empty leaves are rejected. An empty tag
+may be a hub only when it has populated descendants. Primary groups remain
+nonempty. Articles receive their direct categories and all ancestors, so edible
+ingredients and other dual-role items also appear in the appropriate root
+lists. Category pages link to their parents, children, direct articles and
+readable index; no fake main-namespace category links or extra fact owners are
+created.
+
+`skill_groups` optionally supplies `{entity,summary}` once for each existing
+skill-group entity. Category titles and all skill memberships are derived from
+the localized group names and `game.json` group references, never a second
+editable membership list. Wanderer, Survivor, Hunter, Warrior and Forager each
+retain five skills, with the original Skills anchors preserved. These are the
+game's recorded groups, not a new prerequisite tree.
+
+Equipment categories use the native `item_fits_slot` acceptance rules and
+`myEquips.subSlots` declarations, not inventory dimensions or equip AP costs.
+Fourteen descriptive slot labels cover 102 carried items and 105 memberships:
+the three torches fit either hand. Helmet/hood, shirt/outer torso,
+pants/leg armor and socks/footwear remain distinct slots. Arrows are accepted
+off-hand ammunition, not weapon-family members. Non-ranged two-handed weapons
+occupy both hands without being independently placeable off hand; bows leave
+that slot for arrows. Built-in Unarmed is excluded from inventory equipment.
+
+Weapon and material families are editorial browsing labels based on reviewed
+names, definitions, profiles and recipe roles, not invented native item types.
+Axes retain their cutting/chopping role; Heavy Branch remains a weapon, wood
+material and fire-making supply. Food ingredients are exactly the intersection
+of reviewed food definitions and inventory-recipe inputs. Lamp Oil stays out
+of food. Repair kits, successful outdoor Map Drawing Kit use, and thrown
+Summoning Stone are consumed by their traced handlers; a rejected indoor map
+attempt does not consume a kit. Summoning Stone is not a damaging thrown flask.
+Flax and Linen remain explicitly localization-only. Numeric facts, recipes,
+acquisition rows and illustrations are not rewritten for classification.
+
+Category titles are generated in namespace 14; arbitrary namespace titles
+remain forbidden in the entity registry. Groupings of creatures remain
+editorial navigation, not biological claims.
 
 `guides` contains bounded original paragraphs, existing related-entity IDs,
 confidence and evidence for the seven damage owners and the finite mechanics

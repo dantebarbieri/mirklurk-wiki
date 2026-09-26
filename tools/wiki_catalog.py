@@ -15,7 +15,7 @@ from wiki_acquisition import validate_acquisition
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
-MAX_CATALOG_BYTES = 192 * 1024
+MAX_CATALOG_BYTES = 224 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs", "Source provenance", "Loot mechanics"}
 CURRENCY_RULE_TITLES = {
     "coin-denominations": "Denominations",
@@ -46,6 +46,77 @@ def default_catalog(data):
                 title = f'Entity {entity["id"]}'
             pages.append({"entity": entity["id"], "title": title, "aliases": []})
     return {"schema_version": 1, "pages": pages, "classifications": [], "entry_links": []}
+
+
+def skill_category_title(entity):
+    name = title_key(entity["name"])
+    return f'Skill group {entity["id"]}' if re.search(r"[\[\]{}|<>#:/\\]", name) else name
+
+
+def category_definitions(data, catalog):
+    """Resolve the single category graph used by validation and rendering."""
+    entities = {row["id"]: row for row in data["entities"]}
+    kinds = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+    categories = {}
+    for row in catalog["pages"]:
+        entity = entities[row["entity"]]
+        root = "NPCs" if kinds.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
+        category = categories.setdefault(root, {
+            "title": root, "index": root, "parents": [], "members": [],
+            "summary": f"Browse {root} articles and their browsing categories. Each article keeps its own editable facts.",
+        })
+        category["members"].append(entity["id"])
+    taxonomy = catalog.get("taxonomy", {})
+    summaries = {row["entity"]: row["summary"] for row in taxonomy.get("skill_groups", [])}
+    for entity in data["entities"]:
+        if entity["category"] != "skill_group":
+            continue
+        title = skill_category_title(entity)
+        if title in categories:
+            raise DataError("taxonomy: duplicate skill or root category")
+        categories[title] = {
+            "title": title, "index": "Skills", "parents": ["Skills"],
+            "members": [row["id"] for row in data["entities"] if row.get("group") == entity["id"]],
+            "summary": summaries.get(entity["id"], f"Skills assigned to the localized {entity['name']} group. This is not an additional prerequisite tree."),
+            "evidence": entity["evidence"], "confidence": entity["confidence"],
+        }
+    for row in [*taxonomy.get("groups", []), *taxonomy.get("tags", [])]:
+        if row["title"] in categories:
+            raise DataError("taxonomy: duplicate category")
+        categories[row["title"]] = {
+            **row, "parents": row.get("parents", [row["index"]]),
+            "summary": row.get("summary", f"An editorial browsing group within {row['index']}. Membership does not establish availability or guarantee an outcome."),
+        }
+    return categories
+
+
+def validate_category_graph(categories):
+    if len(categories) > 128:
+        raise DataError("taxonomy: expected at most 128 categories")
+    visited = set()
+    active = set()
+
+    def visit(title):
+        if title in active:
+            raise DataError("taxonomy: category cycle")
+        if title in visited:
+            return
+        active.add(title)
+        row = categories[title]
+        if not row["parents"] and title != row["index"]:
+            raise DataError("taxonomy: orphan category")
+        for parent in row["parents"]:
+            if parent not in categories or categories[parent]["index"] != row["index"]:
+                raise DataError("taxonomy: unknown parent or cross-index category")
+            visit(parent)
+        active.remove(title)
+        visited.add(title)
+
+    children = {parent for row in categories.values() for parent in row["parents"]}
+    for title, row in categories.items():
+        visit(title)
+        if not row["members"] and title not in children:
+            raise DataError("taxonomy: empty category leaf")
 
 
 def validate_catalog(catalog, data):
@@ -196,20 +267,35 @@ def validate_catalog(catalog, data):
                 _text(step, "entry display step", 500)
     if "taxonomy" in catalog:
         taxonomy = catalog["taxonomy"]
-        _object(taxonomy, {"groups", "tags"}, set(), "taxonomy")
+        _object(taxonomy, {"groups", "tags"}, {"skill_groups"}, "taxonomy")
         grouped = set()
         group_titles = set(CATEGORY_PAGES.values()) | {"NPCs"}
         classified_kind = {row["entity"]: row["kind"] for row in catalog["classifications"]}
         for field in ("groups", "tags"):
             for group in _records(taxonomy[field], f"taxonomy.{field}"):
-                _object(group, {"title", "index", "members"}, set(), "taxonomy group")
+                _object(group, {"title", "index", "members"},
+                        {"parents", "summary", "confidence", "evidence"}, "taxonomy group")
                 title = _title(group["title"])
-                if title in group_titles or group["index"] not in {"Items", "Bestiary", "Nature"}:
+                if title in group_titles or not isinstance(group["index"], str) or group["index"] not in {"Items", "Bestiary", "Nature"}:
                     raise DataError("taxonomy: duplicate category or unsupported index")
                 group_titles.add(title)
+                if "parents" in group:
+                    parents = group["parents"]
+                    if not isinstance(parents, list) or not 1 <= len(parents) <= 4:
+                        raise DataError("taxonomy: expected one to four parents")
+                    if len({_title(parent) for parent in parents}) != len(parents):
+                        raise DataError("taxonomy: duplicate parent")
+                    _text(group.get("summary"), "taxonomy.summary", 1200)
+                if "summary" in group:
+                    _text(group["summary"], "taxonomy.summary", 1200)
+                if ("confidence" in group) != ("evidence" in group):
+                    raise DataError("taxonomy: evidence and confidence must appear together")
+                if "evidence" in group:
+                    _confidence(group["confidence"], "taxonomy.confidence")
+                    _evidence(group["evidence"], sources, "taxonomy.evidence")
                 members = group["members"]
-                if not isinstance(members, list) or not members or len(members) > 500:
-                    raise DataError("taxonomy: expected one to five hundred members")
+                if not isinstance(members, list) or len(members) > 500 or (field == "groups" and not members):
+                    raise DataError("taxonomy: expected at most five hundred members; primary groups cannot be empty")
                 seen_members = set()
                 for identity in members:
                     if not isinstance(identity, str) or identity not in entities or identity in seen_members:
@@ -228,6 +314,17 @@ def validate_catalog(catalog, data):
                     or (e["category"] == "being" and classified_kind.get(e["id"]) == "creature")}
         if grouped != expected:
             raise DataError("taxonomy: primary groups must cover every item, nature record and creature")
+        described = set()
+        for row in _records(taxonomy.get("skill_groups", []), "taxonomy.skill_groups"):
+            _object(row, {"entity", "summary"}, set(), "skill group description")
+            identity = row["entity"]
+            if not isinstance(identity, str) or identity not in entities or entities[identity]["category"] != "skill_group" or identity in described:
+                raise DataError("taxonomy: unknown or duplicate skill group description")
+            described.add(identity)
+            _text(row["summary"], "skill group.summary", 1200)
+        if "skill_groups" in taxonomy and described != {row["id"] for row in entities.values() if row["category"] == "skill_group"}:
+            raise DataError("taxonomy: describe every skill group exactly once")
+    validate_category_graph(category_definitions(data, catalog))
     for history in _records(catalog.get("state_history", []), "state history"):
         _object(history, {"before", "after", "quest", "summary", "attribution", "recorded_on"}, {"evidence"}, "state history")
         for field in ("before", "after"):

@@ -9,8 +9,8 @@ from fractions import Fraction
 from pathlib import Path
 
 from wiki_catalog import (
-    CURRENCY_RULE_TITLES, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
-    validate_catalog,
+    CURRENCY_RULE_TITLES, category_definitions, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
+    skill_category_title, validate_catalog,
 )
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
 from wiki_details import empty_details, validate_coin_profiles, validate_details
@@ -658,6 +658,10 @@ def source_page(data, catalog, details, locations, facts, entries):
                       "Rodents groups Mirk Runner and Mirk Mauler using their rat sprite associations: " + evidence_text([
                           {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[11].sprite/beingDB[29].sprite"}
                       ])])
+        lines.append(table(["Category", "Confidence", "Evidence"], [
+            [f'[[:Category:{title}|{literal(title)}]]', literal(row["confidence"]), evidence_text(row["evidence"])]
+            for title, row in sorted(category_definitions(data, catalog).items()) if row.get("evidence")
+        ]))
     if catalog.get("guides"):
         lines.extend(["", '<span id="Combat_and_action_guide_evidence"></span>', "== Guide evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
             [f'[[{guide["title"]}]]', literal(guide["confidence"]), evidence_text(guide["evidence"])]
@@ -900,7 +904,9 @@ def build_pages(root, data, catalog=None, details=None):
         index = "NPCs" if classified.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
         text = f'[[Main Page]] | [[{index}]]\n\n' + anchor("entity", entity["id"]) + f"'''{literal(entity['name'])}'''\n"
         if entity["category"] == "skill":
-            text += "\nGroup: " + entity_link(entity["group"], entities, locations) + "\n"
+            group = skill_category_title(entities[entity["group"]])
+            text += f"\nGroup: [[:Category:{group}|{literal(entities[entity['group']]['name'])}]] | "
+            text += entity_link(entity["group"], entities, locations) + " in the Skills index\n"
         if entity["category"] == "being" and classified.get(entity["id"]) not in {"npc", "creature"}:
             text += "\nThis being has not been classified.\n"
         matching = [image for image in images if image.get("entity") == entity["id"]]
@@ -1037,6 +1043,7 @@ def build_pages(root, data, catalog=None, details=None):
         if title == "Skills":
             for group in sorted((row for row in data["entities"] if row["category"] == "skill_group"), key=lambda row: (row["name"], row["id"])):
                 pages[title] += "\n" + anchor("entity", group["id"]) + f'\n== {literal(group["name"])} ==\n'
+                pages[title] += f'[[:Category:{skill_category_title(group)}|Browse group category]]\n'
                 matching = {}
                 for entity in data["entities"]:
                     if entity.get("group") == group["id"]:
@@ -1295,28 +1302,37 @@ def build_pages(root, data, catalog=None, details=None):
         for entry in entries:
             if entry["kind"] == "merchant" and "[[Currency and trading" not in pages[owners[entry["id"]]]:
                 pages[owners[entry["id"]]] += "\n[[Currency and trading|How prices, condition, and change work]]\n"
+    categories = category_definitions(data, catalog)
     memberships = defaultdict(set)
-    category_parents = {}
-    for row in catalog["pages"]:
-        entity = entities[row["entity"]]
-        root_category = "NPCs" if classified.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
-        memberships[row["title"]].add(root_category)
-        if entity["category"] == "skill":
-            group = entities[entity["group"]]["name"]
-            memberships[row["title"]].add(group)
-            category_parents[group] = "Skills"
-    for group in [*catalog.get("taxonomy", {}).get("groups", []), *catalog.get("taxonomy", {}).get("tags", [])]:
-        category_parents[group["title"]] = group["index"]
-        for identity in group["members"]:
-            memberships[locations[identity]].add(group["title"])
-    for title, categories in sorted(memberships.items()):
-        pages[title] += "\n" + " ".join(f"[[Category:{category}]]" for category in sorted(categories)) + "\n"
-    all_categories = {category for categories in memberships.values() for category in categories}
-    for category in sorted(all_categories):
-        parent = category_parents.get(category)
-        index = parent or category
-        pages["Category:" + category] = f"[[{index}|Readable index]] | [[Main Page]]\n\nPages in this browsing group keep their own editable facts.\n"
-        if parent:
-            pages["Category:" + category] += f"\n[[Category:{parent}]]\n"
+
+    def add_membership(title, category):
+        if category in memberships[title]:
+            return
+        memberships[title].add(category)
+        for parent in categories[category]["parents"]:
+            add_membership(title, parent)
+
+    for category, row in categories.items():
+        for identity in row["members"]:
+            add_membership(locations[identity], category)
+    for title, assigned in sorted(memberships.items()):
+        pages[title] += "\n" + " ".join(f"[[Category:{category}]]" for category in sorted(assigned)) + "\n"
+    for category, row in sorted(categories.items()):
+        text = f"[[{row['index']}|Readable index]] | [[Main Page]]\n\n"
+        text += linked_prose(row["summary"], {title: ":Category:" + title for title in categories}) + "\n"
+        if row["parents"]:
+            text += "\nParent categories: " + " | ".join(f"[[:Category:{parent}|{parent}]]" for parent in sorted(row["parents"])) + "\n"
+        children = sorted(title for title, child in categories.items() if category in child["parents"])
+        if children:
+            text += "\n== Subcategories ==\n" + "\n".join(f"* [[:Category:{child}|{child}]]" for child in children) + "\n"
+        if row["members"]:
+            text += "\n== Directly listed articles ==\n" + "\n".join(
+                "* " + entity_link(identity, entities, locations)
+                for identity in sorted(row["members"], key=lambda identity: locations[identity])
+            ) + "\n"
+        text += "\n" + " ".join(f"[[Category:{parent}]]" for parent in sorted(row["parents"])) + "\n"
+        pages["Category:" + category] = text
+        if category == row["index"]:
+            pages[row["index"]] += f'\n[[:Category:{category}|Browse the category hierarchy]]\n'
     validate_transclusions(pages)
     return pages

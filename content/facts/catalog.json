@@ -58,10 +58,18 @@
     }
   ],
   "taxonomy": {
+    "skill_groups": [
+      {"entity": "skill-group-0", "summary": "Movement skills in the game's Wanderer group: travelling, swimming, jumping, climbing and balance. Membership follows the localized group assignments, not an invented prerequisite tree."},
+      {"entity": "skill-group-1", "summary": "The game's Survivor group covers fire-making, personal reserves, warmth and carrying. Open each skill for its own effects and conditions."},
+      {"entity": "skill-group-2", "summary": "The game's Hunter group combines bow handling, butchery, movement in combat, arrow recovery and concealment. These are the recorded group members, not extra unlock requirements."},
+      {"entity": "skill-group-3", "summary": "The game's Warrior group covers armor, melee fighting and shields. Individual skill pages own their bonuses; category membership does not imply that every bonus applies to every weapon."},
+      {"entity": "skill-group-4", "summary": "The game's Forager group covers cultivation, small creatures, plant foods, brewing and resistance to poison. Membership follows the recorded skill groups rather than a new wiki skill tree."}
+    ],
     "groups": [
       {
         "title": "Clothes",
         "index": "Items",
+        "summary": "Clothing articles, including ordinary outer garments. Equipment-slot categories distinguish layered garments such as shirts and outer torso pieces.",
         "members": [
           "item-15",
           "item-16",
@@ -98,6 +106,7 @@
       {
         "title": "Armor",
         "index": "Items",
+        "summary": "Protective equipment, including shields. Slot categories also include protective gloves and other equipment whose primary browsing group is different.",
         "members": [
           "item-0",
           "item-1",
@@ -122,6 +131,7 @@
       {
         "title": "Weapons",
         "index": "Items",
+        "summary": "Weapon families and the built-in Unarmed attack. Unarmed is not carried inventory. Ammunition is browsed separately, and an item is not a purpose-built weapon merely because it can be thrown.",
         "members": [
           "item-2",
           "item-3",
@@ -164,6 +174,7 @@
       {
         "title": "Tools",
         "index": "Items",
+        "summary": "Tools for light, fire-making, mapping and other tasks. A tool can also be consumed or used in crafting; these roles overlap rather than replacing its article.",
         "members": [
           "item-40",
           "item-41",
@@ -186,6 +197,7 @@
       {
         "title": "Consumables",
         "index": "Items",
+        "summary": "Food, treatments and supplies spent by their documented use. Some items have several uses; categorization is not a safety recommendation or a claim that every attempted use consumes the item.",
         "members": [
           "item-25",
           "item-32",
@@ -250,6 +262,7 @@
       {
         "title": "Crafting materials",
         "index": "Items",
+        "summary": "Material families and overlapping recipe ingredients. Some materials also serve as food, fuel or equipment. Localization-only records and materials without a reviewed recipe remain explicitly limited on their articles.",
         "members": [
           "item-19",
           "item-34",
@@ -330,6 +343,7 @@
       {
         "title": "Ammunition",
         "index": "Items",
+        "summary": "Arrows readied in the off-hand slot for bows. Ammunition remains distinct from equippable weapon families; its slot membership does not make it a melee weapon.",
         "members": [
           "item-45",
           "item-46",
@@ -520,6 +534,8 @@
       {
         "title": "Cutting and chopping tools",
         "index": "Items",
+        "parents": ["Tools"],
+        "summary": "Reviewed cutting and chopping implements, including weapons with a second tool role. Membership does not promise identical effectiveness for every task.",
         "members": [
           "item-2",
           "item-3",
@@ -544,6 +560,8 @@
       {
         "title": "Light sources",
         "index": "Items",
+        "parents": ["Tools"],
+        "summary": "Portable and placeable light sources. Torches fit either hand, lanterns fit the off hand, and the placed Jar of Fireflies is not hand-slot equipment.",
         "members": [
           "item-41",
           "item-96",
@@ -556,6 +574,8 @@
       {
         "title": "Fire-making supplies",
         "index": "Items",
+        "parents": ["Tools"],
+        "summary": "Ignition tools, stones and wood supplies used around fire-making. This broad role does not mean every member is consumed as fuel.",
         "members": [
           "item-19",
           "item-34",
@@ -587,6 +607,8 @@
       {
         "title": "Remedies",
         "index": "Items",
+        "parents": ["Consumables"],
+        "summary": "Wound, poison, sickness and burn treatments. Each item describes its specific effect; these treatments are not interchangeable.",
         "members": [
           "item-32",
           "item-84",
@@ -603,6 +625,8 @@
       {
         "title": "Food and drink",
         "index": "Items",
+        "parents": ["Consumables"],
+        "summary": "Items supported by food definitions, including raw creatures, prepared meals and plant foods. Edible does not mean safe: some cause sickness or other effects. Lamp Oil is not food.",
         "members": [
           "item-25",
           "item-51",
@@ -645,6 +669,358 @@
           "item-246",
           "item-247"
         ]
+      },
+      {
+        "title": "Equipment by slot",
+        "index": "Items",
+        "parents": ["Items"],
+        "summary": "Browse actual equipment slots using descriptive wiki labels. Helmet and hood, shirt and outer torso, pants and leg armor, and socks and footwear occupy distinct slots. The two weapon sets use the same main-hand and off-hand rules. Built-in Unarmed is not inventory equipment.",
+        "members": [],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "myEquips.subSlots[*].takes/myFists"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_fits_slot"}
+        ]
+      },
+      {
+        "title": "Main-hand equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Inventory items accepted by the main-hand slot: one-handed weapons, the two-handed weapon type and torches. See Two-handed weapons for the distinction between melee weapons occupying both hands and bows using off-hand ammunition.",
+        "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7", "item-8", "item-9", "item-10", "item-11", "item-27", "item-28", "item-29", "item-30", "item-41", "item-44", "item-90", "item-93", "item-96", "item-105", "item-106", "item-157", "item-158", "item-159", "item-160", "item-161", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-190", "item-191", "item-206", "item-212"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[16,17,23]"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_fits_slot.takes[0]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "myFists/item[31]"}
+        ]
+      },
+      {
+        "title": "Off-hand equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Shields, lanterns, torches and readied arrows accepted directly by the off-hand slot. A two-handed melee weapon occupying this hand is not independently placeable here. Arrows remain ammunition, not weapon-family members.",
+        "members": ["item-0", "item-1", "item-41", "item-45", "item-46", "item-50", "item-58", "item-76", "item-96", "item-110", "item-111", "item-118", "item-174", "item-212", "item-219", "item-220"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[15,21,23,24]"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_fits_slot.takes[21]"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "type[17].non-ranged-offhand-mirror"}
+        ]
+      },
+      {
+        "title": "Helmet-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Head pieces accepted by the helmet slot. The hood is a separate equipment slot.",
+        "members": ["item-54", "item-116", "item-117", "item-119"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[1]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "head1.takes[1]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Hood-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Hoods accepted by the hood slot, distinct from the helmet slot.",
+        "members": ["item-42", "item-146", "item-204", "item-205"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[2]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "head2.takes[2]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Shirt-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Shirts accepted by the inner torso slot. Outer torso equipment has its own slot.",
+        "members": ["item-22", "item-23", "item-24"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[3]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "chest1.takes[3]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Outer torso equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Vests and chest armor accepted by the outer torso slot. This includes clothing as well as armor; a shirt occupies a different slot.",
+        "members": ["item-43", "item-55", "item-147", "item-194", "item-196", "item-197", "item-198"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[4]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "chest2.takes[4]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Belt-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Herbalist belts accepted by the belt slot. Backpacks have a separate carrying-equipment slot.",
+        "members": ["item-13", "item-166", "item-167", "item-168"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[5]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "belt1.takes[5]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Cloak-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Cloaks accepted by the cloak slot, separate from shirts, outer torso equipment and backpacks.",
+        "members": ["item-137", "item-145", "item-207", "item-208", "item-209"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[6]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "cloak1.takes[6]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Backpack-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Backpacks accepted by the backpack slot. Belts are browsed separately rather than combined into an invented bag slot.",
+        "members": ["item-12", "item-14", "item-26", "item-148"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[7]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "bag1.takes[7]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Glove-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Gloves accepted by the glove slot, including Iron Reinforced Gloves. Hand clothing is separate from held equipment.",
+        "members": ["item-59", "item-164", "item-165", "item-199", "item-200"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[8]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "gloves1.takes[8]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Pants-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Pants accepted by the pants slot. Leg armor is a separate layer and slot.",
+        "members": ["item-20", "item-21", "item-33"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[9]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "pants1.takes[9]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Leg-armor-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Protective leg pieces accepted by the leg-armor slot, distinct from ordinary pants.",
+        "members": ["item-56", "item-192", "item-193", "item-195"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[10]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "pants2.takes[10]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Sock-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Socks accepted by the sock slot. Shoes and boots use the separate footwear slot.",
+        "members": ["item-16", "item-17", "item-18"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[11]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "feet1.takes[11]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Footwear-slot equipment",
+        "index": "Items",
+        "parents": ["Equipment by slot"],
+        "summary": "Shoes and boots accepted by the footwear slot, distinct from socks.",
+        "members": ["item-15", "item-57", "item-201", "item-202", "item-203"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[12]"},
+          {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "feet2.takes[12]/myEquips.subSlots"}
+        ]
+      },
+      {
+        "title": "Daggers and hunting knives",
+        "index": "Items",
+        "parents": ["Weapons"],
+        "summary": "Named daggers and hunting knives, also used as cutting tools. This is an editorial weapon family, not a separate in-game skill tree.",
+        "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7"]
+      },
+      {
+        "title": "Swords",
+        "index": "Items",
+        "parents": ["Weapons"],
+        "summary": "Shortswords, longswords and greatswords. Their main-hand membership does not imply that every sword leaves the off hand available.",
+        "members": ["item-8", "item-9", "item-10", "item-11", "item-184", "item-185"]
+      },
+      {
+        "title": "Axes",
+        "index": "Items",
+        "parents": ["Weapons", "Cutting and chopping tools"],
+        "summary": "Hand axes, felling axes and battleaxes retain both weapon and chopping-tool roles. See each article for its own attack and tool properties.",
+        "members": ["item-27", "item-28", "item-29", "item-30", "item-188", "item-189"]
+      },
+      {
+        "title": "Clubs, maces and hammers",
+        "index": "Items",
+        "parents": ["Weapons"],
+        "summary": "Clubs, cudgels, morning stars, maces and warhammers, plus the Heavy Branch used as a club. This family describes weapon forms, not a shared damage class.",
+        "members": ["item-90", "item-157", "item-158", "item-160", "item-161", "item-169", "item-186", "item-187", "item-190", "item-191"]
+      },
+      {
+        "title": "Bows",
+        "index": "Items",
+        "parents": ["Weapons"],
+        "summary": "Bow weapons use the main-hand slot with arrows readied in the off hand. Arrow articles remain in Ammunition rather than this weapon family.",
+        "members": ["item-44", "item-93", "item-105", "item-106", "item-179"]
+      },
+      {
+        "title": "Two-handed weapons",
+        "index": "Items",
+        "parents": ["Weapons"],
+        "summary": "The native two-handed weapon type. Its melee weapons occupy both hands through the weapon-set rules, not direct off-hand placement; bows instead use off-hand ammunition.",
+        "members": ["item-29", "item-30", "item-44", "item-93", "item-105", "item-106", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-206"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[17]"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "type[17].non-ranged-offhand-mirror"}
+        ]
+      },
+      {
+        "title": "Thrown flasks",
+        "index": "Items",
+        "parents": ["Weapons", "Consumables"],
+        "summary": "Purpose-made poison and fire flasks with reviewed thrown impact effects. Other throwable inventory items are not automatically included as weapons.",
+        "members": ["item-251", "item-253"],
+        "confidence": "inferred",
+        "evidence": [{"source": "game-data", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[251,253].impact-effects"}]
+      },
+      {
+        "title": "Poison weapons",
+        "index": "Items",
+        "parents": ["Weapons"],
+        "summary": "Weapons with reviewed Poison attacks, including the poison flask's separate thrown effect. Poison arrows are ammunition and are not counted as weapons here.",
+        "members": ["item-159", "item-206", "item-251"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[159,206].damageClass"},
+          {"source": "game-data", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[251].impact-effects"}
+        ]
+      },
+      {
+        "title": "Raw animal foods",
+        "index": "Items",
+        "parents": ["Food and drink"],
+        "summary": "Unprepared meat, eggs and edible small creatures, including live insects. Food membership follows food definitions, not a promise that eating them is safe.",
+        "members": ["item-60", "item-62", "item-64", "item-66", "item-69", "item-82", "item-87", "item-95", "item-103", "item-162", "item-180", "item-241", "item-242", "item-243", "item-247"]
+      },
+      {
+        "title": "Prepared foods",
+        "index": "Items",
+        "parents": ["Food and drink"],
+        "summary": "Bread, cooked foods and prepared meals. Preparation is not a guarantee against every negative effect; use each item's documented properties.",
+        "members": ["item-25", "item-61", "item-63", "item-65", "item-67", "item-70", "item-83", "item-88", "item-104", "item-163", "item-181", "item-222", "item-235", "item-236", "item-237", "item-244", "item-245", "item-246"]
+      },
+      {
+        "title": "Plant foods",
+        "index": "Items",
+        "parents": ["Food and drink"],
+        "summary": "Berries, Turnip and Watercress with food definitions. Some are also recipe ingredients, and not all are equally safe to eat.",
+        "members": ["item-217", "item-218", "item-221", "item-223", "item-225", "item-226"]
+      },
+      {
+        "title": "Repair and refuelling supplies",
+        "index": "Items",
+        "parents": ["Consumables"],
+        "summary": "Repair kits spent during repair applications and Lamp Oil spent to refill lantern fuel. Lamp Oil is a refuelling supply, not food.",
+        "members": ["item-112", "item-113", "item-114", "item-115"],
+        "confidence": "inferred",
+        "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "items_bonus_apply.repair-and-fuel/amount-decrement"}]
+      },
+      {
+        "title": "Mapping supplies",
+        "index": "Items",
+        "parents": ["Tools", "Consumables"],
+        "summary": "Map Drawing Kit is spent when it successfully creates a map outdoors. An indoor attempt does not consume it. Finished maps and the Map Ledger are not spent by this action.",
+        "members": ["item-156"],
+        "confidence": "inferred",
+        "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[156].doRemove/amount"}]
+      },
+      {
+        "title": "Summoning supplies",
+        "index": "Items",
+        "parents": ["Consumables"],
+        "summary": "Summoning Stone is spent when thrown to create its summoning portal. This is a summoning supply, not a reusable tool or a damaging thrown flask.",
+        "members": ["item-127"],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state[3].tempWeapon.amount"},
+          {"source": "game-data", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[127].portal"}
+        ]
+      },
+      {
+        "title": "Restorative tonics",
+        "index": "Items",
+        "parents": ["Consumables"],
+        "summary": "Wayfarer's Vigor is a consumed tonic rather than a food definition. Its article owns the documented stamina, satiation and focus effects.",
+        "members": ["item-176"],
+        "confidence": "inferred",
+        "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[176]"}]
+      },
+      {
+        "title": "Wood and bark",
+        "index": "Items",
+        "parents": ["Crafting materials", "Fire-making supplies"],
+        "summary": "Wood and bark supplies with reviewed burn properties, including the Heavy Branch's overlapping weapon and recipe roles. Not every listed wood has a documented inventory recipe.",
+        "members": ["item-19", "item-34", "item-35", "item-36", "item-78", "item-79", "item-80", "item-81", "item-121", "item-169", "item-210", "item-211", "item-213", "item-214", "item-215", "item-216", "item-224"]
+      },
+      {
+        "title": "Fibers and fabrics",
+        "index": "Items",
+        "parents": ["Crafting materials"],
+        "summary": "Fiber, twine and fabric records. Flax and Linen have localized names only in the reviewed snapshot; their inclusion does not invent definitions, recipes or acquisition methods.",
+        "members": ["item-48", "item-49", "item-91", "item-92", "item-107"]
+      },
+      {
+        "title": "Animal materials",
+        "index": "Items",
+        "parents": ["Crafting materials"],
+        "summary": "Pelts, hides, husks, feathers, wax, fat, glands and creature-derived Glow Goo. Large Scaalmyr Husk also serves as a shield. Material grouping alone does not assert a recipe for every member.",
+        "members": ["item-50", "item-52", "item-77", "item-102", "item-120", "item-124", "item-129", "item-134", "item-135", "item-136", "item-178"]
+      },
+      {
+        "title": "Mineral materials",
+        "index": "Items",
+        "parents": ["Crafting materials"],
+        "summary": "Rock, Flint and Lump of Coal used by reviewed recipes. Coal's recipe role is not evidence that it can be fed directly to a campfire.",
+        "members": ["item-37", "item-39", "item-177"]
+      },
+      {
+        "title": "Plant and fungal reagents",
+        "index": "Items",
+        "parents": ["Crafting materials"],
+        "summary": "Calmia Root, Vile Bulb, Water Lily and Mold used in reviewed preparation recipes. Recipe use does not make these items food.",
+        "members": ["item-122", "item-142", "item-173", "item-175"]
+      },
+      {
+        "title": "Food ingredients",
+        "index": "Items",
+        "parents": ["Crafting materials", "Food and drink"],
+        "summary": "Edible items that are inputs to reviewed recipes, including food preparation, remedies and other crafting. Their recipe roles do not replace their food categories or imply that every recipe output is edible.",
+        "members": ["item-51", "item-60", "item-62", "item-64", "item-66", "item-69", "item-70", "item-82", "item-87", "item-103", "item-162", "item-180", "item-217", "item-218", "item-221", "item-223", "item-225", "item-226", "item-241", "item-242", "item-243", "item-247"]
       }
     ]
   },
