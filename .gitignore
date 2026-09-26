@@ -11,6 +11,7 @@
 !/docs/PUBLICATION.md
 !/docs/DEPLOYMENT.md
 !/docs/IMAGES.md
+!/docs/NATIVE_PUBLICATION.md
 !/content/
 !/content/facts/
 !/content/facts/game.json
@@ -51,6 +52,9 @@
 !/tools/build_wiki.py
 !/tools/smoke_deploy.py
 !/tools/smoke_prefix.py
+!/tools/native_publication.php
+!/tools/publication_journal.py
+!/tools/smoke_native.py
 !/tests/
 !/tests/test_safety.py
 !/tests/test_wiki.py
@@ -60,6 +64,8 @@
 !/tests/test_migration.py
 !/tests/test_prefix.py
 !/tests/test_runtime.php
+!/tests/test_publication_journal.py
+!/tests/native_worker_fixture.php
 !/deploy/
 !/deploy/Dockerfile
 !/deploy/compose.dev.yml

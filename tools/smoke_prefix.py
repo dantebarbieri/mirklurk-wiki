@@ -924,7 +924,7 @@ class Rehearsal:
         print(f"ENDPOINT_CANDIDATE {endpoint}: {len(captures['selected'])} context projections, "
               f"{len(captures['discrepancies'])} explicit discrepancies; independent review required.", flush=True)
 
-    def run(self, token, wait_tick, drain_jobs, job_status=None):
+    def run(self, save, wait_tick, drain_jobs, job_status=None):
         self.refresh_metadata()
         self.capture_endpoint("baseline")
         self.capture_link_endpoint("baseline")
@@ -936,19 +936,11 @@ class Rehearsal:
         for index, title in enumerate(self.order, 1):
             prerequisites = [self.probe(title, owner, arguments) for owner, arguments in transclusions(self.desired[title])]
             wait_tick(self.api)
-            parameters = {"action": "edit", "title": title, "text": self.desired[title], "token": token}
-            if title in self.metadata:
-                parameters["baserevid"] = self.metadata[title]["revid"]
-                parameters["nocreate"] = 1
-            else:
-                parameters["createonly"] = 1
-            edit = self.api(parameters, post=True).get("edit", {})
-            if edit.get("result") != "Success" or "newrevid" not in edit or "nochange" in edit:
-                raise RuntimeError("A planned prefix save did not create exactly one normal revision.")
+            revision_id = save(title, self.metadata, self.desired[title], prerequisites)
             self.current[title] = self.desired[title]
             drain_jobs()
             self.refresh_metadata()
-            if edit["newrevid"] != self.metadata[title]["revid"]:
+            if revision_id != self.metadata[title]["revid"]:
                 raise RuntimeError("The saved revision is not the observed current pointer.")
             affected = {title}
             affected.update(consumer for consumer, text in self.current.items()

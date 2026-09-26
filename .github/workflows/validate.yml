@@ -25,11 +25,13 @@ jobs:
         run: |
           php -l deploy/install.php
           php -l deploy/healthcheck.php
+          php -l tools/native_publication.php
+          php -l tests/native_worker_fixture.php
           php tests/test_runtime.php
   docker-smoke:
     needs: publication
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
