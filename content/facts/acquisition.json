@@ -471,12 +471,14 @@
       "kind": "loot-rules",
       "summary": "Random treasure uses constrained value-budget pools. Being eligible means an item can be selected in at least one valid roll for that source; it does not mean the item is guaranteed, or that every candidate has equal final odds.",
       "conditions": [
-        "The generator rejects explicitly excluded items and items that do not fit the remaining value budget. It stops after filling the budget or exhausting the candidate-attempt limit documented below. Coins are exempt from the minimum-value test, but not the total budget.",
+        "Each source supplies a value budget and minimum item value. A proposed item is rejected if it is excluded, costs more than the remaining budget, or falls below that source's minimum. Coins and other valuables bypass the minimum-value test, but must still fit the remaining budget. The minimum stays tied to the source's initial settings rather than shrinking with the remaining budget.",
         "Ordinary skeleton, chest, ruin and nest treasure excludes the game's food and material/ignition-item classes. These exclusions include food, wood, rocks, flint, feathers, pelts and several potion ingredients. Do not assume that all inventory items can appear on a skeleton.",
         "The Raving Unwanted and Mutated Unwanted corpse pool deliberately lacks those ordinary type exclusions, but has a much smaller fixed budget. Specific enemy meat/gland drops and the dead camp's fixed supplies are separate systems.",
-        "Budget rolls favor smaller outcomes: the game mixes several uniform integer ranges rather than choosing the final budget uniformly. Sampling an item number uniformly at the start does not make final item drop rates uniform after all rejection tests.",
-        "Coin selections can grow into a stack through repeated 80% continuation checks, subject to the stack limit and remaining budget. Non-coin items generally receive wear when generated; a full-condition merchant price is therefore not a promise of equal resale value for random loot.",
-        "Some otherwise eligible items also have story conditions, shown below. Other explicitly non-lootable records remain excluded even when they have a valid item definition."
+        "Random budget rolls favor smaller outcomes: the game mixes several uniform integer ranges rather than choosing the final budget uniformly. The Unwanted corpse pool instead has a fixed budget. Each accepted entry spends its base value from the remaining budget, even if its generated condition is worn.",
+        "Generation stops when the budget is spent or 500 counted proposals have been tried. Defined candidates rejected by the value or type rules still count; undefined candidates and the early Summoning Stone story exclusion do not. An eligible item may never be accepted before this limit.",
+        "Coins and other valuables can grow into a stack through repeated 80% continuation checks. An additional unit must fit the stack limit and cost strictly less than the available extra-unit budget. Non-valuable items generally receive wear; a full-condition merchant price is not a promise of equal resale value for random loot.",
+        "Some otherwise eligible items also have story conditions, shown below. Other explicitly non-lootable records remain excluded even when they have a valid item definition.",
+        "A proposal, the next successfully accepted item, and the final contents of a container are different probability questions. Source-specific odds can be modeled for a fixed budget, remaining value and story state, including the attempt limit and any later retention checks. The lists below establish which items can occur across each source's valid budgets; they are not equal-weight drop percentages."
       ],
       "rows": [],
       "pool_ids": [
@@ -539,7 +541,7 @@
       "kind": "random-container",
       "summary": "The randomly placed skeletal remains and partially clothed bodies share the ordinary treasure generator. Their contents are generated when the unopened container is first accessed, rather than being a guaranteed list of equipment or food.",
       "conditions": [
-        "Outdoor and indoor remains use different value budgets. The same item may qualify indoors but be too valuable for an outdoor body, or too cheap for an indoor body's minimum non-coin value.",
+        "Outdoor and indoor remains use different value budgets. The same item may qualify indoors but be too valuable for an outdoor body, or too cheap for an indoor body's minimum non-valuable item value.",
         "The three visual variations are appearances of the same container class, not three independently verified loot tables.",
         "Reopening a searched container does not reroll fresh treasure. Existing contents can deteriorate or disappear as time passes, so eligibility is not a promise about a previously opened body.",
         "These randomly placed remains are not the same as a freshly killed creature's fixed meat/gland drops, the Raving or Mutated Unwanted pool, or the scripted dead-camp containers."
@@ -592,7 +594,7 @@
       "conditions": [
         "The nominal tier-selection rates accompany each pool below. These percentages describe the chest tier, not the odds of finding a particular item.",
         "All three tiers use the same placed-chest sprite in this creation path. The code does not establish a different visible appearance for each tier.",
-        "Chests use the ordinary treasure type exclusions. A richer budget does not allow food or every crafting material, and the minimum non-coin value rises with the rolled budget.",
+        "Chests use the ordinary treasure type exclusions. A richer budget does not allow food or every crafting material, and the minimum non-valuable item value rises with the rolled budget.",
         "The container-kind argument is not the treasure-pool argument: these chests still call the ordinary pool. Do not apply the unused reduced-wear pool branch merely because chest creation uses a numeric kind of two."
       ],
       "rows": [],
@@ -4012,7 +4014,7 @@
       "id": "skeleton-outdoors",
       "title": "Outdoor skeletons and remains",
       "owner_source": "random-treasure",
-      "summary": "The rolled budget ranges from 30 copper to 5 silver and 20 copper. The minimum non-coin item value is one quarter of that particular budget.",
+      "summary": "The rolled budget ranges from 30 copper to 5 silver and 20 copper. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-0",
         "item-1",
@@ -4137,7 +4139,7 @@
       "id": "skeleton-indoors",
       "title": "Indoor skeletons and remains",
       "owner_source": "random-treasure",
-      "summary": "Indoors, the ordinary remains budget receives an extra 2 silver and 50 copper, giving a range of 2 silver and 80 copper to 7 silver and 70 copper. The minimum non-coin value is one quarter of the rolled budget.",
+      "summary": "Indoors, the ordinary remains budget receives an extra 2 silver and 50 copper, giving a range of 2 silver and 80 copper to 7 silver and 70 copper. The minimum non-valuable item value is one quarter of the rolled budget.",
       "eligible_item_ids": [
         "item-1",
         "item-3",
@@ -4239,7 +4241,7 @@
       "id": "chest-common",
       "title": "Common treasure-chest tier",
       "owner_source": "random-treasure",
-      "summary": "This chest tier rolls a budget from 3 to 22 silver. The minimum non-coin value is one quarter of that particular budget.",
+      "summary": "This chest tier rolls a budget from 3 to 22 silver. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-1",
         "item-3",
@@ -4369,7 +4371,7 @@
       "id": "chest-middle",
       "title": "Middle treasure-chest tier",
       "owner_source": "random-treasure",
-      "summary": "This chest tier rolls a budget from 5 to 44 silver. The minimum non-coin value is one quarter of that particular budget.",
+      "summary": "This chest tier rolls a budget from 5 to 44 silver. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-1",
         "item-4",
@@ -4487,7 +4489,7 @@
       "id": "chest-rich",
       "title": "Rich treasure-chest tier",
       "owner_source": "random-treasure",
-      "summary": "This chest tier rolls a budget from 10 to 59 silver. The minimum non-coin value is one quarter of that particular budget.",
+      "summary": "This chest tier rolls a budget from 10 to 59 silver. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-4",
         "item-5",
@@ -4587,7 +4589,7 @@
       "id": "ruins-large",
       "title": "Larger searchable ruins",
       "owner_source": "random-treasure",
-      "summary": "The budget ranges from 1 silver to 3 silver and 40 copper. Non-coin items must be worth at least 1 silver, and every item must occupy fewer than four inventory squares.",
+      "summary": "The budget ranges from 1 silver to 3 silver and 40 copper. Non-valuable items must be worth at least 1 silver, and every item must occupy fewer than four inventory squares.",
       "eligible_item_ids": [
         "item-3",
         "item-5",
@@ -4640,7 +4642,7 @@
       "id": "ruins-small",
       "title": "Smaller searchable ruins",
       "owner_source": "random-treasure",
-      "summary": "The unadjusted budget ranges from 30 copper to 1 silver and 50 copper. Budgets below the 50-copper minimum item value are raised to 60 copper. Items must occupy fewer than four inventory squares.",
+      "summary": "The unadjusted budget ranges from 30 copper to 1 silver and 50 copper. Budgets below the 50-copper minimum non-valuable item value are raised to 60 copper. Items must occupy fewer than four inventory squares.",
       "eligible_item_ids": [
         "item-3",
         "item-13",
@@ -4682,7 +4684,7 @@
       "id": "nest-tiny",
       "title": "Bird-nest bonus treasure",
       "owner_source": "random-treasure",
-      "summary": "The unadjusted budget ranges from 10 copper to 1 silver and 50 copper. A budget below the 15-copper minimum item value becomes 25 copper. Only one-square items qualify.",
+      "summary": "The unadjusted budget ranges from 10 copper to 1 silver and 50 copper. A budget below the 15-copper minimum non-valuable item value becomes 25 copper. Only one-square items qualify.",
       "eligible_item_ids": [
         "item-32",
         "item-72",
@@ -4719,7 +4721,7 @@
       "id": "cracks-tiny",
       "title": "Cave-floor crack bonus treasure",
       "owner_source": "random-treasure",
-      "summary": "The budget ranges from 5 copper to 1 silver and 4 copper. The minimum non-coin item value is half a copper, and only one-square items qualify.",
+      "summary": "The budget ranges from 5 copper to 1 silver and 4 copper. The minimum non-valuable item value is half a copper, and only one-square items qualify.",
       "eligible_item_ids": [
         "item-32",
         "item-72",
@@ -4755,7 +4757,7 @@
       "id": "unwanted-remains",
       "title": "Raving and Mutated Unwanted corpse treasure",
       "owner_source": "random-treasure",
-      "summary": "These two enemies use a different pool: a fixed budget of 1 silver and a minimum non-coin value of 10 copper, without the ordinary treasure pool's food, material-class or size exclusions.",
+      "summary": "These two enemies use a different pool: a fixed budget of 1 silver and a minimum non-valuable item value of 10 copper, without the ordinary treasure pool's food, material-class or size exclusions.",
       "eligible_item_ids": [
         "item-0",
         "item-2",

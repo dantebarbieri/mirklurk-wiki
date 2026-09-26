@@ -388,6 +388,44 @@ def dom(html, title):
     return result.normalize()
 
 
+def check_pool_projection(html, pool, owner, locations, catalog, item=None, parse_title="Pool projection"):
+    parsed = dom(html, parse_title)
+    members = set(pool["eligible_item_ids"]) if item is None else {item} & set(pool["eligible_item_ids"])
+    wanted = {"pool-item-" + pool["id"] + "-" + identity for identity in members}
+    actual = [identity for identity in parsed.anchors if identity.startswith("pool-item-")]
+    if set(actual) != wanted or len(actual) != len(wanted):
+        raise RuntimeError("A pool view changed its exact membership.")
+    for identity, condition in pool["item_conditions"].items():
+        if (" ".join(condition.split()) in parsed.text) != (identity in members):
+            raise RuntimeError("A pool view lost or leaked an item-specific story gate.")
+    if item is not None:
+        gate = pool["item_conditions"].get(item)
+        expected = ((locations[item] + ": " + gate + " ") if gate else "") + pool["title"] + " (eligible)" if members else ""
+        expected_links = ([locations[item]] if gate else []) + [owner + "#pool-" + pool["id"]] if members else []
+        if (parsed.text != expected or parsed.rows or re.search(r"<(?:table|img|h[1-6])\b", html, re.I)
+                or [link["target"] for link in parsed.links] != expected_links or parsed.non_wiki_links):
+            raise RuntimeError("An item pool view changed its compact eligibility-only reference.")
+    else:
+        categories = {identity: group["title"] for group in catalog.get("taxonomy", {}).get("groups", [])
+                      if group["index"] == "Items" for identity in group["members"]}
+        if len(parsed.rows) != len(members):
+            raise RuntimeError("A pool candidate table omitted or duplicated rows.")
+        for row in parsed.rows:
+            if len(row["ids"]) != 1 or row["ids"][0] not in wanted or len(row["cells"]) != 2:
+                raise RuntimeError("A pool candidate table changed its two-column shape.")
+            identity = row["ids"][0].removeprefix("pool-item-" + pool["id"] + "-")
+            category = categories.get(identity)
+            links = [locations[identity]]
+            if identity in pool["item_conditions"]:
+                links.append(owner + "#treasure-condition-" + identity)
+            if ([link["target"] for link in row["cells"][0]["links"]] != links
+                    or row["headers"] != ["Item", "Category"]
+                    or row["cells"][1]["text"] != (category or "Item")
+                    or [link["target"] for link in row["cells"][1]["links"]] != (["Category:" + category] if category else [])):
+                raise RuntimeError("A pool candidate changed its item, category or condition link.")
+    return parsed
+
+
 def linked_titles(text):
     return {title_key(target.lstrip(":").split("#", 1)[0]) for target in re.findall(r"\[\[([^\]|]+)", text)
             if target.lstrip(":").split("#", 1)[0]}
@@ -562,18 +600,7 @@ class Rehearsal:
                 raise RuntimeError("A prerequisite source omitted its canonical shared qualification.")
         elif view == "pool":
             pool = self.pools[parameters["pool"]]
-            members = {parameters["item"]} & set(pool["eligible_item_ids"]) if "item" in parameters else set(pool["eligible_item_ids"])
-            wanted = {"pool-item-" + pool["id"] + "-" + item for item in members}
-            actual = [identity for identity in parsed.anchors if identity.startswith("pool-item-")]
-            if set(actual) != wanted or len(actual) != len(wanted):
-                raise RuntimeError("A prerequisite pool view changed its exact membership.")
-            for row in parsed.rows:
-                if set(row["ids"]) & wanted and (len(row["cells"]) != 4 or [cell["text"] for cell in row["cells"][1:3]]
-                                               != ["Budget-dependent", "Not established"]):
-                    raise RuntimeError("A prerequisite pool invented quantity or probability.")
-            for item, condition in pool["item_conditions"].items():
-                if (self.checks.plain(condition) in parsed.text) != (item in members):
-                    raise RuntimeError("A prerequisite pool lost or leaked an item-specific story gate.")
+            check_pool_projection(html, pool, owner, self.locations, self.catalog, parameters.get("item"), parse_title)
         elif view == "stock":
             rules = {row["id"]: row for row in self.catalog.get("currency", {}).get("rules", [])}
             rule = rules.get("trade-stock-and-funds")

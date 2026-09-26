@@ -63,11 +63,10 @@ hard exclusions after positive exceptions. Never allow an entire directory's
 contents, use force-add as a workaround, relax binary checks for an asset, or
 introduce a fixture containing a real secret.
 
-The catalog validator's named-file cap is 44 KiB to accommodate the bounded
-merchant-availability, editorial-evidence and shared-stock validation. This
-correction also gives `tests/test_catalog.py` and `tools/smoke_prefix.py`
-66 KiB each for the focused regressions and finite stock-view checks.
-No path exception or other file's size limit is widened.
+The catalog validator's named-file cap is 48 KiB, including the bounded
+recipe-input/source joins used to derive acquisition browsing without another
+stored dataset. `tests/test_catalog.py` and `tools/smoke_prefix.py` retain their
+66 KiB caps. No path exception or other file's size limit is widened.
 
 Runtime files belong outside the checkout, even when ignored. Actual
 `LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original

@@ -1,6 +1,7 @@
 import copy
 import hashlib
 import json
+import re
 import sys
 import unittest
 from fractions import Fraction
@@ -9,10 +10,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from wiki_catalog import entry_owners, entry_relations, page_locations, validate_catalog
+from wiki_catalog import category_definitions, entry_owners, entry_relations, ingredient_acquisition, page_locations, validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
-from wiki_render import acquisition_probability, build_pages, display_entry, literal
+from wiki_render import acquisition_probability, build_pages, clothing_subgroups, display_entry, literal
 from wiki_views import available_views, transclusions
 
 
@@ -51,6 +52,107 @@ class AcquisitionTests(unittest.TestCase):
         for identity in unverified:
             self.assertIn("verified", self.pages[locations[identity]])
             self.assertNotIn("unobtainable", self.pages[locations[identity]])
+
+    def test_clothing_is_browsable_in_items_and_category_by_reviewed_slots(self):
+        clothes = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Clothes")
+        expected = {"Headwear": 4, "Shirts": 3, "Outerwear": 3, "Cloaks": 5, "Gloves": 4,
+                    "Pants": 3, "Socks": 3, "Footwear": 5}
+        groups = clothing_subgroups(self.catalog, clothes["members"])
+        self.assertEqual({label: len(members) for label, members, _ in groups}, expected)
+        self.assertEqual(set().union(*(members for _, members, _ in groups)), set(clothes["members"]))
+        locations = page_locations(self.data, self.catalog)
+        for page in ("Items", "Category:Clothes"):
+            for label, members, slots in groups:
+                section = self.pages[page].split("=== " + label + " ===\n", 1)[1].split("\n==", 1)[0]
+                for identity in members:
+                    self.assertIn("[[" + locations[identity] + "|", section)
+                for slot in slots:
+                    self.assertIn("[[:Category:" + slot + "|", section)
+        anchors = re.findall(r'id="entity-(item-\d+)"', self.pages["Items"])
+        self.assertEqual(len(anchors), 247)
+        self.assertEqual(set(anchors), {row["id"] for row in self.data["entities"] if row["category"] == "item"})
+
+    def test_overlapping_clothing_tags_never_duplicate_primary_index_anchors(self):
+        catalog = copy.deepcopy(self.catalog)
+        gloves = next(row for row in catalog["taxonomy"]["tags"] if row["title"] == "Glove-slot equipment")
+        gloves["members"].append("item-42")
+        pages = build_pages(ROOT, self.data, catalog, self.details)
+        self.assertEqual(pages["Items"].count('id="entity-item-42"'), 1)
+        self.assertIn("[[Category:Glove-slot equipment]]", pages["Simple Hood"])
+        self.assertIn("[[Category:Hood-slot equipment]]", pages["Simple Hood"])
+        clothes = next(row for row in catalog["taxonomy"]["groups"] if row["title"] == "Clothes")
+        gloves["members"].remove("item-42")
+        hood = next(row for row in catalog["taxonomy"]["tags"] if row["title"] == "Hood-slot equipment")
+        hood["members"].remove("item-42")
+        self.assertEqual(dict((label, members) for label, members, _ in clothing_subgroups(catalog, clothes["members"]))["Other clothing"],
+                         {"item-42"})
+
+    def test_ingredient_groups_are_exact_input_source_joins_not_material_or_ware_lists(self):
+        inputs = {row["item"] for entry in self.data["entries"] if entry["kind"] == "recipe"
+                  for row in entry["details"]["inputs"]}
+        inputs.update(row["item"] for recipe in self.catalog["construction_recipes"] for row in recipe["inputs"])
+        routes = ingredient_acquisition(self.data, self.catalog)
+        self.assertEqual(set(routes), inputs)
+        self.assertEqual(len(inputs), 53)
+        expected = {"Creature drops": 12, "Gatherables": 36, "Purchased ingredients": 1,
+                    "Crafted ingredients": 4, "Other ingredient sources": 1}
+        categories = category_definitions(self.data, self.catalog)
+        self.assertEqual(set(categories["Recipe ingredients"]["members"]), inputs)
+        locations = page_locations(self.data, self.catalog)
+        for method, count in expected.items():
+            members = {identity for identity, methods in routes.items() if method in methods}
+            self.assertEqual(len(members), count, method)
+            self.assertEqual(set(categories[method]["members"]), members)
+            section = self.pages["Items"].split("=== " + method + " ===\n", 1)[1].split("\n==", 1)[0]
+            for item in members:
+                self.assertIn("[[" + locations[item] + "|", section)
+                self.assertIn("[[Category:" + method + "]]", self.pages[locations[item]])
+                for target, _ in routes[item][method]:
+                    self.assertIn("[[" + target + "|", section)
+                    self.assertIn("[[" + target + "|", self.pages["Category:" + method])
+        offers = {entry["details"]["item"] for entry in self.data["entries"] if entry["kind"] == "merchant"}
+        self.assertEqual(set(categories["Purchased ingredients"]["members"]), inputs & offers)
+        self.assertEqual(inputs & offers, {"item-45"})
+        self.assertNotIn("Creature drops", routes["item-142"])
+        self.assertIn(("Plant harvesting#acquisition-harvest-calmia-root", "Plant harvesting"), routes["item-142"]["Gatherables"])
+        self.assertIn(("Starting equipment#acquisition-starting-equipment-item-39", "Starting equipment"),
+                      routes["item-39"]["Other ingredient sources"])
+        self.assertIn("[[:Category:Crafting materials|Material families]]", self.pages["Items"])
+        material_section = self.pages["Items"].split("== Crafting materials ==\n", 1)[1].split("\n== ", 1)[0]
+        self.assertIn("[[#Recipe_ingredients_by_acquisition|", material_section)
+        self.assertIn("[[Items#Recipe_ingredients_by_acquisition|", self.pages["Category:Crafting materials"])
+        self.assertIn("[[Category:Food ingredients]]", self.pages["Honey"])
+
+    def test_ingredient_methods_overlap_and_ignore_random_only_eligibility(self):
+        data, catalog = copy.deepcopy(self.data), copy.deepcopy(self.catalog)
+        item = "item-103"
+        offer = next(row for row in data["entries"] if row["kind"] == "merchant")
+        offer["details"]["item"] = item
+        source = next(row for row in catalog["acquisition"]["sources"] if row["id"] == "plant-harvesting")
+        source["rows"][0]["item"] = item
+        routes = ingredient_acquisition(data, catalog)
+        self.assertTrue({"Creature drops", "Gatherables", "Purchased ingredients"} <= routes[item].keys())
+        source["rows"][0]["coverage"] = "eligible-pool"
+        self.assertNotIn("Gatherables", ingredient_acquisition(data, catalog)[item])
+        self.assertNotIn("Creature drops", ingredient_acquisition(self.data, self.catalog)["item-142"])
+
+    def test_ingredient_fallbacks_keep_story_random_only_and_unknown_records_reachable(self):
+        data, catalog = copy.deepcopy(self.data), copy.deepcopy(self.catalog)
+        recipe = next(row for row in data["entries"] if row["kind"] == "recipe")
+        recipe["details"]["inputs"].extend({"item": item, "quantity": 1} for item in ("item-48", "item-100"))
+        catalog["construction_recipes"][0]["inputs"].append({"item": "item-107", "quantity": 1})
+        routes = ingredient_acquisition(data, catalog)
+        self.assertEqual(set(routes["item-48"]), {"Unverified ingredient sources"})
+        self.assertEqual(set(routes["item-100"]), {"Other ingredient sources"})
+        self.assertTrue(all(label.endswith("(eligibility only)") for _, label in routes["item-100"]["Other ingredient sources"]))
+        self.assertTrue(any(target.startswith("Story rewards and finds#acquisition-")
+                            for target, _ in routes["item-107"]["Other ingredient sources"]))
+        pages = build_pages(ROOT, data, catalog, self.details)
+        self.assertIn("[[Flax|", pages["Category:Unverified ingredient sources"])
+        self.assertIn("[[Sapphire|", pages["Category:Other ingredient sources"])
+        self.assertNotIn("[[Category:Gatherables]]", pages["Sapphire"])
+        self.assertNotIn("[[Category:Creature drops]]", pages["Sapphire"])
+        self.assertIn("[[Flax|", pages["Category:Fibers and fabrics"])
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
@@ -222,7 +324,10 @@ class AcquisitionTests(unittest.TestCase):
         sources = {source["id"]: source for source in document["sources"]}
         pools = {pool["id"]: pool for pool in document["pools"]}
         self.assertEqual(hashlib.sha256((json.dumps(document["pools"], sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "bdeb19f06c51e66d285247c1aef8488d8601e2e06dd2dc0b8d705b9d8de62d40")
+                         "e02e196d984a645c1f0c71265a0c0a4510f3e18f3da83eaa8702786114497f0d")
+        unchanged = [{key: value for key, value in pool.items() if key != "summary"} for pool in document["pools"]]
+        self.assertEqual(hashlib.sha256((json.dumps(unchanged, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
+                         "c6dee73e935ff85b73fa994970cdcf0d31f3e22c8182ce1ba7609a69b66ada1b")
         self.assertEqual({identity: len(pool["eligible_item_ids"]) for identity, pool in pools.items()}, {
             "skeleton-outdoors": 95, "skeleton-indoors": 72, "chest-common": 98, "chest-middle": 86,
             "chest-rich": 68, "ruins-large": 23, "ruins-small": 12, "nest-tiny": 7,

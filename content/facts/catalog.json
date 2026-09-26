@@ -4001,8 +4001,8 @@
     {
       "entry": "corpse-budgeted-treasure",
       "steps": [
-        "These creatures use a restricted treasure category, a total base-value budget of one, and a minimum item value of 0.1.",
-        "The generator's type restrictions, nonlootable exclusions, story gates, durability handling and rejection loop still apply.",
+        "Raving Unwanted and Mutated Unwanted use a one-silver base-value budget and a minimum non-valuable item value of 10 copper. Coins and gems bypass that minimum but must fit the total budget.",
+        "Their pool allows food and materials excluded from ordinary skeleton treasure. Nonlootable exclusions, story gates, durability handling and the rejection loop still apply.",
         "After the creature-specific base inventory is built, each stored arrow entry is appended. The hit/recovery process that populated that list is a separate mechanic."
       ]
     },

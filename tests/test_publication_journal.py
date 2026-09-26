@@ -101,16 +101,16 @@ class NativeReleaseCoverageTests(unittest.TestCase):
                 manifest = journal.call_args.args[1]
                 validate_manifest(manifest)
                 operations, preserved = manifest["operations"], manifest["preserved"]
-                self.assertEqual(len(operations), 453)
+                self.assertEqual(len(operations), 459)
                 self.assertEqual(len(preserved), 12)
                 self.assertEqual(sum(row["expected"]["page_id"] != 0 for row in operations), 389)
-                self.assertEqual(sum(row["expected"]["page_id"] == 0 for row in operations), 64)
+                self.assertEqual(sum(row["expected"]["page_id"] == 0 for row in operations), 70)
                 self.assertEqual([row["title"] for row in operations], rehearsal.order)
                 self.assertEqual({row["title"] for row in operations},
                                  {title for title in desired if desired[title] != baseline.get(title)})
                 self.assertEqual({row["title"] for row in preserved},
                                  {title for title in baseline if baseline[title] == desired[title]})
-                self.assertEqual(len(desired), 465)
+                self.assertEqual(len(desired), 471)
                 for field, incomplete in (
                     ("order", rehearsal.order[:-1]),
                     ("metadata", {title: row for title, row in rehearsal.metadata.items()
@@ -118,7 +118,7 @@ class NativeReleaseCoverageTests(unittest.TestCase):
                 ):
                     with self.subTest(incomplete=field), patch.object(rehearsal, field, incomplete):
                         journal.reset_mock()
-                        with self.assertRaisesRegex(RuntimeError, "453 writes plus 12 preserved"):
+                        with self.assertRaisesRegex(RuntimeError, "459 writes plus 12 preserved"):
                             native.full_run(rehearsal, corpora)
                         journal.assert_not_called()
 

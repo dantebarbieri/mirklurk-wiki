@@ -715,36 +715,29 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
 
 
 def smoke_acquisition_pools(run, api, pages, data, catalog, token):
+    from smoke_prefix import check_pool_projection, dom
+
     locations = page_locations(data, catalog)
     sources = {source["id"]: source for source in catalog.get("acquisition", {}).get("sources", [])}
     pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
     for pool in pools.values():
         owner = sources[pool["owner_source"]]["title"]
+        result = api({"action": "parse", "title": "Synthetic pool list",
+                      "text": "{{:" + owner + "|view=pool|pool=" + pool["id"] + "}}",
+                      "prop": "text|templates"}, post=True)["parse"]
+        check_parser_errors(result["text"]["*"])
+        check_pool_projection(result["text"]["*"], pool, owner, locations, catalog)
+        if {row["*"] for row in result.get("templates", [])} != {owner}:
+            raise RuntimeError("A pool candidate list introduced a nested dependency.")
         for item in sorted({*pool["eligible_item_ids"], "item-48"}):
             text = "{{:" + owner + "|view=pool|pool=" + pool["id"] + "|item=" + item + "}}"
             result = api({"action": "parse", "title": "Synthetic pool view", "text": text,
                           "prop": "text|templates"}, post=True)["parse"]
             rendered = result["text"]["*"]
             check_parser_errors(rendered)
-            parsed = RenderedRows("pool-item-", "pool-item-")
-            parsed.feed(rendered)
-            expected = {pool["id"] + "-" + item} if item in pool["eligible_item_ids"] else set()
-            actual = {identity for row in parsed.rows for identity in row["entries"]}
-            if actual != expected or len(parsed.rows) != len(expected):
-                raise RuntimeError("A pool view omitted an eligible item or admitted an ineligible member.")
+            parsed = check_pool_projection(rendered, pool, owner, locations, catalog, item)
             if {row["*"] for row in result.get("templates", [])} != {owner} or pool["summary"] in parsed.text:
                 raise RuntimeError("A pool view added dependencies or copied its full budget explanation.")
-            if expected and ("Budget-dependent" not in parsed.text or "Not established" not in parsed.text):
-                raise RuntimeError("A pool view lost its quantity/odds qualification.")
-            for row in parsed.rows:
-                cells = row["cells"]
-                if len(cells) != 4 or item_links(cells[0], locations) != [locations[item]]:
-                    raise RuntimeError("A pool member changed its ordered item cell.")
-                if plain(cells[1]["text"]) != "Budget-dependent" or plain(cells[2]["text"]) != "Not established":
-                    raise RuntimeError("A pool member gained an invented quantity or probability.")
-            for identity, condition in pool["item_conditions"].items():
-                if (condition in parsed.text) != (item == identity):
-                    raise RuntimeError("The canonical story gate did not follow the filtered pool member.")
     for source in sources.values():
         for reference in source.get("pool_refs", []):
             text = "{{:" + source["title"] + "|view=pool-source|pool=" + reference["pool"] + "}}"
@@ -765,11 +758,11 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
     for item in {max(counts, key=counts.get), "item-127"}:
         rendered = api({"action": "parse", "page": locations[item], "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
-        parsed = RenderedRows("pool-item-", "pool-item-")
-        parsed.feed(rendered)
-        expected = {reference["pool"] + "-" + item for source in sources.values()
+        parsed = dom(rendered, locations[item])
+        expected = {"pool-item-" + reference["pool"] + "-" + item for source in sources.values()
                     for reference in source.get("pool_refs", []) if item in pools[reference["pool"]]["eligible_item_ids"]}
-        if {identity for row in parsed.rows for identity in row["entries"]} != expected:
+        actual = [identity for identity in parsed.anchors if identity.startswith("pool-item-")]
+        if set(actual) != expected or len(actual) != len(expected):
             raise RuntimeError("A complete item page lost a pool variant or exceeded its expansion budget.")
     gate = next(pool["item_conditions"]["item-127"] for pool in pools.values() if "item-127" in pool["item_conditions"])
     chest_condition = sources["treasure-chests"]["pool_refs"][0]["condition"]

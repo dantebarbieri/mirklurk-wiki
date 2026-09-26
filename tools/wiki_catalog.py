@@ -30,6 +30,71 @@ CURRENCY_RULE_TITLES = {
 RESERVED_TITLES.add("Currency and trading")
 RESERVED_TITLES.update(MECHANIC_GUIDE_TITLES)
 
+INGREDIENT_METHODS = {
+    "Creature drops": "Recipe inputs with named creature loot or harvesting records. Follow the source for base yields and recovery conditions; membership is not a guaranteed drop.",
+    "Gatherables": "Recipe inputs found through documented plant, tree, hive or world-feature gathering and searches. Source pages distinguish main yields, bonus checks and growth requirements.",
+    "Purchased ingredients": "Recipe inputs in documented merchant offers, not every merchant ware. Each merchant owns availability and each item owns its standard price.",
+    "Crafted ingredients": "Recipe inputs that are themselves outputs of another documented recipe. Follow the output item for ingredients, methods and costs.",
+    "Other ingredient sources": "Starting grants, scripted finds and other documented routes for recipe inputs. Any random-only route is explicitly labeled as eligibility, not a guaranteed acquisition.",
+    "Unverified ingredient sources": "Documented recipe inputs without an established acquisition route in this reference. This does not establish that they are unobtainable.",
+}
+
+
+def ingredient_acquisition(data, catalog):
+    """Join actual recipe inputs to their existing acquisition owners."""
+    entries = data.get("entries", [])
+    inputs = {row["item"] for entry in entries if entry["kind"] == "recipe"
+              for row in entry["details"]["inputs"]}
+    inputs.update(row["item"] for recipe in catalog.get("construction_recipes", []) for row in recipe["inputs"])
+    routes = {identity: {} for identity in sorted(inputs)}
+    locations = page_locations(data, catalog)
+    relations = entry_relations(data, catalog)
+    owners = entry_owners(data, locations, relations, catalog)
+    creatures = {row["entity"] for row in catalog["classifications"] if row["kind"] == "creature"}
+    sources = catalog.get("acquisition", {}).get("sources", [])
+    inherited = {identity: source for source in sources for identity in source.get("existing_entry_ids", [])}
+
+    def add(identity, method, target, label):
+        if identity in routes:
+            routes[identity].setdefault(method, set()).add((target, label))
+
+    def source_method(source):
+        if source["kind"] in {"gathering", "world-feature"}:
+            return "Gatherables"
+        return "Creature drops" if source["kind"] == "enemy" else "Other ingredient sources"
+
+    for source in sources:
+        for row in source["rows"]:
+            if row["coverage"] != "eligible-pool":
+                add(row["item"], source_method(source),
+                    source["title"] + "#acquisition-" + row["id"], source["title"])
+    for entry in entries:
+        details, owner = entry["details"], owners[entry["id"]]
+        if entry["kind"] == "recipe":
+            for row in details["outputs"]:
+                add(row["item"], "Crafted ingredients", owner + "#Recipes", owner)
+        elif entry["kind"] == "merchant":
+            add(details["item"], "Purchased ingredients", owner + "#entry-" + entry["id"], owner)
+        elif entry["kind"] == "loot" and details["outcome"] is not None:
+            if entry["id"] in inherited:
+                method = source_method(inherited[entry["id"]])
+            else:
+                named = relations[entry["id"]] & creatures
+                method = "Creature drops" if len(named) == 1 and owner == locations[next(iter(named))] else "Other ingredient sources"
+            add(details["outcome"], method, owner + "#entry-" + entry["id"], owner)
+    source_titles = {source["id"]: source["title"] for source in sources}
+    for identity, methods in routes.items():
+        if methods:
+            continue
+        for pool in catalog.get("acquisition", {}).get("pools", []):
+            if identity in pool["eligible_item_ids"]:
+                add(identity, "Other ingredient sources",
+                    source_titles[pool["owner_source"]] + "#pool-" + pool["id"],
+                    pool["title"] + " (eligibility only)")
+        if not methods:
+            add(identity, "Unverified ingredient sources", locations[identity] + "#How_to_acquire", "Acquisition notes")
+    return routes
+
 
 def default_catalog(data):
     """Propose titles for new datasets; publication uses the checked-in registry."""
@@ -88,6 +153,22 @@ def category_definitions(data, catalog):
             **row, "parents": row.get("parents", [row["index"]]),
             "summary": row.get("summary", f"An editorial browsing group within {row['index']}. Membership does not establish availability or guarantee an outcome."),
         }
+    ingredients = ingredient_acquisition(data, catalog)
+    if ingredients:
+        derived = [{
+            "title": "Recipe ingredients", "index": "Items", "parents": ["Items"],
+            "members": sorted(ingredients),
+            "summary": "Inputs to documented crafting and in-place construction recipes, including ingredients whose primary group is food, equipment or another material family. Acquisition methods overlap.",
+        }]
+        derived.extend({
+            "title": method, "index": "Items", "parents": ["Recipe ingredients"],
+            "members": [identity for identity, routes in ingredients.items() if method in routes],
+            "summary": summary,
+        } for method, summary in INGREDIENT_METHODS.items() if any(method in routes for routes in ingredients.values()))
+        for row in derived:
+            if row["title"] in categories:
+                raise DataError("taxonomy: duplicate derived ingredient category")
+            categories[row["title"]] = row
     return categories
 
 
@@ -354,7 +435,6 @@ def validate_catalog(catalog, data):
             _text(row["summary"], "skill group.summary", 1200)
         if "skill_groups" in taxonomy and described != {row["id"] for row in entities.values() if row["category"] == "skill_group"}:
             raise DataError("taxonomy: describe every skill group exactly once")
-    validate_category_graph(category_definitions(data, catalog))
     for history in _records(catalog.get("state_history", []), "state history"):
         _object(history, {"before", "after", "quest", "summary", "attribution", "recorded_on"}, {"evidence"}, "state history")
         for field in ("before", "after"):
@@ -575,6 +655,7 @@ def validate_catalog(catalog, data):
                               if note["kind"] == "construction-action"}
         if construction_notes != {recipe["owner_item"] for recipe in construction}:
             raise DataError("construction recipes and construction-action notes must have the same canonical owners")
+    validate_category_graph(category_definitions(data, catalog))
     return catalog
 
 
