@@ -143,9 +143,22 @@ Public methods:
 `put_artifact(value)` durably writes opaque canonical JSON as
 `artifact-<sha256>.json` and returns its digest; `get_artifact(sha256)` returns
 the hash-verified preimage. Same-content puts are idempotent, never overwrites.
-Replay verifies every artifact's filename/content digest. An artifact is at most
-32 MiB; larger guard sets should retain separate captures plus a manifest of
-their digests. The coordinator retains its full private guard preimages,
+Replay verifies every artifact's filename/content digest. Every journal record
+is bounded by the shared `MAX_RECORD_BYTES`: **64 MiB (67,108,864 bytes)** of
+canonical UTF-8 JSON, inclusive. Publication checks the bound before opening a
+temporary file; replay checks the same bound before reading a record body.
+This accommodates an inline baseline capture of roughly 44.2 MB without changing
+its preimage or introducing references, chunking or hydration. Measure the
+complete binding, not just its capture, before publication; oversized records
+still fail closed. Existing records retain their original bytes and digests.
+Older 32 MiB readers reject newly written records above their bound; bind the
+reviewed journal implementation consistently for writing and recovery.
+The native executor's separate input-file bounds are unchanged.
+
+The journal keeps decoded records in memory and canonicalization creates
+additional temporary representations. The per-record bound is not a total
+journal or process-memory bound; cold-replay memory depends on both record shape
+and the complete retained record set. The coordinator retains its full private guard preimages,
 including capture/trace, account/log/history/File chronology, price review and
 barrier evidence; a digest alone is not enough to reconstruct restart guards.
 There is no domain-specific guard interpretation in this store.

@@ -9,8 +9,9 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from build_wiki import build_pages
@@ -242,6 +243,58 @@ class JournalTests(unittest.TestCase):
         journal.put_artifact(GUARD)
         journal.put_artifact(COMPLETION)
         return journal
+
+    def test_record_size_exact_boundary_publishes_and_reopens(self):
+        limit = 64 * 1024 * 1024
+        value = "x" * (limit - 2)
+        self.assertEqual(len(canonical_bytes(value)), limit)
+        with self.new() as journal:
+            fingerprint = journal.put_artifact(value)
+            self.assertEqual((self.path / f"artifact-{fingerprint}.json").stat().st_size, limit)
+        del journal
+        with Journal(self.path) as reopened:
+            self.assertEqual(reopened.get_artifact(fingerprint), value)
+            self.assertEqual(reopened.accepted, [])
+
+    def test_record_size_one_byte_over_write_rejects_before_open(self):
+        value = "x" * (64 * 1024 * 1024 - 1)
+        self.assertEqual(len(canonical_bytes(value)), 64 * 1024 * 1024 + 1)
+        with self.new() as journal:
+            before = copy.deepcopy(journal.records)
+            with patch("publication_journal.os.open") as opened:
+                with self.assertRaisesRegex(JournalError, "replay size bound"):
+                    journal.put_artifact(value)
+                opened.assert_not_called()
+            self.assertEqual(journal.records, before)
+            self.assertEqual(set(os.listdir(self.path)), set(before))
+
+    def test_record_size_one_byte_over_read_rejects_before_body(self):
+        stream = MagicMock()
+        stream.__enter__.return_value = stream
+        info = SimpleNamespace(st_mode=0o100600, st_nlink=1, st_uid=os.geteuid(),
+                               st_size=64 * 1024 * 1024 + 1)
+        with (patch("publication_journal.os.listdir", return_value=["artifact-" + "a" * 64 + ".json"]),
+              patch("publication_journal.os.open", return_value=123),
+              patch("publication_journal.os.fdopen", return_value=stream),
+              patch("publication_journal.os.fstat", return_value=info)):
+            with self.assertRaisesRegex(JournalError, "journal entry"):
+                Journal._read(SimpleNamespace(fd=123))
+        stream.read.assert_not_called()
+
+    def test_record_size_nested_capture_roundtrip_preserves_complete_artifact(self):
+        capture = {"selected": [{"owner": {"title": "Synthetic owner", "revid": 1}, "html": ""}], "direct": []}
+        capture["selected"][0]["html"] = "x" * (44_233_312 - len(canonical_bytes(capture)))
+        self.assertEqual(len(canonical_bytes(capture)), 44_233_312)
+        binding = {"render_baseline": capture, "input_sha256": "a" * 64, "kind": "synthetic binding"}
+        expected = digest(binding)
+        with self.new() as journal:
+            self.assertEqual(journal.put_artifact(binding), expected)
+            self.assertEqual(journal.put_artifact(binding), expected)
+            self.assertEqual(journal.get_artifact(expected), binding)
+        del journal
+        with Journal(self.path) as reopened:
+            self.assertEqual(reopened.get_artifact(expected), binding)
+            self.assertEqual(reopened.accepted, [])
 
     def test_lost_committed_response_reconciles_without_resending(self):
         with self.new() as journal:
