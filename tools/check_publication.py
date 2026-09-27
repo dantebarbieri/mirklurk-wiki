@@ -55,7 +55,7 @@ ALLOWED_FILES = {
     "tests/test_prefix.py": 52 * 1024,
     "tests/test_incremental.py": 64 * 1024,
     "tests/test_runtime.php": 32 * 1024,
-    "tests/test_publication_journal.py": 24 * 1024,
+    "tests/test_publication_journal.py": 28 * 1024,
     "tests/native_worker_fixture.php": 4 * 1024,
     "deploy/Dockerfile": 8 * 1024,
     "deploy/compose.dev.yml": 16 * 1024,

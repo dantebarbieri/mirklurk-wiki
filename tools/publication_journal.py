@@ -8,6 +8,9 @@ import stat
 from pathlib import Path
 
 
+MAX_RECORD_BYTES = 64 * 1024 * 1024
+
+
 class JournalError(RuntimeError):
     pass
 
@@ -271,7 +274,7 @@ class Journal:
 
     def _publish(self, name, value):
         raw = canonical_bytes(value)
-        require(len(raw) <= 32 * 1024 * 1024, "Journal record exceeds the replay size bound.")
+        require(len(raw) <= MAX_RECORD_BYTES, "Journal record exceeds the replay size bound.")
         temporary = "." + name + ".pending"
         file = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
                        0o600, dir_fd=self.fd)
@@ -303,7 +306,7 @@ class Journal:
             with os.fdopen(file, "rb") as stream:
                 info = os.fstat(stream.fileno())
                 require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and info.st_uid == os.geteuid()
-                        and stat.S_IMODE(info.st_mode) == 0o600 and info.st_size <= 32 * 1024 * 1024,
+                        and stat.S_IMODE(info.st_mode) == 0o600 and info.st_size <= MAX_RECORD_BYTES,
                         "Damaged, aliased or nonprivate journal entry.")
                 records[name] = decode(stream.read())
         return records
