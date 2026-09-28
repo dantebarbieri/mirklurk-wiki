@@ -43,11 +43,11 @@ Writes follow the transclusion graph: a page whose views others include is
 saved before the pages that include it. Merchants and items include views of
 each other, so a few pages are necessarily saved before an owner. After
 writing, the sync re-renders (with a null edit) every automation-owned page
-whose output could be stale: pages that include a page saved after them or
-revised since they were last rendered, and pages linking to a newly created
-page. Readers therefore see the new content immediately, without waiting for
-MediaWiki's job queue, and an interrupted publish is repaired by the next run.
-Pages people edited are left to the queue.
+that was rendered before a page it includes was saved, or links to a page this
+run created. Readers therefore see the new content immediately, without
+waiting for MediaWiki's job queue; the preview lists these pages too. Pages
+people edited, and the dependents of an interrupted publish, are left to the
+queue, which catches up as the wiki is used.
 
 Finally it re-reads every page it saved and fails the run if the stored text
 differs from the generated text, which catches wikitext that MediaWiki's

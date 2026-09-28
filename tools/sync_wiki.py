@@ -132,7 +132,7 @@ def fetch_live(api, titles):
     for start in range(0, len(ordered), BATCH):
         batch = ordered[start:start + BATCH]
         query = api.call({
-            "action": "query", "prop": "revisions|info", "rvprop": "ids|timestamp|user|comment|content",
+            "action": "query", "prop": "revisions", "rvprop": "ids|timestamp|user|comment|content",
             "rvslots": "main", "titles": "|".join(batch),
         }, post=True).get("query", {})
         aliases = {row["to"]: row["from"] for row in query.get("normalized", [])}
@@ -150,7 +150,6 @@ def fetch_live(api, titles):
             readable = not slot.get("texthidden") and slot.get("contentmodel", "wikitext") == "wikitext"
             live[title] = {
                 "revid": revision["revid"], "timestamp": revision.get("timestamp", ""),
-                "touched": page.get("touched", ""),
                 "user": revision.get("user"), "comment": revision.get("comment", ""),
                 "text": slot.get("content") if readable else None,
             }
@@ -213,24 +212,18 @@ def write_order(titles, pages):
     return order
 
 
-def stale_renderings(texts, written, created, live=None):
-    """Pages whose cached rendering may predate an owner they include or a page they link to.
+def stale_renderings(texts, written, created):
+    """Pages rendered before an owner they include was saved, or before a page they link to existed.
 
-    Within a run the write order decides. Across runs, an included owner revised after
-    the page was last re-rendered (MediaWiki's page_touched) does, so an interrupted
-    publish is repaired by the next one.
+    MediaWiki 1.43 null edits re-render without advancing page_touched, and bot passwords
+    cannot purge, so staleness follows this run's write order rather than timestamps.
     """
-    live = live or {}
     position = {title: index for index, title in enumerate(written)}
     stale = []
     for title, text in sorted(texts.items()):
         mine = position.get(title, -1)
-        included = owners(text) - {title}
-        targets = (included & position.keys()) | ((links(text) & created) - {title})
-        late = any(position[target] > mine for target in targets)
-        touched = (live.get(title) or {}).get("touched")
-        outdated = bool(touched) and any((live.get(owner) or {}).get("timestamp", "") > touched for owner in included)
-        if late or outdated:
+        targets = ((owners(text) & position.keys()) | (links(text) & created)) - {title}
+        if any(position[target] > mine for target in targets):
             stale.append(title)
     return stale
 
@@ -308,8 +301,9 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
         "created": [], "updated": [], "conflicts": [], "errors": [], "refresh": [], "refreshed": [],
         "unverified": [],
     }
+    order = write_order(report["create"] + report["update"], pages)
     written, created = [], set()
-    for title in write_order(report["create"] + report["update"], pages) if apply else []:
+    for title in order if apply else []:
         try:
             save(api, title, pages[title], live[title], summary)
         except ApiError as error:
@@ -323,10 +317,14 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
         created.update([title] if actions[title] == "create" else [])
         report["created" if actions[title] == "create" else "updated"].append(title)
         log(f"{actions[title]}d: {title}")
-    current = fetch_live(api, pages) if written else live
-    texts = {title: row["text"] for title, row in current.items() if row and row["text"] is not None}
+    if not apply:
+        # Preview the refreshes the planned writes would cause.
+        written, created = order, set(report["create"])
+    current = fetch_live(api, pages) if apply and written else live
+    texts = {title: pages[title] if title in written else row["text"]
+             for title, row in current.items() if title in written or (row and row["text"] is not None)}
     # Pages people edited last are left to MediaWiki's job queue.
-    report["refresh"] = [title for title in stale_renderings(texts, written, created, current)
+    report["refresh"] = [title for title in stale_renderings(texts, written, created)
                          if title in written or automation_owned(current[title], accounts)]
     for title in report["refresh"] if apply else []:
         try:
@@ -336,7 +334,8 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
             report["refreshed"].append(title)
         except ApiError as error:
             report["errors"].append({"title": title, "error": f"refresh failed: {error}"})
-    report["unverified"] = [title for title in written if current[title] is None or current[title]["text"] is None
+    report["unverified"] = [title for title in (written if apply else [])
+                            if current[title] is None or current[title]["text"] is None
                             or normalize(current[title]["text"]) != normalize(pages[title])]
     report["missing_files"] = missing_files(api, pages)
     return report

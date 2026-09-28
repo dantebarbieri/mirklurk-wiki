@@ -30,7 +30,6 @@ class FakeWiki:
 
     def __init__(self, pages=None, files=(), groups=None):
         self.revisions = {}
-        self.touched = {}
         self.clock = 0
         self.next_revid = 100
         self.files = set(files)
@@ -44,8 +43,6 @@ class FakeWiki:
         self.touches = []
         for title, (text, user, comment) in (pages or {}).items():
             self.store(title, text, user, comment)
-        settled = self.now()
-        self.touched = {title: settled for title in self.revisions}
 
     def now(self):
         self.clock += 1
@@ -56,7 +53,6 @@ class FakeWiki:
         stamp = self.now()
         self.revisions.setdefault(title, []).append(
             {"revid": self.next_revid, "user": user, "comment": comment, "text": text, "timestamp": stamp})
-        self.touched[title] = stamp
         return self.next_revid
 
     def text(self, title):
@@ -77,7 +73,7 @@ class FakeWiki:
                     pages.append({"ns": namespace, "title": title, "missing": True})
                     continue
                 revision = self.revisions[title][-1]
-                pages.append({"ns": namespace, "title": title, "touched": self.touched[title], "revisions": [{
+                pages.append({"ns": namespace, "title": title, "revisions": [{
                     "revid": revision["revid"], "user": revision["user"], "comment": revision["comment"],
                     "timestamp": revision["timestamp"],
                     "slots": {"main": {"contentmodel": "wikitext", "content": revision["text"]}},
@@ -113,7 +109,6 @@ class FakeWiki:
             return {"edit": {"result": "Success", "oldrevid": latest["revid"], "newrevid": revid}}
         if "appendtext" in params:
             self.touches.append(title)
-            self.touched[title] = self.now()
             return {"edit": {"result": "Success", "nochange": True}}
         if "baserevid" in params and int(params["baserevid"]) != latest["revid"] and not self.merge:
             raise ApiError("editconflict")
@@ -205,16 +200,6 @@ class OwnershipAndPlanTests(unittest.TestCase):
         stale = stale_renderings(texts, written, created={"New page", "Late new page"})
         self.assertEqual(stale, ["Early", "Guide", "Merchant"])
 
-    def test_owner_revised_after_the_last_render_is_stale_across_runs(self):
-        texts = {"Seller": "{{:Item|view=price}}", "Item": "price", "Index": "[[Item]]"}
-        live = {"Seller": {"touched": "2026-09-28T00:00:05Z", "timestamp": "2026-09-28T00:00:01Z"},
-                "Item": {"touched": "2026-09-28T00:00:06Z", "timestamp": "2026-09-28T00:00:06Z"},
-                "Index": {"touched": "2026-09-28T00:00:01Z", "timestamp": "2026-09-28T00:00:01Z"}}
-        self.assertEqual(stale_renderings(texts, [], set(), live), ["Seller"])
-        live["Seller"]["touched"] = "2026-09-28T00:00:06Z"
-        self.assertEqual(stale_renderings(texts, [], set(), live), [])
-
-
 class SyncTests(unittest.TestCase):
     def test_dry_run_reads_but_never_writes(self):
         wiki = FakeWiki({"Old": ("Old", "WikiAdmin", "repo-sync: a")}, files={"File:Pic.png"})
@@ -302,17 +287,16 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(report["update"], ["Page"])
         self.assertEqual([row["title"] for row in report["skipped"]], ["Mine"])
 
-    def test_interrupted_publish_is_re_rendered_by_the_next_run(self):
+    def test_preview_lists_the_pages_a_publish_would_re_render(self):
         wiki = logged_in(FakeWiki({"Seller": ("{{:Item}}", "WikiAdmin", "repo-sync: 1"),
                                    "Fan page": ("{{:Item}} notes", "DanteB", "Notes"),
                                    "Item": ("price", "WikiAdmin", "repo-sync: 1")}))
-        wiki.store("Item", "new price", "MirkLurkBot", "repo-sync: 2")
         pages = {"Seller": "{{:Item}}", "Fan page": "{{:Item}}", "Item": "new price"}
-        preview = sync(wiki, pages, "repo-sync: 3", log=lambda _: None)
+        preview = sync(wiki, pages, "repo-sync: 2", log=lambda _: None)
         self.assertEqual((preview["refresh"], wiki.touches), (["Seller"], []))
-        report = sync(wiki, pages, "repo-sync: 3", apply=True, log=lambda _: None)
+        report = sync(wiki, pages, "repo-sync: 2", apply=True, log=lambda _: None)
         self.assertEqual((report["refreshed"], wiki.touches), (["Seller"], ["Seller"]))
-        self.assertEqual(sync(wiki, pages, "repo-sync: 4", apply=True, log=lambda _: None)["refreshed"], [])
+        self.assertEqual(sync(wiki, pages, "repo-sync: 3", apply=True, log=lambda _: None)["refreshed"], [])
 
     def test_read_only_wiki_stops_the_run(self):
         wiki = logged_in(FakeWiki({"A": ("old", "WikiAdmin", "repo-sync: 1"), "B": ("old", "WikiAdmin", "repo-sync: 1")}))
