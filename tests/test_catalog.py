@@ -42,7 +42,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
-        self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 385)
+        self.assertEqual(sum(":" not in title for title in self.pages), 385)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 101)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
@@ -115,10 +115,16 @@ class CatalogTests(unittest.TestCase):
                     if key == "being-armor" and any(g["kind"] == "health" for g in grids):
                         self.assertNotIn("<nowiki>Armor</nowiki> ||", page)
                     elif key in {"hp-grid-width", "hp-grid-height"} and any(g["kind"] == "health" for g in grids):
+                        from wiki_display import grid_argument
                         health = next(g for g in grids if g["kind"] == "health")
-                        self.assertIn(f'{len(health["rows"])} rows x {len(health["rows"][0])} columns', page)
+                        self.assertIn("{{Health grid|" + grid_argument(health) + "}}", page)
                     elif "-pattern-" in key and any(g["kind"] == key.split("-")[0] for g in grids):
-                        self.assertIn(f'{profile["values"][key.split("-")[0] + "-pattern-min"]} to {profile["values"][key.split("-")[0] + "-pattern-max"]}', page)
+                        from wiki_display import grid_argument
+                        grid = next(g for g in grids if g["kind"] == key.split("-")[0])
+                        self.assertIn("{{Attack grid|" + grid_argument(grid), page)
+                        for bound in ("min", "max"):
+                            self.assertEqual(sum(c[bound] for row in grid["rows"] for c in row if c),
+                                             profile["values"][grid["kind"] + "-pattern-" + bound])
                     elif key in folded:
                         self.assertIn(known(folded[key]), page.split("== Recipes ==", 1)[1])
                     elif profile["entity"] in coins and key in {"initial-price", "initial-weight", "stack-limit"}:
@@ -616,6 +622,7 @@ class CatalogTests(unittest.TestCase):
     def test_category_graph_links_and_transitive_membership_resolve(self):
         categories = category_definitions(self.data, self.catalog)
         locations = page_locations(self.data, self.catalog)
+        creatures = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "creature"}
         expected = {identity: set() for identity in locations}
 
         def ancestors(title):
@@ -632,7 +639,8 @@ class CatalogTests(unittest.TestCase):
                 self.assertIn(f"[[:Category:{title}|", self.pages["Category:" + parent])
             for identity in row["members"]:
                 expected[identity].update(ancestors(title))
-                self.assertIn(f"[[{locations[identity]}|", page)
+                self.assertIn("{{Creature|" + locations[identity] + "}}" if identity in creatures
+                              else f"[[{locations[identity]}|", page)
         for row in self.catalog["pages"]:
             actual = set(re.findall(r"\[\[Category:([^\]|]+)", self.pages[row["title"]]))
             self.assertEqual(actual, expected[row["entity"]], row["title"])
@@ -647,7 +655,8 @@ class CatalogTests(unittest.TestCase):
         ns = {"w": "http://www.mediawiki.org/xml/export-0.11/"}
         for page in root.findall("w:page", ns):
             title = page.findtext("w:title", namespaces=ns)
-            self.assertEqual(page.findtext("w:ns", namespaces=ns), "14" if title.startswith("Category:") else "0")
+            from wiki_display import page_namespace
+            self.assertEqual(page.findtext("w:ns", namespaces=ns), str(page_namespace(title)))
 
     def test_category_graph_rejects_cycles_orphans_empty_leaves_and_collisions(self):
         def change_row(catalog, target, **values):
@@ -787,12 +796,12 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(len(self.catalog["unit_prices"]["prices"]), 42)
 
     def test_prices_use_exact_minimum_coin_count_and_approved_icons(self):
-        cases = ((20, "2 gold"), (Decimal("3.57"), "3 silver 57 copper"),
-                 (Decimal("12.34"), "1 gold 2 silver 34 copper"),
-                 (Decimal("0.01"), "1 copper"), (0, "0 copper"))
+        cases = ((20, "{{Coins|2000}}"), (Decimal("3.57"), "{{Coins|357}}"),
+                 (Decimal("12.34"), "{{Coins|1234}}"),
+                 (Decimal("0.01"), "{{Coins|1}}"), (0, "{{Coins|0}}"))
         for value, expected in cases:
             self.assertEqual(price_text({"value": value}, []), expected)
-        rendered = price_text({"value": Decimal("12.34")}, self.data["illustrations"])
+        rendered = self.pages["Module:Display assets"]
         for number, name in ((74, "Gold"), (73, "Silver"), (72, "Copper")):
             image = next(row for row in self.data["illustrations"] if row.get("entity") == f"item-{number}")
             self.assertIn(f'[[File:Item-{number}.png|{image["pixel_art"]["width"]}px|link=|alt=<nowiki>{name} coin</nowiki>', rendered)
@@ -821,18 +830,16 @@ class CatalogTests(unittest.TestCase):
                          {(y, 2 if y % 2 == 0 else 0) for y in range(7)})
         self.assertEqual(sum(c["health"] for r in nightmare["rows"] for c in r if c), 14)
         page = self.pages["Nightmare"]
-        self.assertIn("14 occupied health cells", page)
-        self.assertIn('aria-label="Row 1, column 3: empty"', page)
+        self.assertIn("{{Health grid|1,1,0;0,1,1;1,1,0;0,1,1;1,1,0;0,1,1;1,1,0}}", page)
         thorns = next(g for g in grids if g["id"] == "item-206-melee")
         self.assertEqual(thorns["rows"], [[{"min": 1, "max": 4}, {"min": 1, "max": 4}]] * 4)
         attack = self.pages["Thorns of Wackah"]
-        self.assertEqual(attack.count(">1-4</td>"), 8)
-        self.assertIn("4 rows x 2 columns", attack)
-        self.assertIn("not maximum actual damage", attack)
+        self.assertIn("{{Attack grid|1-4,1-4;1-4,1-4;1-4,1-4;1-4,1-4|label=Attack pattern}}", attack)
+        self.assertIn("not maximum actual damage", self.pages["Module:Display"])
         self.assertNotIn("Potential melee damage", attack)
         self.assertNotIn("== Melee", self.pages["Shortbow (Willow)"])
-        self.assertIn("0-1</td>", self.pages["Unarmed"])
-        self.assertIn("[[File:Health-armor-3.png|64px|alt=<nowiki>1 HP, 3 armor layers (gold shield)", self.pages["Sceetler"])
+        self.assertIn("{{Attack grid|0-1", self.pages["Unarmed"])
+        self.assertIn("{{Health grid|0,1,0;1,4,1;0,1,0}}", self.pages["Sceetler"])
         self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages["Sceetler"])
         for title in ("Giant Slug", "Swamp Troll", "Mirk Mauler", "Scaal", "Wilda", "Unwanted Guard"):
             self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages[title])

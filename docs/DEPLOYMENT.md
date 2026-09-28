@@ -37,11 +37,21 @@ web uploads remain disabled. The runtime explicitly uses the pinned image's
 
 The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
-The template loads bundled ParserFunctions for named, canonical recipe and
-seller views as well as ConfirmEdit/QuestyCaptcha. The Docker build asserts
-that the bundled extension exists; no extension download, new namespace, or
-database migration is introduced. A site must run an image built from this
-template before it receives pages that use the named views.
+The template loads bundled ParserFunctions for named canonical views,
+Scribunto with the bundled `luastandalone` engine for [display templates](TEMPLATES.md),
+and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
+no extension download is needed. Scribunto registers Module namespace 828
+and the `Scribunto` Lua content model. Its standard CPU/memory limits remain
+enabled, alongside the display module's explicit input/geometry bounds.
+
+**Rollout order matters:** separately authorize the runtime rebuild/deployment
+before publishing pages using Lua. Follow the upgrade procedure below and
+verify the new image in a disposable wiki first. A Git merge does not rebuild
+the homeserver image. The publisher fails before any page edits when the target
+lacks the required extensions, namespaces, content models or a working Lua
+engine; it also probes unsaved module compilation. Never bypass that gate or
+seed Lua pages into the old runtime. No production action is implied by the
+repository changes. Do not roll back the runtime while live Lua readers remain.
 
 ## Runtime variables
 

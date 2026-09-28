@@ -434,7 +434,8 @@ class SelectiveViewTests(unittest.TestCase):
             "Trees", "Trolls", "Unwanted creatures", "Wanderer", "Warrior", "Weapons",
         }
         self.assertTrue({"Category:" + title for title in historical_categories} <= set(self.pages))
-        old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles
+        from wiki_display import DISPLAY_TITLES
+        old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
         self.assertEqual(len(old_titles), 401)
         self.assertEqual(hashlib.sha256(("\n".join(old_titles) + "\n").encode()).hexdigest(),

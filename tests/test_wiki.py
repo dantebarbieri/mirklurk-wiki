@@ -564,49 +564,30 @@ class HealthArmorTests(unittest.TestCase):
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
 
     def test_shields_replace_only_occupied_armored_cells_at_exact_levels(self):
-        from smoke_deploy import RenderedGrids
+        from wiki_display import grid_argument
         from wiki_render import cell_grid
         self.assertEqual(hashlib.sha256(json.dumps(self.details["grids"], sort_keys=True).encode()).hexdigest(),
                          "d693bb51f80cbd3ad1502cd260c6eca44351c9bd3f1d4f8fda87eb75d3bb693b")
         totals = {0: 0, 1: 0, 2: 0, 3: 0}
         for grid in self.details["grids"]:
             rendered = cell_grid(grid, "being", self.data["illustrations"])
-            parsed = RenderedGrids()
-            parsed.feed(rendered)
-            self.assertEqual([len(row) for row in parsed.grids[0]], [len(row) for row in grid["rows"]])
-            for y, (expected_row, row) in enumerate(zip(grid["rows"], parsed.grids[0]), 1):
+            serialized = [row.split(",") for row in grid_argument(grid).split(";")]
+            self.assertEqual([len(row) for row in serialized], [len(row) for row in grid["rows"]])
+            self.assertIn(grid_argument(grid), rendered)
+            for y, (expected_row, row) in enumerate(zip(grid["rows"], serialized), 1):
                 for x, (expected, cell) in enumerate(zip(expected_row, row), 1):
                     with self.subTest(grid=grid["id"], row=y, column=x):
-                        position = f"Row {y}, column {x}: "
                         if expected is None:
-                            self.assertEqual(cell["attrs"]["aria-label"], position + "empty")
-                            self.assertEqual(cell["text"], "")
-                            self.assertEqual(cell["attrs"]["class"], "grid-hole")
+                            self.assertEqual(cell, "0")
                         elif grid["kind"] == "health":
                             armor = expected["armor"]
                             totals[armor] += 1
-                            description = position + f"1 HP, {armor} armor layers"
-                            self.assertEqual(cell["attrs"]["aria-label"], description)
-                            if armor:
-                                name = {1: "bronze", 2: "silver", 3: "gold"}[armor]
-                                label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
-                                self.assertEqual(cell["text"], f'[[File:Health-armor-{armor}.png|64px|alt={label}|{label}]]')
-                                self.assertEqual(cell["attrs"]["title"], description)
-                                self.assertEqual(cell["icon_styles"], ["display:inline-block;line-height:0;image-rendering:pixelated;zoom:calc(2 / 4);"])
-                            else:
-                                self.assertEqual(cell["text"], "1 HP")
-                            self.assertIn("background:#852c36;", cell["attrs"]["style"])
-                            self.assertIn("min-width:3em;height:3em;padding:0.25em;", cell["attrs"]["style"])
+                            self.assertEqual(int(cell) - 1, armor)
                         else:
                             visible = str(expected["min"]) if expected["min"] == expected["max"] else f'{expected["min"]}-{expected["max"]}'
-                            self.assertEqual(cell["text"], visible)
-                            self.assertEqual(cell["attrs"]["aria-label"], position + visible + " damage")
-                        if expected is None or grid["kind"] != "health" or not expected["armor"]:
-                            self.assertNotIn("Health-armor-", cell["text"])
-                            self.assertEqual(cell["icon_styles"], [])
-            self.assertNotIn("#663d24", rendered)
+                            self.assertEqual(cell, visible)
         self.assertEqual(totals, {0: 259, 1: 189, 2: 22, 3: 10})
-        self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 224)
+        self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 6)
         guide = self.pages["Health and armor"]
         for armor, name in ((1, "Bronze"), (2, "Silver"), (3, "Gold")):
             self.assertEqual(guide.count(f"[[File:Health-armor-{armor}.png|64px|"), 1)

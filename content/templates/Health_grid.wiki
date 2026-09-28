@@ -1,0 +1,7 @@
+<includeonly>{{#invoke:Display|health|{{{1|}}}}}</includeonly><noinclude>
+Use commas between cells and semicolons between rows: <nowiki>{{Health grid|1,1,1;1,4,1;1,1,1}}</nowiki> is a generic nine-HP square, not Sceetler.
+
+0 is a hole; 1 is one HP; 2, 3 and 4 are one HP with one, two and three armor layers respectively. Sceetler's five-HP cross is <nowiki>{{Health grid|0,1,0;1,4,1;0,1,0}}</nowiki>.
+
+Rows run top to bottom, cells left to right. Dimensions are inferred; up to 32 rows and 32 columns, rectangular, with at least one occupied cell. Whitespace around cells is allowed. Empty cells, unsupported values and malformed input display errors. Each occupied cell has a coordinate/HP/armor tooltip and accessible label; holes retain their position and accessible label. See [[Health and armor]] for the shield legend.
+</noinclude>
