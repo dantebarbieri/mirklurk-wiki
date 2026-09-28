@@ -29,7 +29,7 @@ from wiki_views import available_views, transclusions
 ROOT = Path(__file__).resolve().parents[1]
 SUMMARY_PREFIX = "repo-sync:"
 # Every sync save ends its summary with a hash of the text it meant to store.
-STAMP = re.compile(r" text:([0-9a-f]{12})$")
+STAMP = re.compile(r" text:([0-9a-f]{32})$")
 # Summaries of the publication workflows this tool replaced; no new ones are written.
 LEGACY_SUMMARIES = ("native-publication/v1:", "Publish reviewed ", "Original repository seed")
 # MediaWiki's installer and maintenance identities; nobody can log in as these.
@@ -123,7 +123,7 @@ def normalize(text):
 
 
 def stamp(text):
-    return hashlib.sha256(normalize(text).encode("utf-8")).hexdigest()[:12]
+    return hashlib.sha256(normalize(text).encode("utf-8")).hexdigest()[:32]
 
 
 def automation_owned(revision, accounts):
