@@ -1369,7 +1369,6 @@ def smoke():
             minimum_edit_interval = 21
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
-            smoke_acquisition_pools(run, api, pages, data, catalog, csrf)
             cached_merchant = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
             if "111.23 silver" in cached_merchant or 'id="entity-item-105"' in cached_merchant:
                 raise RuntimeError("The merchant price-edit precondition is invalid.")

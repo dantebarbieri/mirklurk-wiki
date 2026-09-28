@@ -417,6 +417,8 @@ class SyncTests(unittest.TestCase):
         self.assertEqual((preview["refresh"], wiki.touches), (["Seller"], []))
         report = sync(wiki, pages, "repo-sync: 2", apply=True, log=lambda _: None)
         self.assertEqual((report["refreshed"], wiki.touches), (["Seller"], ["Seller"]))
+        self.assertIn("<summary>Would re-render (1)</summary>\n\n- Seller\n", sync_wiki.markdown(preview, "https://wiki.example.org/api.php"))
+        self.assertIn("<summary>Re-rendered (1)</summary>\n\n- Seller\n", sync_wiki.markdown(report, "https://wiki.example.org/api.php"))
         self.assertEqual(sync(wiki, pages, "repo-sync: 3", apply=True, log=lambda _: None)["refreshed"], [])
 
     def test_read_only_wiki_stops_the_run(self):

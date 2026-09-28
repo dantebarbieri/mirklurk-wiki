@@ -444,6 +444,7 @@ def markdown(report, api_url):
         ("Adoption waits for a change: these already match the repository", report["adopt_pending"]),
         ("Would create" if dry else "Created", report["create"] if dry else report["created"]),
         ("Would update" if dry else "Updated", report["update"] if dry else report["updated"]),
+        ("Would re-render" if dry else "Re-rendered", report["refresh"] if dry else report["refreshed"]),
         ("Referenced images not on the wiki yet (import them separately)", report["missing_files"]),
     )
     for heading, rows in sections:
