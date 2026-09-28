@@ -1,12 +1,13 @@
 """Real disposable MediaWiki/Scribunto checks; called only by smoke_deploy."""
 
+import copy
 import re
 import urllib.parse
 
 from sync_wiki import SyncError, fetch_live, sync
 from wiki_catalog import page_locations, primary_groups
 from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, lua_string, page_namespace
-from wiki_render import image_for, pixel_geometry
+from wiki_render import image_for, merchant_table, pixel_geometry
 
 
 def smoke_display_install(publisher, pages):
@@ -44,6 +45,48 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             raise RuntimeError("An imported/API-published display page has the wrong namespace or content model.")
 
     locations = page_locations(data, catalog)
+    constructions = {recipe["owner_item"] for recipe in catalog.get("construction_recipes", [])}
+    items = {row["id"]: row for row in data["entities"] if row["category"] == "item" and row["id"] not in constructions}
+    for identity, item in items.items():
+        title = locations[identity]
+        rendered = parse("{{Item|" + title + "|quantity=4}}")
+        projection = dom(rendered, "Item")
+        parsed = parse_grids()
+        parsed.feed(rendered)
+        if (len(parsed.items) != 1 or parsed.items[0].get("aria-label") != title
+                or parsed.items[0].get("title") != title or projection.text.strip() != item["name"] + " x 4"):
+            raise RuntimeError(f"{title}: Item lost its canonical identity, original label or quantity.")
+        image = image_for(identity, data["illustrations"])
+        if [link["target"] for link in projection.wiki_links] != [title] * (2 if image else 1):
+            raise RuntimeError("Item icon/name links lost their canonical destination.")
+        if any(link["redlink"] for link in projection.wiki_links):
+            raise RuntimeError("Item produced a red link for a registered title.")
+        if len(parsed.images) != (1 if image else 0):
+            raise RuntimeError("Item guessed or dropped a reviewed image.")
+        if image:
+            actual = parsed.images[0]
+            pixels = image["pixel_art"]
+            scale = pixel_geometry(image, 32, 32)[2]
+            if (image["file_title"].removeprefix("File:") not in urllib.parse.unquote(actual.get("src", ""))
+                    or actual.get("alt") != item["name"] or actual.get("width") != str(pixels["width"])
+                    or actual.get("height") != str(pixels["height"]) or "srcset" in actual
+                    or "/thumb/" in actual.get("src", "") or len(parsed.pixel_styles) != 1
+                    or f'zoom:calc({scale}/{pixels["source_scale"]})' not in parsed.pixel_styles[0].replace(" ", "")):
+                raise RuntimeError(f"{title}: Item diverged from the shared approved image policy.")
+    for raw, title in ((" iron_Hand_Axe ", "Iron Hand Axe"), ("turnip_(item)", "Turnip (item)")):
+        if f'aria-label="{title}"' not in parse("{{Item|" + raw + "}}"):
+            raise RuntimeError("Item does not use MediaWiki canonical title normalization.")
+    for title, source in pages.items():
+        if title.startswith(("Template:", "Module:")):
+            continue
+        if title == "Items" or title.startswith("Category:") and "{{Item|" in source:
+            expected = re.findall(r"\{\{Item\|([^{}|]+)\}\}", source)
+            rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+            check_errors(rendered)
+            parsed = parse_grids()
+            parsed.feed(rendered)
+            if [entry.get("aria-label") for entry in parsed.items] != expected:
+                raise RuntimeError(f"{title}: authored Item entries changed their order or membership.")
     creatures = {locations[row["entity"]]: image_for(row["entity"], data["illustrations"])
                  for row in catalog["classifications"] if row["kind"] == "creature"}
     for title, image in creatures.items():
@@ -192,6 +235,10 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                         "0 - 1", "1e2", "1 " * 8193],
         "Creature": ["", "Not a creature", "Ranger Bhato", "Unwanted Guard", "being-13", "Template:Coins",
                      "Sceetler#Stats", "File:Being-13.png", "NIGHTMARE", "x" * 161],
+        "Item": ["", "Sceetler", "Ranger Bhato", "Finish Raft", "item-14", "File:Item-14.png", "Item:Iron Hand Axe",
+                 "Turnip", "Turnip (nature)", "Iron Hand Axe#Stats", "IRON HAND AXE", "x" * 161,
+                 "Plant Fiber|quantity=0", "Plant Fiber|quantity=-1", "Plant Fiber|quantity=1.2",
+                 "Plant Fiber|quantity=1e3", "Plant Fiber|quantity=" + "9" * 19],
     }
     for template, values in invalid.items():
         for value in values:
@@ -202,7 +249,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             if 'class="mirklurk-cell-grid"' in rendered or '<img ' in rendered:
                 raise RuntimeError("Invalid input produced a success-shaped grid or coin display.")
     injected = '<nowiki>"><script>alert(1)</script>&</nowiki>'
-    for template in ("Coins", "Health grid", "Attack grid", "Creature"):
+    for template in ("Coins", "Health grid", "Attack grid", "Creature", "Item"):
         rendered = api({"action": "parse", "title": "Display escape smoke",
                         "text": "{{" + template + "|" + injected + "}}", "prop": "text"}, post=True)["parse"]["text"]["*"]
         if "Display error:" not in rendered or "<script>" in rendered or "alert(1)" in rendered:
@@ -211,14 +258,73 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                     "text": "{{Attack grid|1|label=" + injected + "}}", "prop": "text"}, post=True)["parse"]["text"]["*"]
     if "Display error:" not in rendered or "alert(1)" in rendered:
         raise RuntimeError("Attack caption allowed arbitrary injected markup.")
-    print("Native displays: all 118 grids, exact coins, 25 creature portraits and authored faction lists, "
+    rows = parse('<table>{{Recipe row|ingredients={{Item|Plant Fiber|quantity=4}}'
+                 '|output={{Item|Rope|quantity=1}}|methods=[[Inventory crafting]]|ap=1.2'
+                 '|conditions=<nowiki>A | B = C {{literal}}</nowiki>}}</table>')
+    parsed = dom(rows, "Recipe row")
+    if len(parsed.rows) != 1 or [cell["text"] for cell in parsed.rows[0]["cells"]] != [
+        "Plant Fiber x 4", "Rope x 1", "Inventory crafting", "1.2 base AP", "A | B = C {{literal}}"
+    ]:
+        raise RuntimeError("Recipe row lost named arguments, nesting, fractional AP or literal escaping.")
+    for args, cost in (("", "Not established"), ("|ap=0", "0 base AP"), ("|cost=3 turns", "3 turns")):
+        parsed = dom(parse("<table>{{Recipe row" + args + "}}</table>"), "Recipe row")
+        if [cell["text"] for cell in parsed.rows[0]["cells"]] != [
+            "No item inputs", "Not established", "Not established", cost, "Not established"
+        ]:
+            raise RuntimeError("Recipe row invented a default value or lost a custom/zero cost.")
+    print("Native displays: all 118 grids, exact coins, 246 items, 25 creature portraits and authored lists, "
           "images, accessibility, invalid inputs and resource bounds passed.", flush=True)
+
+
+def smoke_vendor_rows(api, pages, data, catalog, token, dom, check_errors):
+    locations = page_locations(data, catalog)
+    entities = {row["id"]: row for row in data["entities"]}
+    offers = copy.deepcopy([entry for entry in data["entries"] if entry["kind"] == "merchant"][:2])
+    offers[0]["details"].update(price=19, currency="silver", quantity=3, location="First place")
+    offers[1]["details"].update(location="Second place")
+    offers[0]["conditions"], offers[1]["conditions"] = "First condition", "Second condition"
+    title = "Vendor exception smoke"
+    text = merchant_table(offers, data["illustrations"], entities, locations, standard_prices=True)
+    result = api({"action": "edit", "title": title, "text": text, "token": token,
+                  "summary": "Disposable mixed vendor prices"}, post=True)
+    if result.get("edit", {}).get("result") != "Success":
+        raise RuntimeError("Vendor-price fixture could not be saved.")
+    full = api({"action": "parse", "page": title, "prop": "text|templates"})["parse"]
+    for index in (None, 0, 1):
+        result = full if index is None else api({
+            "action": "parse", "title": locations[offers[index]["details"]["item"]],
+            "text": "{{:" + title + "|view=offers|item=" + offers[index]["details"]["item"] + "}}",
+            "prop": "text|templates"}, post=True)["parse"]
+        rendered = result["text"]["*"]
+        check_errors(rendered)
+        projection = dom(rendered, title)
+        if len(projection.rows) != (2 if index is None else 1):
+            raise RuntimeError("Mixed vendor-price views lost exact offer filtering.")
+        for row in projection.rows:
+            if row["headers"] != ["Seller", "Item", "Quantity", "Unit price", "Location", "Conditions"] or len(row["cells"]) != 6:
+                raise RuntimeError("Mixed vendor prices misaligned headers and cells.")
+        if index in (None, 0) and "1 gold 9 silver" not in projection.text:
+            raise RuntimeError("A vendor exception no longer uses the exact Coins value.")
+        if index is not None:
+            dependencies = {row["*"] for row in result.get("templates", [])}
+            if dependencies & set(locations.values()):
+                raise RuntimeError("A mixed-price item view recursively included an item article.")
+            if index == 1 and projection.rows[0]["cells"][3]["text"] != "Standard item price":
+                raise RuntimeError("A mixed-price standard row lost its nonrecursive price link.")
 
 
 def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
     # Ordinary edits, no imports or reseeding; each dependency layer must invalidate readers.
     owner_anchor = re.search(r'id="entity-[^"]+"', pages["Survivor's Field Kit"]).group()
     examples = (
+        ("Template:Item", pages["Template:Item"].replace("<includeonly>", "<includeonly>native-item-marker ", 1),
+         "native-item-marker", "Items", 'aria-label="Iron Hand Axe"', 'id="price-item-14"'),
+        ("Template:Item", pages["Template:Item"].replace("<includeonly>", "<includeonly>native-item-row-marker ", 1),
+         "native-item-row-marker", "Gurb-Gurb", "mirklurk-item", 'id="price-item-14"'),
+        ("Template:Recipe row", pages["Template:Recipe row"].replace("<td>", "<td>native-recipe-marker ", 1),
+         "native-recipe-marker", "Campfire", "base", 'id="entity-item-141"'),
+        ("Template:Ware row", pages["Template:Ware row"].replace("<td>", "<td>native-ware-marker ", 1),
+         "native-ware-marker", "Iron Hand Axe", "Magus Clay", 'id="entity-being-8"'),
         ("Template:Coins", pages["Template:Coins"].replace("<includeonly>", "<includeonly>native-template-marker ", 1),
          "native-template-marker", "Gurb-Gurb", "2 gold", owner_anchor),
         ("Module:Display", pages["Module:Display"].replace("return table.concat(parts, ' ')", "return 'native-module-marker ' .. table.concat(parts, ' ')"),

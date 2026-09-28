@@ -71,7 +71,7 @@ used.
 
 This includes ordinary Template transclusions, `#invoke` and static
 `mw.loadData`/`require` module edges, not just selective main-namespace views.
-Only the four registered display templates and their two Lua modules are
+Only the seven registered display/row templates and their two Lua modules are
 publishable outside main/Category namespaces. Lua uses the `Scribunto` content
 model and `text/plain`, never wikitext. Presentation cycles or missing generated
 dependencies are rejected before writes. Display pages do not need selective

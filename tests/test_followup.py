@@ -104,7 +104,7 @@ class FollowupTests(unittest.TestCase):
         carrying = self.pages["Items"].split("== Carrying equipment ==", 1)[1].split("\n== ", 1)[0]
         for identity in self.categories["Carrying equipment"]["members"]:
             self.assertIn(f'id="entity-{identity}"', carrying)
-            self.assertIn(f'[[{self.locations[identity]}|', self.pages["Category:Carrying equipment"])
+            self.assertIn("{{Item|" + self.locations[identity] + "}}", self.pages["Category:Carrying equipment"])
 
     def test_capacity_validation_rejects_ambiguous_or_incomplete_bonus_data(self):
         for mutate in (
@@ -137,7 +137,7 @@ class FollowupTests(unittest.TestCase):
                 self.assertIn("=== " + group["title"] + " ===", self.pages[title])
             for identity in group["members"]:
                 self.assertIn("[[Category:" + group["title"] + "]]", self.pages[self.locations[identity]])
-                self.assertIn("[[" + self.locations[identity] + "|", self.pages["Category:" + group["title"]])
+                self.assertIn("{{Item|" + self.locations[identity] + "}}", self.pages["Category:" + group["title"]])
 
     def test_every_image_uses_original_pixels_and_integer_native_geometry(self):
         entities = {row["id"]: row for row in self.data["entities"]}

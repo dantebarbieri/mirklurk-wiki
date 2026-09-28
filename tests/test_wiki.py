@@ -285,7 +285,7 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 369)
+        self.assertEqual(len(pages), 378)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
@@ -424,7 +424,8 @@ class ResearchTests(unittest.TestCase):
         data = synthetic_data()
         validate_data(data)
         pages = build_pages(ROOT, data)
-        self.assertEqual(set(pages), {*PAGE_FILES, "Source provenance", "NPCs", "Entity synthetic-item", "Category:Items"})
+        from wiki_display import DISPLAY_TITLES
+        self.assertEqual(set(pages), {*PAGE_FILES, *DISPLAY_TITLES, "Source provenance", "NPCs", "Entity synthetic-item", "Category:Items"})
         self.assertNotIn("More researched topics", pages["Main Page"])
         self.assertNotIn("Illustration references", pages["Items"])
 
@@ -440,7 +441,7 @@ class ResearchTests(unittest.TestCase):
         self.assertIn("Not established", pages["Synthetic merchant"])
         self.assertIn("not converted to probabilities", pages["Synthetic merchant"])
         self.assertNotIn("50%", pages["Synthetic merchant"])
-        self.assertIn("[[Entity synthetic-item|", pages["Entity synthetic-item"])
+        self.assertIn("{{Item|Entity synthetic-item|quantity=", pages["Entity synthetic-item"])
         self.assertIn("[[Game mechanics]]", pages["Weather"])
         self.assertIn("[[Source provenance#synthetic|synthetic]]", pages["Source provenance"])
         for title in ("Quests and journal", "Synthetic merchant", "Entity synthetic-item", "Weather"):

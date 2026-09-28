@@ -232,6 +232,11 @@ def write_order(titles, pages):
     order = []
     while pending:
         ready = [title for title in sorted(pending) if not needs[title] & pending]
+        if ready:
+            def tier(title):
+                return 0 if title.startswith("Module:") else 1 if title.startswith("Template:") else 2
+            first = min(tier(title) for title in ready)
+            ready = [title for title in ready if tier(title) == first]
         batch = ready or [min(pending)]
         order.extend(batch)
         pending.difference_update(batch)

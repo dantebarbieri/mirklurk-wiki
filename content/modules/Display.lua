@@ -46,9 +46,46 @@ function p.coins(frame)
     local silver = tonumber(padded:sub(-3, -3))
     local copper = tonumber(padded:sub(-2))
     local icons = assets().coins
+    if not icons.gold or not icons.silver or not icons.copper then
+        return failure('Coins requires approved denomination illustrations.')
+    end
     local parts = {}
     local function add(count, name)
-        parts[#parts + 1] = frame:preprocess(icons[name]) .. ' ' .. count .. ' ' .. name
+        local part = mw.html.create('span'):addClass('mirklurk-coin')
+            :css({display = 'inline-flex', ['align-items'] = 'center', gap = '0.25em',
+                ['vertical-align'] = 'middle'})
+        part:wikitext(frame:preprocess(icons[name]))
+        part:tag('span'):addClass('mirklurk-coin-text'):wikitext(count .. ' ' .. name)
+        parts[#parts + 1] = tostring(part)
+    end
+
+    function p.item(frame)
+        local value = argument(frame)
+        if not value or #value > 160 then
+            return failure('Item requires a registered item page title (at most 160 bytes).')
+        end
+        local title = mw.title.new(value)
+        if not title or title.namespace ~= 0 or title.isExternal or title.fragment ~= '' then
+            return failure('Item requires a main-namespace item page title without a section fragment.')
+        end
+        local markup = assets().items[title.text]
+        if not markup then
+            return failure('Unknown item title. Use a registered item page title; creatures, NPCs and construction actions are not items.')
+        end
+        local quantity = frame.args.quantity or ''
+        if #quantity > 16384 then
+            return failure('Item quantity requires a positive integer of at most 18 digits.')
+        end
+        quantity = mw.text.trim(quantity)
+        if quantity ~= '' and (#quantity > 18 or not quantity:match('^[1-9][0-9]*$')) then
+            return failure('Item quantity requires a positive integer of at most 18 digits.')
+        end
+        local item = mw.html.create('span'):addClass('mirklurk-item')
+            :attr('title', title.text):attr('aria-label', title.text)
+            :css({display = 'inline-flex', ['align-items'] = 'center', gap = '0.25em',
+                ['vertical-align'] = 'middle', ['max-width'] = '100%'})
+            :wikitext(frame:preprocess(markup))
+        return tostring(item) .. (quantity == '' and '' or ' x ' .. quantity)
     end
     if gold ~= '' then add(gold, 'gold') end
     if silver > 0 then add(tostring(silver), 'silver') end
@@ -126,6 +163,9 @@ local function grid(frame, health)
             else
                 local visible, description
                 if health then
+                    if cell.armor > 0 and not assets().shields[cell.armor] then
+                        return failure('Health grid requires an approved shield illustration for each armor level.')
+                    end
                     visible = cell.armor == 0 and '1 HP' or frame:preprocess(assets().shields[cell.armor])
                     description = '1 HP, ' .. cell.armor .. ' armor layers'
                 else

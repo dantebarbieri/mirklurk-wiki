@@ -65,7 +65,7 @@ class AcquisitionTests(unittest.TestCase):
             for label, members, slots in groups:
                 section = self.pages[page].split("=== " + label + " ===\n", 1)[1].split("\n==", 1)[0]
                 for identity in members:
-                    self.assertIn("[[" + locations[identity] + "|", section)
+                    self.assertIn("{{Item|" + locations[identity] + "}}", section)
                 for slot in slots:
                     self.assertIn("[[:Category:" + slot + "|", section)
         anchors = re.findall(r'id="entity-(item-\d+)"', self.pages["Items"])
@@ -105,7 +105,7 @@ class AcquisitionTests(unittest.TestCase):
             self.assertEqual(set(categories[method]["members"]), members)
             section = self.pages["Items"].split("=== " + method + " ===\n", 1)[1].split("\n==", 1)[0]
             for item in members:
-                self.assertIn("[[" + locations[item] + "|", section)
+                self.assertIn("{{Item|" + locations[item] + "}}", section)
                 self.assertIn("[[Category:" + method + "]]", self.pages[locations[item]])
                 for target, _ in routes[item][method]:
                     self.assertIn("[[" + target + "|", section)
@@ -148,11 +148,11 @@ class AcquisitionTests(unittest.TestCase):
         self.assertTrue(any(target.startswith("Story rewards and finds#acquisition-")
                             for target, _ in routes["item-107"]["Other ingredient sources"]))
         pages = build_pages(ROOT, data, catalog, self.details)
-        self.assertIn("[[Flax|", pages["Category:Unverified ingredient sources"])
-        self.assertIn("[[Sapphire|", pages["Category:Other ingredient sources"])
+        self.assertIn("{{Item|Flax}}", pages["Category:Unverified ingredient sources"])
+        self.assertIn("{{Item|Sapphire}}", pages["Category:Other ingredient sources"])
         self.assertNotIn("[[Category:Gatherables]]", pages["Sapphire"])
         self.assertNotIn("[[Category:Creature drops]]", pages["Sapphire"])
-        self.assertIn("[[Flax|", pages["Category:Fibers and fabrics"])
+        self.assertIn("{{Item|Flax}}", pages["Category:Fibers and fabrics"])
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}

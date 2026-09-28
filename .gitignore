@@ -46,6 +46,9 @@
 !/content/templates/Health_grid.wiki
 !/content/templates/Attack_grid.wiki
 !/content/templates/Creature.wiki
+!/content/templates/Item.wiki
+!/content/templates/Recipe_row.wiki
+!/content/templates/Ware_row.wiki
 !/content/modules/
 !/content/modules/Display.lua
 !/tools/
@@ -57,6 +60,7 @@
 !/tools/wiki_views.py
 !/tools/wiki_display.py
 !/tools/smoke_display.py
+!/tools/smoke_browser.py
 !/tools/wiki_acquisition.py
 !/tools/build_wiki.py
 !/tools/sync_wiki.py

@@ -1,11 +1,92 @@
 # Native display templates
 
-These ordinary MediaWiki templates use `Module:Display` (Scribunto Lua). Edit
+These ordinary MediaWiki templates compose rows and use `Module:Display` (Scribunto Lua) for displays. Edit
 their pages normally on the wiki; MediaWiki tracks transclusion dependencies
 and refreshes readers through its job queue, without reseeding. Repository
 copies live in `content/templates/` and `content/modules/`; the publisher
-preserves human edits. No Item, Recipe, Ware, Acquisition or Collapsible
-templates are part of this feature.
+preserves human edits. The seven public templates are Coins, Health grid,
+Attack grid, Creature, Item, Recipe row and Ware row. There is no Merchant
+infobox, central recipe database, Acquisition or Collapsible template.
+
+## Item
+
+`{{Item|Iron Hand Axe}}` displays its reviewed icon and linked item name.
+`{{Item|Plant Fiber|quantity=4}}` adds an exact positive integer quantity
+(1 to 18 digits, no leading zeros); omit quantity for an ordinary list entry.
+Ranges and source-specific quantity conditions stay in their existing cells,
+not a guessed scalar. Use the **canonical page title**, for example
+`{{Item|Turnip (item)}}`, retaining the displayed localized name `Turnip`.
+Source IDs, source prefixes, arbitrary aliases, ambiguous names such as
+`Turnip`, creatures, NPCs and construction actions produce visible errors.
+Spaces, underscores and first-letter normalization follow MediaWiki, as for
+Creature; remaining case is significant.
+
+The generated registry contains 246 items from the existing item classification
+and canonical page map. It explicitly excludes the catalog's **Finish Raft**
+in-place construction action. Known items with missing/unapproved art show their
+linked name without an icon (currently Flax, Linen and Unarmed); no filename,
+subpage, duplicate stats or independent artwork registry is introduced.
+Icons retain the 32px budget and integer-native scaling, even when native art
+exceeds that budget. Icon and name line boxes are centered together; long names
+can wrap, rather than clipping images into a fixed-height row.
+
+The generated Items index, existing authored item category lists, capacity and
+ingredient tables, recipe inputs/outputs, wares, acquisition/loot rows, random
+treasure candidate lists and suitable reverse-reference lists actually use Item.
+Canonical source descriptions, exact ranges, conditions, anchors, groupings and
+native automatic category links are unchanged. Simple narrative/section links
+are still links, not every mention of an item needs an icon.
+
+## Composable rows
+
+These are **presentation**, not new factual owners. Keep the literal
+`onlyinclude` / `#switch` selectors and `station` or `item` filters on the
+owning article, with the row invocation **inside** them. Template arguments do
+not inherit the caller's view/filter parameters. Stable variant anchors are
+passed with `anchors`; merged variants retain all original anchors.
+
+Syntax example (illustrative, not a verified recipe):
+
+```text
+{{Recipe row
+|ingredients={{Item|Plant Fiber|quantity=4}}
+|output={{Item|Rope|quantity=1}}
+|methods=[[Inventory crafting]]
+|ap=2
+|conditions=Use the documented requirements.
+}}
+```
+
+Separate multiple inputs/outputs with `<br />`. `ap` accepts the documented
+base cost, including fractional AP; `cost` preserves other units. Missing
+cost/output/method/conditions say **Not established**, never zero. `output`
+may instead describe an in-place completion. The existing 96 recipe variants
+remain 77 condition-preserving groups plus one construction row.
+Workstations still transclude the output items' filtered recipe rows.
+
+```text
+{{Ware row
+|seller=[[Magus Clay]]
+|item=Iron Hand Axe
+|price=<noinclude>{{:Iron Hand Axe}}</noinclude>
+}}
+```
+
+Ware row calls Item itself. Optional `quantity`, `price`, `currency`, `location`
+and `conditions` add cells in that order, matching the owner's table headers.
+When a column exists but a value is unknown, pass **Not established**; omit a
+field only when its column is absent. Location, story availability and stock
+disclosures shared by a section stay once on the owner, not copied per row.
+
+**Keep the literal price gate on the merchant, not inside Ware row.** On the
+merchant's full page the item transclusion supplies its price, ultimately
+`{{Coins|...}}`. An item's filtered sellers view must omit that column and
+must not transclude the item again. The header uses the matching `noinclude`
+gate. For a genuinely mixed-price table, keep the column and use the existing
+owner-level `includeonly` link to `Item title#price-item-id` for standard rows;
+a vendor-specific exception may supply `{{Coins|1900}}` on its merchant row.
+All 63 offers keep their six merchant owners; all 42 standard price blocks
+stay on items. Shared stock/funds remain on Currency and trading.
 
 ## Creature
 
@@ -43,6 +124,9 @@ denomination icons and accessible coin names. Input is total copper, not silver:
 one gold = 1000 copper; one silver = 100 copper. Zero shows **0 copper**, and
 other zero denominations are omitted. Icons are decorative/nonlinked, as in
 the original price display; item and currency article links remain outside.
+Each denomination is an inline-flex icon/text unit, centered by its line box
+rather than the image baseline. Spaces between denominations allow wrapping;
+there is no fixed-height crop, global image alignment change or raster resize.
 
 Accept 1 to 18 ASCII digits, from 0 through **999999999999999999**, optionally
 surrounded by whitespace. Leading zeros are accepted within the digit limit.
@@ -114,7 +198,7 @@ empty, inverted, unsupported or oversized input renders a visible
 `Display error:` alert, not an empty success-shaped table. User input is not
 reflected into error HTML or arbitrary attributes.
 
-`Module:Display assets` (including the creature lookup) is generated from the existing approved
+`Module:Display assets` (including the item and creature lookups) is generated from the existing approved
 `illustrations.json` metadata using the **same `pixel_image()` formatter** as
 other illustrations. It contains exact escaped markup, not a second image
 registry or Lua sizing policy. Coins use the 20px budget (16px native display);
@@ -146,3 +230,10 @@ All 118 curated grids are checked for value/geometry parity, and disposable
 MediaWiki tests cover parsed markup, limits, propagation and image semantics.
 They also check all 25 creature icon identities and the actual parsed Bestiary
 and faction lists; native category membership remains checked separately.
+All 246 item lookups, authored lists, nested row arguments, exact prices,
+filtered rows and ordinary template-edit propagation are parsed by MediaWiki.
+The disposable browser runner uses actual Vector desktop/mobile pages after
+fonts and images load. It reproduces the old baseline error, measures coin
+and item icon/text centers (at most 0.5 CSS px rounding error), checks native
+16px coins, narrow wrapping and unchanged health cells, and saves synthetic-only
+screenshots plus `geometry.json` in the CI `vector-layout` artifact.

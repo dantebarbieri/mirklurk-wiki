@@ -226,7 +226,8 @@ class LandmarkTests(unittest.TestCase):
                     self.assertNotIn(paragraph, selected.text)
                 self.assertNotIn(self.images[identity]["file_title"], rendered)
                 check_seller_context(
-                    {"templates": [{"*": owner}], "text": {"*": rendered}},
+                    {"templates": [{"*": title} for title in (owner, "Template:Ware row", "Template:Item",
+                                                             "Module:Display", "Module:Display assets")], "text": {"*": rendered}},
                     owner, offer["details"]["item"], selected.text, location_page=owner,
                 )
         historical = {row["details"]["location"] for row in self.data["entries"]
@@ -307,11 +308,12 @@ class LandmarkTests(unittest.TestCase):
     def test_seller_smoke_keeps_filtered_views_leaf_and_checks_stock_rule_references(self):
         stock = "Listed wares do not run out, and merchants have unlimited buying funds."
         reference = '<a href="/index.php?title=Category:Merchants#Trading_rules">Shared trading rules</a>'
-        result = {"templates": [{"*": "Merchant"}], "text": {"*": ""}}
+        result = {"templates": [{"*": title} for title in ("Merchant", "Template:Ware row", "Template:Item",
+                                                         "Module:Display", "Module:Display assets")], "text": {"*": ""}}
         check_seller_context(result, "Merchant", "item-0", "", stock)
         full = dict(result, text={"*": reference})
         check_seller_context(full, "Merchant", None, "Shared trading rules", stock)
-        check_seller_context({"templates": [{"*": "Merchant"}]}, "Merchant", "item-0", "Quantity is not established.")
+        check_seller_context(result, "Merchant", "item-0", "Quantity is not established.")
         for templates in ([], ["Currency and trading"], ["Merchant", "Currency and trading"], ["Merchant", "Item"],
                           ["Merchant", "Currency and trading", "Copper Coin"]):
             with self.assertRaises(RuntimeError):

@@ -1,0 +1,14 @@
+<includeonly><tr><td>{{{anchors|}}}{{{ingredients|No item inputs}}}</td><td>{{{output|Not established}}}</td><td>{{{methods|Not established}}}</td><td>{{#if:{{{ap|}}}|{{{ap}}} base [[Action points|AP]]|{{{cost|Not established}}}}}</td><td>{{{conditions|Not established}}}</td></tr>
+</includeonly><noinclude>
+A presentation row inside an existing recipe table:
+<pre>{{Recipe row
+|ingredients={{Item|Plant Fiber|quantity=4}}
+|output={{Item|Rope|quantity=1}}
+|methods=[[Inventory crafting]]
+|ap=2
+|conditions=Example only; use the documented requirements.
+}}</pre>
+This example illustrates syntax, not a verified recipe. Use nested Item calls separated by <nowiki><br /></nowiki> for multiple ingredients or outputs. Fractional base AP is supported. If a cost has another unit, supply cost instead of ap. Missing values say "Not established"; zero is not unknown. Output may describe an in-place construction instead of inventing an inventory item.
+
+Keep literal onlyinclude/view/station filters and stable anchors on the owning output article. Put the row call inside those filters; this template does not inherit caller parameters or own facts. Workstations continue transcluding filtered rows.
+</noinclude>

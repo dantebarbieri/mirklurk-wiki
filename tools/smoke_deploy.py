@@ -33,7 +33,8 @@ from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
 from wiki_display import page_namespace
-from smoke_display import smoke_display_install, smoke_display_propagation, smoke_display_rendering
+from smoke_display import smoke_display_install, smoke_display_propagation, smoke_display_rendering, smoke_vendor_rows
+from smoke_browser import smoke_browser
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
@@ -60,6 +61,7 @@ class RenderedGrids(HTMLParser):
         self.icon_styles = []
         self.pixel_styles = []
         self.creatures = []
+        self.items = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -87,6 +89,8 @@ class RenderedGrids(HTMLParser):
             self.pixel_styles.append(attrs.get("style", ""))
         if tag == "span" and "mirklurk-creature" in attrs.get("class", "").split():
             self.creatures.append(attrs)
+        if tag == "span" and "mirklurk-item" in attrs.get("class", "").split():
+            self.items.append(attrs)
 
     def handle_endtag(self, tag):
         if tag == "table":
@@ -568,7 +572,7 @@ def check_pool_projection(html, pool, owner, locations, catalog, item=None, pars
             links = [locations[identity]]
             if identity in pool["item_conditions"]:
                 links.append(owner + "#treasure-condition-" + identity)
-            if ([link["target"] for link in row["cells"][0]["links"]] != links
+            if ([link["target"] for link in row["cells"][0]["links"] if link["text"]] != links
                     or row["headers"] != ["Item", "Category"]
                     or row["cells"][1]["text"] != (category or "Item")
                     or [link["target"] for link in row["cells"][1]["links"]] != (["Category:" + category] if category else [])):
@@ -719,7 +723,9 @@ def check_price_cell(cell, value):
 
 def check_seller_context(result, merchant, item, text, stock_text=None, location_page=None):
     if item is not None:
-        if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in text:
+        if {row["*"] for row in result.get("templates", [])} != {
+            merchant, "Template:Ware row", "Template:Item", "Module:Display", "Module:Display assets"
+        } or "Unit price" in text:
             raise RuntimeError("A seller view has missing dependencies or recursively transcluded item prices.")
     if stock_text is not None or location_page is not None:
         parsed = dom(result["text"]["*"], merchant if item is None else "Synthetic seller view")
@@ -888,7 +894,9 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             expected = {row["id"]: row for row in source["rows"] if row["item"] == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys():
                 raise RuntimeError("A fixed acquisition view leaked another item or omitted a documented condition.")
-            if len(parsed.rows) != len(expected) or {row["*"] for row in result.get("templates", [])} != {source["title"]}:
+            if len(parsed.rows) != len(expected) or {row["*"] for row in result.get("templates", [])} != {
+                source["title"], "Template:Item", "Module:Display", "Module:Display assets"
+            }:
                 raise RuntimeError("An acquisition view duplicated rows or included an unexpected owner.")
             if 'id="source-' in rendered or source["summary"] in rendered:
                 raise RuntimeError("An acquisition view leaked the source article.")
@@ -927,10 +935,10 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     for recipe in catalog.get("construction_recipes", []):
         owner = locations[recipe["owner_item"]]
         original = pages[owner]
-        row = next(row for row in re.findall(r"<tr>.*?</tr>", original, re.DOTALL)
+        row = next(row for row in re.findall(r"\{\{Recipe row\n.*?\n\}\}", original, re.DOTALL)
                    if 'id="entry-' + recipe["id"] + '"' in row)
-        before = "<nowiki>" + scalar(recipe["base_ap_cost"]) + "</nowiki> base [[Action points|AP]]"
-        changed = row.replace(before, "<nowiki>991</nowiki> base [[Action points|AP]]", 1)
+        before = "|ap=<nowiki>" + scalar(recipe["base_ap_cost"]) + "</nowiki>"
+        changed = row.replace(before, "|ap=<nowiki>991</nowiki>", 1)
         if changed == row:
             raise RuntimeError("The construction AP edit did not identify its exact cost cell.")
         api({"action": "parse", "page": recipe["station_title"], "prop": "text"})
@@ -956,8 +964,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                  if f'id="entry-{fixture[0]["id"]}"' in block)
     changed = original
     for before, after, expected in (
-        (" x <nowiki>1</nowiki>", " x <nowiki>701</nowiki>", "701"),
-        ("<nowiki>2.4</nowiki> base", "<nowiki>997</nowiki> base", "997"),
+        ("|quantity=1}}", "|quantity=701}}", "701"),
+        ("|ap=<nowiki>2.4</nowiki>", "|ap=<nowiki>997</nowiki>", "997"),
     ):
         replacement = block.replace(before, after, 1)
         if replacement == block:
@@ -997,7 +1005,9 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
                       "prop": "text|templates"}, post=True)["parse"]
         check_parser_errors(result["text"]["*"])
         check_pool_projection(result["text"]["*"], pool, owner, locations, catalog)
-        if {row["*"] for row in result.get("templates", [])} != {owner}:
+        if {row["*"] for row in result.get("templates", [])} != {
+            owner, "Template:Item", "Module:Display", "Module:Display assets"
+        }:
             raise RuntimeError("A pool candidate list introduced a nested dependency.")
         for item in sorted({*pool["eligible_item_ids"], "item-48"}):
             text = "{{:" + owner + "|view=pool|pool=" + pool["id"] + "|item=" + item + "}}"
@@ -1349,6 +1359,8 @@ def smoke():
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
             smoke_display_rendering(api, pages, data, catalog, details, RenderedGrids,
                                     check_parser_errors, check_shield_icon, dom)
+            smoke_browser(api, base, csrf, data, os.environ.get("MIRKLURK_SMOKE_ARTIFACTS", workspace / "browser"))
+            smoke_vendor_rows(api, pages, data, catalog, csrf, dom, check_parser_errors)
             smoke_display_propagation(run, api, pages, csrf, wait_for_server_tick, refreshed_transclusion)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},

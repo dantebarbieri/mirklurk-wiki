@@ -1,0 +1,5 @@
+<includeonly>{{#invoke:Display|item|{{{1|}}}|quantity={{{quantity|}}}}}</includeonly><noinclude>
+Use <nowiki>{{Item|Iron Hand Axe}}</nowiki> or <nowiki>{{Item|Plant Fiber|quantity=4}}</nowiki> for an approved icon and linked item name. Use the canonical page title, including disambiguation such as <nowiki>{{Item|Turnip (item)}}</nowiki>. Spaces, underscores and first-letter normalization follow MediaWiki; entity IDs, guessed names, creatures, NPCs and construction actions are rejected. Quantity is optional and must be a positive integer of at most 18 digits.
+
+Known items without approved art keep their name link without an icon. No filename is guessed. Icons use the shared integer-native pixel-art policy; this template does not copy item statistics, prices or acquisition facts.
+</noinclude>

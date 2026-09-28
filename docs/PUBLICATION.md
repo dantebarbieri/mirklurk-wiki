@@ -67,7 +67,7 @@ introduce a fixture containing a real secret.
 
 The catalog validator's named-file cap is 48 KiB, including the bounded
 recipe-input/source joins used to derive acquisition browsing without another
-stored dataset. `tests/test_catalog.py` retains its 66 KiB cap;
+stored dataset. `tests/test_catalog.py` has a 68 KiB cap, including native item-call assertions;
 `tools/smoke_deploy.py` has a 96 KiB cap for its reader, editor and landmark
 checks; `tools/sync_wiki.py` has a 32 KiB cap and `tests/test_sync.py` 40 KiB.
 No private input, XML, measurement, artwork,
