@@ -70,3 +70,11 @@ the repository, then hand the page back as described in
 
 You must have the right to submit your own contributions. No contribution here
 grants rights to the game's creative content.
+
+## Reusable displays
+
+Use the native `{{Coins|...}}`, `{{Health grid|...}}` and
+`{{Attack grid|...}}` syntax described in [TEMPLATES.md](docs/TEMPLATES.md).
+Keep prices in item-owned views and preserve curated grid geometry; do not
+copy display HTML or prices into readers. Lua/runtime changes require the
+deployment prerequisites in that guide.

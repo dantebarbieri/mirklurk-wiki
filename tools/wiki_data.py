@@ -90,9 +90,10 @@ def _text(value, location, limit=160):
 
 def title_key(title):
     normalized = " ".join(title.replace("_", " ").split())
-    if normalized.lower().startswith("category:"):
-        name = normalized.split(":", 1)[1].strip()
-        return "Category:" + name[:1].upper() + name[1:]
+    prefix, separator, name = normalized.partition(":")
+    if separator and prefix.strip().lower() in {"category", "template", "module"}:
+        name = name.strip()
+        return prefix.strip().capitalize() + ":" + name[:1].upper() + name[1:]
     return normalized[:1].upper() + normalized[1:]
 
 

@@ -9,6 +9,7 @@ from pathlib import Path
 from wiki_catalog import title_key
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
+from wiki_display import NAMESPACES, content_model, page_namespace
 from wiki_render import build_pages, literal, profile_value
 
 
@@ -36,8 +37,10 @@ def existing_titles(path):
         page_namespace = page.findtext(f"{prefix}ns")
         if not title or not title.strip() or page_namespace is None or not page_namespace.isdecimal():
             raise DataError("existing export has an invalid page title or namespace")
-        if page_namespace in {"0", "14"}:
-            if (page_namespace == "14") != title_key(title).startswith("Category:"):
+        if page_namespace in {"0", "10", "14", "828"}:
+            canonical = title_key(title)
+            expected = NAMESPACES.get(canonical.split(":", 1)[0], 0)
+            if int(page_namespace) != expected:
                 raise DataError("existing export has a title/namespace mismatch")
             titles.add(title_key(title))
     return titles
@@ -57,12 +60,12 @@ def build_xml(pages):
     element(siteinfo, "generator", "MirkLurk curated repository seed")
     element(siteinfo, "case", "first-letter")
     namespaces = element(siteinfo, "namespaces")
-    element(namespaces, "namespace", "", key="0", case="first-letter")
-    element(namespaces, "namespace", "Category", key="14", case="first-letter")
+    for name, number in NAMESPACES.items():
+        element(namespaces, "namespace", name, key=str(number), case="first-letter")
     for identifier, title in enumerate(sorted(pages), 1):
         page = element(root, "page")
         element(page, "title", title)
-        element(page, "ns", "14" if title.startswith("Category:") else "0")
+        element(page, "ns", str(page_namespace(title)))
         element(page, "id", str(identifier))
         revision = element(page, "revision")
         element(revision, "id", str(identifier))
@@ -71,8 +74,9 @@ def build_xml(pages):
         element(contributor, "username", "Repository seed")
         element(revision, "comment", "Original repository seed; evidence and rights caveats apply.")
         element(revision, "origin", str(identifier))
-        element(revision, "model", "wikitext")
-        element(revision, "format", "text/x-wiki")
+        model = content_model(title)
+        element(revision, "model", model)
+        element(revision, "format", "text/plain" if model == "Scribunto" else "text/x-wiki")
         element(
             revision, "text", pages[title],
             **{"{http://www.w3.org/XML/1998/namespace}space": "preserve",

@@ -52,6 +52,8 @@ try {
     check(count($wgCdnServersNoPurge) === 2, 'Trusted proxy configuration missing.');
     check(in_array('ConfirmEdit/QuestyCaptcha', $loaded, true), 'CAPTCHA extension not loaded.');
     check(in_array('ParserFunctions', $loaded, true), 'Selective canonical views require ParserFunctions.');
+    check(in_array('Scribunto', $loaded, true), 'Native display templates require Scribunto.');
+    check($wgScribuntoDefaultEngine === 'luastandalone', 'Use the bundled bounded Lua standalone engine.');
 
     foreach (['http://public.example.invalid', 'https://wiki.example.invalid/', 'https://wiki.example.invalid?x=1'] as $url) {
         putenv('MW_SERVER_URL=' . $url);

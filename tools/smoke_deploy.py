@@ -32,6 +32,8 @@ from build_wiki import build_pages, build_xml, title_key
 from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
+from wiki_display import page_namespace
+from smoke_display import smoke_display_install, smoke_display_propagation, smoke_display_rendering
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
@@ -132,7 +134,7 @@ def smoke_category_memberships(api, pages):
             })
             for row in result["query"]["pages"].values():
                 title = title_key(row["title"])
-                namespace = 14 if title.startswith("Category:") else 0
+                namespace = page_namespace(title)
                 if title not in actual or "missing" in row or "invalid" in row or row["ns"] != namespace:
                     raise RuntimeError(f"Category query returned a missing, unexpected or wrong-namespace page: {title}")
                 seen.add(title)
@@ -1286,6 +1288,8 @@ def smoke():
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
             if not any(row["name"] == "ParserFunctions" and row.get("version") for row in extensions):
                 raise RuntimeError("The installed ParserFunctions extension is not loaded.")
+            if not any(row["name"] == "Scribunto" for row in extensions):
+                raise RuntimeError("The installed Scribunto extension is not loaded.")
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -1325,6 +1329,9 @@ def smoke():
             data, catalog, details = load_publication_inputs(ROOT)
             pages = build_pages(ROOT, data, catalog, details)
             image_hashes = smoke_images(run, api, base, data, pages)
+            publisher = Api(base + "/api.php")
+            publisher.login("WikiAdmin", password_file.read_text(encoding="utf-8"))
+            smoke_display_install(publisher, pages)
             # Start from an imported copy, like a live wiki before a release. Pages carry the text an
             # edit would store (no trailing whitespace), so a null-edit refresh stays revision-free.
             # One page also links to a title that does not exist yet, so a later sync must refresh it.
@@ -1333,12 +1340,13 @@ def smoke():
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump",
                 input_bytes=build_xml({title: normalize(text) for title, text in baseline.items()}))
             drain_jobs_bounded(run)
-            publisher = Api(base + "/api.php")
-            publisher.login("WikiAdmin", password_file.read_text(encoding="utf-8"))
             # Only the installer's welcome page differs from the imported release.
             publish(baseline, "baseline", created=[], updated=["Main Page"], skipped=[])
             drain_jobs_bounded(run)
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
+            smoke_display_rendering(api, pages, data, catalog, details, RenderedGrids,
+                                    check_parser_errors, check_shield_icon, dom)
+            smoke_display_propagation(run, api, pages, csrf, wait_for_server_tick, refreshed_transclusion)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},

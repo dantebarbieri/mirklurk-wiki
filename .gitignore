@@ -12,6 +12,7 @@
 !/docs/DEPLOYMENT.md
 !/docs/IMAGES.md
 !/docs/PUBLISHING.md
+!/docs/TEMPLATES.md
 !/content/
 !/content/facts/
 !/content/facts/game.json
@@ -40,6 +41,12 @@
 !/content/pages/Weather.wiki
 !/content/pages/Level_progression.wiki
 !/content/pages/World_seed_logic.wiki
+!/content/templates/
+!/content/templates/Coins.wiki
+!/content/templates/Health_grid.wiki
+!/content/templates/Attack_grid.wiki
+!/content/modules/
+!/content/modules/Display.lua
 !/tools/
 !/tools/check_publication.py
 !/tools/wiki_data.py
@@ -47,6 +54,8 @@
 !/tools/wiki_details.py
 !/tools/wiki_render.py
 !/tools/wiki_views.py
+!/tools/wiki_display.py
+!/tools/smoke_display.py
 !/tools/wiki_acquisition.py
 !/tools/build_wiki.py
 !/tools/sync_wiki.py
@@ -60,6 +69,7 @@
 !/tests/test_followup.py
 !/tests/test_acquisition.py
 !/tests/test_sync.py
+!/tests/test_display.py
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile

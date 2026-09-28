@@ -14,6 +14,7 @@ from wiki_catalog import (
 )
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
+from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
 from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
 
 
@@ -224,22 +225,9 @@ def price_text(price, images=None):
         copper = amount * 100
     if copper != copper.to_integral_value():
         raise DataError("price has sub-copper precision; an explicit display policy is required")
-    remaining = int(copper)
-    parts = []
-    for size, name, identity, file_title in (
-        (1000, "gold", "item-74", "File:Item-74.png"),
-        (100, "silver", "item-73", "File:Item-73.png"),
-        (1, "copper", "item-72", "File:Item-72.png"),
-    ):
-        count, remaining = divmod(remaining, size)
-        if count:
-            picture = ""
-            if images is not None:
-                image = image_for(identity, images)
-                if image is not None:
-                    picture = pixel_image(image, 20, 20, "", name.capitalize() + " coin") + " "
-            parts.append(picture + f"{count} {name}")
-    return " ".join(parts) or "0 copper"
+    if copper > MAX_COPPER:
+        raise DataError(f"price exceeds the Coins limit of {MAX_COPPER} copper")
+    return "{{Coins|" + str(int(copper)) + "}}"
 
 
 def recipe_profile_values(profile, recipes, constructions=()):
@@ -397,41 +385,9 @@ def cell_grid(grid, entity_category, images=()):
     health = grid["kind"] == "health"
     label = "Base health" if health else ("Ranged attack" if grid["kind"] == "ranged" else (
         "Melee attack" if entity_category == "being" else "Attack pattern"))
-    rows = grid["rows"]
-    occupied = [cell for row in rows for cell in row if cell is not None]
-    caption = f"{label}: {len(rows)} rows x {len(rows[0])} columns"
     text = "\n" + anchor("grid", grid["id"]) + f"\n== {label} ==\n"
-    text += '<div style="overflow-x:auto;">\n<table class="mirklurk-cell-grid" style="border-collapse:separate;border-spacing:3px;text-align:center;">\n'
-    text += "<caption>" + caption + "</caption>\n"
-    for y, row in enumerate(rows, 1):
-        text += "<tr>\n"
-        for x, cell in enumerate(row, 1):
-            position = f"Row {y}, column {x}: "
-            if cell is None:
-                text += f'<td class="grid-hole" aria-label="{position}empty" style="min-width:3em;height:3em;background:transparent;"></td>\n'
-                continue
-            if health:
-                visible = health_armor_icon(cell["armor"], images) if cell["armor"] else "1 HP"
-                description = f'1 HP, {cell["armor"]} armor layers'
-                color = "#852c36"
-            else:
-                visible = str(cell["min"]) if cell["min"] == cell["max"] else f'{cell["min"]}-{cell["max"]}'
-                description = visible + " damage"
-                color = "#852c36"
-            title = f'title="{position}{description}" ' if health and cell["armor"] else ""
-            text += (f'<td class="grid-cell" aria-label="{position}{description}" {title}'
-                     f'style="min-width:3em;height:3em;padding:0.25em;border:2px solid #caa098;background:{color};color:#fff;font-weight:bold;">'
-                     + visible + "</td>\n")
-        text += "</tr>\n"
-    text += "</table>\n</div>\n"
-    if health:
-        text += f"{len(occupied)} occupied health cells. [[Health and armor|Reading base health, armor layers, and holes]].\n"
-    else:
-        low, high = (sum(cell[bound] for cell in occupied) for bound in ("min", "max"))
-        text += f"Sum of occupied-cell ranges: {low} to {high}. This is not maximum actual damage: target overlap, armor and modifiers affect the result. "
-        text += "Blank spaces do not strike; a 0-1 cell is occupied and can roll zero damage.\n"
-        text += "[[Health and armor|How pattern overlap, rotation, and armor work]].\n"
-    return text
+    template = "Health grid" if health else "Attack grid"
+    return text + "{{" + template + "|" + grid_argument(grid) + ("" if health else "|label=" + label) + "}}\n"
 
 
 def recipe_groups(entries):
@@ -1597,5 +1553,14 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Category:" + category] = text
         if category == row["index"]:
             pages[row["index"]] += f'\n[[:Category:{category}|Browse the category hierarchy]]\n'
+    if any("{{Coins|" in text or "{{Health grid|" in text or "{{Attack grid|" in text for text in pages.values()):
+        coin_icons = {}
+        for name, identity in (("copper", "item-72"), ("silver", "item-73"), ("gold", "item-74")):
+            image = image_for(identity, images)
+            if image is None:
+                raise DataError(f"Coins: an approved {name} coin illustration is required")
+            coin_icons[name] = pixel_image(image, 20, 20, "", name.capitalize() + " coin")
+        pages.update(display_pages(root, coin_icons, {armor: health_armor_icon(armor, images) for armor in HEALTH_ARMOR_ICONS}))
     validate_transclusions(pages)
+    validate_display_dependencies(pages)
     return pages

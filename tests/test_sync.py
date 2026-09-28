@@ -19,6 +19,7 @@ from sync_wiki import (
     stamp, sync, write_order,
 )
 from wiki_details import load_publication_inputs
+from wiki_display import content_model, page_namespace
 from wiki_render import build_pages
 from wiki_views import selective_view
 
@@ -47,6 +48,8 @@ class FakeWiki:
         self.username = None
         self.token = None
         self.touches = []
+        self.models = {}
+        self.runtime = True
         for title, (text, user, comment) in (pages or {}).items():
             self.store(title, text, user, comment)
 
@@ -69,12 +72,23 @@ class FakeWiki:
 
     def call(self, params, post=False, retry=True):
         self.calls.append(dict(params))
+        if params["action"] == "query" and params.get("meta") == "siteinfo":
+            return {"query": {
+                "extensions": [{"name": "ParserFunctions"}, *([{"name": "Scribunto"}] if self.runtime else [])],
+                "namespaces": {str(number): {"id": number, "canonical": name, "case": "first-letter"}
+                               for number, name in ((10, "Template"), (828, "Module"))},
+            }}
+        if params["action"] == "paraminfo":
+            return {"paraminfo": {"modules": [{"parameters": [
+                {"name": "contentmodel", "type": ["wikitext", "Scribunto"]}]}]}}
+        if params["action"] == "scribunto-console":
+            return {"type": "normal", "print": "mirklurk-display-runtime-ok\n"}
         if params["action"] == "query" and "revisions" in params.get("prop", ""):
             titles = params["titles"].split("|")
             assert len(titles) <= sync_wiki.BATCH
             pages = []
             for title in titles:
-                namespace = 14 if title.startswith("Category:") else 0
+                namespace = page_namespace(title)
                 if title not in self.revisions:
                     pages.append({"ns": namespace, "title": title, "missing": True})
                     continue
@@ -82,7 +96,7 @@ class FakeWiki:
                 pages.append({"ns": namespace, "title": title, "revisions": [{
                     "revid": revision["revid"], "user": revision["user"], "comment": revision["comment"],
                     "timestamp": revision["timestamp"],
-                    "slots": {"main": {"contentmodel": "wikitext", "content": revision["text"]}},
+                    "slots": {"main": {"contentmodel": self.models.get(title, content_model(title)), "content": revision["text"]}},
                 }]})
             return {"query": {"pages": pages}}
         if params["action"] == "query" and params.get("list") == "users":
@@ -564,10 +578,10 @@ class RealCorpusTests(unittest.TestCase):
     def setUpClass(cls):
         cls.pages = build_pages(ROOT, *load_publication_inputs(ROOT))
 
-    def test_generated_titles_are_normalized_main_or_category_pages(self):
+    def test_generated_titles_are_normalized_registered_pages(self):
         for title in self.pages:
             self.assertEqual(sync_wiki.title_key(title), title)
-            self.assertTrue(":" not in title.split(" (")[0] or title.startswith("Category:"), title)
+            self.assertIn(page_namespace(title), {0, 10, 14, 828})
 
     def test_a_fresh_wiki_gets_every_page_without_blocking(self):
         report = sync(FakeWiki(), self.pages, "repo-sync: 1", log=lambda _: None)
