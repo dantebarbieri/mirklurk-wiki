@@ -65,6 +65,7 @@ class Api:
         self.opener = opener or urllib.request.build_opener(
             urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
         self.username = None
+        self.rights = set()
         self.token = None
 
     def call(self, params, post=False, retry=True):
@@ -99,9 +100,9 @@ class Api:
             raise SyncError(f"MediaWiki rejected the login for {username} ({outcome.get('result', 'unknown')}).")
         self.username = outcome["lgusername"]
         self.token = None
-        rights = set(self.call({"action": "query", "meta": "userinfo", "uiprop": "rights"})
-                     ["query"]["userinfo"].get("rights", []))
-        missing = {"edit", "createpage"} - rights
+        self.rights = set(self.call({"action": "query", "meta": "userinfo", "uiprop": "rights"})
+                          ["query"]["userinfo"].get("rights", []))
+        missing = {"edit", "createpage"} - self.rights
         if missing:
             raise SyncError(f"{self.username} lacks {', '.join(sorted(missing))}; check the bot password grants.")
         return self.username
@@ -131,7 +132,7 @@ def fetch_live(api, titles):
     for start in range(0, len(ordered), BATCH):
         batch = ordered[start:start + BATCH]
         query = api.call({
-            "action": "query", "prop": "revisions", "rvprop": "ids|timestamp|user|comment|content",
+            "action": "query", "prop": "revisions|info", "rvprop": "ids|timestamp|user|comment|content",
             "rvslots": "main", "titles": "|".join(batch),
         }, post=True).get("query", {})
         aliases = {row["to"]: row["from"] for row in query.get("normalized", [])}
@@ -149,12 +150,25 @@ def fetch_live(api, titles):
             readable = not slot.get("texthidden") and slot.get("contentmodel", "wikitext") == "wikitext"
             live[title] = {
                 "revid": revision["revid"], "timestamp": revision.get("timestamp", ""),
+                "touched": page.get("touched", ""),
                 "user": revision.get("user"), "comment": revision.get("comment", ""),
                 "text": slot.get("content") if readable else None,
             }
         if set(batch) - live.keys():
             raise SyncError("The wiki omitted requested pages: " + ", ".join(sorted(set(batch) - live.keys())))
     return live
+
+
+def bot_accounts(api, live):
+    """Latest editors who belong to MediaWiki's bot group (only bureaucrats can grant it)."""
+    users = sorted({row["user"] for row in live.values() if row and row.get("user")
+                    and row["user"] not in SYSTEM_USERS and not row["user"].startswith("imported>")})
+    bots = set()
+    for start in range(0, len(users), BATCH):
+        query = api.call({"action": "query", "list": "users", "usprop": "groups",
+                          "ususers": "|".join(users[start:start + BATCH])}, post=True).get("query", {})
+        bots.update(row["name"] for row in query.get("users", []) if "bot" in row.get("groups", []))
+    return bots
 
 
 def plan_changes(pages, live, accounts, adopt=()):
@@ -199,14 +213,24 @@ def write_order(titles, pages):
     return order
 
 
-def stale_renderings(texts, written, created):
-    """Pages parsed before an owner they include changed, or before a page they link to existed."""
+def stale_renderings(texts, written, created, live=None):
+    """Pages whose cached rendering may predate an owner they include or a page they link to.
+
+    Within a run the write order decides. Across runs, an included owner revised after
+    the page was last re-rendered (MediaWiki's page_touched) does, so an interrupted
+    publish is repaired by the next one.
+    """
+    live = live or {}
     position = {title: index for index, title in enumerate(written)}
     stale = []
     for title, text in sorted(texts.items()):
         mine = position.get(title, -1)
-        targets = (owners(text) & position.keys()) | (links(text) & created)
-        if any(position[target] > mine for target in targets - {title}):
+        included = owners(text) - {title}
+        targets = (included & position.keys()) | ((links(text) & created) - {title})
+        late = any(position[target] > mine for target in targets)
+        touched = (live.get(title) or {}).get("touched")
+        outdated = bool(touched) and any((live.get(owner) or {}).get("timestamp", "") > touched for owner in included)
+        if late or outdated:
             stale.append(title)
     return stale
 
@@ -235,6 +259,13 @@ def save(api, title, text, current, summary):
     outcome = edit(api, params)
     if outcome.get("result") != "Success":
         raise ApiError(str(outcome.get("result", "failure")).lower(), "MediaWiki did not accept the edit")
+    if current is not None and outcome.get("oldrevid") not in (None, current["revid"]):
+        # Someone saved in between and MediaWiki merged both edits. Put their revision back,
+        # without the repo-sync marker, so later runs keep skipping the page.
+        edit(api, {"action": "edit", "title": title, "undo": str(outcome["newrevid"]),
+                   "undoafter": str(outcome["oldrevid"]), "nocreate": "1",
+                   "summary": "Restore an edit saved during a sync; merge the generated text by hand"})
+        raise ApiError("editconflict", "saved by someone else during the sync; their revision was restored")
     return outcome.get("newrevid") or (current or {}).get("revid")
 
 
@@ -264,6 +295,7 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
         raise SyncError("Only generated pages can be adopted: " + ", ".join(sorted(adopt - pages.keys())))
     accounts = {*DEFAULT_ACCOUNTS, *accounts, *([api.username] if api.username else [])}
     live = fetch_live(api, pages)
+    accounts |= bot_accounts(api, live)
     actions = plan_changes(pages, live, accounts, adopt)
     report = {
         "mode": "apply" if apply else "dry-run", "summary": summary,
@@ -273,39 +305,38 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
         "update": [title for title, action in actions.items() if action == "update"],
         "skipped": [{"title": title, "user": live[title]["user"], "timestamp": live[title]["timestamp"],
                      "revid": live[title]["revid"]} for title, action in actions.items() if action == "skip"],
-        "created": [], "updated": [], "conflicts": [], "errors": [], "refreshed": [], "unverified": [],
+        "created": [], "updated": [], "conflicts": [], "errors": [], "refresh": [], "refreshed": [],
+        "unverified": [],
     }
-    if apply:
-        written, created = [], set()
-        for title in write_order(report["create"] + report["update"], pages):
-            try:
-                revid = save(api, title, pages[title], live[title], summary)
-            except ApiError as error:
-                if error.code == "readonly":
-                    raise SyncError(f"The wiki is read-only ({error}); nothing further was written.") from None
-                bucket = "conflicts" if error.code in CONFLICTS else "errors"
-                report[bucket].append({"title": title, "error": str(error)})
-                log(f"{bucket[:-1]}: {title}: {error}")
-                continue
-            live[title] = {"revid": revid, "user": api.username, "comment": summary, "text": pages[title]}
-            written.append(title)
-            created.update([title] if actions[title] == "create" else [])
-            report["created" if actions[title] == "create" else "updated"].append(title)
-            log(f"{actions[title]}d: {title}")
-        texts = {title: pages[title] if title in written or actions[title] == "unchanged" else current["text"]
-                 for title, current in live.items() if current is not None and current["text"] is not None}
-        for title in stale_renderings(texts, written, created):
-            # A null edit re-renders the page; pages people edited are left to MediaWiki's job queue.
-            if title in written or automation_owned(live[title], accounts):
-                try:
-                    edit(api, {"action": "edit", "title": title, "appendtext": "", "nocreate": "1", "summary": summary})
-                    report["refreshed"].append(title)
-                except ApiError as error:
-                    report["errors"].append({"title": title, "error": f"refresh failed: {error}"})
-        if written:
-            after = fetch_live(api, written)
-            report["unverified"] = [title for title in written if after[title] is None or after[title]["text"] is None
-                                    or normalize(after[title]["text"]) != normalize(pages[title])]
+    written, created = [], set()
+    for title in write_order(report["create"] + report["update"], pages) if apply else []:
+        try:
+            save(api, title, pages[title], live[title], summary)
+        except ApiError as error:
+            if error.code == "readonly":
+                raise SyncError(f"The wiki is read-only ({error}); nothing further was written.") from None
+            bucket = "conflicts" if error.code in CONFLICTS else "errors"
+            report[bucket].append({"title": title, "error": str(error)})
+            log(f"{bucket[:-1]}: {title}: {error}")
+            continue
+        written.append(title)
+        created.update([title] if actions[title] == "create" else [])
+        report["created" if actions[title] == "create" else "updated"].append(title)
+        log(f"{actions[title]}d: {title}")
+    current = fetch_live(api, pages) if written else live
+    texts = {title: row["text"] for title, row in current.items() if row and row["text"] is not None}
+    # Pages people edited last are left to MediaWiki's job queue.
+    report["refresh"] = [title for title in stale_renderings(texts, written, created, current)
+                         if title in written or automation_owned(current[title], accounts)]
+    for title in report["refresh"] if apply else []:
+        try:
+            # A null edit re-renders the page without creating a revision.
+            edit(api, {"action": "edit", "title": title, "appendtext": "", "nocreate": "1", "summary": summary})
+            report["refreshed"].append(title)
+        except ApiError as error:
+            report["errors"].append({"title": title, "error": f"refresh failed: {error}"})
+    report["unverified"] = [title for title in written if current[title] is None or current[title]["text"] is None
+                            or normalize(current[title]["text"]) != normalize(pages[title])]
     report["missing_files"] = missing_files(api, pages)
     return report
 
@@ -318,7 +349,9 @@ def markdown(report, api_url):
         "| Create | Update | Unchanged | Skipped (edited by a person) |", "| --- | --- | --- | --- |",
         f"| {counts['create']} | {counts['update']} | {counts['unchanged']} | {counts['skip']} |", "",
     ]
-    if not dry:
+    if dry:
+        lines += [f"{len(report['refresh'])} dependent pages would be re-rendered.", ""]
+    else:
         lines += [f"Created {len(report['created'])}, updated {len(report['updated'])}, "
                   f"refreshed {len(report['refreshed'])} dependent pages.", ""]
     sections = (
@@ -378,6 +411,9 @@ def main(argv=None):
         api = Api(args.api)
         if args.apply:
             print(f"Logged in as {api.login(username, password)}.", flush=True)
+            if "noratelimit" not in api.rights:
+                print("Warning: this account is limited to about ten edits a minute; "
+                      "see the bot account setup in docs/PUBLISHING.md.", flush=True)
         report = sync(api, pages, summary, accounts, apply=args.apply, adopt=adopt)
     except (SyncError, OSError, ValueError) as error:
         print(f"Wiki sync failed: {error}", file=sys.stderr)

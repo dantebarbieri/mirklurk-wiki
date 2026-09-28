@@ -29,7 +29,7 @@ from fractions import Fraction
 from pathlib import Path
 
 from build_wiki import build_pages, build_xml, title_key
-from sync_wiki import Api, sync
+from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
 from wiki_render import display_entry, image_for, literal, recipe_groups
@@ -1337,8 +1337,8 @@ def smoke():
             })
             wait_for_server_tick(api)
             report = publish(release, "release", created=[target], updated=[price_title], skipped=[])
-            if not sellers | {"Weather"} <= set(report["refreshed"]):
-                raise RuntimeError("The sync did not refresh the pages that depend on what it changed.")
+            if "Weather" not in report["refreshed"]:
+                raise RuntimeError("The sync did not re-render a page linking to the title it created.")
             for seller in sellers:
                 rendered = api({"action": "parse", "page": seller, "prop": "text"})["parse"]["text"]["*"]
                 check_parser_errors(rendered)
@@ -1402,8 +1402,13 @@ def smoke():
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("An ordinary self-registered editor cannot save a page.")
-            publish(baseline, "after editors", created=[], updated=[], refreshed=[],
-                    skipped=[price_title, coin_title, "Game mechanics"])
+            edited = sorted(title for title, revision in fetch_live(publisher, baseline).items()
+                            if revision and revision["user"] == "TestEditor"
+                            and normalize(revision["text"]) != normalize(baseline[title]))
+            if not {price_title, coin_title, "Game mechanics"} <= set(edited):
+                raise RuntimeError(f"The editor fixtures did not leave the expected pages changed: {edited}")
+            drain_jobs_bounded(run)
+            publish(baseline, "after editors", created=[], updated=[], skipped=edited)
             parsed = api({"action": "parse", "page": "Game mechanics", "prop": "wikitext"})
             if parsed["parse"]["wikitext"]["*"] != preserved:
                 raise RuntimeError("The sync changed a person's edit.")

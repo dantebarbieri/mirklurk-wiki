@@ -35,17 +35,19 @@ request) and then:
 The *publishing automation* is a revision whose summary starts with
 `repo-sync:` (this tool) or with one of the earlier publication summaries
 (`native-publication/v1:`, `Publish reviewed `, `Original repository seed`),
-saved by `WikiAdmin` or the bot account. MediaWiki's own `MediaWiki default`,
-`Maintenance script` and `imported>` identities also count, because nobody can
-log in as them.
+saved by `WikiAdmin`, the account the sync logs in as, or any member of the
+`bot` group. MediaWiki's own `MediaWiki default`, `Maintenance script` and
+`imported>` identities also count, because nobody can log in as them.
 
 Writes follow the transclusion graph: a page whose views others include is
 saved before the pages that include it. Merchants and items include views of
 each other, so a few pages are necessarily saved before an owner. After
 writing, the sync re-renders (with a null edit) every automation-owned page
-whose output could be stale: pages that include an updated page, or link to a
-newly created one. Readers therefore see the new content immediately, without
-waiting for MediaWiki's job queue. Pages people edited are left to the queue.
+whose output could be stale: pages that include a page saved after them or
+revised since they were last rendered, and pages linking to a newly created
+page. Readers therefore see the new content immediately, without waiting for
+MediaWiki's job queue, and an interrupted publish is repaired by the next run.
+Pages people edited are left to the queue.
 
 Finally it re-reads every page it saved and fails the run if the stored text
 differs from the generated text, which catches wikitext that MediaWiki's
@@ -56,8 +58,10 @@ The sync never deletes, moves or renames pages and never uploads files. A page
 dropped from the generator stays on the wiki until someone removes it.
 
 `baserevid` turns a person's save in the seconds between the read and the
-write into an edit conflict, reported as such. MediaWiki can merge
-non-overlapping changes instead; the final text check then flags the page.
+write into an edit conflict. MediaWiki can instead merge non-overlapping
+changes; the sync notices that the page changed underneath it, undoes its own
+revision so the person's text is current again, and reports a conflict.
+Either way the page is then skipped like any other person edit.
 
 ## When a person edits a generated page
 
@@ -96,14 +100,17 @@ No freeze is needed for publishing. For other maintenance, the deployment's
 The publish job does nothing (and says so) until these exist.
 
 1. **Bot account.** Signed in as `WikiAdmin`, create an account such as
-   `MirkLurkBot` and add it to the `bot` group at `Special:UserRights`.
-   Bot membership exempts its edits from the link CAPTCHA and, with the
-   high-volume grant below, flags them as bot edits.
+   `MirkLurkBot` and add it to the `bot` and `administrator` groups at
+   `Special:UserRights`. Bot membership exempts its edits from the link
+   CAPTCHA and flags them as bot edits; only administrators are exempt from
+   the wiki's limit of ten edits a minute. The bot password below still limits
+   the automation to editing.
 2. **Bot password.** Signed in as that account, open `Special:BotPasswords`,
    create `repo-sync` and grant **High-volume (bot) access**, **Edit existing
    pages** and **Create, edit, and move pages**. Keep the generated password in
-   a password manager. Without the high-volume grant the sync still works but
-   waits out edit rate limits.
+   a password manager. Without the administrator group or the high-volume
+   grant the sync still works, but it warns and waits out the rate limit,
+   which can take longer than the job allows for a large release.
 3. **GitHub configuration** for this repository:
 
    ```sh
