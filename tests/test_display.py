@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from build_wiki import EXPORT_NS, build_xml, existing_titles
 from sync_wiki import SyncError, fetch_live, stale_renderings, sync, write_order
 from test_sync import FakeWiki, edits, logged_in, ours
-from wiki_data import DataError, _title, title_key
+from wiki_data import DataError, _title, read_authored, title_key
 from wiki_details import load_publication_inputs
 from wiki_display import (
     ASSETS_TITLE, DISPLAY_FILES, DISPLAY_TITLES, MAX_COPPER, content_model, dependencies,
@@ -51,6 +51,18 @@ class DisplayTests(unittest.TestCase):
                                                "category: armor": "Category:Armor"}[title])
             with self.assertRaises(DataError):
                 _title(title)
+
+    def test_native_authored_files_use_the_same_strict_reader_as_articles(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            path = root / "content" / "modules" / "Display.lua"
+            path.parent.mkdir(parents=True)
+            for data in (b"a" * (16 * 1024 + 1), b"\xff", b"return {}\x01"):
+                path.write_bytes(data)
+                with self.assertRaises(DataError):
+                    read_authored(root, "Module:Display", "modules/Display.lua", directory="", limit=16 * 1024)
+            path.write_bytes(b"return {}\r\n")
+            self.assertEqual(read_authored(root, "Module:Display", "modules/Display.lua", directory=""), "return {}\n")
 
     def test_assets_reuse_exact_reviewed_image_policy_and_escaping(self):
         assets = self.pages[ASSETS_TITLE]

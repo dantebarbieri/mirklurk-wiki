@@ -172,6 +172,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
 
 def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
     # Ordinary edits, no imports or reseeding; each dependency layer must invalidate readers.
+    owner_anchor = re.search(r'id="entity-[^"]+"', pages["Survivor's Field Kit"]).group()
     examples = (
         ("Template:Coins", pages["Template:Coins"].replace("<includeonly>", "<includeonly>native-template-marker ", 1), "native-template-marker"),
         ("Module:Display", pages["Module:Display"].replace("return table.concat(parts, ' ')", "return 'native-module-marker ' .. table.concat(parts, ' ')"), "native-module-marker"),
@@ -186,10 +187,10 @@ def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
                       "summary": "Disposable ordinary display edit"}, post=True)
         if result.get("edit", {}).get("result") != "Success":
             raise RuntimeError("An ordinary display edit was rejected.")
-        refreshed(run, api, "Gurb-Gurb", marker, 'id="entity-item-220"', owner)
+        refreshed(run, api, "Gurb-Gurb", marker, owner_anchor, owner)
         wait_tick(api)
         api({"action": "edit", "title": owner, "text": pages[owner], "token": token,
              "summary": "Restore disposable display fixture"}, post=True)
-        rendered = refreshed(run, api, "Gurb-Gurb", "2 gold", 'id="entity-item-220"', owner)
+        rendered = refreshed(run, api, "Gurb-Gurb", "2 gold", owner_anchor, owner)
         if marker in rendered:
             raise RuntimeError("Restoring a display owner did not invalidate the cached reader.")

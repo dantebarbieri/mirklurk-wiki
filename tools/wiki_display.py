@@ -2,7 +2,7 @@
 
 import re
 
-from wiki_data import DataError, title_key
+from wiki_data import DataError, read_authored, title_key
 
 
 DISPLAY_FILES = {
@@ -96,7 +96,8 @@ def lua_string(text):
 
 
 def display_pages(root, coin_icons, shield_icons):
-    pages = {title: (root / "content" / filename).read_text(encoding="utf-8")
+    pages = {title: read_authored(root, title, filename, directory="",
+                                 limit=16 * 1024 if title.startswith("Module:") else 4 * 1024)
              for title, filename in DISPLAY_FILES.items()}
     pages[ASSETS_TITLE] = (
         "-- Generated from approved illustrations metadata by the shared pixel_image formatter.\n"

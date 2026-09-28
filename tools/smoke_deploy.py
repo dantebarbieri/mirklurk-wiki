@@ -1448,13 +1448,25 @@ def smoke():
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("An ordinary self-registered editor cannot save a page.")
-            edited = sorted(title for title, revision in fetch_live(publisher, baseline).items()
+            for title, suffix in (
+                ("Template:Health grid", "\n<noinclude>Ordinary editor display documentation.</noinclude>"),
+                ("Module:Display", "\n-- Ordinary editor display implementation note."),
+            ):
+                result = api({"action": "edit", "title": title, "text": pages[title] + suffix,
+                              "token": csrf, "summary": "Ordinary editor display change"}, post=True)
+                if result.get("edit", {}).get("result") != "Success":
+                    raise RuntimeError(f"An ordinary editor could not change {title}.")
+            before_sync = fetch_live(publisher, baseline)
+            edited = sorted(title for title, revision in before_sync.items()
                             if revision and revision["user"] == "TestEditor"
                             and normalize(revision["text"]) != normalize(baseline[title]))
-            if not {price_title, coin_title, "Game mechanics"} <= set(edited):
+            if not {price_title, coin_title, "Game mechanics", "Template:Health grid", "Module:Display"} <= set(edited):
                 raise RuntimeError(f"The editor fixtures did not leave the expected pages changed: {edited}")
             drain_jobs_bounded(run)
             publish(baseline, "after editors", created=[], updated=[], skipped=edited)
+            after_sync = fetch_live(publisher, edited)
+            if any(after_sync[title] != before_sync[title] for title in edited):
+                raise RuntimeError("Publication changed a human-edited article, template or Lua module.")
             parsed = api({"action": "parse", "page": "Game mechanics", "prop": "wikitext"})
             if parsed["parse"]["wikitext"]["*"] != preserved:
                 raise RuntimeError("The sync changed a person's edit.")

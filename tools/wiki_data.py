@@ -64,6 +64,22 @@ class DataError(ValueError):
     """A curated input cannot be published."""
 
 
+def read_authored(root, title, filename, directory="pages", limit=32 * 1024):
+    path = Path(root) / "content" / directory / filename
+    if path.is_symlink():
+        raise DataError(f"authored page {title}: symlinks are not permitted")
+    raw = path.read_bytes()
+    if len(raw) > limit:
+        raise DataError(f"authored page {title}: exceeds its size limit")
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise DataError(f"authored page {title}: must be UTF-8") from error
+    if any((ord(c) < 32 and c not in "\r\n\t") or 127 <= ord(c) <= 159 for c in text):
+        raise DataError(f"authored page {title}: control characters are not permitted")
+    return text.replace("\r\n", "\n").replace("\r", "\n").rstrip() + "\n"
+
+
 def _object(value, required, optional, location):
     if not isinstance(value, dict):
         raise DataError(f"{location}: expected an object")

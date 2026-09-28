@@ -6,13 +6,12 @@ import re
 from collections import defaultdict
 from decimal import Decimal, localcontext
 from fractions import Fraction
-from pathlib import Path
 
 from wiki_catalog import (
     CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
-from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
 from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
@@ -935,22 +934,6 @@ def currency_page(currency, entities, locations):
         if qualification and rule["id"] != "coin-weight-units":
             text += "\n" + literal(qualification) + "\n"
     return text
-
-
-def read_authored(root, title, filename):
-    path = Path(root) / "content" / "pages" / filename
-    if path.is_symlink():
-        raise DataError(f"authored page {title}: symlinks are not permitted")
-    raw = path.read_bytes()
-    if len(raw) > 32 * 1024:
-        raise DataError(f"authored page {title}: exceeds its size limit")
-    try:
-        text = raw.decode("utf-8")
-    except UnicodeDecodeError as error:
-        raise DataError(f"authored page {title}: must be UTF-8") from error
-    if any((ord(c) < 32 and c not in "\r\n\t") or 127 <= ord(c) <= 159 for c in text):
-        raise DataError(f"authored page {title}: control characters are not permitted")
-    return text.replace("\r\n", "\n").replace("\r", "\n").rstrip() + "\n"
 
 
 def build_pages(root, data, catalog=None, details=None):
