@@ -17,10 +17,11 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from smoke_deploy import LANDMARK_IMAGES, check_seller_context, dom, smoke_npc_locations, smoke_reader_release, synthetic_image_specs
 from test_views import expand_selective_view
-from wiki_catalog import category_definitions, page_locations, validate_catalog
+from wiki_catalog import category_definitions, default_catalog, page_locations, validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs, parse_illustrations
 from wiki_render import build_pages, display_entry, icon, image_for
+from test_wiki import synthetic_data
 
 
 LANDMARKS = {
@@ -122,7 +123,7 @@ class LandmarkTests(unittest.TestCase):
                 }, evidence)
 
     def test_world_generation_distinguishes_initial_layout_from_entry_time_placement(self):
-        page = self.pages["World seed logic"]
+        page = self.pages["World generation"]
         for phrase in (
             "column A or E, in any row from 1 to 5",
             "always the reflection of Fort Solid",
@@ -143,18 +144,47 @@ class LandmarkTests(unittest.TestCase):
             self.assertNotIn(phrase, page)
         for title in ("Ranger Bhato", "Gurb-Gurb", "Ihar"):
             self.assertIn(f"[[{title}#Location_and_access|", page)
-            self.assertIn("[[World seed logic#entry-world-seed-boundaries|", self.pages[title])
+            self.assertIn("[[World generation#entry-world-seed-boundaries|", self.pages[title])
         for identity in ("world-grid-width", "area-seed-ceiling", "area-cell-size"):
             self.assertIn(f'id="fact-{identity}"', page)
         original = next(row for row in self.data["entries"] if row["id"] == "world-seed-boundaries")
         self.assertEqual(original["confidence"], "inferred")
         shown = display_entry(original, self.catalog)
         self.assertEqual(shown["confidence"], "observed")
-        self.assertIn("World layout and exploration order", page)
+        self.assertIn("How areas are generated", page)
         self.assertIn("== Editorial entry evidence ==", self.pages["Source provenance"])
         for reference in shown["evidence"]:
             self.assertIn(reference["key"], self.pages["Source provenance"])
             self.assertNotIn(reference["section"], page)
+
+    def test_world_guide_navigation_redirect_and_ownership(self):
+        page = self.pages["World generation"]
+        self.assertEqual(self.pages["World seed logic"], "#REDIRECT [[World generation]]\n")
+        for title in ("Main Page", "Game mechanics"):
+            self.assertIn("[[World generation]]", self.pages[title])
+            self.assertNotIn("[[World seed logic", self.pages[title])
+        for title in ("NPCs", "Merchants"):
+            self.assertIn("[[World generation#Finding_NPCs|", self.pages[title])
+        for heading in ("Fort Solid", "Scaal's lair", "The Library", "Guaranteed fen biomes",
+                        "Finding NPCs", "Exploration, revisits and saves", "World seeds"):
+            self.assertIn(f" {heading} ==", page)
+        self.assertIn("[[Scaal]]", page)
+        self.assertNotIn("{{Creature|Ranger Bhato", page)
+        for identity in ("world-grid-width", "area-seed-ceiling", "area-cell-size"):
+            self.assertEqual(page.count(f'id="fact-{identity}"'), 1)
+            self.assertIn(f"[[World generation#fact-{identity}|", self.pages["Source provenance"])
+        for identity in LANDMARKS:
+            location = next(row["location"] for row in self.catalog["classifications"] if row["entity"] == identity)
+            for paragraph in location["paragraphs"]:
+                self.assertNotIn(paragraph, page)
+
+    def test_world_topic_titles_cannot_be_shadowed_by_entity_aliases(self):
+        data = synthetic_data()
+        for title in ("World generation", "World seed logic"):
+            catalog = default_catalog(data)
+            catalog["pages"][0]["aliases"] = [title]
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, data)
 
     def test_bhato_direction_and_dynamic_landmark_fallbacks_are_explicit(self):
         bhato = self.pages["Ranger Bhato"]

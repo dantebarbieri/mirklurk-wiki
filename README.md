@@ -17,7 +17,7 @@ The expanded reference retains that baseline and now contains **107 numeric fact
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-385 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
+386 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes, provenance, and a compatibility
 redirect. Another 87 ordinary MediaWiki category pages support hierarchical browsing.
 Only `game.build` changed in the original dataset; all source
@@ -103,15 +103,18 @@ Gurb-Gurb's one-time smoke cue and Ihar's conditional shoreline placement retain
 their source qualifications. These are supplementary native sprites, not
 screenshots or replacements for dialogue portraits.
 
-The world-generation guide (at the existing **World seed logic** title) separates
+The **World generation** guide separates
 the initial biome/landmark-zone map from terrain generated on entry. It documents
 Fort Solid's edge columns, Scaal's reflected lair zone, the Library's distance
 constraints and guaranteed fen biomes. Bhato's Common Bog can be north or south
 of the fort. Gurb-Gurb and Ihar have entry-triggered placement checks, including
 revisits and save loads; Ihar's failed shoreline searches can retry. The active
 generators do not use the internal seed draw or the unused reseeding helpers,
-so the guide does not imply a reusable world seed. Supplemental citations retain
-the original research records unchanged.
+so the guide does not imply a reusable world seed. The main page and mechanics,
+NPC and merchant indexes link to the guide; its finding-NPCs section leads to
+the character-owned search instructions and exterior images. **World seed logic**
+redirects to the new title, retaining historical fact and entry anchors at the
+destination. Supplemental citations retain the original research records unchanged.
 
 Twenty-one source pages own 130 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree

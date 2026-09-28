@@ -28,15 +28,16 @@ RESEARCH_PAGE_FILES = {
     "Loot tables": "Loot_tables.wiki",
     "Weather": "Weather.wiki",
     "Level progression": "Level_progression.wiki",
-    "World seed logic": "World_seed_logic.wiki",
+    "World generation": "World_generation.wiki",
 }
+RESEARCH_PAGE_REDIRECTS = {"World seed logic": "World generation"}
 ENTRY_PAGES = {
     "quest": "Quests and journal",
     "merchant": "Merchants",
     "recipe": "Crafting",
     "loot": "Loot tables",
 }
-ALGORITHM_PAGES = {"Weather", "Level progression", "World seed logic", "Skills", "Crafting", "Loot tables"}
+ALGORITHM_PAGES = {"Weather", "Level progression", "World generation", *RESEARCH_PAGE_REDIRECTS, "Skills", "Crafting", "Loot tables"}
 CATEGORY_PAGES = {
     "item": "Items",
     "being": "Bestiary",
@@ -45,7 +46,7 @@ CATEGORY_PAGES = {
     "skill": "Skills",
     "damage_class": "Damage types",
 }
-FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES}
+FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS}
 CONFIDENCES = {"observed", "inferred", "localization-described"}
 MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
@@ -197,7 +198,8 @@ def _item_quantities(value, entities, location, require_items=False):
 
 
 def entry_page(entry):
-    return entry["details"]["page"] if entry["kind"] == "algorithm" else ENTRY_PAGES[entry["kind"]]
+    page = entry["details"]["page"] if entry["kind"] == "algorithm" else ENTRY_PAGES[entry["kind"]]
+    return RESEARCH_PAGE_REDIRECTS.get(page, page)
 
 
 def _validate_entries(records, sources, entities, facts):

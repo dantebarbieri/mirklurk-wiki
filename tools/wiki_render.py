@@ -11,7 +11,7 @@ from wiki_catalog import (
     CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
-from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, read_authored, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
 from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
@@ -969,6 +969,9 @@ def build_pages(root, data, catalog=None, details=None):
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
     pages = {title: read_authored(root, title, filename) for title, filename in {**PAGE_FILES, "NPCs": "NPCs.wiki", **active}.items()}
+    for alias, target in RESEARCH_PAGE_REDIRECTS.items():
+        if target in active:
+            pages[alias] = f"#REDIRECT [[{target}]]\n"
     if any("health_armor" in image for image in images) or any(
         grid["kind"] == "health" and any(cell and cell["armor"] for row in grid["rows"] for cell in row)
         for grid in details.get("grids", [])
@@ -1140,7 +1143,7 @@ def build_pages(root, data, catalog=None, details=None):
         if original != index:
             legacy[original][target].add(("entity", entity["id"]))
     for fact in data["facts"]:
-        if facts[fact["id"]] != fact["page"]:
+        if facts[fact["id"]] != fact["page"] and fact["page"] not in RESEARCH_PAGE_REDIRECTS:
             legacy[fact["page"]][facts[fact["id"]]].add(("fact", fact["id"]))
     for entry in entries:
         if owners[entry["id"]] != entry_page(entry):

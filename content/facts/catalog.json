@@ -4095,17 +4095,10 @@
     },
     {
       "entry": "world-seed-boundaries",
-      "title": "World layout and exploration order",
-      "summary": "The initial five-by-five map fixes its biomes and the zones for Fort Solid, Bhato's hideout, Scaal's lair and the Library. Terrain and exact exterior positions are generated on entry, not predetermined by a reusable world seed. Gurb-Gurb and Ihar use separate entry-triggered placement checks.",
-      "conditions": "Source-inspected rules for build 0.8.1.5. Coordinates use columns A through E and rows 1 through 5; distances below are straight-line distances in world-map cells.",
+      "title": "How areas are generated",
+      "summary": "The sequence below explains why exploration order matters. Initial world-map placement is described above; each character owns its detailed location and access rules.",
+      "conditions": "Source-inspected generation and landmark rules for build 0.8.1.5, not measured spawn probabilities.",
       "steps": [
-        "Fort Solid is chosen in column A or E, in any row from 1 to 5. Its world-map biome is Fort Solid Shorehold.",
-        "Scaal's lair zone is always the reflection of Fort Solid across the map's center, not merely likely to be opposite: swap A with E and subtract the row from 6. For example, Fort Solid at A2 puts the lair at E4. This zone is a Rift-Thorn Mire; the surface entrance leads through three rift depths, with Scaal in the third.",
-        "The Library is assigned after Fort Solid and Scaal's zone. The generator rerolls a candidate until its cell is empty, at least 2 cells from the fort and at least 1.2 cells from Scaal's zone. Thus it excludes the fort's adjacent cells, including diagonals, and Scaal's orthogonal neighbors, but permits Scaal's diagonal neighbors.",
-        "The Library's zone is made a Sunken Ancient Ruins. Another two or three Sunken Ancient Ruins zones are added later, so that biome alone does not identify the Library.",
-        "Fort Solid's orthogonal neighbors are assigned before the remaining random biomes; one of their Common Bogs becomes Bhato's zone. His location page explains the direction-selection order.",
-        "The remaining placement and fill passes guarantee two or three Broken Fens and at least one Drowned Fen in every normal new world. A world missing either biome is not an ordinary result of this generator.",
-        "The initial biome grid and the three landmark-zone assignments for Bhato, the Library and Scaal are saved before all their zones are explored. Their exact exterior sites are created when their zones are first generated.",
         "Entering an unsaved zone generates terrain using fresh random offsets. Its borders blend into neighboring zones generated earlier, so exploration order affects the terrain. A saved zone is loaded instead of regenerated.",
         "The delayed exterior check is scheduled before the saved-area loading branch. Gurb-Gurb and Ihar can therefore be placed during a first visit, a revisit or a save load while their respective creation flags are false; their location pages own the biome and success rules.",
         "Startup randomizes the random-number generator. The internal seed draw and unused coordinate-reseeding helpers do not seed the active world or terrain generators, and no world-seed value is saved for replay."
