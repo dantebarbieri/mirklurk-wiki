@@ -108,16 +108,15 @@ class FakeWiki:
         if params.get("nocreate") and not exists:
             raise ApiError("missingtitle")
         latest = self.revisions[title][-1] if exists else None
-        if "undo" in params:
-            restored = next(row for row in self.revisions[title] if row["revid"] == int(params["undoafter"]))
-            revid = self.store(title, restored["text"], self.username, params["summary"])
-            return {"edit": {"result": "Success", "oldrevid": latest["revid"], "newrevid": revid}}
-        if "baserevid" in params and int(params["baserevid"]) != latest["revid"] and not self.merge:
-            raise ApiError("editconflict")
-        if exists and normalize(latest["text"]) == normalize(params["text"]):
+        text = params["text"]
+        if "baserevid" in params and int(params["baserevid"]) != latest["revid"]:
+            if not self.merge:
+                raise ApiError("editconflict")
+            text = latest["text"] + "\n" + text  # a non-overlapping merge keeps both edits
+        if exists and normalize(latest["text"]) == normalize(text):
             self.touches.append(title)
             return {"edit": {"result": "Success", "nochange": True}}
-        revid = self.store(title, normalize(params["text"]), self.username, params["summary"])
+        revid = self.store(title, normalize(text), self.username, params["summary"])
         return {"edit": {"result": "Success", "oldrevid": latest["revid"] if latest else 0, "newrevid": revid}}
 
 
@@ -275,18 +274,31 @@ class SyncTests(unittest.TestCase):
         self.assertEqual([row["title"] for row in report["errors"]], ["Locked"])
         self.assertEqual(sorted(report["created"] + report["updated"]), ["Fine", "Slow"])
 
-    def test_merged_concurrent_edit_is_undone_and_then_left_alone(self):
+    def test_merged_concurrent_edit_is_reported_and_then_left_alone(self):
         wiki = logged_in(FakeWiki({"Busy": ours("old")}))
         wiki.merge = True
         wiki.concurrent = {"Busy": ("old, with a person's fix", "DanteB", "Fix")}
         report = sync(wiki, {"Busy": "new"}, "repo-sync: 2", apply=True, log=lambda _: None)
-        self.assertEqual([row["title"] for row in report["conflicts"]], ["Busy"])
-        self.assertEqual(report["updated"], [])
-        self.assertEqual(wiki.text("Busy"), "old, with a person's fix")
-        self.assertFalse(wiki.revisions["Busy"][-1]["comment"].startswith("repo-sync:"))
+        self.assertEqual(([row["title"] for row in report["conflicts"]], report["updated"]), (["Busy"], []))
+        self.assertEqual(wiki.text("Busy"), "old, with a person's fix\nnew")
         later = sync(wiki, {"Busy": "new"}, "repo-sync: 3", apply=True, log=lambda _: None)
         self.assertEqual([row["title"] for row in later["skipped"]], ["Busy"])
-        self.assertEqual(wiki.text("Busy"), "old, with a person's fix")
+        self.assertEqual(wiki.text("Busy"), "old, with a person's fix\nnew")
+
+    def test_a_conflicting_response_never_undoes_anyones_revision(self):
+        wiki = logged_in(FakeWiki({"Busy": ours("old")}))
+
+        def two_people_saved_meanwhile(params):
+            # The sync's own save became a no-op; MediaWiki reports other people's revisions.
+            first = wiki.store(params["title"], "a person's text", "DanteB", "Fix")
+            second = wiki.store(params["title"], "another person's text", "Someone", "Fix")
+            return {"edit": {"result": "Success", "oldrevid": first, "newrevid": second}}
+
+        wiki.edit = two_people_saved_meanwhile
+        report = sync(wiki, {"Busy": "new"}, "repo-sync: 2", apply=True, log=lambda _: None)
+        self.assertEqual([row["title"] for row in report["conflicts"]], ["Busy"])
+        self.assertFalse(any("undo" in call for call in wiki.calls))
+        self.assertEqual(wiki.text("Busy"), "another person's text")
 
     def test_a_lost_response_cannot_hand_a_merged_page_to_the_sync(self):
         wiki = logged_in(FakeWiki({"Busy": ours("old")}))

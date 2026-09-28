@@ -2,8 +2,8 @@
 
 Dry run by default: reports what would change without logging in. With --apply,
 it creates missing pages and updates pages whose latest revision came from the
-publishing automation. Pages last edited by anyone else are never overwritten;
-they are skipped and listed for a manual merge.
+publishing automation. Pages last edited by anyone else are skipped and listed
+for a manual merge; only an explicit --adopt replaces them.
 """
 
 import argparse
@@ -269,12 +269,9 @@ def save(api, title, text, current, summary):
     if outcome.get("result") != "Success":
         raise ApiError(str(outcome.get("result", "failure")).lower(), "MediaWiki did not accept the edit")
     if current is not None and outcome.get("oldrevid") not in (None, current["revid"]):
-        # Someone saved in between and MediaWiki merged both edits. Put their revision back,
-        # without the repo-sync marker, so later runs keep skipping the page.
-        edit(api, {"action": "edit", "title": title, "undo": str(outcome["newrevid"]),
-                   "undoafter": str(outcome["oldrevid"]), "nocreate": "1",
-                   "summary": "Restore an edit saved during a sync; merge the generated text by hand"})
-        raise ApiError("editconflict", "saved by someone else during the sync; their revision was restored")
+        # Someone saved in between and MediaWiki merged both edits. The merged text no longer
+        # matches this save's stamp, so later runs treat the page as that person's edit.
+        raise ApiError("editconflict", "saved by someone else during the sync; MediaWiki kept both edits")
     return outcome.get("newrevid") or (current or {}).get("revid")
 
 

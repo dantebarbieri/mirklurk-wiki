@@ -143,7 +143,7 @@ documented pools, not a measurement of each item's final drop rate.
 | `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
 | `content/facts/acquisition.json` | Reviewed source rows, exact eligibility pools, conditional context, and scoped item notes |
 | `tools/build_wiki.py` | Deterministic MediaWiki XML for seeding a new wiki |
-| `tools/sync_wiki.py` | Publishes changed pages through the MediaWiki API; never overwrites a person's edit |
+| `tools/sync_wiki.py` | Publishes changed pages through the MediaWiki API; skips person-edited pages unless explicitly adopted |
 | `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
 | `tools/wiki_acquisition.py` | Bounded source, probability, membership, and ownership validation |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
@@ -219,8 +219,9 @@ Development Compose binds only to loopback and is **not** a production stack.
 
 Merging to `main` publishes: after the checks pass, CI runs
 [the API sync](docs/PUBLISHING.md), which creates and updates only the pages
-that changed and skips any page a person edited on the wiki. It needs a bot
-password stored as a GitHub secret; there is no edit freeze or manual approval.
+that changed and skips any page a person edited on the wiki unless a maintainer
+explicitly adopts it. It needs a bot password stored as a GitHub secret; there
+is no edit freeze or manual approval.
 The disposable smoke harness uses synthetic accounts/images only.
 
 ## Publication and rights

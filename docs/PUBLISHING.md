@@ -3,7 +3,8 @@
 Merging to `main` publishes. The repository generates every managed page, and
 `tools/sync_wiki.py` brings the live wiki up to date through MediaWiki's normal
 edit API. There is no edit freeze, rehearsal, or manual approval step. Pages
-that a person edited on the wiki are never overwritten.
+that a person edited on the wiki are skipped, never overwritten, unless a
+maintainer explicitly adopts them (see below).
 
 ## From change to live
 
@@ -63,11 +64,11 @@ dropped from the generator stays on the wiki until someone removes it.
 
 `baserevid` turns a person's save in the seconds between the read and the
 write into an edit conflict. MediaWiki can instead merge non-overlapping
-changes; the sync notices that the page changed underneath it, undoes its own
-revision so the person's text is current again, and reports a conflict. If a
-response is lost instead, the run reports an error, and because a merged save
-no longer matches its `text:` hash, later runs treat the page as a person's
-edit rather than overwrite it.
+changes; the sync notices that the page changed underneath it and reports a
+conflict. The merged revision keeps both edits, and because it no longer
+matches its `text:` hash, later runs treat the page as a person's edit. The
+same holds if a response is lost: the run reports an error, and a save that
+merged someone's edit is never mistaken for the automation's.
 
 ## When a person edits a generated page
 
