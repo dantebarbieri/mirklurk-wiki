@@ -34,6 +34,7 @@ ALLOWED_FILES = {
     "content/templates/Coins.wiki": 4 * 1024,
     "content/templates/Health_grid.wiki": 4 * 1024,
     "content/templates/Attack_grid.wiki": 4 * 1024,
+    "content/templates/Creature.wiki": 4 * 1024,
     "content/modules/Display.lua": 16 * 1024,
     "tools/check_publication.py": 32 * 1024,
     "tools/wiki_data.py": 32 * 1024,

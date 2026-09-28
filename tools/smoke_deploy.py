@@ -59,6 +59,7 @@ class RenderedGrids(HTMLParser):
         self.links = []
         self.icon_styles = []
         self.pixel_styles = []
+        self.creatures = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -84,6 +85,8 @@ class RenderedGrids(HTMLParser):
                 self.cell["icon_styles"].append(attrs.get("style", ""))
         if tag == "span" and "pixel-art" in attrs.get("class", "").split():
             self.pixel_styles.append(attrs.get("style", ""))
+        if tag == "span" and "mirklurk-creature" in attrs.get("class", "").split():
+            self.creatures.append(attrs)
 
     def handle_endtag(self, tag):
         if tag == "table":
@@ -1450,6 +1453,7 @@ def smoke():
                 raise RuntimeError("An ordinary self-registered editor cannot save a page.")
             for title, suffix in (
                 ("Template:Health grid", "\n<noinclude>Ordinary editor display documentation.</noinclude>"),
+                ("Template:Creature", "\n<noinclude>Ordinary editor creature documentation.</noinclude>"),
                 ("Module:Display", "\n-- Ordinary editor display implementation note."),
             ):
                 result = api({"action": "edit", "title": title, "text": pages[title] + suffix,
@@ -1460,7 +1464,7 @@ def smoke():
             edited = sorted(title for title, revision in before_sync.items()
                             if revision and revision["user"] == "TestEditor"
                             and normalize(revision["text"]) != normalize(baseline[title]))
-            if not {price_title, coin_title, "Game mechanics", "Template:Health grid", "Module:Display"} <= set(edited):
+            if not {price_title, coin_title, "Game mechanics", "Template:Health grid", "Template:Creature", "Module:Display"} <= set(edited):
                 raise RuntimeError(f"The editor fixtures did not leave the expected pages changed: {edited}")
             drain_jobs_bounded(run)
             publish(baseline, "after editors", created=[], updated=[], skipped=edited)

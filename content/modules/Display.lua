@@ -17,6 +17,23 @@ local function assets()
     return mw.loadData('Module:Display assets')
 end
 
+function p.creature(frame)
+    local value = argument(frame)
+    if not value or #value > 160 then
+        return failure('Creature requires a registered creature page title (at most 160 bytes).')
+    end
+    local title = mw.title.new(value)
+    if not title or title.namespace ~= 0 or title.isExternal or title.fragment ~= '' then
+        return failure('Creature requires a main-namespace creature page title without a section fragment.')
+    end
+    local markup = assets().creatures[title.text]
+    if not markup then
+        return failure('Unknown creature title. Use a registered creature page title; NPCs are not creatures.')
+    end
+    return tostring(mw.html.create('span'):addClass('mirklurk-creature')
+        :attr('title', title.text):attr('aria-label', title.text):wikitext(frame:preprocess(markup)))
+end
+
 function p.coins(frame)
     local value = argument(frame)
     if not value or #value < 1 or #value > 18 or not value:match('^[0-9]+$') then

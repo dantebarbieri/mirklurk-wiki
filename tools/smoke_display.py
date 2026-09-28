@@ -4,8 +4,9 @@ import re
 import urllib.parse
 
 from sync_wiki import SyncError, fetch_live, sync
-from wiki_catalog import page_locations
-from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, page_namespace
+from wiki_catalog import page_locations, primary_groups
+from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, lua_string, page_namespace
+from wiki_render import image_for, pixel_geometry
 
 
 def smoke_display_install(publisher, pages):
@@ -43,6 +44,47 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             raise RuntimeError("An imported/API-published display page has the wrong namespace or content model.")
 
     locations = page_locations(data, catalog)
+    creatures = {locations[row["entity"]]: image_for(row["entity"], data["illustrations"])
+                 for row in catalog["classifications"] if row["kind"] == "creature"}
+    for title, image in creatures.items():
+        rendered = parse("{{Creature|" + title + "}}")
+        parsed = parse_grids()
+        parsed.feed(rendered)
+        projection = dom(rendered, "Creature")
+        if (len(parsed.creatures) != 1 or parsed.creatures[0].get("title") != title
+                or parsed.creatures[0].get("aria-label") != title or projection.text.strip() != title):
+            raise RuntimeError("A creature lost its canonical visible name, tooltip or accessible label.")
+        links = projection.wiki_links
+        if [link["target"] for link in links] != [title, title] or any(link["redlink"] for link in links):
+            raise RuntimeError("Creature portrait/name links did not resolve to the same canonical article.")
+        if image is None or len(parsed.images) != 1 or len(parsed.pixel_styles) != 1:
+            raise RuntimeError("The curated creature fixture lacks its reviewed portrait.")
+        pixels = image["pixel_art"]
+        actual = parsed.images[0]
+        filename = image["file_title"].removeprefix("File:")
+        if (filename not in urllib.parse.unquote(actual.get("src", "")) or actual.get("alt") != title + " portrait"
+                or actual.get("width") != str(pixels["width"]) or actual.get("height") != str(pixels["height"])
+                or "srcset" in actual or "/thumb/" in actual.get("src", "")):
+            raise RuntimeError("Creature icon lost its reviewed identity, full upload or accessible alt.")
+        scale = pixel_geometry(image, 32, 32)[2]
+        style = parsed.pixel_styles[0].replace(" ", "")
+        if f'zoom:calc({scale}/{pixels["source_scale"]})' not in style or "image-rendering:pixelated" not in style:
+            raise RuntimeError("Creature icon diverged from the shared integer-native sizing policy.")
+        if "mirklurk-cell-grid" in rendered or "occupied health cells" in rendered:
+            raise RuntimeError("Creature display unexpectedly copied statistics.")
+    groups = sorted((group for group in primary_groups(catalog) if group["index"] == "Bestiary"), key=lambda g: g["title"])
+    surfaces = {"Bestiary": [locations[i] for group in groups for i in sorted(group["members"], key=lambda i: locations[i])]}
+    surfaces.update({"Category:" + group["title"]: sorted(locations[i] for i in group["members"]) for group in groups})
+    for title, expected in surfaces.items():
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        check_errors(rendered)
+        parsed = parse_grids()
+        parsed.feed(rendered)
+        if [entry.get("aria-label") for entry in parsed.creatures] != expected:
+            raise RuntimeError(f"{title}: native creature icons changed existing list order or membership.")
+    for argument, title in ((" sceetler ", "Sceetler"), ("nightmare", "Nightmare"), ("Mirk_Runner", "Mirk Runner")):
+        if f'aria-label="{title}"' not in parse("{{Creature|" + argument + "}}"):
+            raise RuntimeError("Creature title normalization differs from MediaWiki.")
     totals = {0: 0, 1: 0, 2: 0, 3: 0}
     # Parse generated articles, not a parallel Python rendering of their cells.
     for identity in sorted({grid["entity"] for grid in details["grids"]}):
@@ -148,6 +190,8 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                         "1," * 32 + "1", ";".join(["1"] * 33), "1" * 16385],
         "Attack grid": ["", "0-0", "2-1", "1:4", "1.4", "-1", "1001", "0-1001", "1,", "1;;1", "1,2;3",
                         "0 - 1", "1e2", "1 " * 8193],
+        "Creature": ["", "Not a creature", "Ranger Bhato", "Unwanted Guard", "being-13", "Template:Coins",
+                     "Sceetler#Stats", "File:Being-13.png", "NIGHTMARE", "x" * 161],
     }
     for template, values in invalid.items():
         for value in values:
@@ -158,7 +202,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             if 'class="mirklurk-cell-grid"' in rendered or '<img ' in rendered:
                 raise RuntimeError("Invalid input produced a success-shaped grid or coin display.")
     injected = '<nowiki>"><script>alert(1)</script>&</nowiki>'
-    for template in ("Coins", "Health grid", "Attack grid"):
+    for template in ("Coins", "Health grid", "Attack grid", "Creature"):
         rendered = api({"action": "parse", "title": "Display escape smoke",
                         "text": "{{" + template + "|" + injected + "}}", "prop": "text"}, post=True)["parse"]["text"]["*"]
         if "Display error:" not in rendered or "<script>" in rendered or "alert(1)" in rendered:
@@ -167,30 +211,56 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                     "text": "{{Attack grid|1|label=" + injected + "}}", "prop": "text"}, post=True)["parse"]["text"]["*"]
     if "Display error:" not in rendered or "alert(1)" in rendered:
         raise RuntimeError("Attack caption allowed arbitrary injected markup.")
-    print("Native displays: all 118 grids, exact coins, images, accessibility, invalid inputs and resource bounds passed.", flush=True)
+    print("Native displays: all 118 grids, exact coins, 25 creature portraits and authored faction lists, "
+          "images, accessibility, invalid inputs and resource bounds passed.", flush=True)
 
 
 def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
     # Ordinary edits, no imports or reseeding; each dependency layer must invalidate readers.
     owner_anchor = re.search(r'id="entity-[^"]+"', pages["Survivor's Field Kit"]).group()
     examples = (
-        ("Template:Coins", pages["Template:Coins"].replace("<includeonly>", "<includeonly>native-template-marker ", 1), "native-template-marker"),
-        ("Module:Display", pages["Module:Display"].replace("return table.concat(parts, ' ')", "return 'native-module-marker ' .. table.concat(parts, ' ')"), "native-module-marker"),
-        (ASSETS_TITLE, pages[ASSETS_TITLE].replace("gold = [=[", "gold = [=[native-assets-marker ", 1), "native-assets-marker"),
+        ("Template:Coins", pages["Template:Coins"].replace("<includeonly>", "<includeonly>native-template-marker ", 1),
+         "native-template-marker", "Gurb-Gurb", "2 gold", owner_anchor),
+        ("Module:Display", pages["Module:Display"].replace("return table.concat(parts, ' ')", "return 'native-module-marker ' .. table.concat(parts, ' ')"),
+         "native-module-marker", "Gurb-Gurb", "2 gold", owner_anchor),
+        (ASSETS_TITLE, pages[ASSETS_TITLE].replace("gold = [=[", "gold = [=[native-assets-marker ", 1),
+         "native-assets-marker", "Gurb-Gurb", "2 gold", owner_anchor),
+        ("Template:Creature", pages["Template:Creature"].replace("<includeonly>", "<includeonly>native-creature-template-marker ", 1),
+         "native-creature-template-marker", "Bestiary", 'aria-label="Sceetler"', 'id="grid-being-13-health"'),
+        ("Module:Display", pages["Module:Display"].replace("return tostring(mw.html.create('span')",
+                                                        "return 'native-creature-module-marker ' .. tostring(mw.html.create('span')"),
+         "native-creature-module-marker", "Bestiary", 'aria-label="Sceetler"', 'id="grid-being-13-health"'),
+        (ASSETS_TITLE, pages[ASSETS_TITLE].replace("Sceetler portrait", "native-creature-assets-marker"),
+         "native-creature-assets-marker", "Bestiary", 'aria-label="Sceetler"', 'id="grid-being-13-health"'),
     )
-    for owner, edited, marker in examples:
+    for owner, edited, marker, reader, restored_marker, forbidden_anchor in examples:
         if edited == pages[owner]:
             raise RuntimeError("Native propagation test did not modify its intended owner.")
-        api({"action": "parse", "page": "Gurb-Gurb", "prop": "text"})
+        api({"action": "parse", "page": reader, "prop": "text"})
         wait_tick(api)
         result = api({"action": "edit", "title": owner, "text": edited, "token": token,
                       "summary": "Disposable ordinary display edit"}, post=True)
         if result.get("edit", {}).get("result") != "Success":
             raise RuntimeError("An ordinary display edit was rejected.")
-        refreshed(run, api, "Gurb-Gurb", marker, owner_anchor, owner)
+        refreshed(run, api, reader, marker, forbidden_anchor, owner)
         wait_tick(api)
         api({"action": "edit", "title": owner, "text": pages[owner], "token": token,
              "summary": "Restore disposable display fixture"}, post=True)
-        rendered = refreshed(run, api, "Gurb-Gurb", "2 gold", owner_anchor, owner)
+        rendered = refreshed(run, api, reader, restored_marker, forbidden_anchor, owner)
         if marker in rendered:
             raise RuntimeError("Restoring a display owner did not invalidate the cached reader.")
+    prefix = "        [ " + lua_string("Sceetler") + " ] = "
+    lines = pages[ASSETS_TITLE].splitlines()
+    original = next(line for line in lines if line.startswith(prefix))
+    name_only = prefix + lua_string("[[Sceetler|<nowiki>Sceetler</nowiki>]] (no reviewed image)") + ","
+    assets_without_portrait = pages[ASSETS_TITLE].replace(original, name_only)
+    wait_tick(api)
+    api({"action": "edit", "title": ASSETS_TITLE, "text": assets_without_portrait, "token": token,
+         "summary": "Disposable missing approved portrait fixture"}, post=True)
+    rendered = api({"action": "parse", "title": "Missing portrait smoke", "text": "{{Creature|Sceetler}}",
+                    "prop": "text"}, post=True)["parse"]["text"]["*"]
+    if "(no reviewed image)" not in rendered or "<img " in rendered or 'title="Sceetler"' not in rendered:
+        raise RuntimeError("A missing creature portrait did not render an explicit linked-name-only display.")
+    wait_tick(api)
+    api({"action": "edit", "title": ASSETS_TITLE, "text": pages[ASSETS_TITLE], "token": token,
+         "summary": "Restore disposable portrait fixture"}, post=True)

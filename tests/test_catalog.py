@@ -622,6 +622,7 @@ class CatalogTests(unittest.TestCase):
     def test_category_graph_links_and_transitive_membership_resolve(self):
         categories = category_definitions(self.data, self.catalog)
         locations = page_locations(self.data, self.catalog)
+        creatures = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "creature"}
         expected = {identity: set() for identity in locations}
 
         def ancestors(title):
@@ -638,7 +639,8 @@ class CatalogTests(unittest.TestCase):
                 self.assertIn(f"[[:Category:{title}|", self.pages["Category:" + parent])
             for identity in row["members"]:
                 expected[identity].update(ancestors(title))
-                self.assertIn(f"[[{locations[identity]}|", page)
+                self.assertIn("{{Creature|" + locations[identity] + "}}" if identity in creatures
+                              else f"[[{locations[identity]}|", page)
         for row in self.catalog["pages"]:
             actual = set(re.findall(r"\[\[Category:([^\]|]+)", self.pages[row["title"]]))
             self.assertEqual(actual, expected[row["entity"]], row["title"])

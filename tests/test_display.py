@@ -1,4 +1,5 @@
 import copy
+import re
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,7 @@ from build_wiki import EXPORT_NS, build_xml, existing_titles
 from sync_wiki import SyncError, fetch_live, stale_renderings, sync, write_order
 from test_sync import FakeWiki, edits, logged_in, ours
 from wiki_data import DataError, _title, read_authored, title_key
+from wiki_catalog import page_locations, primary_groups
 from wiki_details import load_publication_inputs
 from wiki_display import (
     ASSETS_TITLE, DISPLAY_FILES, DISPLAY_TITLES, MAX_COPPER, content_model, dependencies,
@@ -98,6 +100,51 @@ class DisplayTests(unittest.TestCase):
             self.assertIn("== Melee attack ==", self.pages[title])
         self.assertIn("{{Health grid|0,1,0;1,4,1;0,1,0}}", self.pages["Sceetler"])
         self.assertEqual({title for title in self.pages if title.startswith("Template:")}, set(DISPLAY_FILES) - {"Module:Display"})
+
+    def test_creature_lookup_and_existing_lists_use_reviewed_classifications_and_art(self):
+        locations = page_locations(self.data, self.catalog)
+        creatures = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "creature"}
+        self.assertEqual(len(creatures), 25)
+        self.assertEqual(self.pages["Bestiary"].count("{{Creature|"), 25)
+        self.assertNotIn("{{Creature|", self.pages["NPCs"])
+        assets = self.pages[ASSETS_TITLE]
+        for identity in creatures:
+            title = locations[identity]
+            image = image_for(identity, self.data["illustrations"])
+            self.assertIn("[ " + lua_string(title) + " ]", assets)
+            self.assertIn(pixel_image(image, 32, 32, title, title + " portrait"), assets)
+            self.assertIn("[[" + title + "|<nowiki>" + title + "</nowiki>]]", assets)
+            line = next(line for line in self.pages["Bestiary"].splitlines() if 'id="entity-' + identity + '"' in line)
+            self.assertTrue(line.endswith("{{Creature|" + title + "}}"))
+        for row in self.catalog["classifications"]:
+            if row["kind"] == "npc":
+                self.assertNotIn("[ " + lua_string(locations[row["entity"]]) + " ]", assets)
+        for group in primary_groups(self.catalog):
+            if group["index"] == "Bestiary":
+                expected = sorted(locations[identity] for identity in group["members"])
+                for title, section in (
+                    ("Bestiary", self.pages["Bestiary"].split("\n== " + group["title"] + " ==\n")[1].split("\n== ", 1)[0]),
+                    ("Category:" + group["title"], self.pages["Category:" + group["title"]]),
+                ):
+                    self.assertEqual(re.findall(r"\{\{Creature\|([^{}]+)\}\}", section), expected, title)
+        self.assertEqual(dependencies(self.pages["Template:Creature"]), {"Module:Display"})
+        stale = stale_renderings(self.pages, [ASSETS_TITLE], set())
+        self.assertIn("Template:Creature", stale)
+        self.assertIn("Bestiary", stale)
+        self.assertIn("Category:Scaalmyr faction", stale)
+
+    def test_missing_or_unapproved_creature_art_keeps_explicit_name_only_display(self):
+        for missing in (True, False):
+            data = copy.deepcopy(self.data)
+            if missing:
+                data["illustrations"] = [row for row in data["illustrations"] if row.get("entity") != "being-13"]
+            else:
+                image = image_for("being-13", data["illustrations"])
+                image.update(rights_status="pending", creator=None, sha256=None, rights_basis=None, rights_note=None)
+            pages = build_pages(ROOT, data, self.catalog, self.details)
+            self.assertIn(lua_string("[[Sceetler|<nowiki>Sceetler</nowiki>]] (no reviewed image)"), pages[ASSETS_TITLE])
+            self.assertNotIn("Being-13.png", pages[ASSETS_TITLE])
+            self.assertIn("{{Creature|Sceetler}}", pages["Bestiary"])
 
 
 class DisplayPublisherTests(unittest.TestCase):
@@ -203,6 +250,14 @@ class DisplayPublisherTests(unittest.TestCase):
             self.assertEqual(edits(wiki), [ASSETS_TITLE])
             self.assertTrue(report["conflicts"] or report["errors"])
             self.assertEqual({row["title"] for row in report["blocked"]}, set(self.pages) - {ASSETS_TITLE})
+
+    def test_human_creature_template_blocks_new_illustrated_lists(self):
+        pages = {**self.pages, "Template:Creature": "{{#invoke:Display|creature}}",
+                 "Bestiary": "{{Creature|Sceetler}}", "Category:Scaalmyr faction": "{{Creature|Sceetler}}"}
+        wiki = logged_in(FakeWiki({"Template:Creature": ("Human template", "Editor", "Keep this")}))
+        report = self.run_sync(wiki, pages, apply=True)
+        self.assertEqual(wiki.text("Template:Creature"), "Human template")
+        self.assertEqual({row["title"] for row in report["blocked"]}, {"Bestiary", "Category:Scaalmyr faction"})
 
 
 if __name__ == "__main__":

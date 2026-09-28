@@ -43,7 +43,10 @@ Explicit projectile evidence adds poison-ammunition and thrown-flask links,
 including the flasks' armor-bypass exceptions. Ammunition bonus ranges are
 decoded per attack cell, not shown as misleading fractional damage.
 
-`{{Coins|1234}}` displays 1 gold, 2 silver and 34 copper. These three ordinary
+`{{Coins|1234}}` displays 1 gold, 2 silver and 34 copper.
+`{{Creature|Sceetler}}` displays its reviewed portrait and linked name; Bestiary
+and existing authored creature/faction lists use it without changing native
+category navigation or copying creature statistics. These four ordinary
 templates use Scribunto Lua and the same reviewed image-sizing policy as other
 artwork. See [author syntax and limits](docs/TEMPLATES.md) and the
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication

@@ -979,6 +979,13 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Main Page"] = pages["Main Page"].replace("== Read the caveats ==", navigation + "\n== Read the caveats ==")
         pages["Game mechanics"] += navigation
     classified = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+    creatures = {identity for identity, kind in classified.items() if kind == "creature"}
+
+    def listed_entity(identity):
+        if identity in creatures:
+            return "{{Creature|" + locations[identity] + "}}"
+        return entity_link(identity, entities, locations)
+
     classification_summaries = {row["entity"]: row["summary"] for row in catalog["classifications"] if "summary" in row}
     npc_locations = {row["entity"]: row["location"] for row in catalog["classifications"] if "location" in row}
     factions = {identity: row for row in faction_groups(catalog) for identity in row["members"]}
@@ -1151,7 +1158,8 @@ def build_pages(root, data, catalog=None, details=None):
             source_entity = next((row for row in data["entities"] if locations[row["id"]] == target), None)
             if source_entity:
                 label = source_entity["name"]
-            lines.append("* " + "".join(anchor(kind, identity) for kind, identity in sorted(markers)) + f"[[{target}|{literal(label)}]]")
+            link = listed_entity(source_entity["id"]) if source_entity and source_entity["id"] in creatures else f"[[{target}|{literal(label)}]]"
+            lines.append("* " + "".join(anchor(kind, identity) for kind, identity in sorted(markers)) + link)
         return lines
 
     for title, targets in navigation.items():
@@ -1521,7 +1529,7 @@ def build_pages(root, data, catalog=None, details=None):
             elif category in INGREDIENT_METHODS:
                 text += ingredient_table(category, ingredients, entities, locations)
             else:
-                text += "\n".join("* " + entity_link(identity, entities, locations)
+                text += "\n".join("* " + listed_entity(identity)
                                   for identity in sorted(row["members"], key=lambda identity: locations[identity])) + "\n"
             if category not in {"Carrying equipment", "Capacity-granting equipment"} and set(row["members"]) & capacity_members:
                 text += "\n== Capacity bonuses ==\n" + capacity_table(row["members"], details, catalog, entities, locations)
@@ -1536,14 +1544,24 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Category:" + category] = text
         if category == row["index"]:
             pages[row["index"]] += f'\n[[:Category:{category}|Browse the category hierarchy]]\n'
-    if any("{{Coins|" in text or "{{Health grid|" in text or "{{Attack grid|" in text for text in pages.values()):
+    if any(any("{{" + name + "|" in text for name in ("Coins", "Health grid", "Attack grid", "Creature")) for text in pages.values()):
         coin_icons = {}
         for name, identity in (("copper", "item-72"), ("silver", "item-73"), ("gold", "item-74")):
             image = image_for(identity, images)
             if image is None:
                 raise DataError(f"Coins: an approved {name} coin illustration is required")
             coin_icons[name] = pixel_image(image, 20, 20, "", name.capitalize() + " coin")
-        pages.update(display_pages(root, coin_icons, {armor: health_armor_icon(armor, images) for armor in HEALTH_ARMOR_ICONS}))
+        creature_markup = {}
+        for identity in sorted(creatures):
+            title = locations[identity]
+            image = image_for(identity, images)
+            link = f"[[{title}|{literal(title)}]]"
+            creature_markup[title] = (
+                pixel_image(image, 32, 32, title, title + " portrait") + " " + link if image is not None
+                else link + " (no reviewed image)"
+            )
+        pages.update(display_pages(root, coin_icons, {armor: health_armor_icon(armor, images) for armor in HEALTH_ARMOR_ICONS},
+                                   creature_markup))
     validate_transclusions(pages)
     validate_display_dependencies(pages)
     return pages

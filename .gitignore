@@ -45,6 +45,7 @@
 !/content/templates/Coins.wiki
 !/content/templates/Health_grid.wiki
 !/content/templates/Attack_grid.wiki
+!/content/templates/Creature.wiki
 !/content/modules/
 !/content/modules/Display.lua
 !/tools/

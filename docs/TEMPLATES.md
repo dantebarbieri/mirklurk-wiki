@@ -7,6 +7,35 @@ copies live in `content/templates/` and `content/modules/`; the publisher
 preserves human edits. No Item, Recipe, Ware, Acquisition or Collapsible
 templates are part of this feature.
 
+## Creature
+
+`{{Creature|Sceetler}}` or `{{Creature|Nightmare}}` displays a compact reviewed
+portrait and linked canonical name. Both portrait and name link to the
+creature's article, with useful portrait alt text, a name tooltip and an
+accessible label. It does **not** copy health, attacks or loot, and is not a
+full creature infobox. There are no per-creature template pages.
+
+Use a creature's ordinary page title, not an entity ID or guessed filename.
+Titles use MediaWiki normalization (surrounding spaces, underscores and the
+first letter); the rest of the title's case remains significant. Only the
+25 catalog-classified creatures are registered, not the 11 NPCs. Unknown
+names, NPC names, namespaces, section fragments, empty input and titles over
+160 bytes produce visible errors. A registered creature with absent or
+unapproved art keeps its canonical name link and explicitly says
+**(no reviewed image)**; it never guesses a file.
+
+The lookup is generated from existing catalog classifications, canonical
+page locations and approved role-less illustration metadata. It uses
+`pixel_image()` with the existing 32-by-32 compact icon **budget**, never
+forced resampling: larger native art is not shrunk below native resolution.
+No second image registry or sizing policy is maintained.
+
+Bestiary and the **existing authored lists** on faction and other creature
+category pages now call this template, retaining their order, membership,
+anchors and destinations. MediaWiki's automatically generated category member
+labels remain plain text links; templates cannot change those native labels.
+No skin hooks, JavaScript or duplicate member directory is added.
+
 ## Coins
 
 `{{Coins|1234}}` displays **1 gold 2 silver 34 copper**, with the approved
@@ -85,7 +114,7 @@ empty, inverted, unsupported or oversized input renders a visible
 `Display error:` alert, not an empty success-shaped table. User input is not
 reflected into error HTML or arbitrary attributes.
 
-`Module:Display assets` is generated from the existing approved
+`Module:Display assets` (including the creature lookup) is generated from the existing approved
 `illustrations.json` metadata using the **same `pixel_image()` formatter** as
 other illustrations. It contains exact escaped markup, not a second image
 registry or Lua sizing policy. Coins use the 20px budget (16px native display);
@@ -115,3 +144,5 @@ in the publishing guide. Unchanged readers and human edits remain on the wiki.
 Module changes trigger the same transitive refresh handling as selective views.
 All 118 curated grids are checked for value/geometry parity, and disposable
 MediaWiki tests cover parsed markup, limits, propagation and image semantics.
+They also check all 25 creature icon identities and the actual parsed Bestiary
+and faction lists; native category membership remains checked separately.
