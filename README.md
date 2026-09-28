@@ -142,15 +142,14 @@ documented pools, not a measurement of each item's final drop rate.
 | `content/facts/entity_details.json` | Bounded typed profiles with shared original property explanations |
 | `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
 | `content/facts/acquisition.json` | Reviewed source rows, exact eligibility pools, conditional context, and scoped item notes |
-| `tools/build_wiki.py` | Deterministic MediaWiki XML for reviewed seeding |
+| `tools/build_wiki.py` | Deterministic MediaWiki XML for seeding a new wiki |
+| `tools/sync_wiki.py` | Publishes changed pages through the MediaWiki API; never overwrites a person's edit |
 | `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
 | `tools/wiki_acquisition.py` | Bounded source, probability, membership, and ownership validation |
-| `tools/plan_migration.py` | Three-way review report that never modifies a wiki |
-| `tools/native_publication.php` | Strict manifest-bound, single-operation CLI publication |
-| `tools/publication_journal.py` | Private POSIX immutable intent/result/accepted-prefix journal |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
+| `tools/smoke_deploy.py` | Disposable Docker install, publication, and reader/editor checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
-| `tests` | Publication, facts, escaping, deterministic export, and runtime-policy tests |
+| `tests` | Publication, facts, escaping, deterministic export, sync, and runtime-policy tests |
 
 ## Work locally
 
@@ -173,6 +172,7 @@ platforms with their usual path separators.
 The builder requires an explicit fresh/additive mode, refuses to overwrite an
 output file, and never connects to a wiki. **Do not import a fresh seed into an
 existing community wiki.** Follow [the import procedure](docs/IMPORTING.md).
+Existing wikis are updated by [publishing](docs/PUBLISHING.md) instead.
 
 Entity pages use ordinary names; only collisions are qualified, such as
 **Turnip (item)** and **Turnip (nature)**. NPCs are indexed separately from
@@ -217,10 +217,11 @@ The hostname is supplied at runtime. This repository does not configure DNS,
 certificates, a reverse proxy, a homeserver, or any existing credentials.
 Development Compose binds only to loopback and is **not** a production stack.
 
-[Native publication](docs/NATIVE_PUBLICATION.md) specifies the reusable one-op
-CAS and durable journal interface. It confers no deployment authorization;
-the private coordinator owns runtime binding, quiescence and preservation
-guards. The disposable smoke harness uses synthetic accounts/images only.
+Merging to `main` publishes: after the checks pass, CI runs
+[the API sync](docs/PUBLISHING.md), which creates and updates only the pages
+that changed and skips any page a person edited on the wiki. It needs a bot
+password stored as a GitHub secret; there is no edit freeze or manual approval.
+The disposable smoke harness uses synthetic accounts/images only.
 
 ## Publication and rights
 

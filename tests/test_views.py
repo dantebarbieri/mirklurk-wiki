@@ -10,13 +10,12 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from plan_migration import plan_migration
 from wiki_catalog import entry_owners, entry_relations, page_locations, validate_catalog
 from wiki_data import DataError, MECHANIC_GUIDE_TITLES
 from wiki_details import load_publication_inputs
 from wiki_render import build_pages, display_entry, linked_prose, merchant_table, recipe_groups
 from wiki_views import available_views, selective_view, transclusions, validate_transclusions
-from smoke_prefix import check_pool_projection, dom
+from smoke_deploy import check_pool_projection, dom
 
 
 def expand_selective_view(text, parameters):
@@ -318,24 +317,6 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertNotIn("<noinclude><td><nowiki>19", rendered)
         self.assertIn("<includeonly>[[", rendered)
         self.assertIn("|Standard item price]]</includeonly>", rendered)
-
-    def test_planner_tracks_every_parameterized_edge_and_unknown_contract(self):
-        base = {"Item": "<onlyinclude>old price</onlyinclude>"}
-        desired = {
-            "Item": selective_view("new price", "price", True) + selective_view("recipe", "recipes"),
-            "Merchant": "{{:Item}}", "Station": "{{:Item|view=recipes|station=campfire}}",
-            "Unknown": "{{:Missing|view=offers|item=item-0}}",
-        }
-        report = plan_migration(base, base, desired)
-        self.assertEqual(report["schema_version"], 2)
-        edges = {row["page"]: row for row in report["transclusion_dependencies"]}
-        self.assertEqual(set(edges), {"Merchant", "Station", "Unknown"})
-        self.assertTrue(edges["Merchant"]["current_view_declared"])
-        self.assertFalse(edges["Station"]["current_view_declared"])
-        self.assertFalse(edges["Unknown"]["current_view_declared"])
-        self.assertEqual(edges["Station"]["parameters"], {"station": "campfire", "view": "recipes"})
-        ready = plan_migration(base, desired, desired)["transclusion_dependencies"]
-        self.assertTrue(all(row["current_owner_matches_desired"] for row in ready if row["owner"] == "Item"))
 
     def test_new_guides_require_evidence_and_finite_existing_targets(self):
         catalog = copy.deepcopy(self.catalog)
