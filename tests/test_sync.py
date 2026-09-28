@@ -16,13 +16,18 @@ sys.path.insert(0, str(ROOT / "tools"))
 import sync_wiki
 from sync_wiki import (
     Api, ApiError, SyncError, automation_owned, links, normalize, owners, plan_changes, stale_renderings,
-    sync, write_order,
+    stamp, sync, write_order,
 )
 from wiki_details import load_publication_inputs
 from wiki_render import build_pages
 
 
 PASSWORD = "-".join(["synthetic", "bot", "login", "value"])
+
+
+def ours(text, user="WikiAdmin", commit="1"):
+    """A page state as a previous sync saved it."""
+    return text, user, f"repo-sync: {commit} text:{stamp(text)}"
 
 
 class FakeWiki:
@@ -107,12 +112,10 @@ class FakeWiki:
             restored = next(row for row in self.revisions[title] if row["revid"] == int(params["undoafter"]))
             revid = self.store(title, restored["text"], self.username, params["summary"])
             return {"edit": {"result": "Success", "oldrevid": latest["revid"], "newrevid": revid}}
-        if "appendtext" in params:
-            self.touches.append(title)
-            return {"edit": {"result": "Success", "nochange": True}}
         if "baserevid" in params and int(params["baserevid"]) != latest["revid"] and not self.merge:
             raise ApiError("editconflict")
         if exists and normalize(latest["text"]) == normalize(params["text"]):
+            self.touches.append(title)
             return {"edit": {"result": "Success", "nochange": True}}
         revid = self.store(title, normalize(params["text"]), self.username, params["summary"])
         return {"edit": {"result": "Success", "oldrevid": latest["revid"] if latest else 0, "newrevid": revid}}
@@ -124,7 +127,7 @@ def logged_in(wiki, username="MirkLurkBot"):
 
 
 def edits(wiki):
-    return [(call["title"], "appendtext" in call) for call in wiki.calls if call["action"] == "edit"]
+    return [call["title"] for call in wiki.calls if call["action"] == "edit"]
 
 
 class OwnershipAndPlanTests(unittest.TestCase):
@@ -136,19 +139,23 @@ class OwnershipAndPlanTests(unittest.TestCase):
         self.assertNotEqual(normalize(" leading"), normalize("leading"))
 
     def test_only_recognized_automation_revisions_can_be_replaced(self):
+        body = "Generated body\n"
         owned = [
             {"user": "WikiAdmin", "comment": "native-publication/v1:c2ad2911"},
             {"user": "WikiAdmin", "comment": "Publish reviewed wiki update 5a61765; preserve history"},
-            {"user": "WikiAdmin", "comment": "repo-sync: aa2cc2c"},
-            {"user": "MirkLurkBot", "comment": "repo-sync: aa2cc2c"},
+            {"user": "WikiAdmin", "comment": f"repo-sync: aa2cc2c text:{stamp(body)}", "text": body},
+            {"user": "MirkLurkBot", "comment": f"repo-sync: aa2cc2c text:{stamp(body)}", "text": "Generated body"},
             {"user": "imported>Repository seed", "comment": "Original repository seed; evidence and rights caveats apply."},
             {"user": "MediaWiki default", "comment": ""},
             {"user": "Maintenance script", "comment": "anything"},
         ]
         people = [
             {"user": "WikiAdmin", "comment": "Fix a typo"},
-            {"user": "DanteB", "comment": "repo-sync: pretending"},
+            {"user": "DanteB", "comment": f"repo-sync: pretending text:{stamp(body)}", "text": body},
             {"user": "MirkLurkBot", "comment": "manual cleanup"},
+            {"user": "MirkLurkBot", "comment": "repo-sync: aa2cc2c", "text": body},
+            {"user": "MirkLurkBot", "comment": f"repo-sync: aa2cc2c text:{stamp(body)}", "text": body + "A merged edit."},
+            {"user": "MirkLurkBot", "comment": f"repo-sync: aa2cc2c text:{stamp(body)}", "text": None},
             {"user": "", "comment": "repo-sync: hidden user"},
             {"comment": "repo-sync: missing user"},
         ]
@@ -163,7 +170,8 @@ class OwnershipAndPlanTests(unittest.TestCase):
         live = {
             "Absent": None,
             "Same": {"revid": 1, "user": "DanteB", "comment": "Edited", "text": "Same text\n", "timestamp": ""},
-            "Ours": {"revid": 2, "user": "WikiAdmin", "comment": "repo-sync: old", "text": "Old", "timestamp": ""},
+            "Ours": {"revid": 2, "user": "WikiAdmin", "comment": f"repo-sync: old text:{stamp('Old')}", "text": "Old",
+                     "timestamp": ""},
             "Theirs": {"revid": 3, "user": "DanteB", "comment": "Better wording", "text": "Mine", "timestamp": ""},
             "Hidden": {"revid": 4, "user": "WikiAdmin", "comment": "repo-sync: x", "text": None, "timestamp": ""},
         }
@@ -202,7 +210,7 @@ class OwnershipAndPlanTests(unittest.TestCase):
 
 class SyncTests(unittest.TestCase):
     def test_dry_run_reads_but_never_writes(self):
-        wiki = FakeWiki({"Old": ("Old", "WikiAdmin", "repo-sync: a")}, files={"File:Pic.png"})
+        wiki = FakeWiki({"Old": ours("Old")}, files={"File:Pic.png"})
         report = sync(wiki, {"Old": "New", "Fresh": "[[File:Pic.png]] [[File:Gone.png]]"}, "repo-sync: b", log=lambda _: None)
         self.assertEqual(edits(wiki), [])
         self.assertEqual((report["create"], report["update"]), (["Fresh"], ["Old"]))
@@ -223,8 +231,8 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(writes[1]["createonly"], "1")
         self.assertEqual({call["nocreate"] for call in (writes[0], writes[2])}, {"1"})
         self.assertTrue(all(call["baserevid"] for call in (writes[0], writes[2])))
-        self.assertTrue(all(call["summary"] == "repo-sync: abc" and call["bot"] == "1" and call["assert"] == "user"
-                            for call in writes))
+        self.assertTrue(all(call["summary"] == f"repo-sync: abc text:{stamp(call['text'])}" and call["bot"] == "1"
+                            and call["assert"] == "user" for call in writes))
         self.assertEqual(wiki.text("Talk about it"), "Mine")
         self.assertEqual([row["title"] for row in report["skipped"]], ["Talk about it"])
         self.assertEqual((report["created"], report["updated"]), (["New item"], ["Item", "Merchant"]))
@@ -232,10 +240,10 @@ class SyncTests(unittest.TestCase):
 
     def test_dependents_of_changed_owners_are_refreshed_but_person_edits_are_not_touched(self):
         wiki = logged_in(FakeWiki({
-            "Item": ("old", "WikiAdmin", "repo-sync: 1"),
-            "Seller": ("{{:Item}}", "WikiAdmin", "repo-sync: 1"),
+            "Item": ours("old"),
+            "Seller": ours("{{:Item}}"),
             "Fan page": ("{{:Item}} and my notes", "DanteB", "Notes"),
-            "Index": ("[[Brand new]]", "WikiAdmin", "repo-sync: 1"),
+            "Index": ours("[[Brand new]]"),
         }))
         pages = {"Item": "new", "Seller": "{{:Item}}", "Fan page": "{{:Item}}", "Index": "[[Brand new]]",
                  "Brand new": "hello"}
@@ -245,7 +253,7 @@ class SyncTests(unittest.TestCase):
         self.assertNotIn("Fan page", wiki.touches)
 
     def test_second_run_is_a_no_op(self):
-        wiki = logged_in(FakeWiki({"Item": ("old", "WikiAdmin", "repo-sync: 1")}))
+        wiki = logged_in(FakeWiki({"Item": ours("old")}))
         pages = {"Item": "new", "Other": "[[Item]]"}
         sync(wiki, pages, "repo-sync: 2", apply=True, log=lambda _: None)
         wiki.calls.clear()
@@ -255,8 +263,8 @@ class SyncTests(unittest.TestCase):
 
     def test_conflicts_rate_limits_and_errors_are_reported_without_stopping(self):
         wiki = logged_in(FakeWiki({
-            "Busy": ("old", "WikiAdmin", "repo-sync: 1"), "Slow": ("old", "WikiAdmin", "repo-sync: 1"),
-            "Locked": ("old", "WikiAdmin", "repo-sync: 1"),
+            "Busy": ours("old"), "Slow": ours("old"),
+            "Locked": ours("old"),
         }))
         wiki.failures = {"Busy": ["editconflict"], "Slow": ["ratelimited", "ratelimited"], "Locked": ["protectedpage"]}
         pages = {"Busy": "new", "Slow": "new", "Locked": "new", "Fine": "new"}
@@ -268,7 +276,7 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(sorted(report["created"] + report["updated"]), ["Fine", "Slow"])
 
     def test_merged_concurrent_edit_is_undone_and_then_left_alone(self):
-        wiki = logged_in(FakeWiki({"Busy": ("old", "WikiAdmin", "repo-sync: 1")}))
+        wiki = logged_in(FakeWiki({"Busy": ours("old")}))
         wiki.merge = True
         wiki.concurrent = {"Busy": ("old, with a person's fix", "DanteB", "Fix")}
         report = sync(wiki, {"Busy": "new"}, "repo-sync: 2", apply=True, log=lambda _: None)
@@ -280,17 +288,49 @@ class SyncTests(unittest.TestCase):
         self.assertEqual([row["title"] for row in later["skipped"]], ["Busy"])
         self.assertEqual(wiki.text("Busy"), "old, with a person's fix")
 
+    def test_a_lost_response_cannot_hand_a_merged_page_to_the_sync(self):
+        wiki = logged_in(FakeWiki({"Busy": ours("old")}))
+        original = wiki.edit
+
+        def merge_then_lose_the_response(params):
+            # MediaWiki merged a person's concurrent fix into the save, then the response was lost.
+            wiki.store(params["title"], "new\n\nA person's fix.", wiki.username, params["summary"])
+            raise ApiError("http", "TimeoutError contacting the wiki API")
+
+        wiki.edit = merge_then_lose_the_response
+        report = sync(wiki, {"Busy": "new"}, "repo-sync: 2", apply=True, log=lambda _: None)
+        self.assertEqual([row["title"] for row in report["errors"]], ["Busy"])
+        self.assertIn("next run re-checks", report["errors"][0]["error"])
+        wiki.edit = original
+        later = sync(wiki, {"Busy": "new"}, "repo-sync: 3", apply=True, log=lambda _: None)
+        self.assertEqual([row["title"] for row in later["skipped"]], ["Busy"])
+        self.assertEqual(wiki.text("Busy"), "new\n\nA person's fix.")
+
+    def test_refresh_re_saves_the_text_it_read_guarded_by_that_revision(self):
+        wiki = logged_in(FakeWiki({"Seller": ours("{{:Item}}"), "Item": ours("price")}))
+        sync(wiki, {"Seller": "{{:Item}}", "Item": "new price"}, "repo-sync: 2", apply=True, log=lambda _: None)
+        refresh = [call for call in wiki.calls if call["action"] == "edit" and call["title"] == "Seller"]
+        self.assertEqual([(call["text"], call["nocreate"]) for call in refresh], [("{{:Item}}", "1")])
+        self.assertEqual(int(refresh[0]["baserevid"]), wiki.revisions["Seller"][-1]["revid"])
+        self.assertNotIn("appendtext", refresh[0])
+        wiki = logged_in(FakeWiki({"Seller": ours("{{:Item}}"), "Item": ours("price")}))
+        wiki.concurrent = {"Seller": ("{{:Item}} and a person's note", "DanteB", "Note")}
+        report = sync(wiki, {"Seller": "{{:Item}}", "Item": "new price"}, "repo-sync: 2", apply=True, log=lambda _: None)
+        self.assertEqual(([row["title"] for row in report["conflicts"]], report["errors"]), (["Seller"], []))
+        self.assertEqual((wiki.text("Seller"), wiki.revisions["Seller"][-1]["user"]),
+                         ("{{:Item}} and a person's note", "DanteB"))
+
     def test_bot_group_edits_are_recognized_without_logging_in(self):
-        wiki = FakeWiki({"Page": ("old", "MirkLurkBot", "repo-sync: 1"),
+        wiki = FakeWiki({"Page": ours("old", "MirkLurkBot"),
                          "Mine": ("x", "DanteB", "repo-sync: typed by hand")}, groups={"MirkLurkBot": ["bot"]})
         report = sync(wiki, {"Page": "new", "Mine": "y"}, "repo-sync: 2", log=lambda _: None)
         self.assertEqual(report["update"], ["Page"])
         self.assertEqual([row["title"] for row in report["skipped"]], ["Mine"])
 
     def test_preview_lists_the_pages_a_publish_would_re_render(self):
-        wiki = logged_in(FakeWiki({"Seller": ("{{:Item}}", "WikiAdmin", "repo-sync: 1"),
+        wiki = logged_in(FakeWiki({"Seller": ours("{{:Item}}"),
                                    "Fan page": ("{{:Item}} notes", "DanteB", "Notes"),
-                                   "Item": ("price", "WikiAdmin", "repo-sync: 1")}))
+                                   "Item": ours("price")}))
         pages = {"Seller": "{{:Item}}", "Fan page": "{{:Item}}", "Item": "new price"}
         preview = sync(wiki, pages, "repo-sync: 2", log=lambda _: None)
         self.assertEqual((preview["refresh"], wiki.touches), (["Seller"], []))
@@ -299,14 +339,14 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(sync(wiki, pages, "repo-sync: 3", apply=True, log=lambda _: None)["refreshed"], [])
 
     def test_read_only_wiki_stops_the_run(self):
-        wiki = logged_in(FakeWiki({"A": ("old", "WikiAdmin", "repo-sync: 1"), "B": ("old", "WikiAdmin", "repo-sync: 1")}))
+        wiki = logged_in(FakeWiki({"A": ours("old"), "B": ours("old")}))
         wiki.failures = {"A": ["readonly"]}
         with self.assertRaisesRegex(SyncError, "read-only"):
             sync(wiki, {"A": "new", "B": "new"}, "repo-sync: 2", apply=True, log=lambda _: None)
         self.assertEqual(wiki.text("B"), "old")
 
     def test_mismatched_saved_text_is_flagged(self):
-        wiki = logged_in(FakeWiki({"A": ("old", "WikiAdmin", "repo-sync: 1")}))
+        wiki = logged_in(FakeWiki({"A": ours("old")}))
         original = wiki.edit
 
         def transforming_edit(params):
@@ -339,6 +379,16 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(wiki.text("Other"), "Mine")
         later = sync(wiki, dict(pages, Price="Next release"), "repo-sync: 3", apply=True, log=lambda _: None)
         self.assertEqual(later["updated"], ["Price"])
+
+    def test_adopting_a_page_that_already_matches_waits_for_its_next_change(self):
+        wiki = logged_in(FakeWiki({"Price": ("Ported wording", "DanteB", "Clarify")}))
+        report = sync(wiki, {"Price": "Ported wording"}, "repo-sync: 2", apply=True, log=lambda _: None, adopt=["Price"])
+        self.assertEqual((report["updated"], report["adopt_pending"]), ([], ["Price"]))
+        self.assertIn("Adoption waits for a change", sync_wiki.markdown(report, "https://wiki.example.org/api.php"))
+        later = sync(wiki, {"Price": "Next release"}, "repo-sync: 3", apply=True, log=lambda _: None)
+        self.assertEqual([row["title"] for row in later["skipped"]], ["Price"])
+        adopted = sync(wiki, {"Price": "Next release"}, "repo-sync: 3", apply=True, log=lambda _: None, adopt=["Price"])
+        self.assertEqual((adopted["updated"], adopted["adopt_pending"]), (["Price"], []))
 
 
 class ResponseHandling(io.BytesIO):

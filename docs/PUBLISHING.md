@@ -32,22 +32,26 @@ request) and then:
 | Last saved by the publishing automation | Update it (`nocreate`, `baserevid`) |
 | Last saved by anyone else | **Skip it** and report it |
 
-The *publishing automation* is a revision whose summary starts with
-`repo-sync:` (this tool) or with one of the earlier publication summaries
-(`native-publication/v1:`, `Publish reviewed `, `Original repository seed`),
-saved by `WikiAdmin`, the account the sync logs in as, or any member of the
-`bot` group. MediaWiki's own `MediaWiki default`, `Maintenance script` and
-`imported>` identities also count, because nobody can log in as them.
+The *publishing automation* is a revision saved by `WikiAdmin`, the account
+the sync logs in as, or any member of the `bot` group, with a summary that
+starts with `repo-sync:` (this tool) or with one of the earlier publication
+summaries (`native-publication/v1:`, `Publish reviewed `,
+`Original repository seed`). Each sync save ends its summary with
+`text:<hash>` of the text it meant to store, and a `repo-sync:` revision
+counts only while its text still matches that hash. MediaWiki's own
+`MediaWiki default`, `Maintenance script` and `imported>` identities also
+count, because nobody can log in as them.
 
 Writes follow the transclusion graph: a page whose views others include is
 saved before the pages that include it. Merchants and items include views of
 each other, so a few pages are necessarily saved before an owner. After
-writing, the sync re-renders (with a null edit) every automation-owned page
-that was rendered before a page it includes was saved, or links to a page this
-run created. Readers therefore see the new content immediately, without
-waiting for MediaWiki's job queue; the preview lists these pages too. Pages
-people edited, and the dependents of an interrupted publish, are left to the
-queue, which catches up as the wiki is used.
+writing, the sync re-renders every automation-owned page that was rendered
+before a page it includes was saved, or links to a page this run created, by
+re-saving the exact text it just read with that revision as `baserevid` (a
+null edit). Readers therefore see the new content immediately, without waiting
+for MediaWiki's job queue; the preview lists these pages too. Pages people
+edited, and the dependents of an interrupted publish, are left to the queue,
+which catches up as the wiki is used.
 
 Finally it re-reads every page it saved and fails the run if the stored text
 differs from the generated text, which catches wikitext that MediaWiki's
@@ -60,18 +64,24 @@ dropped from the generator stays on the wiki until someone removes it.
 `baserevid` turns a person's save in the seconds between the read and the
 write into an edit conflict. MediaWiki can instead merge non-overlapping
 changes; the sync notices that the page changed underneath it, undoes its own
-revision so the person's text is current again, and reports a conflict.
-Either way the page is then skipped like any other person edit.
+revision so the person's text is current again, and reports a conflict. If a
+response is lost instead, the run reports an error, and because a merged save
+no longer matches its `text:` hash, later runs treat the page as a person's
+edit rather than overwrite it.
 
 ## When a person edits a generated page
 
 The sync skips the page on every run and warns about it until it is resolved:
 
-1. Port the improvement into `content/` so the generator produces it, and merge.
-2. If the live text now matches, the page is simply *unchanged*. To let future
-   releases update it again, hand it back: **Actions → Validate and publish →
-   Run workflow** on `main`, with the page title in *adopt* (separate several
-   titles with `|`). The next sync edit makes the page automation-owned again.
+1. If the edit is worth keeping, port it into `content/` so the generator
+   produces it, and merge. While the live text matches the repository, the
+   page is simply *unchanged* and no warning appears.
+2. When the generated text next differs from the live page, the warning
+   returns. Hand the page back: **Actions → Validate and publish → Run
+   workflow** on `main`, with the page title in *adopt* (separate several
+   titles with `|`). That run replaces the page, and later runs update it
+   normally. Adopting a page whose text already matches does nothing yet; the
+   run lists it under *Adoption waits for a change*.
 
 To discard the person's edit instead, adopt the page without porting anything;
 the edit stays in the page history.
@@ -84,11 +94,12 @@ then the page shows a red file link. Nothing else waits on images.
 
 ## Undoing a release
 
-Every sync revision is an ordinary edit summarized `repo-sync: <commit>`:
+Every sync revision is an ordinary edit summarized
+`repo-sync: <commit> text:<hash>`:
 
 - Revert the commit in Git and merge; the sync publishes the previous text.
 - Or undo individual revisions in the page history. The page then counts as
-  edited by a person, so adopt it once the repository matches.
+  edited by a person; adopt it when a release next changes it.
 - For database-level recovery, restore the regular backup. Test restores on a
   schedule rather than before each release.
 

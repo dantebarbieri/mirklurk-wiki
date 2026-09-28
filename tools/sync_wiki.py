@@ -7,6 +7,7 @@ they are skipped and listed for a manual merge.
 """
 
 import argparse
+import hashlib
 import http.cookiejar
 import json
 import os
@@ -26,8 +27,10 @@ from wiki_render import build_pages
 
 ROOT = Path(__file__).resolve().parents[1]
 SUMMARY_PREFIX = "repo-sync:"
-# Edit summaries written by this tool and by the publication workflows it replaced.
-AUTOMATION_SUMMARIES = (SUMMARY_PREFIX, "native-publication/v1:", "Publish reviewed ", "Original repository seed")
+# Every sync save ends its summary with a hash of the text it meant to store.
+STAMP = re.compile(r" text:([0-9a-f]{12})$")
+# Summaries of the publication workflows this tool replaced; no new ones are written.
+LEGACY_SUMMARIES = ("native-publication/v1:", "Publish reviewed ", "Original repository seed")
 # MediaWiki's installer and maintenance identities; nobody can log in as these.
 SYSTEM_USERS = {"MediaWiki default", "Maintenance script"}
 DEFAULT_ACCOUNTS = ("WikiAdmin",)
@@ -118,11 +121,23 @@ def normalize(text):
     return text.rstrip(PHP_WHITESPACE).replace("\r\n", "\n").replace("\r", "\n")
 
 
+def stamp(text):
+    return hashlib.sha256(normalize(text).encode("utf-8")).hexdigest()[:12]
+
+
 def automation_owned(revision, accounts):
     user = revision.get("user") or ""
     if user in SYSTEM_USERS or user.startswith("imported>"):
         return True
-    return user in accounts and (revision.get("comment") or "").startswith(AUTOMATION_SUMMARIES)
+    comment = revision.get("comment") or ""
+    if user not in accounts:
+        return False
+    if comment.startswith(SUMMARY_PREFIX):
+        # A sync revision only counts while it still holds the text it was stamped with,
+        # so a save that MediaWiki merged with someone's concurrent edit stays theirs.
+        match = STAMP.search(comment)
+        return bool(match) and revision.get("text") is not None and match.group(1) == stamp(revision["text"])
+    return comment.startswith(LEGACY_SUMMARIES)
 
 
 def fetch_live(api, titles):
@@ -244,7 +259,8 @@ def edit(api, params):
 
 
 def save(api, title, text, current, summary):
-    params = {"action": "edit", "title": title, "text": text, "summary": summary}
+    """Save text as the automation; with the text just read, this is a guarded null edit."""
+    params = {"action": "edit", "title": title, "text": text, "summary": f"{summary} text:{stamp(text)}"}
     if current is None:
         params["createonly"] = "1"
     else:
@@ -300,6 +316,9 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
                      "revid": live[title]["revid"]} for title, action in actions.items() if action == "skip"],
         "created": [], "updated": [], "conflicts": [], "errors": [], "refresh": [], "refreshed": [],
         "unverified": [],
+        # Matching text leaves no revision to take over; adopt these again once their text changes.
+        "adopt_pending": sorted(title for title in adopt if actions[title] == "unchanged"
+                                and not automation_owned(live[title], accounts)),
     }
     order = write_order(report["create"] + report["update"], pages)
     written, created = [], set()
@@ -310,8 +329,11 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
             if error.code == "readonly":
                 raise SyncError(f"The wiki is read-only ({error}); nothing further was written.") from None
             bucket = "conflicts" if error.code in CONFLICTS else "errors"
-            report[bucket].append({"title": title, "error": str(error)})
-            log(f"{bucket[:-1]}: {title}: {error}")
+            detail = str(error)
+            if error.code == "http":
+                detail += "; the save may still have happened, so the next run re-checks this page"
+            report[bucket].append({"title": title, "error": detail})
+            log(f"{bucket[:-1]}: {title}: {detail}")
             continue
         written.append(title)
         created.update([title] if actions[title] == "create" else [])
@@ -328,12 +350,13 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
                          if title in written or automation_owned(current[title], accounts)]
     for title in report["refresh"] if apply else []:
         try:
-            # A null edit re-renders the page. It only saves a revision when the stored text still
-            # has trailing whitespace that an edit would trim (pages imported rather than edited).
-            edit(api, {"action": "edit", "title": title, "appendtext": "", "nocreate": "1", "summary": summary})
+            # Re-saving the text just read re-renders the page. baserevid turns a concurrent save
+            # into a conflict or no-op; a revision only appears when an import left trailing whitespace.
+            save(api, title, current[title]["text"], current[title], summary)
             report["refreshed"].append(title)
         except ApiError as error:
-            report["errors"].append({"title": title, "error": f"refresh failed: {error}"})
+            bucket = "conflicts" if error.code in CONFLICTS else "errors"
+            report[bucket].append({"title": title, "error": f"refresh: {error}"})
     report["unverified"] = [title for title in (written if apply else [])
                             if current[title] is None or current[title]["text"] is None
                             or normalize(current[title]["text"]) != normalize(pages[title])]
@@ -361,6 +384,7 @@ def markdown(report, api_url):
         ("Conflicts: edited while this run was saving", [f"{row['title']}: {row['error']}" for row in report["conflicts"]]),
         ("Errors", [f"{row['title']}: {row['error']}" for row in report["errors"]]),
         ("Saved text differs from the generated page", report["unverified"]),
+        ("Adoption waits for a change: these already match the repository", report["adopt_pending"]),
         ("Would create" if dry else "Created", report["create"] if dry else report["created"]),
         ("Would update" if dry else "Updated", report["update"] if dry else report["updated"]),
         ("Referenced images not on the wiki yet (import them separately)", report["missing_files"]),
