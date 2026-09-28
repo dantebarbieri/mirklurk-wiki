@@ -26,7 +26,7 @@ def smoke_browser(api, base, token, data, artifact_dir):
         '{{Ware row|seller=[[Magus Clay]]|item=Iron Hand Axe|price={{:Iron Hand Axe}}}}\n</table>\n'
         '<p>{{Item|Plant Fiber|quantity=4}} and {{Item|Turnip (item)}}</p>\n'
         '<div id="narrow-coins" style="width:220px;max-width:100%;">{{Coins|999999999999999999}}</div>\n'
-        '<div id="narrow-item" style="width:160px;max-width:100%;">{{Item|Survivor\'s Field Kit}}</div>\n'
+        '<div id="narrow-item" style="width:110px;max-width:100%;">{{Item|Survivor\'s Field Kit}}</div>\n'
         '<div id="health-fixture">{{Health grid|0,1,0;1,4,1;0,1,0}}</div>\n'
         '<p>{{Creature|Sceetler}}</p>\n</div>'
     )
@@ -48,7 +48,7 @@ def smoke_browser(api, base, token, data, artifact_dir):
                     await document.fonts.ready;
                     await Promise.all([...document.images].map(i => i.decode()));
                 }""")
-                page.locator("#layout-fixture").screenshot(path=str(folder / (name + "-layout.png")))
+                page.screenshot(path=str(folder / (name + "-layout.png")), full_page=True)
                 result = page.evaluate("""() => {
                     const root = document.querySelector('#layout-fixture');
                     const rect = e => {
@@ -82,7 +82,10 @@ def smoke_browser(api, base, token, data, artifact_dir):
                         items:pairs('.mirklurk-item', '.mirklurk-item-name'),
                         narrowWidth:narrow.clientWidth, narrowScroll:narrow.scrollWidth,
                         narrowLines:[...narrow.querySelectorAll('.mirklurk-coin')].map(e => rect(e).y),
-                        itemWidth:item.clientWidth, itemScroll:item.scrollWidth, cells,
+                        itemWidth:item.clientWidth, itemScroll:item.scrollWidth,
+                        itemLines:rect(item.querySelector('.mirklurk-item-name')).height /
+                            parseFloat(getComputedStyle(item.querySelector('.mirklurk-item-name')).lineHeight),
+                        cells,
                         errors:root.querySelectorAll('.error, .mw-broken-media').length
                     };
                 }""")
@@ -103,7 +106,8 @@ def smoke_browser(api, base, token, data, artifact_dir):
                         if kind == "coins" and (pair["image"]["width"] != 16 or pair["image"]["height"] != 16):
                             raise RuntimeError("Browser coins changed their 16px integer-native size.")
                 if (result["narrowScroll"] > result["narrowWidth"]
-                        or len(set(result["narrowLines"])) < 2 or result["itemScroll"] > result["itemWidth"]):
+                        or len(set(result["narrowLines"])) < 2 or result["itemScroll"] > result["itemWidth"]
+                        or result["itemLines"] < 1.9):
                     raise RuntimeError("Coin denominations or long item names no longer wrap without overflow.")
                 if len(result["cells"]) != 5 or any(cell["height"] < 3 * cell["em"] for cell in result["cells"]):
                     raise RuntimeError("Coin alignment changed health-cell geometry.")
@@ -118,8 +122,24 @@ def smoke_browser(api, base, token, data, artifact_dir):
                         raise RuntimeError("A migrated article has rendered errors.")
                     if not page.locator(".mw-parser-output .mirklurk-item").count():
                         raise RuntimeError("A migrated article does not actually use Item.")
+                    article_pairs = page.evaluate("""() => [...document.querySelectorAll(
+                        '.mw-parser-output .mirklurk-item, .mw-parser-output .mirklurk-coin'
+                    )].filter(e => e.querySelector('img')).map(e => {
+                        const i=e.querySelector('img').getBoundingClientRect();
+                        const t=e.querySelector('.mirklurk-item-name, .mirklurk-coin-text').getBoundingClientRect();
+                        return {label:e.textContent.trim(), delta:Math.abs(i.y+i.height/2-t.y-t.height/2),
+                            gap:t.x-i.right, width:i.width, height:i.height};
+                    })""")
+                    if any(pair["delta"] > 0.5 or pair["gap"] < 0 for pair in article_pairs):
+                        raise RuntimeError(f"{name} {article}: real article icons overlap text or are not centered.")
+                    measurements.append({"viewport": name, "article": article, "pairs": article_pairs})
+                    (folder / "geometry.json").write_text(json.dumps(measurements, indent=2) + "\n", encoding="utf-8")
                     if article == "Iron Hand Axe":
                         page.locator("#Buying").scroll_into_view_if_needed()
+                    elif article == "Items":
+                        page.locator("#Ammunition").scroll_into_view_if_needed()
+                    else:
+                        page.locator("#Wares").scroll_into_view_if_needed()
                     page.screenshot(path=str(folder / (name + "-" + article.replace(" ", "-") + ".png")))
                 context.close()
         finally:
