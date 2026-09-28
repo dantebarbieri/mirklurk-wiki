@@ -13,22 +13,34 @@ from wiki_catalog import default_catalog
 
 
 class PublicationTests(unittest.TestCase):
-    def test_ci_runs_fast_pr_checks_and_requires_full_main_or_manual_smoke(self):
+    def test_ci_checks_every_change_and_publishes_main_only_after_the_smoke(self):
         workflow = (ROOT / ".github" / "workflows" / "validate.yml").read_text(encoding="utf-8")
         self.assertIn("  push:\n    branches: [main]\n  pull_request:\n  workflow_dispatch:\n", workflow)
-        self.assertIn("group: ${{ github.workflow }}-${{ github.ref }}", workflow)
-        self.assertIn("cancel-in-progress: true", workflow)
-        publication, smoke = workflow.split("  publication:\n", 1)[1].split("  docker-smoke:\n", 1)
-        self.assertNotIn("\n    if:", publication)
-        self.assertNotIn("timeout-minutes:", publication)
+        self.assertIn("group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.run_id || github.ref }}", workflow)
+        self.assertIn("  queue: max\n", workflow)
+        self.assertNotIn("cancel-in-progress", workflow)
+        publication, rest = workflow.split("\njobs:\n", 1)[1].split("  docker-smoke:\n", 1)
+        smoke, rest = rest.split("  preview:\n", 1)
+        preview, publish = rest.split("  publish:\n", 1)
+        self.assertNotIn("\n    if:", publication + smoke)
         self.assertIn("python3 -m unittest discover -s tests -v", publication)
         self.assertIn("php tests/test_runtime.php", publication)
         self.assertIn("needs: publication", smoke)
-        self.assertIn("if: github.event_name != 'pull_request'", smoke)
-        self.assertIn("    timeout-minutes: 90\n", smoke)
-        self.assertIn("python3 tools/smoke_deploy.py --run --evidence-dir", smoke)
-        self.assertIn("if-no-files-found: error", smoke)
+        self.assertIn("    timeout-minutes: 30\n", smoke)
+        self.assertIn("run: python3 tools/smoke_deploy.py --run\n", smoke)
         self.assertIn("github.event.pull_request.head.sha || github.sha", smoke)
+        self.assertIn("if: github.event_name == 'pull_request'", preview)
+        self.assertIn("continue-on-error: true", preview)
+        self.assertIn("python3 tools/sync_wiki.py\n", preview)
+        self.assertNotIn("secrets.", preview)
+        self.assertIn("if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'", publish)
+        self.assertIn("needs: [publication, docker-smoke]", publish)
+        self.assertIn("python3 tools/sync_wiki.py --apply --adopt \"$ADOPT\"\n", publish)
+        self.assertIn("ADOPT: ${{ inputs.adopt }}", publish)
+        self.assertIn("MIRKLURK_BOT_PASSWORD: ${{ secrets.MIRKLURK_BOT_PASSWORD }}", publish)
+        self.assertEqual(workflow.count("secrets."), 2)
+        # Dispatch input reaches the shell only through a quoted environment variable.
+        self.assertFalse(any("${{ inputs." in line for line in workflow.splitlines() if "run:" in line or "python3" in line))
 
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()

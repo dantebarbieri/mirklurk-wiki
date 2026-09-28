@@ -1,4 +1,9 @@
-"""Opt-in Docker integration test in an isolated, disposable Compose project."""
+"""Opt-in Docker integration test in an isolated, disposable Compose project.
+
+Builds the pinned image, installs a throwaway wiki, publishes the generated
+release with tools/sync_wiki.py, and checks what readers and editors see.
+It never contacts a live wiki.
+"""
 
 import argparse
 import hashlib
@@ -23,7 +28,8 @@ from decimal import Decimal
 from fractions import Fraction
 from pathlib import Path
 
-from build_wiki import build_pages, build_xml, existing_titles, title_key
+from build_wiki import build_pages, build_xml, title_key
+from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
 from wiki_render import display_entry, image_for, literal, recipe_groups
@@ -371,6 +377,166 @@ def check_parser_errors(rendered):
                            + rendered[max(0, match.start() - 120):match.end() + 400])
 
 
+class ProjectionDOM(HTMLParser):
+    """Ordered visible cells and links of rendered HTML, without implementation-specific URLs."""
+
+    def __init__(self, title):
+        super().__init__()
+        self.title = title
+        self.text = ""
+        self.links = []
+        self.non_wiki_links = []
+        self.outside_text = ""
+        self.outside_links = []
+        self.anchors = []
+        self.rows = []
+        self.wiki_links = []
+        self.content_links = []
+        self.content_wiki_links = []
+        self.elements = []
+        self.tables = []
+        self.row = self.cell = self.link = None
+        self.link_tag = None
+
+    def handle_starttag(self, tag, attributes):
+        attrs = dict(attributes)
+        classes = attrs.get("class", "").split()
+        in_toc = (self.elements[-1][1] if self.elements else False) or (
+            attrs.get("id") == "toc" and "toc" in classes)
+        in_edit = (self.elements[-1][2] if self.elements else False) or "mw-editsection" in classes
+        if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}:
+            self.elements.append((tag, in_toc, in_edit))
+        if tag == "table":
+            self.tables.append([])
+        elif tag == "tr":
+            self.row = {"headers": list(self.tables[-1]) if self.tables else [], "cells": [], "ids": []}
+        elif tag in {"td", "th"} and self.row is not None:
+            self.cell = {"text": "", "links": [], "anchors": []}
+            self.row["cells"].append(self.cell)
+            self.row["header"] = tag == "th"
+        if identity := attrs.get("id"):
+            self.anchors.append(identity)
+            if self.row is not None:
+                self.row["ids"].append(identity)
+            if self.cell is not None:
+                self.cell["anchors"].append(identity)
+        if tag == "br":
+            self.handle_data(" ")
+        if tag == "a" or "selflink" in attrs.get("class", "").split():
+            url = urllib.parse.urlsplit(attrs.get("href", ""))
+            query = urllib.parse.parse_qs(url.query)
+            selflink = "selflink" in attrs.get("class", "").split()
+            href = attrs.get("href", "")
+            if url.scheme or url.netloc or not (query.get("title") or href.startswith("#") or selflink):
+                if href:
+                    self.link = {"href": href, "text": ""}
+                    self.link_tag = tag
+                    self.non_wiki_links.append(self.link)
+                    if self.cell is not None:
+                        self.cell.setdefault("non_wiki_links", []).append(self.link)
+                return
+            target = query.get("title", [None])[0] or self.title
+            if url.fragment:
+                target = target.split("#", 1)[0] + "#" + urllib.parse.unquote(url.fragment)
+            name, separator, fragment = target.partition("#")
+            self.link = {"target": name.replace("_", " ") + separator + fragment, "text": ""}
+            self.wiki_links.append({"target": self.link["target"].split("#", 1)[0],
+                                    "redlink": "new" in attrs.get("class", "").split() or query.get("redlink") == ["1"],
+                                    "href": href, "classes": attrs.get("class", "").split()})
+            navigation = (in_toc and href.startswith("#")) or (in_edit and
+                self.wiki_links[-1]["target"] == self.title and query.get("action") == ["edit"] and "section" in query)
+            if not navigation:
+                self.content_links.append(self.link)
+                self.content_wiki_links.append(self.wiki_links[-1])
+            self.link_tag = tag
+            self.links.append(self.link)
+            if self.row is None:
+                self.outside_links.append(self.link)
+            if self.cell is not None:
+                self.cell["links"].append(self.link)
+
+    def handle_endtag(self, tag):
+        for index in range(len(self.elements) - 1, -1, -1):
+            if self.elements[index][0] == tag:
+                del self.elements[index:]
+                break
+        if tag == self.link_tag:
+            self.link = self.link_tag = None
+        if tag in {"td", "th"}:
+            self.cell = None
+        if tag == "tr" and self.row is not None:
+            if self.row.get("header") and self.tables:
+                self.tables[-1] = [" ".join(cell["text"].split()) for cell in self.row["cells"]]
+            else:
+                self.rows.append(self.row)
+            self.row = None
+        if tag == "table" and self.tables:
+            self.tables.pop()
+
+    def handle_data(self, text):
+        self.text += text
+        if self.row is None:
+            self.outside_text += text
+        if self.cell is not None:
+            self.cell["text"] += text
+        if self.link is not None:
+            self.link["text"] += text
+
+    def normalize(self):
+        self.text = " ".join(self.text.split())
+        self.outside_text = " ".join(self.outside_text.split())
+        for link in [*self.links, *self.non_wiki_links]:
+            link["text"] = " ".join(link["text"].split())
+        for row in self.rows:
+            for cell in row["cells"]:
+                cell["text"] = " ".join(cell["text"].split())
+        return self
+
+
+def dom(html, title):
+    result = ProjectionDOM(title)
+    result.feed(html)
+    return result.normalize()
+
+
+def check_pool_projection(html, pool, owner, locations, catalog, item=None, parse_title="Pool projection"):
+    parsed = dom(html, parse_title)
+    members = set(pool["eligible_item_ids"]) if item is None else {item} & set(pool["eligible_item_ids"])
+    wanted = {"pool-item-" + pool["id"] + "-" + identity for identity in members}
+    actual = [identity for identity in parsed.anchors if identity.startswith("pool-item-")]
+    if set(actual) != wanted or len(actual) != len(wanted):
+        raise RuntimeError("A pool view changed its exact membership.")
+    for identity, condition in pool["item_conditions"].items():
+        if (" ".join(condition.split()) in parsed.text) != (identity in members):
+            raise RuntimeError("A pool view lost or leaked an item-specific story gate.")
+    if item is not None:
+        gate = pool["item_conditions"].get(item)
+        expected = ((locations[item] + ": " + gate + " ") if gate else "") + pool["title"] + " (eligible)" if members else ""
+        expected_links = ([locations[item]] if gate else []) + [owner + "#pool-" + pool["id"]] if members else []
+        if (parsed.text != expected or parsed.rows or re.search(r"<(?:table|img|h[1-6])\b", html, re.I)
+                or [link["target"] for link in parsed.links] != expected_links or parsed.non_wiki_links):
+            raise RuntimeError("An item pool view changed its compact eligibility-only reference.")
+    else:
+        categories = {identity: group["title"] for group in catalog.get("taxonomy", {}).get("groups", [])
+                      if group["index"] == "Items" for identity in group["members"]}
+        if len(parsed.rows) != len(members):
+            raise RuntimeError("A pool candidate table omitted or duplicated rows.")
+        for row in parsed.rows:
+            if len(row["ids"]) != 1 or row["ids"][0] not in wanted or len(row["cells"]) != 2:
+                raise RuntimeError("A pool candidate table changed its two-column shape.")
+            identity = row["ids"][0].removeprefix("pool-item-" + pool["id"] + "-")
+            category = categories.get(identity)
+            links = [locations[identity]]
+            if identity in pool["item_conditions"]:
+                links.append(owner + "#treasure-condition-" + identity)
+            if ([link["target"] for link in row["cells"][0]["links"]] != links
+                    or row["headers"] != ["Item", "Category"]
+                    or row["cells"][1]["text"] != (category or "Item")
+                    or [link["target"] for link in row["cells"][1]["links"]] != (["Category:" + category] if category else [])):
+                raise RuntimeError("A pool candidate changed its item, category or condition link.")
+    return parsed
+
+
 class RenderedRows(HTMLParser):
     def __init__(self, prefix="entry-recipe-", strip_prefix="entry-", page_title=None):
         super().__init__()
@@ -517,7 +683,6 @@ def check_seller_context(result, merchant, item, text, stock_text=None, location
         if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in text:
             raise RuntimeError("A seller view has missing dependencies or recursively transcluded item prices.")
     if stock_text is not None or location_page is not None:
-        from smoke_prefix import dom
         parsed = dom(result["text"]["*"], merchant if item is None else "Synthetic seller view")
         if stock_text is not None:
             references = [link for link in parsed.links if link["target"] in {
@@ -783,8 +948,6 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
 
 
 def smoke_acquisition_pools(run, api, pages, data, catalog, token):
-    from smoke_prefix import check_pool_projection, dom
-
     locations = page_locations(data, catalog)
     sources = {source["id"]: source for source in catalog.get("acquisition", {}).get("sources", [])}
     pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
@@ -855,44 +1018,6 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
         if restored.get("edit", {}).get("result") != "Success":
             raise RuntimeError("The synthetic pool/source edit could not be restored.")
     print("Acquisition pools passed: exact members, rejected members, story gates, source conditions and canonical edit propagation.")
-
-
-def capture_view_fixtures(api, pages, catalog):
-    station = next(row["id"] for row in catalog["stations"] if row["title"] == "Alchemy workstation")
-    cases = [
-        ("price", "Longbow (Cypress)", {}),
-        ("coin", "Copper Coin", {}),
-        ("recipes", "Simple Burn Remedy", {"view": "recipes", "station": station}),
-        ("construction", "Finish Raft", {"view": "recipes", "station": "raft-base"}),
-        ("offers", "Ranger Bhato", {"view": "offers", "item": "item-105"}),
-        ("fixed-loot", "Dead camp", {"view": "loot", "item": "item-13"}),
-        ("world-loot", "Searching boulders", {"view": "loot", "item": "item-60"}),
-        ("insect-loot", "Harvested insects", {"view": "loot", "item": "item-243"}),
-        ("pool-source", "Treasure chests", {"view": "pool-source", "pool": "chest-common"}),
-        ("pool-story-gate", "Random treasure", {"view": "pool", "pool": "chest-common", "item": "item-127"}),
-    ]
-    fixtures = []
-    for name, owner, parameters in cases:
-        original = api({"action": "parse", "page": owner, "prop": "wikitext"})["parse"]["wikitext"]["*"]
-        if original != pages[owner]:
-            raise RuntimeError("A named-view fixture owner differs from the frozen desired seed.")
-        invocation = "{{:" + owner + "".join("|" + key + "=" + value for key, value in parameters.items()) + "}}"
-        expanded = api({"action": "expandtemplates", "text": invocation, "prop": "wikitext"}, post=True)["expandtemplates"]["wikitext"]
-        render_context = "table" if parameters.get("view") == "recipes" else "block"
-        render_text = "<table>" + invocation + "</table>" if render_context == "table" else invocation
-        result = api({"action": "parse", "title": "Synthetic contract view", "text": render_text,
-                      "prop": "text|templates"}, post=True)["parse"]
-        check_parser_errors(result["text"]["*"])
-        fixture = {
-            "name": name, "owner": owner, "owner_sha256": hashlib.sha256(original.encode()).hexdigest(),
-            "parameters": parameters, "invocation": invocation, "expanded_wikitext": expanded,
-            "render_context": render_context,
-            "html": result["text"]["*"], "templates": sorted(row["*"] for row in result.get("templates", [])),
-            "scope": "Disposable MediaWiki with synthetic artwork; image URLs and cache metadata are not portable.",
-        }
-        fixtures.append(fixture)
-        print("VIEW_CONTRACT_JSON=" + json.dumps(fixture, ensure_ascii=False), flush=True)
-    return fixtures
 
 
 def refreshed_transclusion(run, api, title, expected, forbidden_anchor, owner=None):
@@ -1026,72 +1151,10 @@ def smoke_images(run, api, base, data, *corpora):
     return {filename: hashlib.sha256(payload).hexdigest() for filename, payload in originals.items()}
 
 
-def write_smoke_evidence(directory, source_head, evidence, seeds, failure=None, rehearsal=None, native=None):
-    from smoke_prefix import canonical_bytes
-    directory.mkdir(parents=True, exist_ok=False)
-    status = "failed" if failure is not None else "passed"
-    if failure is not None:
-        partial = None if rehearsal is None else {
-            key: getattr(rehearsal, key, None) for key in (
-                "provenance", "binding", "order", "base_meta", "metadata", "prefixes", "probes", "link_candidates",
-                "default_endpoints", "default_prefixes", "used_baseline_defaults",
-                "context_previews", "context_checks", "consumer_html", "settling",
-            )
-        }
-        evidence = {"failed-rehearsal.json": {
-            "schema_version": 1, "kind": "failed-disposable-rehearsal", "status": "failed", "complete": False,
-            "source_head_sha": source_head, "failure": {"type": type(failure).__name__, "message": str(failure)},
-            "partial_evidence": evidence, "rehearsal": partial,
-            "native_partial": None if native is None else {
-                "proof": native.proof,
-                "release_journal_records": None if getattr(native, "release_journal", None) is None else native.release_journal.records,
-            },
-            "notice": "Partial observations only; no completed rehearsal, replay, cleanup or publication admission is claimed.",
-        }}
-    for name, value in evidence.items():
-        with (directory / name).open("xb") as stream:
-            stream.write(canonical_bytes(value))
-    for name, payload in seeds.items():
-        with (directory / name).open("xb") as stream:
-            stream.write(payload)
-    hashes = {path.name: {"bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
-              for path in sorted(directory.iterdir())}
-    with (directory / "artifact-manifest.json").open("xb") as stream:
-        stream.write(canonical_bytes({"source_head_sha": source_head, "status": status, "complete": failure is None,
-                                     "artifacts": hashes, "notice": "Disposable observations only; no live writes authorized."}))
-
-
-def smoke(evidence_dir=None, incremental_inputs=None):
-    from smoke_native import NativeSmoke, docker, require_historical_coverage
-    from publication_journal import Journal
-    from smoke_prefix import (
-        PREVIOUS_AUTHORED_COMMIT, STORED_BASELINE_BINDING, Rehearsal, SETTINGS_KEYS,
-        canonical_bytes, capture_installer_welcome, managed_titles,
-        materialize_desired, reconstruct_baseline, settings_hash,
-    )
-
-    if evidence_dir is not None and (evidence_dir.exists() or evidence_dir.is_symlink()):
-        raise FileExistsError("Smoke evidence directory must be new; preserve previous attempts.")
+def smoke():
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
         workspace = Path(folder)
-        incremental = None
-        if incremental_inputs is None:
-            previous_authored, previous_payload, baseline, baseline_payload, baseline_catalog = reconstruct_baseline(ROOT, workspace)
-            previous_head = PREVIOUS_AUTHORED_COMMIT
-        else:
-            from smoke_incremental import IncrementalRehearsal, load_incremental_inputs, verify_native_completion
-            inputs, payloads, previous_inputs, incremental = load_incremental_inputs(ROOT, workspace, incremental_inputs)
-            previous_authored, baseline = inputs["previous_authored"], inputs["baseline"]
-            previous_payload, baseline_payload = payloads["previous_authored"], payloads["baseline"]
-            baseline_catalog = previous_inputs[1]
-            previous_head = incremental["previous_source"]["head_sha"]
-        source_head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-        subprocess.run(["git", "diff", "--quiet", "HEAD", "--"], cwd=ROOT, check=True)
-        evidence = ({"stored-baseline-binding.json": STORED_BASELINE_BINDING} if incremental is None else
-                    {"incremental-input-binding.json": incremental})
-        seeds = {"previous-authored-seed.xml": previous_payload, "baseline-seed.xml": baseline_payload}
-        rehearsal = failure = None
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
@@ -1105,23 +1168,8 @@ def smoke(evidence_dir=None, incremental_inputs=None):
         questions.write_text(json.dumps({question: [secrets.token_hex(8)]}), encoding="utf-8")
         questions.chmod(0o444)
         compose = ["docker", "compose", "--project-name", project, "--file", str(ROOT / "deploy" / "compose.dev.yml")]
-        override = workspace / "native-compose.json"
-        override.write_text(json.dumps({"services": {"mirklurk": {"volumes": [
-            "native-images:/var/www/html/images", f"{ROOT / 'tools'}:/native/tools:ro",
-            f"{ROOT / 'tests'}:/native/tests:ro",
-        ]}}, "volumes": {"native-images": {}}}), encoding="utf-8")
-        compose += ["--file", str(override)]
-        observer = None
-        native = None
 
         def run(*args, input_bytes=None, timeout=None):
-            if observer and args[0] == "exec" and "mirklurk" in args:
-                arguments = list(args[1:])
-                arguments[arguments.index("-T")] = "-i"
-                arguments[arguments.index("mirklurk")] = observer
-                if "runJobs" in arguments:
-                    arguments = ["-e", "MW_READ_ONLY=", *arguments]
-                return docker("exec", *arguments, input_bytes=input_bytes, timeout=timeout or 120)
             return subprocess.run(
                 [*compose, *args], cwd=ROOT, env=environment, input=input_bytes,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=timeout,
@@ -1147,6 +1195,22 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             elif "error" in value:
                 raise RuntimeError(f"API request failed: {value['error'].get('code', 'unknown')}")
             return value
+
+        def publish(corpus, label, **expected):
+            started = time.monotonic()
+            report = sync(publisher, corpus, "repo-sync: smoke " + label, apply=True, log=lambda line: None)
+            summary = {key: report[key] for key in ("created", "updated", "refreshed", "conflicts", "errors", "unverified")}
+            print(f"Sync {label}: {time.monotonic() - started:.1f}s, counts {report['counts']}, "
+                  f"refreshed {len(report['refreshed'])}.", flush=True)
+            if (report["conflicts"] or report["errors"] or report["blocked"] or report["unverified"]
+                    or report["missing_files"]):
+                raise RuntimeError(f"Sync {label} reported problems: {summary}, blocked {report['blocked']}, "
+                                   f"missing files {report['missing_files']}")
+            for key, value in expected.items():
+                actual = sorted(row["title"] for row in report[key]) if key == "skipped" else sorted(report[key])
+                if actual != sorted(value):
+                    raise RuntimeError(f"Sync {label} {key} {actual} differ from the expected {sorted(value)}.")
+            return report
 
         try:
             run("config", "--quiet")
@@ -1184,34 +1248,9 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             general = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
             if "uploadsenabled" in general:
                 raise RuntimeError("Web uploads are unexpectedly enabled.")
-            data, catalog, details = load_publication_inputs(ROOT)
-            authored = build_pages(ROOT, data, catalog, details)
-            seeds["authored-seed.xml"] = build_xml(authored)
-            if incremental is not None and authored != inputs["authored"]:
-                raise RuntimeError("Incremental authored source changed after input validation.")
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
-            parser_functions = next((row for row in extensions if row["name"] == "ParserFunctions"), None)
-            if not parser_functions or not parser_functions.get("version"):
-                raise RuntimeError("The installed ParserFunctions registry has no loaded version.")
-            projection_code = (
-                "$config = MediaWiki\\MediaWikiServices::getInstance()->getMainConfig();"
-                "$projection = []; foreach (" + json.dumps(list(SETTINGS_KEYS)) + " as $key) {"
-                "$projection[$key] = $config->get($key); } "
-                "echo json_encode($projection, JSON_THROW_ON_ERROR);\n"
-            )
-            projection = json.loads(run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "eval", "--quiet",
-                                        input_bytes=projection_code.encode()))
-            container = run("ps", "--quiet", "mirklurk").decode().strip()
-            image_id = subprocess.check_output(["docker", "inspect", "--format", "{{.Image}}", container], text=True).strip()
-            if not re.fullmatch(r"sha256:[0-9a-f]{64}", image_id):
-                raise RuntimeError("The rebuilt disposable image has no immutable image identity.")
-            runtime = {
-                "mediawiki_image_pin": (ROOT / "deploy" / "Dockerfile").read_text().splitlines()[0].removeprefix("FROM "),
-                "runtime_php_sha256": hashlib.sha256((ROOT / "deploy" / "mirklurk-runtime.php").read_bytes()).hexdigest(),
-                "settings_template_sha256": hashlib.sha256((ROOT / "deploy" / "LocalSettings.template.php").read_bytes()).hexdigest(),
-                "generator": general["generator"], "ParserFunctions_version": parser_functions["version"],
-                "runtime_image_id": image_id, "effective_settings_sha256": settings_hash(projection),
-            }
+            if not any(row["name"] == "ParserFunctions" and row.get("version") for row in extensions):
+                raise RuntimeError("The installed ParserFunctions extension is not loaded.")
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -1247,141 +1286,24 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")
-            user = api({"action": "query", "meta": "userinfo", "uiprop": "groups|rights"})["query"]["userinfo"]
-            if user["name"] != "WikiAdmin" or "sysop" not in user["groups"]:
-                raise RuntimeError("Disposable materialization requires the authenticated test operator.")
-            actor = {"id": user["id"], "name": user["name"]}
-            welcome_messages = json.loads(run(
-                "exec", "-T", "mirklurk", "php", "-r",
-                "$messages = json_decode(file_get_contents('includes/installer/i18n/en.json'), true, 512, JSON_THROW_ON_ERROR);"
-                "echo json_encode([$messages['mainpagetext'], $messages['mainpagedocfooter']], JSON_THROW_ON_ERROR);",
-            ))
-            welcome = capture_installer_welcome(api, "\n\n".join(welcome_messages), actor)
-            deletion = api({"action": "delete", "title": "Main Page", "token": csrf,
-                            "reason": "Replace only the fresh disposable installer's welcome before frozen baseline import."},
-                           post=True).get("delete", {})
-            if deletion.get("title") != "Main Page" or not isinstance(deletion.get("logid"), int) or managed_titles(api):
-                raise RuntimeError("Disposable welcome replacement did not remove exactly the one verified page.")
-            evidence["bootstrap-welcome.json"] = {
-                "schema_version": 1, "scope": "fresh-disposable-before-prefix-zero-only",
-                "source_head_sha": source_head, "runtime": runtime, "actor": actor,
-                "welcome": welcome, "deletion_logid": deletion["logid"],
-                "baseline_seed_sha256": hashlib.sha256(baseline_payload).hexdigest(),
-            }
-            native = NativeSmoke(ROOT, workspace, run, api, runtime, source_head)
-            native.faults(csrf)
-            if managed_titles(api):
-                raise RuntimeError("Native synthetic fault fixtures left managed pages behind.")
-            current = workspace / "current.xml"
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=baseline_payload)
-            if managed_titles(api) != set(baseline):
-                raise RuntimeError("The initial import is not exactly the frozen baseline title set.")
-            pages, evidence["storage-materialization.json"] = materialize_desired(
-                api, previous_authored, baseline, authored, source_head, runtime, actor,
-                previous_source_head=previous_head,
-            )
-            if (evidence["storage-materialization.json"]["baseline_seed_sha256"] != hashlib.sha256(baseline_payload).hexdigest()
-                    or evidence["storage-materialization.json"]["previous_authored_seed_sha256"]
-                    != hashlib.sha256(previous_payload).hexdigest()):
-                raise RuntimeError("Materialization no longer binds the exact previous-authored and stored baseline XML.")
-            image_hashes = smoke_images(run, api, base, data, baseline, authored, pages)
-            native.prepare_thumbnails(baseline, authored, pages)
-            wait_for_server_tick(api)
-            baseline_titles = sorted(baseline)
-            for offset in range(0, len(baseline_titles), 50):
-                api({"action": "purge", "titles": "|".join(baseline_titles[offset:offset + 50]),
-                     "forcelinkupdate": 1}, post=True)
-            def drain_jobs(timeout=90):
-                return drain_jobs_bounded(run, timeout)
-            def job_status(timeout=5):
-                return bounded_maintenance(run, ("showJobs",), timeout).decode(errors="replace").strip()
-            drain_jobs()
-            public_base = base
-            run("stop", "mirklurk")
-            public_state = json.loads(docker("inspect", "--format", "{{json .State}}", container))
-            public_sessions = native.root_sql("SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE USER='mirklurk';"
-                                              "SELECT COUNT(*) FROM information_schema.INNODB_TRX;")
-            if public_state["Running"] or public_sessions.split() != [b"0", b"0"]:
-                raise RuntimeError("Public PHP/DB requests are not positively drained.")
-            try:
-                urllib.request.urlopen(public_base + "/api.php", timeout=3)
-            except (OSError, urllib.error.URLError):
-                pass
-            else:
-                raise RuntimeError("Stopped public frontend still accepts requests.")
-            with socket.socket() as probe:
-                probe.bind(("127.0.0.1", 0))
-                observer_port = probe.getsockname()[1]
-            observer_name = project + "-private-observer"
-            run("run", "-d", "--no-deps", "--name", observer_name,
-                "--publish", f"127.0.0.1:{observer_port}:80", "--env",
-                "MW_READ_ONLY=Disposable native publication barrier", "mirklurk")
-            observer = observer_name
-            base = f"http://localhost:{observer_port}"
-            deadline = time.monotonic() + 60
-            while True:
-                try:
-                    api({"action": "query", "meta": "siteinfo"})
-                    break
-                except (OSError, urllib.error.URLError):
-                    if time.monotonic() > deadline:
-                        raise RuntimeError("Private read-only observer did not become responsive.")
-                    time.sleep(0.2)
-            api({"action": "edit", "title": "Native denied frontend", "text": "Must not save",
-                 "token": csrf}, post=True, expected_error="readonly")
-            observer_projection = json.loads(run("exec", "-T", "mirklurk", "php", "maintenance/run.php",
-                                                 "eval", "--quiet", input_bytes=projection_code.encode()))
-            worker_projection = json.loads(run("run", "--rm", "--no-deps", "-T", "--env", "MW_READ_ONLY=",
-                                               "mirklurk", "php", "maintenance/run.php", "eval", "--quiet",
-                                               input_bytes=projection_code.encode()))
-            if (canonical_bytes(worker_projection) != canonical_bytes(projection)
-                    or observer_projection["ReadOnly"] != "Disposable native publication barrier"
-                    or any(canonical_bytes(observer_projection[key]) != canonical_bytes(worker_projection[key])
-                           for key in SETTINGS_KEYS if key != "ReadOnly")):
-                raise RuntimeError("Observed CLI/observer runtime differs beyond the explicit read-only phase.")
-            observer_runtime = {**runtime, "effective_settings_sha256": settings_hash(observer_projection)}
-            evidence["native-runtime-phases.json"] = {
-                "schema_version": 1, "source_head_sha": source_head,
-                "worker": {"runtime": runtime, "projection": worker_projection},
-                "observer": {"runtime": observer_runtime, "projection": observer_projection},
-                "allowed_projection_difference": ["ReadOnly"], "canonical_server": public_base,
-                "observer_connection_origin": base,
-            }
-            evidence["prebarrier-storage-materialization.json"] = evidence["storage-materialization.json"]
-            observer_pages, evidence["storage-materialization.json"] = materialize_desired(
-                api, previous_authored, baseline, authored, source_head, observer_runtime, actor,
-                previous_source_head=previous_head,
-            )
-            if observer_pages != pages:
-                raise RuntimeError("Authoritative read-only PST changed the desired corpus bytes.")
-            seeds["desired-seed.xml"] = build_xml(pages)
-            native.proof["barrier"] = {"public_php_exited": not public_state["Running"],
-                                       "public_db_requests": 0, "public_transactions": 0,
-                                       "public_http_unreachable": True, "private_observer_edit_error": "readonly",
-                                       "worker_surface": "CLI-only; no published ports"}
-            rehearsal_type = Rehearsal if incremental is None else IncrementalRehearsal
-            rehearsal = rehearsal_type(
-                api, sys.modules[__name__], baseline, pages, data, catalog, baseline_catalog, observer_runtime, source_head,
-                **({} if incremental is None else {"previous_inputs": previous_inputs, "binding": incremental,
-                                                    "previous_authored": previous_authored}),
-            )
-            save, accept = native.full_run(rehearsal, {
-                key: hashlib.sha256(canonical_bytes(corpus)).hexdigest()
-                for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
-                                    ("authored", authored), ("desired", pages))
-            })
-            rehearsal.run(save, wait_for_server_tick, drain_jobs, job_status, accept)
-            evidence.update(rehearsal.artifacts())
-            if set(pages) != managed_titles(api):
-                raise RuntimeError("Imported page titles differ from the deterministic bundle.")
-            drain_jobs()
-            def open_media(url, timeout=30):
-                parsed = urllib.parse.urlsplit(url)
-                if parsed[:2] != urllib.parse.urlsplit(public_base)[:2]:
-                    raise RuntimeError("A media URL escaped the unchanged canonical wiki origin.")
-                return urllib.request.urlopen(base + urllib.parse.urlunsplit(("", "", parsed.path, parsed.query, "")),
-                                              timeout=timeout)
-            smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media)
+
+            data, catalog, details = load_publication_inputs(ROOT)
+            pages = build_pages(ROOT, data, catalog, details)
+            image_hashes = smoke_images(run, api, base, data, pages)
+            # Start from an imported copy, like a live wiki before a release. Pages carry the text an
+            # edit would store (no trailing whitespace), so a null-edit refresh stays revision-free.
+            # One page also links to a title that does not exist yet, so a later sync must refresh it.
+            target = "Synthetic sync target"
+            baseline = dict(pages, Weather=pages["Weather"].rstrip() + f"\n\nSee [[{target}]].\n")
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump",
+                input_bytes=build_xml({title: normalize(text) for title, text in baseline.items()}))
+            drain_jobs_bounded(run)
+            publisher = Api(base + "/api.php")
+            publisher.login("WikiAdmin", password_file.read_text(encoding="utf-8"))
+            # Only the installer's welcome page differs from the imported release.
+            publish(baseline, "baseline", created=[], updated=["Main Page"], skipped=[])
+            drain_jobs_bounded(run)
+            smoke_reader_release(api, pages, data, catalog, details, image_hashes)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
@@ -1393,65 +1315,46 @@ def smoke(evidence_dir=None, incremental_inputs=None):
                     raise RuntimeError("MediaWiki did not resolve the encyclopedia's canonical entity links.")
             redirect = api({"action": "query", "titles": "Getting started", "redirects": "1"})["query"].get("redirects", [])
             if not any(row["from"] == "Getting started" and row["to"] == "Research policy" for row in redirect):
-                raise RuntimeError("The reviewed guidance compatibility redirect was not imported correctly.")
+                raise RuntimeError("The reviewed guidance compatibility redirect was not published correctly.")
             for title, anchor in {"Strider": "entry-skill-0-0-mechanics", "Ranger Bhato": "entity-being-12"}.items():
                 rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
                 if f'id="{anchor}"' not in rendered:
                     raise RuntimeError("MediaWiki did not render the entity page's primary record anchor.")
-            if rehearsal.order:
-                accept(len(rehearsal.order), {
-                    **rehearsal.pending_final_guard, "final_observations": rehearsal.final_observations,
-                    **({"mixed_price_expectations": evidence["price-expectations-candidate.json"]}
-                       if incremental is None else {"incremental_envelope": evidence["full-prefix-proof.json"]["incremental"]}),
-                    "final_categories_and_reader_release": "passed",
-                    "final_prerequisite_stability": "passed",
-                })
-                if incremental is None:
-                    require_historical_coverage(len(native.release_journal.accepted), prefixes=len(rehearsal.prefixes))
-                else:
-                    verify_native_completion(rehearsal, native.proof, native.release_journal.accepted)
-                native.release_journal.verify_resume(native.states(native.release_journal.manifest,
-                                                                    native.release_journal.accepted))
-                native.release_journal.close()
-                with Journal(workspace / "native-release-journal") as replayed:
-                    if incremental is None:
-                        require_historical_coverage(len(replayed.accepted))
-                    else:
-                        verify_native_completion(rehearsal, native.proof, replayed.accepted)
-                        replayed.verify_resume(native.states(replayed.manifest, replayed.accepted))
-                journal_records = replayed.records
-            else:
-                verify_native_completion(rehearsal, native.proof, [])
-                journal_records = {}
-            evidence["native-publication-proof.json"] = native.proof
-            evidence["native-journal-proof.json"] = {
-                "schema_version": 1, "source_head_sha": source_head,
-                "scope": "Synthetic-only replayable guard preimages; never a production journal.",
-                "records": journal_records,
-            }
-            if incremental is not None:
-                envelope = evidence["full-prefix-proof.json"]["incremental"]
-                envelope["corpora"] = {key: hashlib.sha256(canonical_bytes(corpus)).hexdigest()
-                                       for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
-                                                           ("authored", authored), ("desired", pages))}
-                envelope["seeds"] = {key: hashlib.sha256(build_xml(corpus)).hexdigest()
-                                     for key, corpus in (("previous_authored", previous_authored), ("baseline", baseline),
-                                                         ("authored", authored), ("desired", pages))}
-                envelope["order_sha256"] = hashlib.sha256(canonical_bytes(rehearsal.order)).hexdigest()
-                envelope["native"] = {
-                    **native.proof["incremental"],
-                    "proof_sha256": hashlib.sha256(canonical_bytes(native.proof)).hexdigest(),
-                    "journal_proof_sha256": hashlib.sha256(canonical_bytes(evidence["native-journal-proof.json"])).hexdigest(),
-                    "primitive_sha256": hashlib.sha256((ROOT / "tools" / "native_publication.php").read_bytes()).hexdigest(),
-                    "cold_replay": "passed" if rehearsal.order else "not-applicable-no-publication",
-                }
-            docker("stop", observer)
-            docker("rm", observer)
-            observer = None
-            base = public_base
-            # Only the same final-capable disposable image resumes for ordinary-editor behavior tests.
-            run("start", "mirklurk")
-            run("up", "-d", "--wait", "mirklurk")
+
+            # A release that changes a price owner and adds a page. Dependent pages must show the
+            # result immediately, because the live sync cannot run MediaWiki's job queue.
+            price_title = "Longbow (Cypress)"
+            original_item = pages[price_title]
+            price_blocks = [block for block in re.findall(r"<onlyinclude>.*?</onlyinclude>", original_item, re.DOTALL)
+                            if "|page|price|=" in block]
+            if len(price_blocks) != 1:
+                raise RuntimeError("The item does not expose exactly one canonical price view.")
+            sellers = {page_locations(data, catalog)[entry["details"]["merchant"]] for entry in data["entries"]
+                       if entry["kind"] == "merchant" and page_locations(data, catalog)[entry["details"]["item"]] == price_title}
+            if not sellers:
+                raise RuntimeError("The price propagation fixture has no merchant.")
+            for seller in sellers:
+                api({"action": "parse", "page": seller, "prop": "text"})
+            release = dict(baseline, **{
+                price_title: original_item.replace(price_blocks[0], selective_view("222.22 silver", "price", True), 1),
+                target: "A page created by the disposable sync test.",
+            })
+            wait_for_server_tick(api)
+            report = publish(release, "release", created=[target], updated=[price_title], skipped=[])
+            if "Weather" not in report["refreshed"]:
+                raise RuntimeError("The sync did not re-render a page linking to the title it created.")
+            for seller in sellers:
+                rendered = api({"action": "parse", "page": seller, "prop": "text"})["parse"]["text"]["*"]
+                check_parser_errors(rendered)
+                if "222.22 silver" not in rendered or 'id="entity-item-105"' in rendered:
+                    raise RuntimeError("A merchant did not show the synced price without waiting for jobs.")
+            weather = dom(api({"action": "parse", "page": "Weather", "prop": "text"})["parse"]["text"]["*"], "Weather")
+            if [row["redlink"] for row in weather.wiki_links if row["target"] == target] != [False]:
+                raise RuntimeError("A page linking to a newly synced title still shows a red link.")
+            publish(baseline, "rollback", created=[], updated=[price_title], skipped=[])
+            publish(baseline, "repeat", created=[], updated=[], refreshed=[], skipped=[])
+
+            # Ordinary editors edit owner pages; later syncs must leave their edits alone.
             opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
             token = api({"action": "query", "meta": "tokens", "type": "login"})["query"]["tokens"]["logintoken"]
             login = api({
@@ -1465,14 +1368,7 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             # Respect the stricter three-edits/minute newcomer policy without exempting the account.
             minimum_edit_interval = 21
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
-            evidence["desired-view-contracts.json"] = capture_view_fixtures(api, pages, catalog)
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
-            price_title = "Longbow (Cypress)"
-            original_item = pages[price_title]
-            price_blocks = [block for block in re.findall(r"<onlyinclude>.*?</onlyinclude>", original_item, re.DOTALL)
-                            if "|page|price|=" in block]
-            if len(price_blocks) != 1:
-                raise RuntimeError("The item does not expose exactly one canonical price view.")
             cached_merchant = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
             if "111.23 silver" in cached_merchant or 'id="entity-item-105"' in cached_merchant:
                 raise RuntimeError("The merchant price-edit precondition is invalid.")
@@ -1483,8 +1379,6 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             if price_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
             print("Owner edit timestamp:", price_edit["edit"]["newtimestamp"], flush=True)
-            sellers = {page_locations(data, catalog)[entry["details"]["merchant"]] for entry in data["entries"]
-                       if entry["kind"] == "merchant" and page_locations(data, catalog)[entry["details"]["item"]] == price_title}
             for seller in sellers:
                 refreshed_transclusion(run, api, seller, "111.23 silver", 'id="entity-item-105"', price_title)
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
@@ -1511,48 +1405,33 @@ def smoke(evidence_dir=None, incremental_inputs=None):
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("An ordinary self-registered editor cannot save a page.")
-            current.write_bytes(run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "dumpBackup", "--current"))
-            excluded = existing_titles(current)
-            missing = {title: text for title, text in pages.items() if title_key(title) not in excluded}
-            if missing:
-                raise RuntimeError("Additive reimport unexpectedly includes an existing title.")
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=build_xml(missing))
+            edited = sorted(title for title, revision in fetch_live(publisher, baseline).items()
+                            if revision and revision["user"] == "TestEditor"
+                            and normalize(revision["text"]) != normalize(baseline[title]))
+            if not {price_title, coin_title, "Game mechanics"} <= set(edited):
+                raise RuntimeError(f"The editor fixtures did not leave the expected pages changed: {edited}")
+            drain_jobs_bounded(run)
+            publish(baseline, "after editors", created=[], updated=[], skipped=edited)
             parsed = api({"action": "parse", "page": "Game mechanics", "prop": "wikitext"})
             if parsed["parse"]["wikitext"]["*"] != preserved:
-                raise RuntimeError("Additive reimport changed a live edit.")
-            drain_jobs()
-            run("stop", "mirklurk")
-            evidence["native-recovery-proof.json"] = native.recovery()
+                raise RuntimeError("The sync changed a person's edit.")
             print(
-                "Disposable Docker smoke passed: install, health, access policy, CAPTCHA, seed, "
-                "edit preservation, CLI image import, resized thumbnail, web uploads disabled."
+                "Disposable Docker smoke passed: install, access policy, CAPTCHA, CLI image import and thumbnails, "
+                "API publication with dependent refreshes, ordinary-editor propagation, and person edits preserved."
             )
-        except BaseException as error:
-            # Retain available observations on failure/interrupt, then propagate the original error.
-            failure = error
-            if isinstance(error, subprocess.CalledProcessError):
-                sys.stderr.write((error.stdout or b"").decode(errors="replace"))
-                sys.stderr.write((error.stderr or b"").decode(errors="replace"))
+        except subprocess.CalledProcessError as error:
+            sys.stderr.write((error.stdout or b"").decode(errors="replace"))
+            sys.stderr.write((error.stderr or b"").decode(errors="replace"))
             raise
         finally:
-            try:
-                if evidence_dir is not None:
-                    write_smoke_evidence(evidence_dir, source_head, evidence, seeds, failure, rehearsal, native)
-            finally:
-                if native is not None:
-                    native.close()
-                if observer:
-                    docker("rm", "-f", observer)
-                run("down", "--volumes", "--remove-orphans")
+            run("down", "--volumes", "--remove-orphans")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", required=True, action="store_true", help="Create and remove test-only Docker resources")
-    parser.add_argument("--evidence-dir", type=Path, help="New output directory for nonsecret disposable evidence")
-    parser.add_argument("--incremental-inputs", type=Path, help="Explicit pinned private incremental input JSON; never upload inputs/evidence to CI")
-    args = parser.parse_args()
-    smoke(args.evidence_dir, args.incremental_inputs)
+    parser.parse_args()
+    smoke()
 
 
 if __name__ == "__main__":

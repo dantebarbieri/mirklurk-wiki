@@ -45,7 +45,8 @@ reviewed for misleading links or inappropriate markup.
 
 1. Make the smallest evidence-backed change. Update directly related prose.
 2. Run `python -m unittest discover -s tests -v`. For runtime changes, also run
-   `php tests/test_runtime.php` and the opt-in disposable Docker smoke test.
+   `php tests/test_runtime.php`. Pull-request CI runs the disposable Docker smoke
+   (`python tools/smoke_deploy.py --run`) and previews the live pages that change.
 3. Stage only the intended files, then run `python tools/check_publication.py`.
    This examines the **Git index**, even if the working copy looks different.
 4. Inspect `git diff --cached --stat` and `git diff --cached`. Check provenance,
@@ -61,10 +62,11 @@ proof that prose is original. Human pre-publication review remains required.
 
 ## Live wiki edits
 
-The repository is a seed and editorial source, not an authoritative mirror that
-overwrites the community wiki. Existing pages are merged manually through the
-normal revision workflow. Additive imports exclude every existing title.
-See [IMPORTING.md](docs/IMPORTING.md).
+Merging to `main` publishes the generated pages automatically, but only onto
+pages whose latest revision came from the publishing automation. A page someone
+edited on the wiki is skipped and reported on every run; port useful edits into
+the repository, then hand the page back as described in
+[PUBLISHING.md](docs/PUBLISHING.md). The sync never deletes pages.
 
 You must have the right to submit your own contributions. No contribution here
 grants rights to the game's creative content.

@@ -128,14 +128,11 @@ PNG. Bhato's frame 0 is the hut, not the different frame 1 entrance.
 
 The location sections request `thumb|220px` explicitly. MediaWiki must cap these
 small originals at their native dimensions, not enlarge or rewrite the approved
-bytes. No new 32px icon consumer uses these exteriors. The operator must import
-the three exact titles with attribution sidecars and verify both portraits and
-new actual `img` elements, original PNG hashes, and served displayed PNGs before
-publishing page embeds. An existing File title alone is not display evidence.
-If read-only mode prevents uncached thumbnails, any necessary preparation remains
-a separately authorized operator action before publication. Do not reuse old
-thumbnail receipts, overwrite existing Files, or upload smoke components,
-previews or unrelated artwork.
+bytes. No new 32px icon consumer uses these exteriors. Import the three exact
+titles with their attribution sidecars before the pages that embed them are
+published; the sync lists every referenced File that is still missing, and an
+existing File title alone is not display evidence. Do not overwrite existing
+Files or upload smoke components, previews or unrelated artwork.
 
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 entity or station record renders a neutral missing-picture notice, **not** an image or File link.

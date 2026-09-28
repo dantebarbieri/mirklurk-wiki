@@ -1,14 +1,21 @@
-name: Validate authored publication
+name: Validate and publish
 
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      adopt:
+        description: "Pages a person edited that the sync may now replace (titles separated by |)"
+        required: false
+        default: ""
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Pull-request runs never wait for each other. Main runs queue in order and none is dropped,
+  # so a publish is never cut off and a manual adopt run is never replaced by a newer push.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.run_id || github.ref }}
+  queue: max
 
 permissions:
   contents: read
@@ -21,7 +28,6 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
       - name: Validate indexed publication, facts, ignore rules, and deterministic XML
         run: |
           python3 tools/check_publication.py
@@ -30,26 +36,54 @@ jobs:
         run: |
           php -l deploy/install.php
           php -l deploy/healthcheck.php
-          php -l tools/native_publication.php
-          php -l tests/native_worker_fixture.php
           php tests/test_runtime.php
   docker-smoke:
     needs: publication
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-      - name: Test disposable image and database; never deploy
-        run: python3 tools/smoke_deploy.py --run --evidence-dir "$RUNNER_TEMP/mirklurk-prefix-evidence"
-      - name: Retain nonsecret rehearsal evidence for independent review
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - name: Install, publish and exercise a disposable wiki; never contacts the live wiki
+        run: python3 tools/smoke_deploy.py --run
+  preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
-          name: disposable-prefix-evidence-${{ github.event.pull_request.head.sha || github.sha }}
-          path: ${{ runner.temp }}/mirklurk-prefix-evidence
-          retention-days: 7
-          if-no-files-found: error
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Show what this change would publish (read-only, no login)
+        env:
+          MIRKLURK_API_URL: ${{ vars.MIRKLURK_API_URL }}
+        run: |
+          if [ -z "$MIRKLURK_API_URL" ]; then
+            echo "::notice::Set the MIRKLURK_API_URL repository variable to preview live changes."
+            exit 0
+          fi
+          python3 tools/sync_wiki.py
+  publish:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: [publication, docker-smoke]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Publish changed pages to the live wiki
+        env:
+          MIRKLURK_API_URL: ${{ vars.MIRKLURK_API_URL }}
+          MIRKLURK_BOT_USERNAME: ${{ secrets.MIRKLURK_BOT_USERNAME }}
+          MIRKLURK_BOT_PASSWORD: ${{ secrets.MIRKLURK_BOT_PASSWORD }}
+          ADOPT: ${{ inputs.adopt }}
+        run: |
+          if [ -z "$MIRKLURK_API_URL" ] || [ -z "$MIRKLURK_BOT_USERNAME" ] || [ -z "$MIRKLURK_BOT_PASSWORD" ]; then
+            echo "::notice::Publishing is not configured yet; see docs/PUBLISHING.md."
+            exit 0
+          fi
+          python3 tools/sync_wiki.py --apply --adopt "$ADOPT"

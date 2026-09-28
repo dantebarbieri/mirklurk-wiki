@@ -40,14 +40,13 @@ complete staged diff. On updates, also review the commits being pushed, not
 merely the last worktree state. Generated XML is for a private handoff, not Git.
 Check any attachments and command logs separately.
 
-Pull requests run the publication gate, Python tests and PHP runtime checks.
-The full disposable Docker smoke runs on pushes to `main` or explicit manual
-dispatch, not on pull requests or feature-branch pushes. Workflow/ref concurrency
-cancels obsolete runs. A skipped pull-request smoke job is **not** smoke evidence:
-a release still requires a successful full run bound to its exact merged source.
-Only the Docker job has a 90-minute budget: main run `36266637565` was cancelled
-at the former 60-minute limit after progress 452/460. All checks, internal
-deadlines and coverage remain unchanged; that cancelled run is not a smoke pass.
+Every pull request and every push to `main` runs the publication gate, the
+Python tests, the PHP runtime checks and the disposable Docker smoke (30-minute
+budget). Pull requests also get a read-only preview of the live pages they
+would change. On `main`, the publish job runs only after all of these pass; see
+[PUBLISHING.md](PUBLISHING.md). Pull-request runs don't wait for each other;
+runs on `main` queue in order (up to 100 pending), so a publish is never
+interrupted and a manual adoption run is never replaced by a newer push.
 CI is **after publication** and cannot prevent an initial
 leak. The local pre-publication gate is mandatory. No check can automatically
 establish authorship, fair use, or that an arbitrary new secret pattern is absent.
@@ -69,15 +68,9 @@ introduce a fixture containing a real secret.
 The catalog validator's named-file cap is 48 KiB, including the bounded
 recipe-input/source joins used to derive acquisition browsing without another
 stored dataset. `tests/test_catalog.py` retains its 66 KiB cap;
-`tools/smoke_prefix.py` has a 72 KiB cap for the explicit incremental hooks and
-MediaWiki endpoint-link classification; `tests/test_prefix.py` has a 52 KiB cap
-for their focused link and failure-evidence regressions;
-`tools/smoke_deploy.py` has a 100 KiB cap for their integration with the current
-landmark and seller-context checks.
-The incremental disposable adapter and its synthetic controls have
-exact exceptions for `tools/smoke_incremental.py` (50 KiB) and
-`tests/test_incremental.py` (64 KiB), including managed-link preview refresh
-and its failure/retention controls. No private input, XML, measurement, artwork,
+`tools/smoke_deploy.py` has a 96 KiB cap for its reader, editor and landmark
+checks; `tools/sync_wiki.py` has a 32 KiB cap and `tests/test_sync.py` 40 KiB.
+No private input, XML, measurement, artwork,
 or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
 20 KiB for metadata, rights, portrait preservation, seller projections and
 synthetic-image regressions. No media exclusion is widened.

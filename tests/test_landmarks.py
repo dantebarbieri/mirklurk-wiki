@@ -15,8 +15,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from smoke_deploy import LANDMARK_IMAGES, check_seller_context, smoke_npc_locations, smoke_reader_release, synthetic_image_specs
-from smoke_prefix import dom
+from smoke_deploy import LANDMARK_IMAGES, check_seller_context, dom, smoke_npc_locations, smoke_reader_release, synthetic_image_specs
 from test_views import expand_selective_view
 from wiki_catalog import category_definitions, page_locations, validate_catalog
 from wiki_data import DataError
