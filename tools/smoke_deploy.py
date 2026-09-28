@@ -227,7 +227,7 @@ def smoke_pixel_art(api, data):
     for start in range(0, len(images), 25):
         cases = [(image, width, height) for image in images[start:start + 25] for width, height in ((224, 288), (32, 32))]
         result = api({"action": "parse", "text": "\n\n".join(pixel_image(*case) for case in cases),
-                      "contentmodel": "wikitext", "prop": "text"})["parse"]["text"]["*"]
+                      "contentmodel": "wikitext", "prop": "text"}, post=True)["parse"]["text"]["*"]
         check_parser_errors(result)
         rendered = RenderedGrids()
         rendered.feed(result)

@@ -175,8 +175,9 @@ class FollowupTests(unittest.TestCase):
     def test_smoke_rejects_resampled_sources_and_stripped_scaling(self):
         image = next(row for row in self.data["illustrations"] if row.get("health_armor") == 1)
         def rendered_case(image_source="", image_attrs="", style_override=None):
-            def api(query):
+            def api(query, post=False):
                 self.assertEqual(query["action"], "parse")
+                self.assertTrue(post, "Bulk read-only parsing must not exceed HTTP request-URI limits")
                 html = ""
                 for width, height in ((224, 288), (32, 32)):
                     scale = pixel_geometry(image, width, height)[2]
