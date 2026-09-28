@@ -398,9 +398,11 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
     current = fetch_live(api, pages) if apply and written else live
     texts = {title: pages[title] if title in written else row["text"]
              for title, row in current.items() if title in written or (row and row["text"] is not None)}
-    # Pages people edited last are left to MediaWiki's job queue.
+    # Pages people edited last are left to MediaWiki's job queue. A real run trusts only the fresh
+    # re-read, so a page deleted or taken over by a person since its save is not touched.
     report["refresh"] = [title for title in stale_renderings(texts, written, created)
-                         if title in written or automation_owned(current[title], accounts)]
+                         if (not apply and title in written) or (current.get(title) and current[title]["text"] is not None
+                                                                 and automation_owned(current[title], accounts))]
     for title in report["refresh"] if apply else []:
         try:
             # Re-saving the text just read re-renders the page. baserevid turns a concurrent save

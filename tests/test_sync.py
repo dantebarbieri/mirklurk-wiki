@@ -297,6 +297,29 @@ class SyncTests(unittest.TestCase):
         self.assertEqual((report["updated"], report["blocked"], report["errors"]), (["A merchant", "Zeta item"], [], []))
         self.assertIn("A merchant", report["refreshed"])
 
+    def test_a_page_changed_after_its_save_is_not_refreshed(self):
+        pages = {"A merchant": "{{:Zeta item|view=stock}}" + selective_view("new offers", "fresh-offers"),
+                 "Zeta item": selective_view("stock", "stock") + "{{:A merchant|view=fresh-offers}}"}
+        for change in ("deleted", "edited by a person"):
+            with self.subTest(change=change):
+                wiki = logged_in(FakeWiki({"A merchant": ours(selective_view("old", "offers")),
+                                           "Zeta item": ours(selective_view("old", "price"))}))
+                original = wiki.edit
+
+                def change_the_merchant_after_the_owner(params):
+                    outcome = original(params)
+                    if params["title"] == "Zeta item":
+                        if change == "deleted":
+                            del wiki.revisions["A merchant"]
+                        else:
+                            wiki.store("A merchant", "A person's rewrite", "DanteB", "Rewrite")
+                    return outcome
+
+                wiki.edit = change_the_merchant_after_the_owner
+                report = sync(wiki, pages, "repo-sync: 2", apply=True, log=lambda _: None)
+                self.assertEqual((report["refresh"], report["refreshed"], report["unverified"]), ([], [], ["A merchant"]))
+                self.assertEqual(wiki.touches, [])
+
     def test_second_run_is_a_no_op(self):
         wiki = logged_in(FakeWiki({"Item": ours("old")}))
         pages = {"Item": "new", "Other": "[[Item]]"}
