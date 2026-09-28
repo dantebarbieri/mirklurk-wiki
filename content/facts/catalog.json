@@ -3251,8 +3251,9 @@
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "location": {
         "paragraphs": [
-          "Gurb-Gurb lives inside a large hollow tree stump in Drowned Fen. The hollow is created only once per world; Savage Mirk is used instead only if the world has no Drowned Fen area.",
-          "When the hollow is first generated, a smoke-discovery message and five white dots point toward it. This is a one-time discovery cue, not a message on every return; the dots show direction, not a safe path. Smoke rises separately in play and is not part of the exterior image."
+          "Gurb-Gurb's large hollow tree stump is not pre-positioned with the initial world map. Generating a new Drowned Fen area schedules a later placement check; a new Savage Mirk area is eligible instead only if the world has no Drowned Fen area. Placement is attempted only if the hollow has not already been created.",
+          "Successful exterior creation triggers a smoke-discovery message and five white dots pointing toward it. That success is then saved to prevent another normal placement. This is a one-time discovery cue, not a message on every return; the dots show direction, not a safe path. Smoke rises separately in play and is not part of the exterior image.",
+          "Gurb-Gurb's NPC instance is part of the hollow's interior room setup, separately from placing the exterior."
         ],
         "related_entities": [],
         "confidence": "observed",
@@ -3399,7 +3400,8 @@
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "location": {
         "paragraphs": [
-          "Look for Ihar inside a wrecked wooden ship on a Broken Fen shoreline. The wreck is created only once, when a suitable shoreline position is found. Placement can fail, so it is not guaranteed in every Broken Fen area."
+          "Look for Ihar inside a wrecked wooden ship on a Broken Fen shoreline. Its exterior is not pre-positioned with the initial world map. Generating a new Broken Fen area schedules a later placement check; placement is attempted only if the wreck has not already been created. Placement can fail after 1280 attempts to find a suitable sand/water shoreline, so it is not guaranteed in every Broken Fen area.",
+          "Successful exterior creation is saved to prevent another normal placement. Ihar's NPC instance is part of the shipwreck's interior room setup, separately from placing the exterior."
         ],
         "related_entities": [],
         "confidence": "observed",

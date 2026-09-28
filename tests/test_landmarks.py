@@ -84,15 +84,34 @@ class LandmarkTests(unittest.TestCase):
         self.assertIn("[[Quests and journal#entry-journal-7|", bhato)
         self.assertIn("only if the world has no Drowned Fen area", self.pages["Gurb-Gurb"])
         self.assertIn("five white dots", self.pages["Gurb-Gurb"])
+        self.assertIn("Successful exterior creation triggers a smoke-discovery message", self.pages["Gurb-Gurb"])
         self.assertIn("one-time discovery cue, not a message on every return", self.pages["Gurb-Gurb"])
         self.assertIn("Smoke rises separately in play", self.pages["Gurb-Gurb"])
         ihar = self.pages["Ihar"].split("== Location and access ==", 1)[1].split("== Stats ==", 1)[0]
         self.assertIn("Broken Fen shoreline", ihar)
         self.assertIn("Placement can fail", ihar)
+        self.assertIn("after 1280 attempts to find a suitable sand/water shoreline", ihar)
         self.assertIn("not guaranteed in every Broken Fen area", ihar)
         self.assertNotIn("smoke", ihar.lower())
         self.assertNotIn("popup", ihar.lower())
         self.assertIn("== NPC location evidence ==", self.pages["Source provenance"])
+
+    def test_locations_separate_new_area_generation_saved_exteriors_and_interior_npcs(self):
+        for title, region, landmark, interior in (
+            ("Gurb-Gurb", "Drowned Fen", "hollow", "hollow"),
+            ("Ihar", "Broken Fen", "wreck", "shipwreck"),
+        ):
+            with self.subTest(npc=title):
+                location = self.pages[title].split("== Location and access ==", 1)[1].split("== Stats ==", 1)[0]
+                for phrase in (
+                    "not pre-positioned with the initial world map",
+                    f"Generating a new {region} area schedules a later placement check",
+                    f"only if the {landmark} has not already been created",
+                    "saved to prevent another normal placement",
+                    f"{title}'s NPC instance is part of the {interior}'s interior room setup",
+                    "separately from placing the exterior",
+                ):
+                    self.assertIn(phrase, location)
 
     def test_filtered_sellers_link_to_new_location_without_copying_prose_or_stale_nulls(self):
         profiles = {row["entity"]: row["location"] for row in self.catalog["classifications"] if "location" in row}
