@@ -93,6 +93,16 @@ Gurb-Gurb's one-time smoke cue and Ihar's conditional shoreline placement retain
 their source qualifications. These are supplementary native sprites, not
 screenshots or replacements for dialogue portraits.
 
+The world-generation guide (at the existing **World seed logic** title) separates
+the initial biome/landmark-zone map from terrain generated on entry. It documents
+Fort Solid's edge columns, Scaal's reflected lair zone, the Library's distance
+constraints and guaranteed fen biomes. Bhato's Common Bog can be north or south
+of the fort. Gurb-Gurb and Ihar have entry-triggered placement checks, including
+revisits and save loads; Ihar's failed shoreline searches can retry. The active
+generators do not use the internal seed draw or the unused reseeding helpers,
+so the guide does not imply a reusable world seed. Supplemental citations retain
+the original research records unchanged.
+
 Twenty-one source pages own 130 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree
 harvesting, insects, story rewards, and mapmaking. All 27 historical world-loot
@@ -123,12 +133,12 @@ verified weight as kg/g, and action/equip costs as linked AP.
 
 The additive research format supports original quest/journal paraphrases,
 merchant offers, station-specific recipes, loot-selection observations, and
-weather, progression, skill, and world-seed summaries. Each narrow claim carries
+weather, progression, skill, and world-generation summaries. Each narrow claim carries
 evidence and confidence. New topic pages appear only when backed by reviewed
 entries or facts; schema support is not a claim that a subsystem is fully documented.
 Reviewed death-handler cases document base creature loot, and lit campfire/
 field-kit menus are traced. Some procedural quantities, final item-specific
-treasure probabilities, merchant locations, and world-seed reproducibility
+treasure probabilities and some merchant locations
 remain explicitly limited or unverified. Eligibility is exhaustive for the ten
 documented pools, not a measurement of each item's final drop rate.
 

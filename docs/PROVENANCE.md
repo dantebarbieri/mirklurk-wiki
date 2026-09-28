@@ -148,8 +148,26 @@ not an independent global release check. Source record build fields/hashes,
 all entities, and every historical fact/entry remain unchanged.
 Coverage gaps are stated on the relevant pages. Reviewed creature death handlers
 are documented, but base generation is not a guaranteed harvested yield;
-runtime harvesting/recovery modifiers, some merchant locations/prices, and
-world-seed reproducibility remain limited or unverified.
+runtime harvesting/recovery modifiers and some merchant locations/prices remain
+limited or unverified.
+
+The `world-seed-boundaries` reader override now documents the reviewed
+world-generation path for that same source fingerprint. New-game map allocation
+fixes biome types and the fort, ranger, lair and Library zones, while first-entry
+terrain generation and later landmark checks depend on exploration. The active
+generators do not call the historical reseeding helpers; the internal seed draw
+is not a reusable world seed. The original entry and all three numeric
+initialization facts are preserved, with the correction and placement evidence
+listed separately under Editorial entry evidence. The existing **World seed
+logic** title remains stable for links.
+
+NPC location evidence supplements distinguish Bhato's ordered orthogonal-neighbor
+selection from Gurb-Gurb's and Ihar's delayed exterior creation. Alarm 6 is
+scheduled before the saved-area early return, so its eligible-area checks also
+run on revisits and save loads. The new-world generator guarantees Drowned Fens
+and Broken Fens: the former makes Gurb-Gurb's Savage Mirk fallback unnecessary
+in ordinary new worlds; Ihar has no alternative-biome fallback. These are
+source observations, not measured spawn probabilities or live gameplay tests.
 
 ## Build output
 

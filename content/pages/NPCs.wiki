@@ -1,5 +1,7 @@
 Browse characters, including merchants. Open a character page for documented details, wares, and any recorded offer conditions or locations.
 
+[[World seed logic|World generation]] distinguishes landmark zones chosen at world creation from locations placed as you enter areas.
+
 NPC is a browsing category, not a guarantee of friendliness, dialogue availability, or survival. Deceased characters are identified on their own pages.
 
 [[Unwanted Guard]] is included only as an inferred character grouping; read its availability caveats rather than assuming a normal encounter or dialogue.

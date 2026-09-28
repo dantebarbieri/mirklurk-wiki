@@ -1,8 +1,15 @@
-World generation combines randomized startup, area generation, and saved areas.
+This page covers '''world generation''' in build '''0.8.1.5'''; its older title does not mean the game has a reusable world seed.
 
-A seed value or initialization call does not establish that every subsystem is deterministic, that all random state is shared, or that worlds match across game builds. Those are separate claims needing separate evidence.
+The world map's biome grid and some landmark zones are chosen when a new world is created. That is not a complete, pre-generated world: unexplored zones do not yet have their terrain or exact landmark positions. Entering a zone generates those details, and later visits load the saved area. Exploration order matters.
 
-== Coverage limits ==
-World-seed reproducibility has not been demonstrated by this reference. The current trace is not a seed finder or a guarantee that a reused seed produces the same world.
+'''Location spoilers below.''' The initial placement rules for Fort Solid, Scaal's lair and the Library are described below. [[Ranger Bhato#Location_and_access|Bhato's location page]] explains his neighboring Common Bog, including north/south placement. [[Gurb-Gurb#Location_and_access|Gurb-Gurb's location page]] and [[Ihar#Location_and_access|Ihar's location page]] explain entry-triggered placement, retries and fallback behavior. Those two exteriors are not assigned a zone with the initial world map.
+
+== Seeds and saved areas ==
+There is no reusable world seed in the inspected generation path. The internal seed value listed below is drawn but is not used by the active world or terrain generators; the coordinate-reseeding helpers have no callers. It is not a code that can reproduce the world.
+
+The biome grid and the player's explored areas are different kinds of saved information. A save can identify the biomes and the fixed landmark zones before they are explored, but it cannot reveal terrain that has not been generated. Visiting every zone generates its terrain; it does not freeze later changes or guarantee that Ihar's placement has succeeded.
+
+== Evidence scope ==
+These are source-inspected rules, not measured spawn rates or a guarantee of behavior in other builds. The original initialization observations remain below for context; their numeric seed field is not a world-generation control. Current placement evidence and historical references are recorded separately in [[Source provenance]].
 
 [[Game mechanics]] | [[Main Page]]

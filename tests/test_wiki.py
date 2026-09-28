@@ -291,7 +291,7 @@ class DataTests(unittest.TestCase):
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
-        self.assertIn("reproducibility has not been demonstrated", pages["World seed logic"])
+        self.assertIn("There is no reusable world seed in the inspected generation path", pages["World seed logic"])
         self.assertIn("0.8.1.5", pages["Game mechanics"])
         self.assertIn("versionString", pages["Source provenance"])
         self.assertNotIn("versionString", pages["Game mechanics"])
