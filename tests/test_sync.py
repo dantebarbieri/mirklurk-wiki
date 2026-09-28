@@ -20,6 +20,7 @@ from sync_wiki import (
 )
 from wiki_details import load_publication_inputs
 from wiki_render import build_pages
+from wiki_views import selective_view
 
 
 PASSWORD = "-".join(["synthetic", "bot", "login", "value"])
@@ -207,6 +208,10 @@ class OwnershipAndPlanTests(unittest.TestCase):
         stale = stale_renderings(texts, written, created={"New page", "Late new page"})
         self.assertEqual(stale, ["Early", "Guide", "Merchant"])
 
+    def test_links_inside_included_views_count_for_new_pages(self):
+        texts = {"Outer": "{{:Index|view=list}}", "Index": "[[New page]]", "New page": "x", "Aside": "[[Index]]"}
+        self.assertEqual(stale_renderings(texts, ["New page"], {"New page"}), ["Index", "Outer"])
+
     def test_nested_views_make_every_outer_page_stale(self):
         texts = {"Inventory crafting": "{{:Firewood|view=recipes}}", "Firewood": "{{:Starting equipment|view=loot}}",
                  "Starting equipment": "loot", "Other": "{{:Firewood}}", "Unrelated": "{{:Elsewhere}}",
@@ -230,8 +235,8 @@ class SyncTests(unittest.TestCase):
             "Item": ("old price", "WikiAdmin", "native-publication/v1:y"),
             "Talk about it": ("Mine", "DanteB", "Personal note"),
         }))
-        pages = {"Merchant": "{{:Item|view=price}} {{:New item}}", "Item": "new price",
-                 "New item": "fresh", "Talk about it": "Generated"}
+        pages = {"Merchant": "{{:Item|view=price}} {{:New item}}", "Item": selective_view("new price", "price", True),
+                 "New item": "<onlyinclude>fresh</onlyinclude>", "Talk about it": "Generated"}
         report = sync(wiki, pages, "repo-sync: abc", apply=True, log=lambda _: None)
         writes = [call for call in wiki.calls if call["action"] == "edit" and "text" in call]
         self.assertEqual([call["title"] for call in writes], ["Item", "New item", "Merchant"])
@@ -258,6 +263,39 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(sorted(report["refreshed"]), ["Index", "Seller"])
         self.assertEqual(sorted(wiki.touches), ["Index", "Seller"])
         self.assertNotIn("Fan page", wiki.touches)
+
+    def test_pages_needing_an_unpublished_view_are_blocked_while_others_continue(self):
+        old_item = selective_view("old price", "price", True)
+        pages = {"Item": selective_view("new price", "price", True) + selective_view("in stock", "stock"),
+                 "Merchant": "{{:Item|view=stock}}", "Guide": "{{:Item|view=price}}"}
+        blocked = [{"title": "Merchant", "needs": ["Item (stock view)"]}]
+        for owner in ("failed", "edited by a person"):
+            with self.subTest(owner=owner):
+                item = ours(old_item) if owner == "failed" else (old_item, "DanteB", "Edited")
+                wiki = logged_in(FakeWiki({"Item": item, "Merchant": ours("old"), "Guide": ours("old")}))
+                wiki.failures = {"Item": ["protectedpage"]} if owner == "failed" else {}
+                if owner != "failed":
+                    self.assertEqual(sync(wiki, pages, "repo-sync: 2", log=lambda _: None)["blocked"], blocked)
+                report = sync(wiki, pages, "repo-sync: 2", apply=True, log=lambda _: None)
+                self.assertEqual((report["blocked"], report["updated"]), (blocked, ["Guide"]))
+                self.assertEqual(wiki.text("Merchant"), "old")
+
+    def test_a_page_saved_before_its_owner_waits_for_the_owners_new_view(self):
+        wiki = logged_in(FakeWiki({"A merchant": ours(selective_view("old offers", "offers")),
+                                   "Zeta item": ours(selective_view("old", "price"))}))
+        pages = {"A merchant": "{{:Zeta item|view=stock}}" + selective_view("offers", "offers"),
+                 "Zeta item": selective_view("stock", "stock") + "{{:A merchant|view=offers}}"}
+        report = sync(wiki, pages, "repo-sync: 2", apply=True, log=lambda _: None)
+        self.assertEqual((report["updated"], report["blocked"]), (["Zeta item", "A merchant"], []))
+
+    def test_pages_that_need_each_others_new_views_break_the_cycle(self):
+        wiki = logged_in(FakeWiki({"A merchant": ours(selective_view("old", "offers")),
+                                   "Zeta item": ours(selective_view("old", "price"))}))
+        pages = {"A merchant": "{{:Zeta item|view=stock}}" + selective_view("new offers", "fresh-offers"),
+                 "Zeta item": selective_view("stock", "stock") + "{{:A merchant|view=fresh-offers}}"}
+        report = sync(wiki, pages, "repo-sync: 2", apply=True, log=lambda _: None)
+        self.assertEqual((report["updated"], report["blocked"], report["errors"]), (["A merchant", "Zeta item"], [], []))
+        self.assertIn("A merchant", report["refreshed"])
 
     def test_second_run_is_a_no_op(self):
         wiki = logged_in(FakeWiki({"Item": ours("old")}))
@@ -505,6 +543,10 @@ class RealCorpusTests(unittest.TestCase):
         for title in self.pages:
             self.assertEqual(sync_wiki.title_key(title), title)
             self.assertTrue(":" not in title.split(" (")[0] or title.startswith("Category:"), title)
+
+    def test_a_fresh_wiki_gets_every_page_without_blocking(self):
+        report = sync(FakeWiki(), self.pages, "repo-sync: 1", log=lambda _: None)
+        self.assertEqual((report["blocked"], report["counts"]["create"]), ([], len(self.pages)))
 
     def test_every_consumer_ends_up_rendered_after_its_owners(self):
         order = write_order(self.pages, self.pages)

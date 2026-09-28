@@ -1202,8 +1202,10 @@ def smoke():
             summary = {key: report[key] for key in ("created", "updated", "refreshed", "conflicts", "errors", "unverified")}
             print(f"Sync {label}: {time.monotonic() - started:.1f}s, counts {report['counts']}, "
                   f"refreshed {len(report['refreshed'])}.", flush=True)
-            if report["conflicts"] or report["errors"] or report["unverified"] or report["missing_files"]:
-                raise RuntimeError(f"Sync {label} reported problems: {summary}, missing files {report['missing_files']}")
+            if (report["conflicts"] or report["errors"] or report["blocked"] or report["unverified"]
+                    or report["missing_files"]):
+                raise RuntimeError(f"Sync {label} reported problems: {summary}, blocked {report['blocked']}, "
+                                   f"missing files {report['missing_files']}")
             for key, value in expected.items():
                 actual = sorted(row["title"] for row in report[key]) if key == "skipped" else sorted(report[key])
                 if actual != sorted(value):

@@ -46,7 +46,7 @@ ALLOWED_FILES = {
     "tests/test_views.py": 32 * 1024,
     "tests/test_landmarks.py": 20 * 1024,
     "tests/test_acquisition.py": 32 * 1024,
-    "tests/test_sync.py": 32 * 1024,
+    "tests/test_sync.py": 40 * 1024,
     "tests/test_runtime.php": 32 * 1024,
     "deploy/Dockerfile": 8 * 1024,
     "deploy/compose.dev.yml": 16 * 1024,

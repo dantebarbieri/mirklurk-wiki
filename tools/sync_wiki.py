@@ -23,6 +23,7 @@ from pathlib import Path
 from wiki_data import title_key
 from wiki_details import load_publication_inputs
 from wiki_render import build_pages
+from wiki_views import available_views, transclusions
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -210,6 +211,12 @@ def links(text):
             if target.strip() and (colon or not target.lstrip().lower().startswith("category:"))}
 
 
+def missing_views(text, sources):
+    """(owner, view) pairs this page includes that the owners' current text does not provide."""
+    return sorted({(owner, dict(arguments).get("view", "")) for owner, arguments in transclusions(text)
+                   if dict(arguments).get("view", "") not in available_views(sources.get(owner) or "")})
+
+
 def write_order(titles, pages):
     """Transcluded owners before their readers where possible.
 
@@ -236,6 +243,7 @@ def stale_renderings(texts, written, created):
     """
     position = {title: index for index, title in enumerate(written)}
     direct = {title: owners(text) - {title} for title, text in texts.items()}
+    linked = {title: links(text) for title, text in texts.items()}
 
     def included(title):
         seen, stack = set(), list(direct[title])
@@ -249,7 +257,10 @@ def stale_renderings(texts, written, created):
     stale = []
     for title, text in sorted(texts.items()):
         mine = position.get(title, -1)
-        targets = (included(title) & position.keys()) | ((links(text) & created) - {title})
+        shown = included(title)
+        # A page also shows the links inside the views it includes.
+        seen_links = linked[title].union(*(linked.get(owner, ()) for owner in shown))
+        targets = (shown & position.keys()) | ((seen_links & created) - {title})
         if any(position[target] > mine for target in targets):
             stale.append(title)
     return stale
@@ -323,34 +334,67 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
         "update": [title for title, action in actions.items() if action == "update"],
         "skipped": [{"title": title, "user": live[title]["user"], "timestamp": live[title]["timestamp"],
                      "revid": live[title]["revid"]} for title, action in actions.items() if action == "skip"],
-        "created": [], "updated": [], "conflicts": [], "errors": [], "refresh": [], "refreshed": [],
-        "unverified": [],
+        "created": [], "updated": [], "conflicts": [], "errors": [], "blocked": [], "refresh": [],
+        "refreshed": [], "unverified": [],
         # Matching text leaves no revision to take over; adopt these again once their text changes.
         "adopt_pending": sorted(title for title in adopt if actions[title] == "unchanged"
                                 and not automation_owned(live[title], accounts)),
     }
     order = write_order(report["create"] + report["update"], pages)
-    written, created = [], set()
-    for title in order if apply else []:
-        try:
-            save(api, title, pages[title], live[title], summary)
-        except ApiError as error:
-            if error.code == "readonly":
-                raise SyncError(f"The wiki is read-only ({error}); nothing further was written.") from None
-            bucket = "conflicts" if error.code in CONFLICTS else "errors"
-            detail = str(error)
-            if error.code == "http":
-                detail += "; the save may still have happened, so the next run re-checks this page"
-            report[bucket].append({"title": title, "error": detail})
-            log(f"{bucket[:-1]}: {title}: {detail}")
-            continue
+    # Each page's text as the wiki will serve it; a dry run assumes every planned save succeeds.
+    sources = {title: row["text"] for title, row in live.items() if row and row["text"] is not None}
+    planned, written, created = set(order), [], set()
+
+    def publish(title):
+        planned.discard(title)
+        if apply:
+            try:
+                save(api, title, pages[title], live[title], summary)
+            except ApiError as error:
+                if error.code == "readonly":
+                    raise SyncError(f"The wiki is read-only ({error}); nothing further was written.") from None
+                bucket = "conflicts" if error.code in CONFLICTS else "errors"
+                detail = str(error)
+                if error.code == "http":
+                    detail += "; the save may still have happened, so the next run re-checks this page"
+                report[bucket].append({"title": title, "error": detail})
+                log(f"{bucket[:-1]}: {title}: {detail}")
+                return
+            report["created" if actions[title] == "create" else "updated"].append(title)
+            log(f"{actions[title]}d: {title}")
+        sources[title] = pages[title]
         written.append(title)
         created.update([title] if actions[title] == "create" else [])
-        report["created" if actions[title] == "create" else "updated"].append(title)
-        log(f"{actions[title]}d: {title}")
-    if not apply:
-        # Preview the refreshes the planned writes would cause.
-        written, created = order, set(report["create"])
+
+    def missing(title):
+        return missing_views(pages[title], {**sources, title: pages[title]})
+
+    queue = order
+    while queue:
+        waiting, progress = [], False
+        for title in queue:
+            needed = missing(title)
+            pending = [pair for pair in needed if pair[0] in planned]
+            if len(pending) < len(needed):
+                # An owner that will not be published this run lacks the view; a later run retries.
+                planned.discard(title)
+                needs = [f"{owner} ({view or 'default'} view)" for owner, view in needed if (owner, view) not in pending]
+                report["blocked"].append({"title": title, "needs": needs})
+                log(f"blocked: {title}: needs {', '.join(needs)}")
+                progress = True
+            elif pending:
+                waiting.append(title)
+            else:
+                publish(title)
+                progress = True
+        if waiting and not progress:
+            # These only wait on each other (a cycle): save one now; the refresh re-renders it.
+            publish(waiting.pop(0))
+        queue = waiting
+    for title in written:
+        if missing(title):
+            report["errors"].append({"title": title, "error": "saved ahead of an owner whose save then failed; "
+                                     "it shows " + ", ".join(owner for owner, _ in missing(title)) + " without the view"})
     current = fetch_live(api, pages) if apply and written else live
     texts = {title: pages[title] if title in written else row["text"]
              for title, row in current.items() if title in written or (row and row["text"] is not None)}
@@ -391,6 +435,8 @@ def markdown(report, api_url):
             f"{row['title']} (last edited by {row['user'] or 'a hidden user'}, {row['timestamp']})"
             for row in report["skipped"]]),
         ("Conflicts: edited while this run was saving", [f"{row['title']}: {row['error']}" for row in report["conflicts"]]),
+        ("Blocked: includes a view its owner does not publish yet",
+         [f"{row['title']}: needs {', '.join(row['needs'])}" for row in report["blocked"]]),
         ("Errors", [f"{row['title']}: {row['error']}" for row in report["errors"]]),
         ("Saved text differs from the generated page", report["unverified"]),
         ("Adoption waits for a change: these already match the repository", report["adopt_pending"]),
@@ -458,6 +504,8 @@ def main(argv=None):
             stream.write(text + "\n")
         for row in report["skipped"][:20]:
             print(f"::warning title=Not overwritten::{row['title']} was last edited by {row['user']}; merge it by hand.")
+        for row in report["blocked"][:20]:
+            print(f"::warning title=Not published yet::{row['title']} needs {', '.join(row['needs'])}.")
         for row in report["errors"][:20]:
             print(f"::error title=Wiki sync::{row['title']}: {row['error']}")
     if args.report:

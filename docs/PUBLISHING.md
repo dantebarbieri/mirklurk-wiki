@@ -45,17 +45,22 @@ counts only while its text still matches that hash. MediaWiki's own
 count, because nobody can log in as them.
 
 Writes follow the transclusion graph: a page whose views others include is
-saved before the pages that include it. Merchants and items include views of
-each other, so a few pages are necessarily saved before an owner. After
+saved before the pages that include it. A page is only saved once every view it
+includes exists in its owner's text as the wiki will serve it. If the owner is
+still to be saved in this run, the page waits for it. If the owner failed or a
+person edited it without that view, the page is listed as *blocked* and a
+later run retries it. Merchants and items include views of each other, so when
+pages in such a cycle wait only on each other, one is saved first. After
 writing, the sync re-renders every automation-owned page that was rendered
-before a page it includes was saved, or links to a page this run created, by
-re-saving the exact text it just read with that revision as `baserevid` (a
-null edit). Inclusion counts through nested views too: a workstation that
-shows an item's recipe view, which shows a source's loot view, is re-rendered
-when that source changes. Readers therefore see the new content immediately,
-without waiting for MediaWiki's job queue; the preview lists these pages too.
-Pages people edited, and the dependents of an interrupted publish, are left to
-the queue, which catches up as the wiki is used.
+before a page it includes was saved, or that shows a link to a page this run
+created, by re-saving the exact text it just read with that revision as
+`baserevid` (a null edit). Inclusion counts through nested views too: a
+workstation that shows an item's recipe view, which shows a source's loot
+view, is re-rendered when that source changes. Readers therefore see the new
+content immediately, without waiting for MediaWiki's job queue; the preview
+lists these pages too. Pages people edited, and the dependents of an
+interrupted publish, are left to the queue, which catches up as the wiki is
+used.
 
 Finally it re-reads every page it saved and fails the run if the stored text
 differs from the generated text, which catches wikitext that MediaWiki's
@@ -156,6 +161,6 @@ and add `--apply`. From PowerShell, set `$env:MIRKLURK_API_URL` and use
 `python tools\sync_wiki.py`. Other options: `--adopt TITLE`, `--summary`,
 `--automation-account` and `--report FILE` (see `--help`).
 
-The exit status is 0 when every intended write succeeded; skipped pages and
-conflicts are warnings. It is 1 for errors or saved text that differs from the
-generated text, and 2 when `--apply` lacks credentials.
+The exit status is 0 when every intended write succeeded; skipped, blocked and
+conflicting pages are warnings. It is 1 for errors or saved text that differs
+from the generated text, and 2 when `--apply` lacks credentials.
