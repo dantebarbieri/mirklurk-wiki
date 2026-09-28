@@ -237,7 +237,7 @@ They also check all 25 creature icon identities and the actual parsed Bestiary
 and faction lists; native category membership remains checked separately.
 All 246 item lookups, authored lists, nested row arguments, exact prices,
 filtered rows and ordinary template-edit propagation are parsed by MediaWiki.
-The disposable browser runner uses actual Vector desktop/mobile pages after
+The disposable browser runner uses the deployed Vector 2022 skin at desktop/mobile widths after
 fonts and images load. It reproduces the old baseline error, measures coin
 and item icon/text centers (at most 0.5 CSS px rounding error), checks native
 16px coins, narrow wrapping and unchanged health cells, and saves synthetic-only

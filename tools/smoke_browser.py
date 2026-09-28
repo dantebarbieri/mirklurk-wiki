@@ -42,8 +42,10 @@ def smoke_browser(api, base, token, data, artifact_dir):
                                          ("mobile", {"width": 390, "height": 844}, 2)):
                 context = browser.new_context(viewport=viewport, device_scale_factor=dpr)
                 page = context.new_page()
-                page.goto(base + "/index.php?" + urllib.parse.urlencode({"title": title, "useskin": "vector"}),
+                page.goto(base + "/index.php?" + urllib.parse.urlencode({"title": title, "useskin": "vector-2022"}),
                           wait_until="networkidle")
+                if page.evaluate("mw.config.get('skin')") != "vector-2022":
+                    raise RuntimeError("Browser smoke did not load the deployed Vector 2022 skin.")
                 page.evaluate("""async () => {
                     await document.fonts.ready;
                     await Promise.all([...document.images].map(i => i.decode()));
@@ -112,7 +114,7 @@ def smoke_browser(api, base, token, data, artifact_dir):
                 if len(result["cells"]) != 5 or any(cell["height"] < 3 * cell["em"] for cell in result["cells"]):
                     raise RuntimeError("Coin alignment changed health-cell geometry.")
                 for article in ("Iron Hand Axe", "Items", "Gurb-Gurb"):
-                    page.goto(base + "/index.php?" + urllib.parse.urlencode({"title": article, "useskin": "vector"}),
+                    page.goto(base + "/index.php?" + urllib.parse.urlencode({"title": article, "useskin": "vector-2022"}),
                               wait_until="networkidle")
                     page.evaluate("""async () => {
                         await document.fonts.ready;
