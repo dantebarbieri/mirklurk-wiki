@@ -36,7 +36,15 @@ try {
     putenv('MW_SERVER_URL=https://wiki.example.invalid');
     putenv('MW_TRUSTED_PROXY_CIDRS=192.0.2.10,2001:db8::/64');
     putenv('MW_READ_ONLY=Maintenance unit test');
+    foreach (['MW_LOGO_URL', 'MW_LOGO_ICON_URL', 'MW_FAVICON_URL'] as $variable) {
+        putenv($variable);
+    }
+    $wgLogo = '/upstream-logo.png';
+    $wgLogos = false;
+    $wgFavicon = '/favicon.ico';
     require __DIR__ . '/../deploy/LocalSettings.template.php';
+    check($wgLogo === '/upstream-logo.png' && $wgLogos === false, 'Unset branding must preserve upstream logos.');
+    check($wgFavicon === '/favicon.ico', 'Unset branding must preserve the upstream favicon.');
     check($wgServer === 'https://wiki.example.invalid' && $wgCookieSecure, 'HTTPS configuration mismatch.');
     check($wgGroupPermissions['*']['read'] && $wgGroupPermissions['*']['createaccount'], 'Public access missing.');
     check(!$wgGroupPermissions['*']['edit'] && $wgGroupPermissions['user']['edit'], 'Editing policy mismatch.');
@@ -54,6 +62,47 @@ try {
     check(in_array('ParserFunctions', $loaded, true), 'Selective canonical views require ParserFunctions.');
     check(in_array('Scribunto', $loaded, true), 'Native display templates require Scribunto.');
     check($wgScribuntoDefaultEngine === 'luastandalone', 'Use the bundled bounded Lua standalone engine.');
+
+    putenv('MW_FAVICON_URL=/images/d/d3/MirkLurk-favicon.png');
+    require __DIR__ . '/../deploy/LocalSettings.template.php';
+    check($wgFavicon === '/images/d/d3/MirkLurk-favicon.png', 'PNG favicon not configured.');
+    check($wgLogos === false, 'Favicon-only configuration must not replace logos.');
+    putenv('MW_FAVICON_URL');
+    $wgFavicon = '/favicon.ico';
+    putenv('MW_LOGO_URL=/images/a/ab/MirkLurk-logo-128.png');
+    putenv('MW_LOGO_ICON_URL=/images/b/bc/MirkLurk-logo-256.png');
+    require __DIR__ . '/../deploy/LocalSettings.template.php';
+    check($wgLogo === '/images/a/ab/MirkLurk-logo-128.png', 'Legacy logo must use its smaller raster.');
+    check($wgLogos === [
+        '1x' => '/images/a/ab/MirkLurk-logo-128.png',
+        'icon' => '/images/b/bc/MirkLurk-logo-256.png',
+    ], 'Vector 2022 and legacy logo mappings differ from the configured images.');
+    check($wgFavicon === '/favicon.ico', 'Logo-only configuration must preserve the favicon.');
+    foreach (['MW_LOGO_URL', 'MW_LOGO_ICON_URL'] as $missing) {
+        $saved = getenv($missing);
+        putenv($missing);
+        rejects(static function (): void {
+            require __DIR__ . '/../deploy/LocalSettings.template.php';
+        });
+        putenv($missing . '=' . $saved);
+    }
+    foreach (['MW_LOGO_URL', 'MW_LOGO_ICON_URL', 'MW_FAVICON_URL'] as $variable) {
+        foreach ([
+            'https://example.invalid/logo.png', '//example.invalid/logo.png',
+            'images/logo.png', '/images/../logo.png', '/images/./logo.png',
+            '/images//logo.png', '/images/%2e%2e/logo.png', '/images/logo.svg',
+            '/images/logo.png?version=1', '/images/logo.png#fragment',
+            '/images/logo.png" onload="alert(1)', "/images/logo.png\n", '/images\\logo.png',
+        ] as $invalid) {
+            putenv($variable . '=' . $invalid);
+            rejects(static fn() => mirklurkImageUrl($variable));
+        }
+        foreach (['', '/logo.png', '/images/0/01/Logo-256.v1.png'] as $valid) {
+            putenv($variable . '=' . $valid);
+            check(mirklurkImageUrl($variable) === $valid, 'Valid local PNG path rejected.');
+        }
+        putenv($variable);
+    }
 
     foreach (['http://public.example.invalid', 'https://wiki.example.invalid/', 'https://wiki.example.invalid?x=1'] as $url) {
         putenv('MW_SERVER_URL=' . $url);

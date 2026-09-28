@@ -47,6 +47,11 @@ LANDMARK_IMAGES = {
     "Gurb-Gurb-hollow-exterior.png": (80, 128),
     "Ihar-shipwreck-exterior.png": (128, 96),
 }
+BRANDING_IMAGES = {
+    "MW_LOGO_URL": ("Synthetic-logo-128.png", 128, bytes((41, 73, 19, 255))),
+    "MW_LOGO_ICON_URL": ("Synthetic-logo-256.png", 256, bytes((42, 73, 19, 255))),
+    "MW_FAVICON_URL": ("Synthetic-favicon.png", 184, bytes((43, 73, 19, 255))),
+}
 
 
 class RenderedGrids(HTMLParser):
@@ -57,6 +62,7 @@ class RenderedGrids(HTMLParser):
         self.cell = None
         self.images = []
         self.links = []
+        self.head_links = []
         self.icon_styles = []
         self.pixel_styles = []
         self.creatures = []
@@ -79,6 +85,8 @@ class RenderedGrids(HTMLParser):
             self.links.append(attrs)
             if self.cell is not None:
                 self.cell["links"].append(attrs)
+        elif tag == "link":
+            self.head_links.append(attrs)
         elif tag == "span" and "health-armor-icon" in attrs.get("class", "").split():
             self.icon_styles.append(attrs.get("style", ""))
             if self.cell is not None:
@@ -1091,6 +1099,7 @@ def cache_diagnostics(api, title, owner, rendered):
 def synthetic_image_specs(data):
     # Original solid-color RGB/RGBA pixels, not game artwork or a committed fixture.
     specs = {"Synthetic-thumbnail.png": (64, 32, bytes((37, 149, 211)), 16)}
+    specs.update({filename: (size, size, pixel, 32) for filename, size, pixel in BRANDING_IMAGES.values()})
     specs.update({f"Health-armor-{armor}.png": (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
                   for armor in (1, 2, 3)})
     for index, image in enumerate(sorted(data["illustrations"], key=lambda row: row["file_title"])):
@@ -1191,6 +1200,41 @@ def smoke_images(run, api, base, data, *corpora):
     return {filename: hashlib.sha256(payload).hexdigest() for filename, payload in originals.items()}
 
 
+def branding_paths():
+    paths = {}
+    for variable, (filename, _, _) in BRANDING_IMAGES.items():
+        # MediaWiki's default hashed image directories use the filename's MD5.
+        digest = hashlib.md5(filename.encode(), usedforsecurity=False).hexdigest()
+        paths[variable] = f"/images/{digest[0]}/{digest[:2]}/{filename}"
+    return paths
+
+
+def smoke_branding(api, base, paths, image_hashes, open_media=urllib.request.urlopen):
+    general = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
+    if urllib.parse.urljoin(base, general.get("logo", "")) != base + paths["MW_LOGO_URL"]:
+        raise RuntimeError("The legacy logo does not use its configured smaller raster.")
+    with open_media(base + "/index.php?title=Main_Page&useskin=vector-2022", timeout=30) as response:
+        rendered = RenderedGrids()
+        rendered.feed(response.read().decode("utf-8"))
+    logos = [row for row in rendered.images if "mw-logo-icon" in row.get("class", "").split()]
+    if (len(logos) != 1 or urllib.parse.urljoin(base, logos[0].get("src", "")) != base + paths["MW_LOGO_ICON_URL"]
+            or logos[0].get("width") != "50" or logos[0].get("height") != "50"):
+        raise RuntimeError("Vector 2022 did not render the configured logo in its 50px header slot.")
+    icons = [row for row in rendered.head_links if "icon" in row.get("rel", "").split()]
+    if len(icons) != 1 or urllib.parse.urljoin(base, icons[0].get("href", "")) != base + paths["MW_FAVICON_URL"]:
+        raise RuntimeError("The HTML favicon link does not use the configured PNG.")
+    for variable, (filename, size, _) in BRANDING_IMAGES.items():
+        with open_media(base + paths[variable], timeout=30) as response:
+            if response.status != 200 or response.headers.get_content_type() != "image/png":
+                raise RuntimeError("A branding URL is not anonymously readable as PNG.")
+            body = response.read()
+        if (len(body) < 24 or body[:8] != b"\x89PNG\r\n\x1a\n" or body[12:16] != b"IHDR"
+                or struct.unpack(">II", body[16:24]) != (size, size)
+                or hashlib.sha256(body).hexdigest() != image_hashes[filename]):
+            raise RuntimeError("A branding PNG differs from its configured dimensions or imported bytes.")
+    print("Branding passed: Vector 2022 logo, legacy logo, favicon markup and anonymous exact PNG reads.")
+
+
 def smoke():
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
@@ -1199,6 +1243,8 @@ def smoke():
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
         environment = dict(os.environ, MIRKLURK_SECRETS_DIR=folder, MIRKLURK_DEV_PORT=str(port), MW_READ_ONLY="")
+        paths = branding_paths()
+        environment.update(paths)
         for name in ("DB_PASSWORD", "DB_ROOT_PASSWORD", "SECRET_KEY", "UPGRADE_KEY", "ADMIN_PASSWORD"):
             destination = workspace / ("MIRKLURK_" + name)
             destination.write_text(secrets.token_hex(40), encoding="utf-8")
@@ -1332,6 +1378,7 @@ def smoke():
             data, catalog, details = load_publication_inputs(ROOT)
             pages = build_pages(ROOT, data, catalog, details)
             image_hashes = smoke_images(run, api, base, data, pages)
+            smoke_branding(api, base, paths, image_hashes)
             publisher = Api(base + "/api.php")
             publisher.login("WikiAdmin", password_file.read_text(encoding="utf-8"))
             smoke_display_install(publisher, pages)
