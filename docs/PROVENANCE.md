@@ -277,6 +277,45 @@ appears once even if slot tags overlap; unmatched future members stay visible
 under Other clothing. Slot links retain access to protective equipment in
 other primary groups.
 
+Armor now uses the same slot evidence: the 18 primary Armor members are
+partitioned into Head armor, Torso armor, Armored gloves, Leg armor and Shields.
+These child categories are derived intersections, not another editable
+membership list. Each links to Armor and its equipment-slot category.
+Validation rejects missing or overlapping armor-slot coverage.
+
+### Aggression factions and added inventory capacity
+
+`catalog.aggression` owns reviewed `factions` (integer `id`, descriptive `title`,
+`summary`, `members`, `confidence`, `evidence`) and shared original `paragraphs`
+with their own confidence/evidence. All 36 beings must belong to exactly one
+faction. Seven creature factions replace the former primary Bestiary taxonomy;
+the friendly faction's 11 NPCs remain under NPCs. Earlier appearance categories
+are retained only as secondary navigation. Faction names are editorial, not
+invented lore organizations.
+
+The source-traced `beingDB.team` groups are 0 (friendly NPCs), 3 (mixed wildlife),
+4 (Giant Slug), 5 (Scaalmyr including Mutated Unwanted), 6 (Toadkin), 7 (Viper and
+Red Fang), 8 (Nightmare and Raving Unwanted), and 9 (trolls). The player's team 1
+is separate. `being_get_target` normally excludes equal teams but explicitly
+permits team 8 to target faction-mates; self is excluded. Team 0 additionally
+skips the player. Eligibility still depends on acquisition checks, and
+`attack_aftermath` retaliation can assign the attacker without a team check.
+Do not turn these rules into an unconditional friendliness or hostility claim.
+The register cites the initializer, target-acquisition and retaliation sources.
+
+Exactly 13 equipment items receive storage subinventories in the reviewed
+`item` constructor: four backpacks, four herbalist belts, three pocketed vests,
+Hiker's Shirt and Hiker's Pants. Each new profile supplies the positive integer
+properties `inventory-slots-added`, `storage-grid-width` and
+`storage-grid-height`; the bonus must equal the grid area. Profiles describe
+storage available while equipped, not item footprint, weight allowance, stack
+limit or total player capacity. Each grid remains separate; replacing equipment
+replaces that item's contribution. Forager's Vest adds exactly 9 cells (3 x 3).
+Hidden Hollow's placed storage is not an equipment bonus. The capacity category
+must match all capacity profiles and cover every Carrying equipment member;
+all members must have a reviewed equipment slot. Item stats and browse tables
+use the same profiles. These are source-traced facts, not runtime playtests.
+
 Recipe ingredients and their acquisition categories are derived, not stored
 as another membership dataset. The 53 inputs across inventory recipes and
 in-place construction are joined to named creature loot, source-owned

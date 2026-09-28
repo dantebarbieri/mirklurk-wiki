@@ -294,6 +294,24 @@
       "label": "Equip cost",
       "unit": "AP",
       "description": "Base equipment action cost from the item's inventory footprint, distinct from attacking or using the item."
+    },
+    {
+      "id": "inventory-slots-added",
+      "label": "Inventory slots added",
+      "unit": "slots",
+      "description": "Storage cells supplied by this equipped item, not weight allowance, occupied footprint or total player capacity. Equal to the item's separate storage-grid width times height."
+    },
+    {
+      "id": "storage-grid-width",
+      "label": "Storage grid columns",
+      "unit": "cells",
+      "description": "Columns in the item's own storage grid; not the item's occupied equipment or inventory footprint."
+    },
+    {
+      "id": "storage-grid-height",
+      "label": "Storage grid rows",
+      "unit": "cells",
+      "description": "Rows in the item's own storage grid; storage from multiple equipped items is not one merged rectangle."
     }
   ],
   "profiles": [
@@ -12904,6 +12922,305 @@
       ],
       "values": {
         "equip-ap-cost": 1.2
+      }
+    },
+    {
+      "id": "item-12-capacity",
+      "entity": "item-12",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(12).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "12"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 35,
+        "storage-grid-width": 7,
+        "storage-grid-height": 5
+      }
+    },
+    {
+      "id": "item-14-capacity",
+      "entity": "item-14",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(14).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "14"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 49,
+        "storage-grid-width": 7,
+        "storage-grid-height": 7
+      }
+    },
+    {
+      "id": "item-148-capacity",
+      "entity": "item-148",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(148).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "148"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 56,
+        "storage-grid-width": 8,
+        "storage-grid-height": 7
+      }
+    },
+    {
+      "id": "item-26-capacity",
+      "entity": "item-26",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(26).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "26"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 72,
+        "storage-grid-width": 8,
+        "storage-grid-height": 9
+      }
+    },
+    {
+      "id": "item-13-capacity",
+      "entity": "item-13",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(13).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "13"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 8,
+        "storage-grid-width": 4,
+        "storage-grid-height": 2
+      }
+    },
+    {
+      "id": "item-166-capacity",
+      "entity": "item-166",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(166).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "166"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 10,
+        "storage-grid-width": 5,
+        "storage-grid-height": 2
+      }
+    },
+    {
+      "id": "item-167-capacity",
+      "entity": "item-167",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(167).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "167"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 12,
+        "storage-grid-width": 6,
+        "storage-grid-height": 2
+      }
+    },
+    {
+      "id": "item-168-capacity",
+      "entity": "item-168",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(168).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "168"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 16,
+        "storage-grid-width": 8,
+        "storage-grid-height": 2
+      }
+    },
+    {
+      "id": "item-196-capacity",
+      "entity": "item-196",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(196).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "196"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 9,
+        "storage-grid-width": 3,
+        "storage-grid-height": 3
+      }
+    },
+    {
+      "id": "item-197-capacity",
+      "entity": "item-197",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(197).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "197"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 12,
+        "storage-grid-width": 3,
+        "storage-grid-height": 4
+      }
+    },
+    {
+      "id": "item-198-capacity",
+      "entity": "item-198",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(198).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "198"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 16,
+        "storage-grid-width": 4,
+        "storage-grid-height": 4
+      }
+    },
+    {
+      "id": "item-24-capacity",
+      "entity": "item-24",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(24).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "24"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 6,
+        "storage-grid-width": 3,
+        "storage-grid-height": 2
+      }
+    },
+    {
+      "id": "item-21-capacity",
+      "entity": "item-21",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(21).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "21"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 6,
+        "storage-grid-width": 3,
+        "storage-grid-height": 2
       }
     }
   ],

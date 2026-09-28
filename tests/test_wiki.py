@@ -95,6 +95,7 @@ def illustration_data(approved=False):
             creator="Synthetic test creator", sha256=hashlib.sha256(b"no image bytes; schema test").hexdigest(),
             rights_status="approved", rights_basis="Synthetic schema fixture only",
             rights_note="This test does not provide or clear any actual artwork.",
+            pixel_art={"width": 64, "height": 32, "source_scale": 2},
         )
     return data
 
@@ -524,7 +525,7 @@ class ResearchTests(unittest.TestCase):
 
     def test_approved_references_have_domain_independent_attribution(self):
         pages = build_pages(ROOT, illustration_data(approved=True))
-        self.assertIn("[[File:Synthetic.png|thumb|", pages["Entity synthetic-item"])
+        self.assertIn("[[File:Synthetic.png|64px|", pages["Entity synthetic-item"])
         self.assertIn("Synthetic test creator", pages["Source provenance"])
         self.assertNotIn("https://", pages["Entity synthetic-item"])
 
@@ -589,9 +590,9 @@ class HealthArmorTests(unittest.TestCase):
                             if armor:
                                 name = {1: "bronze", 2: "silver", 3: "gold"}[armor]
                                 label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
-                                self.assertEqual(cell["text"], f'[[File:Health-armor-{armor}.png|32px|alt={label}|{label}]]')
+                                self.assertEqual(cell["text"], f'[[File:Health-armor-{armor}.png|64px|alt={label}|{label}]]')
                                 self.assertEqual(cell["attrs"]["title"], description)
-                                self.assertEqual(cell["icon_styles"], ["image-rendering:pixelated;"])
+                                self.assertEqual(cell["icon_styles"], ["display:inline-block;line-height:0;image-rendering:pixelated;zoom:calc(2 / 4);"])
                             else:
                                 self.assertEqual(cell["text"], "1 HP")
                             self.assertIn("background:#852c36;", cell["attrs"]["style"])
@@ -608,7 +609,7 @@ class HealthArmorTests(unittest.TestCase):
         self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 224)
         guide = self.pages["Health and armor"]
         for armor, name in ((1, "Bronze"), (2, "Silver"), (3, "Gold")):
-            self.assertEqual(guide.count(f"[[File:Health-armor-{armor}.png|32px|"), 1)
+            self.assertEqual(guide.count(f"[[File:Health-armor-{armor}.png|64px|"), 1)
             self.assertIn(f"{name} shield: {armor} armor", guide)
 
     def test_shared_shields_require_finite_targets_and_approved_metadata(self):

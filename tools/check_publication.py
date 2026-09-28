@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
 from wiki_catalog import MAX_CATALOG_BYTES, parse_catalog, validate_catalog
 from wiki_acquisition import MAX_ACQUISITION_BYTES
-from wiki_details import MAX_DETAILS_BYTES, MAX_ILLUSTRATIONS_BYTES, parse_details, parse_document, parse_illustrations, validate_coin_profiles
+from wiki_details import MAX_DETAILS_BYTES, MAX_ILLUSTRATIONS_BYTES, parse_details, parse_document, parse_illustrations, validate_capacity_profiles, validate_coin_profiles
 
 
 ALLOWED_FILES = {
@@ -18,7 +18,7 @@ ALLOWED_FILES = {
     ".dockerignore": 4 * 1024,
     "README.md": 32 * 1024,
     "CONTRIBUTING.md": 32 * 1024,
-    "docs/PROVENANCE.md": 40 * 1024,
+    "docs/PROVENANCE.md": 44 * 1024,
     "docs/IMPORTING.md": 32 * 1024,
     "docs/PUBLICATION.md": 32 * 1024,
     "docs/DEPLOYMENT.md": 32 * 1024,
@@ -32,9 +32,9 @@ ALLOWED_FILES = {
     "content/pages/NPCs.wiki": 32 * 1024,
     "tools/check_publication.py": 32 * 1024,
     "tools/wiki_data.py": 32 * 1024,
-    "tools/wiki_catalog.py": 48 * 1024,
+    "tools/wiki_catalog.py": 56 * 1024,
     "tools/wiki_details.py": 32 * 1024,
-    "tools/wiki_render.py": 96 * 1024,
+    "tools/wiki_render.py": 104 * 1024,
     "tools/wiki_views.py": 16 * 1024,
     "tools/wiki_acquisition.py": 16 * 1024,
     "tools/build_wiki.py": 32 * 1024,
@@ -45,6 +45,7 @@ ALLOWED_FILES = {
     "tests/test_catalog.py": 66 * 1024,
     "tests/test_views.py": 32 * 1024,
     "tests/test_landmarks.py": 20 * 1024,
+    "tests/test_followup.py": 20 * 1024,
     "tests/test_acquisition.py": 32 * 1024,
     "tests/test_sync.py": 40 * 1024,
     "tests/test_runtime.php": 32 * 1024,
@@ -258,6 +259,7 @@ def audit_index(root):
             catalog = parse_catalog(staged_metadata["content/facts/catalog.json"], data)
             details = parse_details(staged_metadata["content/facts/entity_details.json"], data)
             validate_coin_profiles(catalog, details)
+            validate_capacity_profiles(catalog, details)
         except DataError as error:
             problems.append(f"staged coin/profile consistency: {error}")
     acquisition_path = "content/facts/acquisition.json"

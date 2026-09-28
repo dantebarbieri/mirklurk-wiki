@@ -23,7 +23,12 @@
           "section": "ItemTitles",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-1-illustration",
@@ -47,7 +52,12 @@
           "section": "ItemTitles",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-2-illustration",
@@ -71,7 +81,12 @@
           "section": "ItemTitles",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-3-illustration",
@@ -95,7 +110,12 @@
           "section": "ItemTitles",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-4-illustration",
@@ -119,7 +139,12 @@
           "section": "ItemTitles",
           "key": "4"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-5-illustration",
@@ -143,7 +168,12 @@
           "section": "ItemTitles",
           "key": "5"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-6-illustration",
@@ -167,7 +197,12 @@
           "section": "ItemTitles",
           "key": "6"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-7-illustration",
@@ -191,7 +226,12 @@
           "section": "ItemTitles",
           "key": "7"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-8-illustration",
@@ -215,7 +255,12 @@
           "section": "ItemTitles",
           "key": "8"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-9-illustration",
@@ -239,7 +284,12 @@
           "section": "ItemTitles",
           "key": "9"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-10-illustration",
@@ -263,7 +313,12 @@
           "section": "ItemTitles",
           "key": "10"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-11-illustration",
@@ -287,7 +342,12 @@
           "section": "ItemTitles",
           "key": "11"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-12-illustration",
@@ -311,7 +371,12 @@
           "section": "ItemTitles",
           "key": "12"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-13-illustration",
@@ -335,7 +400,12 @@
           "section": "ItemTitles",
           "key": "13"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-14-illustration",
@@ -359,7 +429,12 @@
           "section": "ItemTitles",
           "key": "14"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-15-illustration",
@@ -383,7 +458,12 @@
           "section": "ItemTitles",
           "key": "15"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-16-illustration",
@@ -407,7 +487,12 @@
           "section": "ItemTitles",
           "key": "16"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-17-illustration",
@@ -431,7 +516,12 @@
           "section": "ItemTitles",
           "key": "17"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-18-illustration",
@@ -455,7 +545,12 @@
           "section": "ItemTitles",
           "key": "18"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-19-illustration",
@@ -479,7 +574,12 @@
           "section": "ItemTitles",
           "key": "19"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-20-illustration",
@@ -503,7 +603,12 @@
           "section": "ItemTitles",
           "key": "20"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-21-illustration",
@@ -527,7 +632,12 @@
           "section": "ItemTitles",
           "key": "21"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-22-illustration",
@@ -551,7 +661,12 @@
           "section": "ItemTitles",
           "key": "22"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-23-illustration",
@@ -575,7 +690,12 @@
           "section": "ItemTitles",
           "key": "23"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-24-illustration",
@@ -599,7 +719,12 @@
           "section": "ItemTitles",
           "key": "24"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-25-illustration",
@@ -623,7 +748,12 @@
           "section": "ItemTitles",
           "key": "25"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-26-illustration",
@@ -647,7 +777,12 @@
           "section": "ItemTitles",
           "key": "26"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-27-illustration",
@@ -671,7 +806,12 @@
           "section": "ItemTitles",
           "key": "27"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-28-illustration",
@@ -695,7 +835,12 @@
           "section": "ItemTitles",
           "key": "28"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-29-illustration",
@@ -719,7 +864,12 @@
           "section": "ItemTitles",
           "key": "29"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-30-illustration",
@@ -743,7 +893,12 @@
           "section": "ItemTitles",
           "key": "30"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-32-illustration",
@@ -767,7 +922,12 @@
           "section": "ItemTitles",
           "key": "32"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-33-illustration",
@@ -791,7 +951,12 @@
           "section": "ItemTitles",
           "key": "33"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-34-illustration",
@@ -815,7 +980,12 @@
           "section": "ItemTitles",
           "key": "34"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-35-illustration",
@@ -839,7 +1009,12 @@
           "section": "ItemTitles",
           "key": "35"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-36-illustration",
@@ -863,7 +1038,12 @@
           "section": "ItemTitles",
           "key": "36"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-37-illustration",
@@ -887,7 +1067,12 @@
           "section": "ItemTitles",
           "key": "37"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-38-illustration",
@@ -911,7 +1096,12 @@
           "section": "ItemTitles",
           "key": "38"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-39-illustration",
@@ -935,7 +1125,12 @@
           "section": "ItemTitles",
           "key": "39"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-40-illustration",
@@ -959,7 +1154,12 @@
           "section": "ItemTitles",
           "key": "40"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-41-illustration",
@@ -983,7 +1183,12 @@
           "section": "ItemTitles",
           "key": "41"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-42-illustration",
@@ -1007,7 +1212,12 @@
           "section": "ItemTitles",
           "key": "42"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-43-illustration",
@@ -1031,7 +1241,12 @@
           "section": "ItemTitles",
           "key": "43"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-44-illustration",
@@ -1055,7 +1270,12 @@
           "section": "ItemTitles",
           "key": "44"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-45-illustration",
@@ -1079,7 +1299,12 @@
           "section": "ItemTitles",
           "key": "45"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-46-illustration",
@@ -1103,7 +1328,12 @@
           "section": "ItemTitles",
           "key": "46"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-47-illustration",
@@ -1127,7 +1357,12 @@
           "section": "ItemTitles",
           "key": "47"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-50-illustration",
@@ -1151,7 +1386,12 @@
           "section": "ItemTitles",
           "key": "50"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-51-illustration",
@@ -1175,7 +1415,12 @@
           "section": "ItemTitles",
           "key": "51"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-52-illustration",
@@ -1199,7 +1444,12 @@
           "section": "ItemTitles",
           "key": "52"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-54-illustration",
@@ -1223,7 +1473,12 @@
           "section": "ItemTitles",
           "key": "54"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-55-illustration",
@@ -1247,7 +1502,12 @@
           "section": "ItemTitles",
           "key": "55"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-56-illustration",
@@ -1271,7 +1531,12 @@
           "section": "ItemTitles",
           "key": "56"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-57-illustration",
@@ -1295,7 +1560,12 @@
           "section": "ItemTitles",
           "key": "57"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-58-illustration",
@@ -1319,7 +1589,12 @@
           "section": "ItemTitles",
           "key": "58"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-59-illustration",
@@ -1343,7 +1618,12 @@
           "section": "ItemTitles",
           "key": "59"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-60-illustration",
@@ -1367,7 +1647,12 @@
           "section": "ItemTitles",
           "key": "60"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-61-illustration",
@@ -1391,7 +1676,12 @@
           "section": "ItemTitles",
           "key": "61"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-62-illustration",
@@ -1415,7 +1705,12 @@
           "section": "ItemTitles",
           "key": "62"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-63-illustration",
@@ -1439,7 +1734,12 @@
           "section": "ItemTitles",
           "key": "63"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-64-illustration",
@@ -1463,7 +1763,12 @@
           "section": "ItemTitles",
           "key": "64"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-65-illustration",
@@ -1487,7 +1792,12 @@
           "section": "ItemTitles",
           "key": "65"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-66-illustration",
@@ -1511,7 +1821,12 @@
           "section": "ItemTitles",
           "key": "66"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-67-illustration",
@@ -1535,7 +1850,12 @@
           "section": "ItemTitles",
           "key": "67"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-68-illustration",
@@ -1559,7 +1879,12 @@
           "section": "ItemTitles",
           "key": "68"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-69-illustration",
@@ -1583,7 +1908,12 @@
           "section": "ItemTitles",
           "key": "69"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-70-illustration",
@@ -1607,7 +1937,12 @@
           "section": "ItemTitles",
           "key": "70"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-72-illustration",
@@ -1631,7 +1966,12 @@
           "section": "ItemTitles",
           "key": "72"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-73-illustration",
@@ -1655,7 +1995,12 @@
           "section": "ItemTitles",
           "key": "73"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-74-illustration",
@@ -1679,7 +2024,12 @@
           "section": "ItemTitles",
           "key": "74"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-75-illustration",
@@ -1703,7 +2053,12 @@
           "section": "ItemTitles",
           "key": "75"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-76-illustration",
@@ -1727,7 +2082,12 @@
           "section": "ItemTitles",
           "key": "76"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-77-illustration",
@@ -1751,7 +2111,12 @@
           "section": "ItemTitles",
           "key": "77"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-78-illustration",
@@ -1775,7 +2140,12 @@
           "section": "ItemTitles",
           "key": "78"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-79-illustration",
@@ -1799,7 +2169,12 @@
           "section": "ItemTitles",
           "key": "79"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-80-illustration",
@@ -1823,7 +2198,12 @@
           "section": "ItemTitles",
           "key": "80"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-81-illustration",
@@ -1847,7 +2227,12 @@
           "section": "ItemTitles",
           "key": "81"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-82-illustration",
@@ -1871,7 +2256,12 @@
           "section": "ItemTitles",
           "key": "82"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-83-illustration",
@@ -1895,7 +2285,12 @@
           "section": "ItemTitles",
           "key": "83"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-84-illustration",
@@ -1919,7 +2314,12 @@
           "section": "ItemTitles",
           "key": "84"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-85-illustration",
@@ -1943,7 +2343,12 @@
           "section": "ItemTitles",
           "key": "85"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-86-illustration",
@@ -1967,7 +2372,12 @@
           "section": "ItemTitles",
           "key": "86"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-87-illustration",
@@ -1991,7 +2401,12 @@
           "section": "ItemTitles",
           "key": "87"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-88-illustration",
@@ -2015,7 +2430,12 @@
           "section": "ItemTitles",
           "key": "88"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-89-illustration",
@@ -2039,7 +2459,12 @@
           "section": "ItemTitles",
           "key": "89"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-90-illustration",
@@ -2063,7 +2488,12 @@
           "section": "ItemTitles",
           "key": "90"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-91-illustration",
@@ -2087,7 +2517,12 @@
           "section": "ItemTitles",
           "key": "91"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-92-illustration",
@@ -2111,7 +2546,12 @@
           "section": "ItemTitles",
           "key": "92"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-93-illustration",
@@ -2135,7 +2575,12 @@
           "section": "ItemTitles",
           "key": "93"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-94-illustration",
@@ -2159,7 +2604,12 @@
           "section": "ItemTitles",
           "key": "94"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-95-illustration",
@@ -2183,7 +2633,12 @@
           "section": "ItemTitles",
           "key": "95"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-96-illustration",
@@ -2207,7 +2662,12 @@
           "section": "ItemTitles",
           "key": "96"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-97-illustration",
@@ -2231,7 +2691,12 @@
           "section": "ItemTitles",
           "key": "97"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-98-illustration",
@@ -2255,7 +2720,12 @@
           "section": "ItemTitles",
           "key": "98"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-99-illustration",
@@ -2279,7 +2749,12 @@
           "section": "ItemTitles",
           "key": "99"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-100-illustration",
@@ -2303,7 +2778,12 @@
           "section": "ItemTitles",
           "key": "100"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-101-illustration",
@@ -2327,7 +2807,12 @@
           "section": "ItemTitles",
           "key": "101"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-102-illustration",
@@ -2351,7 +2836,12 @@
           "section": "ItemTitles",
           "key": "102"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-103-illustration",
@@ -2375,7 +2865,12 @@
           "section": "ItemTitles",
           "key": "103"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-104-illustration",
@@ -2399,7 +2894,12 @@
           "section": "ItemTitles",
           "key": "104"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-105-illustration",
@@ -2423,7 +2923,12 @@
           "section": "ItemTitles",
           "key": "105"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-106-illustration",
@@ -2447,7 +2952,12 @@
           "section": "ItemTitles",
           "key": "106"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-107-illustration",
@@ -2471,7 +2981,12 @@
           "section": "ItemTitles",
           "key": "107"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-108-illustration",
@@ -2495,7 +3010,12 @@
           "section": "ItemTitles",
           "key": "108"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 160,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-110-illustration",
@@ -2519,7 +3039,12 @@
           "section": "ItemTitles",
           "key": "110"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-111-illustration",
@@ -2543,7 +3068,12 @@
           "section": "ItemTitles",
           "key": "111"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-112-illustration",
@@ -2567,7 +3097,12 @@
           "section": "ItemTitles",
           "key": "112"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-113-illustration",
@@ -2591,7 +3126,12 @@
           "section": "ItemTitles",
           "key": "113"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-114-illustration",
@@ -2615,7 +3155,12 @@
           "section": "ItemTitles",
           "key": "114"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-115-illustration",
@@ -2639,7 +3184,12 @@
           "section": "ItemTitles",
           "key": "115"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-116-illustration",
@@ -2663,7 +3213,12 @@
           "section": "ItemTitles",
           "key": "116"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-117-illustration",
@@ -2687,7 +3242,12 @@
           "section": "ItemTitles",
           "key": "117"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-118-illustration",
@@ -2711,7 +3271,12 @@
           "section": "ItemTitles",
           "key": "118"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-119-illustration",
@@ -2735,7 +3300,12 @@
           "section": "ItemTitles",
           "key": "119"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-120-illustration",
@@ -2759,7 +3329,12 @@
           "section": "ItemTitles",
           "key": "120"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-121-illustration",
@@ -2783,7 +3358,12 @@
           "section": "ItemTitles",
           "key": "121"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-122-illustration",
@@ -2807,7 +3387,12 @@
           "section": "ItemTitles",
           "key": "122"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-123-illustration",
@@ -2831,7 +3416,12 @@
           "section": "ItemTitles",
           "key": "123"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-124-illustration",
@@ -2855,7 +3445,12 @@
           "section": "ItemTitles",
           "key": "124"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-126-illustration",
@@ -2879,7 +3474,12 @@
           "section": "ItemTitles",
           "key": "126"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-127-illustration",
@@ -2903,7 +3503,12 @@
           "section": "ItemTitles",
           "key": "127"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-129-illustration",
@@ -2927,7 +3532,12 @@
           "section": "ItemTitles",
           "key": "129"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-130-illustration",
@@ -2951,7 +3561,12 @@
           "section": "ItemTitles",
           "key": "130"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-132-illustration",
@@ -2975,7 +3590,12 @@
           "section": "ItemTitles",
           "key": "132"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-134-illustration",
@@ -2999,7 +3619,12 @@
           "section": "ItemTitles",
           "key": "134"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-135-illustration",
@@ -3023,7 +3648,12 @@
           "section": "ItemTitles",
           "key": "135"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-136-illustration",
@@ -3047,7 +3677,12 @@
           "section": "ItemTitles",
           "key": "136"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-137-illustration",
@@ -3071,7 +3706,12 @@
           "section": "ItemTitles",
           "key": "137"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-138-illustration",
@@ -3095,7 +3735,12 @@
           "section": "ItemTitles",
           "key": "138"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-139-illustration",
@@ -3119,7 +3764,12 @@
           "section": "ItemTitles",
           "key": "139"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-140-illustration",
@@ -3143,7 +3793,12 @@
           "section": "ItemTitles",
           "key": "140"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-141-illustration",
@@ -3167,7 +3822,12 @@
           "section": "ItemTitles",
           "key": "141"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-142-illustration",
@@ -3191,7 +3851,12 @@
           "section": "ItemTitles",
           "key": "142"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-143-illustration",
@@ -3215,7 +3880,12 @@
           "section": "ItemTitles",
           "key": "143"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-144-illustration",
@@ -3239,7 +3909,12 @@
           "section": "ItemTitles",
           "key": "144"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-145-illustration",
@@ -3263,7 +3938,12 @@
           "section": "ItemTitles",
           "key": "145"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-146-illustration",
@@ -3287,7 +3967,12 @@
           "section": "ItemTitles",
           "key": "146"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-147-illustration",
@@ -3311,7 +3996,12 @@
           "section": "ItemTitles",
           "key": "147"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-148-illustration",
@@ -3335,7 +4025,12 @@
           "section": "ItemTitles",
           "key": "148"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-153-illustration",
@@ -3359,7 +4054,12 @@
           "section": "ItemTitles",
           "key": "153"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-154-illustration",
@@ -3383,7 +4083,12 @@
           "section": "ItemTitles",
           "key": "154"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-155-illustration",
@@ -3407,7 +4112,12 @@
           "section": "ItemTitles",
           "key": "155"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-156-illustration",
@@ -3431,7 +4141,12 @@
           "section": "ItemTitles",
           "key": "156"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-157-illustration",
@@ -3455,7 +4170,12 @@
           "section": "ItemTitles",
           "key": "157"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-158-illustration",
@@ -3479,7 +4199,12 @@
           "section": "ItemTitles",
           "key": "158"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-159-illustration",
@@ -3503,7 +4228,12 @@
           "section": "ItemTitles",
           "key": "159"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-160-illustration",
@@ -3527,7 +4257,12 @@
           "section": "ItemTitles",
           "key": "160"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-161-illustration",
@@ -3551,7 +4286,12 @@
           "section": "ItemTitles",
           "key": "161"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-162-illustration",
@@ -3575,7 +4315,12 @@
           "section": "ItemTitles",
           "key": "162"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-163-illustration",
@@ -3599,7 +4344,12 @@
           "section": "ItemTitles",
           "key": "163"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-164-illustration",
@@ -3623,7 +4373,12 @@
           "section": "ItemTitles",
           "key": "164"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-165-illustration",
@@ -3647,7 +4402,12 @@
           "section": "ItemTitles",
           "key": "165"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-166-illustration",
@@ -3671,7 +4431,12 @@
           "section": "ItemTitles",
           "key": "166"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-167-illustration",
@@ -3695,7 +4460,12 @@
           "section": "ItemTitles",
           "key": "167"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-168-illustration",
@@ -3719,7 +4489,12 @@
           "section": "ItemTitles",
           "key": "168"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-169-illustration",
@@ -3743,7 +4518,12 @@
           "section": "ItemTitles",
           "key": "169"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-170-illustration",
@@ -3767,7 +4547,12 @@
           "section": "ItemTitles",
           "key": "170"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-172-illustration",
@@ -3791,7 +4576,12 @@
           "section": "ItemTitles",
           "key": "172"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-173-illustration",
@@ -3815,7 +4605,12 @@
           "section": "ItemTitles",
           "key": "173"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-174-illustration",
@@ -3839,7 +4634,12 @@
           "section": "ItemTitles",
           "key": "174"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-175-illustration",
@@ -3863,7 +4663,12 @@
           "section": "ItemTitles",
           "key": "175"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-176-illustration",
@@ -3887,7 +4692,12 @@
           "section": "ItemTitles",
           "key": "176"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-177-illustration",
@@ -3911,7 +4721,12 @@
           "section": "ItemTitles",
           "key": "177"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-178-illustration",
@@ -3935,7 +4750,12 @@
           "section": "ItemTitles",
           "key": "178"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-179-illustration",
@@ -3959,7 +4779,12 @@
           "section": "ItemTitles",
           "key": "179"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-180-illustration",
@@ -3983,7 +4808,12 @@
           "section": "ItemTitles",
           "key": "180"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-181-illustration",
@@ -4007,7 +4837,12 @@
           "section": "ItemTitles",
           "key": "181"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-182-illustration",
@@ -4031,7 +4866,12 @@
           "section": "ItemTitles",
           "key": "182"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-183-illustration",
@@ -4055,7 +4895,12 @@
           "section": "ItemTitles",
           "key": "183"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-184-illustration",
@@ -4079,7 +4924,12 @@
           "section": "ItemTitles",
           "key": "184"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-185-illustration",
@@ -4103,7 +4953,12 @@
           "section": "ItemTitles",
           "key": "185"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-186-illustration",
@@ -4127,7 +4982,12 @@
           "section": "ItemTitles",
           "key": "186"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-187-illustration",
@@ -4151,7 +5011,12 @@
           "section": "ItemTitles",
           "key": "187"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-188-illustration",
@@ -4175,7 +5040,12 @@
           "section": "ItemTitles",
           "key": "188"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-189-illustration",
@@ -4199,7 +5069,12 @@
           "section": "ItemTitles",
           "key": "189"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-190-illustration",
@@ -4223,7 +5098,12 @@
           "section": "ItemTitles",
           "key": "190"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-191-illustration",
@@ -4247,7 +5127,12 @@
           "section": "ItemTitles",
           "key": "191"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-192-illustration",
@@ -4271,7 +5156,12 @@
           "section": "ItemTitles",
           "key": "192"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-193-illustration",
@@ -4295,7 +5185,12 @@
           "section": "ItemTitles",
           "key": "193"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-194-illustration",
@@ -4319,7 +5214,12 @@
           "section": "ItemTitles",
           "key": "194"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-195-illustration",
@@ -4343,7 +5243,12 @@
           "section": "ItemTitles",
           "key": "195"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-196-illustration",
@@ -4367,7 +5272,12 @@
           "section": "ItemTitles",
           "key": "196"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-197-illustration",
@@ -4391,7 +5301,12 @@
           "section": "ItemTitles",
           "key": "197"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-198-illustration",
@@ -4415,7 +5330,12 @@
           "section": "ItemTitles",
           "key": "198"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-199-illustration",
@@ -4439,7 +5359,12 @@
           "section": "ItemTitles",
           "key": "199"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-200-illustration",
@@ -4463,7 +5388,12 @@
           "section": "ItemTitles",
           "key": "200"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-201-illustration",
@@ -4487,7 +5417,12 @@
           "section": "ItemTitles",
           "key": "201"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-202-illustration",
@@ -4511,7 +5446,12 @@
           "section": "ItemTitles",
           "key": "202"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-203-illustration",
@@ -4535,7 +5475,12 @@
           "section": "ItemTitles",
           "key": "203"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-204-illustration",
@@ -4559,7 +5504,12 @@
           "section": "ItemTitles",
           "key": "204"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-205-illustration",
@@ -4583,7 +5533,12 @@
           "section": "ItemTitles",
           "key": "205"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-206-illustration",
@@ -4607,7 +5562,12 @@
           "section": "ItemTitles",
           "key": "206"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-207-illustration",
@@ -4631,7 +5591,12 @@
           "section": "ItemTitles",
           "key": "207"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-208-illustration",
@@ -4655,7 +5620,12 @@
           "section": "ItemTitles",
           "key": "208"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-209-illustration",
@@ -4679,7 +5649,12 @@
           "section": "ItemTitles",
           "key": "209"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-210-illustration",
@@ -4703,7 +5678,12 @@
           "section": "ItemTitles",
           "key": "210"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-211-illustration",
@@ -4727,7 +5707,12 @@
           "section": "ItemTitles",
           "key": "211"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-212-illustration",
@@ -4751,7 +5736,12 @@
           "section": "ItemTitles",
           "key": "212"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-213-illustration",
@@ -4775,7 +5765,12 @@
           "section": "ItemTitles",
           "key": "213"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-214-illustration",
@@ -4799,7 +5794,12 @@
           "section": "ItemTitles",
           "key": "214"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-215-illustration",
@@ -4823,7 +5823,12 @@
           "section": "ItemTitles",
           "key": "215"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-216-illustration",
@@ -4847,7 +5852,12 @@
           "section": "ItemTitles",
           "key": "216"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-217-illustration",
@@ -4871,7 +5881,12 @@
           "section": "ItemTitles",
           "key": "217"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-218-illustration",
@@ -4895,7 +5910,12 @@
           "section": "ItemTitles",
           "key": "218"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-219-illustration",
@@ -4919,7 +5939,12 @@
           "section": "ItemTitles",
           "key": "219"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-220-illustration",
@@ -4943,7 +5968,12 @@
           "section": "ItemTitles",
           "key": "220"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-221-illustration",
@@ -4967,7 +5997,12 @@
           "section": "ItemTitles",
           "key": "221"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-222-illustration",
@@ -4991,7 +6026,12 @@
           "section": "ItemTitles",
           "key": "222"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-223-illustration",
@@ -5015,7 +6055,12 @@
           "section": "ItemTitles",
           "key": "223"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-224-illustration",
@@ -5039,7 +6084,12 @@
           "section": "ItemTitles",
           "key": "224"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-225-illustration",
@@ -5063,7 +6113,12 @@
           "section": "ItemTitles",
           "key": "225"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-226-illustration",
@@ -5087,7 +6142,12 @@
           "section": "ItemTitles",
           "key": "226"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-227-illustration",
@@ -5111,7 +6171,12 @@
           "section": "ItemTitles",
           "key": "227"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-228-illustration",
@@ -5135,7 +6200,12 @@
           "section": "ItemTitles",
           "key": "228"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-229-illustration",
@@ -5159,7 +6229,12 @@
           "section": "ItemTitles",
           "key": "229"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-230-illustration",
@@ -5183,7 +6258,12 @@
           "section": "ItemTitles",
           "key": "230"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-231-illustration",
@@ -5207,7 +6287,12 @@
           "section": "ItemTitles",
           "key": "231"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-232-illustration",
@@ -5231,7 +6316,12 @@
           "section": "ItemTitles",
           "key": "232"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-233-illustration",
@@ -5255,7 +6345,12 @@
           "section": "ItemTitles",
           "key": "233"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-234-illustration",
@@ -5279,7 +6374,12 @@
           "section": "ItemTitles",
           "key": "234"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-235-illustration",
@@ -5303,7 +6403,12 @@
           "section": "ItemTitles",
           "key": "235"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-236-illustration",
@@ -5327,7 +6432,12 @@
           "section": "ItemTitles",
           "key": "236"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-237-illustration",
@@ -5351,7 +6461,12 @@
           "section": "ItemTitles",
           "key": "237"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-238-illustration",
@@ -5375,7 +6490,12 @@
           "section": "ItemTitles",
           "key": "238"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-239-illustration",
@@ -5399,7 +6519,12 @@
           "section": "ItemTitles",
           "key": "239"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-240-illustration",
@@ -5423,7 +6548,12 @@
           "section": "ItemTitles",
           "key": "240"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 192,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "id": "item-241-illustration",
@@ -5447,7 +6577,12 @@
           "section": "ItemTitles",
           "key": "241"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-242-illustration",
@@ -5471,7 +6606,12 @@
           "section": "ItemTitles",
           "key": "242"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-243-illustration",
@@ -5495,7 +6635,12 @@
           "section": "ItemTitles",
           "key": "243"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-244-illustration",
@@ -5519,7 +6664,12 @@
           "section": "ItemTitles",
           "key": "244"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-245-illustration",
@@ -5543,7 +6693,12 @@
           "section": "ItemTitles",
           "key": "245"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-246-illustration",
@@ -5567,7 +6722,12 @@
           "section": "ItemTitles",
           "key": "246"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-247-illustration",
@@ -5591,7 +6751,12 @@
           "section": "ItemTitles",
           "key": "247"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-248-illustration",
@@ -5615,7 +6780,12 @@
           "section": "ItemTitles",
           "key": "248"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-249-illustration",
@@ -5639,7 +6809,12 @@
           "section": "ItemTitles",
           "key": "249"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 48,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "item-250-illustration",
@@ -5663,7 +6838,12 @@
           "section": "ItemTitles",
           "key": "250"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 96,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "item-251-illustration",
@@ -5687,7 +6867,12 @@
           "section": "ItemTitles",
           "key": "251"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-252-illustration",
@@ -5711,7 +6896,12 @@
           "section": "ItemTitles",
           "key": "252"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-253-illustration",
@@ -5735,7 +6925,12 @@
           "section": "ItemTitles",
           "key": "253"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-254-illustration",
@@ -5759,7 +6954,12 @@
           "section": "ItemTitles",
           "key": "254"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-255-illustration",
@@ -5783,7 +6983,12 @@
           "section": "ItemTitles",
           "key": "255"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "item-256-illustration",
@@ -5807,7 +7012,12 @@
           "section": "ItemTitles",
           "key": "256"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "item-257-illustration",
@@ -5831,7 +7041,12 @@
           "section": "ItemTitles",
           "key": "257"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 80,
+        "source_scale": 5
+      }
     },
     {
       "id": "being-0-illustration",
@@ -5855,7 +7070,12 @@
           "section": "Titles",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-1-illustration",
@@ -5879,7 +7099,12 @@
           "section": "Titles",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-2-illustration",
@@ -5903,7 +7128,12 @@
           "section": "Titles",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-3-illustration",
@@ -5927,7 +7157,12 @@
           "section": "Titles",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 224,
+        "height": 160,
+        "source_scale": 4
+      }
     },
     {
       "id": "being-4-illustration",
@@ -5951,7 +7186,12 @@
           "section": "Titles",
           "key": "4"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 224,
+        "source_scale": 4
+      }
     },
     {
       "id": "being-5-illustration",
@@ -5975,7 +7215,12 @@
           "section": "Titles",
           "key": "5"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 6
+      }
     },
     {
       "id": "being-6-illustration",
@@ -5999,7 +7244,12 @@
           "section": "Titles",
           "key": "6"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-7-illustration",
@@ -6023,7 +7273,12 @@
           "section": "Titles",
           "key": "7"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-8-illustration",
@@ -6047,7 +7302,12 @@
           "section": "Titles",
           "key": "8"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-9-illustration",
@@ -6071,7 +7331,12 @@
           "section": "Titles",
           "key": "9"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-10-illustration",
@@ -6095,7 +7360,12 @@
           "section": "Titles",
           "key": "10"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-11-illustration",
@@ -6119,7 +7389,12 @@
           "section": "Titles",
           "key": "11"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 160,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-12-illustration",
@@ -6143,7 +7418,12 @@
           "section": "Titles",
           "key": "12"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-13-illustration",
@@ -6167,7 +7447,12 @@
           "section": "Titles",
           "key": "13"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 160,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-14-illustration",
@@ -6191,7 +7476,12 @@
           "section": "Titles",
           "key": "14"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 140,
+        "height": 225,
+        "source_scale": 5
+      }
     },
     {
       "id": "being-15-illustration",
@@ -6215,7 +7505,12 @@
           "section": "Titles",
           "key": "15"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 180,
+        "height": 225,
+        "source_scale": 5
+      }
     },
     {
       "id": "being-16-illustration",
@@ -6239,7 +7534,12 @@
           "section": "Titles",
           "key": "16"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 180,
+        "height": 225,
+        "source_scale": 5
+      }
     },
     {
       "id": "being-17-illustration",
@@ -6263,7 +7563,12 @@
           "section": "Titles",
           "key": "17"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-18-illustration",
@@ -6287,7 +7592,12 @@
           "section": "Titles",
           "key": "18"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 224,
+        "height": 160,
+        "source_scale": 4
+      }
     },
     {
       "id": "being-19-illustration",
@@ -6311,7 +7621,12 @@
           "section": "Titles",
           "key": "19"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-20-illustration",
@@ -6335,7 +7650,12 @@
           "section": "Titles",
           "key": "20"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-21-illustration",
@@ -6359,7 +7679,12 @@
           "section": "Titles",
           "key": "21"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-22-illustration",
@@ -6383,7 +7708,12 @@
           "section": "Titles",
           "key": "22"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 192,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-23-illustration",
@@ -6407,7 +7737,12 @@
           "section": "Titles",
           "key": "23"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-24-illustration",
@@ -6431,7 +7766,12 @@
           "section": "Titles",
           "key": "24"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-25-illustration",
@@ -6455,7 +7795,12 @@
           "section": "Titles",
           "key": "25"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-26-illustration",
@@ -6479,7 +7824,12 @@
           "section": "Titles",
           "key": "26"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-27-illustration",
@@ -6503,7 +7853,12 @@
           "section": "Titles",
           "key": "27"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-28-illustration",
@@ -6527,7 +7882,12 @@
           "section": "Titles",
           "key": "28"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-29-illustration",
@@ -6551,7 +7911,12 @@
           "section": "Titles",
           "key": "29"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 160,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-30-illustration",
@@ -6575,7 +7940,12 @@
           "section": "Titles",
           "key": "30"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "id": "being-31-illustration",
@@ -6599,7 +7969,12 @@
           "section": "Titles",
           "key": "31"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 6
+      }
     },
     {
       "id": "being-32-illustration",
@@ -6623,7 +7998,12 @@
           "section": "Titles",
           "key": "32"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 6
+      }
     },
     {
       "id": "being-33-illustration",
@@ -6647,7 +8027,12 @@
           "section": "Titles",
           "key": "33"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-34-illustration",
@@ -6671,7 +8056,12 @@
           "section": "Titles",
           "key": "34"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
     },
     {
       "id": "being-35-illustration",
@@ -6695,7 +8085,12 @@
           "section": "Titles",
           "key": "35"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 224,
+        "height": 160,
+        "source_scale": 4
+      }
     },
     {
       "id": "skill-0-0-illustration",
@@ -6719,7 +8114,12 @@
           "section": "SkillsTitle0",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-0-1-illustration",
@@ -6743,7 +8143,12 @@
           "section": "SkillsTitle0",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-0-2-illustration",
@@ -6767,7 +8172,12 @@
           "section": "SkillsTitle0",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-0-3-illustration",
@@ -6791,7 +8201,12 @@
           "section": "SkillsTitle0",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-0-4-illustration",
@@ -6815,7 +8230,12 @@
           "section": "SkillsTitle0",
           "key": "4"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-1-0-illustration",
@@ -6839,7 +8259,12 @@
           "section": "SkillsTitle1",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-1-1-illustration",
@@ -6863,7 +8288,12 @@
           "section": "SkillsTitle1",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-1-2-illustration",
@@ -6887,7 +8317,12 @@
           "section": "SkillsTitle1",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-1-3-illustration",
@@ -6911,7 +8346,12 @@
           "section": "SkillsTitle1",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-1-4-illustration",
@@ -6935,7 +8375,12 @@
           "section": "SkillsTitle1",
           "key": "4"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-2-0-illustration",
@@ -6959,7 +8404,12 @@
           "section": "SkillsTitle2",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-2-1-illustration",
@@ -6983,7 +8433,12 @@
           "section": "SkillsTitle2",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-2-2-illustration",
@@ -7007,7 +8462,12 @@
           "section": "SkillsTitle2",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-2-3-illustration",
@@ -7031,7 +8491,12 @@
           "section": "SkillsTitle2",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-2-4-illustration",
@@ -7055,7 +8520,12 @@
           "section": "SkillsTitle2",
           "key": "4"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-3-0-illustration",
@@ -7079,7 +8549,12 @@
           "section": "SkillsTitle3",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-3-1-illustration",
@@ -7103,7 +8578,12 @@
           "section": "SkillsTitle3",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-3-2-illustration",
@@ -7127,7 +8607,12 @@
           "section": "SkillsTitle3",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-3-3-illustration",
@@ -7151,7 +8636,12 @@
           "section": "SkillsTitle3",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-3-4-illustration",
@@ -7175,7 +8665,12 @@
           "section": "SkillsTitle3",
           "key": "4"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-4-0-illustration",
@@ -7199,7 +8694,12 @@
           "section": "SkillsTitle4",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-4-1-illustration",
@@ -7223,7 +8723,12 @@
           "section": "SkillsTitle4",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-4-2-illustration",
@@ -7247,7 +8752,12 @@
           "section": "SkillsTitle4",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-4-3-illustration",
@@ -7271,7 +8781,12 @@
           "section": "SkillsTitle4",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "id": "skill-4-4-illustration",
@@ -7295,7 +8810,12 @@
           "section": "SkillsTitle4",
           "key": "4"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7324,7 +8844,12 @@
           "section": "Titles",
           "key": "0"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7353,7 +8878,12 @@
           "section": "Titles",
           "key": "1"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7382,7 +8912,12 @@
           "section": "Titles",
           "key": "2"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7411,7 +8946,12 @@
           "section": "Titles",
           "key": "3"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7445,7 +8985,12 @@
           "section": "gml_Object_obj_tree_Draw_0",
           "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 588,
+        "height": 564,
+        "source_scale": 4
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7474,7 +9019,12 @@
           "section": "Titles",
           "key": "5"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7508,7 +9058,12 @@
           "section": "gml_Object_databank_Alarm_2",
           "key": "natureDB[6].sprTrunk/sprBranch"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7542,7 +9097,12 @@
           "section": "gml_Object_obj_tree_Draw_0",
           "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 684,
+        "height": 912,
+        "source_scale": 4
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7571,7 +9131,12 @@
           "section": "Titles",
           "key": "8"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7600,7 +9165,12 @@
           "section": "Titles",
           "key": "9"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7629,7 +9199,12 @@
           "section": "Titles",
           "key": "12"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7663,7 +9238,12 @@
           "section": "gml_Object_obj_tree_Draw_0",
           "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 340,
+        "height": 540,
+        "source_scale": 4
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7692,7 +9272,12 @@
           "section": "Titles",
           "key": "18"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7721,7 +9306,12 @@
           "section": "Titles",
           "key": "19"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7755,7 +9345,12 @@
           "section": "gml_Object_obj_tree_Draw_0",
           "key": "trunk/branch/leaf.draw-order/origins/scales/angles"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 4
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7779,7 +9374,12 @@
           "section": "Titles",
           "key": "13"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 128,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7804,7 +9404,12 @@
           "key": "203"
         }
       ],
-      "variant": "early-game"
+      "variant": "early-game",
+      "pixel_art": {
+        "width": 192,
+        "height": 96,
+        "source_scale": 2
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7829,7 +9434,12 @@
           "key": "210"
         }
       ],
-      "variant": "later-game"
+      "variant": "later-game",
+      "pixel_art": {
+        "width": 128,
+        "height": 192,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7858,7 +9468,12 @@
           "section": "Bhato",
           "key": "204"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 256,
+        "height": 256,
+        "source_scale": 8
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7877,7 +9492,12 @@
           "section": "gml_GlobalScript_scr_gui_general",
           "key": "hpcell_draw.hpValue[2]/picAdjust[hpValue-2]/spr_ui_16x16.frame[11]"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 64,
+        "source_scale": 4
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7896,7 +9516,12 @@
           "section": "gml_GlobalScript_scr_gui_general",
           "key": "hpcell_draw.hpValue[3]/picAdjust[hpValue-2]/spr_ui_16x16.frame[12]"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 64,
+        "source_scale": 4
+      }
     },
     {
       "creator": "Edym Pixels",
@@ -7915,7 +9540,12 @@
           "section": "gml_GlobalScript_scr_gui_general",
           "key": "hpcell_draw.hpValue[4]/picAdjust[hpValue-2]/spr_ui_16x16.frame[13]"
         }
-      ]
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 64,
+        "source_scale": 4
+      }
     },
     {
       "id": "being-12-location-illustration",
@@ -7932,7 +9562,12 @@
       "evidence": [
         {"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "rangerCamp/marker-2995/spr_built_48x32.frame0/portal31"},
         {"source": "game-data", "section": "gml_RoomCC_rm_hideout_ranger_0_Create", "key": "being12"}
-      ]
+      ],
+      "pixel_art": {
+        "width": 48,
+        "height": 48,
+        "source_scale": 1
+      }
     },
     {
       "id": "being-26-location-illustration",
@@ -7950,7 +9585,12 @@
         {"source": "game-data", "section": "gml_Object_manager_area_Alarm_6", "key": "marker-2990/spr_building_80x80.frame0/portal34"},
         {"source": "game-data", "section": "gml_RoomCC_rm_hut_gurb_0_Create", "key": "being26"},
         {"source": "game-data", "section": "gml_Object_obj_solid_Alarm_2", "key": "marker-2990/partFireSmoke-separate-particle-stream"}
-      ]
+      ],
+      "pixel_art": {
+        "width": 80,
+        "height": 128,
+        "source_scale": 1
+      }
     },
     {
       "id": "being-33-location-illustration",
@@ -7967,7 +9607,12 @@
       "evidence": [
         {"source": "game-data", "section": "gml_Object_manager_area_Alarm_6", "key": "marker-2989/spr_building_128x64.frame0/portal35"},
         {"source": "game-data", "section": "gml_RoomCC_rm_shipwreck_0_Create", "key": "being33"}
-      ]
+      ],
+      "pixel_art": {
+        "width": 128,
+        "height": 96,
+        "source_scale": 1
+      }
     }
   ]
 }

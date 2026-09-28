@@ -399,91 +399,6 @@
         ]
       },
       {
-        "title": "Bugs",
-        "index": "Bestiary",
-        "members": [
-          "being-1",
-          "being-2",
-          "being-25",
-          "being-27",
-          "being-28"
-        ]
-      },
-      {
-        "title": "Snakes",
-        "index": "Bestiary",
-        "members": [
-          "being-4",
-          "being-10",
-          "being-23"
-        ]
-      },
-      {
-        "title": "Trolls",
-        "index": "Bestiary",
-        "members": [
-          "being-3",
-          "being-18"
-        ]
-      },
-      {
-        "title": "Scaalmyr",
-        "index": "Bestiary",
-        "members": [
-          "being-13",
-          "being-14",
-          "being-15",
-          "being-16",
-          "being-22"
-        ]
-      },
-      {
-        "title": "Crabs",
-        "index": "Bestiary",
-        "members": [
-          "being-7",
-          "being-30"
-        ]
-      },
-      {
-        "title": "Mollusks",
-        "index": "Bestiary",
-        "members": [
-          "being-0"
-        ]
-      },
-      {
-        "title": "Toadkin",
-        "index": "Bestiary",
-        "members": [
-          "being-21"
-        ]
-      },
-      {
-        "title": "Unwanted creatures",
-        "index": "Bestiary",
-        "members": [
-          "being-31",
-          "being-32"
-        ]
-      },
-      {
-        "title": "Rodents",
-        "index": "Bestiary",
-        "members": [
-          "being-11",
-          "being-29"
-        ]
-      },
-      {
-        "title": "Aquatic creatures",
-        "index": "Bestiary",
-        "members": [
-          "being-17",
-          "being-24"
-        ]
-      },
-      {
         "title": "Trees",
         "index": "Nature",
         "members": [
@@ -1021,6 +936,145 @@
         "parents": ["Crafting materials", "Food and drink"],
         "summary": "Edible items that are inputs to reviewed recipes, including food preparation, remedies and other crafting. Their recipe roles do not replace their food categories or imply that every recipe output is edible.",
         "members": ["item-51", "item-60", "item-62", "item-64", "item-66", "item-69", "item-70", "item-82", "item-87", "item-103", "item-162", "item-180", "item-217", "item-218", "item-221", "item-223", "item-225", "item-226", "item-241", "item-242", "item-243", "item-247"]
+      },
+      {
+        "title": "Bugs",
+        "index": "Bestiary",
+        "members": [
+          "being-1",
+          "being-2",
+          "being-25",
+          "being-27",
+          "being-28"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Snakes",
+        "index": "Bestiary",
+        "members": [
+          "being-4",
+          "being-10",
+          "being-23"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Trolls",
+        "index": "Bestiary",
+        "members": [
+          "being-3",
+          "being-18"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Scaalmyr",
+        "index": "Bestiary",
+        "members": [
+          "being-13",
+          "being-14",
+          "being-15",
+          "being-16",
+          "being-22"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Crabs",
+        "index": "Bestiary",
+        "members": [
+          "being-7",
+          "being-30"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Mollusks",
+        "index": "Bestiary",
+        "members": [
+          "being-0"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Toadkin",
+        "index": "Bestiary",
+        "members": [
+          "being-21"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Unwanted creatures",
+        "index": "Bestiary",
+        "members": [
+          "being-31",
+          "being-32"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Rodents",
+        "index": "Bestiary",
+        "members": [
+          "being-11",
+          "being-29"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Aquatic creatures",
+        "index": "Bestiary",
+        "members": [
+          "being-17",
+          "being-24"
+        ],
+        "summary": "Secondary appearance-based browsing, not an aggression faction."
+      },
+      {
+        "title": "Capacity-granting equipment",
+        "index": "Items",
+        "parents": ["Items"],
+        "members": [
+          "item-12",
+          "item-14",
+          "item-148",
+          "item-26",
+          "item-13",
+          "item-166",
+          "item-167",
+          "item-168",
+          "item-196",
+          "item-197",
+          "item-198",
+          "item-24",
+          "item-21"
+        ],
+        "summary": "All equipment with a reviewed storage grid, including backpacks, herbalist belts, three pocketed vests, Hiker's Shirt and Hiker's Pants. Slot bonuses are not weight allowances or a player's total inventory.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item constructor: inventory subParts by item ID"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "inventory constructor: grid dimensions"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_pickup: equipped-item subinventories"
+          },
+          {
+            "source": "items-en",
+            "section": "ItemTitles/ItemDesc",
+            "key": "12/14/148/26/13/166/167/168/196/197/198/24/21"
+          }
+        ]
       }
     ]
   },
@@ -6234,5 +6288,236 @@
         }
       ]
     }
-  ]
+  ],
+  "aggression": {
+    "factions": [
+      {
+        "id": 0,
+        "title": "Friendly NPC faction",
+        "summary": "Friendly NPCs skip the player and faction-mates during normal target acquisition. Retaliation can still target an attacker.",
+        "members": [
+          "being-5",
+          "being-6",
+          "being-8",
+          "being-9",
+          "being-12",
+          "being-19",
+          "being-20",
+          "being-26",
+          "being-33",
+          "being-34",
+          "being-35"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[5,6,8,9,12,19,20,26,33,34,35].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Wildlife faction",
+        "summary": "This shared wildlife faction crosses appearance groups: flies, gnats, crabs, Mirk rodents, Mudfin, Razorfin and Mire Serpent normally exclude one another as targets.",
+        "members": [
+          "being-1",
+          "being-2",
+          "being-4",
+          "being-7",
+          "being-11",
+          "being-17",
+          "being-24",
+          "being-25",
+          "being-27",
+          "being-29",
+          "being-30"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[1,2,4,7,11,17,24,25,27,29,30].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Giant Slug faction",
+        "summary": "Giant Slugs form a separate faction, not part of the mixed wildlife faction.",
+        "members": [
+          "being-0"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[0].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Scaalmyr faction",
+        "summary": "Sceetler, Scaal, Scaalmyr fighters and Mutated Unwanted share this targeting faction despite their different names and appearance.",
+        "members": [
+          "being-13",
+          "being-14",
+          "being-15",
+          "being-16",
+          "being-22",
+          "being-32"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[13].team/beingDB[14].team/beingDB[15].team/beingDB[16].team/beingDB[22].team/beingDB[32].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Toadkin faction",
+        "summary": "Toadkin form their own targeting faction.",
+        "members": [
+          "being-21"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[21].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Viper faction",
+        "summary": "Viper and Red Fang share a faction. Mire Serpent instead belongs to the mixed wildlife faction.",
+        "members": [
+          "being-10",
+          "being-23"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[10].team/beingDB[23].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Nightmare faction",
+        "summary": "Both Nightmare and Raving Unwanted can select other members of this same faction as targets. Neither selects itself.",
+        "members": [
+          "being-28",
+          "being-31"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[28].team/beingDB[31].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Troll faction",
+        "summary": "Swamp Troll and Cave Troll share this faction.",
+        "members": [
+          "being-3",
+          "being-18"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[3].team/beingDB[18].team"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "being_get_target"
+          }
+        ]
+      }
+    ],
+    "paragraphs": [
+      "These labels describe mechanical targeting groups; they are not official named organizations or species classifications.",
+      "Normal target acquisition excludes beings in the actor's own faction, except the group shared by Nightmare and Raving Unwanted.",
+      "Both Nightmare and Raving Unwanted can normally select another member of their own group. The acting individual is always excluded.",
+      "Friendly-faction NPCs additionally exclude the player from normal target acquisition. The player has a separate team, 1, and is not one of the 36 catalog beings.",
+      "Faction eligibility alone is not guaranteed aggression: acquisition also checks distance, detectability, reachability and optionally line of sight; actual aggression has additional probability and current-target behavior.",
+      "Damage retaliation can assign the attacker as target without the same-team acquisition filter. Same-faction beings can therefore sometimes attack each other, and friendly NPCs are not unconditionally pacifist."
+    ],
+    "confidence": "inferred",
+    "evidence": [
+      {
+        "source": "game-data",
+        "section": "gml_Object_databank_Alarm_3",
+        "key": "global.beingDB member team fields"
+      },
+      {
+        "source": "beings-en",
+        "section": "Titles",
+        "key": "0 through 35"
+      },
+      {
+        "source": "game-data",
+        "section": "gml_GlobalScript_scr_ai_related",
+        "key": "being_get_target"
+      },
+      {
+        "source": "game-data",
+        "section": "gml_GlobalScript_scr_basic_useful",
+        "key": "attack_aftermath retaliation target assignment"
+      }
+    ]
+  }
 }

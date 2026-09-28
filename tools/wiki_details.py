@@ -14,6 +14,7 @@ from wiki_acquisition import MAX_ACQUISITION_BYTES
 
 MAX_DETAILS_BYTES = 768 * 1024
 MAX_ILLUSTRATIONS_BYTES = 512 * 1024
+CAPACITY_PROPERTIES = {"inventory-slots-added", "storage-grid-width", "storage-grid-height"}
 
 
 def empty_details():
@@ -55,6 +56,7 @@ def validate_details(details, data):
     sources = {source["id"]: source for source in data["sources"]}
     entities = {entity["id"]: entity for entity in data["entities"]}
     profiles = set()
+    capacity_owners = set()
     for row in _records(details["profiles"], "profiles"):
         _object(row, {"id", "entity", "context", "confidence", "evidence", "values"}, set(), "profile")
         identity = _identifier(row["id"], "profile.id")
@@ -74,6 +76,15 @@ def validate_details(details, data):
                 raise DataError("profile value refers to an undeclared property")
             if value is not None and type(value) is not bool:
                 _number(value, f"profile.values.{key}", minimum=-(10**15))
+        values = row["values"]
+        if CAPACITY_PROPERTIES & values.keys():
+            if not CAPACITY_PROPERTIES <= values.keys() or entities[entity]["category"] != "item" or entity in capacity_owners:
+                raise DataError("capacity: expected one complete storage profile per item")
+            capacity_owners.add(entity)
+            for key in CAPACITY_PROPERTIES:
+                _number(values[key], f"capacity.{key}", minimum=1, maximum=1024, integer=True)
+            if values["inventory-slots-added"] != values["storage-grid-width"] * values["storage-grid-height"]:
+                raise DataError("capacity: added slots must equal the storage grid area")
     grid_ids = set()
     grid_owners = set()
     grids = _records(details.get("grids", []), "grids")
@@ -176,6 +187,22 @@ def validate_coin_profiles(catalog, details):
             raise DataError("coin kilogram and gram values disagree")
 
 
+def validate_capacity_profiles(catalog, details):
+    capacity = {row["entity"] for row in details["profiles"] if "inventory-slots-added" in row["values"]}
+    taxonomy = catalog.get("taxonomy", {})
+    declared = next((set(row["members"]) for row in taxonomy.get("tags", [])
+                     if row["title"] == "Capacity-granting equipment"), set())
+    if capacity != declared:
+        raise DataError("capacity: browse category must match every reviewed capacity-granting item")
+    if capacity:
+        carrying = next((set(row["members"]) for row in taxonomy.get("groups", [])
+                         if row["title"] == "Carrying equipment"), set())
+        slots = {identity for row in taxonomy.get("tags", []) if "Equipment by slot" in row.get("parents", [])
+                 for identity in row["members"]}
+        if not carrying <= capacity or not capacity <= slots:
+            raise DataError("capacity: every carrying item needs a bonus and every bonus needs an equipment slot")
+
+
 def load_publication_inputs(root):
     folder = Path(root) / "content" / "facts"
     data = load_data(folder / "game.json")
@@ -187,4 +214,5 @@ def load_publication_inputs(root):
     data = dict(data, illustrations=[*data.get("illustrations", []), *images])
     details = parse_details(read_metadata(folder / "entity_details.json", MAX_DETAILS_BYTES), data)
     validate_coin_profiles(catalog, details)
+    validate_capacity_profiles(catalog, details)
     return data, catalog, details

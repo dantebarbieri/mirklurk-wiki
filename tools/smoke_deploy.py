@@ -32,7 +32,7 @@ from build_wiki import build_pages, build_xml, title_key
 from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
-from wiki_render import display_entry, image_for, literal, recipe_groups
+from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
 
@@ -56,6 +56,7 @@ class RenderedGrids(HTMLParser):
         self.images = []
         self.links = []
         self.icon_styles = []
+        self.pixel_styles = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -79,6 +80,8 @@ class RenderedGrids(HTMLParser):
             self.icon_styles.append(attrs.get("style", ""))
             if self.cell is not None:
                 self.cell["icon_styles"].append(attrs.get("style", ""))
+        if tag == "span" and "pixel-art" in attrs.get("class", "").split():
+            self.pixel_styles.append(attrs.get("style", ""))
 
     def handle_endtag(self, tag):
         if tag == "table":
@@ -95,7 +98,7 @@ def check_shield_icon(images, links, styles, armor):
     name = {1: "bronze", 2: "silver", 3: "gold"}[armor]
     label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
     if len(images) != 1 or any(images[0].get(key) != value for key, value in (
-        ("alt", label), ("width", "32"), ("height", "32"),
+        ("alt", label), ("width", "64"), ("height", "64"),
     )):
         raise RuntimeError("A health shield lost its exact size or accessible HP/armor label.")
     filename = f"Health-armor-{armor}.png"
@@ -105,6 +108,9 @@ def check_shield_icon(images, links, styles, armor):
         raise RuntimeError("A shield no longer links to its canonical local File page.")
     if len(styles) != 1 or "image-rendering:pixelated" not in styles[0].replace(" ", ""):
         raise RuntimeError("MediaWiki stripped the shield's pixel rendering style.")
+    if ("zoom:calc(2/4)" not in styles[0].replace(" ", "") or "srcset" in images[0]
+            or "/thumb/" in images[0].get("src", "")):
+        raise RuntimeError("A shield must display the original at exactly 2x native pixels, without a thumbnail.")
 
 
 def smoke_category_memberships(api, pages):
@@ -186,21 +192,25 @@ def smoke_npc_locations(api, data, catalog, image_hashes, open_media=urllib.requ
         rendered = RenderedGrids()
         rendered.feed(parsed["text"]["*"])
         matches = [row for row in rendered.images if filename in urllib.parse.unquote(row.get("src", ""))]
-        if len(matches) != 1 or tuple(matches[0].get(key) for key in ("width", "height")) != tuple(map(str, size)):
-            raise RuntimeError("An NPC location picture did not render once at its native, non-upscaled dimensions.")
+        scale = pixel_geometry(image)[2]
+        if (len(matches) != 1 or tuple(matches[0].get(key) for key in ("width", "height")) != tuple(map(str, size))
+                or "srcset" in matches[0] or "/thumb/" in matches[0].get("src", "")
+                or not any(f"zoom:calc({scale}/1)" in style.replace(" ", "") and "image-rendering:pixelated" in style
+                           for style in rendered.pixel_styles)):
+            raise RuntimeError("An NPC location picture lost its original source or exact integer-scaled presentation.")
         if not any(portrait["file_title"].removeprefix("File:") in urllib.parse.unquote(row.get("src", ""))
                    for row in rendered.images):
             raise RuntimeError("An NPC portrait did not resolve to an actual rendered image.")
         info_page = next(iter(api({
             "action": "query", "titles": image["file_title"], "prop": "imageinfo",
-            "iiprop": "url|size|mime", "iiurlwidth": 220,
+            "iiprop": "url|size|mime",
         })["query"]["pages"].values()))
         info = info_page.get("imageinfo", [{}])[0]
         if info.get("mime") != "image/png" or (info.get("width"), info.get("height")) != size or not info.get("url"):
             raise RuntimeError("An NPC exterior File page has missing or incorrect native PNG metadata.")
         displayed_url = urllib.parse.urljoin(info["url"], matches[0]["src"])
-        if displayed_url != info.get("thumburl", info["url"]):
-            raise RuntimeError("An NPC exterior img does not use its File page's requested 220px image.")
+        if displayed_url != info["url"]:
+            raise RuntimeError("An NPC exterior img does not use its exact original File image.")
         for url in (info["url"], displayed_url):
             with open_media(url, timeout=30) as response:
                 if response.status != 200 or response.headers.get_content_type() != "image/png":
@@ -212,9 +222,33 @@ def smoke_npc_locations(api, data, catalog, image_hashes, open_media=urllib.requ
                 raise RuntimeError("An NPC exterior original or displayed PNG differs from its exact native import.")
 
 
+def smoke_pixel_art(api, data):
+    images = [image for image in data["illustrations"] if image["rights_status"] == "approved"]
+    for start in range(0, len(images), 25):
+        cases = [(image, width, height) for image in images[start:start + 25] for width, height in ((224, 288), (32, 32))]
+        result = api({"action": "parse", "text": "\n\n".join(pixel_image(*case) for case in cases),
+                      "contentmodel": "wikitext", "prop": "text"})["parse"]["text"]["*"]
+        check_parser_errors(result)
+        rendered = RenderedGrids()
+        rendered.feed(result)
+        if len(rendered.images) != len(cases) or len(rendered.pixel_styles) != len(cases):
+            raise RuntimeError("Pixel-art parser output lost an image or its scaling wrapper.")
+        for (image, width, height), actual, style in zip(cases, rendered.images, rendered.pixel_styles):
+            pixels = image["pixel_art"]
+            scale = pixel_geometry(image, width, height)[2]
+            expected_zoom = f'zoom:calc({scale}/{pixels["source_scale"]})'
+            source = urllib.parse.unquote(actual.get("src", ""))
+            if (tuple(actual.get(key) for key in ("width", "height")) != tuple(str(pixels[key]) for key in ("width", "height"))
+                    or "srcset" in actual or "/thumb/" in source
+                    or not source.endswith(image["file_title"].removeprefix("File:"))
+                    or expected_zoom not in style.replace(" ", "") or "image-rendering:pixelated" not in style):
+                raise RuntimeError("Pixel art used a resampled source, lost aspect ratio or lost its integer-native scale.")
+
+
 def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media=urllib.request.urlopen):
     smoke_category_memberships(api, pages)
     smoke_npc_locations(api, data, catalog, image_hashes, open_media)
+    smoke_pixel_art(api, data)
     locations = page_locations(data, catalog)
     for identity in MATURE_TREES:
         image = image_for(identity, data["illustrations"])
@@ -1056,7 +1090,8 @@ def synthetic_image_specs(data):
                   for armor in (1, 2, 3)})
     for index, image in enumerate(sorted(data["illustrations"], key=lambda row: row["file_title"])):
         filename = image["file_title"].removeprefix("File:")
-        specs.setdefault(filename, (64, 64, bytes((index % 256, index // 256, 73, 255)), 32))
+        pixels = image["pixel_art"]
+        specs.setdefault(filename, (pixels["width"], pixels["height"], bytes((index % 256, index // 256, 73, 255)), 32))
     for identity, (width, height) in MATURE_TREES.items():
         filename = image_for(identity, data["illustrations"])["file_title"].removeprefix("File:")
         specs[filename] = (width, height, specs[filename][2], 32)
