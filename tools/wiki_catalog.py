@@ -15,7 +15,7 @@ from wiki_acquisition import validate_acquisition
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
-MAX_CATALOG_BYTES = 224 * 1024
+MAX_CATALOG_BYTES = 256 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs", "Source provenance", "Loot mechanics"}
 CURRENCY_RULE_TITLES = {
     "coin-denominations": "Denominations",
@@ -119,6 +119,38 @@ def skill_category_title(entity):
     return f'Skill group {entity["id"]}' if re.search(r"[\[\]{}|<>#:/\\]", name) else name
 
 
+def faction_groups(catalog):
+    kinds = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+    return [{**row, "index": "NPCs" if kinds[row["members"][0]] == "npc" else "Bestiary"}
+            for row in catalog.get("aggression", {}).get("factions", [])]
+
+
+def primary_groups(catalog):
+    return [*catalog.get("taxonomy", {}).get("groups", []),
+            *({key: value for key, value in row.items() if key != "id"}
+              for row in faction_groups(catalog) if row["index"] == "Bestiary")]
+
+
+def armor_groups(catalog):
+    taxonomy = catalog.get("taxonomy", {})
+    armor = next((set(row["members"]) for row in taxonomy.get("groups", []) if row["title"] == "Armor"), set())
+    slots = {row["title"]: row for row in taxonomy.get("tags", [])}
+    groups = []
+    for title, slot in (("Head armor", "Helmet-slot equipment"), ("Torso armor", "Outer torso equipment"),
+                        ("Armored gloves", "Glove-slot equipment"), ("Leg armor", "Leg-armor-slot equipment"),
+                        ("Shields", "Off-hand equipment")):
+        members = armor & set(slots.get(slot, {}).get("members", []))
+        if members:
+            if not {"confidence", "evidence"} <= slots[slot].keys():
+                raise DataError("armor slot categories require reviewed evidence")
+            groups.append({
+                "title": title, "index": "Items", "parents": ["Armor", slot], "members": sorted(members),
+                "summary": f"Armor worn in the {slot.lower()}. Other equipment using this slot remains in its own browsing group.",
+                "confidence": slots[slot]["confidence"], "evidence": slots[slot]["evidence"],
+            })
+    return groups
+
+
 def category_definitions(data, catalog):
     """Resolve the single category graph used by validation and rendering."""
     entities = {row["id"]: row for row in data["entities"]}
@@ -146,7 +178,8 @@ def category_definitions(data, catalog):
             "summary": summaries.get(entity["id"], f"Skills assigned to the localized {entity['name']} group. This is not an additional prerequisite tree."),
             "evidence": entity["evidence"], "confidence": entity["confidence"],
         }
-    for row in [*taxonomy.get("groups", []), *taxonomy.get("tags", [])]:
+    for row in [*primary_groups(catalog), *taxonomy.get("tags", []), *armor_groups(catalog),
+                *(row for row in faction_groups(catalog) if row["index"] == "NPCs")]:
         if row["title"] in categories:
             raise DataError("taxonomy: duplicate category")
         categories[row["title"]] = {
@@ -215,7 +248,8 @@ def validate_category_graph(categories):
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
             {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides",
-             "damage_sources", "item_effects", "acquisition", "construction_recipes", "merchant_profiles"}, "catalog")
+             "damage_sources", "item_effects", "acquisition", "construction_recipes", "merchant_profiles",
+             "aggression"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -345,6 +379,38 @@ def validate_catalog(catalog, data):
                 raise DataError("NPC location: expected at most eight unique related entities")
             _confidence(location["confidence"], "NPC location.confidence")
             _evidence(location["evidence"], sources, "NPC location.evidence")
+    if "aggression" in catalog:
+        aggression = catalog["aggression"]
+        _object(aggression, {"factions", "paragraphs", "confidence", "evidence"}, set(), "aggression")
+        _confidence(aggression["confidence"], "aggression.confidence")
+        _evidence(aggression["evidence"], sources, "aggression.evidence")
+        if not isinstance(aggression["paragraphs"], list) or not 1 <= len(aggression["paragraphs"]) <= 8:
+            raise DataError("aggression: expected one to eight original paragraphs")
+        for paragraph in aggression["paragraphs"]:
+            _text(paragraph, "aggression.paragraph", 1200)
+        teams, members = set(), set()
+        kinds = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+        for faction in _records(aggression["factions"], "aggression.factions"):
+            _object(faction, {"id", "title", "summary", "members", "confidence", "evidence"}, set(), "faction")
+            _number(faction["id"], "faction.id", maximum=255, integer=True)
+            if faction["id"] in teams:
+                raise DataError("faction: duplicate team")
+            teams.add(faction["id"])
+            _title(faction["title"])
+            _text(faction["summary"], "faction.summary", 1200)
+            _confidence(faction["confidence"], "faction.confidence")
+            _evidence(faction["evidence"], sources, "faction.evidence")
+            group = faction["members"]
+            if not isinstance(group, list) or not 1 <= len(group) <= 128:
+                raise DataError("faction: expected one to 128 members")
+            for identity in group:
+                if not isinstance(identity, str) or identity not in kinds or identity in members:
+                    raise DataError("faction: unknown or duplicate being")
+                members.add(identity)
+            if len({kinds[identity] for identity in group}) != 1 or kinds[group[0]] not in {"npc", "creature"}:
+                raise DataError("faction: preserve reviewed NPC separation")
+        if members != {e["id"] for e in entities.values() if e["category"] == "being"}:
+            raise DataError("factions must cover every being exactly once")
     entry_ids = {entry["id"] for entry in data.get("entries", [])}
     linked = set()
     for row in _records(catalog["entry_links"], "catalog.entry_links"):
@@ -409,8 +475,10 @@ def validate_catalog(catalog, data):
         grouped = set()
         group_titles = set(CATEGORY_PAGES.values()) | {"NPCs"}
         classified_kind = {row["entity"]: row["kind"] for row in catalog["classifications"]}
+        _records(taxonomy["groups"], "taxonomy.groups")
         for field in ("groups", "tags"):
-            for group in _records(taxonomy[field], f"taxonomy.{field}"):
+            records = primary_groups(catalog) if field == "groups" else taxonomy[field]
+            for group in _records(records, f"taxonomy.{field}"):
                 _object(group, {"title", "index", "members"},
                         {"parents", "summary", "confidence", "evidence"}, "taxonomy group")
                 title = _title(group["title"])
@@ -452,6 +520,10 @@ def validate_catalog(catalog, data):
                     or (e["category"] == "being" and classified_kind.get(e["id"]) == "creature")}
         if grouped != expected:
             raise DataError("taxonomy: primary groups must cover every item, nature record and creature")
+        armor = next((set(row["members"]) for row in taxonomy["groups"] if row["title"] == "Armor"), set())
+        covered_armor = [identity for row in armor_groups(catalog) for identity in row["members"]]
+        if set(covered_armor) != armor or len(covered_armor) != len(armor):
+            raise DataError("armor must have exactly one reviewed equipment slot")
         described = set()
         for row in _records(taxonomy.get("skill_groups", []), "taxonomy.skill_groups"):
             _object(row, {"entity", "summary"}, set(), "skill group description")

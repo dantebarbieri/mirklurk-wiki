@@ -73,7 +73,7 @@ Three shared shield records originally brought the total to 326. They use `healt
 
 The reviewed `spr_ui_16x16` frames are native 16x16 RGBA overlays, privately
 scaled to 64x64 PNG using integer nearest-neighbor scaling. The health-cell
-renderer uses a 32px File reference over the existing red base and preserves
+renderer displays the original File at 32px over the existing red base and preserves
 the cell dimensions. HP and armor remain in the cell's title and ARIA label
 and the image's alt text; there is no additional visible armor-count chip.
 The Health and armor guide owns the three-shield legend.
@@ -126,9 +126,10 @@ and the operator-reported permission basis are in the three `role: "location"`
 records. Gurb-Gurb's smoke is a separate runtime effect, not an overlay in the
 PNG. Bhato's frame 0 is the hut, not the different frame 1 entrance.
 
-The location sections request `thumb|220px` explicitly. MediaWiki must cap these
-small originals at their native dimensions, not enlarge or rewrite the approved
-bytes. No new 32px icon consumer uses these exteriors. Import the three exact
+The location sections now use the original-file integer-scaling policy below:
+Bhato's hut is displayed at 192 x 192 (4x), Gurb-Gurb's hollow at 160 x 256 (2x),
+and Ihar's shipwreck at 128 x 96 (1x). Approved bytes are never rewritten.
+No compact icon consumer uses these exteriors. Import the three exact
 titles with their attribution sidecars before the pages that embed them are
 published; the sync lists every referenced File that is still missing, and an
 existing File title alone is not display evidence. Do not overwrite existing
@@ -143,8 +144,8 @@ missing or pending shield metadata raises an explicit `DataError`, rather than
 publishing broken images, guessing another level, or falling back to brown.
 Zero-armor cells and holes never reference a shield; values above 3 are rejected.
 
-For `rights_status: approved`, creator, hash, rights basis, and review note are
-required. The reviewed record may then emit `[[File:...|thumb|...]]`.
+For `rights_status: approved`, creator, hash, rights basis, review note and
+reviewed `pixel_art` geometry are required.
 An approved flag is a recorded human decision, not a legal conclusion made by
 the software. The builder cannot verify permission or the live file's existence.
 Publish approved metadata only after the corresponding operator import is ready.
@@ -152,6 +153,44 @@ Publish approved metadata only after the corresponding operator import is ready.
 Titles are restricted to simple ASCII raster-image basenames: PNG, JPEG, or
 WebP. Use stable names, not version-specific host URLs. MediaWiki resolves these
 relative File references after a domain migration.
+
+## Crisp integer-scaled presentation
+
+Every approved record carries `pixel_art: {width, height, source_scale}`:
+the exact uploaded raster dimensions and its integer nearest-neighbor
+enlargement from native pixels. Dimensions must be positive, bounded integers
+divisible by the scale. This is metadata, not a new asset or permission grant.
+All 329 current PNGs were hash-matched and decoded during review: reducing
+each by its recorded scale and re-enlarging with nearest-neighbor reproduces
+every RGBA pixel exactly. Existing export receipts supply most dimensions.
+The 12 active 128px nature tiles have a unique 16px/8x inverse under their
+recorded export algorithm; the three workstation frames were additionally
+compared pixel-for-pixel with their native frames. Source scales vary from 1x
+to 8x; never assume every previous upload was 4x.
+
+The shared `pixel_image` renderer requests ordinary `File` embeds at the
+uploaded width, **not** `thumb` or `frameless`. MediaWiki therefore serves the
+original, not a resampled thumbnail or density-dependent `srcset`. A shipped
+inline wrapper applies `image-rendering:pixelated` and CSS
+`zoom:calc(display_scale / source_scale)`. The resulting width and height are
+exact integer multiples of the native grid, even when an upload had previously
+been enlarged 3x, 5x or 6x. Applying pixelated CSS to a blurred thumbnail would
+not restore its lost detail and is deliberately avoided.
+
+Main illustrations choose the largest whole native-pixel scale within a
+224 x 288 box, with a minimum of 1x. Captions stay at normal text size.
+Table icons use a separate 32 x 32 budget; coins use 20 x 20 (rounding down to
+a whole native scale, never below 1x). Shields retain their exact 32 x 32
+display over the unchanged health cells, using the original 64px upload at
+2x the native 16px grid. Large native sprites are not fractionally squeezed
+just to fit an icon budget.
+
+Figure containers are bounded by their parent's width and horizontally
+scroll on exceptionally narrow layouts rather than interpolating, cropping
+or distorting the art. Ordinary phone layouts fit these figures without
+page overflow. This content-only policy ships through the existing namespace
+0/14 publisher: it needs no unshipped Common.css, site JavaScript, new runtime
+deployment or artwork reimport. File-page links and alt text remain intact.
 
 ## Private staging and attribution
 

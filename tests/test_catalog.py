@@ -43,7 +43,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
         self.assertEqual(sum(not title.startswith("Category:") for title in self.pages), 385)
-        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 87)
+        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 101)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
 
@@ -88,15 +88,16 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(
             hashlib.sha256((json.dumps({
                 "schema_version": 1,
-                "properties": [r for r in self.details["properties"] if r["id"] != "equip-ap-cost"],
-                "profiles": [r for r in self.details["profiles"] if not r["id"].endswith("-equip-cost")],
+                "properties": [r for r in self.details["properties"] if r["id"] not in {
+                    "equip-ap-cost", "inventory-slots-added", "storage-grid-width", "storage-grid-height"}],
+                "profiles": [r for r in self.details["profiles"] if not r["id"].endswith(("-equip-cost", "-capacity"))],
             }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
             "1afe8a32c2e129d483555878c938a2fbb08aa2bc6565433ecbaa9d5366568001",
         )
-        self.assertEqual(len(self.details["properties"]), 49)
-        self.assertEqual(len(self.details["profiles"]), 475)
+        self.assertEqual(len(self.details["properties"]), 52)
+        self.assertEqual(len(self.details["profiles"]), 488)
         self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 297)
-        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2559)
+        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2598)
         locations = page_locations(self.data, self.catalog)
         entities = {row["id"]: row for row in self.data["entities"]}
         prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
@@ -124,7 +125,7 @@ class CatalogTests(unittest.TestCase):
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
                         self.assertIn(known(coins[profile["entity"]][field]), page)
                     elif key == "initial-price" and profile["entity"] in prices:
-                        self.assertIn(selective_view(price_text(prices[profile["entity"]]), "price", True), page)
+                        self.assertIn(selective_view(price_text(prices[profile["entity"]], self.data["illustrations"]), "price", True), page)
                     else:
                         self.assertIn(profile_value(key, value, entities, locations), page)
         for name in ("Flax", "Linen"):
@@ -133,7 +134,8 @@ class CatalogTests(unittest.TestCase):
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
         self.assertEqual(len(self.data["illustrations"]), 329)
-        images = [row for row in self.data["illustrations"] if "role" not in row]
+        images = [{key: value for key, value in row.items() if key != "pixel_art"}
+                  for row in self.data["illustrations"] if "role" not in row]
         self.assertEqual(
             hashlib.sha256((json.dumps({"schema_version": 1, "illustrations": images}, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
             "26cd04c5255d3a76d10ac771df5182d64db92f833f1e4fc909f6724b3972c508",
@@ -157,7 +159,8 @@ class CatalogTests(unittest.TestCase):
         for image in original_batch["illustrations"]:
             title = locations[image["entity"]] if "entity" in image else stations[image["station"]]["title"]
             page = self.pages[title]
-            self.assertEqual(page.count(f'[[{image["file_title"]}|thumb|'), 1)
+            figures = [part.split("</div>", 1)[0] for part in page.split('class="pixel-art-figure"')[1:]]
+            self.assertEqual(sum(figure.count(f'[[{image["file_title"]}|') for figure in figures), 1)
             self.assertIn(literal(image["sha256"]), self.pages["Source provenance"])
             self.assertNotIn(image["sha256"], page)
             self.assertIn(literal(image["caption"]), page)
@@ -443,7 +446,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual({title for title, page in self.pages.items() if "" in available_views(page)}, expected_default_owners)
         for identity in items:
             page = self.pages[locations[identity]]
-            self.assertIn(selective_view(price_text(known_prices.get(identity)), "price", True), page)
+            self.assertIn(selective_view(price_text(known_prices.get(identity), self.data["illustrations"]), "price", True), page)
             if identity in known_prices:
                 self.assertNotIn("Base value (not a shop price)", page)
         for entry in self.data["entries"]:
@@ -484,7 +487,7 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("Maybe unused", self.pages["Armor workstation"])
         for image in station_images:
             page = self.pages[stations[image["station"]]["title"]]
-            self.assertIn(f'[[{image["file_title"]}|thumb|', page)
+            self.assertIn(f'[[{image["file_title"]}|{image["pixel_art"]["width"]}px|', page)
         raw = {"schema_version": 1, "illustrations": [copy.deepcopy(station_images[0])]}
         base = load_data(ROOT / "content" / "facts" / "game.json")
         raw["illustrations"][0]["variant"] = "unreviewed"
@@ -791,7 +794,8 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(price_text({"value": value}, []), expected)
         rendered = price_text({"value": Decimal("12.34")}, self.data["illustrations"])
         for number, name in ((74, "Gold"), (73, "Silver"), (72, "Copper")):
-            self.assertIn(f"[[File:Item-{number}.png|20px|link=|alt={name} coin]]", rendered)
+            image = next(row for row in self.data["illustrations"] if row.get("entity") == f"item-{number}")
+            self.assertIn(f'[[File:Item-{number}.png|{image["pixel_art"]["width"]}px|link=|alt=<nowiki>{name} coin</nowiki>', rendered)
         for value in (Decimal("0.001"), Decimal("1.23000000000000000000000000000000001")):
             with self.assertRaises(DataError):
                 price_text({"value": value}, [])
@@ -828,7 +832,7 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("Potential melee damage", attack)
         self.assertNotIn("== Melee", self.pages["Shortbow (Willow)"])
         self.assertIn("0-1</td>", self.pages["Unarmed"])
-        self.assertIn("[[File:Health-armor-3.png|32px|alt=1 HP, 3 armor layers (gold shield)", self.pages["Sceetler"])
+        self.assertIn("[[File:Health-armor-3.png|64px|alt=<nowiki>1 HP, 3 armor layers (gold shield)", self.pages["Sceetler"])
         self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages["Sceetler"])
         for title in ("Giant Slug", "Swamp Troll", "Mirk Mauler", "Scaal", "Wilda", "Unwanted Guard"):
             self.assertNotIn("<nowiki>Armor</nowiki> ||", self.pages[title])

@@ -9,11 +9,11 @@ from fractions import Fraction
 from pathlib import Path
 
 from wiki_catalog import (
-    CURRENCY_RULE_TITLES, INGREDIENT_METHODS, category_definitions, default_catalog, entry_owners, entry_relations,
-    fact_owners, ingredient_acquisition, page_locations, skill_category_title, validate_catalog,
+    CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
+    fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, entry_page, validate_data
-from wiki_details import empty_details, validate_coin_profiles, validate_details
+from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
 
 
@@ -90,11 +90,34 @@ def image_for(identity, images):
                  and "role" not in image and image["rights_status"] == "approved"), None)
 
 
-def illustration_markup(image, width=None):
-    text = anchor("illustration", image["id"])
+def pixel_geometry(image, width=224, height=288):
+    pixels = image["pixel_art"]
+    native_width = pixels["width"] // pixels["source_scale"]
+    native_height = pixels["height"] // pixels["source_scale"]
+    scale = max(1, min(width // native_width, height // native_height))
+    return native_width * scale, native_height * scale, scale
+
+
+def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pixel-art"):
+    pixels = image["pixel_art"]
+    _, _, scale = pixel_geometry(image, width, height)
+    label = literal(image["caption"] if alt is None else alt)
+    target = "" if link is None else "|link=" + link
+    # Request the original, never an interpolated server thumbnail (including srcset variants).
+    return (
+        f'<span class="{css_class}" style="display:inline-block;line-height:0;image-rendering:pixelated;'
+        f'zoom:calc({scale} / {pixels["source_scale"]});">'
+        f'[[{image["file_title"]}|{pixels["width"]}px{target}|alt={label}|{label}]]</span>'
+    )
+
+
+def illustration_markup(image, width=224, caption=None, marker=True):
+    text = anchor("illustration", image["id"]) if marker else ""
     if image["rights_status"] == "approved":
-        size = f"|{width}px" if width is not None else ""
-        return text + f'\n[[{image["file_title"]}|thumb{size}|{literal(image["caption"])}]]\n'
+        label = image["caption"] if caption is None else caption
+        return (text + '\n<div class="pixel-art-figure" style="max-width:100%;overflow-x:auto;">'
+                + pixel_image(image, width=width, alt=label) + "</div>\n"
+                + '<div class="pixel-art-caption">' + literal(label) + "</div>\n")
     return text + "\nNo reviewed picture is available yet.\n"
 
 
@@ -102,7 +125,7 @@ def icon(identity, images, entities, locations):
     image = image_for(identity, images)
     if image is None:
         return ""
-    return f'[[{image["file_title"]}|32px|link={locations[identity]}|alt={literal(entities[identity]["name"])}]]'
+    return pixel_image(image, 32, 32, locations[identity], entities[identity]["name"])
 
 
 def item_cell(identity, images, entities, locations):
@@ -135,6 +158,8 @@ def profile_value(key, value, entities, locations):
         return literal(decimal_text(amount)) + " kg"
     if key == "initial-price":
         return known(value) + " silver equivalents"
+    if key == "inventory-slots-added":
+        return "+" + known(value) + " inventory slots"
     if key == "extra-damage":
         amount = Decimal(str(value))
         low = int(amount)
@@ -184,6 +209,7 @@ PAIRED_PROPERTIES = (
     ("melee-pattern-min", "melee-pattern-max", "Potential melee damage", " to "),
     ("ranged-pattern-min", "ranged-pattern-max", "Potential ranged damage", " to "),
     ("terrain-height-min", "terrain-height-max", "Growth height range", " to "),
+    ("storage-grid-width", "storage-grid-height", "Separate storage grid (columns x rows)", " x "),
 )
 
 
@@ -208,9 +234,10 @@ def price_text(price, images=None):
         count, remaining = divmod(remaining, size)
         if count:
             picture = ""
-            if images is None or any(i.get("entity") == identity and i["file_title"] == file_title
-                                     and i["rights_status"] == "approved" for i in images):
-                picture = f"[[{file_title}|20px|link=|alt={name.capitalize()} coin]] "
+            if images is not None:
+                image = image_for(identity, images)
+                if image is not None:
+                    picture = pixel_image(image, 20, 20, "", name.capitalize() + " coin") + " "
             parts.append(picture + f"{count} {name}")
     return " ".join(parts) or "0 copper"
 
@@ -312,7 +339,8 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
             unit = properties[key]["unit"]
             if unit in {"XP", "items", "cells", "normalized height"}:
                 label += f" ({unit})"
-            rows.append([extra + literal(label), profile_value(key, value, entities, locations), scope])
+            rows.append([extra + literal(label), profile_value(key, value, entities, locations),
+                         "While equipped" if key == "inventory-slots-added" else scope])
     for fact in sorted(facts, key=lambda row: row["id"]):
         if fact["id"] not in coalesced:
             is_skill = any(e["category"] == "skill" and e["name"] == fact["entity"] for e in entities.values())
@@ -343,6 +371,8 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
         notes.append("Potential damage is before target overlap, armor, and modifiers; it is not guaranteed damage per hit.")
     if "extra-damage" in keys:
         notes.append("[[Health and armor|How ammunition bonus rolls modify an attack pattern]].")
+    if "inventory-slots-added" in keys:
+        notes.append(CAPACITY_NOTE + " [[Items#Capacity-granting_equipment|Compare capacity-granting equipment]].")
     return "\n== Stats ==\n" + markers + "\n" + table(["Detail", "Value", "Applies to / notes"], rows) + " ".join(notes) + "\n"
 
 
@@ -352,8 +382,7 @@ def health_armor_icon(armor, images):
         raise DataError(f"health armor {armor}: an approved shield illustration is required")
     name = HEALTH_ARMOR_ICONS[armor][1].lower()
     label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
-    return ('<span class="health-armor-icon" style="image-rendering:pixelated;">'
-            f'[[{image["file_title"]}|32px|alt={label}|{label}]]</span>')
+    return pixel_image(image, 32, 32, alt=label, css_class="health-armor-icon")
 
 
 def health_armor_legend(images):
@@ -646,6 +675,29 @@ def clothing_subgroups(catalog, members):
     return groups
 
 
+CAPACITY_NOTE = (
+    "Added inventory slots are storage cells supplied by the equipped item, not weight allowance, occupied item slots, "
+    "or the player's total capacity. Each item has its own rectangular storage grid. "
+    "Replacing equipment replaces its contribution rather than adding the new bonus on top of the old one."
+)
+
+
+def capacity_table(members, details, catalog, entities, locations, markers=None):
+    profiles = {row["entity"]: row["values"] for row in details["profiles"] if "inventory-slots-added" in row["values"]}
+    slots = {identity: row["title"] for row in catalog.get("taxonomy", {}).get("tags", [])
+             if "Equipment by slot" in row.get("parents", []) for identity in row["members"]}
+    return table(["Equipment", "Equipped slot", "Inventory slots added", "Storage grid (columns x rows)"], [
+        [
+            ("".join(anchor(kind, value) for kind, value in sorted(markers.get(locations[identity], []))) if markers else "")
+            + entity_link(identity, entities, locations),
+            f'[[:Category:{slots[identity]}|{slots[identity]}]]',
+            profile_value("inventory-slots-added", profiles[identity]["inventory-slots-added"], entities, locations),
+            known(profiles[identity]["storage-grid-width"]) + " x " + known(profiles[identity]["storage-grid-height"]),
+        ]
+        for identity in sorted(set(members) & profiles.keys(), key=lambda identity: entities[identity]["name"])
+    ])
+
+
 def ingredient_table(method, ingredients, entities, locations):
     return html_table(["Ingredient", "Documented sources"], [
         html_row([entity_link(identity, entities, locations), " &middot; ".join(
@@ -731,10 +783,19 @@ def source_page(data, catalog, details, locations, facts, entries):
         [f'[[{locations[row["entity"]]}]]', literal(row["kind"]), literal(row["confidence"]), evidence_text(row["evidence"]), literal(row["note"])]
         for row in sorted(catalog["classifications"], key=lambda row: row["entity"])
     ])])
+    if "aggression" in catalog:
+        lines.extend(["", "== Aggression faction evidence ==",
+                      "Mechanical team membership and target-acquisition rules are source-traced, not runtime-playtested. Faction names are editorial labels.",
+                      table(["Faction / editable owner", "Team", "Confidence", "Evidence"], [
+                          [f'[[:Category:{row["title"]}|{row["title"]}]]', known(row["id"]),
+                           literal(row["confidence"]), evidence_text(row["evidence"])]
+                          for row in sorted(catalog["aggression"]["factions"], key=lambda row: row["id"])
+                      ]),
+                      "[[Bestiary#Aggression_rules|Shared aggression rules]]: " + evidence_text(catalog["aggression"]["evidence"])])
     if "taxonomy" in catalog:
         lines.extend(["", "== Browsing categories ==",
                       "Categories are editorial navigation based on reviewed names, profiles, recipes and operator identifications, not an in-game biological classification. Cross-tags link to the same editable article; they do not create another copy of its facts.",
-                      "Scaalmyr includes Sceetler and Scaal as confirmed by the wiki operator. Aquatic creatures is an operator-confirmed browsing label for Mudfin and Razorfin, not a fish classification. Nightmare is grouped with Bugs from its arthropod appearance. NPC separation is unchanged.",
+                      "Former creature appearance groups remain secondary navigation, not aggression factions. Scaalmyr includes Sceetler and Scaal; Aquatic creatures labels Mudfin and Razorfin, not a fish classification. Nightmare's Bugs cross-tag describes appearance, not targeting behavior. NPC separation is unchanged.",
                       "Rodents groups Mirk Runner and Mirk Mauler using their rat sprite associations: " + evidence_text([
                           {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[11].sprite/beingDB[29].sprite"}
                       ])])
@@ -806,8 +867,10 @@ def source_page(data, catalog, details, locations, facts, entries):
                       + ". The journal remains the owner of the quest instructions."])
         if history.get("evidence"):
             lines.append(evidence_text(history["evidence"]))
-    lines.extend(["", "== Artwork review ==", table(["File", "Creator", "Reviewed image SHA-256", "Rights review", "Evidence"], [
+    lines.extend(["", "== Artwork review ==", table(["File", "Creator", "Reviewed image SHA-256", "Uploaded pixels / source scale", "Rights review", "Evidence"], [
         [literal(row["file_title"]), known(row["creator"]), known(row["sha256"]),
+         (f'{row["pixel_art"]["width"]} x {row["pixel_art"]["height"]}; {row["pixel_art"]["source_scale"]}x native'
+          if "pixel_art" in row else "Not reviewed"),
          literal(row["rights_status"]) + "; " + known(row["rights_basis"]) + "; " + known(row["rights_note"]),
          evidence_text(row["evidence"])]
         for row in sorted(data.get("illustrations", []), key=lambda row: row["id"])
@@ -944,6 +1007,7 @@ def build_pages(root, data, catalog=None, details=None):
     validate_data(data, stations={row["id"]: row for row in catalog.get("stations", [])})
     details = validate_details(empty_details() if details is None else details, data)
     validate_coin_profiles(catalog, details)
+    validate_capacity_profiles(catalog, details)
     entities = {row["id"]: row for row in data["entities"]}
     properties = {row["id"]: row for row in details["properties"]}
     locations = page_locations(data, catalog)
@@ -978,6 +1042,11 @@ def build_pages(root, data, catalog=None, details=None):
     classified = {row["entity"]: row["kind"] for row in catalog["classifications"]}
     classification_summaries = {row["entity"]: row["summary"] for row in catalog["classifications"] if "summary" in row}
     npc_locations = {row["entity"]: row["location"] for row in catalog["classifications"] if "location" in row}
+    factions = {identity: row for row in faction_groups(catalog) for identity in row["members"]}
+    if "aggression" in catalog:
+        pages["Bestiary"] += "\n== Aggression rules ==\n" + "\n\n".join(
+            linked_prose(paragraph, {entities[identity]["name"]: locations[identity] for identity in factions})
+            for paragraph in catalog["aggression"]["paragraphs"]) + "\n"
     if any(image.get("role") == "location" and image["entity"] not in npc_locations for image in images):
         raise DataError("location illustration: requires a reviewed NPC location owner")
     stations = {method: row for row in catalog.get("stations", []) for method in row["methods"]}
@@ -995,6 +1064,11 @@ def build_pages(root, data, catalog=None, details=None):
         text = f'[[Main Page]] | [[{index}]]\n\n' + anchor("entity", entity["id"]) + f"'''{literal(entity['name'])}'''\n"
         if entity["id"] in classification_summaries:
             text += "\n" + literal(classification_summaries[entity["id"]]) + "\n"
+        if entity["id"] in factions:
+            faction = factions[entity["id"]]
+            text += f'\nAggression faction: [[:Category:{faction["title"]}|{faction["title"]}]]. '
+            text += "[[Bestiary#Aggression_rules|Target selection and retaliation exceptions]].\n"
+            text += literal(faction["summary"]) + "\n"
         if entity["category"] == "skill":
             group = skill_category_title(entities[entity["group"]])
             text += f"\nGroup: [[:Category:{group}|{literal(entities[entity['group']]['name'])}]] | "
@@ -1011,7 +1085,7 @@ def build_pages(root, data, catalog=None, details=None):
             text += "\n== Location and access ==\n"
             for image in images:
                 if image.get("entity") == entity["id"] and image.get("role") == "location":
-                    text += illustration_markup(image, width=220)
+                    text += illustration_markup(image)
             links = {entities[identity]["name"]: locations[identity] for identity in location["related_entities"]}
             text += "\n\n".join(linked_prose(paragraph, links) for paragraph in location["paragraphs"]) + "\n"
         pages[row["title"]] = text
@@ -1029,7 +1103,7 @@ def build_pages(root, data, catalog=None, details=None):
             image = image_for(source["image_entity"], images)
             if image is None:
                 raise DataError("acquisition source: contextual picture has no approved image")
-            text += f'\n[[{image["file_title"]}|thumb|{literal(source["image_caption"])}]]\n'
+            text += illustration_markup(image, caption=source["image_caption"], marker=False)
         text += "\n" + linked_prose(source["summary"], links) + "\n"
         if source.get("pool_ids"):
             text += "\n== How random selection works ==\n"
@@ -1086,7 +1160,7 @@ def build_pages(root, data, catalog=None, details=None):
             image = image_for(guide["image_entity"], images)
             if image is None:
                 raise DataError("guide: contextual picture has no approved image metadata")
-            pages[guide["title"]] += f'\n[[{image["file_title"]}|thumb|{literal(guide["image_caption"])}]]\n'
+            pages[guide["title"]] += illustration_markup(image, caption=guide["image_caption"], marker=False)
         pages[guide["title"]] += "\n== How it works ==\n"
         links = {target: target for target in guide.get("related_pages", [])}
         if "section_titles" in guide:
@@ -1156,7 +1230,7 @@ def build_pages(root, data, catalog=None, details=None):
             if "Level progression" in pages:
                 pages[title] += "\n[[Level progression|Earning and allocating skill points]]\n"
             continue
-        groups = [group for group in catalog.get("taxonomy", {}).get("groups", []) if group["index"] == title]
+        groups = [group for group in primary_groups(catalog) if group["index"] == title]
         if groups:
             for group in sorted(groups, key=lambda row: row["title"]):
                 pages[title] += f'\n== {group["title"]} ==\n[[:Category:{group["title"]}|Browse category]]\n'
@@ -1171,11 +1245,28 @@ def build_pages(root, data, catalog=None, details=None):
                         pages[title] += "\n".join(navigation_lines(matching)) + "\n"
                     pages[title] += "\nSee also [[#Armor|armor]] and [[#Carrying_equipment|belts and backpacks]].\n"
                     continue
+                if title == "Items" and group["title"] == "Armor":
+                    for subgroup in armor_groups(catalog):
+                        pages[title] += f'\n=== {subgroup["title"]} ===\n[[:Category:{subgroup["title"]}|Browse category]]\n'
+                        matching = {locations[identity]: targets[locations[identity]] for identity in subgroup["members"]}
+                        pages[title] += "\n".join(navigation_lines(matching)) + "\n"
+                    continue
+                if title == "Items" and group["title"] == "Carrying equipment":
+                    pages[title] += "\n" + CAPACITY_NOTE + "\n"
+                    pages[title] += capacity_table(group["members"], details, catalog, entities, locations, targets)
+                    pages[title] += "\n[[#Capacity-granting_equipment|Clothing and all other capacity-granting equipment]].\n"
+                    continue
+                if title == "Bestiary":
+                    pages[title] += literal(group.get("summary", "")) + "\n"
                 matching = {locations[identity]: targets[locations[identity]] for identity in group["members"]}
                 pages[title] += "\n".join(navigation_lines(matching)) + "\n"
             continue
         lines = navigation_lines(targets)
         pages[title] += "\n== Browse ==\n" + "\n".join(lines) + "\n"
+    capacity_members = {row["entity"] for row in details["profiles"] if "inventory-slots-added" in row["values"]}
+    if capacity_members:
+        pages["Items"] += "\n== Capacity-granting equipment ==\n[[:Category:Capacity-granting equipment|Browse category]]\n"
+        pages["Items"] += CAPACITY_NOTE + "\n" + capacity_table(capacity_members, details, catalog, entities, locations)
     if ingredients:
         pages["Items"] += (
             "\n== Recipe ingredients by acquisition ==\n"
@@ -1411,11 +1502,7 @@ def build_pages(root, data, catalog=None, details=None):
                     pages[title] += "\n" + anchor("report", report["id"]) + literal(report["text"]) + "\n"
             for image in images:
                 if image.get("station") == station["id"] and image.get("variant") == identity:
-                    pages[title] += "\n" + anchor("illustration", image["id"])
-                    if image["rights_status"] == "approved":
-                        pages[title] += f'\n[[{image["file_title"]}|thumb|{literal(image["caption"])}]]\n'
-                    else:
-                        pages[title] += "\nNo reviewed picture is available yet.\n"
+                    pages[title] += illustration_markup(image)
         if station.get("related_entities"):
             pages[title] += "\nRelated pages: " + " | ".join(entity_link(identity, entities, locations) for identity in station["related_entities"]) + "\n"
             for identity in station["related_entities"]:
@@ -1479,7 +1566,14 @@ def build_pages(root, data, catalog=None, details=None):
             text += "\n== Subcategories ==\n" + "\n".join(f"* [[:Category:{child}|{child}]]" for child in children) + "\n"
         if row["members"]:
             text += "\n== Directly listed articles ==\n"
-            if category == "Clothes":
+            if category in {"Carrying equipment", "Capacity-granting equipment"} and capacity_members:
+                text += CAPACITY_NOTE + "\n" + capacity_table(row["members"], details, catalog, entities, locations)
+            elif category == "Armor":
+                for subgroup in armor_groups(catalog):
+                    text += f'\n=== {subgroup["title"]} ===\n[[:Category:{subgroup["title"]}|Browse category]]\n'
+                    text += "\n".join("* " + entity_link(identity, entities, locations)
+                                      for identity in sorted(subgroup["members"], key=lambda identity: locations[identity])) + "\n"
+            elif category == "Clothes":
                 for label, members, slots in clothing_subgroups(catalog, row["members"]):
                     text += f"\n=== {label} ===\n"
                     text += " | ".join(f"[[:Category:{slot}|{slot}]]" for slot in slots) + "\n"
@@ -1490,6 +1584,11 @@ def build_pages(root, data, catalog=None, details=None):
             else:
                 text += "\n".join("* " + entity_link(identity, entities, locations)
                                   for identity in sorted(row["members"], key=lambda identity: locations[identity])) + "\n"
+            if category not in {"Carrying equipment", "Capacity-granting equipment"} and set(row["members"]) & capacity_members:
+                text += "\n== Capacity bonuses ==\n" + capacity_table(row["members"], details, catalog, entities, locations)
+                text += "\n[[Items#Capacity-granting_equipment|How added inventory capacity works]].\n"
+        if category in {group["title"] for group in faction_groups(catalog)}:
+            text += "\n[[Bestiary#Aggression_rules|Normal target selection, same-faction exceptions and retaliation]].\n"
         if category == "Recipe ingredients" or category in INGREDIENT_METHODS:
             text += "\n[[Items#Recipe_ingredients_by_acquisition|Browse ingredients by acquisition]] | [[:Category:Crafting materials|Material families]]\n"
         elif category == "Crafting materials" and ingredients:

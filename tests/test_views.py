@@ -349,7 +349,7 @@ class SelectiveViewTests(unittest.TestCase):
         guide = next(row for row in catalog["guides"] if row["title"] == "Action points")
         guide.update(image_entity="item-68", image_caption="A bedroll used as a contextual illustration.")
         pages = build_pages(ROOT, self.data, catalog, self.details)
-        self.assertIn("[[File:Item-68.png|thumb|<nowiki>A bedroll used as a contextual illustration.", pages["Action points"])
+        self.assertIn("alt=<nowiki>A bedroll used as a contextual illustration.", pages["Action points"])
         for change in (
             lambda g: g.update(image_entity="unknown"),
             lambda g: g.update(image_entity="item-31"),
@@ -457,7 +457,7 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertEqual(image["sha256"], digest)
             self.assertEqual(image["file_title"], "File:" + identity.capitalize() + "-mature.png")
             page = self.pages[locations[identity]]
-            self.assertIn("[[" + image["file_title"] + "|thumb|", page)
+            self.assertIn("[[" + image["file_title"] + "|" + str(image["pixel_art"]["width"]) + "px|", page)
             self.assertNotIn("[[File:" + identity.capitalize() + ".png", page)
             self.assertIn("representative shape assembled", page)
             self.assertIn(locations[identity], image["caption"])

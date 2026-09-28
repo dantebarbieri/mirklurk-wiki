@@ -270,7 +270,7 @@ def _validate_illustrations(records, sources, entities, stations=None):
             illustration,
             {"id", "file_title", "caption", "creator", "sha256", "rights_status",
              "rights_basis", "rights_note", "confidence", "evidence"},
-            {"entity", "station", "variant", "health_armor", "role"}, where,
+            {"entity", "station", "variant", "health_armor", "role", "pixel_art"}, where,
         )
         identity = _identifier(illustration["id"], f"{where}.id")
         if identity in seen:
@@ -327,6 +327,16 @@ def _validate_illustrations(records, sources, entities, stations=None):
             illustration[key] is None for key in ("creator", "sha256", "rights_basis", "rights_note")
         ):
             raise DataError(f"{where}: approved images require creator, hash, rights basis, and review note")
+        if illustration["rights_status"] == "approved" and "pixel_art" not in illustration:
+            raise DataError(f"{where}: approved images require reviewed pixel dimensions")
+        if "pixel_art" in illustration:
+            pixels = illustration["pixel_art"]
+            _object(pixels, {"width", "height", "source_scale"}, set(), f"{where}.pixel_art")
+            for key in ("width", "height", "source_scale"):
+                _number(pixels[key], f"{where}.pixel_art.{key}", minimum=1,
+                        maximum=16 if key == "source_scale" else 4096, integer=True)
+            if any(pixels[key] % pixels["source_scale"] for key in ("width", "height")):
+                raise DataError(f"{where}: uploaded dimensions must be integer multiples of native pixels")
         _confidence(illustration["confidence"], f"{where}.confidence")
         _evidence(illustration["evidence"], sources, f"{where}.evidence")
 

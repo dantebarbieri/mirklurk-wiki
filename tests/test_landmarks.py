@@ -53,8 +53,9 @@ class LandmarkTests(unittest.TestCase):
             page = self.pages[self.locations[identity]]
             portrait = image_for(identity, self.data["illustrations"])
             self.assertEqual(portrait["file_title"], "File:" + identity.capitalize() + ".png")
-            self.assertEqual(page.count("[[" + portrait["file_title"] + "|thumb|"), 1)
-            self.assertEqual(page.count("[[File:" + filename + "|thumb|220px|"), 1)
+            self.assertEqual(page.count("[[" + portrait["file_title"] + "|"), 1)
+            self.assertEqual(page.count("[[File:" + filename + "|"), 1)
+            self.assertNotIn("|thumb", page)
             location_section = page.split("== Location and access ==", 1)[1].split("== Stats ==", 1)[0]
             self.assertIn("[[File:" + filename, location_section)
             self.assertNotIn(portrait["file_title"], location_section)
@@ -145,7 +146,7 @@ class LandmarkTests(unittest.TestCase):
             page = pages[self.locations[identity]]
             self.assertNotIn("[[File:" + filename, page)
             self.assertNotIn("[[:File:" + filename, page)
-            self.assertIn("[[File:" + identity.capitalize() + ".png|thumb|", page)
+            self.assertIn("[[File:" + identity.capitalize() + ".png|", page)
             self.assertIn("No reviewed picture is available yet.", page)
 
     def test_location_images_reject_unreviewed_roles_owners_duplicates_and_rights(self):
@@ -233,7 +234,7 @@ class LandmarkTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "reviewed location"):
                 check_seller_context(dict(result, text={"*": rendered}), "Merchant", "item-0", text, location_page="Merchant")
 
-    def test_synthetic_landmarks_keep_native_sizes_and_do_not_require_upscaling(self):
+    def test_synthetic_landmarks_keep_exact_originals_for_browser_integer_upscaling(self):
         specs = synthetic_image_specs(self.data)
         self.assertEqual(LANDMARK_IMAGES, {
             "Ranger-Bhato-hut-exterior.png": (48, 48),
@@ -258,8 +259,10 @@ class LandmarkTests(unittest.TestCase):
             bodies[url] = body
             hashes[filename] = hashlib.sha256(body).hexdigest()
             portrait = identity.capitalize() + ".png"
+            scale = {"being-12": 4, "being-26": 2, "being-33": 1}[identity]
             parses[self.locations[identity]] = {"images": [filename, portrait], "text": {"*":
-                f'<img src="{url}" width="{width}" height="{height}" />'
+                f'<span class="pixel-art" style="image-rendering:pixelated;zoom:calc({scale} / 1);">'
+                f'<img src="{url}" width="{width}" height="{height}" /></span>'
                 f'<img src="https://example.invalid/images/{portrait}" />'}}
             infos["File:" + filename] = {"url": url, "thumburl": url, "width": width, "height": height, "mime": "image/png"}
 
@@ -272,7 +275,7 @@ class LandmarkTests(unittest.TestCase):
             def api(query):
                 if query["action"] == "parse":
                     return {"parse": responses[query["page"]]}
-                self.assertEqual(query["iiurlwidth"], 220)
+                self.assertNotIn("iiurlwidth", query)
                 return {"query": {"pages": {"1": {"imageinfo": [metadata[query["titles"]]]}}}}
 
             def open_media(url, timeout):
