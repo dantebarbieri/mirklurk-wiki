@@ -59,38 +59,39 @@ function p.coins(frame)
         parts[#parts + 1] = tostring(part)
     end
 
-    function p.item(frame)
-        local value = argument(frame)
-        if not value or #value > 160 then
-            return failure('Item requires a registered item page title (at most 160 bytes).')
-        end
-        local title = mw.title.new(value)
-        if not title or title.namespace ~= 0 or title.isExternal or title.fragment ~= '' then
-            return failure('Item requires a main-namespace item page title without a section fragment.')
-        end
-        local markup = assets().items[title.text]
-        if not markup then
-            return failure('Unknown item title. Use a registered item page title; creatures, NPCs and construction actions are not items.')
-        end
-        local quantity = frame.args.quantity or ''
-        if #quantity > 16384 then
-            return failure('Item quantity requires a positive integer of at most 18 digits.')
-        end
-        quantity = mw.text.trim(quantity)
-        if quantity ~= '' and (#quantity > 18 or not quantity:match('^[1-9][0-9]*$')) then
-            return failure('Item quantity requires a positive integer of at most 18 digits.')
-        end
-        local item = mw.html.create('span'):addClass('mirklurk-item')
-            :attr('title', title.text):attr('aria-label', title.text)
-            :css({display = 'inline-flex', ['align-items'] = 'center', gap = '0.25em',
-                ['vertical-align'] = 'middle', ['max-width'] = '100%'})
-            :wikitext(frame:preprocess(markup))
-        return tostring(item) .. (quantity == '' and '' or ' x ' .. quantity)
-    end
     if gold ~= '' then add(gold, 'gold') end
     if silver > 0 then add(tostring(silver), 'silver') end
     if copper > 0 or #parts == 0 then add(tostring(copper), 'copper') end
     return table.concat(parts, ' ')
+end
+
+function p.item(frame)
+    local value = argument(frame)
+    if not value or #value > 160 then
+        return failure('Item requires a registered item page title (at most 160 bytes).')
+    end
+    local title = mw.title.new(value)
+    if not title or title.namespace ~= 0 or title.isExternal or title.fragment ~= '' then
+        return failure('Item requires a main-namespace item page title without a section fragment.')
+    end
+    local markup = assets().items[title.text]
+    if not markup then
+        return failure('Unknown item title. Use a registered item page title; creatures, NPCs and construction actions are not items.')
+    end
+    local quantity = frame.args.quantity or ''
+    if #quantity > 16384 then
+        return failure('Item quantity requires a positive integer of at most 18 digits.')
+    end
+    quantity = mw.text.trim(quantity)
+    if quantity ~= '' and (#quantity > 18 or not quantity:match('^[1-9][0-9]*$')) then
+        return failure('Item quantity requires a positive integer of at most 18 digits.')
+    end
+    local item = mw.html.create('span'):addClass('mirklurk-item')
+        :attr('title', title.text):attr('aria-label', title.text)
+        :css({display = 'inline-flex', ['align-items'] = 'center', gap = '0.25em',
+            ['vertical-align'] = 'middle', ['max-width'] = '100%'})
+        :wikitext(frame:preprocess(markup))
+    return tostring(item) .. (quantity == '' and '' or ' x ' .. quantity)
 end
 
 local function split(value, separator)
