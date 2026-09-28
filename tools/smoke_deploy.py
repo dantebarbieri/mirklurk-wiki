@@ -1288,11 +1288,13 @@ def smoke():
             data, catalog, details = load_publication_inputs(ROOT)
             pages = build_pages(ROOT, data, catalog, details)
             image_hashes = smoke_images(run, api, base, data, pages)
-            # Start from an imported copy, like a live wiki before a release. One page also links
-            # to a title that does not exist yet, so a later sync must refresh its red link.
+            # Start from an imported copy, like a live wiki before a release. Pages carry the text an
+            # edit would store (no trailing whitespace), so a null-edit refresh stays revision-free.
+            # One page also links to a title that does not exist yet, so a later sync must refresh it.
             target = "Synthetic sync target"
             baseline = dict(pages, Weather=pages["Weather"].rstrip() + f"\n\nSee [[{target}]].\n")
-            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump", input_bytes=build_xml(baseline))
+            run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump",
+                input_bytes=build_xml({title: normalize(text) for title, text in baseline.items()}))
             drain_jobs_bounded(run)
             publisher = Api(base + "/api.php")
             publisher.login("WikiAdmin", password_file.read_text(encoding="utf-8"))

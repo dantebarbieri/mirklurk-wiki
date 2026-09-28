@@ -330,7 +330,8 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
                          if title in written or automation_owned(current[title], accounts)]
     for title in report["refresh"] if apply else []:
         try:
-            # A null edit re-renders the page without creating a revision.
+            # A null edit re-renders the page. It only saves a revision when the stored text still
+            # has trailing whitespace that an edit would trim (pages imported rather than edited).
             edit(api, {"action": "edit", "title": title, "appendtext": "", "nocreate": "1", "summary": summary})
             report["refreshed"].append(title)
         except ApiError as error:
