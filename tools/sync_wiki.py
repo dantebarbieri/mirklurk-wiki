@@ -22,6 +22,7 @@ from pathlib import Path
 
 from wiki_data import title_key
 from wiki_details import load_publication_inputs
+from wiki_display import DISPLAY_TITLES, content_model, dependencies, page_namespace, validate_display_dependencies
 from wiki_render import build_pages
 from wiki_views import available_views, transclusions
 
@@ -38,7 +39,6 @@ DEFAULT_ACCOUNTS = ("WikiAdmin",)
 BATCH = 50
 PHP_WHITESPACE = " \t\n\r\0\x0b"
 USER_AGENT = "MirkLurkWikiSync/1 (+https://github.com/dantebarbieri/mirklurk-wiki)"
-OWNER = re.compile(r"\{\{:([^{}|\n]+)")
 LINK = re.compile(r"\[\[(:?)([^\[\]|#\n]+)")
 FILE = re.compile(r"\[\[(?:File|Image):([^\[\]|#\n]+)", re.IGNORECASE)
 CONFLICTS = {"editconflict", "articleexists", "missingtitle"}
@@ -156,18 +156,22 @@ def fetch_live(api, titles):
             title = aliases.get(page.get("title"), page.get("title"))
             if page.get("invalid") or title not in batch:
                 raise SyncError(f"The wiki returned an invalid or unexpected title: {title!r}")
-            if page.get("ns") != (14 if title.startswith("Category:") else 0):
+            if page.get("ns") != page_namespace(title):
                 raise SyncError(f"{title} resolved to an unexpected namespace.")
             if page.get("missing"):
                 live[title] = None
                 continue
             revision = page["revisions"][0]
             slot = revision.get("slots", {}).get("main", {})
-            readable = not slot.get("texthidden") and slot.get("contentmodel", "wikitext") == "wikitext"
+            model = slot.get("contentmodel", "wikitext")
+            if title in DISPLAY_TITLES and model != content_model(title):
+                raise SyncError(f"{title} has content model {model!r}; expected {content_model(title)}. No pages written.")
+            readable = not slot.get("texthidden") and model == content_model(title)
             live[title] = {
                 "revid": revision["revid"], "timestamp": revision.get("timestamp", ""),
                 "user": revision.get("user"), "comment": revision.get("comment", ""),
                 "text": slot.get("content") if readable else None,
+                "contentmodel": model,
             }
         if set(batch) - live.keys():
             raise SyncError("The wiki omitted requested pages: " + ", ".join(sorted(set(batch) - live.keys())))
@@ -201,8 +205,8 @@ def plan_changes(pages, live, accounts, adopt=()):
     return actions
 
 
-def owners(text):
-    return {title_key(owner.strip()) for owner in OWNER.findall(text)}
+def owners(text, title=""):
+    return dependencies(text, title.startswith("Module:"))
 
 
 def links(text):
@@ -224,7 +228,7 @@ def write_order(titles, pages):
     before an owner; stale_renderings() lists them for a re-render afterwards.
     """
     pending = set(titles)
-    needs = {title: owners(pages[title]) - {title} for title in pending}
+    needs = {title: owners(pages[title], title) - {title} for title in pending}
     order = []
     while pending:
         ready = [title for title in sorted(pending) if not needs[title] & pending]
@@ -242,7 +246,7 @@ def stale_renderings(texts, written, created):
     cannot purge, so staleness follows this run's write order rather than timestamps.
     """
     position = {title: index for index, title in enumerate(written)}
-    direct = {title: owners(text) - {title} for title, text in texts.items()}
+    direct = {title: owners(text, title) - {title} for title, text in texts.items()}
     linked = {title: links(text) for title, text in texts.items()}
 
     def included(title):
@@ -283,7 +287,9 @@ def edit(api, params):
 
 def save(api, title, text, current, summary):
     """Save text as the automation; with the text just read, this is a guarded null edit."""
-    params = {"action": "edit", "title": title, "text": text, "summary": f"{summary} text:{stamp(text)}"}
+    params = {"action": "edit", "title": title, "text": text, "summary": f"{summary} text:{stamp(text)}",
+              "contentmodel": content_model(title),
+              "contentformat": "text/plain" if content_model(title) == "Scribunto" else "text/x-wiki"}
     if current is None:
         params["createonly"] = "1"
     else:
@@ -311,6 +317,34 @@ def missing_files(api, pages):
     return sorted(missing)
 
 
+def runtime_preflight(api, pages, apply):
+    """No page writes: inspect registration, then exercise the actual Lua engine on apply."""
+    if not DISPLAY_TITLES & pages.keys():
+        return
+    query = api.call({"action": "query", "meta": "siteinfo", "siprop": "extensions|namespaces"})["query"]
+    extensions = {row["name"] for row in query.get("extensions", [])}
+    namespaces = {int(key): row for key, row in query.get("namespaces", {}).items()}
+    if not {"Scribunto", "ParserFunctions"} <= extensions or any(
+        namespaces.get(number, {}).get("canonical") != name or namespaces[number].get("case") != "first-letter"
+        for number, name in ((10, "Template"), (828, "Module"))
+    ):
+        raise SyncError("Display templates require deployed Scribunto, ParserFunctions and canonical Template/Module namespaces. No pages written.")
+    info = api.call({"action": "paraminfo", "modules": "edit"})
+    parameters = info.get("paraminfo", {}).get("modules", [{}])[0].get("parameters", [])
+    models = next((row.get("type", []) for row in parameters if row.get("name") == "contentmodel"), [])
+    if "Scribunto" not in models or "wikitext" not in models:
+        raise SyncError("The target edit API does not support Scribunto and wikitext content models. No pages written.")
+    if apply:
+        # The extension's console compiles an unsaved module and executes in its sandbox.
+        # It only caches a debug session; it never saves a page or runs an edit action.
+        for title in sorted(title for title in pages if content_model(title) == "Scribunto"):
+            probe = api.call({"action": "scribunto-console", "title": title,
+                              "content": pages[title], "question": "print('mirklurk-display-runtime-ok')",
+                              "token": api.csrf()}, post=True)
+            if probe.get("type") != "normal" or probe.get("print", "").strip() != "mirklurk-display-runtime-ok":
+                raise SyncError(f"The deployed Scribunto Lua engine failed its unsaved-module probe for {title}. No pages written.")
+
+
 def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
     if not summary.startswith(SUMMARY_PREFIX):
         raise SyncError(f"Edit summaries must start with {SUMMARY_PREFIX!r} so later runs recognize them.")
@@ -319,6 +353,8 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
     unnormalized = sorted(title for title in pages if title_key(title) != title)
     if unnormalized:
         raise SyncError("Generated titles must be normalized: " + ", ".join(unnormalized[:5]))
+    validate_display_dependencies(pages)
+    runtime_preflight(api, pages, apply)
     adopt = {title_key(title) for title in adopt}
     if adopt - pages.keys():
         raise SyncError("Only generated pages can be adopted: " + ", ".join(sorted(adopt - pages.keys())))
@@ -344,6 +380,7 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
     # Each page's text as the wiki will serve it; a dry run assumes every planned save succeeds.
     sources = {title: row["text"] for title, row in live.items() if row and row["text"] is not None}
     planned, written, created = set(order), [], set()
+    unavailable = {title for title in DISPLAY_TITLES & pages.keys() if actions[title] == "skip"}
 
     def publish(title):
         planned.discard(title)
@@ -358,6 +395,8 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
                 if error.code == "http":
                     detail += "; the save may still have happened, so the next run re-checks this page"
                 report[bucket].append({"title": title, "error": detail})
+                if title in DISPLAY_TITLES:
+                    unavailable.add(title)
                 log(f"{bucket[:-1]}: {title}: {detail}")
                 return
             report["created" if actions[title] == "create" else "updated"].append(title)
@@ -367,17 +406,35 @@ def sync(api, pages, summary, accounts=(), apply=False, log=print, adopt=()):
         created.update([title] if actions[title] == "create" else [])
 
     def missing(title):
-        return missing_views(pages[title], {**sources, title: pages[title]})
+        needed = [] if content_model(title) == "Scribunto" else missing_views(pages[title], {**sources, title: pages[title]})
+        seen, stack = {title}, list(owners(pages[title], title))
+        while stack:
+            owner = stack.pop()
+            if owner in seen:
+                continue
+            seen.add(owner)
+            if owner.startswith(("Template:", "Module:")):
+                if owner in unavailable:
+                    needed.append((owner, "reviewed display definition"))
+                    continue
+                if owner in planned or owner not in sources:
+                    needed.append((owner, "display definition"))
+                    continue
+            source = pages.get(owner, "") if owner in planned else sources.get(owner, "")
+            stack.extend(owners(source, owner))
+        return sorted(set(needed))
 
     queue = order
     while queue:
         waiting, progress = [], False
         for title in queue:
             needed = missing(title)
-            pending = [pair for pair in needed if pair[0] in planned]
+            pending = [pair for pair in needed if pair[0] in planned and pair[0] not in unavailable]
             if len(pending) < len(needed):
                 # An owner that will not be published this run lacks the view; a later run retries.
                 planned.discard(title)
+                if title in DISPLAY_TITLES:
+                    unavailable.add(title)
                 needs = [f"{owner} ({view or 'default'} view)" for owner, view in needed if (owner, view) not in pending]
                 report["blocked"].append({"title": title, "needs": needs})
                 log(f"blocked: {title}: needs {', '.join(needs)}")
@@ -437,7 +494,7 @@ def markdown(report, api_url):
             f"{row['title']} (last edited by {row['user'] or 'a hidden user'}, {row['timestamp']})"
             for row in report["skipped"]]),
         ("Conflicts: edited while this run was saving", [f"{row['title']}: {row['error']}" for row in report["conflicts"]]),
-        ("Blocked: includes a view its owner does not publish yet",
+        ("Blocked: includes a view or display definition its owner does not publish yet",
          [f"{row['title']}: needs {', '.join(row['needs'])}" for row in report["blocked"]]),
         ("Errors", [f"{row['title']}: {row['error']}" for row in report["errors"]]),
         ("Saved text differs from the generated page", report["unverified"]),

@@ -8,6 +8,13 @@ maintainer explicitly adopts them (see below).
 
 ## From change to live
 
+**Lua rollout prerequisite:** the operator must separately approve and deploy
+the rebuilt Scribunto-enabled image before merging a release that uses the
+[display templates](TEMPLATES.md). A merge only publishes content; it does not
+deploy the image. Missing runtime, namespaces, content models, invalid Lua or
+a failed engine probe stop the apply run before any page edits. The read-only
+preview checks registration without logging in or executing the console probe.
+
 1. Change `content/` (or the generator) on a branch and open a pull request.
 2. CI runs the publication gate, the unit tests and the PHP runtime checks
    (about 2 minutes), plus the disposable Docker smoke (about 10–15 minutes).
@@ -61,6 +68,17 @@ content immediately, without waiting for MediaWiki's job queue; the preview
 lists these pages too. Pages people edited, and the dependents of an
 interrupted publish, are left to the queue, which catches up as the wiki is
 used.
+
+This includes ordinary Template transclusions, `#invoke` and static
+`mw.loadData`/`require` module edges, not just selective main-namespace views.
+Only the four registered display templates and their two Lua modules are
+publishable outside main/Category namespaces. Lua uses the `Scribunto` content
+model and `text/plain`, never wikitext. Presentation cycles or missing generated
+dependencies are rejected before writes. Display pages do not need selective
+`view` declarations. A divergent human-edited template/module is skipped and
+blocks new or changed dependent readers until reviewed/ported and explicitly
+adopted; a failed module/template save also blocks dependent readers instead
+of publishing against an older definition. Existing readers are not removed.
 
 Finally it re-reads every page it saved and fails the run if the stored text
 differs from the generated text, which catches wikitext that MediaWiki's

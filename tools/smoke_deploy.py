@@ -32,6 +32,8 @@ from build_wiki import build_pages, build_xml, title_key
 from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
+from wiki_display import page_namespace
+from smoke_display import smoke_display_install, smoke_display_propagation, smoke_display_rendering
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
@@ -57,6 +59,7 @@ class RenderedGrids(HTMLParser):
         self.links = []
         self.icon_styles = []
         self.pixel_styles = []
+        self.creatures = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -82,6 +85,8 @@ class RenderedGrids(HTMLParser):
                 self.cell["icon_styles"].append(attrs.get("style", ""))
         if tag == "span" and "pixel-art" in attrs.get("class", "").split():
             self.pixel_styles.append(attrs.get("style", ""))
+        if tag == "span" and "mirklurk-creature" in attrs.get("class", "").split():
+            self.creatures.append(attrs)
 
     def handle_endtag(self, tag):
         if tag == "table":
@@ -100,7 +105,7 @@ def check_shield_icon(images, links, styles, armor):
     if len(images) != 1 or any(images[0].get(key) != value for key, value in (
         ("alt", label), ("width", "64"), ("height", "64"),
     )):
-        raise RuntimeError("A health shield lost its exact size or accessible HP/armor label.")
+        raise RuntimeError(f"A health shield lost its exact size or accessible HP/armor label: {images!r}")
     filename = f"Health-armor-{armor}.png"
     if filename not in urllib.parse.unquote(images[0].get("src", "")):
         raise RuntimeError("A health cell displays the wrong armor sprite.")
@@ -132,7 +137,7 @@ def smoke_category_memberships(api, pages):
             })
             for row in result["query"]["pages"].values():
                 title = title_key(row["title"])
-                namespace = 14 if title.startswith("Category:") else 0
+                namespace = page_namespace(title)
                 if title not in actual or "missing" in row or "invalid" in row or row["ns"] != namespace:
                     raise RuntimeError(f"Category query returned a missing, unexpected or wrong-namespace page: {title}")
                 seen.add(title)
@@ -1286,6 +1291,8 @@ def smoke():
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
             if not any(row["name"] == "ParserFunctions" and row.get("version") for row in extensions):
                 raise RuntimeError("The installed ParserFunctions extension is not loaded.")
+            if not any(row["name"] == "Scribunto" for row in extensions):
+                raise RuntimeError("The installed Scribunto extension is not loaded.")
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -1325,6 +1332,9 @@ def smoke():
             data, catalog, details = load_publication_inputs(ROOT)
             pages = build_pages(ROOT, data, catalog, details)
             image_hashes = smoke_images(run, api, base, data, pages)
+            publisher = Api(base + "/api.php")
+            publisher.login("WikiAdmin", password_file.read_text(encoding="utf-8"))
+            smoke_display_install(publisher, pages)
             # Start from an imported copy, like a live wiki before a release. Pages carry the text an
             # edit would store (no trailing whitespace), so a null-edit refresh stays revision-free.
             # One page also links to a title that does not exist yet, so a later sync must refresh it.
@@ -1333,12 +1343,13 @@ def smoke():
             run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump",
                 input_bytes=build_xml({title: normalize(text) for title, text in baseline.items()}))
             drain_jobs_bounded(run)
-            publisher = Api(base + "/api.php")
-            publisher.login("WikiAdmin", password_file.read_text(encoding="utf-8"))
             # Only the installer's welcome page differs from the imported release.
             publish(baseline, "baseline", created=[], updated=["Main Page"], skipped=[])
             drain_jobs_bounded(run)
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
+            smoke_display_rendering(api, pages, data, catalog, details, RenderedGrids,
+                                    check_parser_errors, check_shield_icon, dom)
+            smoke_display_propagation(run, api, pages, csrf, wait_for_server_tick, refreshed_transclusion)
             for title, expected_links in {
                 "Items": {"Wood Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
@@ -1440,13 +1451,26 @@ def smoke():
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("An ordinary self-registered editor cannot save a page.")
-            edited = sorted(title for title, revision in fetch_live(publisher, baseline).items()
+            for title, suffix in (
+                ("Template:Health grid", "\n<noinclude>Ordinary editor display documentation.</noinclude>"),
+                ("Template:Creature", "\n<noinclude>Ordinary editor creature documentation.</noinclude>"),
+                ("Module:Display", "\n-- Ordinary editor display implementation note."),
+            ):
+                result = api({"action": "edit", "title": title, "text": pages[title] + suffix,
+                              "token": csrf, "summary": "Ordinary editor display change"}, post=True)
+                if result.get("edit", {}).get("result") != "Success":
+                    raise RuntimeError(f"An ordinary editor could not change {title}.")
+            before_sync = fetch_live(publisher, baseline)
+            edited = sorted(title for title, revision in before_sync.items()
                             if revision and revision["user"] == "TestEditor"
                             and normalize(revision["text"]) != normalize(baseline[title]))
-            if not {price_title, coin_title, "Game mechanics"} <= set(edited):
+            if not {price_title, coin_title, "Game mechanics", "Template:Health grid", "Template:Creature", "Module:Display"} <= set(edited):
                 raise RuntimeError(f"The editor fixtures did not leave the expected pages changed: {edited}")
             drain_jobs_bounded(run)
             publish(baseline, "after editors", created=[], updated=[], skipped=edited)
+            after_sync = fetch_live(publisher, edited)
+            if any(after_sync[title] != before_sync[title] for title in edited):
+                raise RuntimeError("Publication changed a human-edited article, template or Lua module.")
             parsed = api({"action": "parse", "page": "Game mechanics", "prop": "wikitext"})
             if parsed["parse"]["wikitext"]["*"] != preserved:
                 raise RuntimeError("The sync changed a person's edit.")
