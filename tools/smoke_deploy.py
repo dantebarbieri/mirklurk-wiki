@@ -692,6 +692,9 @@ def check_probability(cell, expected, scope=None, note=None):
         actual = None if match is None else (
             Fraction(match[1]) / 100 if match[1] is not None else Fraction(int(match[2]), int(match[3])))
         if actual != expected:
+            if "Category:Pages with script errors" in actual:
+                rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+                check_parser_errors(rendered)
             raise RuntimeError("A loot probability is not the exact documented rational value.")
     if scope and plain(scope) not in text:
         raise RuntimeError("A probability lost its conditional scope.")
