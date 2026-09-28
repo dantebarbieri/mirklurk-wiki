@@ -207,6 +207,14 @@ class OwnershipAndPlanTests(unittest.TestCase):
         stale = stale_renderings(texts, written, created={"New page", "Late new page"})
         self.assertEqual(stale, ["Early", "Guide", "Merchant"])
 
+    def test_nested_views_make_every_outer_page_stale(self):
+        texts = {"Inventory crafting": "{{:Firewood|view=recipes}}", "Firewood": "{{:Starting equipment|view=loot}}",
+                 "Starting equipment": "loot", "Other": "{{:Firewood}}", "Unrelated": "{{:Elsewhere}}",
+                 "Cycle A": "{{:Cycle B}}", "Cycle B": "{{:Cycle A}} {{:Starting equipment}}"}
+        stale = stale_renderings(texts, ["Starting equipment"], set())
+        self.assertEqual(stale, ["Cycle A", "Cycle B", "Firewood", "Inventory crafting", "Other"])
+        self.assertEqual(stale_renderings(texts, ["Cycle A"], set()), ["Cycle B"])
+
 class SyncTests(unittest.TestCase):
     def test_dry_run_reads_but_never_writes(self):
         wiki = FakeWiki({"Old": ours("Old")}, files={"File:Pic.png"})

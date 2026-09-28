@@ -228,16 +228,28 @@ def write_order(titles, pages):
 
 
 def stale_renderings(texts, written, created):
-    """Pages rendered before an owner they include was saved, or before a page they link to existed.
+    """Pages rendered before a page they include was saved, or before a page they link to existed.
 
-    MediaWiki 1.43 null edits re-render without advancing page_touched, and bot passwords
+    Inclusion is transitive: a view that itself includes another page shows that page's text
+    too. MediaWiki 1.43 null edits re-render without advancing page_touched, and bot passwords
     cannot purge, so staleness follows this run's write order rather than timestamps.
     """
     position = {title: index for index, title in enumerate(written)}
+    direct = {title: owners(text) - {title} for title, text in texts.items()}
+
+    def included(title):
+        seen, stack = set(), list(direct[title])
+        while stack:
+            owner = stack.pop()
+            if owner not in seen and owner != title:
+                seen.add(owner)
+                stack.extend(direct.get(owner, ()))
+        return seen
+
     stale = []
     for title, text in sorted(texts.items()):
         mine = position.get(title, -1)
-        targets = ((owners(text) & position.keys()) | (links(text) & created)) - {title}
+        targets = (included(title) & position.keys()) | ((links(text) & created) - {title})
         if any(position[target] > mine for target in targets):
             stale.append(title)
     return stale

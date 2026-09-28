@@ -12,9 +12,10 @@ on:
         default: ""
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  # Supersede stale pull-request runs; queue main runs so a publish is never cut off midway.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # Pull-request runs never wait for each other. Main runs queue in order and none is dropped,
+  # so a publish is never cut off and a manual adopt run is never replaced by a newer push.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.run_id || github.ref }}
+  queue: max
 
 permissions:
   contents: read

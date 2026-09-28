@@ -18,8 +18,9 @@ maintainer explicitly adopts them (see below).
    15 minutes after the merge.
 
 The job summary of each run lists what was created, updated, skipped and
-refreshed. Runs on `main` queue rather than cancel each other, so a publish is
-never cut off midway; bursts of merges collapse into the newest commit.
+refreshed. Runs on `main` queue in order and none is dropped: every merge and
+every manual run, including adoption requests, is validated and published in
+turn, and a publish is never cut off midway.
 
 ## What the sync does
 
@@ -49,10 +50,12 @@ each other, so a few pages are necessarily saved before an owner. After
 writing, the sync re-renders every automation-owned page that was rendered
 before a page it includes was saved, or links to a page this run created, by
 re-saving the exact text it just read with that revision as `baserevid` (a
-null edit). Readers therefore see the new content immediately, without waiting
-for MediaWiki's job queue; the preview lists these pages too. Pages people
-edited, and the dependents of an interrupted publish, are left to the queue,
-which catches up as the wiki is used.
+null edit). Inclusion counts through nested views too: a workstation that
+shows an item's recipe view, which shows a source's loot view, is re-rendered
+when that source changes. Readers therefore see the new content immediately,
+without waiting for MediaWiki's job queue; the preview lists these pages too.
+Pages people edited, and the dependents of an interrupted publish, are left to
+the queue, which catches up as the wiki is used.
 
 Finally it re-reads every page it saved and fails the run if the stored text
 differs from the generated text, which catches wikitext that MediaWiki's

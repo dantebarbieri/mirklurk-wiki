@@ -44,8 +44,9 @@ Every pull request and every push to `main` runs the publication gate, the
 Python tests, the PHP runtime checks and the disposable Docker smoke (30-minute
 budget). Pull requests also get a read-only preview of the live pages they
 would change. On `main`, the publish job runs only after all of these pass; see
-[PUBLISHING.md](PUBLISHING.md). Stale pull-request runs are cancelled; runs on
-`main` queue so that a publish is never interrupted.
+[PUBLISHING.md](PUBLISHING.md). Pull-request runs don't wait for each other;
+runs on `main` queue in order (up to 100 pending), so a publish is never
+interrupted and a manual adoption run is never replaced by a newer push.
 CI is **after publication** and cannot prevent an initial
 leak. The local pre-publication gate is mandatory. No check can automatically
 establish authorship, fair use, or that an arbitrary new secret pattern is absent.
