@@ -285,13 +285,13 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 368)
+        self.assertEqual(len(pages), 369)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
-        self.assertIn("reproducibility has not been demonstrated", pages["World seed logic"])
+        self.assertIn("There is no reusable world seed in the inspected generation path", pages["World generation"])
         self.assertIn("0.8.1.5", pages["Game mechanics"])
         self.assertIn("versionString", pages["Source provenance"])
         self.assertNotIn("versionString", pages["Game mechanics"])
@@ -434,6 +434,8 @@ class ResearchTests(unittest.TestCase):
         self.assertIn("Quests and journal", pages)
         self.assertIn("[[Merchants]]", pages["Main Page"])
         self.assertNotIn("World seed logic", pages)
+        self.assertNotIn("World generation", pages)
+        self.assertNotIn("[[World generation]]", pages["Main Page"])
         self.assertNotIn("[[World seed logic]]", pages["Main Page"])
         self.assertIn("Not established", pages["Synthetic merchant"])
         self.assertIn("not converted to probabilities", pages["Synthetic merchant"])
@@ -446,18 +448,20 @@ class ResearchTests(unittest.TestCase):
             self.assertNotIn("Evidence status", pages[title])
 
     def test_topic_fact_without_entry_activates_only_its_page(self):
-        data = synthetic_data()
-        data["facts"][0]["page"] = "World seed logic"
-        pages = build_pages(ROOT, data)
-        self.assertIn("World seed logic", pages)
-        self.assertEqual(set(pages) & RESEARCH_PAGE_FILES.keys(), {"World seed logic"})
-        self.assertIn("[[World seed logic]]", pages["Main Page"])
+        for title in ("World seed logic", "World generation"):
+            data = synthetic_data()
+            data["facts"][0]["page"] = title
+            pages = build_pages(ROOT, data)
+            self.assertEqual(pages["World seed logic"], "#REDIRECT [[World generation]]\n")
+            self.assertEqual(set(pages) & RESEARCH_PAGE_FILES.keys(), {"World generation"})
+            self.assertIn("[[World generation]]", pages["Main Page"])
+            self.assertIn('id="fact-synthetic-fact"', pages["World generation"])
 
     def test_all_algorithm_destinations_are_supported(self):
-        for title in ("Weather", "Level progression", "World seed logic", "Skills", "Crafting", "Loot tables"):
+        for title in ("Weather", "Level progression", "World seed logic", "World generation", "Skills", "Crafting", "Loot tables"):
             data = research_data()
             data["entries"][-1]["details"]["page"] = title
-            owner = {"Loot tables": "Loot mechanics", "Skills": "Level progression"}.get(title, title)
+            owner = {"Loot tables": "Loot mechanics", "Skills": "Level progression", "World seed logic": "World generation"}.get(title, title)
             self.assertIn("An original synthetic step.", build_pages(ROOT, data)[owner])
 
     def test_explicit_empty_result_is_not_an_unknown_item(self):

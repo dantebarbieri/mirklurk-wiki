@@ -17,10 +17,11 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from smoke_deploy import LANDMARK_IMAGES, check_seller_context, dom, smoke_npc_locations, smoke_reader_release, synthetic_image_specs
 from test_views import expand_selective_view
-from wiki_catalog import category_definitions, page_locations, validate_catalog
+from wiki_catalog import category_definitions, default_catalog, page_locations, validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs, parse_illustrations
-from wiki_render import build_pages, icon, image_for
+from wiki_render import build_pages, display_entry, icon, image_for
+from test_wiki import synthetic_data
 
 
 LANDMARKS = {
@@ -96,22 +97,118 @@ class LandmarkTests(unittest.TestCase):
         self.assertNotIn("popup", ihar.lower())
         self.assertIn("== NPC location evidence ==", self.pages["Source provenance"])
 
-    def test_locations_separate_new_area_generation_saved_exteriors_and_interior_npcs(self):
-        for title, region, landmark, interior in (
-            ("Gurb-Gurb", "Drowned Fen", "hollow", "hollow"),
-            ("Ihar", "Broken Fen", "wreck", "shipwreck"),
+    def test_locations_separate_entry_checks_saved_exteriors_and_interior_npcs(self):
+        for title, region, interior in (
+            ("Gurb-Gurb", "Drowned Fen", "hollow"),
+            ("Ihar", "Broken Fen", "shipwreck"),
         ):
             with self.subTest(npc=title):
                 location = self.pages[title].split("== Location and access ==", 1)[1].split("== Stats ==", 1)[0]
                 for phrase in (
                     "not pre-positioned with the initial world map",
-                    f"Generating a new {region} area schedules a later placement check",
-                    f"only if the {landmark} has not already been created",
+                    f"first entry into a {region}",
+                    "revisits",
+                    "loading a save in that outdoor area",
                     "saved to prevent another normal placement",
                     f"{title}'s NPC instance is part of the {interior}'s interior room setup",
                     "separately from placing the exterior",
                 ):
                     self.assertIn(phrase, location)
+                self.assertNotIn(f"Generating a new {region} area schedules", location)
+                evidence = next(row["location"]["evidence"] for row in self.catalog["classifications"]
+                                if self.locations[row["entity"]] == title)
+                self.assertIn({
+                    "source": "game-data", "section": "gml_Object_manager_area_Alarm_2",
+                    "key": "alarm[6]-scheduled-before-saved-Ygrid-exit",
+                }, evidence)
+
+    def test_world_generation_distinguishes_initial_layout_from_entry_time_placement(self):
+        page = self.pages["World generation"]
+        for phrase in (
+            "column A or E, in any row from 1 to 5",
+            "always the reflection of Fort Solid",
+            "swap A with E and subtract the row from 6",
+            "Fort Solid at A2 puts the lair at E4",
+            "at least 2 cells from the fort and at least 1.2 cells from Scaal",
+            "permits Scaal's diagonal neighbors",
+            "Another two or three Sunken Ancient Ruins zones",
+            "two or three Broken Fens and at least one Drowned Fen",
+            "exploration order affects the terrain",
+            "A saved zone is loaded instead of regenerated",
+            "a first visit, a revisit or a save load",
+            "coordinate-reseeding helpers have no callers",
+            "no world-seed value is saved for replay",
+        ):
+            self.assertIn(phrase, page)
+        for phrase in ("A seed finder requires", "RNG compatibility", "plus the first coordinate"):
+            self.assertNotIn(phrase, page)
+        for title in ("Ranger Bhato", "Gurb-Gurb", "Ihar"):
+            self.assertIn(f"[[{title}#Location_and_access|", page)
+            self.assertIn("[[World generation#entry-world-seed-boundaries|", self.pages[title])
+        for identity in ("world-grid-width", "area-seed-ceiling", "area-cell-size"):
+            self.assertIn(f'id="fact-{identity}"', page)
+        original = next(row for row in self.data["entries"] if row["id"] == "world-seed-boundaries")
+        self.assertEqual(original["confidence"], "inferred")
+        shown = display_entry(original, self.catalog)
+        self.assertEqual(shown["confidence"], "observed")
+        self.assertIn("How areas are generated", page)
+        self.assertIn("== Editorial entry evidence ==", self.pages["Source provenance"])
+        for reference in shown["evidence"]:
+            self.assertIn(reference["key"], self.pages["Source provenance"])
+            self.assertNotIn(reference["section"], page)
+
+    def test_world_guide_navigation_redirect_and_ownership(self):
+        page = self.pages["World generation"]
+        self.assertEqual(self.pages["World seed logic"], "#REDIRECT [[World generation]]\n")
+        for title in ("Main Page", "Game mechanics"):
+            self.assertIn("[[World generation]]", self.pages[title])
+            self.assertNotIn("[[World seed logic", self.pages[title])
+        for title in ("NPCs", "Merchants"):
+            self.assertIn("[[World generation#Finding_NPCs|", self.pages[title])
+        for heading in ("Fort Solid", "Scaal's lair", "The Library", "Guaranteed fen biomes",
+                        "Finding NPCs", "Exploration, revisits and saves", "World seeds"):
+            self.assertIn(f" {heading} ==", page)
+        self.assertIn("[[Scaal]]", page)
+        self.assertNotIn("{{Creature|Ranger Bhato", page)
+        for identity in ("world-grid-width", "area-seed-ceiling", "area-cell-size"):
+            self.assertEqual(page.count(f'id="fact-{identity}"'), 1)
+            self.assertIn(f"[[World generation#fact-{identity}|", self.pages["Source provenance"])
+        for identity in LANDMARKS:
+            location = next(row["location"] for row in self.catalog["classifications"] if row["entity"] == identity)
+            for paragraph in location["paragraphs"]:
+                self.assertNotIn(paragraph, page)
+
+    def test_world_topic_titles_cannot_be_shadowed_by_entity_aliases(self):
+        data = synthetic_data()
+        for title in ("World generation", "World seed logic"):
+            catalog = default_catalog(data)
+            catalog["pages"][0]["aliases"] = [title]
+            with self.assertRaises(DataError):
+                validate_catalog(catalog, data)
+
+    def test_bhato_direction_and_dynamic_landmark_fallbacks_are_explicit(self):
+        bhato = self.pages["Ranger Bhato"]
+        for phrase in (
+            "always in a Common Bog directly north, south, east or west of Fort Solid",
+            "never diagonally adjacent",
+            "north, south, east for a column A fort",
+            "west, north, south for a column E fort",
+            "last Common Bog in that order",
+        ):
+            self.assertIn(phrase, bhato)
+        gurb = self.pages["Gurb-Gurb"]
+        self.assertIn("first entry into a Drowned Fen while the hollow is still uncreated", gurb)
+        self.assertIn("not used in normal new worlds", gurb)
+        ihar = self.pages["Ihar"]
+        for phrase in (
+            "whose shoreline search succeeds",
+            "even if a valid spot exists",
+            "A failed search leaves the wreck uncreated",
+            "Entering the same or another Broken Fen retries it",
+            "There is no alternative-biome fallback",
+            "if an altered or older world had none",
+        ):
+            self.assertIn(phrase, ihar)
 
     def test_filtered_sellers_link_to_new_location_without_copying_prose_or_stale_nulls(self):
         profiles = {row["entity"]: row["location"] for row in self.catalog["classifications"] if "location" in row}

@@ -57,7 +57,7 @@ function for an entire inferred system.
 | `merchant` | `merchant`: being entity ID; `item`: item entity ID; `quantity`: positive integer or null; `price`: nonnegative number or null; `currency`: label or null; `location`: original text or null |
 | `recipe` | `station`: short label; `inputs` and `outputs`: arrays of `{item, quantity}`; `cost`: `{amount, unit}` or null |
 | `loot` | `table`: short trace identifier; `outcome`: item entity ID or null for an explicit empty result; `quantity`: `{min, max}` or null; `weight`: nonnegative number or null; `probability`: number from 0 to 1 or null; `rolls`: `{min, max}` or null |
-| `algorithm` | `page`: Weather, Level progression, World seed logic, Skills, Crafting, or Loot tables; `steps`: one to twenty original prose steps; `fact_ids`: references to existing numeric/boolean fact IDs |
+| `algorithm` | `page`: Weather, Level progression, World generation (also accepts historical World seed logic), Skills, Crafting, or Loot tables; `steps`: one to twenty original prose steps; `fact_ids`: references to existing numeric/boolean fact IDs |
 
 Quest entries paraphrase a **single** localized journal stage. A summary is not
 a quotation, and a localized objective alone does not prove a runtime trigger.
@@ -148,8 +148,34 @@ not an independent global release check. Source record build fields/hashes,
 all entities, and every historical fact/entry remain unchanged.
 Coverage gaps are stated on the relevant pages. Reviewed creature death handlers
 are documented, but base generation is not a guaranteed harvested yield;
-runtime harvesting/recovery modifiers, some merchant locations/prices, and
-world-seed reproducibility remain limited or unverified.
+runtime harvesting/recovery modifiers and some merchant locations/prices remain
+limited or unverified.
+
+The `world-seed-boundaries` override documents world generation for the same
+source fingerprint. New-game map allocation
+fixes biome types and the fort, ranger, lair and Library zones, while first-entry
+terrain generation and later landmark checks depend on exploration. The active
+generators do not call the historical reseeding helpers; the internal seed draw
+is not a reusable world seed. The original entry and all three numeric
+initialization facts are preserved, with the correction and placement evidence
+listed separately under Editorial entry evidence. The authored **World generation**
+guide owns the initial placement explanation; its supplemental entry owns the
+generation sequence and cites the source scope for the guide. NPCs retain their
+own detailed location/access prose.
+
+Historical `World seed logic` fact and algorithm destinations resolve to
+**World generation** without rewriting `game.json`. The old title is emitted as
+a redirect only when the researched topic is present. Historical fact and entry
+anchors stay on the new page, and generated navigation/provenance links target
+the new owner. Both titles are reserved against entity-page/alias collisions.
+
+NPC location evidence supplements distinguish Bhato's ordered orthogonal-neighbor
+selection from Gurb-Gurb's and Ihar's delayed exterior creation. Alarm 6 is
+scheduled before the saved-area early return, so its eligible-area checks also
+run on revisits and save loads. The new-world generator guarantees Drowned Fens
+and Broken Fens: the former makes Gurb-Gurb's Savage Mirk fallback unnecessary
+in ordinary new worlds; Ihar has no alternative-biome fallback. These are
+source observations, not measured spawn probabilities or live gameplay tests.
 
 ## Build output
 

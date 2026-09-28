@@ -7,7 +7,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from wiki_data import (
-    CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES,
+    CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS,
     _confidence, _entity_reference, _evidence, _identifier, _item_quantities, _nullable_text, _number,
     _object, _records, _text, _title, entry_page, title_key,
 )
@@ -16,7 +16,7 @@ from wiki_acquisition import validate_acquisition
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
 MAX_CATALOG_BYTES = 256 * 1024
-RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs", "Source provenance", "Loot mechanics"}
+RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS, "NPCs", "Source provenance", "Loot mechanics"}
 CURRENCY_RULE_TITLES = {
     "coin-denominations": "Denominations",
     "coin-consolidation": "Converting and consolidating coins",
@@ -810,7 +810,7 @@ def fact_owners(data, locations):
         if len(candidates) > 1:
             raise DataError("fact owner is ambiguous; curate an unambiguous identity before publication")
         result[fact["id"]] = "Action points" if fact["id"] == "turn-minutes" else locations[candidates[0]["id"]] if candidates else (
-            "Level progression" if fact["page"] == "Skills" else fact["page"]
+            "Level progression" if fact["page"] == "Skills" else RESEARCH_PAGE_REDIRECTS.get(fact["page"], fact["page"])
         )
     return result
 
