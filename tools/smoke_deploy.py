@@ -166,9 +166,12 @@ def smoke_category_memberships(api, pages):
             raise RuntimeError(f"Category query omitted generated pages: {sorted(set(batch) - seen)}")
         for title in batch:
             if actual[title] != expected[title]:
-                if "Category:Pages with script errors" in actual[title]:
-                    rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
-                    check_parser_errors(rendered)
+                if (actual[title] - expected[title]) & {
+                    "Category:Pages with script errors", "Category:Pages where template include size is exceeded"
+                }:
+                    result = api({"action": "parse", "page": title, "prop": "text|limitreportdata"})["parse"]
+                    print(title + " parser limits: " + json.dumps(result.get("limitreportdata", [])), flush=True)
+                    check_parser_errors(result["text"]["*"])
                 raise RuntimeError(
                     f"Category membership mismatch for {title}: "
                     f"missing={sorted(expected[title] - actual[title])}, extra={sorted(actual[title] - expected[title])}"
@@ -575,7 +578,7 @@ def check_pool_projection(html, pool, owner, locations, catalog, item=None, pars
             links = [locations[identity]]
             if identity in pool["item_conditions"]:
                 links.append(owner + "#treasure-condition-" + identity)
-            if ([link["target"] for link in row["cells"][0]["links"] if link["text"]] != links
+            if ([link["target"] for link in row["cells"][0]["links"]] != links
                     or row["headers"] != ["Item", "Category"]
                     or row["cells"][1]["text"] != (category or "Item")
                     or [link["target"] for link in row["cells"][1]["links"]] != (["Category:" + category] if category else [])):
@@ -1001,6 +1004,18 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
     locations = page_locations(data, catalog)
     sources = {source["id"]: source for source in catalog.get("acquisition", {}).get("sources", [])}
     pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
+    complete = api({"action": "parse", "page": "Random treasure", "prop": "text|limitreportdata"})["parse"]
+    check_parser_errors(complete["text"]["*"])
+    print("Random treasure parser limits: " + json.dumps(complete["limitreportdata"]), flush=True)
+    include_size = next(row for row in complete["limitreportdata"] if row["name"] == "limitreport-postexpandincludesize")
+    if include_size["0"] >= include_size["1"]:
+        raise RuntimeError("The complete candidate lists exceed the deployed template expansion budget.")
+    parsed = dom(complete["text"]["*"], "Random treasure")
+    expected = ["pool-item-" + pool["id"] + "-" + identity for pool in sorted(pools.values(), key=lambda row: row["id"])
+                for identity in sorted(pool["eligible_item_ids"], key=lambda identity: (
+                    next(row["name"] for row in data["entities"] if row["id"] == identity), identity))]
+    if [identity for identity in parsed.anchors if identity.startswith("pool-item-")] != expected:
+        raise RuntimeError("The complete candidate lists changed membership/order or lost a pool to expansion limits.")
     for pool in pools.values():
         owner = sources[pool["owner_source"]]["title"]
         result = api({"action": "parse", "title": "Synthetic pool list",
@@ -1008,9 +1023,7 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
                       "prop": "text|templates"}, post=True)["parse"]
         check_parser_errors(result["text"]["*"])
         check_pool_projection(result["text"]["*"], pool, owner, locations, catalog)
-        if {row["*"] for row in result.get("templates", [])} != {
-            owner, "Template:Item", "Module:Display", "Module:Display assets"
-        }:
+        if {row["*"] for row in result.get("templates", [])} != {owner}:
             raise RuntimeError("A pool candidate list introduced a nested dependency.")
         for item in sorted({*pool["eligible_item_ids"], "item-48"}):
             text = "{{:" + owner + "|view=pool|pool=" + pool["id"] + "|item=" + item + "}}"

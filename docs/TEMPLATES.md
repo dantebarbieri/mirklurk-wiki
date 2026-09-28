@@ -31,11 +31,16 @@ exceeds that budget. Icon and name line boxes are centered together; long names
 can wrap, rather than clipping images into a fixed-height row.
 
 The generated Items index, existing authored item category lists, capacity and
-ingredient tables, recipe inputs/outputs, wares, acquisition/loot rows, random
-treasure candidate lists and suitable reverse-reference lists actually use Item.
+ingredient tables, recipe inputs/outputs, wares, acquisition/loot rows and
+suitable reverse-reference lists actually use Item.
 Canonical source descriptions, exact ranges, conditions, anchors, groupings and
 native automatic category links are unchanged. Simple narrative/section links
 are still links, not every mention of an item needs an icon.
+In particular, the 538 dense random-treasure eligibility memberships retain
+compact text links and their existing selectors: expanding icons through all
+of those nested views exceeded MediaWiki's template include-size limit.
+Their complete membership/order and compact item-side references are checked
+in the real parser without raising runtime limits or omitting any candidates.
 
 ## Composable rows
 

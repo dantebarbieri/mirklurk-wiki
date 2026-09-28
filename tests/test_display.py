@@ -190,15 +190,15 @@ class DisplayTests(unittest.TestCase):
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (96, 77))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 78)
-        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2441)
+        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 1903)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("Standard unit price: ") for text in readers.values()), 42)
         self.assertEqual(dependencies(self.pages["Template:Ware row"]), {"Template:Item"})
         self.assertEqual(dependencies(self.pages["Template:Item"]), {"Module:Display"})
         self.assertIn("Template:Recipe row", dependencies(self.pages["Simple Burn Remedy"]))
-        self.assertIn("Template:Item", dependencies(self.pages["Random treasure"]))
-        for reader in ("Items", "Random treasure", "Category:Armor", "Plant harvesting", "Magus Clay"):
+        self.assertNotIn("Template:Item", dependencies(self.pages["Random treasure"]))
+        for reader in ("Items", "Category:Armor", "Plant harvesting", "Magus Clay"):
             self.assertIn(reader, stale_renderings(self.pages, ["Template:Item"], set()))
         self.assertIn("Campfire", stale_renderings(self.pages, ["Template:Recipe row"], set()))
         self.assertIn("Iron Hand Axe", stale_renderings(self.pages, ["Template:Ware row"], set()))

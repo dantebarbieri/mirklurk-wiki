@@ -614,7 +614,7 @@ def acquisition_pool_table(pool, owner, entities, locations, categories):
     rows = []
     reference = f'[[{owner}#pool-{pool["id"]}|{literal(pool["title"])}]] (eligible)'
     for identity in sorted(pool["eligible_item_ids"], key=lambda identity: (entities[identity]["name"], identity)):
-        item = item_reference(identity, locations)
+        item = entity_link(identity, entities, locations)
         if identity in pool["item_conditions"]:
             item += f' [[{owner}#treasure-condition-{identity}|Story condition]].'
         category = categories.get(identity)
