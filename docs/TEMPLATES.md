@@ -55,7 +55,7 @@ Syntax example (illustrative, not a verified recipe):
 ```text
 {{Recipe row
 |ingredients={{Item|Plant Fiber|quantity=4}}
-|output={{Item|Rope|quantity=1}}
+|output={{Item|Bandage|quantity=1}}
 |methods=[[Inventory crafting]]
 |ap=2
 |conditions=Use the documented requirements.

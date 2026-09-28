@@ -168,6 +168,10 @@ class DisplayTests(unittest.TestCase):
             self.assertNotIn("[ " + lua_string(title) + " ]", registry)
         self.assertIn("{{Item|Turnip (item)}}", self.pages["Items"])
         self.assertNotIn("{{Item|Finish Raft", "\n".join(self.pages.values()))
+        valid_titles = {locations[identity] for identity in items}
+        for source in [*self.pages.values(), (ROOT / "docs" / "TEMPLATES.md").read_text(encoding="utf-8")]:
+            for title in re.findall(r"\{\{Item\|([^{}|]+)(?:\||\}\})", source):
+                self.assertIn(title, valid_titles)
 
     def test_item_name_only_fallback_and_literal_label_are_generated_not_guessed(self):
         for missing in (True, False):

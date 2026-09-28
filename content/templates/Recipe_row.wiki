@@ -3,7 +3,7 @@
 A presentation row inside an existing recipe table:
 <pre>{{Recipe row
 |ingredients={{Item|Plant Fiber|quantity=4}}
-|output={{Item|Rope|quantity=1}}
+|output={{Item|Bandage|quantity=1}}
 |methods=[[Inventory crafting]]
 |ap=2
 |conditions=Example only; use the documented requirements.

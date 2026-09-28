@@ -259,11 +259,11 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
     if "Display error:" not in rendered or "alert(1)" in rendered:
         raise RuntimeError("Attack caption allowed arbitrary injected markup.")
     rows = parse('<table>{{Recipe row|ingredients={{Item|Plant Fiber|quantity=4}}'
-                 '|output={{Item|Rope|quantity=1}}|methods=[[Inventory crafting]]|ap=1.2'
+                 '|output={{Item|Bandage|quantity=1}}|methods=[[Inventory crafting]]|ap=1.2'
                  '|conditions=<nowiki>A | B = C {{literal}}</nowiki>}}</table>')
     parsed = dom(rows, "Recipe row")
     if len(parsed.rows) != 1 or [cell["text"] for cell in parsed.rows[0]["cells"]] != [
-        "Plant Fiber x 4", "Rope x 1", "Inventory crafting", "1.2 base AP", "A | B = C {{literal}}"
+        "Plant Fiber x 4", "Bandage x 1", "Inventory crafting", "1.2 base AP", "A | B = C {{literal}}"
     ]:
         raise RuntimeError("Recipe row lost named arguments, nesting, fractional AP or literal escaping.")
     for args, cost in (("", "Not established"), ("|ap=0", "0 base AP"), ("|cost=3 turns", "3 turns")):
