@@ -31,7 +31,7 @@ function p.coins(frame)
     local icons = assets().coins
     local parts = {}
     local function add(count, name)
-        parts[#parts + 1] = icons[name] .. ' ' .. count .. ' ' .. name
+        parts[#parts + 1] = frame:preprocess(icons[name]) .. ' ' .. count .. ' ' .. name
     end
     if gold ~= '' then add(gold, 'gold') end
     if silver > 0 then add(tostring(silver), 'silver') end
@@ -109,7 +109,7 @@ local function grid(frame, health)
             else
                 local visible, description
                 if health then
-                    visible = cell.armor == 0 and '1 HP' or assets().shields[cell.armor]
+                    visible = cell.armor == 0 and '1 HP' or frame:preprocess(assets().shields[cell.armor])
                     description = '1 HP, ' .. cell.armor .. ' armor layers'
                 else
                     visible = cell.low == cell.high and tostring(cell.low) or cell.low .. '-' .. cell.high

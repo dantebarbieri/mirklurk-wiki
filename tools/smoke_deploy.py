@@ -102,7 +102,7 @@ def check_shield_icon(images, links, styles, armor):
     if len(images) != 1 or any(images[0].get(key) != value for key, value in (
         ("alt", label), ("width", "64"), ("height", "64"),
     )):
-        raise RuntimeError("A health shield lost its exact size or accessible HP/armor label.")
+        raise RuntimeError(f"A health shield lost its exact size or accessible HP/armor label: {images!r}")
     filename = f"Health-armor-{armor}.png"
     if filename not in urllib.parse.unquote(images[0].get("src", "")):
         raise RuntimeError("A health cell displays the wrong armor sprite.")
