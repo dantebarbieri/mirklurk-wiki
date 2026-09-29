@@ -1,7 +1,5 @@
-Browse creatures by their actual aggression factions rather than species or appearance. Their pages retain documented profiles and loot relationships. Characters and merchants remain under [[NPCs]].
+Browse creatures by aggression faction, or use the appearance-based categories. See [[NPCs]] for characters and merchants.
 
-Faction names below are descriptive wiki labels, not confirmed in-game organization names. Shared faction membership normally prevents selecting one another as targets, but is not universal friendliness. Read the exceptions below. Locations and encounter availability need their own evidence. Older appearance-based categories remain available as secondary navigation.
+Faction names describe targeting groups, not in-game organizations. Members usually avoid attacking one another; the exceptions are below.
 
-Faction eligibility alone does not guarantee hostility; non-hostile behavior remains possible.
-
-[[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]
+[[Main Page]] | [[Game mechanics]]

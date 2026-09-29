@@ -1,8 +1,6 @@
-Explore researched systems through the topic links below. Individual skill bonuses and formulas live on their [[Skills|skill pages]], while [[Items|items]] and [[Bestiary|creatures]] own their documented stats.
+Learn about survival, combat, crafting and progression. See [[Skills]] for bonuses, [[Items]] for equipment stats and [[Bestiary]] for creatures.
 
 == Version ==
-This guide documents installed build '''0.8.1.5'''. Behavior may differ in other versions.
+These guides cover '''0.8.1.5'''. Other versions may differ.
 
-Missing information is unknown, not zero. Do not add bonuses together unless their interaction is documented.
-
-[[Skills]] | [[Damage types]] | [[Health and armor]] | [[Action points]] | [[Main Page]] | [[Evidence and spoilers]]
+[[Skills]] | [[Damage types]] | [[Health and armor]] | [[Action points]] | [[Main Page]]

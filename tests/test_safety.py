@@ -278,6 +278,25 @@ class PublicationTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(blob_errors(path, (ROOT / path).read_bytes()), [])
 
+    def test_complete_render_uses_staged_authors_and_generator(self):
+        for path in ALLOWED_FILES:
+            self.stage(path, (ROOT / path).read_bytes())
+        self.assertEqual(audit_index(self.repo)[1], [])
+        path = "content/pages/Main_Page.wiki"
+        original = (ROOT / path).read_bytes()
+        self.stage(path, original + b"\nMissing evidence ledger.\n")
+        (self.repo / path).write_bytes(original)
+        self.assertTrue(any("staged rendered publication failed" in error for error in audit_index(self.repo)[1]))
+        self.stage(path, original)
+        path = "tools/wiki_render.py"
+        original = (ROOT / path).read_bytes()
+        changed = original.replace(b'pages["Source provenance"] = "#REDIRECT [[Game mechanics]]\\n"',
+                                   b'pages["Source provenance"] = "Old evidence ledger"')
+        self.assertNotEqual(changed, original)
+        self.stage(path, changed)
+        (self.repo / path).write_bytes(original)
+        self.assertTrue(any("staged rendered publication failed" in error for error in audit_index(self.repo)[1]))
+
 
 if __name__ == "__main__":
     unittest.main()

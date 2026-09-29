@@ -71,7 +71,7 @@ used.
 
 This includes ordinary Template transclusions, `#invoke` and static
 `mw.loadData`/`require` module edges, not just selective main-namespace views.
-Only the seven registered display/row templates and their two Lua modules are
+Only the registered display/row templates, the Unverified marker and their two Lua modules are
 publishable outside main/Category namespaces. Lua uses the `Scribunto` content
 model and `text/plain`, never wikitext. Presentation cycles or missing generated
 dependencies are rejected before writes. Display pages do not need selective
@@ -87,6 +87,34 @@ are not on the wiki yet.
 
 The sync never deletes, moves or renames pages and never uploads files. A page
 dropped from the generator stays on the wiki until someone removes it.
+
+### Retired research pages
+
+The publication check builds the entire indexed page set, not the working copy.
+The disposable MediaWiki smoke parses every reader page to check visible text,
+tooltips, transcluded views, uncertainty markers and retirement links.
+
+The reader cleanup keeps these managed titles so normal sync can replace their
+old content safely:
+
+| Title | Redirect target |
+| --- | --- |
+| Evidence and spoilers | Main Page |
+| Research policy | Main Page |
+| Source provenance | Game mechanics |
+| Getting started | Starting equipment |
+
+The source ledger remains available in repository data and the local audit
+renderer, not under another public title. No article links to the retired
+research titles. `World seed logic` remains a separate compatibility redirect
+to `World generation`.
+
+Before sharing the live cleanup, check the publish report and follow each old
+URL. A human-edited legacy page is **skipped**, not retired automatically: port
+any useful changes, then explicitly adopt that exact title, or ask an operator
+to remove it. Do the same for any human-edited navigation that still links there.
+Page history is retained; redirects replace current content, not past revisions.
+Merging publishes automatically, so review and authorization must precede merge.
 
 `baserevid` turns a person's save in the seconds between the read and the
 write into an edit conflict. MediaWiki can instead merge non-overlapping

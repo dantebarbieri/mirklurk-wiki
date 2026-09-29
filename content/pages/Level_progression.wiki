@@ -1,5 +1,3 @@
-Experience thresholds, level-up rewards, and level caps are collected here. Individual skill effects belong on their [[Skills|skill pages]].
-
-Unknown interactions and rounding behavior are not inferred from a base value alone.
+Gain XP to level up and earn points for [[Skills|skills]] and health.
 
 [[Game mechanics]] | [[Skills]] | [[Main Page]]

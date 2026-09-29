@@ -1,7 +1,7 @@
 <includeonly>{{#invoke:Display|creature|{{{1|}}}}}</includeonly><noinclude>
-Use <nowiki>{{Creature|Sceetler}}</nowiki> or <nowiki>{{Creature|Nightmare}}</nowiki> for a compact reviewed portrait and linked creature name. This is not an infobox: health, attacks and loot remain on the creature's own page.
+Use <nowiki>{{Creature|Sceetler}}</nowiki> or <nowiki>{{Creature|Nightmare}}</nowiki> for a portrait and linked creature name.
 
-The argument is an existing canonical creature page title, not an entity ID or filename. MediaWiki title normalization (spaces, underscores and the first letter) is supported. Unknown names, NPCs, non-main namespaces and section fragments display an error; no image filename is guessed. A registered creature without approved portrait art keeps its name link and shows "no reviewed image".
+Use a canonical creature title, not an ID or filename. Spaces, underscores and first-letter normalization are supported. Unknown names, NPCs, namespaces and section fragments produce an error. A creature without portrait art displays its name link.
 
-Bestiary and the existing authored category lists use this template. MediaWiki's automatically generated category member labels remain ordinary text links; category membership and native navigation are unchanged.
+Automatic category member labels remain plain links.
 </noinclude>

@@ -281,8 +281,8 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
         check_parser_errors(parsed["text"]["*"])
         if filename not in parsed["images"] or old_filename in parsed["images"]:
             raise RuntimeError("A tree page does not use its reviewed mature composition exclusively.")
-        if "representative shape assembled" not in parsed["text"]["*"]:
-            raise RuntimeError("A mature-tree caption lost its assembly qualification.")
+        if "shape varies" not in parsed["text"]["*"]:
+            raise RuntimeError("A mature-tree caption lost its shape qualification.")
         info = next(iter(api({"action": "query", "titles": "File:" + old_filename,
                               "prop": "imageinfo", "iiprop": "url"})["query"]["pages"].values()))
         with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
@@ -388,6 +388,31 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
     for title in ("Poison", "Sharp", "Blunt", "Force", "Piercing", "Fire", "Weak", "Action points"):
         if title not in pages:
             raise RuntimeError("A required canonical guide is missing.")
+
+
+def smoke_editorial_release(api, pages):
+    from wiki_render import RETIRED_PAGES, validate_reader_text
+    for title, text in pages.items():
+        if title.startswith("Module:"):
+            continue
+        if text.startswith("#REDIRECT"):
+            target = re.fullmatch(r"#REDIRECT \[\[([^\]]+)\]\]\n", text)[1]
+            resolved = api({"action": "query", "titles": title, "redirects": "1"})["query"].get("redirects", [])
+            if not any(row["from"] == title and row["to"] == target for row in resolved):
+                raise RuntimeError(f"{title}: retirement or compatibility redirect did not resolve.")
+            continue
+        parsed = api({"action": "parse", "page": title, "prop": "text|links"})["parse"]
+        rendered = parsed["text"]["*"]
+        check_parser_errors(rendered)
+        validate_reader_text(title, rendered)
+        if any(link["*"] in RETIRED_PAGES for link in parsed["links"]):
+            raise RuntimeError(f"{title}: rendered link to retired research content.")
+    rendered = api({"action": "parse", "title": "Uncertainty smoke",
+                    "text": "Confirmed. Claim. {{Unverified}} Value: Unknown. Zero: 0.",
+                    "prop": "text"}, post=True)["parse"]["text"]["*"]
+    check_parser_errors(rendered)
+    if rendered.count("[unverified]") != 1 or 'title="This claim has not been confirmed."' not in rendered:
+        raise RuntimeError("The uncertainty marker did not render once with its short tooltip.")
 
 
 def wait_for_server_tick(api, minimum=None):
@@ -656,14 +681,14 @@ def plain(value):
 
 def scalar(value):
     if value is None:
-        return "Not established"
+        return "Unknown"
     if isinstance(value, (int, float, Decimal)):
         return format(Decimal(str(value)).normalize(), "f")
     return str(value)
 
 
 def interval(value):
-    return "Not established" if value is None else (
+    return "Unknown" if value is None else (
         str(value["min"]) if value["min"] == value["max"] else f'{value["min"]} to {value["max"]}')
 
 
@@ -691,7 +716,7 @@ def check_recipe_cells(row, group, locations, stations, quantity_override=None, 
     if actual_stations != wanted_stations:
         raise RuntimeError("A recipe changed its ordered workstation links.")
     cost = group[0]["details"]["cost"]
-    expected = "Not established" if cost is None else scalar(ap_override if ap_override is not None else cost["amount"]) + " " + cost["unit"]
+    expected = "Unknown" if cost is None else scalar(ap_override if ap_override is not None else cost["amount"]) + " " + cost["unit"]
     if plain(cells[3]["text"]) != expected or plain(cells[4]["text"]) != plain(scalar(group[0]["conditions"])):
         raise RuntimeError("A recipe changed its numeric AP cell or condition cell.")
 
@@ -699,7 +724,7 @@ def check_recipe_cells(row, group, locations, stations, quantity_override=None, 
 def check_probability(cell, expected, scope=None, note=None):
     text = plain(cell["text"])
     if expected is None:
-        if not text.startswith("Not established") or note and plain(note) not in text:
+        if not text.startswith(("Unknown", "Variable")) or note and plain(note) not in text:
             raise RuntimeError("An unknown probability lost its explicit qualification.")
     else:
         match = re.match(r"^(?:(\d+(?:\.\d+)?)%|(\d+)/(\d+))", text)
@@ -749,12 +774,12 @@ def check_seller_context(result, merchant, item, text, stock_text=None, location
             }]
             expected = [{"target": "Category:Merchants#Trading_rules", "text": "Shared trading rules"}] if item is None else []
             if (references != expected or plain(stock_text) in plain(text)
-                    or "Shared stock and merchant-funds rules" in text or "Quantity is not established." in text
+                    or "Shared stock and merchant-funds rules" in text or "Quantity: Unknown." in text
                     or (item is not None and "Shared trading rules" in text)):
                 raise RuntimeError("A seller view lost its category link or repeated a stock rule/reference or unknown-quantity claim.")
         if location_page is not None and (
             not any(link["target"] == location_page + "#Location_and_access" for link in parsed.links)
-            or "Location: Not established" in text
+            or "Location: Unknown" in text
         ):
             raise RuntimeError("A seller view lost its reviewed location link or retained an unknown-location claim.")
 
@@ -798,7 +823,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     check_parser_errors(rendered)
     if re.search(r'id="(?:entity-|entry-|profile-|Recipes|How_to_acquire)', rendered) or "Ingredients" in rendered:
         raise RuntimeError("A default price view leaked owner content, a recipe, or merchant availability.")
-    if not catalog["unit_prices"]["unresolved_offers"] and "Not established" in rendered:
+    if not catalog["unit_prices"]["unresolved_offers"] and "Unknown" in rendered:
         raise RuntimeError("A fully documented merchant price still renders as unresolved.")
     for title in price_owners:
         rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
@@ -835,7 +860,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                     if plain(cells[index]["text"]) != scalar(detail["quantity"]):
                         raise RuntimeError("An offer changed its documented quantity.")
                     index += 1
-                elif stock_text is None and "Quantity is not established." not in parsed.text:
+                elif stock_text is None and "Quantity: Unknown." not in parsed.text:
                     raise RuntimeError("An offer invented stock quantity or lost the unknown-quantity note.")
                 if item is None:
                     check_price_cell(cells[index], prices[detail["item"]])
@@ -1421,6 +1446,7 @@ def smoke():
             drain_jobs_bounded(run)
             smoke_browser(api, base, csrf, data, os.environ.get("MIRKLURK_SMOKE_ARTIFACTS", workspace / "browser"))
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
+            smoke_editorial_release(api, pages)
             smoke_display_rendering(api, pages, data, catalog, details, RenderedGrids,
                                     check_parser_errors, check_shield_icon, dom)
             smoke_vendor_rows(api, pages, data, catalog, csrf, dom, check_parser_errors)
@@ -1435,7 +1461,7 @@ def smoke():
                 if not expected_links <= {link["*"] for link in parsed_links if link["ns"] == 0}:
                     raise RuntimeError("MediaWiki did not resolve the encyclopedia's canonical entity links.")
             redirect = api({"action": "query", "titles": "Getting started", "redirects": "1"})["query"].get("redirects", [])
-            if not any(row["from"] == "Getting started" and row["to"] == "Research policy" for row in redirect):
+            if not any(row["from"] == "Getting started" and row["to"] == "Starting equipment" for row in redirect):
                 raise RuntimeError("The reviewed guidance compatibility redirect was not published correctly.")
             for title, anchor in {"Strider": "entry-skill-0-0-mechanics", "Ranger Bhato": "entity-being-12"}.items():
                 rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]

@@ -20,7 +20,7 @@ from test_views import expand_selective_view
 from wiki_catalog import category_definitions, default_catalog, page_locations, validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs, parse_illustrations
-from wiki_render import build_pages, display_entry, icon, image_for
+from wiki_render import audit_report, image_caption, build_pages, display_entry, icon, image_for
 from test_wiki import synthetic_data
 
 
@@ -36,6 +36,7 @@ class LandmarkTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+        cls.audit = audit_report(cls.data, cls.catalog, cls.details)
         cls.locations = page_locations(cls.data, cls.catalog)
         cls.images = {row["entity"]: row for row in cls.data["illustrations"] if row.get("role") == "location"}
 
@@ -60,7 +61,7 @@ class LandmarkTests(unittest.TestCase):
             location_section = page.split("== Location and access ==", 1)[1].split("== Stats ==", 1)[0]
             self.assertIn("[[File:" + filename, location_section)
             self.assertNotIn(portrait["file_title"], location_section)
-            self.assertIn(digest, self.pages["Source provenance"])
+            self.assertIn(digest, self.audit)
             self.assertNotIn(digest, page)
 
     def test_every_primary_lookup_ignores_contextual_order_and_pending_portraits(self):
@@ -80,22 +81,22 @@ class LandmarkTests(unittest.TestCase):
     def test_location_prose_keeps_generation_qualifications_and_existing_journal_owners(self):
         bhato = self.pages["Ranger Bhato"]
         self.assertIn("[[Captain Eir|<nowiki>Captain Eir</nowiki>]]", bhato)
-        self.assertIn("neighboring area", bhato)
+        self.assertIn("Common Bog directly north, south, east or west", bhato)
         self.assertIn("not the nearby ancient cellar", bhato)
         self.assertIn("[[Quests and journal#entry-journal-7|", bhato)
-        self.assertIn("only if the world has no Drowned Fen area", self.pages["Gurb-Gurb"])
+        self.assertIn("only in a world with no Drowned Fen", self.pages["Gurb-Gurb"])
         self.assertIn("five white dots", self.pages["Gurb-Gurb"])
-        self.assertIn("Successful exterior creation triggers a smoke-discovery message", self.pages["Gurb-Gurb"])
-        self.assertIn("one-time discovery cue, not a message on every return", self.pages["Gurb-Gurb"])
-        self.assertIn("Smoke rises separately in play", self.pages["Gurb-Gurb"])
+        self.assertIn("When the hollow appears, a smoke-discovery message", self.pages["Gurb-Gurb"])
+        self.assertIn("one-time cue", self.pages["Gurb-Gurb"])
+        self.assertIn("Smoke rises from the hollow during play", self.pages["Gurb-Gurb"])
         ihar = self.pages["Ihar"].split("== Location and access ==", 1)[1].split("== Stats ==", 1)[0]
         self.assertIn("Broken Fen shoreline", ihar)
-        self.assertIn("Placement can fail", ihar)
-        self.assertIn("after 1280 attempts to find a suitable sand/water shoreline", ihar)
-        self.assertIn("not guaranteed in every Broken Fen area", ihar)
+        self.assertIn("search can fail", ihar)
+        self.assertIn("after 1280 attempts to find suitable sand and water", ihar)
+        self.assertIn("even when a valid spot exists", ihar)
         self.assertNotIn("smoke", ihar.lower())
         self.assertNotIn("popup", ihar.lower())
-        self.assertIn("== NPC location evidence ==", self.pages["Source provenance"])
+        self.assertIn("== NPC location evidence ==", self.audit)
 
     def test_locations_separate_entry_checks_saved_exteriors_and_interior_npcs(self):
         for title, region, interior in (
@@ -105,13 +106,10 @@ class LandmarkTests(unittest.TestCase):
             with self.subTest(npc=title):
                 location = self.pages[title].split("== Location and access ==", 1)[1].split("== Stats ==", 1)[0]
                 for phrase in (
-                    "not pre-positioned with the initial world map",
-                    f"first entry into a {region}",
-                    "revisits",
-                    "loading a save in that outdoor area",
-                    "saved to prevent another normal placement",
-                    f"{title}'s NPC instance is part of the {interior}'s interior room setup",
-                    "separately from placing the exterior",
+                    region, "Revisits", "loading an outdoor save",
+                    "caves do not" if title == "Gurb-Gurb" else "caves do not",
+                    "Gurb-Gurb is inside the hollow" if title == "Gurb-Gurb" else "Ihar is inside",
+                    "while it remains uncreated" if title == "Gurb-Gurb" else "if it has not appeared yet",
                 ):
                     self.assertIn(phrase, location)
                 self.assertNotIn(f"Generating a new {region} area schedules", location)
@@ -126,18 +124,17 @@ class LandmarkTests(unittest.TestCase):
         page = self.pages["World generation"]
         for phrase in (
             "column A or E, in any row from 1 to 5",
-            "always the reflection of Fort Solid",
+            "the reflection of Fort Solid",
             "swap A with E and subtract the row from 6",
-            "Fort Solid at A2 puts the lair at E4",
+            "fort at A2 puts the lair at E4",
             "at least 2 cells from the fort and at least 1.2 cells from Scaal",
             "permits Scaal's diagonal neighbors",
             "Another two or three Sunken Ancient Ruins zones",
             "two or three Broken Fens and at least one Drowned Fen",
-            "exploration order affects the terrain",
-            "A saved zone is loaded instead of regenerated",
-            "a first visit, a revisit or a save load",
-            "coordinate-reseeding helpers have no callers",
-            "no world-seed value is saved for replay",
+            "terrain blends into neighboring zones",
+            "Saved zones load their existing terrain",
+            "first visits, revisits or outdoor save loads",
+            "no seed code you can enter to recreate a world",
         ):
             self.assertIn(phrase, page)
         for phrase in ("A seed finder requires", "RNG compatibility", "plus the first coordinate"):
@@ -151,10 +148,10 @@ class LandmarkTests(unittest.TestCase):
         self.assertEqual(original["confidence"], "inferred")
         shown = display_entry(original, self.catalog)
         self.assertEqual(shown["confidence"], "observed")
-        self.assertIn("How areas are generated", page)
-        self.assertIn("== Editorial entry evidence ==", self.pages["Source provenance"])
+        self.assertIn("Exploration order", page)
+        self.assertIn("== Editorial entry evidence ==", self.audit)
         for reference in shown["evidence"]:
-            self.assertIn(reference["key"], self.pages["Source provenance"])
+            self.assertIn(reference["key"], self.audit)
             self.assertNotIn(reference["section"], page)
 
     def test_world_guide_navigation_redirect_and_ownership(self):
@@ -172,7 +169,7 @@ class LandmarkTests(unittest.TestCase):
         self.assertNotIn("{{Creature|Ranger Bhato", page)
         for identity in ("world-grid-width", "area-seed-ceiling", "area-cell-size"):
             self.assertEqual(page.count(f'id="fact-{identity}"'), 1)
-            self.assertIn(f"[[World generation#fact-{identity}|", self.pages["Source provenance"])
+            self.assertIn(f"[[World generation#fact-{identity}|", self.audit)
         for identity in LANDMARKS:
             location = next(row["location"] for row in self.catalog["classifications"] if row["entity"] == identity)
             for paragraph in location["paragraphs"]:
@@ -189,24 +186,24 @@ class LandmarkTests(unittest.TestCase):
     def test_bhato_direction_and_dynamic_landmark_fallbacks_are_explicit(self):
         bhato = self.pages["Ranger Bhato"]
         for phrase in (
-            "always in a Common Bog directly north, south, east or west of Fort Solid",
-            "never diagonally adjacent",
+            "in a Common Bog directly north, south, east or west of Fort Solid",
+            "never diagonally",
             "north, south, east for a column A fort",
             "west, north, south for a column E fort",
             "last Common Bog in that order",
         ):
             self.assertIn(phrase, bhato)
         gurb = self.pages["Gurb-Gurb"]
-        self.assertIn("first entry into a Drowned Fen while the hollow is still uncreated", gurb)
-        self.assertIn("not used in normal new worlds", gurb)
+        self.assertIn("first enter a Drowned Fen while it remains uncreated", gurb)
+        self.assertIn("Normal new worlds always have one", gurb)
         ihar = self.pages["Ihar"]
         for phrase in (
-            "whose shoreline search succeeds",
-            "even if a valid spot exists",
-            "A failed search leaves the wreck uncreated",
-            "Entering the same or another Broken Fen retries it",
+            "attempts to place it if it has not appeared yet",
+            "even when a valid spot exists",
+            "After a failed search",
+            "enter the same or another Broken Fen to retry",
             "There is no alternative-biome fallback",
-            "if an altered or older world had none",
+            "a world without them cannot place this wreck",
         ):
             self.assertIn(phrase, ihar)
 
@@ -214,14 +211,14 @@ class LandmarkTests(unittest.TestCase):
         profiles = {row["entity"]: row["location"] for row in self.catalog["classifications"] if "location" in row}
         for identity, location in profiles.items():
             owner = self.locations[identity]
-            self.assertNotIn("Location: Not established", self.pages[owner])
+            self.assertNotIn("Location: Unknown", self.pages[owner])
             for offer in self.data["entries"]:
                 if offer["kind"] != "merchant" or offer["details"]["merchant"] != identity:
                     continue
                 rendered = expand_selective_view(self.pages[owner], {"view": "offers", "item": offer["details"]["item"]})
                 selected = dom(rendered, "Filtered seller")
                 self.assertIn({"target": owner + "#Location_and_access", "text": "Location and access"}, selected.links)
-                self.assertNotIn("Location: Not established", selected.text)
+                self.assertNotIn("Location: Unknown", selected.text)
                 for paragraph in location["paragraphs"]:
                     self.assertNotIn(paragraph, selected.text)
                 self.assertNotIn(self.images[identity]["file_title"], rendered)
@@ -245,7 +242,7 @@ class LandmarkTests(unittest.TestCase):
             self.assertNotIn("[[File:" + filename, page)
             self.assertNotIn("[[:File:" + filename, page)
             self.assertIn("[[File:" + identity.capitalize() + ".png|", page)
-            self.assertIn("No reviewed picture is available yet.", page)
+            self.assertNotIn("No reviewed picture is available yet.", page)
 
     def test_location_images_reject_unreviewed_roles_owners_duplicates_and_rights(self):
         base = {key: value for key, value in self.data.items() if key != "illustrations"}
@@ -313,12 +310,12 @@ class LandmarkTests(unittest.TestCase):
         check_seller_context(result, "Merchant", "item-0", "", stock)
         full = dict(result, text={"*": reference})
         check_seller_context(full, "Merchant", None, "Shared trading rules", stock)
-        check_seller_context(result, "Merchant", "item-0", "Quantity is not established.")
+        check_seller_context(result, "Merchant", "item-0", "Quantity: Unknown.")
         for templates in ([], ["Currency and trading"], ["Merchant", "Currency and trading"], ["Merchant", "Item"],
                           ["Merchant", "Currency and trading", "Copper Coin"]):
             with self.assertRaises(RuntimeError):
                 check_seller_context(dict(result, templates=[{"*": title} for title in templates]), "Merchant", "item-0", "", stock)
-        for text in (stock, "Shared trading rules", "Shared stock and merchant-funds rules", "Unit price", "Quantity is not established."):
+        for text in (stock, "Shared trading rules", "Shared stock and merchant-funds rules", "Unit price", "Quantity: Unknown."):
             with self.assertRaises(RuntimeError):
                 check_seller_context(result, "Merchant", "item-0", text, stock)
         for rendered in ("", reference * 2, reference.replace("Category:Merchants", "Category:NPCs"),
@@ -328,7 +325,7 @@ class LandmarkTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             check_seller_context(full, "Merchant", "item-0", "Shared trading rules", stock)
         location = '<a href="/index.php?title=Merchant#Location_and_access">Location and access</a>'
-        for rendered, text in (("", ""), (location, "Location: Not established"),
+        for rendered, text in (("", ""), (location, "Location: Unknown"),
                                (location.replace("Merchant#", "Other#"), "Location and access")):
             with self.assertRaisesRegex(RuntimeError, "reviewed location"):
                 check_seller_context(dict(result, text={"*": rendered}), "Merchant", "item-0", text, location_page="Merchant")

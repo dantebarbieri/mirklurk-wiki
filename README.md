@@ -18,8 +18,8 @@ and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
 386 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
-plus workstation articles, topic guides/indexes, provenance, and a compatibility
-redirect. Another 87 ordinary MediaWiki category pages support hierarchical browsing.
+plus workstation articles, topic guides/indexes and compatibility redirects.
+Another 101 ordinary MediaWiki category pages support hierarchical browsing.
 Only `game.build` changed in the original dataset; all source
 fingerprints, entities, facts, and research entries remain unchanged.
 
@@ -77,8 +77,13 @@ context, not invented stat icons. Meter-specific rates stay on meter pages,
 combined effects on Wellbeing, bed recovery and natural healing on Resting,
 and ten reviewed consumption effects on their item owners.
 
-Gameplay pages use compact tables and ordinary names, with machine IDs and
-citations kept in Source provenance. Each detail has **one editable wiki owner**:
+Gameplay pages use compact tables and ordinary names. Source records, confidence
+and citations stay in repository data and the local `wiki_render.audit_report()`,
+not public articles. Genuinely unconfirmed claims use `{{Unverified}}`; missing
+values say **Unknown**. Retired research titles remain safe managed redirects
+so sync replaces their old contents without deleting history. See the
+[retirement checklist](docs/PUBLISHING.md#retired-research-pages).
+Each detail has **one editable wiki owner**:
 recipes on output items, offers on merchants, quest prose in the journal, and
 workstation behavior on its own page. Identical recipes across stations share
 one row; 96 original variants form 77 condition-preserving recipe groups.
@@ -162,9 +167,9 @@ documented pools, not a measurement of each item's final drop rate.
 
 | Location | Purpose |
 | --- | --- |
-| `content/pages` | Original wikitext introductions, navigation, policies, and caveats |
+| `content/pages` | Reader guides, introductions, navigation, and compatibility redirects |
 | `content/facts/game.json` | Vetted names, numeric facts, structured research, and provenance, not raw research |
-| `content/facts/catalog.json` | Stable ordinary page titles, evidence-backed classifications, and editorial crosslinks |
+| `content/facts/catalog.json` | Page titles, classifications, prose overrides, and editorial crosslinks |
 | `content/facts/entity_details.json` | Bounded typed profiles with shared original property explanations |
 | `content/facts/illustrations.json` | Individually reviewed, server-only image references and rights metadata |
 | `content/facts/acquisition.json` | Reviewed source rows, exact eligibility pools, conditional context, and scoped item notes |
@@ -172,7 +177,7 @@ documented pools, not a measurement of each item's final drop rate.
 | `tools/sync_wiki.py` | Publishes changed pages through the MediaWiki API; skips person-edited pages unless explicitly adopted |
 | `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
 | `tools/wiki_acquisition.py` | Bounded source, probability, membership, and ownership validation |
-| `tools/check_publication.py` | Exact-file, size, text, secret-pattern, and Git-index checks |
+| `tools/check_publication.py` | Exact-file, size, text, secret-pattern checks and a complete staged rebuild |
 | `tools/smoke_deploy.py` | Disposable Docker install, publication, and reader/editor checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
 | `tests` | Publication, facts, escaping, deterministic export, sync, and runtime-policy tests |

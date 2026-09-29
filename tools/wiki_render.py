@@ -17,6 +17,45 @@ from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_disp
 from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
 
 
+RETIRED_PAGES = {
+    "Evidence and spoilers": "Main Page",
+    "Research policy": "Main Page",
+    "Source provenance": "Game mechanics",
+}
+READER_META = re.compile(
+    r"\b(?:missing|source|technical|reviewed|supporting) evidence\b|"
+    r"\bevidence (?:ledger|register|status|notes|and spoilers)\b|\bprovenance\b|"
+    r"\bresearch (?:policy|status|notes|records|ledger|methodology)\b|\bmethodology\b|\binitializer\b|"
+    r"\breviewed\b|\binspected\b|\bverified\b|\bvalidation\b|\bconfidence\b|"
+    r"\bsource[- ](?:scoped|derived|inspected)\b|\bdeath.handler\b|\bnot established\b|"
+    r"\bgml_(?:Object|Script|GlobalScript)_|\bSHA-?256\b",
+    re.I,
+)
+
+
+def validate_reader_text(title, text):
+    """Check visible text and tooltip labels; compatibility IDs are not prose."""
+    labels = ["".join(match) for match in re.findall(
+        r"""\b(?:title|alt|aria-label)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))""", text, re.I,
+    )]
+    visible = html.unescape(re.sub(r"<[^>]*>", "", text) + " " + " ".join(labels))
+    if READER_META.search(visible):
+        raise DataError(f"{title}: reader text contains research or publication commentary")
+
+
+def validate_reader_pages(pages):
+    for title, text in pages.items():
+        if title in RETIRED_PAGES:
+            if text != f"#REDIRECT [[{RETIRED_PAGES[title]}]]\n":
+                raise DataError(f"{title}: retired page must be a reader-safe redirect")
+            continue
+        if title.startswith("Module:"):
+            continue
+        if any(re.search(r"\[\[:?" + re.escape(retired) + r"(?:[#|\]])", text) for retired in RETIRED_PAGES):
+            raise DataError(f"{title}: links to a retired research page")
+        validate_reader_text(title, text)
+
+
 def literal(value):
     return "<nowiki>" + html.escape(str(value), quote=False) + "</nowiki>"
 
@@ -44,7 +83,7 @@ def table(headers, rows):
 
 def known(value):
     if value is None:
-        return "Not established"
+        return "Unknown"
     if type(value) is bool:
         return "Yes" if value else "No"
     if type(value) in {int, float, Decimal}:
@@ -54,7 +93,7 @@ def known(value):
 
 def count_range(value):
     if value is None:
-        return "Not established"
+        return "Unknown"
     if value["min"] == value["max"]:
         return known(value["min"])
     return known(value["min"]) + " to " + known(value["max"])
@@ -101,7 +140,7 @@ def pixel_geometry(image, width=224, height=288):
 def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pixel-art"):
     pixels = image["pixel_art"]
     _, _, scale = pixel_geometry(image, width, height)
-    label = literal(image["caption"] if alt is None else alt)
+    label = literal(image_caption(image) if alt is None else alt)
     target = "" if link is None else "|link=" + link
     # Request the original, never an interpolated server thumbnail (including srcset variants).
     return (
@@ -111,14 +150,25 @@ def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pi
     )
 
 
+def image_caption(image):
+    caption = image["caption"]
+    caption = caption.replace(" in-game sprite, shown in a representative frame.", ".")
+    caption = caption.replace(" representative nature tile, without environment-specific tinting.", " (without terrain tint).")
+    caption = caption.replace("; a representative shape assembled from the game's tree sprites.", "; shape varies.")
+    return {
+        "nature-6-illustration": "Brambles ground tile, not a complete mature specimen.",
+        "nature-13-illustration": "Rift Vine branch detail.",
+    }.get(image["id"], caption)
+
+
 def illustration_markup(image, width=224, caption=None, marker=True):
     text = anchor("illustration", image["id"]) if marker else ""
     if image["rights_status"] == "approved":
-        label = image["caption"] if caption is None else caption
+        label = image_caption(image) if caption is None else caption
         return (text + '\n<div class="pixel-art-figure" style="max-width:100%;overflow-x:auto;">'
                 + pixel_image(image, width=width, alt=label) + "</div>\n"
                 + '<div class="pixel-art-caption">' + literal(label) + "</div>\n")
-    return text + "\nNo reviewed picture is available yet.\n"
+    return text + "\n"
 
 
 def icon(identity, images, entities, locations):
@@ -215,7 +265,7 @@ PAIRED_PROPERTIES = (
 
 def price_text(price, images=None):
     if price is None:
-        return "Not established"
+        return "Unknown"
     amount = Decimal(str(price["value"]))
     if not amount.is_finite() or amount < 0:
         raise DataError("price must be a finite nonnegative amount")
@@ -329,6 +379,9 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
             rows.append([extra + literal(label), profile_value(key, value, entities, locations),
                          "While equipped" if key == "inventory-slots-added" else scope])
     for fact in sorted(facts, key=lambda row: row["id"]):
+        if fact["id"] == "area-seed-ceiling":
+            markers += anchor("fact", fact["id"])
+            continue
         if fact["id"] not in coalesced:
             is_skill = any(e["category"] == "skill" and e["name"] == fact["entity"] for e in entities.values())
             note = ("Per rank." if "per rank" in fact["property"].lower() else "Base or milestone effect.") if is_skill else fact["description"]
@@ -341,19 +394,18 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
             ])
     notes = []
     if profiles and coin is None:
-        notes.append("Equipment, condition, and other effects may change effective values.")
+        notes.append("Base stats can change with equipment, condition and other effects.")
     keys = {key for profile in profiles for key in profile["values"]}
     if coin is None and keys & {"initial-weight", "initial-price"}:
         notes.append(
-            "Base weight and base value are literal initializer values before recipe postprocessing, "
-            "not finalized in-game weights or prices."
+            "Base weight and value are before crafting adjustments; final weight and price may differ."
         )
     if show_base_value:
         notes.append("Base value is not the price charged by a merchant.")
     if "hp-grid-width" in keys and "hp-grid-width" not in grid_properties:
         notes.append("Grid dimensions are not a stated maximum HP total.")
     if "awareness-chance" in keys:
-        notes.append("Targeting parameters do not establish hostility toward the player.")
+        notes.append("[[Bestiary#Aggression_rules|Faction and targeting rules]] also affect aggression.")
     if any(key.endswith("-pattern-min") for key in keys - grid_properties):
         notes.append("Potential damage is before target overlap, armor, and modifiers; it is not guaranteed damage per hit.")
     if "extra-damage" in keys:
@@ -414,7 +466,7 @@ def row_template(name, arguments):
 def vendor_price(details):
     value, currency = details["price"], details["currency"]
     if value is None:
-        return "Not established"
+        return "Unknown"
     if currency in {"copper", "silver", "gold"}:
         return price_text({"value": Decimal(str(value)) * {"copper": Decimal("0.01"), "silver": 1, "gold": 10}[currency]})
     return known(value) + " " + known(currency)
@@ -444,7 +496,7 @@ def merchant_table(entries, images, entities, locations, standard_prices=False, 
         elif field != "currency" and not (field == "quantity" and standard_stock):
             unknown.append(label.lower())
     if unknown:
-        notes.append(" and ".join(unknown).capitalize() + " are not established." if len(unknown) > 1 else unknown[0].capitalize() + " is not established.")
+        notes.append(" and ".join(unknown).capitalize() + ": Unknown.")
     same_location, location = shared_field(entries, lambda entry: entry["details"]["location"])
     if location_page is not None:
         notes.append(f"Location: [[{location_page}#Location_and_access|Location and access]].")
@@ -516,7 +568,7 @@ def recipe_table(entries, stations, images, entities, locations):
         arguments["conditions"] = known(first["conditions"])
         station_ids = [stations[entry["details"]["station"]]["id"] for entry in group if entry["details"]["station"] in stations]
         rows.append(selective_view(filtered_row(row_template("Recipe row", arguments), "station", station_ids), "recipes"))
-    return "\n=== Recipes ===\nThese are base recipes; skill and station effects may change costs or consumption.\n\n" + html_table(headers, rows)
+    return "\n=== Recipes ===\nSkills and stations can reduce AP or ingredient costs.\n\n" + html_table(headers, rows)
 
 
 def construction_table(recipe, images, entities, locations):
@@ -556,7 +608,7 @@ def loot_table(entries, images, entities, locations, owner):
         row = [
             anchor("entry", entry["id"]) + f'[[{owner}#entry-{entry["id"]}|{literal(owner)}]]',
             result, count_range(details["quantity"]),
-            known(Decimal(str(probability)) * 100) + "%" if probability is not None else "Not established",
+            known(Decimal(str(probability)) * 100) + "%" if probability is not None else "Unknown",
             *(getter(entry) for getter in getters),
         ]
         if not same_conditions:
@@ -564,7 +616,9 @@ def loot_table(entries, images, entities, locations, owner):
         if not same_summary:
             row.append(literal(entry["summary"]))
         rows.append(filtered_row(html_row(row), "item", [details["outcome"] or "empty"]))
-    notes = ["Reported weights are not converted to probabilities. A range does not imply equally likely quantities."]
+    notes = ["Quantities within a range are not necessarily equally likely."]
+    if any(entry["details"]["weight"] is not None for entry in entries):
+        notes.append("Selection weights are not percentages.")
     if same_conditions and conditions:
         notes.append(literal(conditions))
     if same_summary:
@@ -577,7 +631,7 @@ def loot_table(entries, images, entities, locations, owner):
 def acquisition_probability(row):
     probability = row["probability"]
     if probability is None:
-        return "Not established. " + literal(row["odds_note"])
+        return "Unknown. " + literal(row["odds_note"])
     chance = Fraction(probability["numerator"], probability["denominator"])
     denominator = chance.denominator
     for prime in (2, 5):
@@ -652,9 +706,8 @@ def clothing_subgroups(catalog, members):
 
 
 CAPACITY_NOTE = (
-    "Added inventory slots are storage cells supplied by the equipped item, not weight allowance, occupied item slots, "
-    "or the player's total capacity. Each item has its own rectangular storage grid. "
-    "Replacing equipment replaces its contribution rather than adding the new bonus on top of the old one."
+    "Equipped items add storage cells, not weight allowance. Each has a rectangular storage grid. "
+    "Replacing an item replaces its capacity bonus; the bonuses do not stack in the same slot."
 )
 
 
@@ -691,7 +744,17 @@ def evidence_text(references):
     )
 
 
+def audit_report(data, catalog=None, details=None):
+    """Render provenance for local review, outside the publishable page mapping."""
+    catalog = default_catalog(data) if catalog is None else catalog
+    locations = page_locations(data, catalog)
+    return source_page(data, catalog, empty_details() if details is None else details, locations,
+                       fact_owners(data, locations),
+                       entry_owners(data, locations, entry_relations(data, catalog), catalog))
+
+
 def source_page(data, catalog, details, locations, facts, entries):
+    """Internal audit report; never include this ledger in the publication."""
     lines = [
         "Technical evidence, identifiers, and methodology are kept here rather than repeated on gameplay pages.",
         "The linked gameplay page is the editable owner of its values or prose; this register does not duplicate them.",
@@ -938,8 +1001,7 @@ CURRENCY_QUALIFICATIONS = {
 
 def currency_page(currency, entities, locations):
     coins = currency["coins"]
-    text = "[[Merchants]] | [[Items]] | [[Main Page]]\n\nCoins and barter use a shared value. The coin details below are maintained on the individual coin pages.\n"
-    text += "\nCatalog purchase prices use exact gold, silver and copper amounts with the fewest whole coins. This display does not round or alter the price; the game's change and resale rules are explained separately below.\n"
+    text = "[[Merchants]] | [[Items]] | [[Main Page]]\n\nTrade items or coins with merchants. Prices below use gold, silver and copper; resale value depends on condition.\n"
     for rule in currency["rules"]:
         text += "\n" + anchor("currency", rule["id"]) + f'\n== {CURRENCY_RULE_TITLES[rule["id"]]} ==\n'
         if rule["id"] == "coin-denominations":
@@ -1000,7 +1062,7 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Health and armor"] += health_armor_legend(images)
     if active:
         navigation = "\n== Explore more ==\n" + " | ".join(f"[[{title}]]" for title in sorted(active)) + "\n"
-        pages["Main Page"] = pages["Main Page"].replace("== Read the caveats ==", navigation + "\n== Read the caveats ==")
+        pages["Main Page"] = pages["Main Page"].replace("== More guides ==", "== More guides ==\n" + navigation.split("\n", 2)[2])
         pages["Game mechanics"] += navigation
     classified = {row["entity"]: row["kind"] for row in catalog["classifications"]}
     creatures = {identity for identity, kind in classified.items() if kind == "creature"}
@@ -1047,13 +1109,9 @@ def build_pages(root, data, catalog=None, details=None):
             group = skill_category_title(entities[entity["group"]])
             text += f"\nGroup: [[:Category:{group}|{literal(entities[entity['group']]['name'])}]] | "
             text += entity_link(entity["group"], entities, locations) + " in the Skills index\n"
-        if entity["category"] == "being" and classified.get(entity["id"]) not in {"npc", "creature"}:
-            text += "\nThis being has not been classified.\n"
         matching = [image for image in images if image.get("entity") == entity["id"] and "role" not in image]
         for image in matching:
             text += illustration_markup(image)
-        if not matching and entity["category"] != "damage_class":
-            text += "\nNo reviewed picture is available yet.\n"
         if entity["id"] in npc_locations:
             location = npc_locations[entity["id"]]
             text += "\n== Location and access ==\n"
@@ -1150,7 +1208,7 @@ def build_pages(root, data, catalog=None, details=None):
             pages[guide["title"]] += "\nRelated items and skills: " + " | ".join(
                 listed_entity(identity) for identity in guide["related_entities"]) + "\n"
             for identity in guide["related_entities"]:
-                pages[locations[identity]] += f'\n[[{guide["title"]}|{guide["title"]}: effects and related rules]]\n'
+                pages[locations[identity]] += f'\n[[{guide["title"]}]]\n'
         if guide["title"] not in MECHANIC_GUIDE_TITLES:
             pages[guide["title"]] += "\n[[Health and armor|Health shapes and armor layers]] | [[Action points]]\n"
         if guide["title"] == "Foods" and any(group["title"] == "Food and drink" for field in ("groups", "tags")
@@ -1246,8 +1304,8 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Items"] += (
             "\n== Recipe ingredients by acquisition ==\n"
             "[[:Category:Recipe ingredients|All recipe ingredients]] | [[:Category:Crafting materials|Material families]]\n\n"
-            "These are inputs to documented recipes, not all wares or every material. Methods can overlap; "
-            "source links retain quantities, availability and conditions. Random-pool eligibility alone does not make an ingredient a creature drop, gatherable or purchase.\n"
+            "Ingredients can have several sources. Follow a source for quantities and requirements. "
+            "Random treasure is listed separately from creature drops, gathering and purchases.\n"
         )
         for method, summary in INGREDIENT_METHODS.items():
             if any(method in routes for routes in ingredients.values()):
@@ -1266,12 +1324,14 @@ def build_pages(root, data, catalog=None, details=None):
         previous = previous_owners[entry["id"]]
         target = owners[entry["id"]]
         if previous != target:
-            pages[previous] += "\n" + anchor("entry", entry["id"]) + f"[[{target}#entry-{entry['id']}|Documented loot source]]\n"
+            pages[previous] += "\n" + anchor("entry", entry["id"]) + f"[[{target}#entry-{entry['id']}|Loot source]]\n"
 
+    fact_display = {row["fact"]: row for row in catalog.get("fact_display", [])}
     for title in list(pages):
         entity_ids = {row["entity"] for row in catalog["pages"] if row["title"] == title}
         merchant_profile = next((merchant_profiles[identity] for identity in entity_ids if identity in merchant_profiles), None)
-        matching_facts = [row for row in data["facts"] if facts[row["id"]] == title]
+        matching_facts = [{**row, **{key: value for key, value in fact_display.get(row["id"], {}).items() if key != "fact"}}
+                          for row in data["facts"] if facts[row["id"]] == title]
         matching_profiles = sorted(
             (row for row in details["profiles"] if row["entity"] in entity_ids),
             key=lambda row: (any(key.endswith("-pattern-min") for key in row["values"]), row["id"]),
@@ -1307,8 +1367,7 @@ def build_pages(root, data, catalog=None, details=None):
             own_offers = {row["details"]["item"]: row for row in matching_entries if row["kind"] == "merchant"}
             other_offers = {row["details"]["item"]: row for row in entries
                             if row["kind"] == "merchant" and row["details"]["merchant"] == compared}
-            pages[title] += ("\n== Comparing stock ==\nSome wares are shared, but these two lists are not identical. "
-                             "The links below lead to the merchant-owned offer rows, not additional stock or price records.\n")
+            pages[title] += "\n== Comparing stock ==\nThese wares differ between the two shops.\n"
             for merchant, offers, other in ((merchant_profile["entity"], own_offers, other_offers),
                                             (compared, other_offers, own_offers)):
                 pages[title] += "\n=== Only in " + literal(entities[merchant]["name"]) + "'s list ===\n"
@@ -1401,7 +1460,7 @@ def build_pages(root, data, catalog=None, details=None):
             if identity in coins:
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
             elif not own_recipes and not offers and not loot and not documented_sources and not eligible_sources and identity not in acquisition_notes:
-                pages[title] += "No documented acquisition source is available yet.\n"
+                pages[title] += "Acquisition: Unknown.\n"
         for recipe in catalog.get("construction_recipes", []):
             if any(component["item"] == identity for component in recipe["inputs"]):
                 recipes.append(f'* [[{locations[recipe["owner_item"]]}#Recipes|{literal(locations[recipe["owner_item"]])}]]')
@@ -1411,8 +1470,8 @@ def build_pages(root, data, catalog=None, details=None):
             pages[title] += "\n== Main quest ==\n" + "\n".join(text for _, text in sorted(quests)) + "\n"
         if other:
             pages[title] += "\n== Related pages ==\n" + "\n".join(sorted(set(other))) + "\n"
-        if entities[identity]["category"] != "damage_class" and not any(facts[fact["id"]] == title for fact in data["facts"]) and not any(profile["entity"] == identity for profile in details["profiles"]):
-            pages[title] += "\nNumerical stats are not established.\n"
+        if entities[identity]["category"] == "item" and not any(facts[fact["id"]] == title for fact in data["facts"]) and not any(profile["entity"] == identity for profile in details["profiles"]):
+            pages[title] += "\nStats: Unknown.\n"
 
     for entity in entities.values():
         if entity["category"] != "damage_class":
@@ -1433,7 +1492,7 @@ def build_pages(root, data, catalog=None, details=None):
                 for identity, labels in sorted(uses.items(), key=lambda pair: entities[pair[0]]["name"])
             ])
         else:
-            text += "No weapon or creature attack is documented for this type yet.\n"
+            text += "Weapons and creature attacks: Not documented.\n"
         pages[locations[entity["id"]]] += text
     for source in sorted(catalog.get("damage_sources", []), key=lambda row: (row["entity"], row["damage_type"])):
         pages[locations[source["entity"]]] += (
@@ -1467,14 +1526,14 @@ def build_pages(root, data, catalog=None, details=None):
             pages[title] += "\n" + literal(note) + "\n"
         for report in reports:
             if report["section"] is None:
-                pages[title] += "\n" + anchor("report", report["id"]) + literal(report["text"]) + "\n"
+                pages[title] += "\n" + anchor("report", report["id"]) + literal(report["text"]) + " {{Unverified}}\n"
         variant_sections = [(None, None), *[(row["id"], row["title"]) for row in station.get("variants", [])]]
         for identity, heading in variant_sections:
             if heading:
                 pages[title] += "\n" + anchor("variant", station["id"] + "-" + identity) + f"\n=== {literal(heading)} ===\n"
             for report in reports:
                 if identity is not None and report["section"] == identity:
-                    pages[title] += "\n" + anchor("report", report["id"]) + literal(report["text"]) + "\n"
+                    pages[title] += "\n" + anchor("report", report["id"]) + literal(report["text"]) + " {{Unverified}}\n"
             for image in images:
                 if image.get("station") == station["id"] and image.get("variant") == identity:
                     pages[title] += illustration_markup(image)
@@ -1503,7 +1562,9 @@ def build_pages(root, data, catalog=None, details=None):
         pages[title] += "\n== What you can craft ==\n" + html_table(
             ["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], rows,
         )
-    pages["Source provenance"] = source_page(data, catalog, details, locations, facts, owners)
+    pages["Source provenance"] = "#REDIRECT [[Game mechanics]]\n"
+    if "Starting equipment" not in pages:
+        pages["Getting started"] = "#REDIRECT [[Main Page]]\n"
     if "currency" in catalog:
         pages["Currency and trading"] = currency_page(catalog["currency"], entities, locations)
         for title in ("Main Page", "Merchants"):
@@ -1528,7 +1589,7 @@ def build_pages(root, data, catalog=None, details=None):
     for title, assigned in sorted(memberships.items()):
         pages[title] += "\n" + " ".join(f"[[Category:{category}]]" for category in sorted(assigned)) + "\n"
     for category, row in sorted(categories.items()):
-        text = f"[[{row['index']}|Readable index]] | [[Main Page]]\n\n"
+        text = f"[[{row['index']}|Index]] | [[Main Page]]\n\n"
         text += linked_prose(row["summary"], {title: ":Category:" + title for title in categories}) + "\n"
         if category == "Merchants":
             text += "\n[[Merchants|Merchant index]]\n"
@@ -1540,7 +1601,7 @@ def build_pages(root, data, catalog=None, details=None):
         if children:
             text += "\n== Subcategories ==\n" + "\n".join(f"* [[:Category:{child}|{child}]]" for child in children) + "\n"
         if row["members"]:
-            text += "\n== Directly listed articles ==\n"
+            text += "\n== Articles ==\n"
             if category in {"Carrying equipment", "Capacity-granting equipment"} and capacity_members:
                 text += CAPACITY_NOTE + "\n" + capacity_table(row["members"], details, catalog, entities, locations)
             elif category == "Armor":
@@ -1589,7 +1650,7 @@ def build_pages(root, data, catalog=None, details=None):
             link = f"[[{title}|{literal(title)}]]"
             creature_markup[title] = (
                 pixel_image(image, 32, 32, title, title + " portrait") + " " + link if image is not None
-                else link + " (no reviewed image)"
+                else link
             )
         item_markup = {}
         for identity in sorted(items):

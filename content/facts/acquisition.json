@@ -6,11 +6,10 @@
       "id": "starting-equipment",
       "title": "Starting equipment",
       "kind": "starting",
-      "summary": "Normal starting equipment comes from two places: clothes equipped when the character is created, and Captain Eir's initial handover. The rows distinguish these steps and the difficulty-specific supplies.",
+      "summary": "You start with equipped clothes. Captain Eir then gives you equipment and supplies based on difficulty.",
       "conditions": [
-        "The initial clothing applies to every normal new character. Captain Eir's later handover supplies shared equipment and additional items determined by difficulty.",
-        "The Small Backpack is equipped during the handover; the other supplied items are received into inventory. This is a one-time starting grant, not merchant stock or a random treasure roll.",
-        "Developer quick-start inventory is a separate code path and is not included in the normal starting set."
+        "Starting clothing is the same on every difficulty. Eir's handover includes shared equipment and difficulty-specific supplies.",
+        "The Small Backpack is equipped during the handover; other supplies go into inventory. This grant happens once."
       ],
       "rows": [
         {
@@ -312,11 +311,11 @@
       "id": "dead-camp",
       "title": "Dead camp",
       "kind": "fixed-location",
-      "summary": "The destroyed camp in the starting area has deliberately scripted supplies, not just a draw from the general corpse-loot pool. Its two loot containers have different fixed contents.",
+      "summary": "The destroyed camp in the starting area has two containers with different fixed supplies.",
       "conditions": [
-        "Check the dead-body pile and the second wooden container separately. The Apprentice Herbalist's Belt belongs to the body-pile container, not the second container.",
-        "The separately interactive Dead Unwanted has a quest pickup documented at Story rewards and finds. The torn central tent is another distinct object, not a generic cart holding all the camp's supplies.",
-        "The guarantees below apply to the initial contents of this particular scripted camp. They do not describe every random skeleton or corpse, and do not promise replenishment after looting."
+        "Check the dead-body pile and wooden container separately. The Apprentice Herbalist's Belt is in the body pile.",
+        "Dead Unwanted has a separate quest pickup; see Story rewards and finds. The torn central tent is another object.",
+        "These are the camp's initial contents, not random corpse loot or replenishing supplies."
       ],
       "rows": [
         {
@@ -469,16 +468,16 @@
       "id": "random-treasure",
       "title": "Random treasure",
       "kind": "loot-rules",
-      "summary": "Random treasure uses constrained value-budget pools. Being eligible means an item can be selected in at least one valid roll for that source; it does not mean the item is guaranteed, or that every candidate has equal final odds.",
+      "summary": "Random treasure fills a value budget. Items in a pool can appear, but are neither guaranteed nor equally likely.",
       "conditions": [
-        "Each source supplies a value budget and minimum item value. A proposed item is rejected if it is excluded, costs more than the remaining budget, or falls below that source's minimum. Coins and other valuables bypass the minimum-value test, but must still fit the remaining budget. The minimum stays tied to the source's initial settings rather than shrinking with the remaining budget.",
-        "Ordinary skeleton, chest, ruin and nest treasure excludes the game's food and material/ignition-item classes. These exclusions include food, wood, rocks, flint, feathers, pelts and several potion ingredients. Do not assume that all inventory items can appear on a skeleton.",
-        "The Raving Unwanted and Mutated Unwanted corpse pool deliberately lacks those ordinary type exclusions, but has a much smaller fixed budget. Specific enemy meat/gland drops and the dead camp's fixed supplies are separate systems.",
-        "Random budget rolls favor smaller outcomes: the game mixes several uniform integer ranges rather than choosing the final budget uniformly. The Unwanted corpse pool instead has a fixed budget. Each accepted entry spends its base value from the remaining budget, even if its generated condition is worn.",
-        "Generation stops when the budget is spent or 500 counted proposals have been tried. Defined candidates rejected by the value or type rules still count; undefined candidates and the early Summoning Stone story exclusion do not. An eligible item may never be accepted before this limit.",
-        "Coins and other valuables can grow into a stack through repeated 80% continuation checks. An additional unit must fit the stack limit and cost strictly less than the available extra-unit budget. Non-valuable items generally receive wear; a full-condition merchant price is not a promise of equal resale value for random loot.",
-        "Some otherwise eligible items also have story conditions, shown below. Other explicitly non-lootable records remain excluded even when they have a valid item definition.",
-        "A proposal, the next successfully accepted item, and the final contents of a container are different probability questions. Source-specific odds can be modeled for a fixed budget, remaining value and story state, including the attempt limit and any later retention checks. The lists below establish which items can occur across each source's valid budgets; they are not equal-weight drop percentages."
+        "Candidates must fit the remaining budget and the source's minimum item value. Coins and valuables bypass the minimum but still spend the budget. The minimum does not shrink as the budget is spent.",
+        "Ordinary skeleton, chest, ruin and nest pools exclude food and material/ignition items, including wood, rocks, flint, feathers, pelts and several potion ingredients.",
+        "Raving Unwanted and Mutated Unwanted allow those item classes but have a smaller fixed budget. Creature meat and gland drops and the dead camp's supplies are separate.",
+        "Random budgets favor smaller amounts by mixing several uniform integer ranges. The Unwanted corpse budget is fixed. Each accepted item spends its base value, even if worn.",
+        "Generation stops when the budget is spent or 500 counted candidates have been tried. Value and type rejections count; undefined items and the early Summoning Stone story exclusion do not. The limit can leave a budget partly unspent.",
+        "Coins and valuables stack through repeated 80% continuation checks. Each extra unit must fit the stack limit and cost strictly less than the extra-unit budget. Other items usually receive wear, reducing resale value.",
+        "Story requirements below also apply. Non-lootable items stay excluded.",
+        "Per-container item probabilities depend on budget, previous selections, story state, attempt limits and any later retention checks. Exact per-item rates are unknown."
       ],
       "rows": [],
       "pool_ids": [
@@ -510,7 +509,7 @@
         "being-32"
       ],
       "image_entity": "item-73",
-      "image_caption": "Coins can appear in random treasure, but the generator is not a guaranteed coin payout.",
+      "image_caption": "Coins are one possible treasure find.",
       "confidence": "observed",
       "evidence": [
         {
@@ -539,12 +538,12 @@
       "id": "skeletons-and-corpses",
       "title": "Skeletons and corpses",
       "kind": "random-container",
-      "summary": "The randomly placed skeletal remains and partially clothed bodies share the ordinary treasure generator. Their contents are generated when the unopened container is first accessed, rather than being a guaranteed list of equipment or food.",
+      "summary": "Randomly placed skeletons and partially clothed bodies generate treasure when first opened.",
       "conditions": [
-        "Outdoor and indoor remains use different value budgets. The same item may qualify indoors but be too valuable for an outdoor body, or too cheap for an indoor body's minimum non-valuable item value.",
-        "The three visual variations are appearances of the same container class, not three independently verified loot tables.",
-        "Reopening a searched container does not reroll fresh treasure. Existing contents can deteriorate or disappear as time passes, so eligibility is not a promise about a previously opened body.",
-        "These randomly placed remains are not the same as a freshly killed creature's fixed meat/gland drops, the Raving or Mutated Unwanted pool, or the scripted dead-camp containers."
+        "Indoor remains have larger budgets and higher minimum non-valuable item values than outdoor remains.",
+        "All three appearances use the same treasure rules.",
+        "Reopening does not reroll treasure. Contents can deteriorate or disappear over time.",
+        "Fresh creature drops, Raving and Mutated Unwanted loot and the dead camp's supplies use separate rules."
       ],
       "rows": [],
       "pool_refs": [
@@ -590,12 +589,12 @@
       "id": "treasure-chests",
       "title": "Treasure chests",
       "kind": "random-container",
-      "summary": "Some treasure placements become chests instead of skeletal remains. A chest's generated tier controls its value-budget range; those budgets allow a different selection from ordinary bodies.",
+      "summary": "Some treasure placements become chests instead of remains. A chest's tier sets its value budget.",
       "conditions": [
-        "The nominal tier-selection rates accompany each pool below. These percentages describe the chest tier, not the odds of finding a particular item.",
-        "All three tiers use the same placed-chest sprite in this creation path. The code does not establish a different visible appearance for each tier.",
-        "Chests use the ordinary treasure type exclusions. A richer budget does not allow food or every crafting material, and the minimum non-valuable item value rises with the rolled budget.",
-        "The container-kind argument is not the treasure-pool argument: these chests still call the ordinary pool. Do not apply the unused reduced-wear pool branch merely because chest creation uses a numeric kind of two."
+        "Tier percentages below are chances of each chest tier, not per-item drop rates.",
+        "All three tiers look the same.",
+        "Chests use ordinary treasure exclusions: richer chests still exclude food and many materials. The minimum non-valuable item value rises with the rolled budget.",
+        "Chest loot receives ordinary wear; chests do not use a reduced-wear pool."
       ],
       "rows": [],
       "pool_refs": [
@@ -676,8 +675,8 @@
       "kind": "world-feature",
       "summary": "Search loose twig piles for Willow or Cypress twigs, with separate chances for small animals, flint and other ground finds.",
       "conditions": [
-        "Normally the twig species is Willow on 85% of selections and Cypress on 15%. In shade with a Cypress as the nearest tree, Cypress is forced instead. Twig quantities are uniformly one to three; do not treat the 15% as universal across every location.",
-        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+        "Twig selection is 85% Willow and 15% Cypress, except in shade where the nearest tree is Cypress: then it is always Cypress. Quantities of one to three are equally likely.",
+        "Bonus checks are independent and can succeed together. Quantities and percentages apply to each row's condition."
       ],
       "rows": [
         {
@@ -983,7 +982,7 @@
       "kind": "world-feature",
       "summary": "Search a pebble pile to collect a small stack of Rock. Independent bonus checks can add flint, bugs and other small finds.",
       "conditions": [
-        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+        "Bonus checks are independent and can succeed together. Quantities and percentages apply to each row's condition."
       ],
       "rows": [
         {
@@ -1288,8 +1287,8 @@
       "kind": "world-feature",
       "summary": "Mixed twig-and-rock piles generate both a twig stack and a Rock stack, then perform the same small-find checks as other ground debris.",
       "conditions": [
-        "Normally the twig species is Willow on 85% of selections and Cypress on 15%. In shade with a Cypress as the nearest tree, Cypress is forced instead. Twig quantities are uniformly one to three; do not treat the 15% as universal across every location.",
-        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+        "Twig selection is 85% Willow and 15% Cypress, except in shade where the nearest tree is Cypress: then it is always Cypress. Quantities of one to three are equally likely.",
+        "Bonus checks are independent and can succeed together. Quantities and percentages apply to each row's condition."
       ],
       "rows": [
         {
@@ -1594,9 +1593,9 @@
       "id": "boulders",
       "title": "Searching boulders",
       "kind": "world-feature",
-      "summary": "Searchable boulders can conceal maggots, beetles, eggs and other small finds. They are not the generic skeleton treasure table.",
+      "summary": "Search boulders for maggots, beetles, eggs and other small finds.",
       "conditions": [
-        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows.",
+        "Bonus checks are independent and can succeed together. Quantities and percentages apply to each row's condition.",
         "The base maggot and beetle checks are separate from the additional one-creature bonus checks. Multiple successes can therefore produce more than one stack of the same creature."
       ],
       "rows": [
@@ -2003,7 +2002,7 @@
       "kind": "world-feature",
       "summary": "Rotting or mossy logs produce Moldy Wood and Mold, with independent checks for several small creatures.",
       "conditions": [
-        "Newly found Moldy Wood has randomized wetness in this search path; a stack is not necessarily ready dry fuel."
+        "Moldy Wood can be wet when found and may need drying before use as fuel."
       ],
       "rows": [
         {
@@ -2221,9 +2220,9 @@
       "id": "cave-floor-cracks",
       "title": "Cave-floor cracks",
       "kind": "world-feature",
-      "summary": "Search the distinctive cracks in cave floors for Cave Creepers, Drake Jasper and occasional bonus items. This is separate from treasure chests and skeletons.",
+      "summary": "Search cave-floor cracks for Cave Creepers, Drake Jasper and bonus finds.",
       "conditions": [
-        "Independent checks can succeed together. A displayed percentage is tied to its row's condition, not a promise that every search produces an item. Quantities shown for each successful check are separate from other rows."
+        "Bonus checks are independent and can succeed together. Quantities and percentages apply to each row's condition."
       ],
       "rows": [
         {
@@ -2454,7 +2453,7 @@
       "pool_refs": [
         {
           "pool": "cracks-tiny",
-          "condition": "A separate 33% check attempts tiny treasure generation. Each particular eligible item's final probability is not resolved."
+          "condition": "A separate 33% check attempts tiny treasure generation. Exact per-item odds are unknown."
         }
       ]
     },
@@ -2462,9 +2461,9 @@
       "id": "searching-ruins",
       "title": "Searching ruins",
       "kind": "world-feature",
-      "summary": "Searchable ruin debris uses size-limited random treasure pools. Smaller and larger ruin objects have different budgets; neither is a skeleton loot table.",
+      "summary": "Searchable ruins use size-limited treasure pools. Larger and smaller objects have different budgets.",
       "conditions": [
-        "The existing empty-result rows own the initial failure probabilities. Passing that check does not guarantee an item: the budgeted treasure generator may also return no items. Ancient-library quest shelves are a different source."
+        "The initial empty-result chances are below. Passing that check can still yield no treasure. Ancient-library quest shelves are separate."
       ],
       "rows": [],
       "existing_entry_ids": [
@@ -2512,14 +2511,14 @@
       "id": "plant-harvesting",
       "title": "Plant harvesting",
       "kind": "gathering",
-      "summary": "Harvest plants and ash deposits for specific ingredients rather than rolling the skeleton treasure pool. Yield depends on the plant and, for several species, its growth stage.",
+      "summary": "Harvest plants for ingredients. Species and growth stage affect yield; ash deposits provide coal.",
       "image_entity": "nature-9",
       "image_caption": "Ferns provide Plant Fiber; their growth stage affects the amount.",
       "conditions": [
         "Creepy-Crawlies can add insects through its repeated ground-harvest checks. The conditional insect selection is documented at Harvested insects.",
         "Lilypads supply Water Lily only at their two flower-bearing stages. Young Cranberry stages can be searched but do not produce Cranberries before the berry-bearing stage.",
-        "Other than the explicitly flowering Lilypad restriction, the harvestability predicate permits the listed plant classes without a universal full-growth gate. Waiting for a larger plant can nevertheless increase its base yield.",
-        "Ash yields Lump of Coal according to the amount of ash on its tile. This branch does not receive the plant-yield or extra-insect bonuses."
+        "Plants other than Lilypads do not all require full growth before harvesting. Larger plants can give higher yields.",
+        "Ash yields Lump of Coal according to its density. Plant-yield and extra-insect bonuses do not apply."
       ],
       "rows": [
         {
@@ -2712,7 +2711,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Harvest ash. Each ash-density step adds an independently rolled one or two lumps; total amount is density-dependent, not a fixed per-tile count.",
@@ -2773,7 +2772,7 @@
       "kind": "gathering",
       "summary": "Fallen tree and shrub segments produce their species' wood or berries. Trunks, side branches, size and maturity determine which primary item appears.",
       "image_entity": "nature-4",
-      "image_caption": "Mature Willow, shown as a representative assembly of its native trunk, branch and leaf sprites.",
+      "image_caption": "Mature Willow; shape varies.",
       "conditions": [
         "For ordinary trees, the number of generated pieces is the segment's scaled sprite height divided into 16-pixel units, rounded up, plus one. Elderwort uses one piece per fallen segment instead.",
         "Willow and Cypress switch their thin-versus-developed primary wood at a growth factor of 0.2. Bark also requires a trunk or a side branch whose growth factor is above 0.33.",
@@ -3094,7 +3093,7 @@
             "max": 2
           },
           "probability": null,
-          "odds_note": "Growth, stage or skill dependent; no constant whole-source drop rate is asserted.",
+          "odds_note": "Depends on growth, stage or skill; see the condition.",
           "condition": "Bramble segment growth must exceed 0.35, then its success check is growth multiplied by 0.33. A success gives one berry, with a possible Green Fingers extra.",
           "coverage": "conditional",
           "confidence": "inferred",
@@ -3114,7 +3113,7 @@
             "max": 2
           },
           "probability": null,
-          "odds_note": "Growth, stage or skill dependent; no constant whole-source drop rate is asserted.",
+          "odds_note": "Depends on growth, stage or skill; see the condition.",
           "condition": "Rift Vine segment growth must exceed 0.45, then its success check is growth multiplied by 0.2. A success gives one berry, with a possible Green Fingers extra.",
           "coverage": "conditional",
           "confidence": "inferred",
@@ -3136,7 +3135,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "A fallen Elderwort segment at its berry-producing foliage stage gives one berry, with a possible Green Fingers extra.",
@@ -3158,7 +3157,7 @@
             "max": 1
           },
           "probability": null,
-          "odds_note": "Growth, stage or skill dependent; no constant whole-source drop rate is asserted.",
+          "odds_note": "Depends on growth, stage or skill; see the condition.",
           "condition": "Before the berry-producing foliage stage, an Elderwort segment attempts a Branch drop with success threshold twice its growth factor, becoming certain when that threshold reaches one.",
           "coverage": "conditional",
           "confidence": "inferred",
@@ -3246,7 +3245,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Produced on the first piece from the fallen hive-bearing segment.",
@@ -3270,7 +3269,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Produced on the first piece from the fallen hive-bearing segment.",
@@ -3302,7 +3301,7 @@
       "id": "harvested-insects",
       "title": "Harvested insects",
       "kind": "gathering",
-      "summary": "Plant harvesting and certain berry drops can add insects. Ground plants and Bramble/Elderwort berries deliberately use different checks, so their rules must not be interchanged.",
+      "summary": "Harvesting plants and collecting some berries can add insects. Ground plants and Bramble/Elderwort berries use different checks.",
       "image_entity": "item-243",
       "image_caption": "Bursthopper is one of the possible extra creatures.",
       "conditions": [
@@ -3672,7 +3671,7 @@
       ],
       "loot_context": "The table percentages are the distribution conditional on an extra-creature check succeeding, not the chance per harvested plant, per bush or per turn. Ground plants use repeated checks; Bramble and Elderwort berries use one check. See Harvested insects for their different trigger rules.",
       "entity_context": {
-        "skill-4-1": "The repeated ground-plant searches described here differ from the single extra-insect check on Bramble and Elderwort berry drops. The berry rules and conditional creature distribution are documented separately."
+        "skill-4-1": "Bramble and Elderwort berries use one extra-insect check instead of the repeated ground-plant searches. See Harvested insects."
       }
     },
     {
@@ -3698,7 +3697,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Initial contents of a successfully spawned collectible Firefly patch.",
@@ -3749,7 +3748,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "At the start of the main quest, choose Pick Up when interacting with Dead Unwanted at the camp. This is a scripted quest pickup, not ordinary corpse loot; see Quests and journal for the hand-in.",
@@ -3788,7 +3787,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Search the rift at or before Clay's early three-sample quest step, while carrying fewer than three Rift Weaves.",
@@ -3812,7 +3811,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Receive Clay's potion during his instruction to revive one of the dead Unwanted after the rune investigation.",
@@ -3836,7 +3835,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Receive a Summoning Stone in Commander Tain's relevant post-access story conversation.",
@@ -3860,7 +3859,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Captain Eir grants a Summoning Stone during her later story conversation after the Fort Solid crisis.",
@@ -3884,7 +3883,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Search the designated strongbox target in the ancient library; ordinary empty shelves do not give this item.",
@@ -3908,7 +3907,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Pick up the Ward Breaker dropped at Clay's position when he disappears during his later story scene.",
@@ -3967,7 +3966,7 @@
       "image_caption": "Map Drawing Kit: an item-use route to a map, separate from Captain Eir's starting supplies.",
       "conditions": [
         "Using the kit indoors is refused and does not consume a use. A successful outdoor use follows the kit's normal use/durability consumption.",
-        "This use action is not a workstation recipe and should not be represented as one."
+        "Use the kit directly; no workstation is needed."
       ],
       "rows": [
         {
@@ -3980,7 +3979,7 @@
           "probability": {
             "numerator": 1,
             "denominator": 1,
-            "scope": "Conditional on the source and stage described in this row."
+            "scope": "When the row's condition is met."
           },
           "odds_note": null,
           "condition": "Use a Map Drawing Kit outdoors.",
@@ -4114,7 +4113,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
@@ -4216,7 +4215,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
@@ -4344,7 +4343,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {
         "item-127": "Summoning Stone is excluded until the Fort Solid access story milestone."
       },
@@ -4462,7 +4461,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {
         "item-127": "Summoning Stone is excluded until the Fort Solid access story milestone."
       },
@@ -4562,7 +4561,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {
         "item-127": "Summoning Stone is excluded until the Fort Solid access story milestone."
       },
@@ -4617,7 +4616,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
@@ -4659,7 +4658,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
@@ -4696,7 +4695,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
@@ -4732,7 +4731,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
@@ -4833,7 +4832,7 @@
       ],
       "quantity": null,
       "probability": null,
-      "odds_note": "Eligible candidate, not a guaranteed find or a uniform per-item drop chance. The rolled budget, already selected items and 500-valid-candidate attempt limit affect the final contents.",
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
       "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
@@ -4859,7 +4858,7 @@
     {
       "item": "item-142",
       "kind": "gathering",
-      "text": "Gathering Calmia Root can provide useful early income. An intact root sells for 25 copper coins per item, not per patch. This is the amount received when selling it, not a quoted shop purchase price. No fixed patch density, respawn schedule or income rate is established.",
+      "text": "An intact Calmia Root sells for 25 copper per root, making gathering useful for early income. Patch density and respawn timing are unknown.",
       "evidence": [
         {
           "source": "game-data",
@@ -4886,7 +4885,7 @@
     {
       "item": "item-31",
       "kind": "built-in",
-      "text": "Unarmed is the player's built-in fist attack, initialized when the character is created. It is not a normal pickup, merchant purchase or crafting output.",
+      "text": "Unarmed is the player's built-in fist attack, not a collectible item.",
       "evidence": [
         {
           "source": "game-data",
@@ -4898,7 +4897,7 @@
     {
       "item": "item-171",
       "kind": "construction-action",
-      "text": "Finish Raft is the completion action offered by a placed Raft Base, not a separate collectible item. Craft and place a Raft Base, then complete it through its menu. This changes the existing raft in place; no new inventory item is received.",
+      "text": "Craft and place a Raft Base, then use its menu to finish the raft. Finish Raft is an action, not a collectible item; it changes the placed raft in place.",
       "related_items": [
         "item-170"
       ],
@@ -4928,7 +4927,7 @@
     {
       "item": "item-48",
       "kind": "unverified",
-      "text": "This name is present in the English localization, but the inspected build has no corresponding populated item definition. No ordinary acquisition route was verified; a localized name alone does not establish that the item is obtainable.",
+      "text": "Availability in 0.8.1.5: Unknown. No acquisition method is documented.",
       "evidence": [
         {
           "source": "game-data",
@@ -4940,7 +4939,7 @@
     {
       "item": "item-49",
       "kind": "unverified",
-      "text": "This name is present in the English localization, but the inspected build has no corresponding populated item definition. No ordinary acquisition route was verified; a localized name alone does not establish that the item is obtainable.",
+      "text": "Availability in 0.8.1.5: Unknown. No acquisition method is documented.",
       "evidence": [
         {
           "source": "game-data",
@@ -4952,7 +4951,7 @@
     {
       "item": "item-40",
       "kind": "unverified",
-      "text": "This ignition tool has a valid item definition, but no normal acquisition route was verified in this build. Ordinary treasure rejects its item class, and its value exceeds the less restrictive Unwanted corpse pool's budget. No verified recipe, scripted grant or merchant stock entry supplies it.",
+      "text": "Acquisition in 0.8.1.5: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted corpse budget. Recipes, fixed finds and sellers are not documented.",
       "evidence": [
         {
           "source": "game-data",
@@ -4974,7 +4973,7 @@
     {
       "item": "item-254",
       "kind": "unverified",
-      "text": "This ignition tool has a valid item definition, but no normal acquisition route was verified in this build. Ordinary treasure rejects its item class, and its value exceeds the less restrictive Unwanted corpse pool's budget. No verified recipe, scripted grant or merchant stock entry supplies it.",
+      "text": "Acquisition in 0.8.1.5: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted corpse budget. Recipes, fixed finds and sellers are not documented.",
       "evidence": [
         {
           "source": "game-data",

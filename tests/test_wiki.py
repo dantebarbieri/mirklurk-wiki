@@ -18,7 +18,7 @@ from build_wiki import EXPORT_NS, build_pages, build_xml, existing_titles, liter
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, load_data, parse_data, validate_data
 from check_publication import blob_errors
 from wiki_catalog import entry_owners, entry_relations, default_catalog, page_locations
-from wiki_render import recipe_groups
+from wiki_render import audit_report, recipe_groups
 from smoke_deploy import smoke_category_memberships, smoke_reader_release, wait_for_server_tick
 
 
@@ -285,15 +285,15 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 378)
+        self.assertEqual(len(pages), 379)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
-        self.assertIn("There is no reusable world seed in the inspected generation path", pages["World generation"])
+        self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
         self.assertIn("0.8.1.5", pages["Game mechanics"])
-        self.assertIn("versionString", pages["Source provenance"])
+        self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
     def test_curated_payload_and_expected_shape(self):
@@ -315,8 +315,8 @@ class DataTests(unittest.TestCase):
         )
         pages = build_pages(ROOT, data)
         self.assertTrue(set(PAGE_FILES) <= pages.keys())
-        self.assertIn("not a guarantee", pages["Source provenance"])
-        self.assertIn("non-hostile", pages["Bestiary"])
+        self.assertIn("not a guarantee", audit_report(data))
+        self.assertIn("usually avoid attacking one another", pages["Bestiary"])
 
     def test_valid_boolean_and_numeric_values(self):
         for value in (True, False, 0, -4, 2.5):
@@ -438,12 +438,12 @@ class ResearchTests(unittest.TestCase):
         self.assertNotIn("World generation", pages)
         self.assertNotIn("[[World generation]]", pages["Main Page"])
         self.assertNotIn("[[World seed logic]]", pages["Main Page"])
-        self.assertIn("Not established", pages["Synthetic merchant"])
-        self.assertIn("not converted to probabilities", pages["Synthetic merchant"])
+        self.assertIn("Unknown", pages["Synthetic merchant"])
+        self.assertIn("Selection weights are not percentages", pages["Synthetic merchant"])
         self.assertNotIn("50%", pages["Synthetic merchant"])
         self.assertIn("{{Item|Entity synthetic-item|quantity=", pages["Entity synthetic-item"])
         self.assertIn("[[Game mechanics]]", pages["Weather"])
-        self.assertIn("[[Source provenance#synthetic|synthetic]]", pages["Source provenance"])
+        self.assertIn("[[Source provenance#synthetic|synthetic]]", audit_report(data))
         for title in ("Quests and journal", "Synthetic merchant", "Entity synthetic-item", "Weather"):
             self.assertNotIn("Source / section / key", pages[title])
             self.assertNotIn("Evidence status", pages[title])
@@ -524,14 +524,14 @@ class ResearchTests(unittest.TestCase):
 
     def test_pending_images_never_embed_or_link_artwork(self):
         pages = build_pages(ROOT, illustration_data())
-        self.assertIn("No reviewed picture", pages["Entity synthetic-item"])
+        self.assertNotIn("No reviewed picture", pages["Entity synthetic-item"])
         self.assertNotIn("[[File:", pages["Entity synthetic-item"])
         self.assertNotIn("[[:File:", pages["Entity synthetic-item"])
 
     def test_approved_references_have_domain_independent_attribution(self):
         pages = build_pages(ROOT, illustration_data(approved=True))
         self.assertIn("[[File:Synthetic.png|64px|", pages["Entity synthetic-item"])
-        self.assertIn("Synthetic test creator", pages["Source provenance"])
+        self.assertIn("Synthetic test creator", audit_report(illustration_data(approved=True)))
         self.assertNotIn("https://", pages["Entity synthetic-item"])
 
     def test_invalid_illustration_metadata_is_rejected(self):

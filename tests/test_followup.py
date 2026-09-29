@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from wiki_catalog import armor_groups, category_definitions, page_locations, primary_groups, validate_catalog
 from wiki_data import DataError, validate_data
 from wiki_details import load_publication_inputs, validate_capacity_profiles, validate_details
-from wiki_render import build_pages, icon, illustration_markup, pixel_geometry, pixel_image
+from wiki_render import audit_report, image_caption, build_pages, icon, illustration_markup, pixel_geometry, pixel_image
 from smoke_deploy import smoke_pixel_art
 
 
@@ -33,6 +33,7 @@ class FollowupTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+        cls.audit = audit_report(cls.data, cls.catalog, cls.details)
         cls.locations = page_locations(cls.data, cls.catalog)
         cls.categories = category_definitions(cls.data, cls.catalog)
 
@@ -55,13 +56,13 @@ class FollowupTests(unittest.TestCase):
         for old in ("Bugs", "Snakes", "Scaalmyr", "Unwanted creatures", "Aquatic creatures"):
             self.assertIn("Category:" + old, self.pages)
             self.assertNotIn("\n== " + old + " ==\n", self.pages["Bestiary"])
-            self.assertIn("not an aggression faction", self.pages["Category:" + old])
-        self.assertIn("== Aggression faction evidence ==", self.pages["Source provenance"])
+            self.assertIn("aggression factions may differ", self.pages["Category:" + old])
+        self.assertIn("== Aggression faction evidence ==", self.audit)
 
     def test_target_rules_include_both_exceptions_and_retaliation_not_universal_friendliness(self):
         rules = self.pages["Bestiary"].split("== Aggression rules ==", 1)[1].split("\n== ", 1)[0]
-        for phrase in ("Nightmare", "Raving Unwanted", "retaliation", "without the same-team",
-                       "acting individual is always excluded", "separate team, 1", "distance", "line of sight"):
+        for phrase in ("Nightmare", "Raving Unwanted", "retaliate", "without the usual faction check",
+                       "never themselves", "separate faction", "distance", "line-of-sight"):
             self.assertIn(phrase, rules)
         for title in ("Nightmare", "Raving Unwanted"):
             self.assertIn("Both Nightmare and Raving Unwanted can select other members", self.pages[title])
@@ -100,7 +101,7 @@ class FollowupTests(unittest.TestCase):
                 if identity in row["members"]:
                     self.assertIn(f"+<nowiki>{slots}</nowiki> inventory slots", self.pages["Category:" + category])
         self.assertIn("+<nowiki>9</nowiki> inventory slots", self.pages["Forager's Vest"])
-        self.assertIn("Replacing equipment replaces its contribution", self.pages["Forager's Vest"])
+        self.assertIn("Replacing an item replaces its capacity bonus", self.pages["Forager's Vest"])
         carrying = self.pages["Items"].split("== Carrying equipment ==", 1)[1].split("\n== ", 1)[0]
         for identity in self.categories["Carrying equipment"]["members"]:
             self.assertIn(f'id="entity-{identity}"', carrying)
