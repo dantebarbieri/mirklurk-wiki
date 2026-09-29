@@ -2,6 +2,11 @@ name: Disposable Cargo prototype
 
 on:
   workflow_dispatch:
+    inputs:
+      integrated:
+        description: "Test disposable lifecycle integration (otherwise reproduce the baseline)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -21,7 +26,12 @@ jobs:
           python3 -m pip install playwright==1.55.0
           python3 -m playwright install --with-deps chromium
       - name: Exercise isolated pinned Cargo wiki
-        run: python3 tools/prototype_cargo.py --run --artifacts "${{ runner.temp }}/cargo-prototype"
+        env:
+          INTEGRATED: ${{ inputs.integrated }}
+        run: |
+          args=()
+          if [ "$INTEGRATED" = true ]; then args+=(--integrated); fi
+          python3 tools/prototype_cargo.py --run --artifacts "${{ runner.temp }}/cargo-prototype" "${args[@]}"
       - name: Preserve synthetic evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

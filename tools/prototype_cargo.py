@@ -24,10 +24,10 @@ CARGO_COMMIT = "b3cc797aa8a1575f7ce4a7c5b0a1979698d582f5"
 CARGO_SHA256 = "005301a0f0fac395a9cec340fac0f229d9226974c3c26e80fff3c16015bd21af"
 
 
-def prototype(artifacts):
+def prototype(artifacts, integrated=False):
     artifacts.mkdir(parents=True, exist_ok=True)
     report = {"status": "running", "cargo": "3.9.4", "commit": CARGO_COMMIT,
-              "license": "GPL-2.0-or-later", "checks": {}, "cache": []}
+              "license": "GPL-2.0-or-later", "integrated": integrated, "checks": {}, "cache": []}
     started = time.monotonic()
     with tempfile.TemporaryDirectory(prefix="mirklurk-cargo-") as folder:
         workspace = Path(folder)
@@ -50,6 +50,12 @@ def prototype(artifacts):
         dockerfile.write_text(dockerfile.read_text() + """
 COPY Cargo /var/www/html/extensions/Cargo
 RUN printf '\\nwfLoadExtension("Cargo");\\n$wgJobRunRate = 0;\\n$wgShowExceptionDetails = true;\\n' >> /var/www/html/LocalSettings.php
+""", encoding="utf-8")
+        if integrated:
+            shutil.copyfile(ROOT / "tools" / "prototype_cargo_hooks.php", context / "prototype_cargo_hooks.php")
+            dockerfile.write_text(dockerfile.read_text() + """
+COPY prototype_cargo_hooks.php /var/www/html/prototype_cargo_hooks.php
+RUN php -l /var/www/html/prototype_cargo_hooks.php && printf '\\nrequire_once __DIR__ . "/prototype_cargo_hooks.php";\\n' >> /var/www/html/LocalSettings.php
 """, encoding="utf-8")
         # Disable opportunistic jobs only to measure immediate vs job-drained behavior.
         with socket.socket() as probe:
@@ -114,7 +120,7 @@ RUN printf '\\nwfLoadExtension("Cargo");\\n$wgJobRunRate = 0;\\n$wgShowException
                 "captchaId": captcha["fields"]["captchaId"]["value"], "captchaWord": answer,
             }, post=True)
             assert created["createaccount"]["status"] == "PASS", "Prototype signup failed."
-            exercise(admin, base, editor_password, maintenance, report, artifacts)
+            exercise(admin, base, editor_password, maintenance, report, artifacts, integrated=integrated)
             report["status"] = "completed_with_limitations"
         except Exception as error:
             report["status"] = "failed"
@@ -131,5 +137,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", action="store_true", required=True, help="Create/destroy a disposable local wiki.")
     parser.add_argument("--artifacts", type=Path, required=True)
+    parser.add_argument("--integrated", action="store_true", help="Enable disposable table-dependency/restore hooks.")
     args = parser.parse_args()
-    prototype(args.artifacts)
+    prototype(args.artifacts, integrated=args.integrated)

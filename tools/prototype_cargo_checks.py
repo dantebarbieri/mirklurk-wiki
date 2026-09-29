@@ -45,20 +45,25 @@ def cached_reader(base, title):
         return visible(r.read().decode())
 
 
-def exercise(admin, base, password, maintenance, report, artifacts):
+def exercise(admin, base, password, maintenance, report, artifacts, integrated=False):
     from playwright.sync_api import sync_playwright
 
     assert urllib.parse.urlsplit(base).hostname == "localhost", "Disposable localhost required."
     fixtures = pages()
+    if integrated:
+        fixtures[TEMPLATE] = fixtures[TEMPLATE].replace(
+            "<includeonly>", "<includeonly>{{#prototype_owner:}}", 1)
     for title, text in fixtures.items():
         store(admin, title, text, **({"contentmodel": "Scribunto"} if title == MODULE else {}))
 
     def jobs():
+        started = time.monotonic()
         before = maintenance("showJobs").strip()
         output = maintenance("runJobs", "--maxjobs", "500", "--maxtime", "60")
         assert "ERROR" not in output and " failed" not in output, output
         after = maintenance("showJobs").strip()
-        return {"before": before, "after": after, "output": output[-2000:]}
+        return {"before": before, "after": after, "output": output[-2000:],
+                "seconds": round(time.monotonic() - started, 3)}
 
     def recreate():
         start = time.monotonic()
@@ -74,8 +79,12 @@ def exercise(admin, base, password, maintenance, report, artifacts):
     assert properties.get("pageprops", {}).get("CargoTableName") == "PrototypeRecords", properties
     recreate()
     assert rows(admin) == [], "Empty index expected before authoring."
+    def reader_query(condition):
+        text = query(condition)
+        return text.replace("#cargo_query:tables=PrototypeRecords", "#prototype_query:") if integrated else text
+
     for title, condition in READERS.items():
-        store(admin, title, query(condition))
+        store(admin, title, reader_query(condition))
     jobs()
     for title in READERS:
         assert "No matching records." in cached_reader(base, title)
@@ -92,6 +101,8 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             observed = entry["readers"][title]
             text = cached_reader(base, title)
             observed["after_jobs"] = all((needle in text) == present for needle, present in needles)
+            if integrated:
+                assert observed["after_jobs"], (label, title, text[-1500:])
             if not observed["after_jobs"]:
                 admin.call({"action": "purge", "titles": title}, post=True)
                 text = cached_reader(base, title)
@@ -191,7 +202,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
                 "Prototype trader": [(OWNER, True)],
             })
             populated_reader = "Prototype populated reader"
-            store(admin, populated_reader, query("Stations HOLDS 'Prototype bench'"))
+            store(admin, populated_reader, reader_query("Stations HOLDS 'Prototype bench'"))
             assert "AP 2" in cached_reader(base, populated_reader)
             page.goto(url("Prototype bench"), wait_until="networkidle")
             data_link = page.locator(".prototype-result").get_by_role("link", name="Edit data", exact=True).first
@@ -250,7 +261,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert rows(admin) == snapshot and revision(admin, OWNER) == before
             report["checks"]["preview_visual_draft_anonymous_parse_no_writes"] = True
 
-            store(admin, "Prototype reused view", query("Stations HOLDS 'Prototype bench'"))
+            store(admin, "Prototype reused view", reader_query("Stations HOLDS 'Prototype bench'"))
             jobs()
             assert rows(admin) == snapshot, "A reused view registered a duplicate authoritative row."
             report["checks"]["reuse_does_not_store"] = True
@@ -305,6 +316,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             report["move_jobs"] = jobs()
             report["move_after_jobs_rows"] = rows(admin)
             if {r["Owner"] for r in rows(admin)} != {MOVED, NEW_OWNER}:
+                assert not integrated, "Automatic owner move indexing failed."
                 report["move_rebuild_required"] = True
                 recreate()
             moved_rows = rows(admin)
@@ -324,6 +336,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             report["restore_jobs"] = jobs()
             report["checks"]["restore_after_jobs_rows"] = len(rows(admin))
             if {r["Owner"] for r in rows(admin)} != {MOVED, NEW_OWNER}:
+                assert not integrated, "Automatic restored owner indexing failed."
                 report["restore_rebuild_required"] = True
                 recreate()
             assert {r["Owner"] for r in rows(admin)} == {MOVED, NEW_OWNER}, "Restore was not recoverable from current source."
