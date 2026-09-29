@@ -64,6 +64,9 @@
 !/tools/smoke_display.py
 !/tools/smoke_browser.py
 !/tools/smoke_editing.py
+!/tools/prototype_cargo.py
+!/tools/prototype_cargo_checks.py
+!/tools/prototype_cargo_fixtures.py
 !/tools/smoke_urls.py
 !/tools/wiki_acquisition.py
 !/tools/build_wiki.py
@@ -93,6 +96,7 @@
 !/.github/
 !/.github/workflows/
 !/.github/workflows/validate.yml
+!/.github/workflows/cargo-prototype.yml
 
 # Defense in depth. Never add exceptions below these exclusions.
 # .gitignore does NOT protect files already tracked or added with --force.

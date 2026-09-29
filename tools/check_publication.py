@@ -51,6 +51,9 @@ ALLOWED_FILES = {
     "tools/smoke_display.py": 32 * 1024,
     "tools/smoke_browser.py": 24 * 1024,
     "tools/smoke_editing.py": 24 * 1024,
+    "tools/prototype_cargo.py": 12 * 1024,
+    "tools/prototype_cargo_checks.py": 24 * 1024,
+    "tools/prototype_cargo_fixtures.py": 8 * 1024,
     "tools/smoke_urls.py": 24 * 1024,
     "tools/wiki_acquisition.py": 16 * 1024,
     "tools/build_wiki.py": 32 * 1024,
@@ -76,6 +79,7 @@ ALLOWED_FILES = {
     "deploy/install.php": 16 * 1024,
     "deploy/healthcheck.php": 8 * 1024,
     ".github/workflows/validate.yml": 8 * 1024,
+    ".github/workflows/cargo-prototype.yml": 4 * 1024,
     **{f"content/pages/{name}": 32 * 1024 for name in (*PAGE_FILES.values(), *RESEARCH_PAGE_FILES.values())},
     "content/pages/Help_Editing.wiki": 6 * 1024,
 }
