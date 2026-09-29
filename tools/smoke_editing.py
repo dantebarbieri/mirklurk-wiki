@@ -146,7 +146,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             if page.locator("#ca-edit a").inner_text() != "Edit source":
                 raise RuntimeError("Logged-in source editing is not discoverable.")
             page.locator("#ca-ve-edit a").click()
-            page.wait_for_function("window.ve && ve.init.target && ve.init.target.active && ve.init.target.getSurface()")
+            page.wait_for_function("window.ve?.init?.target?.active && ve.init.target.getSurface()")
             welcome = page.locator(".ve-ui-mwWelcomeDialog .oo-ui-processDialog-actions-primary .oo-ui-buttonElement-button")
             if welcome.is_visible():
                 welcome.click()
@@ -171,7 +171,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             value = saving.value.json().get("visualeditoredit", {})
             if value.get("result") != "success":
                 raise RuntimeError("VisualEditor save failed: " + json.dumps(value))
-            page.wait_for_function("!ve.init.target.active")
+            page.wait_for_function("!window.ve?.init?.target?.active")
 
         try:
             page.goto(url(SIMPLE), wait_until="networkidle")
