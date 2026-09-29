@@ -177,9 +177,8 @@ def smoke_responsive(base, data, artifact_dir):
                 page = context.new_page()
                 for article in ARTICLES:
                     print(f"Responsive {name}: loading {article}", flush=True)
-                    page.goto(base + "/index.php?" + urllib.parse.urlencode({
-                        "title": article, "useskin": "vector-2022",
-                    }), wait_until="networkidle")
+                    page.goto(base + "/w/" + urllib.parse.quote(article.replace(" ", "_"), safe="")
+                              + "?useskin=vector-2022", wait_until="networkidle")
                     page.evaluate("""() => {
                         const images=[...document.images];
                         images.forEach(i => { i.loading='eager'; });
@@ -251,6 +250,14 @@ def smoke_responsive(base, data, artifact_dir):
                             if [t["box"]["width"] for t in restored["tables"]] != [t["box"]["width"] for t in result["tables"]]:
                                 raise RuntimeError("Resizing back to desktop did not restore table layout.")
                             record["resizeRestored"] = True
+                        if name == "phone" and article == "Items":
+                            link = page.locator('.mirklurk-item[aria-label="Iron Hand Axe"] .mirklurk-item-name a').first
+                            with page.expect_navigation(wait_until="networkidle"):
+                                link.click()
+                            if (urllib.parse.urlsplit(page.url).path != "/w/Iron_Hand_Axe"
+                                    or page.locator("#firstHeading").inner_text() != "Iron Hand Axe"):
+                                raise RuntimeError("A phone item link did not reach its actual short-URL article.")
+                            record["followedItemLink"] = page.url
                     except Exception:
                         page.screenshot(path=str(folder / ("failed-" + name + "-" + article.replace(" ", "-") + ".png")),
                                         full_page=True)
