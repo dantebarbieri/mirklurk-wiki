@@ -61,7 +61,7 @@ def smoke_navigation(page, api, base, folder, name):
               wait_until="networkidle")
     menu = page.locator("#vector-main-menu")
     if not menu.is_visible():
-        page.locator('label[for="vector-main-menu-dropdown-checkbox"]').click()
+        page.get_by_role("button", name="Main menu", exact=True).click()
     menu.wait_for(state="visible")
     info = api({"action": "query", "titles": "|".join(SIDEBAR_LINKS.values()),
                 "prop": "info", "inprop": "url"})["query"]["pages"]
