@@ -229,10 +229,18 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert rows(admin) == snapshot and revision(admin, OWNER) == before
             report["checks"]["preview_visual_draft_anonymous_parse_no_writes"] = True
 
-            store(admin, "Prototype reused view", "{{:" + OWNER + "}}\n\n" + query("Stations HOLDS 'Prototype bench'"))
+            store(admin, "Prototype reused view", query("Stations HOLDS 'Prototype bench'"))
             jobs()
             assert rows(admin) == snapshot, "A reused view registered a duplicate authoritative row."
             report["checks"]["reuse_does_not_store"] = True
+            # Negative control: current-style raw owner transclusion is NOT a supported index reader.
+            unsafe_reader = "Prototype unsupported raw transclusion"
+            store(admin, unsafe_reader, "{{:" + OWNER + "}}")
+            report["raw_owner_transclusion_extra_rows"] = len(rows(admin)) - len(snapshot)
+            assert report["raw_owner_transclusion_extra_rows"] == 2
+            admin.call({"action": "delete", "title": unsafe_reader, "token": admin.csrf(),
+                        "reason": "Remove synthetic negative control"}, post=True)
+            assert rows(admin) == snapshot
 
             # No Git owner list changes: author a previously unknown page after caching empty reader results.
             wiki_save(NEW_OWNER, "Another author's prose.\n\n" + record(
@@ -314,6 +322,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
                 "TemplateData field edits are visual; add/remove variants are tested through the ordinary editor API, not a GUI.",
                 "Ingredients support arbitrary line count, but Item = quantity is paired-text notation, not repeatable controls.",
                 "Stations/merchants use semicolon-separated titles; no production autocomplete or uniqueness validation.",
+                "Only query renderers are safe read-only reuse. Direct owner transclusion indexes copies and must be migrated.",
                 "No production schema migration, Page Forms installation, or original raw-table fix is included.",
             ]
         except Exception:

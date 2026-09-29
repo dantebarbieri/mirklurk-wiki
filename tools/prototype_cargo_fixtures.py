@@ -35,9 +35,8 @@ function p.main(frame)
         end
     end
     local current = mw.title.getCurrentTitle()
-    local caller = parent:getParent()
-    -- Reuse renders the record, but only the page containing the direct call owns it.
-    if current.namespace == 0 and caller and caller:getTitle() == current.prefixedText then
+    -- Query readers use a separate non-storing renderer, never this authoring template.
+    if current.namespace == 0 then
         mw.ext.cargo.store('PrototypeRecords', {
             Variant=a.variant, Product=a.product, Quantity=a.quantity, AP=a.ap,
             Ingredients=table.concat(names, ';'), Inputs=table.concat(inputs, '\n'),
@@ -45,9 +44,6 @@ function p.main(frame)
         })
     end
     local out = mw.html.create('div'):addClass('prototype-record')
-    out:attr('data-current', current.prefixedText)
-    out:attr('data-parent', parent:getTitle())
-    out:attr('data-caller', caller and caller:getTitle() or 'no parent frame')
     out:tag('strong'):wikitext(mw.text.nowiki(a.product or '')):done()
     out:tag('p'):wikitext(mw.text.nowiki('Variant: ' .. (a.variant or '') .. '; AP ' .. (a.ap or ''))):done()
     out:tag('p'):wikitext(mw.text.nowiki(table.concat(inputs, '; '))):done()
