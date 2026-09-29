@@ -25,7 +25,7 @@ def editor_fixtures():
               '|methods=Synthetic station|ap=2|conditions=Synthetic condition.}}\n')
     recipes = SCROLL + html_table(
         ["Inputs", "Output", "Method", "Cost", "Conditions"],
-        [filtered_row(recipe, "station", ["Synthetic station"])],
+        [selective_view(filtered_row(recipe, "station", ["Synthetic station"]), "recipes")],
     ) + "</div>\n"
     ware = ('{{Ware row|anchors=<span id="synthetic-ware"></span>|seller=Synthetic seller'
             '|item=Iron Hand Axe|price=<noinclude>{{:' + OWNER + '}}</noinclude>}}\n')
@@ -39,7 +39,7 @@ def editor_fixtures():
                  "\n\nSynthetic uncertain claim.{{Unverified}}\n"),
         OWNER: ("Synthetic owner introduction.\n\n== Price ==\n"
                 + selective_view("{{Coins|1234}}", "price", True)
-                + "\n\n== Recipe ==\n" + selective_view(recipes, "recipes") + "\n"),
+                + "\n\n== Recipe ==\n" + recipes + "\n"),
         MERCHANT: "Synthetic merchant introduction.\n\n" + selective_view(wares, "sellers") + "\n",
     }
 
@@ -57,8 +57,10 @@ def source(api, title):
 def projections(api):
     views = {
         "price": "{{:" + OWNER + "}}",
-        "recipe": "{{:" + OWNER + "|view=recipes|station=Synthetic station}}",
-        "wrong station": "{{:" + OWNER + "|view=recipes|station=Other station}}",
+        "recipe": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
+                                     ["{{:" + OWNER + "|view=recipes|station=Synthetic station}}"]) + "</div>",
+        "wrong station": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
+                                            ["{{:" + OWNER + "|view=recipes|station=Other station}}"]) + "</div>",
         "seller": "{{:" + MERCHANT + "|view=sellers|item=Iron Hand Axe}}",
         "wrong item": "{{:" + MERCHANT + "|view=sellers|item=Bandage}}",
     }
@@ -141,15 +143,14 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 raise RuntimeError("Disposable browser API HTTP request failed.")
             return response.json()
 
-        def open_editor(title):
+        def open_editor(title, first_edit=False):
             page.goto(url(title), wait_until="networkidle")
             if page.locator("#ca-edit a").inner_text() != "Edit source":
                 raise RuntimeError("Logged-in source editing is not discoverable.")
             page.locator("#ca-ve-edit a").click()
             page.wait_for_function("window.ve?.init?.target?.active && ve.init.target.getSurface()")
-            welcome = page.locator(".ve-ui-mwWelcomeDialog .oo-ui-processDialog-actions-primary .oo-ui-buttonElement-button")
-            if welcome.is_visible():
-                welcome.click()
+            if first_edit:
+                page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
             page.locator(".ve-ce-documentNode").wait_for(state="visible")
 
         def append_prose(text):
@@ -189,8 +190,8 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             if "edit" not in user["rights"] or "sysop" in user["groups"] or "bot" in user["groups"]:
                 raise RuntimeError("Browser editing must use an ordinary self-registered account.")
 
-            open_editor(SIMPLE)
-            page.locator(".ve-ce-mwTransclusionNode").filter(has=page.locator(".mirklurk-item")).first.dblclick()
+            open_editor(SIMPLE, first_edit=True)
+            page.locator(".ve-ce-documentNode .mirklurk-item").first.dblclick()
             dialog = page.locator(".ve-ui-mwTransclusionDialog")
             dialog.get_by_label("Quantity", exact=True).fill("5")
             if not dialog.get_by_label("Item", exact=True).count():
