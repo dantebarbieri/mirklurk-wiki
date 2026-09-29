@@ -8,6 +8,7 @@ final class PrototypeCargo {
     public const TABLE = 'PrototypeRecords';
     public const READER = 'prototype-cargo-reader';
     public const OWNER = 'prototype-cargo-owner';
+    public static bool $pauseRebuild = false;
 
     public static function register(Parser $parser): void {
         $parser->setFunctionHook('prototype_query', static function (Parser $parser, ...$args) {
@@ -30,14 +31,48 @@ final class PrototypeCargo {
         $output = $update->getParserOutput();
         if ($output->getPageProperty(self::OWNER) !== null ||
             array_key_exists(self::OWNER, $update->getRemovedProperties() ?? [])) {
-            self::queueRefresh();
+            self::queueOwner($update->getPageId());
         }
     }
 
     public static function restored($page): void {
+        self::queueOwner($page->getId());
+    }
+
+    public static function queueOwner(int $id): void {
         MediaWikiServices::getInstance()->getJobQueueGroup()->push(
-            new PrototypeCargoRestoreJob(Title::newFromPageIdentity($page), ['pageId' => $page->getId()])
+            new PrototypeCargoReindexJob(Title::makeTitle(NS_MAIN, 'Prototype index'), ['pageId' => $id])
         );
+    }
+
+    public static function rebuilt(): void {
+        $db = CargoUtils::getMainDBForRead();
+        $owners = $db->select('page_props', ['pp_page'], ['pp_propname' => self::OWNER], __METHOD__);
+        if ($owners->numRows() > 200) {
+            throw new RuntimeException('Disposable owner bound exceeded.');
+        }
+        foreach ($owners as $owner) {
+            self::queueOwner((int)$owner->pp_page);
+        }
+        self::queueRefresh();
+    }
+
+    public static function storageBarrier($title, $table): void {
+        if (self::$pauseRebuild && $table === self::TABLE &&
+            (CargoStore::$settings['origin'] ?? '') === 'template') {
+            self::$pauseRebuild = false;
+            if (file_put_contents('/tmp/prototype-cargo-barrier.json',
+                json_encode(['title' => $title->getPrefixedText()])) === false) {
+                throw new RuntimeException('Could not write the disposable rebuild checkpoint.');
+            }
+            $deadline = microtime(true) + 30;
+            while (!file_exists('/tmp/prototype-cargo-release') && microtime(true) < $deadline) {
+                usleep(50000);
+            }
+            if (!file_exists('/tmp/prototype-cargo-release')) {
+                throw new RuntimeException('Disposable rebuild concurrency barrier timed out.');
+            }
+        }
     }
 
     public static function moved($old, $new): void {
@@ -75,9 +110,9 @@ final class PrototypeCargoRefreshJob extends Job {
     }
 }
 
-final class PrototypeCargoRestoreJob extends Job {
+final class PrototypeCargoReindexJob extends Job {
     public function __construct($title, array $params = []) {
-        parent::__construct('prototypeCargoRestore', $title, $params);
+        parent::__construct('prototypeCargoReindex', $title, $params);
     }
 
     public function run() {
@@ -130,5 +165,6 @@ $wgHooks['LinksUpdateComplete'][] = [PrototypeCargo::class, 'linksComplete'];
 $wgHooks['PageUndeleteComplete'][] = [PrototypeCargo::class, 'restored'];
 $wgHooks['PageMoveComplete'][] = [PrototypeCargo::class, 'moved'];
 $wgHooks['PageDeleteComplete'][] = [PrototypeCargo::class, 'deleted'];
+$wgHooks['CargoBeforeStoreData'][] = [PrototypeCargo::class, 'storageBarrier'];
 $wgJobClasses['prototypeCargoRefresh'] = PrototypeCargoRefreshJob::class;
-$wgJobClasses['prototypeCargoRestore'] = PrototypeCargoRestoreJob::class;
+$wgJobClasses['prototypeCargoReindex'] = PrototypeCargoReindexJob::class;

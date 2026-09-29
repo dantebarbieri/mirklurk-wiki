@@ -54,9 +54,11 @@ RUN printf '\\nwfLoadExtension("Cargo");\\n$wgJobRunRate = 0;\\n$wgShowException
         if integrated:
             shutil.copyfile(ROOT / "tools" / "prototype_cargo_hooks.php", context / "prototype_cargo_hooks.php")
             shutil.copyfile(ROOT / "tools" / "prototype_cargo_magic.php", context / "prototype_cargo_magic.php")
+            shutil.copyfile(ROOT / "tools" / "prototype_cargo_rebuild.php", context / "prototype_cargo_rebuild.php")
             dockerfile.write_text(dockerfile.read_text() + """
 COPY prototype_cargo_hooks.php /var/www/html/prototype_cargo_hooks.php
 COPY prototype_cargo_magic.php /var/www/html/prototype_cargo_magic.php
+COPY prototype_cargo_rebuild.php /var/www/html/extensions/Cargo/maintenance/prototypeRebuild.php
 RUN php -l /var/www/html/prototype_cargo_hooks.php && printf '\\nrequire_once __DIR__ . "/prototype_cargo_hooks.php";\\n' >> /var/www/html/LocalSettings.php
 """, encoding="utf-8")
         # Disable opportunistic jobs only to measure immediate vs job-drained behavior.

@@ -67,7 +67,8 @@ def exercise(admin, base, password, maintenance, report, artifacts, integrated=F
 
     def recreate():
         start = time.monotonic()
-        output = maintenance("Cargo:cargoRecreateData", "--table", "PrototypeRecords", "--quiet")
+        command = "Cargo:prototypeRebuild" if integrated else "Cargo:cargoRecreateData"
+        output = maintenance(command, "--table", "PrototypeRecords", "--quiet")
         report.setdefault("rebuild_output", []).append(output)
         assert "Error:" not in output and "skipping" not in output, output
         return round(time.monotonic() - start, 3)

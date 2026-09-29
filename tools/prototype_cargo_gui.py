@@ -59,9 +59,12 @@ def exercise_gui(admin, page, open_visual, save_visual, freshness, reader_query,
     insert("gui-rain", "5", "Only during synthetic rain.")
     for remaining in (1, 0):
         open_visual(owner)
-        page.locator(".ve-ce-documentNode .prototype-record").last.hover(force=True)
+        variant = "gui-rain" if remaining else "gui-base"
+        page.locator(".ve-ce-documentNode .prototype-record").filter(has_text="Variant: " + variant).hover(force=True)
         page.locator('.ve-ce-focusableNode-highlight[title="Prototype record"]').last.click()
-        page.keyboard.press("Backspace")
+        page.locator(".ve-ce-documentNode").press("Delete")
+        page.wait_for_function("(count) => document.querySelectorAll('.ve-ce-documentNode .prototype-record').length === count",
+                               arg=remaining)
         summary = "Native GUI remove variant" if remaining else "Native GUI remove last record"
         save_visual(summary)
         owned, current = verify(summary, remaining)
