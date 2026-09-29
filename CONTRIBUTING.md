@@ -45,7 +45,8 @@ reviewed for misleading links or inappropriate markup.
 
 Write short, direct game guidance. Keep amounts, prerequisites, exceptions and
 relevant versions; cut repeated introductions, hedging and explanations of how
-the wiki is built. Do not publish evidence ledgers, research status, source paths,
+the wiki is built. Keep actual quest research and in-game evidence: this policy
+targets wiki commentary, not game content. Do not publish evidence ledgers, research status, source paths,
 verification instructions or missing-image notices in articles, categories,
 navigation, captions or tooltips. Provenance stays in the structured inputs and
 the local `wiki_render.audit_report()` output, never in `build_pages()`.

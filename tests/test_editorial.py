@@ -80,6 +80,8 @@ class EditorialTests(unittest.TestCase):
     def test_visible_text_tooltips_transcluded_copy_and_retired_links_are_checked(self):
         for bad in (
             "Missing evidence", '<span title="Reviewed initializer">5</span>',
+            "<span title='Reviewed initializer'>5</span>",
+            '<span title="Missing evid&#101;nce">5</span>',
             "<onlyinclude>Source-inspected result</onlyinclude>",
             "[[Source provenance#Profiles|More details]]",
             "#REDIRECT [[Research policy]]",
@@ -87,6 +89,9 @@ class EditorialTests(unittest.TestCase):
             with self.subTest(bad=bad), self.assertRaises(DataError):
                 validate_reader_pages({"Example": bad})
         validate_reader_text("Example", '<span id="profile-item-1-initializer"></span>Base weight: Unknown.')
+        validate_reader_text("Quest", "Collect evidence for Clay's research.")
+        self.assertIn("Research in progress", self.pages["Quests and journal"])
+        self.assertIn("Search the target ruins for surviving evidence.", self.pages["Quests and journal"])
         with self.assertRaises(DataError):
             validate_reader_pages({"Source provenance": "The former ledger."})
 

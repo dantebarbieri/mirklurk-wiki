@@ -23,7 +23,9 @@ RETIRED_PAGES = {
     "Source provenance": "Game mechanics",
 }
 READER_META = re.compile(
-    r"\bevidence\b|\bprovenance\b|\bresearch(?:ed)?\b|\bmethodology\b|\binitializer\b|"
+    r"\b(?:missing|source|technical|reviewed|supporting) evidence\b|"
+    r"\bevidence (?:ledger|register|status|notes|and spoilers)\b|\bprovenance\b|"
+    r"\bresearch (?:policy|status|notes|records|ledger|methodology)\b|\bmethodology\b|\binitializer\b|"
     r"\breviewed\b|\binspected\b|\bverified\b|\bvalidation\b|\bconfidence\b|"
     r"\bsource[- ](?:scoped|derived|inspected)\b|\bdeath.handler\b|\bnot established\b|"
     r"\bgml_(?:Object|Script|GlobalScript)_|\bSHA-?256\b",
@@ -33,9 +35,9 @@ READER_META = re.compile(
 
 def validate_reader_text(title, text):
     """Check visible text and tooltip labels; compatibility IDs are not prose."""
-    labels = re.findall(r'\b(?:title|alt|aria-label)="([^"]*)"', text)
-    visible = html.unescape(re.sub(r"<[^>]*>", "", text))
-    if READER_META.search(visible + " " + " ".join(labels)):
+    labels = [value for _, value in re.findall(r"""\b(?:title|alt|aria-label)=(['"])(.*?)\1""", text, re.I | re.S)]
+    visible = html.unescape(re.sub(r"<[^>]*>", "", text) + " " + " ".join(labels))
+    if READER_META.search(visible):
         raise DataError(f"{title}: reader text contains research or publication commentary")
 
 
