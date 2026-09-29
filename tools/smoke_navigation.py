@@ -26,6 +26,10 @@ def sidebar_text():
     return read_authored(ROOT, SIDEBAR_TITLE, "Sidebar.wiki", directory="interface", limit=2 * 1024)
 
 
+def article_url(base, article_path, title):
+    return urllib.parse.urljoin(base, article_path.replace("$1", urllib.parse.quote(title.replace(" ", "_"), safe=":/")))
+
+
 def install_sidebar_fixture(api, base, token):
     if urllib.parse.urlsplit(base).hostname not in {"localhost", "127.0.0.1"}:
         raise RuntimeError("Sidebar smoke may only edit the disposable localhost wiki.")
@@ -63,8 +67,9 @@ def smoke_navigation(page, api, base, folder, name):
     if not menu.is_visible():
         page.get_by_role("button", name="Main menu", exact=True).click()
     menu.wait_for(state="visible")
+    article_path = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]["articlepath"]
     info = api({"action": "query", "titles": "|".join(SIDEBAR_LINKS.values()),
-                "prop": "info", "inprop": "url"})["query"]["pages"]
+                "prop": "info"})["query"]["pages"]
     by_title = {row["title"]: row for row in info.values()}
     for label, title in SIDEBAR_LINKS.items():
         target = by_title[title]
@@ -74,7 +79,8 @@ def smoke_navigation(page, api, base, folder, name):
         if link.count() != 1 or not link.is_visible():
             raise RuntimeError("Native sidebar lost its unique visible link: " + label)
         actual = urllib.parse.urljoin(base, link.get_attribute("href"))
-        if urllib.parse.unquote(actual) != urllib.parse.unquote(target["fullurl"]):
+        expected = article_url(base, article_path, title)
+        if urllib.parse.unquote(actual) != urllib.parse.unquote(expected):
             raise RuntimeError("Native sidebar link does not resolve to its internal title: " + title)
         link.focus()
         if not link.evaluate("(element) => element === document.activeElement"):
@@ -85,6 +91,6 @@ def smoke_navigation(page, api, base, folder, name):
         raise RuntimeError("The native community toolbox was removed.")
     page.screenshot(path=str(Path(folder) / (name + "-navigation.png")), full_page=True)
     menu.get_by_role("link", name="Editing help", exact=True).press("Enter")
-    page.wait_for_url(by_title["Help:Editing"]["fullurl"])
+    page.wait_for_url(article_url(base, article_path, "Help:Editing"))
     if page.locator("#firstHeading").inner_text().strip() != "Help:Editing":
         raise RuntimeError("Keyboard navigation did not open the editing-help article.")

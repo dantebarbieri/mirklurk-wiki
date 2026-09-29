@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from check_publication import ALLOWED_FILES, blob_errors, path_errors
-from smoke_navigation import SIDEBAR_LINKS, SIDEBAR_TITLE, install_sidebar_fixture, sidebar_text
+from smoke_navigation import SIDEBAR_LINKS, SIDEBAR_TITLE, article_url, install_sidebar_fixture, sidebar_text
 from sync_wiki import markdown, sync
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
@@ -69,6 +69,15 @@ class NavigationTests(unittest.TestCase):
         self.assertTrue(blob_errors(path, b"x" * (2 * 1024 + 1)))
         self.assertTrue(path_errors("content/interface/Common.js", "100644"))
         self.assertTrue(path_errors("content/interface/Unreviewed.wiki", "100644"))
+
+    def test_browser_expectations_use_wiki_article_path_including_special_pages(self):
+        for path in ("/index.php?title=$1", "/wiki/$1"):
+            for title, encoded in (("Game mechanics", "Game_mechanics"), ("Help:Editing", "Help:Editing"),
+                                   ("Special:Random", "Special:Random"),
+                                   ("Special:RecentChanges", "Special:RecentChanges")):
+                with self.subTest(path=path, title=title):
+                    self.assertEqual(article_url("http://localhost:8080", path, title),
+                                     "http://localhost:8080" + path.replace("$1", encoded))
 
     def test_sync_report_does_not_claim_interface_publication(self):
         report = {"mode": "dry-run", "summary": "repo-sync: test",
