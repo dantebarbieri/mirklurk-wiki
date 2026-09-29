@@ -1,13 +1,24 @@
 import sys
 import unittest
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from smoke_metadata import Head, check_head, import_fixtures, sitemap_locations
+from smoke_metadata import Head, check_head, import_fixtures, sitemap_locations, wait_for_http
 
 
 class MetadataAssertionsTests(unittest.TestCase):
+    @patch("smoke_metadata.time.sleep")
+    def test_restart_readiness_accepts_private_response_and_retries_resets(self, sleep):
+        read = Mock(side_effect=[ConnectionResetError(), (403, {}, b"Private wiki")])
+        wait_for_http(read)
+        self.assertEqual(read.call_count, 2)
+        sleep.assert_called_once_with(1)
+        with self.assertRaises(ConnectionResetError):
+            wait_for_http(Mock(side_effect=ConnectionResetError()))
+        with self.assertRaisesRegex(RuntimeError, "responsive"):
+            wait_for_http(Mock(return_value=(500, {}, b"Failed")))
+
     def test_nonreader_fixtures_do_not_bypass_publication_namespaces(self):
         run = Mock()
         api = Mock(return_value={"query": {"tokens": {"csrftoken": "synthetic"}}})

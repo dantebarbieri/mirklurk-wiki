@@ -84,6 +84,19 @@ def import_fixtures(run, api, fixtures):
             api({"action": "edit", "title": title, "text": text, "token": csrf}, post=True)
 
 
+def wait_for_http(read):
+    for attempt in range(30):
+        try:
+            status, _, _ = read()
+            if status in (200, 401, 403):
+                return
+        except (urllib.error.URLError, ConnectionError, TimeoutError):
+            if attempt == 29:
+                raise
+        time.sleep(1)
+    raise RuntimeError("Disposable Apache did not become responsive after metadata configuration change.")
+
+
 def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
     fixtures = {
         TITLE: LEAD + "\n\n== Later ==\nNever use this section as the description.",
@@ -209,17 +222,8 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
             input_bytes=original_settings + text.encode())
         # Ensure the Apache workers do not retain old opcache settings.
         run("restart", "mirklurk")
-        for attempt in range(30):
-            try:
-                # A deliberately private wiki cannot pass the public API healthcheck.
-                status, _, _ = get(article("Items"))
-                if status in (200, 401, 403):
-                    return
-            except urllib.error.URLError:
-                if attempt == 29:
-                    raise
-            time.sleep(1)
-        raise RuntimeError("Disposable Apache did not become responsive after metadata configuration change.")
+        # A deliberately private wiki cannot pass the public API healthcheck.
+        wait_for_http(lambda: get(article("Items")))
 
     try:
         baseline = check_format(base)
