@@ -1,6 +1,7 @@
 """Metadata and native sitemap checks against the disposable wiki only."""
 
 import subprocess
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -115,7 +116,7 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
             return response.status, response.headers, response.read()
 
     def article(title, query=None):
-        return "/index.php?" + urllib.parse.urlencode({"title": title, **(query or {})})
+        return "/index.php?" + urllib.parse.urlencode({"title": title, "metadata-smoke": "1", **(query or {})})
 
     def check_format(origin):
         info = api({"action": "query", "titles": "|".join(fixtures) + "|Items", "prop": "info",
@@ -175,8 +176,11 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
             raise RuntimeError("Native sitemap included a redirect, noindex or unsuitable namespace.")
         # Both punctuation/Unicode and ordinary URLs must actually resolve.
         for title in (TITLE, "Items", "Category:Synthetic metadata"):
-            if get(urls[title], origin)[0] != 200:
+            status, _, body = get(urls[title], origin)
+            if status != 200:
                 raise RuntimeError("Sitemap article URL is not servable.")
+            if Head(body.decode()).meta.get("og:url") != urls[title]:
+                raise RuntimeError("The served sitemap URL lost its matching native canonical/social URL.")
         robots = get("/robots.txt")
         if (robots[0] != 200 or robots[1].get_content_type() != "text/plain"
                 or f"Sitemap: {origin}/sitemap.xml\n" not in robots[2].decode()
@@ -198,18 +202,32 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
                 "/var/lib/mirklurk-sitemap/sitemap-private-probe.xml")
         return index
 
-    def append_settings(text):
-        run("exec", "-T", "mirklurk", "sh", "-c", "cat >> /var/www/html/LocalSettings.php",
-            input_bytes=text.encode())
+    original_settings = run("exec", "-T", "mirklurk", "cat", "/var/www/html/LocalSettings.php")
+
+    def settings(text):
+        run("exec", "-T", "mirklurk", "sh", "-c", "cat > /var/www/html/LocalSettings.php",
+            input_bytes=original_settings + text.encode())
         # Ensure the Apache workers do not retain old opcache settings.
         run("restart", "mirklurk")
-        run("up", "-d", "--wait", "mirklurk")
+        for attempt in range(30):
+            try:
+                # A deliberately private wiki cannot pass the public API healthcheck.
+                status, _, _ = get(article("Items"))
+                if status in (200, 401, 403):
+                    return
+            except urllib.error.URLError:
+                if attempt == 29:
+                    raise
+            time.sleep(1)
+        raise RuntimeError("Disposable Apache did not become responsive after metadata configuration change.")
 
-    run("exec", "-T", "mirklurk", "cp", "/var/www/html/LocalSettings.php", "/tmp/metadata-settings.php")
     try:
         baseline = check_format(base)
+        urls = {page["title"]: page["canonicalurl"] for page in api({
+            "action": "query", "titles": TITLE + "|Items", "prop": "info", "inprop": "url",
+        })["query"]["pages"].values()}
         with open_authenticated(base + article(TITLE), timeout=30) as response:
-            check_head(Head(response.read().decode()), base + "/index.php?title=Synthetic_%22quotes%22_%26_caf%C3%A9")
+            check_head(Head(response.read().decode()), urls[TITLE])
         csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
         revised = "The live editor's updated equipment guide."
         api({"action": "edit", "title": TITLE, "text": revised, "token": csrf}, post=True)
@@ -217,7 +235,7 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
         if head.meta.get("description") != revised:
             raise RuntimeError("Description did not follow the current live edit.")
         api({"action": "edit", "title": TITLE, "text": fixtures[TITLE], "token": csrf}, post=True)
-        append_settings("\n$wgArticleRobotPolicies['Items'] = 'noindex,follow';\n")
+        settings("\n$wgArticleRobotPolicies['Items'] = 'noindex,follow';\n")
         try:
             run(*refresh)
         except subprocess.CalledProcessError as error:
@@ -227,8 +245,8 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
             raise RuntimeError("Sitemap refresh did not refuse unsupported robot policy.")
         if get("/sitemap.xml")[2] != baseline:
             raise RuntimeError("A failed refresh replaced the served sitemap.")
-        check_head(Head(get(article("Items"))[2].decode()), base + "/index.php?title=Items", noindex=True)
-        append_settings("\n$wgGroupPermissions['*']['read'] = false;\n")
+        check_head(Head(get(article("Items"))[2].decode()), urls["Items"], noindex=True)
+        settings("\n$wgGroupPermissions['*']['read'] = false;\n")
         check_head(Head(get(article("Items"))[2].decode()), None, noindex=True)
         try:
             run(*refresh)
@@ -237,8 +255,7 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
                 raise
         else:
             raise RuntimeError("Sitemap refresh did not refuse a private wiki.")
-        append_settings("\n$wgGroupPermissions['*']['read'] = true;\n"
-                        "$wgArticleRobotPolicies = [];\n$wgExemptFromUserRobotsControl = [NS_MAIN];\n")
+        settings("\n$wgExemptFromUserRobotsControl = [NS_MAIN];\n")
         try:
             run(*refresh)
         except subprocess.CalledProcessError as error:
@@ -246,24 +263,18 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
                 raise
         else:
             raise RuntimeError("Sitemap refresh did not refuse disabled author noindex controls.")
-        # Exercise the alternate URL contract without depending on the short-URL sibling.
-        # This route/settings fixture exists only inside this throwaway container.
-        run("exec", "-T", "mirklurk", "sh", "-c",
-            "cat > /etc/apache2/conf-enabled/metadata-test-route.conf",
-            input_bytes=b'RewriteEngine On\nRewriteRule "^/w/.*$" "/index.php" [PT]\n')
-        run("exec", "-T", "mirklurk", "a2enmod", "rewrite")
-        append_settings("\n$wgExemptFromUserRobotsControl = [];\n$wgArticlePath = '/w/$1';\n")
+        # The real image/vhost uses /w/. Retain regression coverage for the old
+        # query layout without the short-layout-only legacy-view redirect hook.
+        settings("\n$wgArticlePath = '/index.php?title=$1';\n$wgHooks['MediaWikiPerformAction'] = [];\n")
         check_format(base)
         custom_origin = "https://wiki.example.invalid"
         run("exec", "-T", "mirklurk", "sh", "-c",
-            "cat >> /etc/apache2/conf-enabled/metadata-test-route.conf",
+            "cat > /etc/apache2/conf-enabled/metadata-test-origin.conf",
             input_bytes=b"SetEnv MW_SERVER_URL https://wiki.example.invalid\n")
-        append_settings("\n$wgServer = $wgCanonicalServer = 'https://wiki.example.invalid';\n")
+        settings("\n$wgServer = $wgCanonicalServer = 'https://wiki.example.invalid';\n")
         check_format(custom_origin)
     finally:
-        run("exec", "-T", "mirklurk", "cp", "/tmp/metadata-settings.php", "/var/www/html/LocalSettings.php")
-        run("exec", "-T", "mirklurk", "rm", "-f", "/etc/apache2/conf-enabled/metadata-test-route.conf",
-            "/tmp/metadata-settings.php")
-        run("restart", "mirklurk")
+        run("exec", "-T", "mirklurk", "rm", "-f", "/etc/apache2/conf-enabled/metadata-test-origin.conf")
+        settings("")
         run("up", "-d", "--wait", "mirklurk")
     print("Metadata passed: native canonicals, safe live lead previews, robots and atomic native sitemaps in both URL formats.")

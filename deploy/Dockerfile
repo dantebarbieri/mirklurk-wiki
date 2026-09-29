@@ -5,8 +5,11 @@ COPY deploy/mirklurk-runtime.php /var/www/html/mirklurk-runtime.php
 COPY deploy/mirklurk-metadata.php /var/www/html/mirklurk-metadata.php
 COPY deploy/install.php deploy/healthcheck.php deploy/robots.php deploy/refresh-sitemap.php /usr/local/lib/mirklurk/
 COPY deploy/metadata.conf /etc/apache2/conf-available/mirklurk-metadata.conf
+COPY deploy/apache-short-urls.conf /etc/apache2/sites-available/000-default.conf
 
-RUN test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
+RUN a2enmod rewrite \
+    && apache2ctl -t \
+    && test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
     && test -f /var/www/html/extensions/ParserFunctions/extension.json \
     && test -f /var/www/html/extensions/Scribunto/extension.json \
     && test -f /var/www/html/skins/Vector/skin.json \
@@ -20,7 +23,8 @@ RUN test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
     && printf 'display_errors=Off\nlog_errors=On\nexpose_php=Off\n' > /usr/local/etc/php/conf.d/mirklurk.ini \
     && install -d -o www-data -g www-data /var/lib/mirklurk-sitemap /var/lib/mirklurk-sitemap/public \
     && a2enmod headers \
-    && a2enconf mirklurk-metadata
+    && a2enconf mirklurk-metadata \
+    && apache2ctl -t
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD ["php", "/usr/local/lib/mirklurk/healthcheck.php"]

@@ -39,6 +39,7 @@ from smoke_display import (
 )
 from smoke_browser import smoke_browser
 from smoke_metadata import smoke_metadata
+from smoke_urls import smoke_urls
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
@@ -365,6 +366,15 @@ def drain_jobs_bounded(run, timeout=90):
             "remaining_jobs": remaining.decode(errors="replace").strip()}
 
 
+def link_title(url):
+    query = urllib.parse.parse_qs(url.query)
+    if query.get("title"):
+        return query["title"][0]
+    if url.path.startswith("/w/"):
+        return urllib.parse.unquote(url.path.removeprefix("/w/"))
+    return None
+
+
 class ProjectionDOM(HTMLParser):
     """Ordered visible cells and links of rendered HTML, without implementation-specific URLs."""
 
@@ -415,7 +425,8 @@ class ProjectionDOM(HTMLParser):
             query = urllib.parse.parse_qs(url.query)
             selflink = "selflink" in attrs.get("class", "").split()
             href = attrs.get("href", "")
-            if url.scheme or url.netloc or not (query.get("title") or href.startswith("#") or selflink):
+            page_title = link_title(url)
+            if url.scheme or url.netloc or not (page_title or href.startswith("#") or selflink):
                 if href:
                     self.link = {"href": href, "text": ""}
                     self.link_tag = tag
@@ -423,7 +434,7 @@ class ProjectionDOM(HTMLParser):
                     if self.cell is not None:
                         self.cell.setdefault("non_wiki_links", []).append(self.link)
                 return
-            target = query.get("title", [None])[0] or self.title
+            target = page_title or self.title
             if url.fragment:
                 target = target.split("#", 1)[0] + "#" + urllib.parse.unquote(url.fragment)
             name, separator, fragment = target.partition("#")
@@ -552,9 +563,9 @@ class RenderedRows(HTMLParser):
             elif tag == "br":
                 self.handle_data(" ")
             elif self.cell is not None and (tag == "a" or "selflink" in attrs.get("class", "")):
-                query = urllib.parse.parse_qs(urllib.parse.urlsplit(attrs.get("href", "")).query)
-                if query.get("title"):
-                    attrs["title"] = query["title"][0].replace("_", " ")
+                target = link_title(urllib.parse.urlsplit(attrs.get("href", "")))
+                if target:
+                    attrs["title"] = target.replace("_", " ")
                 if "selflink" in attrs.get("class", "") or attrs.get("href", "").startswith("#"):
                     attrs.setdefault("title", self.page_title)
                 self.link = {"attrs": attrs, "text": ""}
@@ -1328,6 +1339,7 @@ def smoke():
             if login.get("login", {}).get("result") != "Success":
                 raise RuntimeError("The freshly created administrator cannot log in.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+            smoke_urls(api, base, csrf, editor_password)
             api({
                 "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
             }, post=True, expected_error="uploaddisabled")

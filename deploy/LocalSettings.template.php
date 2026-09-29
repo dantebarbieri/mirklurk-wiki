@@ -10,13 +10,37 @@ $wgMetaNamespace = 'MirkLurk_Wiki';
 $wgServer = mirklurkServer();
 $wgCanonicalServer = $wgServer;
 $wgScriptPath = '';
-$wgArticlePath = '/index.php?title=$1';
+$wgArticlePath = '/w/$1';
 $wgLanguageCode = 'en';
 $wgEnableCanonicalServerLink = true;
 $wgSitemapNamespaces = [NS_MAIN, NS_CATEGORY];
 // Let authors opt articles out of indexing as well as category pages.
 $wgExemptFromUserRobotsControl = [];
 $wgHooks['OutputPageAfterGetHeadLinksArray'][] = MirklurkMetadata::class . '::onHeadLinks';
+
+// Core normalizes titles, but leaves already-normalized index.php views alone.
+$wgHooks['MediaWikiPerformAction'][] = static function (
+    \MediaWiki\Output\OutputPage $output,
+    \Article $article,
+    \MediaWiki\Title\Title $title,
+    \MediaWiki\User\User $user,
+    \MediaWiki\Request\WebRequest $request
+): bool {
+    $url = $request->getRequestURL();
+    if (!in_array($request->getMethod(), ['GET', 'HEAD'], true)
+        || parse_url($url, PHP_URL_PATH) !== '/index.php'
+        || !preg_match('/\A(?:title=[^&;]+(?:&action=view)?|action=view&title=[^&;]+)\z/',
+            parse_url($url, PHP_URL_QUERY) ?? '')
+        || $title->isSpecialPage() || $title->isExternal()
+        || $request->getRawVal('action', 'view') !== 'view'
+    ) {
+        return true;
+    }
+    // Keep wiki redirect pages as URLs, including their normal redirected-from notice.
+    $requestedTitle = $article->getRedirectedFrom() ?: $title;
+    $output->redirect($requestedTitle->getFullURL(), 301);
+    return false;
+};
 
 $logo = mirklurkImageUrl('MW_LOGO_URL');
 $logoIcon = mirklurkImageUrl('MW_LOGO_ICON_URL');

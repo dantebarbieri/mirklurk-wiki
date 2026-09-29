@@ -52,6 +52,9 @@ try {
     check($wgSitemapNamespaces === [0, 14], 'Only reader namespaces belong in the sitemap.');
     check($wgExemptFromUserRobotsControl === [], 'Articles must honor __NOINDEX__.');
     check($wgHooks['OutputPageAfterGetHeadLinksArray'] === ['MirklurkMetadata::onHeadLinks'], 'Metadata hook missing.');
+    check($wgCanonicalServer === $wgServer, 'Canonical URLs must use the runtime origin.');
+    check($wgScriptPath === '' && $wgArticlePath === '/w/$1', 'Only the article path should move.');
+    check(count($wgHooks['MediaWikiPerformAction']) === 1, 'Legacy view compatibility hook missing.');
     check($wgGroupPermissions['*']['read'] && $wgGroupPermissions['*']['createaccount'], 'Public access missing.');
     check(!$wgGroupPermissions['*']['edit'] && $wgGroupPermissions['user']['edit'], 'Editing policy mismatch.');
     check(!$wgEnableUploads && !$wgEnableEmail, 'Disabled functionality unexpectedly enabled.');
