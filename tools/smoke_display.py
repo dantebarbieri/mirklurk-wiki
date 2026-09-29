@@ -1,13 +1,112 @@
 """Real disposable MediaWiki/Scribunto checks; called only by smoke_deploy."""
 
 import copy
+import json
 import re
 import urllib.parse
 
 from sync_wiki import SyncError, fetch_live, sync
-from wiki_catalog import page_locations, primary_groups
+from wiki_catalog import page_locations, primary_groups, title_key
 from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, lua_string, page_namespace
 from wiki_render import image_for, merchant_table, pixel_geometry
+
+
+def check_parser_errors(rendered):
+    match = re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded|mw-broken-media|typeof="[^"]*mw:Error[^"]*mw:File', rendered)
+    if match:
+        raise RuntimeError("A canonical view produced a MediaWiki parser error, expansion limit, or missing image: "
+                           + rendered[max(0, match.start() - 120):match.end() + 400])
+
+
+def smoke_category_memberships(api, pages):
+    expected = {
+        title: {title_key(target) for target in re.findall(r"\[\[(Category:[^\]|]+)(?:\|[^\]]*)?\]\]", text)}
+        for title, text in pages.items()
+    }
+    titles = sorted(expected)
+    for start in range(0, len(titles), 50):
+        batch = titles[start:start + 50]
+        actual = {title: set() for title in batch}
+        seen = set()
+        continuation = {}
+        tokens = set()
+        for _ in range(100):
+            result = api({
+                "action": "query", "titles": "|".join(batch), "prop": "categories", "cllimit": "max",
+                **continuation,
+            })
+            for row in result["query"]["pages"].values():
+                title = title_key(row["title"])
+                namespace = page_namespace(title)
+                if title not in actual or "missing" in row or "invalid" in row or row["ns"] != namespace:
+                    raise RuntimeError(f"Category query returned a missing, unexpected or wrong-namespace page: {title}")
+                seen.add(title)
+                for category in row.get("categories", []):
+                    if category["ns"] != 14:
+                        raise RuntimeError(f"Category query returned a non-category membership for {title}.")
+                    actual[title].add(title_key(category["title"]))
+            if "continue" not in result:
+                break
+            continuation = result["continue"]
+            if (not isinstance(continuation, dict) or "clcontinue" not in continuation
+                    or not set(continuation) <= {"continue", "clcontinue"}
+                    or not all(isinstance(value, str) for value in continuation.values())):
+                raise RuntimeError("Category query returned invalid continuation parameters.")
+            token = tuple(sorted(continuation.items()))
+            if token in tokens:
+                raise RuntimeError("Category query repeated its continuation token.")
+            tokens.add(token)
+        else:
+            raise RuntimeError("Category query exceeded its 100-response continuation bound.")
+        if seen != set(batch):
+            raise RuntimeError(f"Category query omitted generated pages: {sorted(set(batch) - seen)}")
+        for title in batch:
+            if actual[title] != expected[title]:
+                if (actual[title] - expected[title]) & {
+                    "Category:Pages with script errors", "Category:Pages where template include size is exceeded"
+                }:
+                    result = api({"action": "parse", "page": title, "prop": "text|limitreportdata"})["parse"]
+                    print(title + " parser limits: " + json.dumps(result.get("limitreportdata", [])), flush=True)
+                    check_parser_errors(result["text"]["*"])
+                raise RuntimeError(
+                    f"Category membership mismatch for {title}: "
+                    f"missing={sorted(expected[title] - actual[title])}, extra={sorted(actual[title] - expected[title])}"
+                )
+    for title in titles:
+        if title != "Skills" and not title.startswith("Category:"):
+            continue
+        targets = {title_key(target) for target in re.findall(r"\[\[:(Category:[^\]|]+)(?:\|[^\]]*)?\]\]", pages[title])} - {title}
+        if not targets <= set(pages):
+            raise RuntimeError(f"Category browse links on {title} target pages outside the generated release.")
+        parsed = api({"action": "parse", "page": title, "prop": "links"})["parse"]
+        resolved = {title_key(link["*"]) for link in parsed["links"] if link["ns"] == 14 and "exists" in link}
+        if not targets <= resolved:
+            raise RuntimeError(f"Category browse links did not resolve on {title}: {sorted(targets - resolved)}")
+
+
+def smoke_editorial_release(api, pages):
+    from wiki_render import RETIRED_PAGES, validate_reader_text
+    for title, text in pages.items():
+        if title.startswith("Module:"):
+            continue
+        if text.startswith("#REDIRECT"):
+            target = re.fullmatch(r"#REDIRECT \[\[([^\]]+)\]\]\n", text)[1]
+            resolved = api({"action": "query", "titles": title, "redirects": "1"})["query"].get("redirects", [])
+            if not any(row["from"] == title and row["to"] == target for row in resolved):
+                raise RuntimeError(f"{title}: retirement or compatibility redirect did not resolve.")
+            continue
+        parsed = api({"action": "parse", "page": title, "prop": "text|links"})["parse"]
+        rendered = parsed["text"]["*"]
+        check_parser_errors(rendered)
+        validate_reader_text(title, rendered)
+        if any(link["*"] in RETIRED_PAGES for link in parsed["links"]):
+            raise RuntimeError(f"{title}: rendered link to retired research content.")
+    rendered = api({"action": "parse", "title": "Uncertainty smoke",
+                    "text": "Confirmed. Claim. {{Unverified}} Value: Unknown. Zero: 0.",
+                    "prop": "text"}, post=True)["parse"]["text"]["*"]
+    check_parser_errors(rendered)
+    if rendered.count("[unverified]") != 1 or 'title="This claim has not been confirmed."' not in rendered:
+        raise RuntimeError("The uncertainty marker did not render once with its short tooltip.")
 
 
 def smoke_display_install(publisher, pages):
