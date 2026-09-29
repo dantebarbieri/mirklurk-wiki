@@ -488,6 +488,9 @@ def markdown(report, api_url):
         f"### Wiki sync ({report['mode']})", "", f"{api_url} · `{report['summary']}`", "",
         "| Create | Update | Unchanged | Skipped (edited by a person) |", "| --- | --- | --- | --- |",
         f"| {counts['create']} | {counts['update']} | {counts['unchanged']} | {counts['skip']} |", "",
+        "**Operator-managed interface:** MediaWiki:Sidebar is not published by this sync. "
+        "Its reviewed artifact is `content/interface/Sidebar.wiki`; activation and updates require "
+        "operator review after Help:Editing is available. See `docs/PUBLISHING.md`.", "",
     ]
     if dry:
         lines += [f"{len(report['refresh'])} dependent pages would be re-rendered.", ""]
