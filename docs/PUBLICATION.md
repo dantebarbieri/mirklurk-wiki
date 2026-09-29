@@ -30,7 +30,7 @@ deliberately conservative about ordinary documentation: discussing a password
 file or a forbidden asset name is not itself a leak.
 
 The Docker build context has its own deny-by-default `.dockerignore`: only the
-five named runtime/build files are sent to Docker. Local game files, Git history,
+individually named runtime/build files are sent to Docker. Local game files, Git history,
 secrets, and research cannot be included by a broad `COPY .`.
 
 ## Before committing or pushing
@@ -70,6 +70,9 @@ recipe-input/source joins used to derive acquisition browsing without another
 stored dataset. `tests/test_catalog.py` has a 68 KiB cap, including native item-call assertions;
 `tools/smoke_deploy.py` has a 96 KiB cap for its reader, editor and landmark
 checks; `tools/sync_wiki.py` has a 32 KiB cap and `tests/test_sync.py` 40 KiB.
+`tools/smoke_urls.py` is separately bounded at 24 KiB for disposable HTTP/browser
+URL checks; `deploy/apache-short-urls.conf` is bounded at 4 KiB for the image's
+article-routing virtual host. Neither exception permits additional files.
 No private input, XML, measurement, artwork,
 or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
 20 KiB for metadata, rights, portrait preservation, seller projections and

@@ -3,8 +3,11 @@ FROM mediawiki:1.43.9@sha256:39a6503b8739f6aa58f8a458e9537258dd537f7cec7dd93c665
 COPY deploy/LocalSettings.template.php /var/www/html/LocalSettings.php
 COPY deploy/mirklurk-runtime.php /var/www/html/mirklurk-runtime.php
 COPY deploy/install.php deploy/healthcheck.php /usr/local/lib/mirklurk/
+COPY deploy/apache-short-urls.conf /etc/apache2/sites-available/000-default.conf
 
-RUN test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
+RUN a2enmod rewrite \
+    && apache2ctl -t \
+    && test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
     && test -f /var/www/html/extensions/ParserFunctions/extension.json \
     && test -f /var/www/html/extensions/Scribunto/extension.json \
     && test -f /var/www/html/skins/Vector/skin.json \
