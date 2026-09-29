@@ -6,6 +6,10 @@ edit API. There is no edit freeze, rehearsal, or manual approval step. Pages
 that a person edited on the wiki are skipped, never overwritten, unless a
 maintainer explicitly adopts them (see below).
 
+**Interface exception:** `MediaWiki:Sidebar` is operator-managed, not generated.
+Merging its reviewed artifact does **not** activate or update site navigation.
+The sync report always calls out this boundary; see [Native sidebar](#native-sidebar).
+
 ## From change to live
 
 **Lua rollout prerequisite:** the operator must separately approve and deploy
@@ -153,6 +157,69 @@ the edit stays in the page history.
 Image bytes never enter Git. When a run lists missing images, import the
 approved files on the server as described in [IMAGES.md](IMAGES.md); until
 then the page shows a red file link. Nothing else waits on images.
+
+## Native sidebar
+
+The single source for the proposed native menu is
+[`content/interface/Sidebar.wiki`](../content/interface/Sidebar.wiki).
+It replaces the external MediaWiki help link with **Editing help**, adds the
+existing Items, Bestiary, NPCs, Merchants, Crafting and Game mechanics hubs,
+and retains Main page, Random page, Recent changes, search, the native toolbox
+and language links. Crafting lists inventory crafting and workstations;
+Game mechanics covers survival, combat and progression. No game facts change.
+
+The artifact uses native `*` / `** target|label` sidebar syntax, internal
+titles and MediaWiki's standard main-page/random/recent-changes message keys.
+Do not replace them with a hostname or an `index.php` URL. Vector controls its
+own accessible desktop/mobile menu; no navigation JavaScript, custom CSS or
+per-article navigation template is required.
+
+### One-time activation and later updates
+
+**Dependency:** publish and verify the editing-help release's `Help:Editing`
+article **before activating** this sidebar. That separate release owns the
+article; this repository artifact does not create a placeholder help page.
+If the article is missing or skipped by its publisher, defer sidebar activation.
+The encyclopedia destinations are already canonical generated pages.
+
+1. Obtain separate operator approval. Use a trusted human session with the
+   `editinterface` right (normally an administrator) to edit `MediaWiki:Sidebar`.
+   Its wikitext does not require `editsitecss`, `editsitejs` or interface-admin
+   privileges. Do **not** expand the publication bot password's grants, add
+   interface rights to ordinary contributors, or add credentials to CI.
+2. Verify every destination above and `Help:Editing` exists on the target wiki.
+   Open `MediaWiki:Sidebar` and its history using the wiki's search/title UI.
+   Compare the live text and latest revision with the previously installed
+   artifact (or the default menu on first installation). Preserve local links
+   and useful human changes: review and port them to the artifact in a PR
+   before proceeding. A divergent human edit is a stop for review, not
+   permission to overwrite it.
+3. Open **Edit source** on that live revision, paste the approved artifact and
+   inspect **Show changes**. Save with a descriptive summary naming the reviewed
+   commit, not a `repo-sync:` summary. If another editor saves meanwhile,
+   resolve the normal MediaWiki edit conflict by reviewing the new revision;
+   never force a stale copy over it. Keep the prior revision ID for rollback.
+4. Check the actual anonymous Vector menu on both a wide and a narrow screen.
+   Open the collapsed main menu, follow each link, and use keyboard navigation
+   to reach Editing help. Confirm Recent changes and Special pages remain
+   available. Reload with browser caching disabled if the old menu is cached.
+   Record the installed commit and wiki revision in the operator change log.
+   To roll back, review subsequent human edits and undo only the operator's
+   sidebar revision through page history.
+
+The file is on the exact-file Git publication allowlist with a 2 KiB budget,
+but is deliberately absent from `build_pages()`, generated XML, and all sync
+create/update/refresh/adoption operations. `--adopt MediaWiki:Sidebar` is
+rejected. A successful publish job therefore says nothing about interface
+activation; the separate operator step above is required on **every** update.
+The normal human-edit skip and explicit adoption rules for articles are unchanged.
+
+CI installs the exact artifact only in its disposable localhost wiki and checks
+the native Vector links on desktop, mobile and mobile without JavaScript,
+including keyboard access. Until the editing-help release is present, that
+smoke uses a clearly synthetic `Help:Editing` target solely in the disposable
+database; it does not validate the future help article or satisfy the live
+activation dependency.
 
 ## Undoing a release
 

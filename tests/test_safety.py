@@ -146,6 +146,7 @@ class PublicationTests(unittest.TestCase):
             "content/images/Item-2.png", "content/pages/Item-2.png",
             "content/facts/illustrations-raw.json", "docs/Item-2.png", "private-images/Item-2.png",
             "Health-armor-1.png", "content/images/Health-armor-2.png", "tests/fixtures/Health-armor-3.png",
+            "content/interface/Common.js", "content/interface/Unreviewed.wiki",
         ]
         positives = sorted(ALLOWED_FILES)
         result = self.git(

@@ -6,6 +6,7 @@ import urllib.parse
 
 from wiki_render import image_for, pixel_image
 from smoke_responsive import smoke_responsive
+from smoke_navigation import smoke_navigation
 
 
 def smoke_browser(api, base, token, data, artifact_dir):
@@ -43,6 +44,7 @@ def smoke_browser(api, base, token, data, artifact_dir):
                                          ("mobile", {"width": 390, "height": 844}, 2)):
                 context = browser.new_context(viewport=viewport, device_scale_factor=dpr)
                 page = context.new_page()
+                smoke_navigation(page, api, base, folder, name)
                 page.goto(base + "/index.php?" + urllib.parse.urlencode({"title": title, "useskin": "vector-2022"}),
                           wait_until="networkidle")
                 if page.evaluate("mw.config.get('skin')") != "vector-2022":
@@ -145,8 +147,12 @@ def smoke_browser(api, base, token, data, artifact_dir):
                         page.locator("#Wares").scroll_into_view_if_needed()
                     page.screenshot(path=str(folder / (name + "-" + article.replace(" ", "-") + ".png")))
                 context.close()
+            context = browser.new_context(viewport={"width": 390, "height": 844}, java_script_enabled=False)
+            smoke_navigation(context.new_page(), api, base, folder, "mobile-no-js")
+            context.close()
         finally:
             browser.close()
     print("Vector browser: old baseline reproduced; centered 16px coins/item names, narrow wrapping, "
-          "3em health cells and real desktop/mobile articles passed.", flush=True)
+          "3em health cells and real desktop/mobile articles passed. Native sidebar links and keyboard "
+          "navigation passed on desktop, mobile and mobile without JavaScript.", flush=True)
     smoke_responsive(base, data, folder)
