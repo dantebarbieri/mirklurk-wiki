@@ -69,7 +69,7 @@ def record(variant="base", ap="2", stations="Prototype bench;Prototype camp", pr
 
 def query(where):
     return ("{{#cargo_query:tables=PrototypeRecords|fields=_pageName=Owner,Variant,Product,AP,Inputs,Requirement"
-            "|where=" + where + "|order by=_pageName,Variant|format=template|template=Prototype result"
+            "|where=" + where + "|order by=_pageName,Variant|format=template|template=Prototype result|named args=yes"
             "|default=No matching records.}}")
 
 

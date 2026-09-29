@@ -125,7 +125,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             page.locator("#wpTextbox1").fill(text)
             page.locator("#wpSummary").fill(summary)
             page.locator("#wpSave").click()
-            page.wait_for_function("mw.config.get('wgAction') === 'view'")
+            page.wait_for_function("window.mw?.config.get('wgAction') === 'view'")
             saved = revision(admin, title)
             assert saved["user"] == "TestEditor" and saved["comment"] == summary
             assert saved["slots"]["main"]["content"].strip() == text.strip()
@@ -164,7 +164,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             page.locator("#wpName1").fill("TestEditor")
             page.locator("#wpPassword1").fill(password)
             page.locator("#wpLoginAttempt").click()
-            page.wait_for_function("mw.config.get('wgUserName') === 'TestEditor'")
+            page.wait_for_function("window.mw?.config.get('wgUserName') === 'TestEditor'")
             text = "Synthetic author prose.\n\n" + record() + "\n\n" + record(
                 variant="rain", ap="3", stations="Prototype camp")
             source_save(OWNER, text, "Create two synthetic variants")
