@@ -1,11 +1,7 @@
 name: Disposable Cargo prototype
 
 on:
-  push:
-    branches: [dantebarbieri-beginner-friendly-wiki-editing]
-    paths:
-      - "tools/prototype_cargo*.py"
-      - ".github/workflows/cargo-prototype.yml"
+  workflow_call:
   workflow_dispatch:
 
 permissions:

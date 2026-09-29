@@ -6,6 +6,11 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      cargo_prototype:
+        description: "Run only the isolated synthetic Cargo experiment; never publish"
+        type: boolean
+        required: false
+        default: false
       adopt:
         description: "Pages a person edited that the sync may now replace (titles separated by |)"
         required: false
@@ -21,7 +26,11 @@ permissions:
   contents: read
 
 jobs:
+  cargo-prototype:
+    if: github.event_name == 'workflow_dispatch' && inputs.cargo_prototype
+    uses: ./.github/workflows/cargo-prototype.yml
   publication:
+    if: github.event_name != 'workflow_dispatch' || !inputs.cargo_prototype
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
@@ -81,7 +90,7 @@ jobs:
           fi
           python3 tools/sync_wiki.py
   publish:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && !inputs.cargo_prototype
     needs: [publication, docker-smoke]
     runs-on: ubuntu-24.04
     timeout-minutes: 60
