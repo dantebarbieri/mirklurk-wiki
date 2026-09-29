@@ -38,6 +38,7 @@ from smoke_display import (
     smoke_display_rendering, smoke_editorial_release, smoke_vendor_rows,
 )
 from smoke_browser import smoke_browser
+from smoke_metadata import smoke_metadata
 from smoke_navigation import install_sidebar_fixture
 from smoke_urls import smoke_urls
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
@@ -1362,6 +1363,7 @@ def smoke():
             # Only the installer's welcome page differs from the imported release.
             publish(baseline, "baseline", created=[], updated=["Main Page"], skipped=[])
             drain_jobs_bounded(run)
+            smoke_metadata(run, api, base, paths["MW_LOGO_ICON_URL"], drain_jobs_bounded, opener.open)
             install_sidebar_fixture(api, base, csrf)
             smoke_browser(api, base, csrf, data, os.environ.get("MIRKLURK_SMOKE_ARTIFACTS", workspace / "browser"))
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)

@@ -1,6 +1,8 @@
 <?php
 define('MEDIAWIKI', true);
 define('CACHE_DB', 1);
+define('NS_MAIN', 0);
+define('NS_CATEGORY', 14);
 $loaded = [];
 function wfLoadSkin(string $name): void {
     $GLOBALS['loaded'][] = $name;
@@ -46,6 +48,10 @@ try {
     check($wgLogo === '/upstream-logo.png' && $wgLogos === false, 'Unset branding must preserve upstream logos.');
     check($wgFavicon === '/favicon.ico', 'Unset branding must preserve the upstream favicon.');
     check($wgServer === 'https://wiki.example.invalid' && $wgCookieSecure, 'HTTPS configuration mismatch.');
+    check($wgEnableCanonicalServerLink === true, 'Native canonical links must be enabled.');
+    check($wgSitemapNamespaces === [0, 14], 'Only reader namespaces belong in the sitemap.');
+    check($wgExemptFromUserRobotsControl === [], 'Articles must honor __NOINDEX__.');
+    check($wgHooks['OutputPageAfterGetHeadLinksArray'] === ['MirklurkMetadata::onHeadLinks'], 'Metadata hook missing.');
     check($wgCanonicalServer === $wgServer, 'Canonical URLs must use the runtime origin.');
     check($wgScriptPath === '' && $wgArticlePath === '/w/$1', 'Only the article path should move.');
     check(count($wgHooks['MediaWikiPerformAction']) === 1, 'Legacy view compatibility hook missing.');

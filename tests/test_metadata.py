@@ -1,0 +1,66 @@
+import sys
+import unittest
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+from smoke_metadata import Head, check_head, import_fixtures, sitemap_locations, wait_for_http
+
+
+class MetadataAssertionsTests(unittest.TestCase):
+    @patch("smoke_metadata.time.sleep")
+    def test_restart_readiness_accepts_private_response_and_retries_resets(self, sleep):
+        read = Mock(side_effect=[ConnectionResetError(), (403, {}, b"Private wiki")])
+        wait_for_http(read)
+        self.assertEqual(read.call_count, 2)
+        sleep.assert_called_once_with(1)
+        with self.assertRaises(ConnectionResetError):
+            wait_for_http(Mock(side_effect=ConnectionResetError()))
+        with self.assertRaisesRegex(RuntimeError, "responsive"):
+            wait_for_http(Mock(return_value=(500, {}, b"Failed")))
+
+    def test_nonreader_fixtures_do_not_bypass_publication_namespaces(self):
+        run = Mock()
+        api = Mock(return_value={"query": {"tokens": {"csrftoken": "synthetic"}}})
+        import_fixtures(run, api, {"Article": "Lead.", "Category:Test": "Browse.",
+                                  "User:Test": "User.", "Talk:Test": "Talk.", "Template:Test": "Template."})
+        xml = run.call_args.kwargs["input_bytes"].decode()
+        self.assertIn("<title>Article</title>", xml)
+        for namespace in ("User", "Talk", "Template"):
+            self.assertNotIn(f"<title>{namespace}:Test</title>", xml)
+        self.assertEqual([call.args[0]["title"] for call in api.call_args_list[1:]],
+                         ["User:Test", "Talk:Test", "Template:Test"])
+
+    def test_html_entities_and_unicode(self):
+        head = Head('<html><head><link rel="canonical" href="https://wiki.example.invalid/?a=1&amp;b=2">'
+                    '<meta property="og:title" content="&quot;A&quot; &amp; caf\u00e9">'
+                    '</head><body><meta name="description" content="Not head"></body></html>')
+        self.assertEqual(head.canonicals, ["https://wiki.example.invalid/?a=1&b=2"])
+        self.assertEqual(head.meta, {"og:title": '"A" & caf\u00e9'})
+
+    def test_duplicate_and_leaked_metadata_fail(self):
+        with self.assertRaisesRegex(RuntimeError, "Duplicate"):
+            Head('<head><meta name="description"><meta name="description"></head>')
+        with self.assertRaisesRegex(RuntimeError, "leaked"):
+            check_head(Head('<head><meta property="og:url" content="/x"></head>'), None)
+        with self.assertRaisesRegex(RuntimeError, "noindex"):
+            check_head(Head("<head></head>"), None, noindex=True)
+
+    def test_native_sitemap_url_shapes(self):
+        origin = "http://localhost:8089"
+        for path in ("/index.php?title=A_%26_B", "/w/A_%26_B"):
+            xml = ('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+                   f"<url><loc>{origin}{path}</loc></url></urlset>")
+            self.assertEqual(sitemap_locations(xml, "urlset", origin), [origin + path])
+        for xml in (
+            "<urlset/>",
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"/>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            '<url><loc>https://wrong.example.invalid/w/Items</loc></url></urlset>',
+        ):
+            with self.assertRaises(RuntimeError):
+                sitemap_locations(xml, "urlset", origin)
+
+
+if __name__ == "__main__":
+    unittest.main()

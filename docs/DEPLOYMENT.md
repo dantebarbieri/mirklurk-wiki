@@ -280,6 +280,121 @@ Changing domains is an operator action: update `MW_SERVER_URL`, rebuild only
 if source changes, recreate the app, and handle redirects/TLS externally.
 Authored pages and the seed contain no deployment hostname.
 
+## Canonical URLs, descriptions and social sharing
+
+The image enables MediaWiki 1.43's native `$wgEnableCanonicalServerLink`.
+Core chooses article, redirect-target, historical-revision, history and info
+canonicals using its Title/config APIs. No hostname or article-path assumption
+is baked into metadata: the deployed-source `/w/$1` and the previous
+`/index.php?title=$1` both work with `MW_SERVER_URL`/`$wgCanonicalServer`.
+Core robots/noindex policies remain authoritative. Missing pages, special pages,
+nonarticle responses and unreadable pages have no canonical: core's generic
+fallback otherwise copies arbitrary request parameters into that tag.
+History/info retain their native action canonical; diffs, edit views and old
+revisions retain the native article canonical, but receive no social description.
+
+`mirklurk-metadata.php` is a small local output hook, not a third-party SEO
+extension. It runs after core has built the head, uses the existing canonical
+for `og:url`, and never writes user/request-derived data into a parser or shared
+cache. Only anonymous, current, indexable main/category wikitext article views
+receive Open Graph title, site, type and URL, plus a summary social card.
+Titles retain their original punctuation/Unicode; MediaWiki escapes attributes.
+Logged-in views, previews, old revisions, redirects shown with `redirect=no`,
+nonreader namespaces, errors and noindex views have no sharing tags.
+
+Descriptions follow the **live rendered lead**, including community edits and
+normal MediaWiki transclusion invalidation, not a generated-source manifest.
+Only direct visible lead paragraphs before the first heading are candidates;
+tables, navigation, images/captions, hidden content, reference/unverified markers,
+raw wiki markup and research/editorial caveats are excluded. A description uses
+at most 240 Unicode characters, preferring a complete paragraph or whole
+sentences rather than chopping words or bytes. If no suitable short lead exists,
+the description is omitted rather than invented. Improve the article lead
+through the ordinary editorial workflow; this runtime change edits no articles.
+
+`og:image` uses only the explicitly configured `MW_LOGO_ICON_URL`, expanded
+against the canonical origin. That setting already requires the operator's
+separately approved branding asset. With no configured icon there is no image
+tag; no game image is bundled, guessed, scraped or newly cleared for sharing.
+No analytics, external metadata service or search-engine account is involved.
+
+### Native sitemap generation and serving
+
+The bundled `generateSitemap` maintenance script owns database enumeration,
+Title URLs, timestamps, namespace splitting and XML escaping. The local
+`refresh-sitemap.php` wrapper only checks the reviewed public policy, stages and
+validates that output, and publishes it atomically. It selects namespaces
+**0 (articles) and 14 (categories)** via `$wgSitemapNamespaces` and passes
+`--skip-redirects`. It excludes missing pages, actions, special/user/talk/template/
+file/module pages and native `__NOINDEX__` page properties. The configuration
+sets `$wgExemptFromUserRobotsControl = []` so article authors can now use
+`__NOINDEX__` as well as category authors; it does not override existing noindex.
+
+Core 1.43's generator does **not** honor per-article/per-namespace config robot
+policies or private-wiki permissions. The wrapper therefore fails explicitly
+if reading is private, default robots differ from `index,follow`, any
+`$wgArticleRobotPolicies` exist, main/category namespace robot overrides exist,
+author noindex controls are exempted, or the sitemap namespace set changes.
+Do not bypass this guard by invoking the
+raw generator against served storage. New access-control extensions or indexing
+policies require a fresh integration review. Before making a public wiki private
+or restricting previously public titles, remove its published sitemap/index and
+cached copies first; a failed refresh deliberately preserves the previous index.
+
+Apache serves `/sitemap.xml` and uniquely named root-level `sitemap-*.xml`
+shards from `/var/lib/mirklurk-sitemap/public`, with XML content types,
+no directory listing and a five-minute public cache lifetime. Root-level shard
+URLs allow articles in either URL layout without sitemap directory-scope
+ambiguity. Staging and locks are outside the web root and have no public alias.
+The image does **not** run a refresh on startup or create a cron job.
+
+The dynamic `/robots.txt` endpoint adds `Sitemap: <MW_SERVER_URL>/sitemap.xml`
+and narrowly disallows API, REST, ResourceLoader and search endpoints. It does
+not disallow all of `/index.php` or `/w/`, nor block revision/action URLs needed
+for crawlers to see native noindex. It reads only validated origin configuration,
+never the Host header or request query. If the operator already serves robots at
+the proxy, preserve that policy and **append this Sitemap directive there**
+instead of replacing the policy; verify the final anonymous `/robots.txt`.
+
+### Authorized rollout and refresh
+
+Merging this PR only changes repository/runtime source. Content publishing does
+not rebuild/recreate the application or generate sitemaps. Separately authorize:
+
+1. Build the reviewed image and perform the normal backed-up runtime upgrade.
+   Ensure the proxy forwards `/robots.txt`, `/sitemap.xml`, and root
+   `/sitemap-*.xml` requests to Apache as well as the existing wiki endpoints.
+2. Provision a dedicated persistent volume at `/var/lib/mirklurk-sitemap`,
+   outside Git, with its root and `public` child owned by UID/GID 33 and mode
+   0755. Only this dedicated directory needs write access; do not change
+   ownership of shared parent paths. Without a mount the disposable image
+   directory works, but is lost on container recreation.
+3. Finish content publication and pending parser/link-update jobs. Then run
+   the following in the app's existing database/secret/network context, as
+   `www-data`, not root. It needs no administrator password, root database
+   credential, external service or expanded database grants.
+
+```sh
+docker compose exec --user www-data mirklurk \
+  php /var/www/html/maintenance/run.php /usr/local/lib/mirklurk/refresh-sitemap.php
+```
+
+4. Check exit status, anonymous robots/index/shard HTTP 200 responses and
+   canonical URLs, including an article with punctuation. A missing initial
+   sitemap is a real 404, not an empty success response. Check metadata on
+   Items, a redirect, an old revision and a noindex page.
+
+Repeat that exact command after content releases, URL/origin changes and
+significant live edits, or schedule it daily with the operator's existing job
+runner. Monitor nonzero exits and sitemap age. Refreshes are serialized by a
+nonblocking lock. New shards have unique names; only after all output is valid
+and readable is the index renamed on the same filesystem. Failures retain the
+old complete index. Keep previous shards for at least a day so cached/in-flight
+indexes resolve; periodically remove only old, unreferenced `sitemap-*.xml`
+files from the dedicated public directory. No runtime data belongs in Git.
+After an origin/path change refresh before crawler verification, invalidate
+old proxy caches if necessary, and keep old URL redirects as an operator task.
+
 ## Development only
 
 `deploy/compose.dev.yml` creates a separate development project, a private
@@ -321,6 +436,11 @@ randomly named Compose project with temporary generated credentials, then:
   the operator `importImages` path, then checks thumbnails and anonymous reads;
 - checks the configured Vector 2022 logo, legacy logo and PNG favicon against
   separate synthetic fixtures, including rendered markup and served bytes;
+- checks actual HTML head metadata for current, old, diff, history/info, edit,
+  redirect, missing, special, private and noindex views, escaping/Unicode and
+  live edits; generates and fetches native sitemap XML and robots discovery in
+  query-style regression and the actual Apache short-URL configuration, with loopback and custom
+  canonical origins, including preservation of the old index on refresh refusal;
 - imports the release and publishes it with `tools/sync_wiki.py`, exactly as
   the live publish job does. A second release changes a price owner and creates
   a page: the merchant and the linking page must show the result without

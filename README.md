@@ -247,6 +247,13 @@ The [site logo and PNG favicon](docs/DEPLOYMENT.md#site-logo-and-favicon) likewi
 use separately approved server-only images and optional runtime settings,
 not assets bundled in Git or the application image.
 
+The runtime also supplies native canonical links and an operator-refreshed
+MediaWiki sitemap, with safe descriptions and social previews from live article
+leads. URLs follow runtime configuration, and optional preview artwork uses only
+the separately approved site icon. See the [metadata rollout and refresh
+contract](docs/DEPLOYMENT.md#canonical-urls-descriptions-and-social-sharing);
+content publication alone does not deploy these features.
+
 The hostname is supplied at runtime. This repository does not configure DNS,
 certificates, a reverse proxy, a homeserver, or any existing credentials.
 Development Compose binds only to loopback and is **not** a production stack.
