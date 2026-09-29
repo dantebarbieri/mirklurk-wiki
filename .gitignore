@@ -64,6 +64,7 @@
 !/tools/wiki_display.py
 !/tools/smoke_display.py
 !/tools/smoke_browser.py
+!/tools/smoke_responsive.py
 !/tools/smoke_navigation.py
 !/tools/smoke_urls.py
 !/tools/wiki_acquisition.py

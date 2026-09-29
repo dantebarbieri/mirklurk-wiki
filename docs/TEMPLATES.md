@@ -219,6 +219,46 @@ registry or Lua sizing policy. Coins use the 20px budget (16px native display);
 shields use the 32px budget (2x native display). Both use original uploads,
 integer-native zoom and no thumbnail/srcset. Image bytes stay outside Git.
 
+### Narrow-screen tables and figures
+
+Wide content scrolls within its own named, keyboard-focusable region instead
+of shrinking sprites/cells or widening the whole page. Tab to the region, use
+the arrow keys, then Tab onward to its links or the next control; touch readers
+can swipe horizontally. Native table captions, headers and cells remain intact,
+including coordinate labels/tooltips, holes and occupied zero-range cells.
+No JavaScript is needed. Coins still wrap between denominations and long item
+labels still wrap beside their integer-native icons.
+
+Generated **article source** wraps each table outside its table markup:
+
+```html
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+<table class="wikitable">
+<!-- Existing headers and Recipe row / Ware row calls stay here. -->
+</table>
+</div>
+```
+
+Wiki-syntax `{|` / `|}` tables use the same outer block. For whole-table views
+(such as merchant offers), keep wrapper and table together inside the existing
+owner-level `onlyinclude`/view selector. Recipe views expose **rows only**:
+their wrapper and table remain outside the row-level `onlyinclude` blocks so
+workstations can enclose the transcluded rows in their own table and wrapper.
+Do not put divs inside a row or change recipe/seller filters. These are ordinary
+editable article blocks, not a new template or content model.
+Ordinary table scrollers use `role="group"`, not a repeated generic region
+landmark; the surrounding headings and native table headers supply context.
+MediaWiki's `noresize` class keeps the nested table as `display:table` on
+phones; the focusable wrapper owns scrolling instead of an inner block table.
+Illustrations retain `class="pixel-art-figure"` with the same scroll attributes
+and their existing caption as the accessible name. The image formatter is
+unchanged and no global media width rule is applied.
+
+Health/attack wrappers are **rendered Lua output**, labeled with the existing
+grid name; authors still edit only their `{{Health grid|...}}` or
+`{{Attack grid|...}}` invocation. The runtime separately enables Vector's
+device-width viewport; see [the two-part rollout](DEPLOYMENT.md#responsive-vector-2022).
+
 ## Runtime and publishing
 
 Before any rollout, an operator must separately authorize, rebuild and deploy

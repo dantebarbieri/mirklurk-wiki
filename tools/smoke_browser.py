@@ -5,6 +5,7 @@ from pathlib import Path
 import urllib.parse
 
 from wiki_render import image_for, pixel_image
+from smoke_responsive import smoke_responsive
 from smoke_navigation import smoke_navigation
 
 
@@ -154,3 +155,4 @@ def smoke_browser(api, base, token, data, artifact_dir):
     print("Vector browser: old baseline reproduced; centered 16px coins/item names, narrow wrapping, "
           "3em health cells and real desktop/mobile articles passed. Native sidebar links and keyboard "
           "navigation passed on desktop, mobile and mobile without JavaScript.", flush=True)
+    smoke_responsive(base, data, folder)

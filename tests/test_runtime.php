@@ -65,6 +65,8 @@ try {
     check(in_array('ParserFunctions', $loaded, true), 'Selective canonical views require ParserFunctions.');
     check(in_array('Scribunto', $loaded, true), 'Native display templates require Scribunto.');
     check($wgScribuntoDefaultEngine === 'luastandalone', 'Use the bundled bounded Lua standalone engine.');
+    check($wgDefaultSkin === 'vector-2022' && $wgVectorResponsive === true,
+        'Vector 2022 must use a device-width viewport, not its fixed desktop fallback.');
 
     putenv('MW_FAVICON_URL=/images/d/d3/MirkLurk-favicon.png');
     require __DIR__ . '/../deploy/LocalSettings.template.php';
