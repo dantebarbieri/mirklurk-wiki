@@ -46,6 +46,9 @@ try {
     check($wgLogo === '/upstream-logo.png' && $wgLogos === false, 'Unset branding must preserve upstream logos.');
     check($wgFavicon === '/favicon.ico', 'Unset branding must preserve the upstream favicon.');
     check($wgServer === 'https://wiki.example.invalid' && $wgCookieSecure, 'HTTPS configuration mismatch.');
+    check($wgCanonicalServer === $wgServer, 'Canonical URLs must use the runtime origin.');
+    check($wgScriptPath === '' && $wgArticlePath === '/w/$1', 'Only the article path should move.');
+    check(count($wgHooks['MediaWikiPerformAction']) === 1, 'Legacy view compatibility hook missing.');
     check($wgGroupPermissions['*']['read'] && $wgGroupPermissions['*']['createaccount'], 'Public access missing.');
     check(!$wgGroupPermissions['*']['edit'] && $wgGroupPermissions['user']['edit'], 'Editing policy mismatch.');
     check(!$wgEnableUploads && !$wgEnableEmail, 'Disabled functionality unexpectedly enabled.');
