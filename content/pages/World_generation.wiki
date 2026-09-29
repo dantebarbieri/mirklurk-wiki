@@ -24,7 +24,7 @@ New worlds contain two or three Broken Fens and at least one Drowned Fen. These 
 == Finding NPCs ==
 See each character's page for directions, exterior pictures and access requirements.
 
-<div class="mirklurk-scroll" role="region" tabindex="0" aria-label="Finding NPCs (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+<div class="mirklurk-scroll" role="group" tabindex="0" aria-label="Finding NPCs (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
 ! Character !! Finding their location
 |-

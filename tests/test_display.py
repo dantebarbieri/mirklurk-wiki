@@ -104,7 +104,7 @@ class DisplayTests(unittest.TestCase):
 
     def test_scroll_wrappers_keep_tables_and_selective_views_native(self):
         opening = scroll_open()
-        self.assertIn('role="region" tabindex="0" aria-label="Table (scroll horizontally)"', opening)
+        self.assertIn('role="group" tabindex="0" aria-label="Table (scroll horizontally)"', opening)
         self.assertIn('style="max-width:100%;overflow-x:auto;"', opening)
         self.assertIn('aria-label="A &quot;quote&quot; &amp; &lt;tag&gt; (scroll horizontally)"',
                       scroll_open('A "quote" & <tag>'))
@@ -124,6 +124,8 @@ class DisplayTests(unittest.TestCase):
         self.assertNotIn('class="mirklurk-scroll"', self.pages["Template:Recipe row"])
         self.assertNotIn('class="mirklurk-scroll"', self.pages["Template:Ware row"])
         self.assertIn(":attr('tabindex', '0')", self.pages["Module:Display"])
+        self.assertIn('aria-label="Magus Clay&#x27;s alchemy workstation in the fort&#x27;s basement. '
+                      '(scroll horizontally)"', self.pages["Alchemy workstation"])
 
     def test_creature_lookup_and_existing_lists_use_reviewed_classifications_and_art(self):
         locations = page_locations(self.data, self.catalog)

@@ -165,7 +165,7 @@ def illustration_markup(image, width=224, caption=None, marker=True):
     text = anchor("illustration", image["id"]) if marker else ""
     if image["rights_status"] == "approved":
         label = image_caption(image) if caption is None else caption
-        return (text + "\n" + scroll_open("Illustration", "pixel-art-figure")
+        return (text + "\n" + scroll_open(label, "pixel-art-figure")
                 + pixel_image(image, width=width, alt=label) + "</div>\n"
                 + '<div class="pixel-art-caption">' + literal(label) + "</div>\n")
     return text + "\n"

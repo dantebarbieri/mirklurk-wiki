@@ -80,7 +80,7 @@ def check_layout(result, width, assets):
     if result["font"] < 14:
         raise RuntimeError("Responsive content was made unreadably small.")
     for region in result["regions"]:
-        if (region["tabindex"] != "0" or region["role"] != "region" or not region["label"]
+        if (region["tabindex"] != "0" or region["role"] not in {"region", "group"} or not region["label"]
                 or region["overflow"] != "auto" or region["box"]["right"] > width + 1):
             raise RuntimeError("A local scroll container lost its bounds or accessible keyboard contract.")
     if any(not t["wrapped"] or t["display"] != "table" for t in result["tables"]):
@@ -176,13 +176,22 @@ def smoke_responsive(base, data, artifact_dir):
                                               java_script_enabled=javascript)
                 page = context.new_page()
                 for article in ARTICLES:
+                    print(f"Responsive {name}: loading {article}", flush=True)
                     page.goto(base + "/index.php?" + urllib.parse.urlencode({
                         "title": article, "useskin": "vector-2022",
                     }), wait_until="networkidle")
-                    page.evaluate("""async () => {
-                        await document.fonts.ready;
-                        await Promise.all([...document.images].map(i => i.decode()));
+                    page.evaluate("""() => {
+                        const images=[...document.images];
+                        images.forEach(i => { i.loading='eager'; });
+                        return Promise.race([
+                            Promise.all([document.fonts.ready, ...images.map(i => i.decode())]),
+                            new Promise((_, reject) => setTimeout(() => reject(new Error(
+                                'Font/image readiness timed out; pending images: ' +
+                                images.filter(i => !i.complete).map(i => i.currentSrc || i.src).join(', ')
+                            )), 15000))
+                        ]);
                     }""")
+                    print(f"Responsive {name}: measuring {article}", flush=True)
                     result = measure(page)
                     semantics = result.pop("semantics")
                     result["semanticHash"] = hashlib.sha256(json.dumps(semantics, sort_keys=True).encode()).hexdigest()

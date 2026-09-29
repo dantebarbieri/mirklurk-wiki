@@ -232,20 +232,24 @@ labels still wrap beside their integer-native icons.
 Generated **article source** wraps each table outside its table markup:
 
 ```html
-<div class="mirklurk-scroll" role="region" tabindex="0" aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+<div class="mirklurk-scroll" role="group" tabindex="0" aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 <table class="wikitable">
 <!-- Existing headers and Recipe row / Ware row calls stay here. -->
 </table>
 </div>
 ```
 
-Wiki-syntax `{|` / `|}` tables use the same outer block. Keep the wrapper and
-table together inside any owner-level `onlyinclude`/view selector; do not put
-divs inside a row or alter the recipe/seller filters. Workstation tables wrap
-the transcluded recipe rows, not each individual row. These are ordinary
+Wiki-syntax `{|` / `|}` tables use the same outer block. For whole-table views
+(such as merchant offers), keep wrapper and table together inside the existing
+owner-level `onlyinclude`/view selector. Recipe views expose **rows only**:
+their wrapper and table remain outside the row-level `onlyinclude` blocks so
+workstations can enclose the transcluded rows in their own table and wrapper.
+Do not put divs inside a row or change recipe/seller filters. These are ordinary
 editable article blocks, not a new template or content model.
+Ordinary table scrollers use `role="group"`, not a repeated generic region
+landmark; the surrounding headings and native table headers supply context.
 Illustrations retain `class="pixel-art-figure"` with the same scroll attributes
-and the label `Illustration (scroll horizontally)`. The image formatter is
+and their existing caption as the accessible name. The image formatter is
 unchanged and no global media width rule is applied.
 
 Health/attack wrappers are **rendered Lua output**, labeled with the existing

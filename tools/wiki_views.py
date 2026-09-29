@@ -12,7 +12,7 @@ VIEW_SELECTOR = "{{{view|<noinclude>page</noinclude>}}}"
 
 def scroll_open(label="Table", css_class="mirklurk-scroll"):
     return (
-        '<div class="' + html.escape(css_class, quote=True) + '" role="region" tabindex="0" aria-label="'
+        '<div class="' + html.escape(css_class, quote=True) + '" role="group" tabindex="0" aria-label="'
         + html.escape(label + " (scroll horizontally)", quote=True)
         + '" style="max-width:100%;overflow-x:auto;">\n'
     )
