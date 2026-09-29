@@ -15,7 +15,7 @@ from wiki_views import filtered_row, html_table, selective_view
 SIMPLE = "User:TestEditor/Visual editor smoke"
 OWNER = "Editor fixture/Owner"
 MERCHANT = "Editor fixture/Merchant"
-SCROLL = ('<div class="mirklurk-scroll" role="group" tabindex="0" '
+SCROLL = ('<div class="mirklurk-scroll noresize" role="group" tabindex="0" '
           'aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">\n')
 
 
@@ -143,13 +143,14 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 raise RuntimeError("Disposable browser API HTTP request failed.")
             return response.json()
 
-        def open_editor(title, first_edit=False):
+        def open_editor(title):
             page.goto(base + "/w/" + urllib.parse.quote(title.replace(" ", "_"), safe=":"), wait_until="networkidle")
             if page.locator("#ca-edit a").inner_text() != "Edit source":
                 raise RuntimeError("Logged-in source editing is not discoverable.")
             page.locator("#ca-ve-edit a").click()
             page.wait_for_function("window.ve?.init?.target?.active && ve.init.target.getSurface()")
-            if first_edit:
+            page.wait_for_function("ve.init.target.welcomeDialogPromise")
+            if page.evaluate("Boolean(ve.init.target.welcomeDialog)"):
                 page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
             page.wait_for_function("ve.init.target.active && !ve.init.target.activating && !ve.init.target.welcomeDialog")
             page.locator(".ve-ce-documentNode").wait_for(state="visible")
@@ -198,7 +199,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             if "edit" not in user["rights"] or "sysop" in user["groups"] or "bot" in user["groups"]:
                 raise RuntimeError("Browser editing must use an ordinary self-registered account.")
 
-            open_editor(SIMPLE, first_edit=True)
+            open_editor(SIMPLE)
             page.locator(".ve-ce-documentNode .ve-ce-mwTransclusionNode").first.click()
             page.locator(".ve-ui-mwTransclusionContextItem").get_by_role("button", name="Edit", exact=True).click()
             dialog = page.locator(".ve-ui-mwTemplateDialog")
