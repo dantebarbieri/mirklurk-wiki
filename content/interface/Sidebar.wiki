@@ -1,0 +1,15 @@
+* navigation
+** mainpage|mainpage-description
+** Items|Items
+** Bestiary|Bestiary
+** NPCs|NPCs
+** Merchants|Merchants
+** Crafting|Crafting and workstations
+** Game mechanics|Survival and game mechanics
+** randompage-url|randompage
+* Contribute
+** Help:Editing|Editing help
+** recentchanges-url|recentchanges
+* SEARCH
+* TOOLBOX
+* LANGUAGES
