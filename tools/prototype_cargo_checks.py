@@ -110,6 +110,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
         page = context.new_page()
         page.set_default_timeout(45000)
         last_save = 0
+        welcome_handled = False
 
         def edit_delay():
             nonlocal last_save
@@ -120,8 +121,12 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             return base + "/index.php?" + urllib.parse.urlencode({"title": title, **params})
 
         def source_save(title, text, summary):
+            nonlocal welcome_handled
             edit_delay()
             page.goto(url(title, action="edit"), wait_until="networkidle")
+            if not welcome_handled:
+                page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
+                welcome_handled = True
             page.locator("#wpTextbox1").fill(text)
             page.locator("#wpSummary").fill(summary)
             page.locator("#wpSave").click()
