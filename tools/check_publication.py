@@ -56,6 +56,8 @@ ALLOWED_FILES = {
     "tools/prototype_cargo_checks.py": 24 * 1024,
     "tools/prototype_cargo_fixtures.py": 8 * 1024,
     "tools/prototype_cargo_hooks.php": 12 * 1024,
+    "tools/prototype_cargo_magic.php": 2 * 1024,
+    "tools/prototype_cargo_gui.py": 8 * 1024,
     "tools/smoke_urls.py": 24 * 1024,
     "tools/wiki_acquisition.py": 16 * 1024,
     "tools/build_wiki.py": 32 * 1024,

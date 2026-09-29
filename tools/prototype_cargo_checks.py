@@ -238,6 +238,9 @@ def exercise(admin, base, password, maintenance, report, artifacts, integrated=F
             assert source(admin, OWNER).strip() == expected, source(admin, OWNER)
             assert [r["AP"] for r in rows(admin) if r["Variant"] == "base"] == ["8"]
             report["checks"]["second_visual_save_no_source_churn"] = True
+            if integrated:
+                from prototype_cargo_gui import exercise_gui
+                exercise_gui(admin, page, open_visual, save_visual, freshness, reader_query, report, artifacts)
 
             # GUI preview, unsaved visual draft and anonymous arbitrary parsing must not store facts.
             snapshot = rows(admin)
@@ -374,7 +377,7 @@ def exercise(admin, base, password, maintenance, report, artifacts, integrated=F
                     value["after_jobs"] for event in report["cache"] for value in event["readers"].values()),
                 "lifecycle_without_rebuild": not (report.get("move_rebuild_required")
                                                  or report.get("restore_rebuild_required")),
-                "native_add_remove_gui_proved": False,
+                "native_add_remove_gui_proved": bool(report["checks"].get("native_gui_add_variant_remove_last_record")),
                 "raw_owner_transclusion_safe": False,
             }
         except Exception:

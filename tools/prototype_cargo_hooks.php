@@ -94,7 +94,11 @@ final class PrototypeCargoRestoreJob extends Job {
                 PrototypeCargo::queueRefresh();
                 return true;
             }
-            $revision = $page->getRevisionRecord();
+            $latestId = (int)$db->selectField('page', 'page_latest', ['page_id' => $pageId], __METHOD__);
+            $revision = $services->getRevisionStore()->getRevisionById($latestId);
+            if (!$revision) {
+                throw new RuntimeException('Current restored revision could not be read.');
+            }
             $content = $revision->getContent('main');
             if ($content->getModel() !== CONTENT_MODEL_WIKITEXT) {
                 return true;
@@ -121,6 +125,7 @@ final class PrototypeCargoRestoreJob extends Job {
 }
 
 $wgHooks['ParserFirstCallInit'][] = [PrototypeCargo::class, 'register'];
+$wgExtensionMessagesFiles['PrototypeCargo'] = __DIR__ . '/prototype_cargo_magic.php';
 $wgHooks['LinksUpdateComplete'][] = [PrototypeCargo::class, 'linksComplete'];
 $wgHooks['PageUndeleteComplete'][] = [PrototypeCargo::class, 'restored'];
 $wgHooks['PageMoveComplete'][] = [PrototypeCargo::class, 'moved'];

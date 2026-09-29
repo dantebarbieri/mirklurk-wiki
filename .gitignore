@@ -69,6 +69,8 @@
 !/tools/prototype_cargo_checks.py
 !/tools/prototype_cargo_fixtures.py
 !/tools/prototype_cargo_hooks.php
+!/tools/prototype_cargo_magic.php
+!/tools/prototype_cargo_gui.py
 !/tools/smoke_urls.py
 !/tools/wiki_acquisition.py
 !/tools/build_wiki.py
