@@ -232,7 +232,7 @@ labels still wrap beside their integer-native icons.
 Generated **article source** wraps each table outside its table markup:
 
 ```html
-<div class="mirklurk-scroll" role="group" tabindex="0" aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 <table class="wikitable">
 <!-- Existing headers and Recipe row / Ware row calls stay here. -->
 </table>
@@ -248,6 +248,8 @@ Do not put divs inside a row or change recipe/seller filters. These are ordinary
 editable article blocks, not a new template or content model.
 Ordinary table scrollers use `role="group"`, not a repeated generic region
 landmark; the surrounding headings and native table headers supply context.
+MediaWiki's `noresize` class keeps the nested table as `display:table` on
+phones; the focusable wrapper owns scrolling instead of an inner block table.
 Illustrations retain `class="pixel-art-figure"` with the same scroll attributes
 and their existing caption as the accessible name. The image formatter is
 unchanged and no global media width rule is applied.

@@ -116,13 +116,13 @@ class DisplayTests(unittest.TestCase):
         self.assertIn("=" + table + "|#default=}}</onlyinclude>", selective_view(table, "wares"))
         for title in ("Items", "Iron Hand Axe", "Gurb-Gurb", "Alchemy workstation", "World generation"):
             text = self.pages[title]
-            self.assertIn('class="mirklurk-scroll"', text, title)
-            self.assertEqual(text.count('class="mirklurk-scroll"'),
+            self.assertIn('class="mirklurk-scroll noresize"', text, title)
+            self.assertEqual(text.count('class="mirklurk-scroll noresize"'),
                              text.count('<table class="wikitable">') + text.count('{| class="wikitable"'), title)
         self.assertIn('<table class="wikitable">\n<tr>', self.pages["Alchemy workstation"])
         self.assertIn("{{:Simple Burn Remedy|view=recipes|station=alchemy-workstation}}", self.pages["Alchemy workstation"])
-        self.assertNotIn('class="mirklurk-scroll"', self.pages["Template:Recipe row"])
-        self.assertNotIn('class="mirklurk-scroll"', self.pages["Template:Ware row"])
+        self.assertNotIn('class="mirklurk-scroll', self.pages["Template:Recipe row"])
+        self.assertNotIn('class="mirklurk-scroll', self.pages["Template:Ware row"])
         self.assertIn(":attr('tabindex', '0')", self.pages["Module:Display"])
         self.assertIn('aria-label="Magus Clay&#x27;s alchemy workstation in the fort&#x27;s basement. '
                       '(scroll horizontally)"', self.pages["Alchemy workstation"])

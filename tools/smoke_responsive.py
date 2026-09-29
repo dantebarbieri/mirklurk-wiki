@@ -243,7 +243,8 @@ def smoke_responsive(base, data, artifact_dir):
                             page.screenshot(path=str(folder / (name + "-responsive-" + article.replace(" ", "-") + ".png")))
                         if name == "desktop" and article == "Scaal":
                             page.set_viewport_size({"width": 320, "height": 900})
-                            check_layout(measure(page), 320, assets)
+                            record["resizedPhone"] = measure(page)
+                            check_layout(record["resizedPhone"], 320, assets)
                             page.set_viewport_size({"width": width, "height": 900})
                             restored = measure(page)
                             check_layout(restored, width, assets)
