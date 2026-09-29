@@ -55,9 +55,9 @@ def exercise(admin, base, password, maintenance, report, artifacts):
 
     def jobs():
         before = maintenance("showJobs").strip()
-        maintenance("runJobs", "--maxjobs", "500", "--maxtime", "60")
+        output = maintenance("runJobs", "--maxjobs", "500", "--maxtime", "60")
         after = maintenance("showJobs").strip()
-        return {"before": before, "after": after}
+        return {"before": before, "after": after, "output": output[-2000:]}
 
     def recreate():
         start = time.monotonic()
@@ -127,10 +127,14 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert saved["slots"]["main"]["content"].strip() == text.strip()
             return saved
 
-        def open_visual(title):
-            page.goto(url(title), wait_until="networkidle")
-            page.locator("#ca-ve-edit a").click()
+        def open_visual(title, entry=None):
+            if entry is None:
+                page.goto(url(title), wait_until="networkidle")
+                page.locator("#ca-ve-edit a").click()
+            else:
+                entry.click()
             page.wait_for_function("window.ve?.init?.target?.active && ve.init.target.getSurface()")
+            assert page.evaluate("mw.config.get('wgPageName')") == title.replace(" ", "_")
             page.wait_for_function("Boolean(ve.init.target.welcomeDialogPromise)")
             if page.evaluate("Boolean(ve.init.target.welcomeDialog)"):
                 page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
@@ -179,7 +183,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             data_link = page.locator(".prototype-result").get_by_role("link", name="Edit data", exact=True).first
             assert urllib.parse.parse_qs(urllib.parse.urlsplit(data_link.get_attribute("href")).query)["veaction"] == ["edit"]
             before = revision(admin, OWNER)
-            open_visual(OWNER)
+            open_visual(OWNER, entry=data_link)
             dialog = select_record()
             assert dialog.get_by_label("Ingredients and quantities", exact=True).input_value().count("\n") == 4
             assert not dialog.get_by_label(re.compile("routing|selector|filter", re.I)).count()
@@ -225,7 +229,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             page.goto(url(OWNER), wait_until="networkidle")
             anonymous = Api(base + "/api.php")
             anonymous.call({"action": "parse", "title": OWNER, "text": record(ap="97"), "prop": "text"}, post=True)
-            admin.call({"action": "parse", "page": OWNER, "oldid": before["revid"], "prop": "text"})
+            admin.call({"action": "parse", "oldid": before["revid"], "prop": "text"})
             assert rows(admin) == snapshot and revision(admin, OWNER) == before
             report["checks"]["preview_visual_draft_anonymous_parse_no_writes"] = True
 
