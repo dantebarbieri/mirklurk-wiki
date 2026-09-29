@@ -10,13 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from build_wiki import EXPORT_NS, build_xml, existing_titles
-from smoke_editing import MERCHANT, OWNER, SCROLL, editor_fixtures
+from smoke_editing import MERCHANT, OWNER, RECIPE_SHELL, SCROLL, WRAPPED_OWNER, editor_fixtures
 from sync_wiki import SyncError, fetch_live, sync
 from test_sync import FakeWiki, edits, logged_in
 from wiki_data import DataError, title_key
 from wiki_details import load_publication_inputs
 from wiki_display import DISPLAY_FILES, content_model, page_namespace
 from wiki_render import build_pages
+from wiki_views import available_views
 
 
 class EditingTests(unittest.TestCase):
@@ -114,6 +115,15 @@ class EditingTests(unittest.TestCase):
         self.assertIn("{{Recipe row", fixtures[OWNER])
         self.assertIn("|price=<noinclude>{{:" + OWNER + "}}</noinclude>", fixtures[MERCHANT])
         self.assertIn('<noinclude><th scope="col">Price</th></noinclude>', fixtures[MERCHANT])
+
+    def test_synthetic_shell_keeps_facts_and_views_on_the_owner(self):
+        fixtures = editor_fixtures()
+        self.assertEqual(available_views(fixtures[WRAPPED_OWNER]), available_views(fixtures[OWNER]))
+        self.assertNotIn("<table", fixtures[WRAPPED_OWNER])
+        self.assertNotIn("<onlyinclude>", fixtures[RECIPE_SHELL])
+        self.assertIn("{{Recipe row", fixtures[WRAPPED_OWNER])
+        self.assertNotIn("{{Recipe row", fixtures[RECIPE_SHELL])
+        self.assertIn("|rows={{#switch:{{{station|}}}", fixtures[WRAPPED_OWNER])
 
 
 if __name__ == "__main__":

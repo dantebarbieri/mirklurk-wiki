@@ -10,12 +10,14 @@ from pathlib import Path
 
 from smoke_display import check_parser_errors
 from wiki_display import DISPLAY_FILES
-from wiki_views import filtered_row, html_table, selective_view
+from wiki_views import VIEW_SELECTOR, filtered_row, html_table, selective_view
 
 
 SIMPLE = "User:TestEditor/Visual editor smoke"
 OWNER = "Editor fixture/Owner"
 MERCHANT = "Editor fixture/Merchant"
+WRAPPED_OWNER = "Editor fixture/Wrapped owner"
+RECIPE_SHELL = "Template:Editor recipe shell"
 SCROLL = ('<div class="mirklurk-scroll noresize" role="group" tabindex="0" '
           'aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">\n')
 
@@ -33,6 +35,13 @@ def editor_fixtures():
     wares = SCROLL + html_table(
         ["Seller", "Item", "Price"], [filtered_row(ware, "item", ["Iron Hand Axe"])], normal_only=(2,),
     ) + "</div>\n"
+    shell = SCROLL + html_table(
+        ["Inputs", "Output", "Method", "Cost", "Conditions"], ["{{{rows|}}}"],
+    ) + "</div>\n"
+    wrapped_recipe = selective_view(
+        "{{Editor recipe shell|view=" + VIEW_SELECTOR
+        + "|rows=" + filtered_row(recipe, "station", ["Synthetic station"]) + "}}", "recipes",
+    )
     return {
         SIMPLE: ("Synthetic editor introduction.\n\n{{Item|Plant Fiber|quantity=4}}\n\n{{Creature|Sceetler}}"
                  "\n\n{{Coins|1234}}\n\n{{Health grid|0,1,0;1,4,1;0,1,0}}"
@@ -42,6 +51,11 @@ def editor_fixtures():
                 + selective_view("{{Coins|1234}}", "price", True)
                 + "\n\n== Recipe ==\n" + recipes + "\n"),
         MERCHANT: "Synthetic merchant introduction.\n\n" + selective_view(wares, "sellers") + "\n",
+        RECIPE_SHELL: "<includeonly>{{#ifeq:{{{view|}}}|page|" + shell
+                      + "|{{{rows|}}}}}</includeonly>\n",
+        WRAPPED_OWNER: ("Synthetic wrapped-owner introduction.\n\n== Price ==\n"
+                        + selective_view("{{Coins|1234}}", "price", True)
+                        + "\n\n== Recipe ==\n" + wrapped_recipe + "\n"),
     }
 
 
@@ -55,21 +69,21 @@ def source(api, title):
     return revision(api, title)["slots"]["main"]["*"]
 
 
-def projections(api):
+def projections(api, owner=OWNER):
     views = {
-        "price": "{{:" + OWNER + "}}",
-        "named price": "{{:" + OWNER + "|view=price}}",
+        "price": "{{:" + owner + "}}",
+        "named price": "{{:" + owner + "|view=price}}",
         "recipe": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
-                                     ["{{:" + OWNER + "|view=recipes|station=Synthetic station}}"]) + "</div>",
+                                     ["{{:" + owner + "|view=recipes|station=Synthetic station}}"]) + "</div>",
         "all recipes": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
-                                          ["{{:" + OWNER + "|view=recipes}}"]) + "</div>",
+                                          ["{{:" + owner + "|view=recipes}}"]) + "</div>",
         "wrong station": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
-                                            ["{{:" + OWNER + "|view=recipes|station=Other station}}"]) + "</div>",
+                                            ["{{:" + owner + "|view=recipes|station=Other station}}"]) + "</div>",
         "default merchant": "{{:" + MERCHANT + "}}",
         "seller": "{{:" + MERCHANT + "|view=sellers|item=Iron Hand Axe}}",
         "all sellers": "{{:" + MERCHANT + "|view=sellers}}",
         "wrong item": "{{:" + MERCHANT + "|view=sellers|item=Bandage}}",
-        "unknown owner view": "{{:" + OWNER + "|view=unknown}}",
+        "unknown owner view": "{{:" + owner + "|view=unknown}}",
         "unknown merchant view": "{{:" + MERCHANT + "|view=unknown}}",
     }
     result = {}
@@ -229,6 +243,36 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 if call not in text:
                     raise RuntimeError("An untouched display template was flattened by visual editing.")
             report["browser_template_edit"] = True
+
+            # Synthetic-only structural experiment. The production owner assertion
+            # below remains strict and still blocks release on its known second-save bug.
+            wrapped_views = projections(api, WRAPPED_OWNER)
+            for name, html in wrapped_views.items():
+                if re.sub(r">\s+<", "><", html) != re.sub(r">\s+<", "><", initial_views[name]):
+                    raise RuntimeError("The synthetic recipe shell changed the " + name + " projection.")
+            for attempt in (1, 2):
+                time.sleep(21)
+                before = source(api, WRAPPED_OWNER)
+                open_editor(WRAPPED_OWNER)
+                addition = f" Synthetic wrapper proof {attempt}."
+                append_prose(addition)
+                save_visual(f"Synthetic whole-table wrapper proof {attempt}")
+                after = source(api, WRAPPED_OWNER)
+                if after.replace(addition, "").strip() != before.strip():
+                    diff = "".join(difflib.unified_diff(
+                        before.splitlines(keepends=True), after.splitlines(keepends=True),
+                        fromfile="before", tofile="after",
+                    ))
+                    raise RuntimeError("The whole-table wrapper did not preserve source:\n" + diff)
+                if projections(api, WRAPPED_OWNER) != wrapped_views:
+                    raise RuntimeError("The whole-table wrapper changed selective projections after saving.")
+            (folder / "editor-wrapper-proof.json").write_text(json.dumps({
+                "exact_modified_round_trips": 2,
+                "matches_original_projections": sorted(wrapped_views),
+                "owner_source": after,
+                "shell_source": fixtures[RECIPE_SHELL],
+                "limitation": "Nested row fields are still wikitext, not a novice editing interface.",
+            }, indent=2) + "\n", encoding="utf-8")
 
             for attempt in (1, 2):
                 time.sleep(21)  # Preserve the real three-edits/minute newcomer limit.
