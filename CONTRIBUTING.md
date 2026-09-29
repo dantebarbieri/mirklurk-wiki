@@ -84,6 +84,13 @@ proof that prose is original. Human pre-publication review remains required.
 
 ## Live wiki edits
 
+Readers can use **Editing help** in the native sidebar after the operator has
+activated it and the separate `Help:Editing` article has been published. For
+navigation changes, propose edits to `content/interface/Sidebar.wiki`; do not
+copy a menu onto every article. The sidebar is a reviewed operator-installed
+exception to automatic publication: see [Native sidebar](docs/PUBLISHING.md#native-sidebar).
+Ordinary contributors do not need interface-editing permissions.
+
 Merging to `main` publishes the generated pages automatically, but only onto
 pages whose latest revision came from the publishing automation. A page someone
 edited on the wiki is skipped and reported on every run; port useful edits into
