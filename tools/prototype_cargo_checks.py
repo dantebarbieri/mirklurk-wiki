@@ -301,6 +301,12 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             report["checks"]["rebuild_identical_no_source_changes"] = True
             report["final_rows"] = rows(admin)
             report["owner_sources"] = {title: source(admin, title) for title in owners_before}
+            query_seconds = []
+            for _ in range(10):
+                started = time.monotonic()
+                assert len(rows(admin, "Stations HOLDS 'Prototype new station'")) == 2
+                query_seconds.append(round(time.monotonic() - started, 4))
+            report["query_seconds_two_records"] = query_seconds
             report["ux_limits"] = [
                 "TemplateData field edits are visual; prototype add/remove variants use the classic source form.",
                 "Ingredients support arbitrary line count, but Item = quantity is paired-text notation, not repeatable controls.",

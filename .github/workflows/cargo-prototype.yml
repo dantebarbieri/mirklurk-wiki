@@ -1,7 +1,8 @@
 name: Disposable Cargo prototype
 
 on:
-  pull_request:
+  push:
+    branches: [dantebarbieri-beginner-friendly-wiki-editing]
     paths:
       - "tools/prototype_cargo*.py"
       - ".github/workflows/cargo-prototype.yml"
