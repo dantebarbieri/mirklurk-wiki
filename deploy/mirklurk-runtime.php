@@ -52,6 +52,14 @@ function mirklurkServer(): string {
     return $url;
 }
 
+function mirklurkImageUrl(string $variable): string {
+    $url = mirklurkEnv($variable, '');
+    if ($url !== '' && !preg_match('#^/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9][A-Za-z0-9_.-]*\.png$#D', $url)) {
+        throw new RuntimeException("$variable must be a root-relative PNG path without a query or fragment.");
+    }
+    return $url;
+}
+
 function mirklurkTrustedProxies(): array {
     $value = mirklurkEnv('MW_TRUSTED_PROXY_CIDRS', '');
     if ($value === '') {

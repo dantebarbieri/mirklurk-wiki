@@ -66,6 +66,42 @@ repository changes. Do not roll back the runtime while live Lua readers remain.
 | `MW_CAPTCHA_QUESTIONS_FILE` | Required path, convention `/run/secrets/MIRKLURK_CAPTCHA_QUESTIONS` |
 | `MW_TRUSTED_PROXY_CIDRS` | Optional comma-separated verified proxy IPs/CIDRs; no all-address prefix. Required operationally for correct client-IP throttling behind a proxy. |
 | `MW_READ_ONLY` | Optional maintenance reason; freezes ordinary edits while set |
+| `MW_LOGO_URL` / `MW_LOGO_ICON_URL` | Optional pair of root-relative PNG paths: a legacy logo no larger than 135px wide and the square Vector 2022 icon. Set both or neither. |
+| `MW_FAVICON_URL` | Optional root-relative PNG path for the browser tab icon; independent of the logo pair. |
+
+### Site logo and favicon
+
+The optional branding settings use MediaWiki's `$wgLogo`, `$wgLogos` (`1x`
+and `icon`), and `$wgFavicon`. With all three unset, upstream branding remains
+unchanged. Vector 2022 displays the square icon at 50 x 50 beside the existing
+site-name text; do not pass the square artwork as a wordmark. Legacy Vector
+needs its own smaller raster because it does not shrink an oversized `1x` logo.
+
+Paths must start with a single `/`, end in `.png`, and use only ASCII letters,
+digits, underscores and hyphens in directory segments; filenames may also
+contain dots. Origins, traversal, query strings, fragments and external image
+hosts are rejected. Use new versioned filenames rather than overwriting an
+image when refreshing browser-cached branding.
+
+Stage the [separately approved branding images](IMAGES.md#site-branding) in a
+dedicated, backed-up directory outside Git, mounted read-only at
+`/var/www/html/branding`. Include a public `attribution.txt` identifying the
+creator, display permission, original fingerprints and derivative method.
+Use versioned paths such as `/branding/2026-09/logo-128.png`.
+Do not mount over existing image storage or put assets into the application image.
+Alternatively, use the private operator import workflow with attribution
+sidecars and obtain direct root-relative paths from MediaWiki's `imageinfo`
+API, not File description pages or `Special:FilePath` redirects.
+Neither approach requires public uploads or changes to gameplay pages.
+
+Rebuild the runtime from the reviewed source and recreate only the app with
+the configured paths. A content-publishing merge does not apply these settings
+to the homeserver. Confirm the rendered `mw-logo-icon` and favicon `link` use
+the intended paths, the API's legacy logo uses the smaller image, and each URL
+returns the expected PNG dimensions and bytes anonymously. Preserve the
+existing access policy, database and artwork.
+
+### Secrets and proxies
 
 The CAPTCHA file is a private JSON **object** mapping original, harmless question
 strings to nonempty arrays of short answer strings. Use multiple questions
@@ -183,6 +219,8 @@ randomly named Compose project with temporary generated credentials, then:
   self-registration;
 - imports original synthetic solid-color PNGs for every referenced File through
   the operator `importImages` path, then checks thumbnails and anonymous reads;
+- checks the configured Vector 2022 logo, legacy logo and PNG favicon against
+  separate synthetic fixtures, including rendered markup and served bytes;
 - imports the release and publishes it with `tools/sync_wiki.py`, exactly as
   the live publish job does. A second release changes a price owner and creates
   a page: the merchant and the linking page must show the result without

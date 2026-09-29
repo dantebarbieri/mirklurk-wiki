@@ -81,6 +81,34 @@ The frame association is cited through `hpcell_draw` in Source provenance.
 Actual PNG hashes, rights, and exact evidence keys are in each metadata record.
 No additional health art or other frames are included in this approval.
 
+## Site branding
+
+On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and
+browser favicon and explicitly authorized applying them to the live wiki.
+They are attributed to Edym Pixels under the operator-reported public-wiki
+display permission above, not licensed for redistribution through Git.
+
+| Role | Original dimensions | PNG bytes | SHA-256 |
+| --- | --- | --- | --- |
+| Wiki logo / Vector 2022 icon | 256 x 256 | 16563 | `2d0fdbb12de9e09a83be6fd9742ddc40b838be1f8b2a7626b3930171f7112064` |
+| Browser favicon | 184 x 184 | 5201 | `d365cdb569ecd682bbfcdbb60835d6ba10b98cf129f576b1554fa9e4ef7e9416` |
+
+Preserve these exact originals. Privately derive a separate 128 x 128
+nearest-neighbor logo for legacy skins, which otherwise crop a 256px `1x`
+image. Stage the three distinct PNGs in a dedicated, backed-up read-only
+branding mount with a public attribution text file, or import them with original
+attribution sidecars. Verify their served bytes before configuring the runtime.
+Attribution must identify the derivative's source fingerprint and resizing method.
+The 184px PNG is supported directly as the favicon; do not relabel PNG bytes
+as an ICO file. Vector 2022 shows the original logo in its native 50px header
+slot alongside the wiki title, not as a replacement wordmark.
+
+These are site-interface assets, not entity illustrations, and do not change
+the 329-entry artwork register or any gameplay page. No branding bytes,
+thumbnails or encoded image fixtures belong in Git, the application image,
+CI artifacts or pull requests. Runtime paths and rollout requirements are
+documented in [Deployment](DEPLOYMENT.md#site-logo-and-favicon).
+
 ## Reviewed mature-tree replacements
 
 The acquisition and wellbeing release replaces only the existing illustration
@@ -112,8 +140,9 @@ uploads or duplicate metadata. This document is not deployment authorization.
 The 2026-09-26 selection adds exactly three native exterior frames. All 326
 previous metadata records, including the three NPC portraits, remain unchanged.
 These additions bring the active register to 329 and, after the separate import,
-the retained uploaded game-image total to 333. The disposable test's 334 synthetic
-fixtures include its extra thumbnail test image; that is not a production count.
+the retained uploaded game-image total to 333 before site branding. The disposable
+test's 337 synthetic fixtures include three branding images and its extra
+thumbnail test image; that is not a production count.
 
 | NPC / preserved portrait | New File title | Native dimensions | PNG bytes | Source frame |
 | --- | --- | --- | --- | --- |

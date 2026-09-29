@@ -1,15 +1,83 @@
 import subprocess
+import hashlib
 import json
+import struct
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import MagicMock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from check_publication import ALLOWED_FILES, audit_index, blob_errors, path_errors
 from wiki_catalog import default_catalog
+from smoke_deploy import BRANDING_IMAGES, branding_paths, smoke_branding
+
+
+class BrandingTests(unittest.TestCase):
+    def setUp(self):
+        self.base = "https://wiki.example.invalid"
+        self.paths = branding_paths()
+        self.html = (
+            f'<link rel="icon" href="{self.paths["MW_FAVICON_URL"]}">'
+            f'<img class="mw-logo-icon" src="{self.paths["MW_LOGO_ICON_URL"]}" width="50" height="50">'
+        )
+        self.payloads = {
+            self.base + self.paths[variable]: b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR" + struct.pack(">II", size, size)
+            for variable, (_, size, _) in BRANDING_IMAGES.items()
+        }
+        self.hashes = {
+            filename: hashlib.sha256(self.payloads[self.base + self.paths[variable]]).hexdigest()
+            for variable, (filename, _, _) in BRANDING_IMAGES.items()
+        }
+        self.api = lambda params: {"query": {"general": {"logo": self.paths["MW_LOGO_URL"]}}}
+        self.mime = "image/png"
+
+    def open_media(self, url, timeout):
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.status = 200
+        response.headers.get_content_type.return_value = self.mime
+        response.read.return_value = self.payloads[url] if url in self.payloads else self.html.encode()
+        return response
+
+    def check_branding(self):
+        smoke_branding(self.api, self.base, self.paths, self.hashes, self.open_media)
+
+    def test_configured_branding_markup_and_images(self):
+        self.check_branding()
+
+    def test_wrong_logo_or_favicon_markup_is_rejected(self):
+        original = self.html
+        for old, new in [
+            (self.paths["MW_LOGO_ICON_URL"], "/wrong.png"),
+            (self.paths["MW_FAVICON_URL"], "/wrong.png"),
+            ('width="50"', 'width="256"'),
+            ('class="mw-logo-icon"', 'class="unrelated"'),
+        ]:
+            with self.subTest(old=old):
+                self.html = original.replace(old, new)
+                with self.assertRaises(RuntimeError):
+                    self.check_branding()
+
+    def test_wrong_legacy_logo_is_rejected(self):
+        self.api = lambda params: {"query": {"general": {"logo": self.paths["MW_LOGO_ICON_URL"]}}}
+        with self.assertRaisesRegex(RuntimeError, "legacy logo"):
+            self.check_branding()
+
+    def test_wrong_branding_bytes_or_mime_are_rejected(self):
+        for variable in BRANDING_IMAGES:
+            url = self.base + self.paths[variable]
+            original = self.payloads[url]
+            self.payloads[url] += b"changed"
+            with self.subTest(variable=variable), self.assertRaisesRegex(RuntimeError, "imported bytes"):
+                self.check_branding()
+            self.payloads[url] = original
+        self.mime = "text/html"
+        with self.assertRaisesRegex(RuntimeError, "readable as PNG"):
+            self.check_branding()
 
 
 class PublicationTests(unittest.TestCase):

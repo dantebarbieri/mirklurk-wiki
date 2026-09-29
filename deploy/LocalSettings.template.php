@@ -12,6 +12,20 @@ $wgScriptPath = '';
 $wgArticlePath = '/index.php?title=$1';
 $wgLanguageCode = 'en';
 
+$logo = mirklurkImageUrl('MW_LOGO_URL');
+$logoIcon = mirklurkImageUrl('MW_LOGO_ICON_URL');
+$favicon = mirklurkImageUrl('MW_FAVICON_URL');
+if (($logo === '') !== ($logoIcon === '')) {
+    throw new RuntimeException('MW_LOGO_URL and MW_LOGO_ICON_URL must be configured together.');
+}
+if ($logo !== '') {
+    $wgLogo = $logo;
+    $wgLogos = ['1x' => $logo, 'icon' => $logoIcon];
+}
+if ($favicon !== '') {
+    $wgFavicon = $favicon;
+}
+
 $wgDBtype = 'mysql';
 $wgDBserver = mirklurkEnv('MW_DB_SERVER', 'mirklurk-db');
 $wgDBname = mirklurkEnv('MW_DB_NAME', 'mirklurk');

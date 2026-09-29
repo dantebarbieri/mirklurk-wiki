@@ -238,6 +238,9 @@ Optional [illustration references](docs/IMAGES.md) keep all image bytes outside
 Git. Only separately rights-approved pictures may be imported by an operator
 into MediaWiki storage; pending references never embed artwork, and public web
 uploads remain disabled.
+The [site logo and PNG favicon](docs/DEPLOYMENT.md#site-logo-and-favicon) likewise
+use separately approved server-only images and optional runtime settings,
+not assets bundled in Git or the application image.
 
 The hostname is supplied at runtime. This repository does not configure DNS,
 certificates, a reverse proxy, a homeserver, or any existing credentials.
