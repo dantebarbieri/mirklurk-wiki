@@ -164,6 +164,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             text = "Synthetic author prose.\n\n" + record() + "\n\n" + record(
                 variant="rain", ap="3", stations="Prototype camp")
             wiki_save(OWNER, text, "Create two synthetic variants")
+            report["initial_owner_html"] = admin.call({"action": "parse", "page": OWNER, "prop": "text"})["parse"]["text"]
             initial = rows(admin)
             assert len(initial) == 2 and {r["Owner"] for r in initial} == {OWNER}, initial
             assert all("Synthetic leaf" in r["Ingredients"] and "Synthetic resin = 2" in r["Inputs"] for r in initial)
