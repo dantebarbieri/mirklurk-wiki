@@ -81,6 +81,10 @@ class EditorialTests(unittest.TestCase):
         for bad in (
             "Missing evidence", '<span title="Reviewed initializer">5</span>',
             "<span title='Reviewed initializer'>5</span>",
+            '<span title = "Missing evidence">5</span>',
+            "<span alt\t=\t'Missing evidence'>5</span>",
+            '<span aria-label\n =\n "Missing evidence">5</span>',
+            "<span title = provenance>5</span>",
             '<span title="Missing evid&#101;nce">5</span>',
             "<onlyinclude>Source-inspected result</onlyinclude>",
             "[[Source provenance#Profiles|More details]]",

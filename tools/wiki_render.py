@@ -35,7 +35,9 @@ READER_META = re.compile(
 
 def validate_reader_text(title, text):
     """Check visible text and tooltip labels; compatibility IDs are not prose."""
-    labels = [value for _, value in re.findall(r"""\b(?:title|alt|aria-label)=(['"])(.*?)\1""", text, re.I | re.S)]
+    labels = ["".join(match) for match in re.findall(
+        r"""\b(?:title|alt|aria-label)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))""", text, re.I,
+    )]
     visible = html.unescape(re.sub(r"<[^>]*>", "", text) + " " + " ".join(labels))
     if READER_META.search(visible):
         raise DataError(f"{title}: reader text contains research or publication commentary")

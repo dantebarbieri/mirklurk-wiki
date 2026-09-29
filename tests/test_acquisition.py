@@ -155,6 +155,13 @@ class AcquisitionTests(unittest.TestCase):
         self.assertNotIn("[[Category:Creature drops]]", pages["Sapphire"])
         self.assertIn("{{Item|Flax}}", pages["Category:Fibers and fabrics"])
 
+    def test_acquisition_snapshot_includes_conditions_and_probability_qualifications(self):
+        document = self.catalog["acquisition"]
+        # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
+        snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
+        self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
+                         "ba46221b0e07878bbeb4d6c6da9cf36f0a5a251b162ed6af7227c69382da9877")
+
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
         identities = {"plant-harvesting", "tree-shrub-harvesting", "beehives", "harvested-insects",
