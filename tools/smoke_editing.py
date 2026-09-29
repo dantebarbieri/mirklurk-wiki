@@ -151,6 +151,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             page.wait_for_function("window.ve?.init?.target?.active && ve.init.target.getSurface()")
             if first_edit:
                 page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
+            page.wait_for_function("ve.init.target.active && !ve.init.target.activating && !ve.init.target.welcomeDialog")
             page.locator(".ve-ce-documentNode").wait_for(state="visible")
 
         def append_prose(text):
@@ -191,8 +192,8 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 raise RuntimeError("Browser editing must use an ordinary self-registered account.")
 
             open_editor(SIMPLE, first_edit=True)
-            page.locator(".ve-ce-documentNode .mirklurk-item").first.dblclick()
-            dialog = page.locator(".ve-ui-mwTransclusionDialog")
+            page.locator(".ve-ce-documentNode .ve-ce-mwTransclusionNode").first.dblclick()
+            dialog = page.locator(".ve-ui-mwTemplateDialog")
             dialog.get_by_label("Quantity", exact=True).fill("5")
             if not dialog.get_by_label("Item", exact=True).count():
                 raise RuntimeError("The template dialog did not show its TemplateData item field.")
@@ -270,6 +271,16 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             # Screenshot only the disposable wiki; never persist browser cookies or login traces.
             if "Special:UserLogin" not in urllib.parse.unquote(page.url):
                 page.screenshot(path=str(folder / "editor-failure.png"), full_page=True)
+                state = page.evaluate("""() => ({
+                    active: window.ve?.init?.target?.active,
+                    activating: window.ve?.init?.target?.activating,
+                    dialogs: [...document.querySelectorAll('[role=dialog]')].map(e => ({
+                        classes: e.className, text: e.innerText
+                    })),
+                    nodes: [...document.querySelectorAll('.ve-ce-documentNode .ve-ce-mwTransclusionNode')]
+                        .map(e => ({classes: e.className, text: e.innerText}))
+                })""")
+                (folder / "editor-failure.json").write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
             raise
         finally:
             context.close()
