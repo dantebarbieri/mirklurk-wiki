@@ -219,6 +219,40 @@ registry or Lua sizing policy. Coins use the 20px budget (16px native display);
 shields use the 32px budget (2x native display). Both use original uploads,
 integer-native zoom and no thumbnail/srcset. Image bytes stay outside Git.
 
+### Narrow-screen tables and figures
+
+Wide content scrolls within its own named, keyboard-focusable region instead
+of shrinking sprites/cells or widening the whole page. Tab to the region, use
+the arrow keys, then Tab onward to its links or the next control; touch readers
+can swipe horizontally. Native table captions, headers and cells remain intact,
+including coordinate labels/tooltips, holes and occupied zero-range cells.
+No JavaScript is needed. Coins still wrap between denominations and long item
+labels still wrap beside their integer-native icons.
+
+Generated **article source** wraps each table outside its table markup:
+
+```html
+<div class="mirklurk-scroll" role="region" tabindex="0" aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+<table class="wikitable">
+<!-- Existing headers and Recipe row / Ware row calls stay here. -->
+</table>
+</div>
+```
+
+Wiki-syntax `{|` / `|}` tables use the same outer block. Keep the wrapper and
+table together inside any owner-level `onlyinclude`/view selector; do not put
+divs inside a row or alter the recipe/seller filters. Workstation tables wrap
+the transcluded recipe rows, not each individual row. These are ordinary
+editable article blocks, not a new template or content model.
+Illustrations retain `class="pixel-art-figure"` with the same scroll attributes
+and the label `Illustration (scroll horizontally)`. The image formatter is
+unchanged and no global media width rule is applied.
+
+Health/attack wrappers are **rendered Lua output**, labeled with the existing
+grid name; authors still edit only their `{{Health grid|...}}` or
+`{{Attack grid|...}}` invocation. The runtime separately enables Vector's
+device-width viewport; see [the two-part rollout](DEPLOYMENT.md#responsive-vector-2022).
+
 ## Runtime and publishing
 
 Before any rollout, an operator must separately authorize, rebuild and deploy

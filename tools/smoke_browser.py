@@ -5,6 +5,7 @@ from pathlib import Path
 import urllib.parse
 
 from wiki_render import image_for, pixel_image
+from smoke_responsive import smoke_responsive
 
 
 def smoke_browser(api, base, token, data, artifact_dir):
@@ -148,3 +149,4 @@ def smoke_browser(api, base, token, data, artifact_dir):
             browser.close()
     print("Vector browser: old baseline reproduced; centered 16px coins/item names, narrow wrapping, "
           "3em health cells and real desktop/mobile articles passed.", flush=True)
+    smoke_responsive(base, data, folder)

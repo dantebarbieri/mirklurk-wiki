@@ -53,6 +53,38 @@ engine; it also probes unsaved module compilation. Never bypass that gate or
 seed Lua pages into the old runtime. No production action is implied by the
 repository changes. Do not roll back the runtime while live Lua readers remain.
 
+## Responsive Vector 2022
+
+The runtime sets `$wgVectorResponsive = true` alongside the existing
+`$wgDefaultSkin = 'vector-2022'`. In the bundled Vector 1.43 code,
+`VectorResponsive` defaults to false: `SkinVector22::isResponsive()` gates
+the device-width viewport on that setting even though the skin emits
+`skin--responsive`. Without it, the skin uses its fixed `width=1120`
+desktop viewport. CSS alone cannot correct that mobile scaling.
+See the [1.43 setting](https://github.com/wikimedia/mediawiki-skins-Vector/blob/REL1_43/skin.json)
+and [skin implementation](https://github.com/wikimedia/mediawiki-skins-Vector/blob/REL1_43/includes/SkinVector22.php).
+No MobileFrontend service, alternate skin, user-agent redirect, or zoom
+restriction is required.
+
+The setting is baked into the application image. **A separately authorized
+rebuild/recreate is required**; publishing wiki pages does not apply it.
+Local horizontal scroll wrappers are a separate content change: the generator
+publishes ordinary editable article markup and `Module:Display` renders the
+grid wrappers. Their inline styles use the existing publishing path; there is
+no `MediaWiki:Common.css`/JavaScript publication or expanded namespace grant.
+Publish the wrappers before, or together with, enabling the responsive runtime,
+so wide existing tables do not become page-wide overflow at phone widths.
+Human-edited pages/modules remain skipped and need the normal explicit review
+and adoption before they acquire the new presentation.
+
+Check anonymous Vector pages at 320px and 390px after both changes: actual
+layout/visual viewport width must match the device, document scroll width must
+not exceed it, and wide tables/grids must scroll locally by keyboard and touch.
+Recheck desktop at 1440px. The disposable smoke covers real Items, merchant,
+recipe, creature/grid and long-item-name pages plus a no-JavaScript phone and
+desktop resizing. CI's `vector-layout` artifact contains synthetic-art
+screenshots and `responsive-geometry.json`; never use game screenshots in Git.
+
 ## Runtime variables
 
 | Variable | Contract |

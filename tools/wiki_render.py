@@ -14,7 +14,7 @@ from wiki_catalog import (
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
-from wiki_views import filtered_row, html_row, html_table, selective_view, validate_transclusions
+from wiki_views import filtered_row, html_row, html_table, scroll_open, selective_view, validate_transclusions
 
 
 RETIRED_PAGES = {
@@ -78,7 +78,7 @@ def table(headers, rows):
     lines = ['{| class="wikitable"', "! " + " !! ".join(headers)]
     for row in rows:
         lines.extend(["|-", "| " + " || ".join(row)])
-    return "\n".join([*lines, "|}"]) + "\n"
+    return scroll_open() + "\n".join([*lines, "|}"]) + "\n</div>\n"
 
 
 def known(value):
@@ -165,7 +165,7 @@ def illustration_markup(image, width=224, caption=None, marker=True):
     text = anchor("illustration", image["id"]) if marker else ""
     if image["rights_status"] == "approved":
         label = image_caption(image) if caption is None else caption
-        return (text + '\n<div class="pixel-art-figure" style="max-width:100%;overflow-x:auto;">'
+        return (text + "\n" + scroll_open("Illustration", "pixel-art-figure")
                 + pixel_image(image, width=width, alt=label) + "</div>\n"
                 + '<div class="pixel-art-caption">' + literal(label) + "</div>\n")
     return text + "\n"
@@ -678,8 +678,8 @@ def acquisition_pool_table(pool, owner, entities, locations, categories):
         row += item_view("</span>", "</td></tr>") + "\n"
         rows.append(filtered_row(row, "item", [identity]))
     heading = f'<includeonly>[[{owner}#pool-{pool["id"]}|{literal(pool["title"])}]] &mdash; rules and value budget.</includeonly>\n'
-    heading += '<table class="wikitable">\n<tr><th scope="col">Item</th><th scope="col">Category</th></tr>\n'
-    content = item_view("", heading) + "".join(rows) + item_view("", "</table>\n")
+    heading += scroll_open() + '<table class="wikitable">\n<tr><th scope="col">Item</th><th scope="col">Category</th></tr>\n'
+    content = item_view("", heading) + "".join(rows) + item_view("", "</table>\n</div>\n")
     return selective_view(filtered_row(filtered_row(content, "item", pool["eligible_item_ids"]),
                                        "pool", [pool["id"]]), "pool")
 

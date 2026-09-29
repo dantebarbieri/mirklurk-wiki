@@ -24,6 +24,7 @@ New worlds contain two or three Broken Fens and at least one Drowned Fen. These 
 == Finding NPCs ==
 See each character's page for directions, exterior pictures and access requirements.
 
+<div class="mirklurk-scroll" role="region" tabindex="0" aria-label="Finding NPCs (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
 ! Character !! Finding their location
 |-
@@ -39,6 +40,7 @@ See each character's page for directions, exterior pictures and access requireme
 | [[Scaal]]
 | The [[#Scaal's_lair|opposite-zone rule above]] identifies the route into his lair.
 |}
+</div>
 
 Bhato's zone is chosen upfront. Gurb-Gurb's hollow and Ihar's wreck are '''not assigned a zone with the initial world map''': their placement depends on which eligible outdoor areas you enter while they remain uncreated. Visiting every zone once does not guarantee that Ihar's placement has succeeded.
 

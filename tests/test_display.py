@@ -21,6 +21,7 @@ from wiki_display import (
     lua_string, page_namespace,
 )
 from wiki_render import build_pages, health_armor_icon, image_for, pixel_image, price_text, recipe_groups, row_template
+from wiki_views import html_table, scroll_open, selective_view
 
 
 class DisplayTests(unittest.TestCase):
@@ -100,6 +101,29 @@ class DisplayTests(unittest.TestCase):
             self.assertIn("== Melee attack ==", self.pages[title])
         self.assertIn("{{Health grid|0,1,0;1,4,1;0,1,0}}", self.pages["Sceetler"])
         self.assertEqual({title for title in self.pages if title.startswith("Template:")}, set(DISPLAY_FILES) - {"Module:Display"})
+
+    def test_scroll_wrappers_keep_tables_and_selective_views_native(self):
+        opening = scroll_open()
+        self.assertIn('role="region" tabindex="0" aria-label="Table (scroll horizontally)"', opening)
+        self.assertIn('style="max-width:100%;overflow-x:auto;"', opening)
+        self.assertIn('aria-label="A &quot;quote&quot; &amp; &lt;tag&gt; (scroll horizontally)"',
+                      scroll_open('A "quote" & <tag>'))
+        table = html_table(["Item", "Price"], ["{{Ware row|item=Iron Hand Axe|price={{:Iron Hand Axe}}}}\n"],
+                           normal_only=(1,))
+        self.assertTrue(table.startswith(opening + '<table class="wikitable">\n'))
+        self.assertTrue(table.endswith("</table>\n</div>\n"))
+        self.assertIn('<noinclude><th scope="col">Price</th></noinclude>', table)
+        self.assertIn("=" + table + "|#default=}}</onlyinclude>", selective_view(table, "wares"))
+        for title in ("Items", "Iron Hand Axe", "Gurb-Gurb", "Alchemy workstation", "World generation"):
+            text = self.pages[title]
+            self.assertIn('class="mirklurk-scroll"', text, title)
+            self.assertEqual(text.count('class="mirklurk-scroll"'),
+                             text.count('<table class="wikitable">') + text.count('{| class="wikitable"'), title)
+        self.assertIn('<table class="wikitable">\n<tr>', self.pages["Alchemy workstation"])
+        self.assertIn("{{:Simple Burn Remedy|view=recipes|station=alchemy-workstation}}", self.pages["Alchemy workstation"])
+        self.assertNotIn('class="mirklurk-scroll"', self.pages["Template:Recipe row"])
+        self.assertNotIn('class="mirklurk-scroll"', self.pages["Template:Ware row"])
+        self.assertIn(":attr('tabindex', '0')", self.pages["Module:Display"])
 
     def test_creature_lookup_and_existing_lists_use_reviewed_classifications_and_art(self):
         locations = page_locations(self.data, self.catalog)

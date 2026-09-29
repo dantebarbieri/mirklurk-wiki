@@ -79,6 +79,7 @@ $wgPasswordAttemptThrottle = [
 
 wfLoadSkin('Vector');
 $wgDefaultSkin = 'vector-2022';
+$wgVectorResponsive = true;
 wfLoadExtension('ParserFunctions');
 wfLoadExtension('Scribunto');
 $wgScribuntoDefaultEngine = 'luastandalone';

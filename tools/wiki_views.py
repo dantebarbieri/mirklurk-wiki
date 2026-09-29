@@ -1,5 +1,6 @@
 """Named, editable MediaWiki views and their explicit publication dependencies."""
 
+import html
 import re
 
 from wiki_data import DataError
@@ -7,6 +8,14 @@ from wiki_display import INERT
 
 
 VIEW_SELECTOR = "{{{view|<noinclude>page</noinclude>}}}"
+
+
+def scroll_open(label="Table", css_class="mirklurk-scroll"):
+    return (
+        '<div class="' + html.escape(css_class, quote=True) + '" role="region" tabindex="0" aria-label="'
+        + html.escape(label + " (scroll horizontally)", quote=True)
+        + '" style="max-width:100%;overflow-x:auto;">\n'
+    )
 
 
 def selective_view(content, view, default=False):
@@ -36,13 +45,13 @@ def html_row(cells, normal_only=()):
 
 def html_table(headers, rows, normal_only=()):
     return (
-        '<table class="wikitable">\n<tr>'
+        scroll_open() + '<table class="wikitable">\n<tr>'
         + "".join(
             ("<noinclude>" if index in normal_only else "") + '<th scope="col">' + heading + "</th>"
             + ("</noinclude>" if index in normal_only else "")
             for index, heading in enumerate(headers)
         )
-        + "</tr>\n" + "".join(rows) + "</table>\n"
+        + "</tr>\n" + "".join(rows) + "</table>\n</div>\n"
     )
 
 

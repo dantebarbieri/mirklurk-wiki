@@ -15,6 +15,13 @@ deploy the image. Missing runtime, namespaces, content models, invalid Lua or
 a failed engine probe stop the apply run before any page edits. The read-only
 preview checks registration without logging in or executing the console probe.
 
+**Mobile presentation has two parts:** publishing updates the ordinary
+table/figure wrappers and Lua grid output, not the skin's runtime viewport.
+The operator separately rebuilds/recreates the image with
+`$wgVectorResponsive = true` after the wrappers are present. See
+[responsive Vector rollout](DEPLOYMENT.md#responsive-vector-2022).
+No Common.css or JavaScript namespace is added to the publisher.
+
 1. Change `content/` (or the generator) on a branch and open a pull request.
 2. CI runs the publication gate, the unit tests and the PHP runtime checks
    (about 2 minutes), plus the disposable Docker smoke (about 10–15 minutes).
