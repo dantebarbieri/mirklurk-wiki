@@ -9,6 +9,47 @@ Attack grid, Creature, Item, Recipe row and Ware row. Unverified is a plain
 wikitext marker, with no new runtime dependency. There is no Merchant
 infobox, central recipe database, Acquisition or Collapsible template.
 
+## Visual editor fields and source fallback
+
+After the separately authorized [editor runtime rollout](DEPLOYMENT.md#visual-editing-and-rest),
+**Edit** opens VisualEditor and **Edit source** keeps the classic wikitext editor.
+The ordinary wiki article **Help:Editing** is the short contributor starting point.
+All eight templates, including Unverified, carry TemplateData inside `noinclude`;
+field documentation is never part of transcluded output. Select a simple
+template and choose Edit to see labels, descriptions and examples. Examples
+are not automatic values. Defaults describe existing behavior, not new facts.
+Copper totals and quantities use string fields to retain exact 18-digit values;
+the display module still validates them and reports invalid input.
+
+Use visual editing for prose and simple Item, Creature, Coins and grid arguments.
+Inspect the source diff before saving a template change. Unknown names, malformed
+grids and invalid numbers still produce visible errors; field metadata does not
+replace validation.
+
+**Edit source is the supported workflow for Recipe row/Ware row inside selective
+owners**, nested wikitext, literal price gates, `onlyinclude`/`noinclude`/`includeonly`,
+`#switch`/`#if` filters and stable anchors. Row metadata explains these fields
+without claiming the visual dialog can safely restructure them. Template and Lua
+definitions also stay source-edited. Missing optional Ware row arguments omit
+columns; inserting blank/default fields can change table geometry. Preserve the
+owner's headers and do not paste rendered rows into workstations or seller views.
+
+The disposable editor smoke checks no-change Parsoid round trips for generated
+Iron Hand Axe, Copper Coin, Gurb-Gurb and Bandage, with all native displays and
+synthetic selective fixtures. Ordinary browser template edits and source
+preview/save with filtered AP propagation pass. **Modified visual editing of
+existing recipe owners is not yet safe to release**, including prose-only edits:
+each save adds another empty `onlyinclude` pair before the raw table. The strict
+second-save assertion exposes this unresolved problem.
+
+Synthetic complete-table wrappers pass two prose saves without source churn;
+synthetic flat recipe templates pass two labeled quantity/AP edits without
+changing other source or selective projections. Neither experiment changes the
+production templates or factual owners. The flat prototype still exposes raw
+view/filter routing fields and does not prove multi-row editing or automatic
+discovery of new recipes. The production editor/migration design remains
+pending; do not deploy this draft or infer arbitrary table/filter safety.
+
 ## Unverified
 
 For uncertainty, put `{{Unverified}}` directly after the specific unconfirmed
@@ -227,6 +268,7 @@ not deployment authorization. See [DEPLOYMENT.md](DEPLOYMENT.md) and
 [PUBLISHING.md](PUBLISHING.md). Do not disable Scribunto while any live page
 still depends on these templates.
 
+TemplateData must also be deployed before publishing template metadata.
 The publisher preflights extension/namespace/content-model registration and,
 on apply, compiles the unsaved Lua modules and probes actual engine execution
 through Scribunto's console API before **any page edits**. This only creates

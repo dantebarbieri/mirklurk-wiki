@@ -15,6 +15,13 @@ deploy the image. Missing runtime, namespaces, content models, invalid Lua or
 a failed engine probe stop the apply run before any page edits. The read-only
 preview checks registration without logging in or executing the console probe.
 
+**Editor rollout prerequisite:** publishing `<templatedata>` requires the bundled
+TemplateData extension, checked before any edits. Deploy the reviewed
+VisualEditor/TemplateData-enabled image separately, following
+[DEPLOYMENT.md](DEPLOYMENT.md#visual-editing-and-rest). Merging metadata and the
+ordinary `Help:Editing` article publishes pages, not runtime configuration.
+VisualEditor activation itself is not a reason to reseed or adopt community pages.
+
 1. Change `content/` (or the generator) on a branch and open a pull request.
 2. CI runs the publication gate, the unit tests and the PHP runtime checks
    (about 2 minutes), plus the disposable Docker smoke (about 10–15 minutes).
@@ -71,8 +78,11 @@ used.
 
 This includes ordinary Template transclusions, `#invoke` and static
 `mw.loadData`/`require` module edges, not just selective main-namespace views.
-Only the registered display/row templates, the Unverified marker and their two Lua modules are
-publishable outside main/Category namespaces. Lua uses the `Scribunto` content
+Only the registered display/row templates, the Unverified marker, their two Lua
+modules and the exact `Help:Editing` title (namespace 12) are publishable outside
+main/Category namespaces. Other Help pages are not implicitly allowlisted.
+Help and template metadata use the same person-edit preservation rules.
+Lua uses the `Scribunto` content
 model and `text/plain`, never wikitext. Presentation cycles or missing generated
 dependencies are rejected before writes. Display pages do not need selective
 `view` declarations. A divergent human-edited template/module is skipped and

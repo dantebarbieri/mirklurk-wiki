@@ -1,0 +1,31 @@
+name: Disposable Cargo prototype
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prototype:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Install disposable browser
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
+      - name: Exercise isolated pinned Cargo wiki
+        run: python3 tools/prototype_cargo.py --run --artifacts "${{ runner.temp }}/cargo-prototype"
+      - name: Preserve synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: cargo-prototype
+          path: ${{ runner.temp }}/cargo-prototype
+          retention-days: 7

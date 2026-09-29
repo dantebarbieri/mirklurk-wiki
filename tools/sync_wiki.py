@@ -328,6 +328,8 @@ def runtime_preflight(api, pages, apply):
         return
     query = api.call({"action": "query", "meta": "siteinfo", "siprop": "extensions|namespaces"})["query"]
     extensions = {row["name"] for row in query.get("extensions", [])}
+    if any("<templatedata>" in text for text in pages.values()) and "TemplateData" not in extensions:
+        raise SyncError("Template metadata requires deployed TemplateData. No pages written.")
     namespaces = {int(key): row for key, row in query.get("namespaces", {}).items()}
     if not {"Scribunto", "ParserFunctions"} <= extensions or any(
         namespaces.get(number, {}).get("canonical") != name or namespaces[number].get("case") != "first-letter"

@@ -4,4 +4,14 @@ Use commas between cells and semicolons between rows: <nowiki>{{Health grid|1,1,
 0 is a hole; 1 is one HP; 2, 3 and 4 are one HP with one, two and three armor layers respectively. Sceetler's five-HP cross is <nowiki>{{Health grid|0,1,0;1,4,1;0,1,0}}</nowiki>.
 
 Rows run top to bottom, cells left to right. Dimensions are inferred; up to 32 rows and 32 columns, rectangular, with at least one occupied cell. Whitespace around cells is allowed. Empty cells, unsupported values and malformed input display errors. Each occupied cell has a coordinate/HP/armor tooltip and accessible label; holes retain their position and accessible label. See [[Health and armor]] for the shield legend.
+<templatedata>
+{
+  "description": "A health shape, preserving holes and armor. Do not replace a creature's shape with a generic square.",
+  "params": {
+    "1": {"label": "Health cells", "description": "Commas separate cells; semicolons separate rows, top to bottom. 0 = hole; 1 = one HP; 2/3/4 = one HP with 1/2/3 armor layers. Rectangular, at most 32 by 32, at least one occupied cell.", "type": "string", "required": true, "example": "0,1,0;1,4,1;0,1,0"}
+  },
+  "paramOrder": ["1"],
+  "format": "inline"
+}
+</templatedata>
 </noinclude>

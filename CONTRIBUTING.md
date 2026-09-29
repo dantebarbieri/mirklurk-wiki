@@ -84,6 +84,13 @@ proof that prose is original. Human pre-publication review remains required.
 
 ## Live wiki edits
 
+New wiki contributors should start with **Help:Editing**. Use the visual editor
+for ordinary prose and simple template fields, and Edit source for canonical
+recipe/ware selectors, nested values and price gates. Preview or review the
+diff, add a save summary, and check both the owner and its dependent view.
+The visual editor and template field help require the separate runtime rollout;
+do not deploy or reseed merely to publish onboarding content.
+
 Merging to `main` publishes the generated pages automatically, but only onto
 pages whose latest revision came from the publishing automation. A page someone
 edited on the wiki is skipped and reported on every run; port useful edits into

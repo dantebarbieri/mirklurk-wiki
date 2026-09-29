@@ -90,7 +90,11 @@ class PublicationTests(unittest.TestCase):
         publication, rest = workflow.split("\njobs:\n", 1)[1].split("  docker-smoke:\n", 1)
         smoke, rest = rest.split("  preview:\n", 1)
         preview, publish = rest.split("  publish:\n", 1)
-        self.assertNotIn("\n    if:", publication + smoke)
+        prototype, publication = publication.split("  publication:\n", 1)
+        self.assertIn("if: github.event_name == 'workflow_dispatch' && inputs.cargo_prototype", prototype)
+        self.assertIn("uses: ./.github/workflows/cargo-prototype.yml", prototype)
+        self.assertIn("if: github.event_name != 'workflow_dispatch' || !inputs.cargo_prototype", publication)
+        self.assertNotIn("\n    if:", smoke)
         self.assertIn("python3 -m unittest discover -s tests -v", publication)
         self.assertIn("php tests/test_runtime.php", publication)
         self.assertIn("needs: publication", smoke)
@@ -102,6 +106,7 @@ class PublicationTests(unittest.TestCase):
         self.assertIn("python3 tools/sync_wiki.py\n", preview)
         self.assertNotIn("secrets.", preview)
         self.assertIn("if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'", publish)
+        self.assertIn("github.ref == 'refs/heads/main' && !inputs.cargo_prototype", publish)
         self.assertIn("needs: [publication, docker-smoke]", publish)
         self.assertIn("python3 tools/sync_wiki.py --apply --adopt \"$ADOPT\"\n", publish)
         self.assertIn("ADOPT: ${{ inputs.adopt }}", publish)
@@ -109,6 +114,11 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(workflow.count("secrets."), 2)
         # Dispatch input reaches the shell only through a quoted environment variable.
         self.assertFalse(any("${{ inputs." in line for line in workflow.splitlines() if "run:" in line or "python3" in line))
+        prototype_workflow = (ROOT / ".github" / "workflows" / "cargo-prototype.yml").read_text(encoding="utf-8")
+        self.assertIn("contents: read", prototype_workflow)
+        self.assertNotIn("secrets.", prototype_workflow)
+        self.assertNotIn("sync_wiki.py", prototype_workflow)
+        self.assertIn("python3 tools/prototype_cargo.py --run --artifacts", prototype_workflow)
 
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()

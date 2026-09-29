@@ -74,7 +74,8 @@ class FakeWiki:
         self.calls.append(dict(params))
         if params["action"] == "query" and params.get("meta") == "siteinfo":
             return {"query": {
-                "extensions": [{"name": "ParserFunctions"}, *([{"name": "Scribunto"}] if self.runtime else [])],
+                "extensions": [{"name": "ParserFunctions"}, {"name": "TemplateData"},
+                               *([{"name": "Scribunto"}] if self.runtime else [])],
                 "namespaces": {str(number): {"id": number, "canonical": name, "case": "first-letter"}
                                for number, name in ((10, "Template"), (828, "Module"))},
             }}
@@ -581,7 +582,7 @@ class RealCorpusTests(unittest.TestCase):
     def test_generated_titles_are_normalized_registered_pages(self):
         for title in self.pages:
             self.assertEqual(sync_wiki.title_key(title), title)
-            self.assertIn(page_namespace(title), {0, 10, 14, 828})
+            self.assertIn(page_namespace(title), {0, 10, 12, 14, 828})
 
     def test_a_fresh_wiki_gets_every_page_without_blocking(self):
         report = sync(FakeWiki(), self.pages, "repo-sync: 1", log=lambda _: None)

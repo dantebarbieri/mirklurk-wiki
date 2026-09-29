@@ -258,6 +258,14 @@ explicitly adopts it. It needs a bot password stored as a GitHub secret; there
 is no edit freeze or manual approval.
 The disposable smoke harness uses synthetic accounts/images only.
 
+Beginner contributors can start at **Help:Editing**. The runtime includes bundled
+VisualEditor and TemplateData with integrated PHP Parsoid: eligible signed-in
+users get both **Edit** and **Edit source**. All native templates have field
+descriptions, while shared-data selectors and nested recipe/ware rows retain an
+explicit source-editing workflow. Activation requires a separately authorized
+[runtime rollout](docs/DEPLOYMENT.md#visual-editing-and-rest) before publishing
+the metadata; a content merge does not deploy the editor.
+
 ## Publication and rights
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), the

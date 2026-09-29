@@ -106,6 +106,16 @@ $wgDefaultSkin = 'vector-2022';
 wfLoadExtension('ParserFunctions');
 wfLoadExtension('Scribunto');
 $wgScribuntoDefaultEngine = 'luastandalone';
+wfLoadExtension('TemplateData');
+wfLoadExtension('VisualEditor');
+$wgVisualEditorUseSingleEditTab = false;
+$wgVisualEditorDisableForAnons = true;
+$wgDefaultUserOptions['visualeditor-autodisable'] = 0;
+$wgDefaultUserOptions['visualeditor-betatempdisable'] = 0;
+$wgDefaultUserOptions['visualeditor-newwikitext'] = 0;
+$wgVisualEditorAvailableNamespaces['Help'] = true;
+$wgVisualEditorAvailableNamespaces['Template'] = false;
+// MediaWiki 1.43 uses its integrated PHP Parsoid client; no RESTBase service.
 wfLoadExtension('ConfirmEdit');
 wfLoadExtension('ConfirmEdit/QuestyCaptcha');
 $wgCaptchaClass = 'QuestyCaptcha';

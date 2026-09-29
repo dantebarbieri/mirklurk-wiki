@@ -4,4 +4,21 @@ A row for a merchant's wares table. Required item is a canonical title; seller i
 
 <pre>{{Ware row|seller=[[Magus Clay]]|item=Iron Hand Axe|price=&lt;noinclude&gt;{{:Iron Hand Axe}}&lt;/noinclude&gt;}}</pre>
 Standard prices stay transcluded from the item, whose price view uses Coins. Keep the literal noinclude gate in the merchant's source, NOT inside this always-transcluded template, and apply the same gate to the table header. Filtered seller views must not include the item price again. In a mixed-price table, the owner supplies an includeonly "Standard item price" link for standard-price rows; genuine vendor exceptions may use a nested Coins call. Location/story/shared-stock disclosures stay once per owning section, not copied into every row.
+<templatedata>
+{
+  "description": "A row inside a merchant-owned wares table. Use source editing for price gates and selective views. Optional fields create columns: omit only when that column is absent, otherwise use Unknown.",
+  "params": {
+    "seller": {"label": "Seller", "description": "Linked merchant name.", "type": "content", "default": "Unknown", "suggested": true, "example": "[[Magus Clay]]"},
+    "item": {"label": "Item", "description": "Canonical item page title, not an Item template call.", "type": "wiki-page-name", "required": true, "example": "Iron Hand Axe"},
+    "quantity": {"label": "Quantity column", "description": "Quantity and any range; nonempty adds a cell.", "type": "content", "example": "Unknown"},
+    "price": {"label": "Price column (source editing)", "description": "Standard prices transclude the item. Preserve the owner's literal noinclude/includeonly gates and matching header; never copy the standard price here.", "type": "content"},
+    "currency": {"label": "Currency column", "description": "Nonempty adds a cell after price.", "type": "content", "example": "Unknown"},
+    "location": {"label": "Location column", "description": "Nonempty adds a cell after currency. Keep shared location text on the owning section.", "type": "content", "example": "Unknown"},
+    "conditions": {"label": "Conditions column", "description": "Nonempty adds a cell after location. Preserve exceptions; shared story and stock notes stay on the section.", "type": "content", "example": "Unknown"},
+    "anchors": {"label": "Stable anchors (source editing)", "description": "Preserve existing offer anchor markup; do not invent or remove IDs.", "type": "content"}
+  },
+  "paramOrder": ["seller", "item", "quantity", "price", "currency", "location", "conditions", "anchors"],
+  "format": "block"
+}
+</templatedata>
 </noinclude>

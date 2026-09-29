@@ -4,4 +4,14 @@ Use <nowiki>{{Creature|Sceetler}}</nowiki> or <nowiki>{{Creature|Nightmare}}</no
 Use a canonical creature title, not an ID or filename. Spaces, underscores and first-letter normalization are supported. Unknown names, NPCs, namespaces and section fragments produce an error. A creature without portrait art displays its name link.
 
 Automatic category member labels remain plain links.
+<templatedata>
+{
+  "description": "A creature portrait and linked name, not health, attacks or loot.",
+  "params": {
+    "1": {"label": "Creature", "description": "Canonical creature page title. Not an NPC, ID, filename or section link.", "type": "wiki-page-name", "required": true, "example": "Sceetler"}
+  },
+  "paramOrder": ["1"],
+  "format": "inline"
+}
+</templatedata>
 </noinclude>

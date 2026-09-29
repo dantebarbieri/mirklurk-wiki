@@ -10,6 +10,9 @@ RUN a2enmod rewrite \
     && test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
     && test -f /var/www/html/extensions/ParserFunctions/extension.json \
     && test -f /var/www/html/extensions/Scribunto/extension.json \
+    && test -f /var/www/html/extensions/VisualEditor/extension.json \
+    && test -f /var/www/html/extensions/TemplateData/extension.json \
+    && test -f /var/www/html/vendor/wikimedia/parsoid/extension.json \
     && test -f /var/www/html/skins/Vector/skin.json \
     && php -l /var/www/html/LocalSettings.php \
     && php -l /var/www/html/mirklurk-runtime.php \

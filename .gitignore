@@ -21,6 +21,7 @@
 !/content/facts/illustrations.json
 !/content/facts/acquisition.json
 !/content/pages/
+!/content/pages/Help_Editing.wiki
 !/content/pages/Main_Page.wiki
 !/content/pages/Getting_started.wiki
 !/content/pages/Game_mechanics.wiki
@@ -62,6 +63,10 @@
 !/tools/wiki_display.py
 !/tools/smoke_display.py
 !/tools/smoke_browser.py
+!/tools/smoke_editing.py
+!/tools/prototype_cargo.py
+!/tools/prototype_cargo_checks.py
+!/tools/prototype_cargo_fixtures.py
 !/tools/smoke_urls.py
 !/tools/wiki_acquisition.py
 !/tools/build_wiki.py
@@ -78,6 +83,7 @@
 !/tests/test_sync.py
 !/tests/test_display.py
 !/tests/test_editorial.py
+!/tests/test_editing.py
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile
@@ -90,6 +96,7 @@
 !/.github/
 !/.github/workflows/
 !/.github/workflows/validate.yml
+!/.github/workflows/cargo-prototype.yml
 
 # Defense in depth. Never add exceptions below these exclusions.
 # .gitignore does NOT protect files already tracked or added with --force.

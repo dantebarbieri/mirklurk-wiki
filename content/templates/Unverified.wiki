@@ -1,1 +1,10 @@
-<includeonly><sup class="unverified" title="This claim has not been confirmed.">[unverified]</sup></includeonly><noinclude>Place <nowiki>{{Unverified}}</nowiki> immediately after an unconfirmed claim. For an unknown value, write "Unknown" instead.</noinclude>
+<includeonly><sup class="unverified" title="This claim has not been confirmed.">[unverified]</sup></includeonly><noinclude>Place <nowiki>{{Unverified}}</nowiki> immediately after an unconfirmed claim. For an unknown value, write "Unknown" instead.
+<templatedata>
+{
+  "description": "Mark one unconfirmed claim, immediately after it. For an unknown value, write Unknown instead. No parameters.",
+  "params": {},
+  "paramOrder": [],
+  "format": "inline"
+}
+</templatedata>
+</noinclude>
