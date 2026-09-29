@@ -164,8 +164,11 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             page.goto(url("Prototype new station"), wait_until="networkidle")
             links = page.locator(".prototype-result").get_by_role("link", name="Edit data", exact=True)
             hrefs = [urllib.parse.urlsplit(link.get_attribute("href")) for link in links.all()]
-            assert any(href.path == "/w/" + title.replace(" ", "_")
-                       and urllib.parse.parse_qs(href.query).get("veaction") == ["edit"] for href in hrefs)
+            targets = [(href.path, urllib.parse.parse_qs(href.query)) for href in hrefs]
+            assert any(params.get("veaction") == ["edit"] and (
+                path == "/w/" + title.replace(" ", "_")
+                or path == "/index.php" and [value.replace("_", " ") for value in params.get("title", [])] == [title]
+            ) for path, params in targets), targets
 
         try:
             page.goto(url("Special:UserLogin"), wait_until="networkidle")
