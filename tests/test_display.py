@@ -142,7 +142,7 @@ class DisplayTests(unittest.TestCase):
                 image = image_for("being-13", data["illustrations"])
                 image.update(rights_status="pending", creator=None, sha256=None, rights_basis=None, rights_note=None)
             pages = build_pages(ROOT, data, self.catalog, self.details)
-            self.assertIn(lua_string("[[Sceetler|<nowiki>Sceetler</nowiki>]] (no reviewed image)"), pages[ASSETS_TITLE])
+            self.assertIn(lua_string("[[Sceetler|<nowiki>Sceetler</nowiki>]]"), pages[ASSETS_TITLE])
             self.assertNotIn("Being-13.png", pages[ASSETS_TITLE])
             self.assertIn("{{Creature|Sceetler}}", pages["Bestiary"])
 

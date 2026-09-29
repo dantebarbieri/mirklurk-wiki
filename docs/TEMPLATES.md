@@ -4,9 +4,18 @@ These ordinary MediaWiki templates compose rows and use `Module:Display` (Scribu
 their pages normally on the wiki; MediaWiki tracks transclusion dependencies
 and refreshes readers through its job queue, without reseeding. Repository
 copies live in `content/templates/` and `content/modules/`; the publisher
-preserves human edits. The seven public templates are Coins, Health grid,
-Attack grid, Creature, Item, Recipe row and Ware row. There is no Merchant
+preserves human edits. The display templates are Coins, Health grid,
+Attack grid, Creature, Item, Recipe row and Ware row. Unverified is a plain
+wikitext marker, with no new runtime dependency. There is no Merchant
 infobox, central recipe database, Acquisition or Collapsible template.
+
+## Unverified
+
+For uncertainty, put `{{Unverified}}` directly after the specific unconfirmed
+claim. It renders a small **[unverified]** with a short tooltip, no category or
+research-page link. Do not apply it merely because a fact came from extraction.
+Unknown numbers remain **Unknown**, never zero. The marker is registered in
+the same exact-file and publication namespace allowlists as display templates.
 
 ## Item
 
@@ -64,7 +73,7 @@ Syntax example (illustrative, not a verified recipe):
 
 Separate multiple inputs/outputs with `<br />`. `ap` accepts the documented
 base cost, including fractional AP; `cost` preserves other units. Missing
-cost/output/method/conditions say **Not established**, never zero. `output`
+cost/output/method/conditions say **Unknown**, never zero. `output`
 may instead describe an in-place completion. The existing 96 recipe variants
 remain 77 condition-preserving groups plus one construction row.
 Workstations still transclude the output items' filtered recipe rows.
@@ -79,7 +88,7 @@ Workstations still transclude the output items' filtered recipe rows.
 
 Ware row calls Item itself. Optional `quantity`, `price`, `currency`, `location`
 and `conditions` add cells in that order, matching the owner's table headers.
-When a column exists but a value is unknown, pass **Not established**; omit a
+When a column exists but a value is unknown, pass **Unknown**; omit a
 field only when its column is absent. Location, story availability and stock
 disclosures shared by a section stay once on the owner, not copied per row.
 
@@ -107,8 +116,8 @@ first letter); the rest of the title's case remains significant. Only the
 25 catalog-classified creatures are registered, not the 11 NPCs. Unknown
 names, NPC names, namespaces, section fragments, empty input and titles over
 160 bytes produce visible errors. A registered creature with absent or
-unapproved art keeps its canonical name link and explicitly says
-**(no reviewed image)**; it never guesses a file.
+unapproved art keeps its canonical name link without a missing-image notice;
+it never guesses a file.
 
 The lookup is generated from existing catalog classifications, canonical
 page locations and approved role-less illustration metadata. It uses

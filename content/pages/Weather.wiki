@@ -1,5 +1,3 @@
 Weather changes over time, with rain history affecting later transitions.
 
-Conditional checks are not a single normalized probability distribution. Units, timing, and interactions not described here remain unknown.
-
 [[Game mechanics]] | [[Main Page]]

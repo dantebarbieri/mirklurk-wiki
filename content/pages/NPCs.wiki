@@ -1,11 +1,8 @@
-Browse characters, including merchants. Open a character page for documented details, wares, and any recorded offer conditions or locations.
+Find characters, merchants and their locations.
 
 == Finding characters ==
-[[World generation#Finding_NPCs|World generation and finding NPCs]] distinguishes landmark zones chosen at world creation from locations placed as you enter areas. Start with [[Ranger Bhato#Location_and_access|Bhato's hideout]], [[Gurb-Gurb#Location_and_access|Gurb-Gurb's hollow]], [[Ihar#Location_and_access|Ihar's shipwreck]], or [[World generation#Scaal's_lair|Scaal's lair zone]].
+See [[World generation#Finding_NPCs|World generation]] for placement rules, or go to [[Ranger Bhato#Location_and_access|Bhato's hideout]], [[Gurb-Gurb#Location_and_access|Gurb-Gurb's hollow]], [[Ihar#Location_and_access|Ihar's shipwreck]] or [[World generation#Scaal's_lair|Scaal's lair]].
 
-== Scope ==
-NPC is a browsing category, not a guarantee of friendliness, dialogue availability, or survival. Deceased characters are identified on their own pages.
+Friendly characters can retaliate when attacked. Trading and dialogue may depend on story progress.
 
-[[Unwanted Guard]] is included only as an inferred character grouping; read its availability caveats rather than assuming a normal encounter or dialogue.
-
-[[Main Page]] | [[Bestiary]] | [[Evidence and spoilers]]
+[[Main Page]] | [[Bestiary]]

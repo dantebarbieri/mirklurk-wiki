@@ -49,6 +49,7 @@
 !/content/templates/Item.wiki
 !/content/templates/Recipe_row.wiki
 !/content/templates/Ware_row.wiki
+!/content/templates/Unverified.wiki
 !/content/modules/
 !/content/modules/Display.lua
 !/tools/
@@ -75,6 +76,7 @@
 !/tests/test_acquisition.py
 !/tests/test_sync.py
 !/tests/test_display.py
+!/tests/test_editorial.py
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile

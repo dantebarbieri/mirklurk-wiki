@@ -1,22 +1,20 @@
-Welcome to the independent '''MirkLurk Wiki'''. Find equipment, creatures, characters, skills, and the systems behind your journey.
+Welcome to the '''MirkLurk Wiki''', an independent guide to the Mirk.
 
 == Explore ==
-* [[Items]] - equipment, materials, and supplies; open an item for its documented stats and relationships
+* [[Items]] - equipment, materials, recipes and supplies
 * [[Bestiary]] - creatures and enemies
-* [[NPCs]] - characters, including merchants and their documented wares
-* [[Nature]] - plants, terrain, and other nature records
-* [[Skills]] - browse skill groups and individual skill mechanics
+* [[NPCs]] - characters and merchants
+* [[Nature]] - plants and terrain
+* [[Skills]] - bonuses and abilities
 * [[Damage types]] - damage, status effects, armor interactions, and remedies
 * [[Health and armor]] - reading health shapes and attack grids
 * [[Action points]] - action costs, turns, and equipping items
-* [[Game mechanics]] - weather, progression, crafting, and other researched systems
+* [[Game mechanics]] - survival, weather, progression and crafting
 
-== Read the caveats ==
-Catalogues may reveal names before you encounter them in play. A source entry is not proof that content is available in the current game. [[Evidence and spoilers|Read the spoiler and build caveats]].
+== More guides ==
 
-Missing information means unknown, not zero. See [[Game mechanics#Version|the documented game version]] when comparing behavior.
+'''Spoilers:''' this wiki includes story events, locations and discoveries.
 
-== Help improve the wiki ==
-Add original explanations and cite evidence. [[Research policy|How to contribute and interpret evidence]] | [[Source provenance|Research sources]].
+Mechanics cover [[Game mechanics#Version|version 0.8.1.5]].
 
 MirkLurk is developed and published by [https://edympixels.com/ Edym Pixels], as listed on [https://store.steampowered.com/app/3972980/MirkLurk/ its Steam page]. This is an unofficial community wiki; game names and artwork remain subject to their owners' rights.

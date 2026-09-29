@@ -13,6 +13,7 @@ DISPLAY_FILES = {
     "Template:Item": "templates/Item.wiki",
     "Template:Recipe row": "templates/Recipe_row.wiki",
     "Template:Ware row": "templates/Ware_row.wiki",
+    "Template:Unverified": "templates/Unverified.wiki",
     "Module:Display": "modules/Display.lua",
 }
 ASSETS_TITLE = "Module:Display assets"

@@ -23,7 +23,7 @@ from pathlib import Path
 from wiki_data import title_key
 from wiki_details import load_publication_inputs
 from wiki_display import DISPLAY_TITLES, content_model, dependencies, page_namespace, validate_display_dependencies
-from wiki_render import build_pages
+from wiki_render import build_pages, validate_reader_pages
 from wiki_views import available_views, transclusions
 
 
@@ -552,6 +552,7 @@ def main(argv=None):
     try:
         data, catalog, details = load_publication_inputs(ROOT)
         pages = build_pages(ROOT, data, catalog, details)
+        validate_reader_pages(pages)
         api = Api(args.api)
         if args.apply:
             print(f"Logged in as {api.login(username, password)}.", flush=True)

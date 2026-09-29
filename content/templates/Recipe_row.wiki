@@ -1,4 +1,4 @@
-<includeonly><tr><td>{{{anchors|}}}{{{ingredients|No item inputs}}}</td><td>{{{output|Not established}}}</td><td>{{{methods|Not established}}}</td><td>{{#if:{{{ap|}}}|{{{ap}}} base [[Action points|AP]]|{{{cost|Not established}}}}}</td><td>{{{conditions|Not established}}}</td></tr>
+<includeonly><tr><td>{{{anchors|}}}{{{ingredients|No item inputs}}}</td><td>{{{output|Unknown}}}</td><td>{{{methods|Unknown}}}</td><td>{{#if:{{{ap|}}}|{{{ap}}} base [[Action points|AP]]|{{{cost|Unknown}}}}}</td><td>{{{conditions|Unknown}}}</td></tr>
 </includeonly><noinclude>
 A presentation row inside an existing recipe table:
 <pre>{{Recipe row
@@ -6,9 +6,9 @@ A presentation row inside an existing recipe table:
 |output={{Item|Bandage|quantity=1}}
 |methods=[[Inventory crafting]]
 |ap=2
-|conditions=Example only; use the documented requirements.
+|conditions=Syntax example only.
 }}</pre>
-This example illustrates syntax, not a verified recipe. Use nested Item calls separated by <nowiki><br /></nowiki> for multiple ingredients or outputs. Fractional base AP is supported. If a cost has another unit, supply cost instead of ap. Missing values say "Not established"; zero is not unknown. Output may describe an in-place construction instead of inventing an inventory item.
+This is a syntax example, not a recipe. Separate multiple Item calls with <nowiki><br /></nowiki>. Fractional AP is supported; for another unit use cost instead of ap. Missing values display "Unknown", not zero. Output can describe in-place construction.
 
-Keep literal onlyinclude/view/station filters and stable anchors on the owning output article. Put the row call inside those filters; this template does not inherit caller parameters or own facts. Workstations continue transcluding filtered rows.
+Keep onlyinclude/view/station filters and anchors on the output article, with the row call inside them. This template does not inherit caller parameters. Workstations transclude the filtered rows.
 </noinclude>

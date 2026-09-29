@@ -22,7 +22,7 @@ from wiki_details import (
     MAX_DETAILS_BYTES, empty_details, load_publication_inputs, parse_details,
     parse_illustrations, validate_details,
 )
-from wiki_render import PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
+from wiki_render import audit_report, image_caption, PAIRED_PROPERTIES, display_entry, fact_value, known, price_text, recipe_groups, recipe_profile_values
 from test_wiki import illustration_data, research_data, synthetic_data
 from smoke_deploy import refreshed_transclusion
 from wiki_views import available_views, selective_view, transclusions
@@ -33,6 +33,7 @@ class CatalogTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+        cls.audit = audit_report(cls.data, cls.catalog, cls.details)
 
     def test_ordinary_titles_qualify_only_collisions(self):
         locations = page_locations(self.data, self.catalog)
@@ -56,7 +57,7 @@ class CatalogTests(unittest.TestCase):
             with self.subTest(fact=fact["id"]):
                 page = self.pages[facts[fact["id"]]]
                 self.assertIn(f'id="fact-{fact["id"]}"', page)
-                if not fact["id"].endswith("-base-armor"):
+                if not fact["id"].endswith("-base-armor") and fact["id"] != "area-seed-ceiling":
                     value = profile_value("initial-weight", fact["value"], {}, {}) if fact["id"].endswith("-base-weight") else fact_value(fact)
                     self.assertIn(value, page)
         for entry in self.data["entries"]:
@@ -112,7 +113,7 @@ class CatalogTests(unittest.TestCase):
             with self.subTest(profile=profile["id"]):
                 page = self.pages[locations[profile["entity"]]]
                 self.assertEqual(page.count(f'id="profile-{profile["id"]}"'), 1)
-                self.assertIn(literal(profile["context"]), self.pages["Source provenance"])
+                self.assertIn(literal(profile["context"]), self.audit)
                 self.assertNotIn(literal(profile["context"]), page)
                 folded = recipe_profile_values(profile, recipes, self.catalog.get("construction_recipes", []))
                 for key, value in profile["values"].items():
@@ -141,7 +142,7 @@ class CatalogTests(unittest.TestCase):
                     else:
                         self.assertIn(profile_value(key, value, entities, locations), page)
         for name in ("Flax", "Linen"):
-            self.assertIn("Numerical stats are not established", self.pages[name])
+            self.assertIn("Stats: Unknown.", self.pages[name])
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
@@ -173,9 +174,9 @@ class CatalogTests(unittest.TestCase):
             page = self.pages[title]
             figures = [part.split("</div>", 1)[0] for part in page.split('class="pixel-art-figure"')[1:]]
             self.assertEqual(sum(figure.count(f'[[{image["file_title"]}|') for figure in figures), 1)
-            self.assertIn(literal(image["sha256"]), self.pages["Source provenance"])
+            self.assertIn(literal(image["sha256"]), self.audit)
             self.assertNotIn(image["sha256"], page)
-            self.assertIn(literal(image["caption"]), page)
+            self.assertIn(literal(image_caption(image)), page)
         for identity in ("nature-6",):
             self.assertIn("not a complete mature specimen", self.pages[locations[identity]])
 
@@ -197,8 +198,8 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("[[Brewer|", self.pages["Alchemy workstation"])
         self.assertNotIn("{|", mechanics)
         self.assertNotIn("[[Getting started", self.pages["Main Page"])
-        self.assertEqual(self.pages["Getting started"], "#REDIRECT [[Research policy]]\n")
-        self.assertIn("Record a useful observation", self.pages["Research policy"])
+        self.assertEqual(self.pages["Getting started"], "#REDIRECT [[Starting equipment]]\n")
+        self.assertEqual(self.pages["Research policy"], "#REDIRECT [[Main Page]]\n")
 
     def test_all_internal_links_and_explicit_anchors_resolve(self):
         for title, text in self.pages.items():
@@ -255,7 +256,7 @@ class CatalogTests(unittest.TestCase):
         }]
         pages = build_pages(ROOT, data, catalog)
         self.assertIn("[[Synthetic merchant|", pages["NPCs"])
-        self.assertIn("Synthetic classification only.", pages["Source provenance"])
+        self.assertIn("Synthetic classification only.", audit_report(data, catalog))
         self.assertNotIn("Synthetic classification only.", pages["Synthetic merchant"])
         self.assertIn("Characters now listed under NPCs", pages["Bestiary"])
         self.assertNotIn("Synthetic merchant", pages["Bestiary"].split("Characters now listed")[0])
@@ -273,12 +274,12 @@ class CatalogTests(unittest.TestCase):
         guard = next(row for row in self.catalog["classifications"] if row["entity"] == "being-35")
         self.assertEqual(guard["kind"], "npc")
         self.assertEqual(guard["confidence"], "inferred")
-        self.assertIn("friendly base faction", self.pages["Unwanted Guard"])
-        self.assertIn("retaliate if attacked", self.pages["Unwanted Guard"])
-        self.assertIn("has not been verified", self.pages["Unwanted Guard"])
-        self.assertIn("aggression chance concerns eligible targets", self.pages["Unwanted Guard"])
+        self.assertIn("friendly faction", self.pages["Unwanted Guard"])
+        self.assertIn("retaliate when attacked", self.pages["Unwanted Guard"])
+        self.assertIn("Normal encounter and summoning availability: Unknown", self.pages["Unwanted Guard"])
+        self.assertIn("Faction and targeting rules", self.pages["Unwanted Guard"])
         self.assertIn("<nowiki>85</nowiki>%", self.pages["Unwanted Guard"])
-        self.assertIn("inferred character grouping", self.pages["NPCs"])
+        self.assertNotIn("inferred character grouping", self.pages["NPCs"])
         self.assertIn("[[Category:NPCs]]", self.pages["Unwanted Guard"])
         self.assertNotIn("[[Category:Bestiary]]", self.pages["Unwanted Guard"])
         self.assertIn("[[Unwanted Guard|", self.pages["NPCs"])
@@ -286,7 +287,7 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("Unwanted Guard", self.pages["Category:Unwanted creatures"])
         self.assertNotIn("Unwanted Guard", self.pages["Category:Bestiary"])
         self.assertNotIn("Unwanted Guard", self.pages["Bestiary"].split("Characters now listed")[0])
-        self.assertIn(literal(guard["note"]), self.pages["Source provenance"])
+        self.assertIn(literal(guard["note"]), self.audit)
         self.assertNotIn(literal(guard["note"]), self.pages["Unwanted Guard"])
         catalog = copy.deepcopy(self.catalog)
         next(row for row in catalog["classifications"] if row["entity"] == "being-35")["summary"] = ""
@@ -343,7 +344,7 @@ class CatalogTests(unittest.TestCase):
             entry = next(row for row in self.data["entries"] if row["id"] == identity)
             self.assertIn(f"[[Quests and journal#entry-{identity}|", bhato)
             self.assertNotIn(literal(entry["summary"]), bhato)
-            self.assertIn(literal(entry["summary"]), self.pages["Quests and journal"])
+            self.assertIn(literal(display_entry(entry, self.catalog)["summary"]), self.pages["Quests and journal"])
         self.assertIn("[[Armor workstation]]", bhato)
         armor = next(row for row in self.catalog["stations"] if row["id"] == "armor-workstation")
         self.assertIn(literal(armor["acquisition"]), self.pages["Armor workstation"])
@@ -375,7 +376,7 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("item-131", locations)
         self.assertNotIn("item-125", locations)
         self.assertNotIn("Obtaining or finding", self.pages["Inventory crafting"])
-        self.assertNotIn("Not established", self.pages["Inventory crafting"])
+        self.assertNotIn("Unknown", self.pages["Inventory crafting"])
 
     def test_matching_recipe_profile_cost_and_yield_share_recipe_cells(self):
         campfire = self.pages["Campfire"]
@@ -431,8 +432,8 @@ class CatalogTests(unittest.TestCase):
 
     def test_initializer_weight_and_value_are_explicitly_not_final_stats(self):
         for title in ("Campfire", "Wood Buckler"):
-            self.assertIn("literal initializer values before recipe postprocessing", self.pages[title])
-            self.assertIn("not finalized in-game weights or prices", self.pages[title])
+            self.assertIn("Base weight and value are before crafting adjustments", self.pages[title])
+            self.assertIn("final weight and price may differ", self.pages[title])
 
     def test_global_prices_are_item_owned_selective_transclusions(self):
         prices = self.catalog["unit_prices"]
@@ -505,7 +506,7 @@ class CatalogTests(unittest.TestCase):
         raw["illustrations"][0]["variant"] = "unreviewed"
         with self.assertRaises(DataError):
             parse_illustrations(json.dumps(raw).encode(), base, self.catalog)
-        self.assertIn("User-reported gameplay", self.pages["Source provenance"])
+        self.assertIn("User-reported gameplay", self.audit)
 
     def test_currency_guide_transcludes_coin_owned_values_and_keeps_pricing_exceptions(self):
         guide = self.pages["Currency and trading"]
@@ -522,13 +523,13 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("Acquisition is not established", page)
             self.assertIn("[[Currency and trading#currency-coin-consolidation|", page)
         self.assertIn("replaces the durability factor", guide)
-        self.assertIn("does not multiply the durability and fuel reductions together", guide)
-        self.assertIn("25 percent", guide)
-        self.assertIn("10 percent", guide)
+        self.assertIn("The two discounts do not multiply", guide)
+        self.assertIn("25% floor", guide)
+        self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
         self.assertEqual(self.data["game"]["build"], "0.8.1.5")
-        self.assertIn("user report", self.pages["Source provenance"])
+        self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
         guide = self.pages["Currency and trading"]
@@ -538,7 +539,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("affect fractions smaller than one copper coin", guide)
         for rule in self.catalog["currency"]["rules"]:
             if rule["id"] in {"coin-consolidation", "coin-weight-units", "trade-standard-value"}:
-                self.assertIn(literal(rule["qualification"]), self.pages["Source provenance"])
+                self.assertIn(literal(rule["qualification"]), self.audit)
                 self.assertNotIn(literal(rule["qualification"]), guide)
 
     def test_coin_profile_and_unit_mismatch_are_rejected(self):
@@ -624,7 +625,7 @@ class CatalogTests(unittest.TestCase):
             self.assertIn("== <nowiki>Effects</nowiki> ==", page)
             self.assertNotRegex(page, r"Paraphrase of|not independently verified|localized design|described effects|runtime implementation")
             self.assertIn("[[Category:Skills]]", page)
-        self.assertIn("Skill description methodology", self.pages["Source provenance"])
+        self.assertIn("Skill description methodology", self.audit)
 
     def test_category_graph_links_and_transitive_membership_resolve(self):
         categories = category_definitions(self.data, self.catalog)
@@ -798,7 +799,7 @@ class CatalogTests(unittest.TestCase):
         for parent in ("Consumables", "Crafting materials"):
             children = [row for row in categories.values() if parent in row["parents"]]
             self.assertTrue(set(categories[parent]["members"]) <= set().union(*(set(row["members"]) for row in children)))
-        self.assertIn("localized names only", self.pages["Category:Fibers and fabrics"])
+        self.assertIn("Fiber, twine and fabrics", self.pages["Category:Fibers and fabrics"])
         self.assertEqual(len(recipes), 96)
         self.assertEqual(sum(entry["kind"] == "merchant" for entry in self.data["entries"]), 63)
         self.assertEqual(len(self.catalog["unit_prices"]["prices"]), 42)
@@ -825,7 +826,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn(selective_view(price_text({"value": 20}, self.data["illustrations"]), "price", True), field_kit)
         self.assertIn("{{:Survivor's Field Kit}}", self.pages["Gurb-Gurb"])
         self.assertIn("[[Alchemy workstation|Alternative crafting method]]", field_kit)
-        self.assertIn("only while the fire remains active", field_kit)
+        self.assertIn("requires an active fire", field_kit)
         self.assertIn("[[Survivor's Field Kit|Alternative crafting method]]", self.pages["Alchemy workstation"])
 
     def test_health_and_attack_grids_preserve_shape_orientation_and_cell_meaning(self):
@@ -894,7 +895,7 @@ class CatalogTests(unittest.TestCase):
             if title.startswith("Category:") or title in {"Source provenance", "Research policy", "Evidence and spoilers"}:
                 continue
             self.assertNotRegex(page, r"\((?:internal [^)]*|0-1 fraction|fraction|unitless|durability units)\)")
-        self.assertIn("not finalized in-game weights or prices", self.pages["Twine"])
+        self.assertIn("final weight and price may differ", self.pages["Twine"])
 
     def test_character_state_and_damage_reverse_links_have_canonical_owners(self):
         self.assertIn("[[Dead Unwanted#State_history|", self.pages["Viend"])
@@ -909,22 +910,22 @@ class CatalogTests(unittest.TestCase):
 
     def test_combat_guides_distinguish_initial_hits_spread_and_remedies(self):
         poison = self.pages["Poison"]
-        self.assertIn("Poison that spreads can get beneath armor", poison)
-        self.assertIn("loses one armor layer instead of receiving poison", poison)
-        self.assertIn("do not restore already lost hit points", poison)
+        self.assertIn("Spreading poison can reach beneath armor", poison)
+        self.assertIn("removes one armor layer instead of poisoning", poison)
+        self.assertIn("without restoring lost hit points", poison)
         sharp = self.pages["Sharp"]
-        self.assertIn("cannot also make that cell bleed", sharp)
-        self.assertIn("Rank 10 Blade Master", sharp)
+        self.assertIn("without causing bleeding on that cell", sharp)
+        self.assertIn("At rank 10, Blade Master", sharp)
         fire = self.pages["Fire"]
-        self.assertIn("cannot be restored by ordinary wound salves", fire)
-        self.assertIn("turn the burned cell into an ordinary wound", fire)
-        self.assertIn("does not immediately restore the hit point", fire)
-        self.assertIn("multi-point hit can make more than one check", self.pages["Piercing"])
-        self.assertIn("Each positive-damage pattern cell", self.pages["Force"])
+        self.assertIn("Wound salves and resting cannot restore burned cells", fire)
+        self.assertIn("turns a burn into an ordinary wound", fire)
+        self.assertIn("does not restore HP immediately", fire)
+        self.assertIn("Multi-point hits can make several checks", self.pages["Piercing"])
+        self.assertIn("Each positive-damage attack cell", self.pages["Force"])
         for title, guide in (("Bandage", "Sharp"), ("Minor Antidote", "Poison"), ("Simple Burn Remedy", "Fire")):
-            self.assertIn(f"[[{guide}|{guide}: effects and related rules]]", self.pages[title])
+            self.assertIn(f"[[{guide}]]", self.pages[title])
         self.assertIn("normally has 8 AP per turn", self.pages["Action points"])
-        self.assertIn("minus any action cost carried over", self.pages["Action points"])
+        self.assertIn("minus any cost carried over", self.pages["Action points"])
         self.assertIn("0.4 AP per square", self.pages["Action points"])
         self.assertIn("<nowiki>Equip cost</nowiki> || <nowiki>3.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
         self.assertIn("<nowiki>7.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
@@ -942,7 +943,7 @@ class CatalogTests(unittest.TestCase):
         for value, expected in ((0, "0"), (0.1, "0-1"), (1.2, "1-2"), (2.3, "2-3")):
             text = profile_value("extra-damage", value, {}, {})
             self.assertEqual(re.sub(r"</?nowiki>", "", text), expected)
-        self.assertIn("rolled independently for each occupied attack cell", self.pages["Health and armor"])
+        self.assertIn("Roll its bonus range separately for each occupied attack cell", self.pages["Health and armor"])
         for change in (
             lambda c: c["guides"][0].update(title="Unreviewed guide"),
             lambda c: c["guides"][0].update(paragraphs=[]),
@@ -1010,7 +1011,7 @@ class ProfileTests(unittest.TestCase):
             pages = build_pages(ROOT, synthetic_data(), details=details)
             self.assertIn("== Stats ==", pages["Entity synthetic-item"])
             self.assertIn(known(value), pages["Entity synthetic-item"])
-            self.assertNotIn("Numerical stats are not established", pages["Entity synthetic-item"])
+            self.assertNotIn("Stats: Unknown.", pages["Entity synthetic-item"])
 
     def test_profile_schema_rejects_unbounded_strings_missing_sources_and_duplicates(self):
         changes = [
@@ -1038,7 +1039,7 @@ class ProfileTests(unittest.TestCase):
         details = synthetic_details()
         details["profiles"][0]["context"] = "</nowiki>[[Injected]]<script>"
         pages = build_pages(ROOT, synthetic_data(), details=details)
-        self.assertIn("&lt;/nowiki&gt;", pages["Source provenance"])
+        self.assertIn("&lt;/nowiki&gt;", audit_report(synthetic_data(), details=details))
         self.assertNotIn("<script>", pages["Source provenance"])
 
     def test_external_image_metadata_supports_nature_and_skills_without_bytes(self):
@@ -1055,7 +1056,7 @@ class ProfileTests(unittest.TestCase):
             data["illustrations"] = images
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
-            self.assertIn("Synthetic test creator", build_pages(ROOT, data)["Source provenance"])
+            self.assertIn("Synthetic test creator", audit_report(data))
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
                 b'"build": "0.8.1.5"', b'"build": null', 1,

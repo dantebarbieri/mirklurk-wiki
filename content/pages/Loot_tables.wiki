@@ -1,7 +1,5 @@
-Find documented loot through the linked item and creature pages. Each source keeps its own results and conditions.
+Find loot by source below, or look up an [[Items|item]] or [[Bestiary|creature]].
 
-[[Random treasure]] lists the eligible items for each documented chest, remains and bonus-treasure pool, with its value budget and selection rules. For reliable named routes, item pages put recipes, sellers and fixed or specific source records before conditional random finds. [[Items#Recipe_ingredients_by_acquisition|Ingredient acquisition groups]] separate creature drops, gathering and purchases.
-
-The catalog is not exhaustive. A missing result does not mean that a drop is impossible.
+[[Random treasure]] lists possible finds in chests, remains and bonus pools. See [[Items#Recipe_ingredients_by_acquisition|ingredients by acquisition]] for creature drops, gathering and purchases.
 
 [[Items]] | [[Bestiary]] | [[Main Page]]

@@ -34,12 +34,33 @@ the effective gameplay value after skills, state, or other modifiers.
 
 Do not classify every bestiary entry as an enemy. Do not infer reachability,
 units, drop tables, stacking, or unlock conditions from a name. Use original
-descriptions, and explicitly state unverified interpretations. Catalogues may
+descriptions, and retain meaningful uncertainty. Catalogues may
 contain spoilers; preserve the existing warnings.
 
 Names in structured data are rendered as literal text, not as executable wiki
 markup. Authored `.wiki` pages are trusted editorial content and must also be
 reviewed for misleading links or inappropriate markup.
+
+## Reader-facing prose
+
+Write short, direct game guidance. Keep amounts, prerequisites, exceptions and
+relevant versions; cut repeated introductions, hedging and explanations of how
+the wiki is built. Do not publish evidence ledgers, research status, source paths,
+verification instructions or missing-image notices in articles, categories,
+navigation, captions or tooltips. Provenance stays in the structured inputs and
+the local `wiki_render.audit_report()` output, never in `build_pages()`.
+
+Use `{{Unverified}}` immediately after a genuinely unconfirmed claim, not on
+every extracted fact or whole page. Use **Unknown** for an unknown value and
+**Not documented** for an absent description; neither means zero or impossible.
+Do not remove an essential qualification to make a sentence shorter.
+
+Edit authored pages and catalog presentation fields, not immutable source
+records. `entry_display` and `fact_display` provide prose overrides; fact
+overrides cannot change values, units or confidence. Keep selective-view
+ownership and filters intact. Review full pages and their transcluded views,
+not just source-word matches. The staged publication gate rebuilds from indexed
+files, and the disposable smoke checks every rendered reader page.
 
 ## Review and validation
 
@@ -66,7 +87,8 @@ Merging to `main` publishes the generated pages automatically, but only onto
 pages whose latest revision came from the publishing automation. A page someone
 edited on the wiki is skipped and reported on every run; port useful edits into
 the repository, then hand the page back as described in
-[PUBLISHING.md](docs/PUBLISHING.md). The sync never deletes pages.
+[PUBLISHING.md](docs/PUBLISHING.md). The sync never deletes pages; retire old
+titles with managed redirects to useful reader pages.
 
 You must have the right to submit your own contributions. No contribution here
 grants rights to the game's creative content.

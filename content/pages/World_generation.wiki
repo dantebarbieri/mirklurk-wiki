@@ -1,6 +1,6 @@
 '''World generation''' happens in two stages: the game chooses the world-map biomes and several landmark zones upfront, then generates each area's terrain when you enter it. There is '''no reusable world seed'''. The route you explore affects both terrain borders and where some NPC locations appear.
 
-This guide covers inspected build '''0.8.1.5''' and contains '''location and story spoilers'''. A '''zone''' below is one cell of the five-by-five world map, labeled A through E and 1 through 5, not a tile within that area.
+This guide covers '''0.8.1.5''' and contains '''location and story spoilers'''. A '''zone''' is one cell of the five-by-five world map, labeled A through E and 1 through 5.
 
 == What is decided upfront? ==
 Creating a world chooses its biome grid and the zones for Fort Solid, [[Ranger Bhato]]'s hideout, [[Scaal]]'s lair and the Library. Those assignments exist before all the zones are explored; their exact exterior positions are created when the relevant areas are generated.
@@ -9,7 +9,7 @@ Creating a world chooses its biome grid and the zones for Fort Solid, [[Ranger B
 Fort Solid is chosen in column A or E, in any row from 1 to 5. Its biome is '''Fort Solid Shorehold'''.
 
 === Scaal's lair ===
-Scaal's lair zone is always the reflection of Fort Solid across the map's center: swap A with E and subtract the row from 6. For example, Fort Solid at A2 puts the lair at E4; E1 puts it at A5. This is a placement rule, not just a tendency.
+Scaal's lair zone is the reflection of Fort Solid across the map's center: swap A with E and subtract the row from 6. For example, a fort at A2 puts the lair at E4; E1 puts it at A5.
 
 The zone is a '''Rift-Thorn Mire'''. Its surface entrance leads through three rift depths, with Scaal in the third; the world-map coordinate identifies the entrance zone, not an outdoor Scaal encounter.
 
@@ -19,10 +19,10 @@ The Library is assigned after Fort Solid and Scaal's zone. The generator rerolls
 This excludes the fort's adjacent cells, including diagonals, and Scaal's orthogonal neighbors, but permits Scaal's diagonal neighbors. The Library's zone becomes '''Sunken Ancient Ruins'''. Another two or three Sunken Ancient Ruins zones are added later, so that biome alone does not identify the Library.
 
 === Guaranteed fen biomes ===
-Normal new worlds contain two or three Broken Fens and at least one Drowned Fen. A world missing either biome is not an ordinary result of this generator. These guarantees matter for [[Ihar#Location_and_access|Ihar's placement]] and [[Gurb-Gurb#Location_and_access|Gurb-Gurb's fallback rule]].
+New worlds contain two or three Broken Fens and at least one Drowned Fen. These are used for [[Ihar#Location_and_access|Ihar's shipwreck]] and [[Gurb-Gurb#Location_and_access|Gurb-Gurb's hollow]].
 
 == Finding NPCs ==
-These character pages own the search instructions, placement exceptions and exterior pictures. Their location sections are separate from their trading and story requirements.
+See each character's page for directions, exterior pictures and access requirements.
 
 {| class="wikitable"
 ! Character !! Finding their location
@@ -48,9 +48,6 @@ A save records the initial biome grid and fixed landmark zones, but cannot revea
 That does not freeze every object in the area. The delayed placement checks for Gurb-Gurb and Ihar also run on revisits and when loading a save in an eligible outdoor area, not while inside a cave there. Their individual pages explain success conditions and what happens after failure.
 
 == World seeds ==
-There is no reusable world seed in the inspected generation path. The internal seed value listed below is drawn but is not used by the active world or terrain generators; the coordinate-reseeding helpers have no callers. It is not a code that can reproduce the world.
-
-== Evidence and version ==
-These are source-inspected rules, not measured spawn rates or a guarantee of behavior in other builds. The original numeric initialization observations remain below for context; their seed field is not a world-generation control. [[Source provenance#Editorial_entry_evidence|Current generation evidence]] and [[Source provenance#NPC_location_evidence|NPC location evidence]] are recorded separately from the historical research references.
+There is no seed code you can enter to recreate a world.
 
 [[NPCs]] | [[Merchants]] | [[Quests and journal]] | [[Game mechanics]] | [[Main Page]]

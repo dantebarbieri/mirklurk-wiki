@@ -59,17 +59,17 @@
   ],
   "taxonomy": {
     "skill_groups": [
-      {"entity": "skill-group-0", "summary": "Movement skills in the game's Wanderer group: travelling, swimming, jumping, climbing and balance. Membership follows the localized group assignments, not an invented prerequisite tree."},
-      {"entity": "skill-group-1", "summary": "The game's Survivor group covers fire-making, personal reserves, warmth and carrying. Open each skill for its own effects and conditions."},
-      {"entity": "skill-group-2", "summary": "The game's Hunter group combines bow handling, butchery, movement in combat, arrow recovery and concealment. These are the recorded group members, not extra unlock requirements."},
-      {"entity": "skill-group-3", "summary": "The game's Warrior group covers armor, melee fighting and shields. Individual skill pages own their bonuses; category membership does not imply that every bonus applies to every weapon."},
-      {"entity": "skill-group-4", "summary": "The game's Forager group covers cultivation, small creatures, plant foods, brewing and resistance to poison. Membership follows the recorded skill groups rather than a new wiki skill tree."}
+      {"entity": "skill-group-0", "summary": "Travel, swimming, jumping, climbing and balance."},
+      {"entity": "skill-group-1", "summary": "Fire-making, personal reserves, warmth and carrying."},
+      {"entity": "skill-group-2", "summary": "Bows, butchery, dodging, arrow recovery and concealment."},
+      {"entity": "skill-group-3", "summary": "Armor, melee combat and shields."},
+      {"entity": "skill-group-4", "summary": "Harvesting, small creatures, plant foods, brewing and poison resistance."}
     ],
     "groups": [
       {
         "title": "Clothes",
         "index": "Items",
-        "summary": "Clothing articles, including ordinary outer garments. Equipment-slot categories distinguish layered garments such as shirts and outer torso pieces.",
+        "summary": "Clothing, from shirts and socks to outer garments. Different layers use separate equipment slots.",
         "members": [
           "item-15",
           "item-16",
@@ -106,7 +106,7 @@
       {
         "title": "Armor",
         "index": "Items",
-        "summary": "Protective equipment, including shields. Slot categories also include protective gloves and other equipment whose primary browsing group is different.",
+        "summary": "Protective equipment and shields. Slot categories also include protective clothing.",
         "members": [
           "item-0",
           "item-1",
@@ -131,7 +131,7 @@
       {
         "title": "Weapons",
         "index": "Items",
-        "summary": "Weapon families and the built-in Unarmed attack. Unarmed is not carried inventory. Ammunition is browsed separately, and an item is not a purpose-built weapon merely because it can be thrown.",
+        "summary": "Melee weapons, bows and thrown flasks. Unarmed is a built-in attack, not a carried item. Arrows are under Ammunition.",
         "members": [
           "item-2",
           "item-3",
@@ -174,7 +174,7 @@
       {
         "title": "Tools",
         "index": "Items",
-        "summary": "Tools for light, fire-making, mapping and other tasks. A tool can also be consumed or used in crafting; these roles overlap rather than replacing its article.",
+        "summary": "Tools for lighting, fire-making, mapping and other tasks. Some are also ingredients or consumables.",
         "members": [
           "item-40",
           "item-41",
@@ -197,7 +197,7 @@
       {
         "title": "Consumables",
         "index": "Items",
-        "summary": "Food, treatments and supplies spent by their documented use. Some items have several uses; categorization is not a safety recommendation or a claim that every attempted use consumes the item.",
+        "summary": "Food, remedies and supplies consumed by use. Some have multiple uses or harmful effects.",
         "members": [
           "item-25",
           "item-32",
@@ -262,7 +262,7 @@
       {
         "title": "Crafting materials",
         "index": "Items",
-        "summary": "Material families and overlapping recipe ingredients. Some materials also serve as food, fuel or equipment. Localization-only records and materials without a reviewed recipe remain explicitly limited on their articles.",
+        "summary": "Recipe materials, including items also used as food, fuel or equipment.",
         "members": [
           "item-19",
           "item-34",
@@ -316,7 +316,8 @@
           "item-166",
           "item-167",
           "item-168"
-        ]
+        ],
+        "summary": "Backpacks and belts that add inventory space."
       },
       {
         "title": "Camping and construction",
@@ -338,12 +339,13 @@
           "item-250",
           "item-256",
           "item-257"
-        ]
+        ],
+        "summary": "Camp equipment, workstations and building supplies."
       },
       {
         "title": "Ammunition",
         "index": "Items",
-        "summary": "Arrows readied in the off-hand slot for bows. Ammunition remains distinct from equippable weapon families; its slot membership does not make it a melee weapon.",
+        "summary": "Arrows readied in the off hand for use with bows.",
         "members": [
           "item-45",
           "item-46",
@@ -365,7 +367,8 @@
           "item-232",
           "item-233",
           "item-234"
-        ]
+        ],
+        "summary": "Seeds for growing plants."
       },
       {
         "title": "Coins and valuables",
@@ -379,7 +382,8 @@
           "item-99",
           "item-100",
           "item-101"
-        ]
+        ],
+        "summary": "Money and valuables for trading."
       },
       {
         "title": "Quest items",
@@ -389,14 +393,16 @@
           "item-126",
           "item-130",
           "item-132"
-        ]
+        ],
+        "summary": "Items used during the main quest."
       },
       {
         "title": "Miscellaneous items",
         "index": "Items",
         "members": [
           "item-75"
-        ]
+        ],
+        "summary": "Other items and supplies."
       },
       {
         "title": "Trees",
@@ -405,7 +411,8 @@
           "nature-4",
           "nature-7",
           "nature-17"
-        ]
+        ],
+        "summary": "Trees and woody shrubs."
       },
       {
         "title": "Rift growth",
@@ -413,7 +420,8 @@
         "members": [
           "nature-12",
           "nature-13"
-        ]
+        ],
+        "summary": "Plants found around the rifts."
       },
       {
         "title": "Gatherable food plants",
@@ -423,7 +431,8 @@
           "nature-18",
           "nature-19",
           "nature-20"
-        ]
+        ],
+        "summary": "Plants with edible harvests. Some produce can cause sickness."
       },
       {
         "title": "Non-growing nature",
@@ -431,7 +440,8 @@
         "members": [
           "nature-2",
           "nature-3"
-        ]
+        ],
+        "summary": "Rocks, logs and other terrain features."
       },
       {
         "title": "Ground cover and water plants",
@@ -442,7 +452,8 @@
           "nature-5",
           "nature-8",
           "nature-9"
-        ]
+        ],
+        "summary": "Grasses, ferns, moss and water plants."
       }
     ],
     "tags": [
@@ -450,7 +461,7 @@
         "title": "Cutting and chopping tools",
         "index": "Items",
         "parents": ["Tools"],
-        "summary": "Reviewed cutting and chopping implements, including weapons with a second tool role. Membership does not promise identical effectiveness for every task.",
+        "summary": "Cutting and chopping implements, including weapons. Effectiveness varies by tool and task.",
         "members": [
           "item-2",
           "item-3",
@@ -476,7 +487,7 @@
         "title": "Light sources",
         "index": "Items",
         "parents": ["Tools"],
-        "summary": "Portable and placeable light sources. Torches fit either hand, lanterns fit the off hand, and the placed Jar of Fireflies is not hand-slot equipment.",
+        "summary": "Torches fit either hand; lanterns fit the off hand. Jar of Fireflies is placed rather than held.",
         "members": [
           "item-41",
           "item-96",
@@ -490,7 +501,7 @@
         "title": "Fire-making supplies",
         "index": "Items",
         "parents": ["Tools"],
-        "summary": "Ignition tools, stones and wood supplies used around fire-making. This broad role does not mean every member is consumed as fuel.",
+        "summary": "Ignition tools, stones and wood. Not every item here burns as fuel.",
         "members": [
           "item-19",
           "item-34",
@@ -523,7 +534,7 @@
         "title": "Remedies",
         "index": "Items",
         "parents": ["Consumables"],
-        "summary": "Wound, poison, sickness and burn treatments. Each item describes its specific effect; these treatments are not interchangeable.",
+        "summary": "Treatments for wounds, poison, sickness and burns.",
         "members": [
           "item-32",
           "item-84",
@@ -541,7 +552,7 @@
         "title": "Food and drink",
         "index": "Items",
         "parents": ["Consumables"],
-        "summary": "Items supported by food definitions, including raw creatures, prepared meals and plant foods. Edible does not mean safe: some cause sickness or other effects. Lamp Oil is not food.",
+        "summary": "Raw and prepared foods, including small creatures. Some cause sickness or other harmful effects.",
         "members": [
           "item-25",
           "item-51",
@@ -589,7 +600,7 @@
         "title": "Equipment by slot",
         "index": "Items",
         "parents": ["Items"],
-        "summary": "Browse actual equipment slots using descriptive wiki labels. Helmet and hood, shirt and outer torso, pants and leg armor, and socks and footwear occupy distinct slots. The two weapon sets use the same main-hand and off-hand rules. Built-in Unarmed is not inventory equipment.",
+        "summary": "Helmet and hood, shirt and outer torso, pants and leg armor, and socks and footwear each use separate slots. Both weapon sets follow the same hand-slot rules. Unarmed is not equipment.",
         "members": [],
         "confidence": "inferred",
         "evidence": [
@@ -601,7 +612,7 @@
         "title": "Main-hand equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Inventory items accepted by the main-hand slot: one-handed weapons, the two-handed weapon type and torches. See Two-handed weapons for the distinction between melee weapons occupying both hands and bows using off-hand ammunition.",
+        "summary": "One-handed weapons, two-handed weapons and torches. Two-handed melee weapons occupy both hands; bows use arrows in the off hand.",
         "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7", "item-8", "item-9", "item-10", "item-11", "item-27", "item-28", "item-29", "item-30", "item-41", "item-44", "item-90", "item-93", "item-96", "item-105", "item-106", "item-157", "item-158", "item-159", "item-160", "item-161", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-190", "item-191", "item-206", "item-212"],
         "confidence": "inferred",
         "evidence": [
@@ -614,7 +625,7 @@
         "title": "Off-hand equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Shields, lanterns, torches and readied arrows accepted directly by the off-hand slot. A two-handed melee weapon occupying this hand is not independently placeable here. Arrows remain ammunition, not weapon-family members.",
+        "summary": "Shields, lanterns, torches and arrows. Two-handed melee weapons occupy this hand but cannot be placed here independently.",
         "members": ["item-0", "item-1", "item-41", "item-45", "item-46", "item-50", "item-58", "item-76", "item-96", "item-110", "item-111", "item-118", "item-174", "item-212", "item-219", "item-220"],
         "confidence": "inferred",
         "evidence": [
@@ -627,7 +638,7 @@
         "title": "Helmet-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Head pieces accepted by the helmet slot. The hood is a separate equipment slot.",
+        "summary": "Headwear worn separately from hoods.",
         "members": ["item-54", "item-116", "item-117", "item-119"],
         "confidence": "inferred",
         "evidence": [
@@ -639,7 +650,7 @@
         "title": "Hood-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Hoods accepted by the hood slot, distinct from the helmet slot.",
+        "summary": "Hoods worn separately from helmets.",
         "members": ["item-42", "item-146", "item-204", "item-205"],
         "confidence": "inferred",
         "evidence": [
@@ -651,7 +662,7 @@
         "title": "Shirt-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Shirts accepted by the inner torso slot. Outer torso equipment has its own slot.",
+        "summary": "Shirts worn beneath outer torso equipment.",
         "members": ["item-22", "item-23", "item-24"],
         "confidence": "inferred",
         "evidence": [
@@ -663,7 +674,7 @@
         "title": "Outer torso equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Vests and chest armor accepted by the outer torso slot. This includes clothing as well as armor; a shirt occupies a different slot.",
+        "summary": "Vests and chest armor, worn separately from shirts.",
         "members": ["item-43", "item-55", "item-147", "item-194", "item-196", "item-197", "item-198"],
         "confidence": "inferred",
         "evidence": [
@@ -675,7 +686,7 @@
         "title": "Belt-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Herbalist belts accepted by the belt slot. Backpacks have a separate carrying-equipment slot.",
+        "summary": "Herbalist belts. Backpacks use a separate slot.",
         "members": ["item-13", "item-166", "item-167", "item-168"],
         "confidence": "inferred",
         "evidence": [
@@ -687,7 +698,7 @@
         "title": "Cloak-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Cloaks accepted by the cloak slot, separate from shirts, outer torso equipment and backpacks.",
+        "summary": "Cloaks, worn separately from shirts, chest pieces and backpacks.",
         "members": ["item-137", "item-145", "item-207", "item-208", "item-209"],
         "confidence": "inferred",
         "evidence": [
@@ -699,7 +710,7 @@
         "title": "Backpack-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Backpacks accepted by the backpack slot. Belts are browsed separately rather than combined into an invented bag slot.",
+        "summary": "Backpacks. Belts use a separate slot.",
         "members": ["item-12", "item-14", "item-26", "item-148"],
         "confidence": "inferred",
         "evidence": [
@@ -711,7 +722,7 @@
         "title": "Glove-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Gloves accepted by the glove slot, including Iron Reinforced Gloves. Hand clothing is separate from held equipment.",
+        "summary": "Gloves, including Iron Reinforced Gloves. Held equipment uses separate slots.",
         "members": ["item-59", "item-164", "item-165", "item-199", "item-200"],
         "confidence": "inferred",
         "evidence": [
@@ -723,7 +734,7 @@
         "title": "Pants-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Pants accepted by the pants slot. Leg armor is a separate layer and slot.",
+        "summary": "Pants, worn separately from leg armor.",
         "members": ["item-20", "item-21", "item-33"],
         "confidence": "inferred",
         "evidence": [
@@ -735,7 +746,7 @@
         "title": "Leg-armor-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Protective leg pieces accepted by the leg-armor slot, distinct from ordinary pants.",
+        "summary": "Leg armor, worn separately from pants.",
         "members": ["item-56", "item-192", "item-193", "item-195"],
         "confidence": "inferred",
         "evidence": [
@@ -747,7 +758,7 @@
         "title": "Sock-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Socks accepted by the sock slot. Shoes and boots use the separate footwear slot.",
+        "summary": "Socks, worn separately from shoes and boots.",
         "members": ["item-16", "item-17", "item-18"],
         "confidence": "inferred",
         "evidence": [
@@ -759,7 +770,7 @@
         "title": "Footwear-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Shoes and boots accepted by the footwear slot, distinct from socks.",
+        "summary": "Shoes and boots, worn separately from socks.",
         "members": ["item-15", "item-57", "item-201", "item-202", "item-203"],
         "confidence": "inferred",
         "evidence": [
@@ -771,42 +782,42 @@
         "title": "Daggers and hunting knives",
         "index": "Items",
         "parents": ["Weapons"],
-        "summary": "Named daggers and hunting knives, also used as cutting tools. This is an editorial weapon family, not a separate in-game skill tree.",
+        "summary": "Daggers and hunting knives, also used for cutting.",
         "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7"]
       },
       {
         "title": "Swords",
         "index": "Items",
         "parents": ["Weapons"],
-        "summary": "Shortswords, longswords and greatswords. Their main-hand membership does not imply that every sword leaves the off hand available.",
+        "summary": "Shortswords, longswords and greatswords. Some require both hands.",
         "members": ["item-8", "item-9", "item-10", "item-11", "item-184", "item-185"]
       },
       {
         "title": "Axes",
         "index": "Items",
         "parents": ["Weapons", "Cutting and chopping tools"],
-        "summary": "Hand axes, felling axes and battleaxes retain both weapon and chopping-tool roles. See each article for its own attack and tool properties.",
+        "summary": "Hand axes, felling axes and battleaxes, used for combat and chopping.",
         "members": ["item-27", "item-28", "item-29", "item-30", "item-188", "item-189"]
       },
       {
         "title": "Clubs, maces and hammers",
         "index": "Items",
         "parents": ["Weapons"],
-        "summary": "Clubs, cudgels, morning stars, maces and warhammers, plus the Heavy Branch used as a club. This family describes weapon forms, not a shared damage class.",
+        "summary": "Clubs, cudgels, morning stars, maces, warhammers and Heavy Branch. Damage types vary.",
         "members": ["item-90", "item-157", "item-158", "item-160", "item-161", "item-169", "item-186", "item-187", "item-190", "item-191"]
       },
       {
         "title": "Bows",
         "index": "Items",
         "parents": ["Weapons"],
-        "summary": "Bow weapons use the main-hand slot with arrows readied in the off hand. Arrow articles remain in Ammunition rather than this weapon family.",
+        "summary": "Bows use the main hand with arrows readied in the off hand.",
         "members": ["item-44", "item-93", "item-105", "item-106", "item-179"]
       },
       {
         "title": "Two-handed weapons",
         "index": "Items",
         "parents": ["Weapons"],
-        "summary": "The native two-handed weapon type. Its melee weapons occupy both hands through the weapon-set rules, not direct off-hand placement; bows instead use off-hand ammunition.",
+        "summary": "Melee weapons occupy both hands. Bows instead use off-hand ammunition.",
         "members": ["item-29", "item-30", "item-44", "item-93", "item-105", "item-106", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-206"],
         "confidence": "inferred",
         "evidence": [
@@ -818,7 +829,7 @@
         "title": "Thrown flasks",
         "index": "Items",
         "parents": ["Weapons", "Consumables"],
-        "summary": "Purpose-made poison and fire flasks with reviewed thrown impact effects. Other throwable inventory items are not automatically included as weapons.",
+        "summary": "Poison and fire flasks with effects on impact.",
         "members": ["item-251", "item-253"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[251,253].impact-effects"}]
@@ -827,7 +838,7 @@
         "title": "Poison weapons",
         "index": "Items",
         "parents": ["Weapons"],
-        "summary": "Weapons with reviewed Poison attacks, including the poison flask's separate thrown effect. Poison arrows are ammunition and are not counted as weapons here.",
+        "summary": "Weapons that inflict Poison, including Venom Flask. Poison arrows are under Ammunition.",
         "members": ["item-159", "item-206", "item-251"],
         "confidence": "inferred",
         "evidence": [
@@ -839,28 +850,28 @@
         "title": "Raw animal foods",
         "index": "Items",
         "parents": ["Food and drink"],
-        "summary": "Unprepared meat, eggs and edible small creatures, including live insects. Food membership follows food definitions, not a promise that eating them is safe.",
+        "summary": "Raw meat, eggs and edible small creatures, including live insects. Some cause sickness.",
         "members": ["item-60", "item-62", "item-64", "item-66", "item-69", "item-82", "item-87", "item-95", "item-103", "item-162", "item-180", "item-241", "item-242", "item-243", "item-247"]
       },
       {
         "title": "Prepared foods",
         "index": "Items",
         "parents": ["Food and drink"],
-        "summary": "Bread, cooked foods and prepared meals. Preparation is not a guarantee against every negative effect; use each item's documented properties.",
+        "summary": "Bread, cooked food and meals. Check each food for sickness risk and other effects.",
         "members": ["item-25", "item-61", "item-63", "item-65", "item-67", "item-70", "item-83", "item-88", "item-104", "item-163", "item-181", "item-222", "item-235", "item-236", "item-237", "item-244", "item-245", "item-246"]
       },
       {
         "title": "Plant foods",
         "index": "Items",
         "parents": ["Food and drink"],
-        "summary": "Berries, Turnip and Watercress with food definitions. Some are also recipe ingredients, and not all are equally safe to eat.",
+        "summary": "Berries, Turnip and Watercress. Some are also ingredients; not all are safe to eat.",
         "members": ["item-217", "item-218", "item-221", "item-223", "item-225", "item-226"]
       },
       {
         "title": "Repair and refuelling supplies",
         "index": "Items",
         "parents": ["Consumables"],
-        "summary": "Repair kits spent during repair applications and Lamp Oil spent to refill lantern fuel. Lamp Oil is a refuelling supply, not food.",
+        "summary": "Repair kits and Lamp Oil. Lamp Oil refuels lanterns; it is not food.",
         "members": ["item-112", "item-113", "item-114", "item-115"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "items_bonus_apply.repair-and-fuel/amount-decrement"}]
@@ -869,7 +880,7 @@
         "title": "Mapping supplies",
         "index": "Items",
         "parents": ["Tools", "Consumables"],
-        "summary": "Map Drawing Kit is spent when it successfully creates a map outdoors. An indoor attempt does not consume it. Finished maps and the Map Ledger are not spent by this action.",
+        "summary": "Map Drawing Kit is consumed after a successful outdoor use, not an indoor attempt. Finished maps and Map Ledger are not consumed.",
         "members": ["item-156"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[156].doRemove/amount"}]
@@ -878,7 +889,7 @@
         "title": "Summoning supplies",
         "index": "Items",
         "parents": ["Consumables"],
-        "summary": "Summoning Stone is spent when thrown to create its summoning portal. This is a summoning supply, not a reusable tool or a damaging thrown flask.",
+        "summary": "Summoning Stone is consumed when thrown to create a portal.",
         "members": ["item-127"],
         "confidence": "inferred",
         "evidence": [
@@ -890,7 +901,7 @@
         "title": "Restorative tonics",
         "index": "Items",
         "parents": ["Consumables"],
-        "summary": "Wayfarer's Vigor is a consumed tonic rather than a food definition. Its article owns the documented stamina, satiation and focus effects.",
+        "summary": "Tonics such as Wayfarer's Vigor that restore survival meters.",
         "members": ["item-176"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[176]"}]
@@ -899,42 +910,42 @@
         "title": "Wood and bark",
         "index": "Items",
         "parents": ["Crafting materials", "Fire-making supplies"],
-        "summary": "Wood and bark supplies with reviewed burn properties, including the Heavy Branch's overlapping weapon and recipe roles. Not every listed wood has a documented inventory recipe.",
+        "summary": "Wood and bark for fuel and crafting. Heavy Branch can also serve as a weapon.",
         "members": ["item-19", "item-34", "item-35", "item-36", "item-78", "item-79", "item-80", "item-81", "item-121", "item-169", "item-210", "item-211", "item-213", "item-214", "item-215", "item-216", "item-224"]
       },
       {
         "title": "Fibers and fabrics",
         "index": "Items",
         "parents": ["Crafting materials"],
-        "summary": "Fiber, twine and fabric records. Flax and Linen have localized names only in the reviewed snapshot; their inclusion does not invent definitions, recipes or acquisition methods.",
+        "summary": "Fiber, twine and fabrics.",
         "members": ["item-48", "item-49", "item-91", "item-92", "item-107"]
       },
       {
         "title": "Animal materials",
         "index": "Items",
         "parents": ["Crafting materials"],
-        "summary": "Pelts, hides, husks, feathers, wax, fat, glands and creature-derived Glow Goo. Large Scaalmyr Husk also serves as a shield. Material grouping alone does not assert a recipe for every member.",
+        "summary": "Pelts, hides, husks, feathers, wax, fat, glands and Glow Goo. Large Scaalmyr Husk also serves as a shield.",
         "members": ["item-50", "item-52", "item-77", "item-102", "item-120", "item-124", "item-129", "item-134", "item-135", "item-136", "item-178"]
       },
       {
         "title": "Mineral materials",
         "index": "Items",
         "parents": ["Crafting materials"],
-        "summary": "Rock, Flint and Lump of Coal used by reviewed recipes. Coal's recipe role is not evidence that it can be fed directly to a campfire.",
+        "summary": "Rock, Flint and Lump of Coal for crafting. Coal cannot be assumed to work as campfire fuel.",
         "members": ["item-37", "item-39", "item-177"]
       },
       {
         "title": "Plant and fungal reagents",
         "index": "Items",
         "parents": ["Crafting materials"],
-        "summary": "Calmia Root, Vile Bulb, Water Lily and Mold used in reviewed preparation recipes. Recipe use does not make these items food.",
+        "summary": "Calmia Root, Vile Bulb, Water Lily and Mold for preparation recipes. These are not all edible.",
         "members": ["item-122", "item-142", "item-173", "item-175"]
       },
       {
         "title": "Food ingredients",
         "index": "Items",
         "parents": ["Crafting materials", "Food and drink"],
-        "summary": "Edible items that are inputs to reviewed recipes, including food preparation, remedies and other crafting. Their recipe roles do not replace their food categories or imply that every recipe output is edible.",
+        "summary": "Foods also used in recipes, including meals, remedies and other crafting.",
         "members": ["item-51", "item-60", "item-62", "item-64", "item-66", "item-69", "item-70", "item-82", "item-87", "item-103", "item-162", "item-180", "item-217", "item-218", "item-221", "item-223", "item-225", "item-226", "item-241", "item-242", "item-243", "item-247"]
       },
       {
@@ -947,7 +958,7 @@
           "being-27",
           "being-28"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Snakes",
@@ -957,7 +968,7 @@
           "being-10",
           "being-23"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Trolls",
@@ -966,7 +977,7 @@
           "being-3",
           "being-18"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Scaalmyr",
@@ -978,7 +989,7 @@
           "being-16",
           "being-22"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Crabs",
@@ -987,7 +998,7 @@
           "being-7",
           "being-30"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Mollusks",
@@ -995,7 +1006,7 @@
         "members": [
           "being-0"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Toadkin",
@@ -1003,7 +1014,7 @@
         "members": [
           "being-21"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Unwanted creatures",
@@ -1012,7 +1023,7 @@
           "being-31",
           "being-32"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Rodents",
@@ -1021,7 +1032,7 @@
           "being-11",
           "being-29"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Aquatic creatures",
@@ -1030,7 +1041,7 @@
           "being-17",
           "being-24"
         ],
-        "summary": "Secondary appearance-based browsing, not an aggression faction."
+        "summary": "Grouped by appearance; aggression factions may differ."
       },
       {
         "title": "Capacity-granting equipment",
@@ -1051,7 +1062,7 @@
           "item-24",
           "item-21"
         ],
-        "summary": "All equipment with a reviewed storage grid, including backpacks, herbalist belts, three pocketed vests, Hiker's Shirt and Hiker's Pants. Slot bonuses are not weight allowances or a player's total inventory.",
+        "summary": "Backpacks, herbalist belts, pocketed vests, Hiker's Shirt and Hiker's Pants add storage cells, not weight allowance.",
         "confidence": "inferred",
         "evidence": [
           {
@@ -1083,7 +1094,7 @@
       "before": "being-9",
       "after": "being-19",
       "quest": "journal-11",
-      "summary": "Dead Unwanted is Viend before his revival. The two records describe different states of the same character.",
+      "summary": "Dead Unwanted is Viend before his revival.",
       "attribution": "Wiki operator",
       "recorded_on": "2026-09-25",
       "evidence": [
@@ -3023,9 +3034,9 @@
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "location": {
         "paragraphs": [
-          "Bhato's hideout is always in a Common Bog directly north, south, east or west of Fort Solid, never diagonally adjacent. North/south placement is possible; he is not restricted to the inward east/west neighbor. The zone is chosen when the world is created, before it is explored.",
-          "The generator checks Fort Solid's in-bounds neighbors in a fixed order: north, south, east for a column A fort, or west, north, south for a column E fort. It permits at most one Vast Waters neighbor and makes the others Common Bogs. Bhato takes the last Common Bog in that order, so the eligible directions are not equally likely.",
-          "Bhato lives in a small hut with a foliage-covered roof, placed when its zone is first generated. Captain Eir gives the direction to the neighboring area containing his hideout, and the journal records the search. Enter the hut, not the nearby ancient cellar."
+          "Bhato's hideout is in a Common Bog directly north, south, east or west of Fort Solid, never diagonally. Its zone is chosen at world creation.",
+          "Neighboring zones are checked north, south, east for a column A fort, or west, north, south for a column E fort. At most one becomes Vast Waters; the rest become Common Bogs. Bhato takes the last Common Bog in that order, so directions are not equally likely.",
+          "Captain Eir gives the direction, which is recorded in your journal. Look for a small foliage-roof hut, placed when you first enter its zone. Enter the hut, not the nearby ancient cellar."
         ],
         "related_entities": ["being-6"],
         "confidence": "observed",
@@ -3309,9 +3320,9 @@
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "location": {
         "paragraphs": [
-          "Gurb-Gurb's large hollow tree stump is not pre-positioned with the initial world map. The first entry into a Drowned Fen while the hollow is still uncreated triggers its placement, rather than randomly selecting a Drowned Fen in advance. The check also runs on revisits and when loading a save in that outdoor area, not while inside its caves. A Savage Mirk is eligible instead only if the world has no Drowned Fen area; this fallback is not used in normal new worlds because their generator guarantees a Drowned Fen.",
-          "Successful exterior creation triggers a smoke-discovery message and five white dots pointing toward it. That success is then saved to prevent another normal placement. This is a one-time discovery cue, not a message on every return; the dots show direction, not a safe path. Smoke rises separately in play and is not part of the exterior image.",
-          "Gurb-Gurb's NPC instance is part of the hollow's interior room setup, separately from placing the exterior."
+          "Gurb-Gurb's hollow is placed when you first enter a Drowned Fen while it remains uncreated. Revisits and loading an outdoor save also trigger the check; caves do not. A Savage Mirk is eligible only in a world with no Drowned Fen. Normal new worlds always have one.",
+          "When the hollow appears, a smoke-discovery message and five white dots point toward it. This one-time cue shows direction, not a safe path. Smoke rises from the hollow during play.",
+          "Gurb-Gurb is inside the hollow tree stump."
         ],
         "related_entities": [],
         "confidence": "observed",
@@ -3459,9 +3470,9 @@
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "location": {
         "paragraphs": [
-          "Look for Ihar inside a wrecked wooden ship on a Broken Fen shoreline. Its exterior is not pre-positioned with the initial world map: it is placed on the first entry into a Broken Fen whose shoreline search succeeds. Placement is attempted only if the wreck has not already been created. Placement can fail after 1280 attempts to find a suitable sand/water shoreline, even if a valid spot exists, so it is not guaranteed in every Broken Fen area.",
-          "A failed search leaves the wreck uncreated. Entering the same or another Broken Fen retries it, including revisits and loading a save in that outdoor area; entering a cave does not qualify. There is no alternative-biome fallback. Normal new worlds guarantee Broken Fens; if an altered or older world had none, this placement path could not create Ihar's wreck.",
-          "Successful exterior creation is saved to prevent another normal placement. Ihar's NPC instance is part of the shipwreck's interior room setup, separately from placing the exterior."
+          "Ihar lives in a wooden shipwreck on a Broken Fen shoreline. Entering a Broken Fen attempts to place it if it has not appeared yet. A search can fail after 1280 attempts to find suitable sand and water, even when a valid spot exists.",
+          "After a failed search, enter the same or another Broken Fen to retry. Revisits and loading an outdoor save count; caves do not. There is no alternative-biome fallback. Normal new worlds have Broken Fens; a world without them cannot place this wreck.",
+          "Once placed, the wreck stays in that location. Ihar is inside."
         ],
         "related_entities": [],
         "confidence": "observed",
@@ -3546,7 +3557,7 @@
         }
       ],
       "note": "The base friendly faction and player-target exclusion are source-observed, not a quest-specific override. NPC placement remains an editorial inference: the inspected creation, dialogue and merchant routes do not establish an ordinary encounter or story role. Generic retaliation is distinct from normal target acquisition.",
-      "summary": "Unwanted Guard has a friendly base faction that does not normally target the player, but it can retaliate if attacked. Its aggression chance concerns eligible targets, not hostility toward the player. An ordinary encounter, dedicated dialogue, merchant stock, quest role or normal summoning route has not been verified. Its NPC grouping is an editorial inference."
+      "summary": "Unwanted Guard belongs to the friendly faction and can retaliate when attacked. Normal encounter and summoning availability: Unknown. Dialogue, wares and quest role: Not documented."
     }
   ],
   "entry_links": [
@@ -3915,15 +3926,21 @@
     },
     {
       "entry": "journal-7-location",
-      "title": "Finding Bhato's hideout"
+      "title": "Finding Bhato's hideout",
+      "summary": "Follow your journal's direction from Fort Solid to Bhato's neighboring zone.",
+      "conditions": null
     },
     {
       "entry": "journal-17-location",
-      "title": "Finding the old library"
+      "title": "Finding the old library",
+      "summary": "Follow your journal's destination for this world's Library.",
+      "conditions": null
     },
     {
       "entry": "journal-26-location",
-      "title": "Finding the rift destination"
+      "title": "Finding the rift destination",
+      "summary": "Follow your journal's destination for this world's rift quest.",
+      "conditions": null
     },
     {
       "entry": "recipe-personal-crafting-menu-36",
@@ -3952,135 +3969,160 @@
     {
       "entry": "loot-54-rock",
       "title": "Rock",
-      "conditions": "This unidentified resource source must be selected; other drops may be added independently."
+      "conditions": "Search a pebble pile; bonus drops are independent.",
+      "summary": "One to three Rocks, with equally likely quantities. Bonus finds are separate."
     },
     {
       "entry": "loot-55-rock",
       "title": "Rock",
-      "conditions": "This unidentified resource source must be selected; shared bonus checks are additional."
+      "conditions": "Search mixed ground debris; bonus drops are independent.",
+      "summary": "One to three Rocks, plus the twig selection."
     },
     {
       "entry": "loot-50-willow",
-      "title": "Twig (Willow)"
+      "title": "Twig (Willow)",
+      "summary": "Willow is the usual twig. A 15% Cypress roll and the nearby-tree rule can replace it."
     },
     {
       "entry": "loot-50-cypress",
-      "title": "Twig (Cypress)"
+      "title": "Twig (Cypress)",
+      "summary": "Cypress twigs come from the 15% roll or the shaded-tree rule; total odds depend on location."
     },
     {
       "entry": "loot-55-willow",
-      "title": "Twig (Willow)"
+      "title": "Twig (Willow)",
+      "summary": "Willow is the usual twig. A 15% Cypress roll and the nearby-tree rule can replace it."
     },
     {
       "entry": "loot-55-cypress",
-      "title": "Twig (Cypress)"
+      "title": "Twig (Cypress)",
+      "summary": "Cypress twigs come from the 15% roll or the shaded-tree rule; total odds depend on location."
     },
     {
       "entry": "loot-50-flint-bonus",
-      "title": "Flint"
+      "title": "Flint",
+      "summary": "A separate 7.5% check adds Flint. Lower quantities are more likely."
     },
     {
       "entry": "loot-54-flint-bonus",
-      "title": "Flint"
+      "title": "Flint",
+      "summary": "A separate 7.5% check adds Flint. Lower quantities are more likely."
     },
     {
       "entry": "loot-55-flint-bonus",
-      "title": "Flint"
+      "title": "Flint",
+      "summary": "A separate 7.5% check adds Flint. Lower quantities are more likely."
     },
     {
       "entry": "loot-51-flint-bonus",
-      "title": "Flint"
+      "title": "Flint",
+      "summary": "A separate 7.5% check adds Flint. Lower quantities are more likely."
     },
     {
       "entry": "loot-64-flint-bonus",
-      "title": "Flint"
+      "title": "Flint",
+      "summary": "A separate 7.5% check adds Flint. Lower quantities are more likely."
     },
     {
       "entry": "loot-50-frog-bonus",
-      "title": "Frog"
+      "title": "Frog",
+      "summary": "Independent Frog bonus."
     },
     {
       "entry": "loot-50-maggot-bonus",
-      "title": "Large Maggot"
+      "title": "Large Maggot",
+      "summary": "A separate 12.5% check adds one Large Maggot."
     },
     {
       "entry": "loot-54-frog-bonus",
-      "title": "Frog"
+      "title": "Frog",
+      "summary": "Independent Frog bonus."
     },
     {
       "entry": "loot-54-maggot-bonus",
-      "title": "Large Maggot"
+      "title": "Large Maggot",
+      "summary": "A separate 12.5% check adds one Large Maggot."
     },
     {
       "entry": "loot-55-frog-bonus",
-      "title": "Frog"
+      "title": "Frog",
+      "summary": "Independent Frog bonus."
     },
     {
       "entry": "loot-55-maggot-bonus",
-      "title": "Large Maggot"
+      "title": "Large Maggot",
+      "summary": "A separate 12.5% check adds one Large Maggot."
     },
     {
       "entry": "loot-51-frog-bonus",
-      "title": "Frog"
+      "title": "Frog",
+      "summary": "Independent Frog bonus."
     },
     {
       "entry": "loot-51-maggot-bonus",
-      "title": "Large Maggot"
+      "title": "Large Maggot",
+      "summary": "A separate 12.5% check adds one Large Maggot."
     },
     {
       "entry": "loot-56-feather",
       "title": "Feather",
-      "conditions": "This unidentified resource source must be selected. the helper favors lower counts."
+      "conditions": "Search a bird nest; lower counts are more likely.",
+      "summary": "Feathers are guaranteed; lower counts are more likely."
     },
     {
       "entry": "loot-56-egg",
       "title": "Egg",
-      "conditions": "This unidentified resource source must be selected. feathers and treasure can also be awarded."
+      "conditions": "Search a bird nest; feathers and treasure can also appear.",
+      "summary": "A separate 40% check adds Eggs; lower counts are more likely."
     },
     {
       "entry": "loot-58-wood",
       "title": "Moldy Wood",
-      "conditions": "This unidentified resource source must be selected. the mold outcome is added separately."
+      "conditions": "Search a mossy log; Mold is added separately.",
+      "summary": "Moldy Wood, with lower quantities more likely."
     },
     {
       "entry": "loot-58-mold",
       "title": "Mold",
-      "conditions": "This unidentified resource source must be selected."
+      "conditions": "Search a mossy log.",
+      "summary": "Mold is added separately; lower quantities are more likely."
     },
     {
       "entry": "loot-59-empty-normal",
       "title": "Empty result outside the special area category",
-      "conditions": "Applies outside the special empty-result area category. Its displayed area name is not established. Later generation may impose further restrictions."
+      "conditions": "Outside a special area category (name unknown). A successful initial check can still yield no treasure.",
+      "summary": "A failed search produces no treasure."
     },
     {
       "entry": "loot-59-empty-ruins",
       "title": "Empty result in the special area category",
-      "conditions": "Applies in the special empty-result area category. Its displayed area name is not established. Later generation may impose further restrictions.",
-      "summary": "The initial empty-result threshold is raised to 55 percent in this special area category."
+      "conditions": "Within a special area category (name unknown). A successful initial check can still yield no treasure.",
+      "summary": "In this area category, the initial empty-result chance is 55%."
     },
     {
       "entry": "loot-60-empty-normal",
       "title": "Empty result outside the special area category",
-      "conditions": "Applies outside the special empty-result area category. Its displayed area name is not established. Later generation may impose further restrictions."
+      "conditions": "Outside a special area category (name unknown). A successful initial check can still yield no treasure.",
+      "summary": "A failed search produces no treasure."
     },
     {
       "entry": "loot-60-empty-ruins",
       "title": "Empty result in the special area category",
-      "conditions": "Applies in the special empty-result area category. Its displayed area name is not established. Later generation may impose further restrictions.",
-      "summary": "The initial empty-result threshold is raised to 55 percent in this special area category."
+      "conditions": "Within a special area category (name unknown). A successful initial check can still yield no treasure.",
+      "summary": "In this area category, the initial empty-result chance is 55%."
     },
     {
       "entry": "corpse-13-123-quest",
       "conditions": "Only while this creature's quest objective is active; this is not an unconditional drop.",
-      "summary": "A qualifying quest death creates this object as a separate ground drop and advances the related journal objective. It is not part of the ordinary corpse inventory."
+      "summary": "Drops separately on the ground and advances the quest, rather than appearing in the corpse."
     },
     {
       "entry": "skill-allocation",
       "steps": [
-        "Select the skill before using the allocation action.",
-        "The UI checks that an unspent point exists and the selected rank is below ten.",
-        "Only a successful rank increase consumes a point; a capped skill does not consume one."
-      ]
+        "Select a skill and spend an unspent point to raise its rank.",
+        "A skill at rank ten cannot rise further and does not consume the point."
+      ],
+      "summary": "Each of the five groups has five skills, starting at rank zero and capped at rank ten."
     },
     {
       "entry": "weather-state-machine",
@@ -4091,55 +4133,330 @@
         "The early-game protection described above can block this transition from clouds to new rain; it does not promise clear skies throughout the protected period.",
         "Rainy weather first tests return to clouds using the larger of 1% and 25% times one plus the balance. Only after failure does it test direct clearing using the larger of 1% and 5% times one plus the balance.",
         "If rain continues, intensity changes by a random amount between minus 10 and plus 10 percentage points and is clamped to its limits. Ending rain can fade over subsequent turns."
-      ]
+      ],
+      "summary": "Weather checks run on hourly turn boundaries. Later checks run only if earlier ones fail.",
+      "conditions": null
     },
     {
       "entry": "world-seed-boundaries",
-      "title": "How areas are generated",
-      "summary": "The sequence below explains why exploration order matters. Initial world-map placement is described above; each character owns its detailed location and access rules.",
-      "conditions": "Source-inspected generation and landmark rules for build 0.8.1.5, not measured spawn probabilities.",
+      "title": "Exploration order",
+      "summary": "New terrain blends into neighboring zones you have already explored.",
+      "conditions": null,
       "steps": [
-        "Entering an unsaved zone generates terrain using fresh random offsets. Its borders blend into neighboring zones generated earlier, so exploration order affects the terrain. A saved zone is loaded instead of regenerated.",
-        "The delayed exterior check is scheduled before the saved-area loading branch. Gurb-Gurb and Ihar can therefore be placed during a first visit, a revisit or a save load while their respective creation flags are false; their location pages own the biome and success rules.",
-        "Startup randomizes the random-number generator. The internal seed draw and unused coordinate-reseeding helpers do not seed the active world or terrain generators, and no world-seed value is saved for replay."
+        "Entering an unsaved zone creates fresh terrain. Saved zones load their existing terrain instead.",
+        "Gurb-Gurb and Ihar can still appear on first visits, revisits or outdoor save loads until their locations have been created. See their pages for biome and placement rules."
       ],
       "confidence": "observed",
       "evidence": [
-        {"source": "game-data", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid/fort/rangerCamp/riftQuestArea/libraryArea/biome-placement-and-fill"},
-        {"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "alarm[6]/saved-Ygrid-exit/seed/noise-offsets/terrain_link_lerp/terrain_link_layer/landmarks"},
-        {"source": "game-data", "section": "gml_Object_manager_area_Alarm_6", "key": "createdGurbsHut/createdShipwreck/areaType/placement-success"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_mapcreations", "key": "rift-depths-1-2-3/being22"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_saveload", "key": "worldGrid/rangerCamp/libraryArea/riftQuestArea/landmark-flags/no-world-seed"},
-        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "randomize"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_seeds", "key": "seed_random/seed_noedges/seed_random_1d/no-live-callers"},
-        {"source": "ui-en", "section": "LocTitles", "key": "0/1/3/4/5/22/23/100"}
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid/fort/rangerCamp/riftQuestArea/libraryArea/biome-placement-and-fill"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "alarm[6]/saved-Ygrid-exit/seed/noise-offsets/terrain_link_lerp/terrain_link_layer/landmarks"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "createdGurbsHut/createdShipwreck/areaType/placement-success"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "rift-depths-1-2-3/being22"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "worldGrid/rangerCamp/libraryArea/riftQuestArea/landmark-flags/no-world-seed"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Room_rm_int_Create",
+          "key": "randomize"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_seeds",
+          "key": "seed_random/seed_noedges/seed_random_1d/no-live-callers"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "0/1/3/4/5/22/23/100"
+        }
       ]
     },
     {
       "entry": "loot-amount-distribution",
       "steps": [
-        "The amount helper builds progressively wider inclusive integer draws, then chooses one of those draws uniformly. Low quantities therefore occur more frequently.",
-        "The treasure generator samples item definitions, rejecting undefined or excluded items and those that fail budget, minimum-value, type, size, or story conditions.",
-        "Accepted items reduce the remaining value budget. Defined-item attempts increment a counter capped at 500; undefined-item draws and the early story-gated rejection are not counted.",
-        "Durability and stack size can be randomized after selection. Listed shared bonus checks are additive rather than mutually exclusive weights."
-      ]
+        "Quantity rolls mix increasingly wide inclusive integer ranges, favoring lower counts.",
+        "Treasure candidates must meet budget, minimum-value, type, size and story requirements.",
+        "Accepted items spend the remaining budget. Generation stops at 500 counted candidates; undefined items and the early Summoning Stone story exclusion do not count.",
+        "Durability and stack size can vary. Independent bonus checks can succeed together."
+      ],
+      "title": "Quantities and treasure budgets",
+      "summary": "Low quantities are more common than high ones. Treasure uses a value budget rather than equal per-item odds.",
+      "conditions": null
     },
     {
       "entry": "corpse-budgeted-treasure",
       "steps": [
-        "Raving Unwanted and Mutated Unwanted use a one-silver base-value budget and a minimum non-valuable item value of 10 copper. Coins and gems bypass that minimum but must fit the total budget.",
-        "Their pool allows food and materials excluded from ordinary skeleton treasure. Nonlootable exclusions, story gates, durability handling and the rejection loop still apply.",
-        "After the creature-specific base inventory is built, each stored arrow entry is appended. The hit/recovery process that populated that list is a separate mechanic."
-      ]
+        "The treasure budget is 1 silver, with a minimum non-valuable item value of 10 copper. Coins and gems bypass that minimum but must fit the budget.",
+        "Food and materials can appear, unlike ordinary skeleton treasure. Other exclusions, story requirements, wear and selection limits still apply.",
+        "Recovered arrows are added after the base loot."
+      ],
+      "summary": "Raving Unwanted and Mutated Unwanted have random treasure rather than fixed loot. Lootable corpses can also contain recovered arrows.",
+      "conditions": "Only arrows retained by the recovery check are added; not every fired arrow is recoverable."
     },
     {
       "entry": "crafting-station-modifiers",
       "title": "Using crafting methods",
-      "summary": "Inventory crafting and workstation crafting offer different recipes. Browse a workstation for links to the items it can make.",
+      "summary": "Different crafting methods offer different recipes.",
       "steps": [
         "Some components are required as tools rather than consumed ingredients.",
         "Where chopping is required, a carried tool must meet the recipe's chopping-capability requirement."
       ]
+    },
+    {
+      "entry": "temperature-labels",
+      "summary": "Temperature has seven named bands. Values above 0.85 are Blazing hot.",
+      "steps": [
+        "Check thresholds from lowest to highest, including equality.",
+        "Use the first matching label.",
+        "Clothing, wetness, shade and warmth-loss modifiers affect temperature separately."
+      ]
+    },
+    {
+      "entry": "level-up-processing",
+      "summary": "XP thresholds grow exponentially and round down to a multiple of five. Excess XP carries over; each update awards at most one level.",
+      "steps": [
+        "For current level L, multiply 28 by 1.2 raised to L, then round down to a multiple of five.",
+        "Compare rounded XP with the threshold. On leveling up, subtract the threshold and keep the remainder.",
+        "Gain one skill point per level and one HP allocation point every third level.",
+        "At the level cap, XP stays below the next threshold."
+      ]
+    },
+    {
+      "entry": "journal-6",
+      "title": "While Clay studies"
+    },
+    {
+      "entry": "journal-18",
+      "summary": "Search the target ruins for old records."
+    },
+    {
+      "entry": "corpse-7-66",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-30-66",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-2-69",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-1-69",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-27-69",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-25-69",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-28-69",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-10-82",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-23-82",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-21-162",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-15-129",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-16-129",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-27-178",
+      "summary": "One item in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-28-120",
+      "summary": "An 85% chance of one item.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-10-120",
+      "summary": "A 55% chance of one item.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-23-120",
+      "summary": "One item in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-4-159",
+      "summary": "One item in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-15-50",
+      "summary": "A 15% chance of one item.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-16-50",
+      "summary": "A 15% chance of one item.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-13-107",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-13-124",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-14-107",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-14-124",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-14-129",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-15-107",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-15-124",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-16-107",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-16-124",
+      "summary": "Exactly one in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-11-103",
+      "summary": "Quantity is chosen between a fixed 1 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-11-102",
+      "summary": "Quantity is chosen between a fixed 1 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-29-103",
+      "summary": "Quantity is chosen between a fixed 2 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-29-102",
+      "summary": "Quantity is chosen between a fixed 1 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-3-135",
+      "summary": "Quantity is chosen between a fixed 1 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-3-134",
+      "summary": "Quantity is chosen between a fixed 1 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-18-136",
+      "summary": "Quantity is chosen between a fixed 1 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-18-134",
+      "summary": "Quantity is chosen between a fixed 1 and a roll favoring lower counts.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-4-82",
+      "summary": "Four Snake Meat stacks of 4-11 each, favoring lower counts: 16-44 total.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+    },
+    {
+      "entry": "corpse-0-none",
+      "summary": "Leaves no lootable corpse. XP and story rewards are separate.",
+      "conditions": "No lootable corpse; other rewards may still apply."
+    },
+    {
+      "entry": "corpse-17-none",
+      "summary": "Leaves no lootable corpse. XP and story rewards are separate.",
+      "conditions": "No lootable corpse; other rewards may still apply."
+    },
+    {
+      "entry": "corpse-24-none",
+      "summary": "Leaves no lootable corpse. XP and story rewards are separate.",
+      "conditions": "No lootable corpse; other rewards may still apply."
+    },
+    {
+      "entry": "corpse-5-none",
+      "summary": "Leaves no lootable corpse. XP and story rewards are separate.",
+      "conditions": "No lootable corpse; other rewards may still apply."
+    },
+    {
+      "entry": "corpse-22-none",
+      "summary": "Leaves no lootable corpse. XP and story rewards are separate.",
+      "conditions": "No lootable corpse; other rewards may still apply."
     }
   ],
   "stations": [
@@ -4251,7 +4568,7 @@
       "methods": [
         "Survivor's Field Kit"
       ],
-      "summary": "A portable alternative to the alchemy workstation, offering the same 15 alchemy recipes. The field kit uses the shared fire menu: its recipes are available only while the fire remains active. Fuel and access requirements differ from the permanent workstation.",
+      "summary": "A portable alternative to the alchemy workstation with the same 15 recipes. It requires an active fire; fuel and access requirements differ from the permanent workstation.",
       "acquisition": null,
       "confidence": "inferred",
       "evidence": [
@@ -4358,7 +4675,7 @@
         "Alchemy station (internal ID 53)",
         "Alchemy station (internal ID 131)"
       ],
-      "summary": "The early-game and later-game alchemy workstations share one output catalog. These permanent workstations have their own crafting menu, independent of the field kit's active fire.",
+      "summary": "Both alchemy workstations offer the same recipes without an active fire.",
       "acquisition": null,
       "confidence": "inferred",
       "evidence": [
@@ -4394,7 +4711,7 @@
         }
       ],
       "notes": [
-        "Crafting access and Viend's trading unlock are separate. A nearby alchemy workstation does not establish that his shop is open; see his merchant page for availability."
+        "Crafting here does not unlock Viend's shop. See Viend for trading requirements."
       ],
       "related_stations": [
         "field-kit"
@@ -4477,7 +4794,7 @@
       "title": "Raft Base",
       "entity": "item-170",
       "methods": [],
-      "summary": "A placed Raft Base offers an in-place completion action rather than producing a new inventory item.",
+      "summary": "Complete a placed raft through its menu. This changes the raft in place, not into an inventory item.",
       "acquisition": null,
       "confidence": "observed",
       "evidence": [
@@ -4502,7 +4819,7 @@
   "merchant_profiles": [
     {
       "entity": "being-8",
-      "conditions": "Clay trades from the Fort Solid undercroft when his ordinary Trade dialogue is available. The explosion ends access to that shop. Clay survives outside, but his post-explosion conversation does not offer trading; he departs later in that conversation sequence.",
+      "conditions": "Clay trades in the Fort Solid undercroft before the explosion. He survives outside afterward but no longer offers Trade, and leaves later in his conversation sequence.",
       "spoiler": true,
       "confidence": "observed",
       "evidence": [
@@ -4514,7 +4831,7 @@
     },
     {
       "entity": "being-12",
-      "conditions": "Bhato's Trade option can be temporarily hidden by quest conversations. No permanent main-story closure was found in the reviewed routes; that is not a guarantee of access in every state.",
+      "conditions": "Bhato's Trade option can be temporarily hidden by quest conversations.",
       "spoiler": false,
       "confidence": "observed",
       "evidence": [
@@ -4524,7 +4841,7 @@
     },
     {
       "entity": "being-19",
-      "conditions": "Viend is already with Clay before the explosion, after his escort and reunion, but is not yet a merchant. He begins trading only after Clay has departed, the Ward Breaker has been picked up and Eir announces that Viend will take over supplies. His presence and the nearby alchemy workstation immediately after the explosion do not unlock his shop.",
+      "conditions": "Viend is with Clay after his escort, but starts trading only after Clay leaves, you pick up Ward Breaker, and Eir announces that Viend will handle supplies. His presence or nearby alchemy workstation alone does not unlock Trade.",
       "spoiler": true,
       "compare_with": "being-8",
       "confidence": "observed",
@@ -4540,7 +4857,7 @@
     },
     {
       "entity": "being-20",
-      "conditions": "Tain's shop requires access to his Fort Solid interior and an available Trade conversation. Commander Tain dies in the explosion, and the interior entrance is removed; his shop is no longer accessible afterward. This is a story closure, not a normal corpse-loot source.",
+      "conditions": "Tain trades inside Fort Solid when his Trade dialogue is available. He dies in the explosion and the entrance is removed, closing the shop. This does not create a normal lootable corpse.",
       "spoiler": true,
       "confidence": "observed",
       "evidence": [
@@ -4553,7 +4870,7 @@
     },
     {
       "entity": "being-26",
-      "conditions": "Gurb-Gurb's ordinary trading dialogue and access are required. No permanent main-story closure was found in the reviewed routes, but other causes of unavailability have not been ruled out.",
+      "conditions": "Reach Gurb-Gurb and use his Trade dialogue.",
       "spoiler": false,
       "confidence": "observed",
       "evidence": [
@@ -4563,7 +4880,7 @@
     },
     {
       "entity": "being-33",
-      "conditions": "Complete Ihar's introductory conversation before using Trade. No permanent main-story closure was found in the reviewed routes; ordinary dialogue and access are still required.",
+      "conditions": "Complete Ihar's introductory conversation to unlock Trade.",
       "spoiler": false,
       "confidence": "observed",
       "evidence": [
@@ -5581,7 +5898,7 @@
       },
       {
         "id": "coin-consolidation",
-        "text": "At an available merchant, offer the coins on the selling side and leave the purchase side empty, then confirm the trade. The merchant returns the excess value as gold first, then silver, then copper. This consolidates smaller denominations without requiring a purchase.",
+        "text": "Offer coins without buying anything, then confirm the trade. The merchant returns change in gold first, then silver, then copper.",
         "qualification": "Describe descending-denomination change, not an absolute guarantee of the mathematically fewest coins at every floating-point rounding boundary. Copper change is rounded to a whole coin.",
         "evidence": [
           {
@@ -5615,7 +5932,7 @@
       },
       {
         "id": "trade-standard-value",
-        "text": "The documented shops share the same rates, with no merchant-specific, player or difficulty markup in the standard trade calculation. Purchases use the final item-definition value per unit; selling uses that value adjusted for the offered item's condition. Newly purchased items have full durability and, where applicable, full fuel. Quest items cannot be sold. Rift Weave is also blocked until the main quest advances beyond Clay's initial sample investigation.",
+        "text": "Shops share the same rates, with no merchant, player or difficulty markup. Purchases use full item value; resale depends on condition. Bought items have full durability and fuel. Quest items cannot be sold. Rift Weave cannot be sold until after Clay's initial sample investigation.",
         "qualification": "An unchanged, full-condition item therefore has the same underlying buy and sell value. The affordability check and copper change involve rounding, so do not promise exact conservation of arbitrary sub-copper fractions.",
         "evidence": [
           {
@@ -5643,7 +5960,7 @@
       {
         "id": "trade-stock-and-funds",
         "text": "Listed wares do not run out, and merchants have unlimited buying funds.",
-        "qualification": "This applies to available standard shops, not story gifts or exchanges; item-sale restrictions and dialogue availability still apply. Display quantities are samples, not finite stock. Summoned characters cannot be interacted with, so summoning does not reopen a shop. The six populated stock branches belong to Magus Clay, Ranger Bhato, Commander Tain, Viend, Gurb-Gurb and Ihar. Wilda has a Trade dialogue option but no populated stock branch in the inspected menu; no additional stock list or normal encounter availability is inferred.",
+        "qualification": "These rules apply to available shops, not story gifts or exchanges. Dialogue and sale restrictions still apply. Display quantities are samples, not finite stock. Summoned characters cannot be interacted with. Clay, Bhato, Tain, Viend, Gurb-Gurb and Ihar have wares; Wilda's Trade option has no wares. Wilda's normal encounter availability is unknown.",
         "evidence": [
           {
             "source": "game-data",
@@ -5674,8 +5991,8 @@
       },
       {
         "id": "trade-durability",
-        "text": "For an item with a maximum-durability field, the unit selling value is its standard value multiplied by the greater of current durability divided by maximum durability and 10 percent. At half durability it sells for half of standard value; at or below one-tenth durability the value floor is 10 percent.",
-        "qualification": "The factor starts at one when there is no maximum-durability field. There is no additional wear discount on top of this factor.",
+        "text": "Resale value is standard value multiplied by remaining durability as a fraction of maximum, with a 10% floor. Half durability gives half value; one-tenth durability or less gives 10%.",
+        "qualification": "Items without durability use full value. There is no second wear discount.",
         "evidence": [
           {
             "source": "game-data",
@@ -5686,8 +6003,8 @@
       },
       {
         "id": "trade-fuel",
-        "text": "When the definition has a burn-duration field and the item has remaining burn time, the remaining-fuel fraction replaces the durability factor. It is floored at 25 percent of standard value. The game does not multiply the durability and fuel reductions together.",
-        "qualification": "This rule applies only when both fields exist, not to every object that can be placed near a fire.",
+        "text": "For items with a burn duration and remaining fuel, the fuel fraction replaces the durability factor, with a 25% floor. The two discounts do not multiply.",
+        "qualification": "Both a burn duration and remaining fuel are required; proximity to fire is not enough.",
         "evidence": [
           {
             "source": "game-data",
@@ -5698,8 +6015,8 @@
       },
       {
         "id": "trade-rounding",
-        "text": "The confirmation check compares basket totals after multiplying them by 100 and rounding. Change is computed from selling value minus purchase cost, split into gold and silver with floor operations, then copper with rounding.",
-        "qualification": "There is no separate merchant commission in this inspected path. Floating-point boundaries and copper rounding remain distinct from a deliberate markup.",
+        "text": "Affordability compares basket totals rounded to whole copper. Change is selling value minus purchase cost: whole gold first, then whole silver, then rounded copper.",
+        "qualification": "There is no merchant commission. Fractions of a copper can be lost or gained through rounding.",
         "evidence": [
           {
             "source": "game-data",
@@ -5721,10 +6038,10 @@
     {
       "title": "Sharp",
       "paragraphs": [
-        "Sharp attacks cause bleeding. On an unarmored hit point, the attack adds bleeding rather than immediately removing that hit point. Bleeding takes effect at the start of the target's turn and can stack.",
-        "Remaining bleeding spreads in a fixed direction to the next neighboring hit point. Rotating the attack changes that direction. This spread can reach a hit point beneath its armor, so armor does not stop bleeding that has already spread.",
-        "Armor still protects against the initial application: normally, a sharp hit that starts on an armored cell can remove armor but cannot also make that cell bleed. Rank 10 Blade Master allows remaining damage to apply bleeding after breaking through.",
-        "Apply an Improvised Bandage or Bandage to the affected cells to remove bleeding. Stopping bleeding does not itself restore a hit point that has already been lost."
+        "Sharp attacks add bleeding to unarmored hit points instead of removing them immediately. Bleeding stacks and takes effect at the start of the target's turn.",
+        "Remaining bleeding spreads to the next neighboring hit point in a fixed direction. Rotating the attack changes that direction. Spreading bleeding can reach beneath armor.",
+        "An initial sharp hit normally removes armor without causing bleeding on that cell. At rank 10, Blade Master lets remaining damage cause bleeding after breaking armor.",
+        "Apply an Improvised Bandage or Bandage to bleeding cells. Bandages stop bleeding but do not restore lost hit points."
       ],
       "related_entities": [
         "item-143",
@@ -5763,9 +6080,9 @@
     {
       "title": "Poison",
       "paragraphs": [
-        "Poison builds up on individual hit points and takes effect at the start of the target's turn. A poisoned cell is lost and one poison counter is used; remaining poison can move to a randomly chosen adjacent healthy cell, including a diagonal neighbor.",
-        "Poison that spreads can get beneath armor. For an ordinary direct poison weapon hit, an armored cell loses one armor layer instead of receiving poison. Thrown effects can have different rules; see the linked thrown item's own effect description.",
-        "Apply Minor Antidote or Antidote over poisoned cells to clear their poison counters. Antidotes prevent further poison damage but do not restore already lost hit points. Natural Antidote can reduce poison before it takes effect."
+        "Poison stacks on individual hit points. At the start of the target's turn, a poisoned cell is lost and one poison counter is spent. Remaining poison can spread to a random adjacent healthy cell, including diagonals.",
+        "Spreading poison can reach beneath armor. An ordinary direct poison hit removes one armor layer instead of poisoning an armored cell. Thrown poison has different rules; see the flask's effect.",
+        "Minor Antidote and Antidote clear poison from the cells they cover without restoring lost hit points. Natural Antidote can reduce poison before it takes effect."
       ],
       "related_entities": [
         "item-84",
@@ -5799,8 +6116,8 @@
     {
       "title": "Blunt",
       "paragraphs": [
-        "Blunt damage removes armor layers before the protected hit point. A successful blunt attack has a base 12% chance to stun a surviving target, causing it to lose its next turn.",
-        "Master Basher raises the player's stun chance and reduces the AP cost of blunt melee attacks at its rank milestones."
+        "Blunt damage removes armor before the protected hit point. A successful blunt attack has a base 12% chance to stun a surviving target, making it lose its next turn.",
+        "Master Basher raises stun chance and reduces blunt melee AP costs at rank milestones."
       ],
       "related_entities": [
         "skill-3-1"
@@ -5822,8 +6139,8 @@
     {
       "title": "Piercing",
       "paragraphs": [
-        "Piercing damage removes armor layers before the protected hit point. After a point of damage, if the struck cell still has armor or a hit point remaining, there is a 15% chance to remove one additional layer or hit point from that same cell.",
-        "The extra damage is checked during damage application, so a multi-point hit can make more than one check. Piercing is not an unconditional armor bypass."
+        "Piercing damage removes armor before the protected hit point. After each point of damage, if armor or HP remains on that cell, there is a 15% chance to remove one more layer or hit point.",
+        "Multi-point hits can make several checks. Piercing does not bypass armor."
       ],
       "related_entities": [],
       "confidence": "inferred",
@@ -5843,8 +6160,8 @@
     {
       "title": "Force",
       "paragraphs": [
-        "Force damage removes armor layers before the protected hit point. Each positive-damage pattern cell that hits a living part of the target has a base 15% chance to deal one extra damage to an eligible neighboring cell.",
-        "The extra hit can strike a diagonal neighbor and still has to remove armor before its hit point. Force Fighter raises the player's chance and reduces the AP cost of force-based melee attacks at its rank milestones."
+        "Force damage removes armor before the protected hit point. Each positive-damage attack cell that hits a living part of the target has a base 15% chance to deal one extra damage to an eligible neighboring cell.",
+        "The extra hit can strike diagonally and must remove armor before HP. Force Fighter raises this chance and reduces force melee AP costs at rank milestones."
       ],
       "related_entities": [
         "skill-3-2"
@@ -5871,8 +6188,8 @@
     {
       "title": "Fire",
       "paragraphs": [
-        "Ordinary direct fire attacks remove armor layers before burning the hit point underneath. Thrown effects can have different rules; see the linked thrown item's own effect description. A burned cell cannot be restored by ordinary wound salves or normal resting regeneration.",
-        "Apply Simple Burn Remedy to turn the burned cell into an ordinary wound. The remedy removes the burn; it does not immediately restore the hit point. The wound can then be healed normally."
+        "Ordinary direct fire attacks remove armor before burning the hit point underneath. Thrown fire has different rules; see the flask's effect. Wound salves and resting cannot restore burned cells.",
+        "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward."
       ],
       "related_entities": [
         "item-141"
@@ -5899,7 +6216,7 @@
     {
       "title": "Weak",
       "paragraphs": [
-        "Weak damage is a basic direct hit with no additional damage-type effect. It removes armor layers before the hit point underneath; it does not add bleeding, poison, burns, stun, or the special piercing and force effects."
+        "Weak damage removes armor before the protected hit point. It has no extra effect: no bleeding, poison, burns, stun, piercing or force damage."
       ],
       "related_entities": [],
       "confidence": "inferred",
@@ -5919,12 +6236,12 @@
     {
       "title": "Health and armor",
       "paragraphs": [
-        "Health is a shape, not just a total: every occupied health-grid square contains one hit point. Missing positions outside the shape are not hit points and cannot be struck.",
-        "Up to three armor layers can protect each hit point. Armor layers are separate from health: a square with three armor layers still contains only one hit point.",
-        "An attack's pattern is placed over the target's health grid. Only the overlapping attack cells can affect it; the numbers show each cell's damage range, not guaranteed total damage. Attack rotation and dodging change the overlap.",
-        "The wiki shows normal starting health shapes and armor. Actual creatures may be wounded or affected by the story, and equipment, skills, ammunition, and status effects can change combat results.",
-        "Ammunition can add bonus damage to a bow's pattern. The bonus range is rolled independently for each occupied attack cell; it is not a separate arrow-shaped attack grid.",
-        "Wellbeing is a separate survival meter from this combat grid. Resting can sometimes restore an ordinary wounded cell when its wellbeing and recovery conditions are met; burned-away cells are excluded. See Resting for the natural-healing threshold and chance."
+        "Each occupied health-grid cell contains one HP. Empty positions cannot be hit.",
+        "Each HP cell can have up to three armor layers. Armor is not extra health.",
+        "Place an attack pattern over the target's health grid. Only overlapping cells can hit. Each number is that cell's damage range; rotation and dodging change the overlap.",
+        "The grids show starting health and armor. Wounds, story events, equipment, skills, ammunition and status effects can change combat results.",
+        "Ammunition adds bonus damage to a bow's pattern. Roll its bonus range separately for each occupied attack cell.",
+        "Wellbeing is separate from combat HP. Resting can heal ordinary wounds when its recovery conditions are met, but not burns."
       ],
       "related_entities": [],
       "related_pages": ["Wellbeing", "Resting"],
@@ -5965,11 +6282,11 @@
     {
       "title": "Satiation",
       "paragraphs": [
-        "Satiation measures how well fed you are. Eating increases it, while passing turns consumes it. On Medium difficulty, an ordinary turn removes 0.715 percentage points before skill modifiers. Resting and sleeping reduce this ordinary loss; their rates are documented on Resting.",
-        "At 50% satiation or more, satiation contributes +0.5 percentage points to wellbeing each turn. From 20% to below 50% it is neutral. Below 20% it causes a growing penalty, reaching -1 percentage point per turn at zero satiation. Wellbeing explains how this contribution combines with the other meters.",
-        "Slow Metabolism reduces satiation loss according to its rank. Difficulty also modifies losses; see Wellbeing for the shared difficulty multipliers. Skill and difficulty modifiers multiply together.",
-        "Eating without becoming sick can grant Well fed when the resulting satiation is above 90%. Each qualifying food adds a duration based on its base satiation value, up to 35 turns. Well fed helps conserve stamina rather than adding a separate direct wellbeing bonus; see Stamina for its loss reduction.",
-        "A food's base satiation, sickness risk, special effects and acquisition methods belong on its item page. Plant-based foods recognized by the game receive the Herbivore skill's satiation bonus. Foods links to the relevant items; not every edible item is equally safe or equally filling."
+        "Eating restores satiation. On Medium difficulty, an ordinary turn removes 0.715 percentage points before skill modifiers. Resting and sleeping reduce this loss; see Resting.",
+        "At 50% or more, satiation adds 0.5 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 1 percentage point per turn at zero satiation.",
+        "Slow Metabolism reduces satiation loss. Skill and difficulty modifiers multiply; see Wellbeing for difficulty rates.",
+        "Eating without getting sick grants Well fed if satiation ends above 90%. Duration depends on the food's base satiation, up to 35 turns. Well fed reduces stamina loss, not wellbeing loss directly; see Stamina.",
+        "See Foods for filling meals and sickness risks. Herbivore improves satiation from foods the game treats as plant-based."
       ],
       "section_titles": ["Eating and ordinary loss", "Contribution to wellbeing", "Skills and difficulty", "Well fed", "Choosing food"],
       "related_entities": ["skill-1-1", "skill-4-2", "item-25"],
@@ -5987,12 +6304,12 @@
     {
       "title": "Stamina",
       "paragraphs": [
-        "Stamina pays for exertion and is distinct from action points. Outside swimming and drowning, ending a turn restores 4 percentage points of stamina for each unspent AP, up to the meter's maximum. Spending every AP removes this ordinary recovery opportunity.",
-        "At 50% stamina or more, stamina contributes +0.2 percentage points to wellbeing each turn. From 20% to below 50% it is neutral. Below 20% it causes an increasing penalty, reaching -0.5 percentage points per turn at zero. Wellbeing combines this contribution with the other meters and active effects.",
-        "Stamina below 30%, 15% and 5% adds cumulative accident-risk contributions of 1, 2 and 3 percentage points respectively: 1%, 3% or 6% from stamina alone. This contributes to checks made by relevant actions, not an accident chance on every turn. Low focus and encumbrance can add further risk.",
-        "Well fed halves stamina losses. Its food trigger and duration are documented on Satiation. The shared difficulty multipliers on Wellbeing combine multiplicatively with this reduction; these loss modifiers do not reduce ordinary recovery from unused AP.",
-        "Swimming uses stamina at turn end instead of granting ordinary unused-AP recovery. Running out can lead to drowning. A bed or bedroll supplies its own stamina recovery while resting or sleeping; normal AP replenishment is suspended in that state, so do not add a second automatic recovery. See Resting for bed-recovery amounts.",
-        "Wayfarer's Vigor grants temporary stamina recovery. Bramble Berries and Bursthopper restore stamina immediately. Their amounts and durations are maintained on those item pages."
+        "Ending a turn restores 4 percentage points of stamina per unused AP, except while swimming or drowning. Spending all AP leaves no ordinary recovery.",
+        "At 50% or more, stamina adds 0.2 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 0.5 percentage points per turn at zero stamina.",
+        "Stamina below 30%, 15% and 5% adds 1, 2 and 3 percentage points of accident risk, respectively: cumulative totals of 1%, 3% and 6%. This applies to actions with accident checks, not every turn. Focus and encumbrance can add more risk.",
+        "Well fed halves stamina loss. It multiplies with the difficulty rates on Wellbeing and does not reduce unused-AP recovery. See Satiation for how to gain it.",
+        "Swimming drains stamina at turn end instead of restoring it; running out can cause drowning. Beds and bedrolls have their own recovery. Normal AP replenishment pauses in bed, so do not count unused-AP recovery twice. See Resting.",
+        "Wayfarer's Vigor restores stamina over time. Bramble Berries and Bursthopper restore it immediately."
       ],
       "section_titles": ["Unused AP and recovery", "Contribution to wellbeing", "Accident checks", "Loss modifiers", "Swimming and bed rest", "Items that restore stamina"],
       "related_entities": ["item-176", "item-217", "item-243", "item-68"],
@@ -6012,11 +6329,11 @@
     {
       "title": "Focus",
       "paragraphs": [
-        "Focus falls while you are active and is restored by rest and sleep. On Medium difficulty, an ordinary turn removes 0.56 percentage points before skill modifiers. See Resting for direct recovery amounts and reduced decay rates for each resting or sleeping action.",
-        "At 50% focus or more, focus contributes +0.2 percentage points to wellbeing each turn. From 20% to below 50% it is neutral. Below 20% it causes a growing penalty, reaching -0.5 percentage points per turn at zero. Wellbeing combines this contribution with the other meters and active effects.",
-        "Focus below 30%, 15% and 5% adds cumulative accident-risk contributions of 1, 2 and 3 percentage points: 1%, 3% or 6% from focus alone. The relevant action must still make an accident check. Stamina and encumbrance can add to that risk.",
-        "Focused Mind reduces focus loss according to its rank. The shared difficulty multipliers on Wellbeing also affect decay, not the listed direct gains from resting or sleeping.",
-        "Cranberries can restore focus immediately; their item page gives the amount. Sleeping until rested ends when focus reaches its maximum, while sleep until sunrise uses the sunrise schedule rather than a fixed number of turns."
+        "On Medium difficulty, an ordinary active turn removes 0.56 percentage points of focus before skill modifiers. Resting and sleeping restore focus and reduce its loss.",
+        "At 50% or more, focus adds 0.2 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 0.5 percentage points per turn at zero focus.",
+        "Focus below 30%, 15% and 5% adds 1, 2 and 3 percentage points of accident risk, respectively: cumulative totals of 1%, 3% and 6%. The action must have an accident check. Stamina and encumbrance can add more risk.",
+        "Focused Mind and difficulty modify focus loss, not direct gains from rest or sleep. See Wellbeing for difficulty rates.",
+        "Cranberries restore focus immediately. Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule, not a fixed turn count."
       ],
       "section_titles": ["Ordinary loss and recovery", "Contribution to wellbeing", "Accident checks", "Loss modifiers", "Food and sleep"],
       "related_entities": ["skill-1-2", "item-225", "item-68", "item-154", "item-256"],
@@ -6034,12 +6351,12 @@
     {
       "title": "Temperature",
       "paragraphs": [
-        "The personal temperature meter runs from cold to hot. Its comfortable range is 40-60% of that meter; these are game-meter percentages, not Celsius or Fahrenheit. Temperature contributes no wellbeing penalty within that range.",
-        "Outside the comfortable range, the wellbeing penalty increases toward the cold or hot extreme. It reaches -3 percentage points per turn at either 0% or 100% temperature. Temperature does not grant the positive high-meter bonus that satiation, stamina and focus do.",
-        "Each turn, body temperature moves toward local ambient temperature. Normally the change is one third of the difference before cooling modifiers. Insulation then pulls the result toward the middle of the comfortable range. Wetness further draws it toward a cold 10% target, so rain, soaked clothing and immersion can matter even when the air is mild.",
-        "Body Warmth reduces cooling loss according to its rank and improves drying. The shared difficulty multipliers on Wellbeing apply to cooling losses, not to every possible temperature change.",
-        "An active nearby fire raises effective temperature and helps drying. Sufficient warmth can build Warm to the core, which halves the ambient cooling step. Its direct wellbeing bonus is documented on Wellbeing. Shelter reduces rain exposure and can cool hot conditions. Equipment condition affects insulation and waterproofing, and sleeping equipment can contribute while in use.",
-        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse also does so but causes a fire hit. Their item pages own the durations and effects; not every source of warmth is risk-free."
+        "The comfortable temperature range is 40-60%. These are game-meter percentages, not degrees. There is no temperature penalty to wellbeing within that range.",
+        "Outside the comfortable range, the wellbeing penalty grows to 3 percentage points per turn at either 0% or 100% temperature. High temperature gives no bonus.",
+        "Each turn, body temperature moves one third of the way toward local ambient temperature before cooling modifiers. Insulation pulls it toward the comfortable midpoint. Wetness pulls it toward 10%, so rain and immersion can chill you even in mild air.",
+        "Body Warmth reduces cooling loss and improves drying. Difficulty also modifies cooling losses, not every temperature change; see Wellbeing.",
+        "Nearby active fires warm and dry you. Warm to the core halves ambient cooling; see Wellbeing for its other bonus. Shelter reduces rain exposure and can cool hot conditions. Equipment condition affects insulation and waterproofing; sleeping gear helps while in use.",
+        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse does too, but also causes a fire hit."
       ],
       "section_titles": ["The comfortable range", "Contribution to wellbeing", "Ambient temperature and wetness", "Cooling modifiers", "Fire, shelter and clothing", "Warm food"],
       "related_entities": ["skill-1-3", "item-38", "item-172", "item-235", "item-236", "item-237", "item-242", "item-256"],
@@ -6057,13 +6374,13 @@
     {
       "title": "Wellbeing",
       "paragraphs": [
-        "Wellbeing is your overall condition, separate from the health-and-armor grid used in combat. Each turn combines the contributions from Satiation, Stamina, Focus and Temperature with active bonuses and penalties. Those meter pages own their contribution thresholds and rates. Reaching zero wellbeing causes death.",
-        "A percentage point is a change on a 0-100% meter, not a percentage multiplier. Each meter's wellbeing contribution is rounded to steps of 0.1 percentage point. The listed turn contributions are applied before the visual wellbeing grid settles. Meter gains are capped at 100% and losses at zero.",
-        "Warm to the core and Well rested each add +1 percentage point per turn while active. Well fed is different: it conserves stamina rather than adding another direct wellbeing bonus. Temperature, Resting and Satiation respectively describe how these effects are gained.",
-        "Sickness I, II and III subtract 1, 2 and 3 percentage points per turn respectively, using the highest active level rather than adding all three. Being very overburdened subtracts 1 percentage point per turn; being extremely overburdened subtracts 2. The lighter overburdened state increases movement costs and accident risk but has no direct wellbeing penalty.",
-        "Compared with Medium, Easy multiplies satiation, stamina and focus losses, and cooling losses, by 0.67; Hard multiplies them by 1.2. Skill and temporary-effect loss modifiers combine multiplicatively with these difficulty modifiers. They do not scale the listed direct recovery gains, and cooling modifiers are not a general slowdown of every temperature change.",
-        "Improving wellbeing is not the same as instantly refilling the combat grid. See Resting for the wellbeing threshold and conditional chance of naturally healing an ordinary wounded cell; burned-away cells are excluded.",
-        "Food can affect wellbeing beyond filling satiation. Honey helps directly and reduces sickness duration, while Riftvine Berries lower wellbeing. Their exact effects belong on the item pages."
+        "Wellbeing is separate from combat HP. Each turn combines Satiation, Stamina, Focus and Temperature with active effects. At zero wellbeing, you die.",
+        "A percentage point changes a 0-100% meter; it is not a multiplier. Each meter's wellbeing contribution rounds to 0.1 percentage-point steps before the display settles. All meters stay between zero and 100%.",
+        "Warm to the core and Well rested each add 1 percentage point per turn. Well fed instead conserves stamina. See Temperature, Resting and Satiation for their triggers.",
+        "Sickness I, II and III remove 1, 2 and 3 percentage points per turn; only the highest active level counts. Being very overburdened removes 1 and extremely overburdened removes 2. The lighter overburdened state increases movement costs and accident risk without a direct wellbeing penalty.",
+        "Compared with Medium, Easy multiplies satiation, stamina, focus and cooling losses by 0.67; Hard multiplies them by 1.2. Skill and temporary-effect modifiers multiply with these rates. Direct recovery gains are unaffected, and cooling modifiers do not slow every temperature change.",
+        "High wellbeing does not instantly restore combat HP. See Resting for natural wound healing; burns cannot heal this way.",
+        "Honey improves wellbeing and shortens sickness. Riftvine Berries reduce wellbeing."
       ],
       "section_titles": ["Combining the four meters", "Units and rounding", "Helpful effects", "Sickness and carrying too much", "Difficulty and loss modifiers", "Wellbeing is not combat HP", "Direct food effects"],
       "related_entities": ["item-51", "item-218", "item-85", "item-86"],
@@ -6082,13 +6399,13 @@
     {
       "title": "Resting",
       "paragraphs": [
-        "Resting and sleeping restore focus and stamina while completed turns still advance the clock at the rate listed on Action points. Recovery therefore exposes you to changing weather, temperature and other ongoing conditions.",
-        "Resting on the ground adds 2 percentage points of focus per turn and uses half the ordinary satiation and focus losses. Stamina recovery comes from unused AP, as described on Stamina. Ground resting finishes when both focus and stamina are full, or can be interrupted manually.",
-        "Resting on a bed or bedroll uses the same focus gain and half-rate losses, but explicitly restores 32 percentage points of stamina each turn. Sleeping adds 2.5 percentage points of focus and 32 of stamina, while reducing satiation and focus decay to 35% of ordinary rates. In bed, normal AP replenishment is suspended, so this stamina gain is not routinely doubled.",
-        "Sleep until rested ends when focus is full; sleep until sunrise checks the sunrise schedule. Disturbance or deteriorating wellbeing can interrupt sleep. Below 45% wellbeing, a negative wellbeing trend can force you awake.",
-        "Sleeping can build Well rested once focus exceeds 95%, provided satiation and stamina are above 20% and temperature is strictly inside its comfortable range. The sleeping item's comfort determines the duration added, up to 35 turns. Its timer can pause while you remain in bed with at least two of the three supporting conditions satisfied. See Wellbeing for the effect's direct bonus.",
-        "At 50% wellbeing or more, resting allows a chance to restore one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and whether temperature is causing a wellbeing penalty; with full supporting meters and no temperature penalty it is 5% per resting turn. A successful roll restores one ordinary wounded cell, not a burned-away cell.",
-        "Choose shelter, warmth and adequate food before a long rest. A sleeping item's insulation and waterproofing can contribute while in use. Great Bedroll and Furhide Bedroll also slow the decay of Warm to the core, but do not make you immune to hunger, cold, sickness or interruption."
+        "Resting and sleeping restore focus and stamina, but time, weather and temperature keep advancing. See Action points for turn duration.",
+        "Ground rest adds 2 percentage points of focus per turn and halves ordinary satiation and focus losses. Unused AP restores stamina. Rest ends at full focus and stamina, or when interrupted manually.",
+        "Bed and bedroll rest gives the same focus gain and half-rate losses, plus 32 percentage points of stamina per turn. Sleep gives 2.5 focus and 32 stamina, with satiation and focus losses at 35% of normal. Normal AP replenishment pauses in bed; do not double-count stamina recovery.",
+        "Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule. Disturbance can wake you. Below 45% wellbeing, a falling wellbeing trend can also force you awake.",
+        "Sleeping can grant Well rested above 95% focus, with satiation and stamina above 20% and temperature strictly inside its comfortable range. Sleeping-item comfort sets the duration added, up to 35 turns. The timer can pause in bed when at least two of the three supporting conditions hold. See Wellbeing for its bonus.",
+        "At 50% wellbeing or more, resting can heal one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and the temperature penalty. With full supporting meters and no temperature penalty, it is 5% per resting turn. Burns cannot heal this way.",
+        "Find shelter, warmth and food before a long rest. Sleeping gear contributes insulation and waterproofing while in use. Great Bedroll and Furhide Bedroll also slow Warm to the core decay, but hunger, cold, sickness and interruptions still apply."
       ],
       "section_titles": ["Time keeps passing", "Resting on the ground", "Beds and sleeping", "Waking and interruption", "Well rested", "Natural healing", "Preparing a resting place"],
       "related_entities": ["item-68", "item-154", "item-256", "item-38"],
@@ -6107,12 +6424,12 @@
     {
       "title": "Foods",
       "paragraphs": [
-        "Foods restore satiation, but differ in how filling they are, how likely they are to cause sickness, and their additional effects. Item pages own base satiation, sickness risk, consumption effects, crafting recipes and verified acquisition methods.",
-        "Herbivore increases the satiation of plant-based foods recognized by the game; its skill page gives the rank bonus. It does not apply indiscriminately to all food. Satiation gains are capped at the meter's maximum.",
-        "Eating a food rolls its declared sickness risk. A meal that does not make you sick may also extend Well fed when its satiation condition is met. See Satiation for that trigger and duration, and Stamina for the resulting loss reduction. Sickness and Well fed are separate from the satiation meter's ordinary wellbeing contribution.",
-        "Honey directly helps wellbeing and reduces sickness duration. Bramble Berries and Bursthopper restore stamina; Cranberries restore focus. Riftvine Berries instead lower wellbeing. Each linked item gives its exact amount, so a food's special effect is not inferred from its name or appearance.",
-        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight provide temporary warmth. Baby Firelouse also does so, but causes a fire hit. Their item pages own the durations and effects. An edible item can help one meter while hurting another.",
-        "Check cooking and preparation recipe by recipe. Workstations display ingredient quantities, output amounts and base AP costs from the resulting item's recipe owner. Check that food's sickness risk separately; processing does not automatically make every food safe or require the same workstation."
+        "Foods differ in satiation, sickness risk and other effects. See each item for stats, recipes and ways to obtain it.",
+        "Herbivore increases satiation from foods the game treats as plant-based, not all food. Satiation stops at 100%.",
+        "Eating rolls the food's sickness risk. A meal that does not cause sickness may extend Well fed; see Satiation for its trigger and Stamina for its effect. Sickness and Well fed act separately from satiation's ordinary wellbeing contribution.",
+        "Honey improves wellbeing and shortens sickness. Bramble Berries and Bursthopper restore stamina; Cranberries restore focus. Riftvine Berries reduce wellbeing. See each item for amounts.",
+        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse also warms you but causes a fire hit.",
+        "Recipes list ingredients, outputs, AP and workstation requirements. Check the resulting food's sickness risk: preparation does not always make food safe."
       ],
       "section_titles": ["Food value and effects", "Plant-based foods", "Sickness and Well fed", "Direct meter effects", "Warm meals and risks", "Cooking and preparation"],
       "related_entities": ["skill-4-2", "item-51", "item-217", "item-243", "item-225", "item-218", "item-235", "item-236", "item-237", "item-242"],
@@ -6129,12 +6446,12 @@
     {
       "title": "Weather",
       "paragraphs": [
-        "Weather changes between clear, cloudy and rainy conditions. Transitions are checked when a completed turn crosses an hour boundary; see Action points for the turn-clock duration. Ambient temperature shifts toward a time-of-day target with a small random variation rather than instantly matching a fixed daytime value; this is distinct from your personal temperature meter.",
-        "Recent rain and dry periods affect later transition chances. A dry spell makes cloud and rain formation more likely, while accumulated rain encourages clearing. These are conditional hourly checks, not a fixed chance of rain every turn. The ordered checks and rain-history details are listed below.",
-        "On Easy and Medium, the early-game weather rule prevents cloudy conditions from starting new rain while fewer than two days have been survived. Hard does not receive that protection. This does not promise constant clear skies.",
-        "Rain matters through exposure and wetness. Wet clothing can transfer moisture to its wearer and other carried clothing. Personal wetness affects the Temperature rules, so waterproofing, shelter and drying complement insulation rather than replacing it.",
-        "The lesser shelter effect provides 80% protection from rain and the stronger shelter effect 95%. Shelter can also lower effective ambient temperature when conditions are hot. Nearby active fires help warmth and drying; dungeon-like areas use a separate ambient baseline rather than the outdoor value.",
-        "Resting still advances weather and temperature. Before sleeping, consider exposure, clothing, sleeping equipment and whether your wellbeing trend is improving or deteriorating."
+        "Clear, cloudy and rainy weather can change when a completed turn crosses an hour boundary. Ambient temperature approaches a time-of-day target with small random variation. It is separate from body temperature.",
+        "Dry spells increase cloud and rain chances; accumulated rain encourages clearing. The ordered hourly checks are below.",
+        "On Easy and Medium, clouds cannot start new rain while fewer than two days have been survived. Hard has no early-game protection. Clouds can still form during the protected period.",
+        "Wet clothing can dampen its wearer and other carried clothing. Wetness affects body Temperature; waterproofing, shelter and drying help alongside insulation.",
+        "Lesser shelter blocks 80% of rain and stronger shelter blocks 95%. Shelter can cool hot conditions. Nearby active fires warm and dry you. Dungeon-like areas use a separate ambient temperature baseline.",
+        "Weather and temperature keep changing while you rest. Check your shelter, clothing and wellbeing trend before sleeping."
       ],
       "section_titles": ["Changing weather", "Rain history", "Early-game rain protection", "Wetness and exposure", "Shelter and local conditions", "Resting through weather"],
       "related_entities": ["item-38", "item-208", "item-154", "item-256"],
@@ -6152,13 +6469,13 @@
     {
       "title": "Action points",
       "paragraphs": [
-        "Action points (AP) are the budget for taking actions during a turn. Attacking, equipping items, crafting, and applying remedies have their own costs, which can include fractions of an AP.",
-        "The player normally has 8 AP per turn. Spending the remaining AP ends the turn. When the next turn begins, AP is replenished, minus any action cost carried over from the previous turn.",
-        "Outside combat, some actions can proceed without enough AP remaining and carry the excess cost into the next turn. Combat checks whether the required AP is available; do not assume an expensive action can always be completed in one turn.",
-        "Ending a turn with AP left can recover stamina; see Stamina for the recovery rate and its swimming and bed-rest exceptions. The clock advances when a turn is completed, not by a fixed time for each AP; the minutes-per-turn value is listed below.",
-        "Equipment has a base equip cost of 0.4 AP per square of its inventory footprint. This is distinct from the AP cost of attacking or using the item.",
-        "Skills can reduce AP costs. Examples include Fast Draw for bows, Blade Master for sharp weapons, Master Basher and Force Fighter for their melee weapon types, and Brewer for alchemy crafting.",
-        "Completed turns also process satiation, focus, temperature and wellbeing. Resting and sleeping alter recovery and resource loss but do not pause that survival simulation."
+        "Attacking, equipping, crafting and applying remedies each cost AP. Costs can include fractions.",
+        "The player normally has 8 AP per turn. Spending the remaining AP ends the turn. The next turn restores AP minus any cost carried over.",
+        "Outside combat, some actions can exceed your remaining AP and carry the excess into the next turn. In combat, the required AP must be available.",
+        "Unused AP can restore stamina, with swimming and bed-rest exceptions; see Stamina. The clock advances per completed turn, not per AP.",
+        "Equipping costs a base 0.4 AP per square of inventory footprint, separate from attacking or using the item.",
+        "Fast Draw reduces bow costs; Blade Master, Master Basher and Force Fighter reduce costs for their weapon types. Brewer reduces alchemy costs.",
+        "Completed turns also update satiation, focus, temperature and wellbeing. Rest and sleep change recovery rates but do not pause these meters."
       ],
       "related_entities": [
         "skill-2-0",
@@ -6206,7 +6523,7 @@
   "item_effects": [
     {
       "entity": "item-51",
-      "paragraphs": ["Eating Honey immediately adds 1 percentage point of wellbeing and reduces sickness duration, in addition to its ordinary food value."],
+      "paragraphs": ["Eating Honey adds 1 percentage point of wellbeing and reduces sickness duration."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[51]"}]
     },
@@ -6218,49 +6535,49 @@
     },
     {
       "entity": "item-217",
-      "paragraphs": ["Eating Bramble Berries immediately restores 5 percentage points of stamina, in addition to the ordinary food effect."],
+      "paragraphs": ["Eating Bramble Berries restores 5 percentage points of stamina."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[217]"}]
     },
     {
       "entity": "item-218",
-      "paragraphs": ["Eating Riftvine Berries immediately removes 5 percentage points of wellbeing, despite providing ordinary food value."],
+      "paragraphs": ["Eating Riftvine Berries removes 5 percentage points of wellbeing."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[218]"}]
     },
     {
       "entity": "item-225",
-      "paragraphs": ["Eating Cranberries immediately restores 1 percentage point of focus, in addition to the ordinary food effect."],
+      "paragraphs": ["Eating Cranberries restores 1 percentage point of focus."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[225]"}]
     },
     {
       "entity": "item-235",
-      "paragraphs": ["Eating Pleasant Vegetable Soup adds five turns of Warm to the core. Temperature and Wellbeing own the effect's cooling and wellbeing rules."],
+      "paragraphs": ["Eating Pleasant Vegetable Soup adds five turns of Warm to the core."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[235]"}]
     },
     {
       "entity": "item-236",
-      "paragraphs": ["Eating Tasty Crab Soup adds five turns of Warm to the core. Temperature and Wellbeing own the effect's cooling and wellbeing rules."],
+      "paragraphs": ["Eating Tasty Crab Soup adds five turns of Warm to the core."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[236]"}]
     },
     {
       "entity": "item-237",
-      "paragraphs": ["Eating Survivor's Delight adds five turns of Warm to the core. Temperature and Wellbeing own the effect's cooling and wellbeing rules."],
+      "paragraphs": ["Eating Survivor's Delight adds five turns of Warm to the core."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[237]"}]
     },
     {
       "entity": "item-242",
-      "paragraphs": ["Eating Baby Firelouse adds ten turns of Warm to the core but also causes a fire hit. This is not a risk-free substitute for a warm meal."],
+      "paragraphs": ["Eating Baby Firelouse adds ten turns of Warm to the core but also causes a fire hit."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[242]"}]
     },
     {
       "entity": "item-243",
-      "paragraphs": ["Eating Bursthopper immediately restores 15 percentage points of stamina, in addition to the ordinary food effect."],
+      "paragraphs": ["Eating Bursthopper restores 15 percentage points of stamina."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[243].first-reachable-branch"}]
     }
@@ -6513,12 +6830,10 @@
       }
     ],
     "paragraphs": [
-      "These labels describe mechanical targeting groups; they are not official named organizations or species classifications.",
-      "Normal target acquisition excludes beings in the actor's own faction, except the group shared by Nightmare and Raving Unwanted.",
-      "Both Nightmare and Raving Unwanted can normally select another member of their own group. The acting individual is always excluded.",
-      "Friendly-faction NPCs additionally exclude the player from normal target acquisition. The player has a separate team, 1, and is not one of the 36 catalog beings.",
-      "Faction eligibility alone is not guaranteed aggression: acquisition also checks distance, detectability, reachability and optionally line of sight; actual aggression has additional probability and current-target behavior.",
-      "Damage retaliation can assign the attacker as target without the same-team acquisition filter. Same-faction beings can therefore sometimes attack each other, and friendly NPCs are not unconditionally pacifist."
+      "Beings normally avoid targeting their own faction. Nightmare and Raving Unwanted are exceptions: they can target each other, but never themselves.",
+      "Friendly NPCs also avoid targeting the player, who belongs to a separate faction.",
+      "An eligible target must still pass distance, detection, reachability and sometimes line-of-sight checks. Aggression chance and current targets also matter.",
+      "Taking damage can make a being retaliate without the usual faction check. Friendly NPCs and faction-mates can therefore fight back."
     ],
     "confidence": "inferred",
     "evidence": [
@@ -6543,5 +6858,105 @@
         "key": "attack_aftermath retaliation target assignment"
       }
     ]
-  }
+  },
+  "fact_display": [
+    {
+      "fact": "temperature-label-0-ceiling",
+      "property": "Biting cold: upper threshold",
+      "description": "Use the first matching threshold; values are not degrees."
+    },
+    {
+      "fact": "temperature-label-1-ceiling",
+      "property": "Very cold: upper threshold",
+      "description": "Use the first matching threshold; values are not degrees."
+    },
+    {
+      "fact": "temperature-label-2-ceiling",
+      "property": "Cold: upper threshold",
+      "description": "Use the first matching threshold; values are not degrees."
+    },
+    {
+      "fact": "temperature-label-3-ceiling",
+      "property": "Comfortable: upper threshold",
+      "description": "Use the first matching threshold; values are not degrees."
+    },
+    {
+      "fact": "temperature-label-4-ceiling",
+      "property": "Warm: upper threshold",
+      "description": "Use the first matching threshold; values are not degrees."
+    },
+    {
+      "fact": "temperature-label-5-ceiling",
+      "property": "Very hot: upper threshold",
+      "description": "Use the first matching threshold; values are not degrees."
+    },
+    {
+      "fact": "level-1-next-xp",
+      "property": "Level 1: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-2-next-xp",
+      "property": "Level 2: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-3-next-xp",
+      "property": "Level 3: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-4-next-xp",
+      "property": "Level 4: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-5-next-xp",
+      "property": "Level 5: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-6-next-xp",
+      "property": "Level 6: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-7-next-xp",
+      "property": "Level 7: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-8-next-xp",
+      "property": "Level 8: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-9-next-xp",
+      "property": "Level 9: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "level-10-next-xp",
+      "property": "Level 10: XP to next level",
+      "description": "Per-level cost, not lifetime XP."
+    },
+    {
+      "fact": "turn-minutes",
+      "description": "Game minutes, not real-world minutes."
+    },
+    {
+      "fact": "rain-max-power",
+      "description": "Maximum rain intensity."
+    },
+    {
+      "fact": "world-grid-width",
+      "property": "World-map width and height (zones)",
+      "description": "Not every zone is playable terrain."
+    },
+    {
+      "fact": "area-cell-size",
+      "property": "Terrain cell width (game units)",
+      "description": "An area is 2560 units wide."
+    }
+  ]
 }

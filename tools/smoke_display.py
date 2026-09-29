@@ -266,10 +266,10 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
         "Plant Fiber x 4", "Bandage x 1", "Inventory crafting", "1.2 base AP", "A | B = C {{literal}}"
     ]:
         raise RuntimeError("Recipe row lost named arguments, nesting, fractional AP or literal escaping.")
-    for args, cost in (("", "Not established"), ("|ap=0", "0 base AP"), ("|cost=3 turns", "3 turns")):
+    for args, cost in (("", "Unknown"), ("|ap=0", "0 base AP"), ("|cost=3 turns", "3 turns")):
         parsed = dom(parse("<table>{{Recipe row" + args + "}}</table>"), "Recipe row")
         if [cell["text"] for cell in parsed.rows[0]["cells"]] != [
-            "No item inputs", "Not established", "Not established", cost, "Not established"
+            "No item inputs", "Unknown", "Unknown", cost, "Unknown"
         ]:
             raise RuntimeError("Recipe row invented a default value or lost a custom/zero cost.")
     print("Native displays: all 118 grids, exact coins, 246 items, 25 creature portraits and authored lists, "
@@ -358,14 +358,14 @@ def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
     prefix = "        [ " + lua_string("Sceetler") + " ] = "
     lines = pages[ASSETS_TITLE].splitlines()
     original = next(line for line in lines if line.startswith(prefix))
-    name_only = prefix + lua_string("[[Sceetler|<nowiki>Sceetler</nowiki>]] (no reviewed image)") + ","
+    name_only = prefix + lua_string("[[Sceetler|<nowiki>Sceetler</nowiki>]]") + ","
     assets_without_portrait = pages[ASSETS_TITLE].replace(original, name_only)
     wait_tick(api)
     api({"action": "edit", "title": ASSETS_TITLE, "text": assets_without_portrait, "token": token,
          "summary": "Disposable missing approved portrait fixture"}, post=True)
     rendered = api({"action": "parse", "title": "Missing portrait smoke", "text": "{{Creature|Sceetler}}",
                     "prop": "text"}, post=True)["parse"]["text"]["*"]
-    if "(no reviewed image)" not in rendered or "<img " in rendered or 'title="Sceetler"' not in rendered:
+    if "no reviewed image" in rendered or "<img " in rendered or 'title="Sceetler"' not in rendered:
         raise RuntimeError("A missing creature portrait did not render an explicit linked-name-only display.")
     wait_tick(api)
     api({"action": "edit", "title": ASSETS_TITLE, "text": pages[ASSETS_TITLE], "token": token,

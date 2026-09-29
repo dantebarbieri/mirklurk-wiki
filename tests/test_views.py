@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from wiki_catalog import entry_owners, entry_relations, page_locations, validate_catalog
 from wiki_data import DataError, MECHANIC_GUIDE_TITLES
 from wiki_details import load_publication_inputs
-from wiki_render import build_pages, display_entry, linked_prose, merchant_table, recipe_groups
+from wiki_render import audit_report, image_caption, build_pages, display_entry, linked_prose, merchant_table, recipe_groups
 from wiki_views import available_views, selective_view, transclusions, validate_transclusions
 from smoke_deploy import check_pool_projection, dom
 
@@ -83,6 +83,7 @@ class SelectiveViewTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+        cls.audit = audit_report(cls.data, cls.catalog, cls.details)
 
     def test_default_contracts_and_named_views_are_distinct(self):
         price = selective_view("2 silver", "price", default=True)
@@ -161,7 +162,7 @@ class SelectiveViewTests(unittest.TestCase):
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
         self.assertEqual(owner.count('id="pool-item-'), 538)
-        for placeholder in ("Budget-dependent", "Not established", "Eligible, not guaranteed."):
+        for placeholder in ("Budget-dependent", "Unknown", "Eligible, not guaranteed."):
             self.assertNotIn(placeholder, owner)
         for pool in self.catalog["acquisition"]["pools"]:
             params = {"view": "pool", "pool": pool["id"]}
@@ -178,12 +179,12 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertEqual(expand_selective_view(owner, {"view": "pool", "pool": "missing", "item": "item-127"}), "")
         self.assertEqual(expand_selective_view(owner, {"view": "price"}), "")
         self.assertIn("== How random selection works ==", owner)
-        self.assertIn("500 counted proposals", owner)
-        self.assertIn("can be modeled", owner)
+        self.assertIn("500 counted candidates", owner)
+        self.assertIn("Exact per-item rates are unknown", owner)
         self.assertNotIn("non-coin", owner.lower())
-        self.assertIn("Coins and other valuables bypass the minimum-value test", owner)
-        self.assertIn("one-silver base-value budget", self.pages["Loot mechanics"])
-        self.assertIn("Their pool allows food and materials", self.pages["Loot mechanics"])
+        self.assertIn("Coins and valuables bypass the minimum", owner)
+        self.assertIn("treasure budget is 1 silver", self.pages["Loot mechanics"])
+        self.assertIn("Food and materials can appear", self.pages["Loot mechanics"])
 
     def test_compact_pool_projection_rejects_missing_members_and_invented_odds(self):
         pool = next(row for row in self.catalog["acquisition"]["pools"] if row["id"] == "chest-common")
@@ -202,7 +203,7 @@ class SelectiveViewTests(unittest.TestCase):
                 check_pool_projection(changed, pool, "Random treasure", locations, self.catalog, item)
         listing = expand_selective_view(self.pages["Random treasure"], {"view": "pool", "pool": pool["id"]})
         for changed in (listing.replace("<th scope=\"col\">Category</th>", "<th>Chance</th>"),
-                        listing.replace("</td></tr>", "<td>Not established</td></tr>", 1)):
+                        listing.replace("</td></tr>", "<td>Unknown</td></tr>", 1)):
             with self.assertRaises(RuntimeError):
                 check_pool_projection(changed, pool, "Random treasure", locations, self.catalog)
 
@@ -262,8 +263,8 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertNotIn("[[Category:Merchants]]", self.pages["Wilda"])
         self.assertNotIn("[[Wilda|", self.pages["Category:Merchants"])
         self.assertIn("Quest items cannot be sold", self.pages["Currency and trading"])
-        self.assertIn("Rift Weave is also blocked", self.pages["Currency and trading"])
-        self.assertIn("no merchant-specific, player or difficulty markup", self.pages["Currency and trading"])
+        self.assertIn("Rift Weave cannot be sold", self.pages["Currency and trading"])
+        self.assertIn("no merchant, player or difficulty markup", self.pages["Currency and trading"])
         self.assertNotIn("Wares", self.pages["Wilda"])
 
     def test_merchant_story_availability_is_owned_inside_offer_views(self):
@@ -282,14 +283,14 @@ class SelectiveViewTests(unittest.TestCase):
                 if original["kind"] == "merchant" and original["details"]["merchant"] == identity:
                     self.assertEqual(display_entry(original, self.catalog)["conditions"], profile["conditions"])
                     self.assertNotIn(profile["conditions"], self.pages[locations[original["details"]["item"]]])
-        self.assertIn("already with Clay before the explosion", profiles["being-19"]["conditions"])
-        self.assertIn("only after Clay has departed", profiles["being-19"]["conditions"])
+        self.assertIn("with Clay after his escort", profiles["being-19"]["conditions"])
+        self.assertIn("only after Clay leaves", profiles["being-19"]["conditions"])
         self.assertIn("Eir announces", profiles["being-19"]["conditions"])
         self.assertTrue(any("MAINQUESTSTAGE>=27" in row["key"] for row in profiles["being-19"]["evidence"]))
-        self.assertIn("Clay survives outside", profiles["being-8"]["conditions"])
-        self.assertIn("Tain dies in the explosion", profiles["being-20"]["conditions"])
+        self.assertIn("He survives outside", profiles["being-8"]["conditions"])
+        self.assertIn("He dies in the explosion", profiles["being-20"]["conditions"])
         self.assertIn("Summoned characters cannot be interacted with", self.pages["Currency and trading"])
-        self.assertIn("Crafting access and Viend", self.pages["Alchemy workstation"])
+        self.assertIn("Crafting here does not unlock Viend", self.pages["Alchemy workstation"])
         self.assertFalse(any("Other story restrictions are not established" in page for page in self.pages.values()))
 
     def test_viend_clay_stock_comparison_links_exact_original_offers(self):
@@ -373,20 +374,20 @@ class SelectiveViewTests(unittest.TestCase):
         for title, text in (
             ("Satiation", "0.715 percentage points"), ("Satiation", "above 90%"),
             ("Stamina", "4 percentage points"), ("Focus", "0.56 percentage points"),
-            ("Temperature", "40-60%"), ("Temperature", "not Celsius or Fahrenheit"),
-            ("Temperature", "-3 percentage points"), ("Wellbeing", "0.1 percentage point"),
+            ("Temperature", "40-60%"), ("Temperature", "not degrees"),
+            ("Temperature", "penalty grows to 3 percentage points"), ("Wellbeing", "0.1 percentage-point"),
             ("Wellbeing", "by 0.67"), ("Wellbeing", "by 1.2"),
             ("Resting", "At 50% wellbeing or more"), ("Resting", "5% per resting turn"),
-            ("Resting", "not routinely doubled"), ("Resting", "Below 45% wellbeing"),
-            ("Resting", "focus exceeds 95%"), ("Resting", "35 turns"),
+            ("Resting", "do not double-count stamina recovery"), ("Resting", "Below 45% wellbeing"),
+            ("Resting", "above 95% focus"), ("Resting", "35 turns"),
             ("Weather", "Easy and Medium"), ("Weather", "fewer than two days"),
         ):
             self.assertIn(text, self.pages[title])
         for title in ("Stamina", "Focus"):
-            self.assertIn("not an accident chance on every turn" if title == "Stamina" else "must still make an accident check", self.pages[title])
-        self.assertIn("distinct from your personal temperature meter", self.pages["Weather"])
+            self.assertIn("not every turn" if title == "Stamina" else "action must have an accident check", self.pages[title])
+        self.assertIn("separate from body temperature", self.pages["Weather"])
         self.assertIn("[[:Category:Food and drink", self.pages["Foods"])
-        self.assertIn('id="Combat_and_action_guide_evidence"', self.pages["Source provenance"])
+        self.assertIn('id="Combat_and_action_guide_evidence"', self.audit)
 
     def test_food_effect_amounts_have_one_item_owner_not_copied_guide_values(self):
         locations = page_locations(self.data, self.catalog)
@@ -461,7 +462,7 @@ class SelectiveViewTests(unittest.TestCase):
             page = self.pages[locations[identity]]
             self.assertIn("[[" + image["file_title"] + "|" + str(image["pixel_art"]["width"]) + "px|", page)
             self.assertNotIn("[[File:" + identity.capitalize() + ".png", page)
-            self.assertIn("representative shape assembled", page)
+            self.assertIn("shape varies", page)
             self.assertIn(locations[identity], image["caption"])
             self.assertEqual({row["section"] for row in image["evidence"]}, {
                 "gml_Object_databank_Alarm_2", "gml_GlobalScript_scr_nature",

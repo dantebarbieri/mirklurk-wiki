@@ -1,5 +1,5 @@
-Damage types describe how an attack interacts with health cells, armor, and status effects. Choose a type below for its rules and links to weapons or creatures that use it.
+Damage types determine how attacks affect health cells, armor and status effects.
 
-Attack patterns show where a hit can land; they are not a promise that every cell will damage the target. Armor, overlap, and other modifiers still matter.
+Only overlapping cells in an [[Health and armor|attack pattern]] can hit the target.
 
-[[Main Page]] | [[Game mechanics]] | [[Evidence and spoilers]] | [[Source provenance]]
+[[Main Page]] | [[Game mechanics]]

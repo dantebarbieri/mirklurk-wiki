@@ -10,7 +10,7 @@ from wiki_catalog import title_key
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
 from wiki_display import NAMESPACES, content_model, page_namespace
-from wiki_render import build_pages, literal, profile_value
+from wiki_render import build_pages, literal, profile_value, validate_reader_pages
 
 
 EXPORT_NS = "http://www.mediawiki.org/xml/export-0.11/"
@@ -72,7 +72,7 @@ def build_xml(pages):
         element(revision, "timestamp", SEED_TIMESTAMP)
         contributor = element(revision, "contributor")
         element(contributor, "username", "Repository seed")
-        element(revision, "comment", "Original repository seed; evidence and rights caveats apply.")
+        element(revision, "comment", "Original repository seed")
         element(revision, "origin", str(identifier))
         model = content_model(title)
         element(revision, "model", model)
@@ -103,6 +103,7 @@ def main(argv=None):
     try:
         data, catalog, details = load_publication_inputs(root)
         pages = build_pages(root, data, catalog, details)
+        validate_reader_pages(pages)
         total = len(pages)
         excluded = existing_titles(args.existing_export) if args.existing_export else set()
         pages = {title: text for title, text in pages.items() if title_key(title) not in excluded}

@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from wiki_catalog import category_definitions, entry_owners, entry_relations, ingredient_acquisition, page_locations, validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
-from wiki_render import acquisition_probability, build_pages, clothing_subgroups, display_entry, literal
+from wiki_render import audit_report, image_caption, acquisition_probability, build_pages, clothing_subgroups, display_entry, literal
 from wiki_views import available_views, transclusions
 
 
@@ -22,6 +22,7 @@ class AcquisitionTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+        cls.audit = audit_report(cls.data, cls.catalog, cls.details)
 
     def test_every_item_has_a_verified_method_or_an_explicit_scoped_note(self):
         document = self.catalog["acquisition"]
@@ -45,12 +46,12 @@ class AcquisitionTests(unittest.TestCase):
         self.assertEqual(normal | notes.keys(), {entity["id"] for entity in self.data["entities"] if entity["category"] == "item"})
         self.assertFalse(any("No documented acquisition source is available yet." in text for text in self.pages.values()))
         self.assertIn("built-in", self.pages["Unarmed"])
-        self.assertIn("not a separate collectible item", self.pages["Finish Raft"])
+        self.assertIn("not a collectible item", self.pages["Finish Raft"])
         locations = page_locations(self.data, self.catalog)
         for identity in ("item-170",):
             self.assertIn("[[" + locations[identity] + "#Recipes|", self.pages["Finish Raft"])
         for identity in unverified:
-            self.assertIn("verified", self.pages[locations[identity]])
+            self.assertIn("Unknown", self.pages[locations[identity]])
             self.assertNotIn("unobtainable", self.pages[locations[identity]])
 
     def test_clothing_is_browsable_in_items_and_category_by_reviewed_slots(self):
@@ -159,8 +160,9 @@ class AcquisitionTests(unittest.TestCase):
         identities = {"plant-harvesting", "tree-shrub-harvesting", "beehives", "harvested-insects",
                       "night-fireflies", "story-acquisition", "mapmaking"}
         rows = [row for source in self.catalog["acquisition"]["sources"] if source["id"] in identities for row in source["rows"]]
-        self.assertEqual(hashlib.sha256((json.dumps(rows, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "baa5c96faa99b0711601c18dce7b029e16453a6d6a6b5dcd23fab1caa1df15f0")
+        from test_editorial import gameplay_record
+        self.assertEqual(hashlib.sha256((json.dumps([gameplay_record(row) for row in rows], sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
+                         "d40ee9d0abb30505c6a71086c5c015e0059982202c26206243462c95ba84ae7e")
         for path in ("ground", "berries"):
             insects = [row for row in sources["harvested-insects"]["rows"] if row["id"].startswith("extra-bug-" + path + "-")]
             self.assertEqual(len(insects), 7)
@@ -176,7 +178,7 @@ class AcquisitionTests(unittest.TestCase):
         self.assertIn("no fixed item count for a whole tree", sources["tree-shrub-harvesting"]["loot_context"])
         self.assertIn("not the chance per harvested plant", sources["harvested-insects"]["loot_context"])
         self.assertIn("[[Harvested insects]]", self.pages["Creepy-Crawlies"])
-        self.assertIn("differ from the single", self.pages["Creepy-Crawlies"])
+        self.assertIn("one extra-insect check instead of the repeated", self.pages["Creepy-Crawlies"])
         self.assertIn("[[Green Fingers", self.pages["Plant harvesting"])
         self.assertIn("[[Creepy-Crawlies", self.pages["Harvested insects"])
 
@@ -200,8 +202,8 @@ class AcquisitionTests(unittest.TestCase):
     def test_calmia_sale_guidance_does_not_create_a_purchase_price_contract(self):
         note = next(row for row in self.catalog["acquisition"]["item_notes"] if row["item"] == "item-142")
         self.assertEqual(note["kind"], "gathering")
-        self.assertIn("intact root sells for 25 copper coins per item", note["text"])
-        self.assertIn("not a quoted shop purchase price", note["text"])
+        self.assertIn("intact Calmia Root sells for 25 copper per root", note["text"])
+        self.assertIn("sells for 25 copper per root", note["text"])
         self.assertIn(literal(note["text"]), self.pages["Calmia Root"])
         self.assertNotIn(literal(note["text"]), self.pages["Plant harvesting"])
         self.assertNotIn("item-142", {row["entity"] for row in self.catalog["unit_prices"]["prices"]})
@@ -226,8 +228,8 @@ class AcquisitionTests(unittest.TestCase):
         for title in ("Wooden Recorder", "Dead Unwanted", "Captain Eir"):
             self.assertIn("[[Quests and journal#entry-journal-1|", self.pages[title])
             self.assertNotIn("automatically hands over one recorder", self.pages[title])
-        self.assertIn("Editorial entry evidence", self.pages["Source provenance"])
-        self.assertIn("menu_psynch[being6/item75]", self.pages["Source provenance"])
+        self.assertIn("Editorial entry evidence", self.audit)
+        self.assertIn("menu_psynch[being6/item75]", self.audit)
 
     def test_fixed_sources_are_conditional_and_have_single_editable_rows(self):
         sources = {row["id"]: row for row in self.catalog["acquisition"]["sources"]}
@@ -257,7 +259,7 @@ class AcquisitionTests(unittest.TestCase):
         for identity in ("item-41", "item-25"):
             self.assertIn("second, wooden container", camp[identity]["condition"])
         self.assertIn("torn central tent", self.pages["Dead camp"])
-        self.assertIn("do not promise replenishment", self.pages["Dead camp"])
+        self.assertIn("not random corpse loot or replenishing supplies", self.pages["Dead camp"])
 
     def test_raft_completion_is_an_owned_in_place_recipe_not_a_field_kit(self):
         recipes = self.catalog["construction_recipes"]
@@ -323,11 +325,10 @@ class AcquisitionTests(unittest.TestCase):
         document = self.catalog["acquisition"]
         sources = {source["id"]: source for source in document["sources"]}
         pools = {pool["id"]: pool for pool in document["pools"]}
-        self.assertEqual(hashlib.sha256((json.dumps(document["pools"], sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "e02e196d984a645c1f0c71265a0c0a4510f3e18f3da83eaa8702786114497f0d")
-        unchanged = [{key: value for key, value in pool.items() if key != "summary"} for pool in document["pools"]]
+        from test_editorial import gameplay_record
+        unchanged = [gameplay_record(pool) for pool in document["pools"]]
         self.assertEqual(hashlib.sha256((json.dumps(unchanged, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "c6dee73e935ff85b73fa994970cdcf0d31f3e22c8182ce1ba7609a69b66ada1b")
+                         "bfbe0e4b620ce63f58b49882f7067a046bb26b5fb9f51fe07c2c372d66159571")
         self.assertEqual({identity: len(pool["eligible_item_ids"]) for identity, pool in pools.items()}, {
             "skeleton-outdoors": 95, "skeleton-indoors": 72, "chest-common": 98, "chest-middle": 86,
             "chest-rich": 68, "ruins-large": 23, "ruins-small": 12, "nest-tiny": 7,
@@ -419,7 +420,7 @@ class AcquisitionTests(unittest.TestCase):
                    odds_note="Synthetic budget-dependent outcome; per-container odds are not established.")
         validate_catalog(catalog, self.data)
         text = acquisition_probability(row)
-        self.assertIn("Not established", text)
+        self.assertIn("Unknown", text)
         self.assertNotIn("0%", text)
         self.assertIn("budget-dependent", text)
         row["probability"] = {"numerator": 1, "denominator": 8, "scope": "one documented selection"}

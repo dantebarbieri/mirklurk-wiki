@@ -31,12 +31,12 @@ RESERVED_TITLES.add("Currency and trading")
 RESERVED_TITLES.update(MECHANIC_GUIDE_TITLES)
 
 INGREDIENT_METHODS = {
-    "Creature drops": "Recipe inputs with named creature loot or harvesting records. Follow the source for base yields and recovery conditions; membership is not a guaranteed drop.",
-    "Gatherables": "Recipe inputs found through documented plant, tree, hive or world-feature gathering and searches. Source pages distinguish main yields, bonus checks and growth requirements.",
-    "Purchased ingredients": "Recipe inputs in documented merchant offers, not every merchant ware. Each merchant owns availability and each item owns its standard price.",
-    "Crafted ingredients": "Recipe inputs that are themselves outputs of another documented recipe. Follow the output item for ingredients, methods and costs.",
-    "Other ingredient sources": "Starting grants, scripted finds and other documented routes for recipe inputs. Any random-only route is explicitly labeled as eligibility, not a guaranteed acquisition.",
-    "Unverified ingredient sources": "Documented recipe inputs without an established acquisition route in this reference. This does not establish that they are unobtainable.",
+    "Creature drops": "Ingredients from creature loot or harvesting. Follow each source for yields and conditions.",
+    "Gatherables": "Ingredients from plants, trees, hives and searches. Yields can depend on growth and bonus checks.",
+    "Purchased ingredients": "Ingredients sold by merchants. Availability depends on shop access.",
+    "Crafted ingredients": "Ingredients made by another recipe.",
+    "Other ingredient sources": "Starting supplies, fixed finds and other routes. Random finds are not guaranteed.",
+    "Unverified ingredient sources": "Acquisition methods for these ingredients are unknown.",
 }
 
 
@@ -145,7 +145,7 @@ def armor_groups(catalog):
                 raise DataError("armor slot categories require reviewed evidence")
             groups.append({
                 "title": title, "index": "Items", "parents": ["Armor", slot], "members": sorted(members),
-                "summary": f"Armor worn in the {slot.lower()}. Other equipment using this slot remains in its own browsing group.",
+                "summary": f"Armor worn in the {slot.lower()}.",
                 "confidence": slots[slot]["confidence"], "evidence": slots[slot]["evidence"],
             })
     return groups
@@ -161,7 +161,7 @@ def category_definitions(data, catalog):
         root = "NPCs" if kinds.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
         category = categories.setdefault(root, {
             "title": root, "index": root, "parents": [], "members": [],
-            "summary": f"Browse {root} articles and their browsing categories. Each article keeps its own editable facts.",
+            "summary": f"Browse {root.lower()} and their categories.",
         })
         category["members"].append(entity["id"])
     taxonomy = catalog.get("taxonomy", {})
@@ -175,7 +175,7 @@ def category_definitions(data, catalog):
         categories[title] = {
             "title": title, "index": "Skills", "parents": ["Skills"],
             "members": [row["id"] for row in data["entities"] if row.get("group") == entity["id"]],
-            "summary": summaries.get(entity["id"], f"Skills assigned to the localized {entity['name']} group. This is not an additional prerequisite tree."),
+            "summary": summaries.get(entity["id"], f"Skills in the {entity['name']} group."),
             "evidence": entity["evidence"], "confidence": entity["confidence"],
         }
     for row in [*primary_groups(catalog), *taxonomy.get("tags", []), *armor_groups(catalog),
@@ -184,7 +184,7 @@ def category_definitions(data, catalog):
             raise DataError("taxonomy: duplicate category")
         categories[row["title"]] = {
             **row, "parents": row.get("parents", [row["index"]]),
-            "summary": row.get("summary", f"An editorial browsing group within {row['index']}. Membership does not establish availability or guarantee an outcome."),
+            "summary": row.get("summary", f"Browse {row['title'].lower()}."),
         }
     merchants = sorted({
         row["details"]["merchant"] for row in data.get("entries", [])
@@ -195,14 +195,14 @@ def category_definitions(data, catalog):
             raise DataError("taxonomy: duplicate derived merchant category")
         categories["Merchants"] = {
             "title": "Merchants", "index": "NPCs", "parents": ["NPCs"], "members": merchants,
-            "summary": "Documented shops. Each NPC owns its shop availability; each item owns its standard price.",
+            "summary": "Shops and their trading requirements.",
         }
     ingredients = ingredient_acquisition(data, catalog)
     if ingredients:
         derived = [{
             "title": "Recipe ingredients", "index": "Items", "parents": ["Items"],
             "members": sorted(ingredients),
-            "summary": "Inputs to documented crafting and in-place construction recipes, including ingredients whose primary group is food, equipment or another material family. Acquisition methods overlap.",
+            "summary": "Ingredients for crafting and construction. Some have several acquisition methods.",
         }]
         derived.extend({
             "title": method, "index": "Items", "parents": ["Recipe ingredients"],
@@ -249,7 +249,7 @@ def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
             {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides",
              "damage_sources", "item_effects", "acquisition", "construction_recipes", "merchant_profiles",
-             "aggression"}, "catalog")
+             "aggression", "fact_display"}, "catalog")
     if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1:
         raise DataError("catalog schema_version: expected integer 1")
     entities = {entity["id"]: entity for entity in data["entities"]}
@@ -444,6 +444,16 @@ def validate_catalog(catalog, data):
         _evidence(row["evidence"], sources, "merchant profile.evidence")
     if "merchant_profiles" in catalog and profiled_merchants != merchant_ids:
         raise DataError("merchant profiles: cover every documented stock owner")
+    displayed_facts = set()
+    fact_ids = {row["id"] for row in data["facts"]}
+    for row in _records(catalog.get("fact_display", []), "catalog.fact_display"):
+        _object(row, {"fact"}, {"property", "description"}, "fact display")
+        if not isinstance(row["fact"], str) or row["fact"] not in fact_ids or row["fact"] in displayed_facts or len(row) == 1:
+            raise DataError("fact display: expected one nonempty override per known fact")
+        displayed_facts.add(row["fact"])
+        for field in ("property", "description"):
+            if field in row:
+                _text(row[field], f"fact display.{field}", 500)
     displayed = set()
     for row in _records(catalog.get("entry_display", []), "catalog.entry_display"):
         _object(row, {"entry"}, {"title", "summary", "conditions", "steps", "confidence", "evidence"}, "entry display")

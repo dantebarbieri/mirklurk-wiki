@@ -4,6 +4,7 @@ import argparse
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path, PurePosixPath
 
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
@@ -38,6 +39,7 @@ ALLOWED_FILES = {
     "content/templates/Item.wiki": 4 * 1024,
     "content/templates/Recipe_row.wiki": 4 * 1024,
     "content/templates/Ware_row.wiki": 4 * 1024,
+    "content/templates/Unverified.wiki": 4 * 1024,
     "content/modules/Display.lua": 16 * 1024,
     "tools/check_publication.py": 32 * 1024,
     "tools/wiki_data.py": 32 * 1024,
@@ -61,6 +63,7 @@ ALLOWED_FILES = {
     "tests/test_acquisition.py": 32 * 1024,
     "tests/test_sync.py": 40 * 1024,
     "tests/test_display.py": 24 * 1024,
+    "tests/test_editorial.py": 24 * 1024,
     "tests/test_runtime.php": 32 * 1024,
     "deploy/Dockerfile": 8 * 1024,
     "deploy/compose.dev.yml": 16 * 1024,
@@ -217,6 +220,7 @@ def audit_index(root):
     problems = []
     count = 0
     staged_metadata = {}
+    staged_files = {}
     if not entries:
         return 0, ["Git index is empty; there is nothing to validate"]
     for entry in entries.rstrip(b"\0").split(b"\0"):
@@ -243,6 +247,8 @@ def audit_index(root):
             else:
                 raw = _git(root, "cat-file", "blob", object_id)
                 errors.extend(blob_errors(path, raw))
+                if not errors:
+                    staged_files[path] = raw
                 if path.startswith("content/facts/") and not errors:
                     staged_metadata[path] = raw
         problems.extend(f"{label}: {error}" for error in errors)
@@ -286,6 +292,20 @@ def audit_index(root):
             validate_catalog(dict(catalog, acquisition=acquisition), data)
         except DataError as error:
             problems.append(f"{acquisition_path}: invalid staged references: {error}")
+    if not problems and "tools/build_wiki.py" in staged_files:
+        with tempfile.TemporaryDirectory(prefix="wiki-index-") as directory:
+            staged_root = Path(directory)
+            for path, raw in staged_files.items():
+                destination = staged_root / path
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(raw)
+            result = subprocess.run(
+                [sys.executable, "-B", str(staged_root / "tools" / "build_wiki.py"),
+                 "--fresh", "--output", str(staged_root / "seed.xml")],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=120, check=False,
+            )
+            if result.returncode:
+                problems.append("staged rendered publication failed: " + result.stderr.decode("utf-8", errors="replace").strip())
     return count, problems
 
 
