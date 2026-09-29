@@ -12,6 +12,7 @@ final class MirklurkRefreshSitemap extends Maintenance {
         if (!$this->getServiceContainer()->getPermissionManager()->isEveryoneAllowed('read')
             || $config->get('DefaultRobotPolicy') !== 'index,follow'
             || $config->get('ArticleRobotPolicies') !== []
+            || $config->get('ExemptFromUserRobotsControl') !== []
             || array_intersect_key($config->get('NamespaceRobotPolicies'), array_flip([NS_MAIN, NS_CATEGORY]))
             || $config->get('SitemapNamespaces') !== [NS_MAIN, NS_CATEGORY]) {
             $this->fatalError('Sitemap requires public reading and the reviewed main/category indexing policy. '

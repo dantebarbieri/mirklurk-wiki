@@ -183,8 +183,9 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
                 or "Disallow: /api.php\n" not in robots[2].decode()):
             raise RuntimeError("Robots discovery or crawler policy is missing.")
         for path in ("/refresh-sitemap.php", "/refresh.lock", "/public/", "/sitemap/"):
-            if get(path)[0] != 404:
-                raise RuntimeError("Private sitemap files became public.")
+            status = get(path)[0]
+            if status not in (403, 404):
+                raise RuntimeError(f"Private sitemap path {path} became public (HTTP {status}).")
         return index
 
     def append_settings(text):
@@ -226,14 +227,22 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
                 raise
         else:
             raise RuntimeError("Sitemap refresh did not refuse a private wiki.")
+        append_settings("\n$wgGroupPermissions['*']['read'] = true;\n"
+                        "$wgArticleRobotPolicies = [];\n$wgExemptFromUserRobotsControl = [NS_MAIN];\n")
+        try:
+            run(*refresh)
+        except subprocess.CalledProcessError as error:
+            if b"reviewed main/category indexing policy" not in error.stdout + error.stderr:
+                raise
+        else:
+            raise RuntimeError("Sitemap refresh did not refuse disabled author noindex controls.")
         # Exercise the alternate URL contract without depending on the short-URL sibling.
         # This route/settings fixture exists only inside this throwaway container.
         run("exec", "-T", "mirklurk", "sh", "-c",
             "cat > /etc/apache2/conf-enabled/metadata-test-route.conf",
             input_bytes=b'RewriteEngine On\nRewriteRule "^/w/.*$" "/index.php" [PT]\n')
         run("exec", "-T", "mirklurk", "a2enmod", "rewrite")
-        append_settings("\n$wgGroupPermissions['*']['read'] = true;\n"
-                        "$wgArticleRobotPolicies = [];\n$wgArticlePath = '/w/$1';\n")
+        append_settings("\n$wgExemptFromUserRobotsControl = [];\n$wgArticlePath = '/w/$1';\n")
         check_format(base)
         custom_origin = "https://wiki.example.invalid"
         run("exec", "-T", "mirklurk", "sh", "-c",

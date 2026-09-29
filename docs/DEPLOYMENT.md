@@ -239,7 +239,8 @@ Core 1.43's generator does **not** honor per-article/per-namespace config robot
 policies or private-wiki permissions. The wrapper therefore fails explicitly
 if reading is private, default robots differ from `index,follow`, any
 `$wgArticleRobotPolicies` exist, main/category namespace robot overrides exist,
-or the sitemap namespace set changes. Do not bypass this guard by invoking the
+author noindex controls are exempted, or the sitemap namespace set changes.
+Do not bypass this guard by invoking the
 raw generator against served storage. New access-control extensions or indexing
 policies require a fresh integration review. Before making a public wiki private
 or restricting previously public titles, remove its published sitemap/index and
