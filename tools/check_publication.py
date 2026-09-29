@@ -26,6 +26,7 @@ ALLOWED_FILES = {
     "docs/IMAGES.md": 32 * 1024,
     "docs/PUBLISHING.md": 16 * 1024,
     "docs/TEMPLATES.md": 16 * 1024,
+    "docs/CARGO_PROTOTYPE.md": 12 * 1024,
     "content/facts/game.json": MAX_FACTS_BYTES,
     "content/facts/catalog.json": MAX_CATALOG_BYTES,
     "content/facts/entity_details.json": MAX_DETAILS_BYTES,

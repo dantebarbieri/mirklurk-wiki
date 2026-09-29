@@ -160,6 +160,13 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert saving.value.json().get("visualeditoredit", {}).get("result") == "success"
             page.wait_for_function("!window.ve?.init?.target?.active")
 
+        def expect_owner_link(title):
+            page.goto(url("Prototype new station"), wait_until="networkidle")
+            links = page.locator(".prototype-result").get_by_role("link", name="Edit data", exact=True)
+            hrefs = [urllib.parse.urlsplit(link.get_attribute("href")) for link in links.all()]
+            assert any(href.path == "/w/" + title.replace(" ", "_")
+                       and urllib.parse.parse_qs(href.query).get("veaction") == ["edit"] for href in hrefs)
+
         try:
             page.goto(url("Special:UserLogin"), wait_until="networkidle")
             page.locator("#wpName1").fill("TestEditor")
@@ -194,7 +201,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             dialog.get_by_label("AP", exact=True).fill("7")
             dialog.get_by_label("Output quantity", exact=True).fill("2")
             page.wait_for_function("!ve.init.target.getSurface().getDialogs().getCurrentWindow().isPending()")
-            page.screenshot(path=str(artifacts / "cargo-fields.png"))
+            page.screenshot(path=str(artifacts / "cargo-fields.png"), animations="disabled")
             dialog.locator(".oo-ui-processDialog-actions-primary .oo-ui-buttonElement-button").click()
             save_visual("Visual synthetic record edit")
             saved = revision(admin, OWNER)
@@ -303,6 +310,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert next(r["PageID"] for r in moved_rows if r["Owner"] == MOVED) == next(
                 r["PageID"] for r in current if r["Owner"] == OWNER)
             freshness("rename owner", {"Prototype new station": [(MOVED, True), (OWNER + " -", False)]})
+            expect_owner_link(MOVED)
             admin.call({"action": "delete", "title": MOVED, "token": admin.csrf(),
                         "reason": "Synthetic lifecycle proof"}, post=True)
             assert {r["Owner"] for r in rows(admin)} == {NEW_OWNER}
@@ -317,6 +325,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
                 recreate()
             assert {r["Owner"] for r in rows(admin)} == {MOVED, NEW_OWNER}, "Restore was not recoverable from current source."
             freshness("restore owner", {"Prototype new station": [(MOVED, True), (NEW_OWNER, True)]})
+            expect_owner_link(MOVED)
             report["checks"]["move_delete_restore"] = True
 
             before_rebuild = rows(admin)

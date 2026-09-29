@@ -116,6 +116,10 @@ anchors remains a **source-editing workflow**. Metadata is field help, not proof
 that arbitrary restructuring can round-trip. Do not flatten shared views or
 move their factual owners. See [TEMPLATES.md](TEMPLATES.md).
 
+The [Cargo prototype](CARGO_PROTOTYPE.md) is an opt-in, publication-disabled
+disposable experiment only. Cargo is not installed by this production image.
+Its successful evidence run records operational limitations, not rollout approval.
+
 Upstream implementation references (version-specific):
 [VisualEditor client factory](https://github.com/wikimedia/mediawiki-extensions-VisualEditor/blob/REL1_43/includes/VisualEditorParsoidClientFactory.php)
 and [editor configuration](https://github.com/wikimedia/mediawiki-extensions-VisualEditor/blob/REL1_43/extension.json).

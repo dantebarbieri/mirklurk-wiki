@@ -42,13 +42,13 @@ existing recipe owners is not yet safe to release**, including prose-only edits:
 each save adds another empty `onlyinclude` pair before the raw table. The strict
 second-save assertion exposes this unresolved problem.
 
-Synthetic complete-table wrappers pass two prose saves without source churn;
-synthetic flat recipe templates pass two labeled quantity/AP edits without
-changing other source or selective projections. Neither experiment changes the
-production templates or factual owners. The flat prototype still exposes raw
-view/filter routing fields and does not prove multi-row editing or automatic
-discovery of new recipes. The production editor/migration design remains
-pending; do not deploy this draft or infer arbitrary table/filter safety.
+Synthetic wrappers pass two prose saves; flat recipe templates pass two
+quantity/AP edits with other source and selective projections unchanged.
+The latter still expose routing fields. A separate [Cargo experiment](CARGO_PROTOTYPE.md)
+proves two native field saves and dynamic discovery without those fields, but
+finds cache/restore and raw-transclusion limitations. None changes production
+owners or proves complete repeated-row UX. Do not deploy this draft or infer
+arbitrary table/filter safety.
 
 ## Unverified
 
