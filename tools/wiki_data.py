@@ -8,6 +8,7 @@ from pathlib import Path
 
 
 PAGE_FILES = {
+    "Help:Editing": "Help_Editing.wiki",
     "Main Page": "Main_Page.wiki",
     "Getting started": "Getting_started.wiki",
     "Game mechanics": "Game_mechanics.wiki",
@@ -108,7 +109,7 @@ def _text(value, location, limit=160):
 def title_key(title):
     normalized = " ".join(title.replace("_", " ").split())
     prefix, separator, name = normalized.partition(":")
-    if separator and prefix.strip().lower() in {"category", "template", "module"}:
+    if separator and prefix.strip().lower() in {"category", "template", "module", "help"}:
         name = name.strip()
         return prefix.strip().capitalize() + ":" + name[:1].upper() + name[1:]
     return normalized[:1].upper() + normalized[1:]

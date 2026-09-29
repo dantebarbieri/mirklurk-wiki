@@ -4,4 +4,15 @@ Use commas between cells and semicolons between rows: <nowiki>{{Attack grid|0-1,
 0 is a gap; 0-1 is occupied and can roll zero damage. Cells accept integers 1 through 1000 or ordered hyphen ranges with endpoints 0 through 1000 and a positive upper endpoint. No colons or encoded decimals. Dimensions are inferred, up to 32 rows and 32 columns; every row must have the same width. Whitespace around cells is allowed, but empty cells or rows are errors. Each occupied cell has a coordinate/damage tooltip and accessible label.
 
 Optional <code>label</code>: Attack pattern (default), Melee attack, or Ranged attack. Keep the article's headings and anchors outside the template. Sum of ranges is not maximum actual damage: overlap, armor and modifiers matter. See [[Health and armor]].
+<templatedata>
+{
+  "description": "An attack shape, not maximum actual damage. Preserve holes and occupied zero-to-one cells.",
+  "params": {
+    "1": {"label": "Attack cells", "description": "Commas separate cells; semicolons separate rows. 0 = gap, 0-1 = occupied. Integers 1 to 1000 or ordered hyphen ranges from 0 to 1000 with a positive upper endpoint. Rectangular, at most 32 by 32.", "type": "string", "required": true, "example": "0-1,0,0-1;0,1-2,0;0-1,0,0-1"},
+    "label": {"label": "Caption", "description": "Use exactly one of these three captions. Keep article headings and anchors outside the template.", "type": "string", "default": "Attack pattern", "example": "Melee attack", "suggestedvalues": ["Attack pattern", "Melee attack", "Ranged attack"]}
+  },
+  "paramOrder": ["1", "label"],
+  "format": "inline"
+}
+</templatedata>
 </noinclude>

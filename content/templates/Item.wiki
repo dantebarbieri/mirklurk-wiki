@@ -2,4 +2,15 @@
 Use <nowiki>{{Item|Iron Hand Axe}}</nowiki> or <nowiki>{{Item|Plant Fiber|quantity=4}}</nowiki> for an approved icon and linked item name. Use the canonical page title, including disambiguation such as <nowiki>{{Item|Turnip (item)}}</nowiki>. Spaces, underscores and first-letter normalization follow MediaWiki; entity IDs, guessed names, creatures, NPCs and construction actions are rejected. Quantity is optional and must be a positive integer of at most 18 digits.
 
 Known items without approved art keep their name link without an icon. No filename is guessed. Icons use the shared integer-native pixel-art policy; this template does not copy item statistics, prices or acquisition facts.
+<templatedata>
+{
+  "description": "An item icon and linked name, not its statistics or price.",
+  "params": {
+    "1": {"label": "Item", "description": "Canonical item page title, including disambiguation. Not an ID, creature, NPC or construction action.", "type": "wiki-page-name", "required": true, "example": "Turnip (item)"},
+    "quantity": {"label": "Quantity", "description": "Optional positive whole number: 1 to 18 digits, no leading zeros. Omit to display only the item; ranges belong outside this template.", "type": "string", "example": "4"}
+  },
+  "paramOrder": ["1", "quantity"],
+  "format": "inline"
+}
+</templatedata>
 </noinclude>

@@ -50,6 +50,7 @@ ALLOWED_FILES = {
     "tools/wiki_display.py": 16 * 1024,
     "tools/smoke_display.py": 32 * 1024,
     "tools/smoke_browser.py": 24 * 1024,
+    "tools/smoke_editing.py": 24 * 1024,
     "tools/wiki_acquisition.py": 16 * 1024,
     "tools/build_wiki.py": 32 * 1024,
     "tools/sync_wiki.py": 32 * 1024,
@@ -64,6 +65,7 @@ ALLOWED_FILES = {
     "tests/test_sync.py": 40 * 1024,
     "tests/test_display.py": 24 * 1024,
     "tests/test_editorial.py": 24 * 1024,
+    "tests/test_editing.py": 16 * 1024,
     "tests/test_runtime.php": 32 * 1024,
     "deploy/Dockerfile": 8 * 1024,
     "deploy/compose.dev.yml": 16 * 1024,
@@ -73,6 +75,7 @@ ALLOWED_FILES = {
     "deploy/healthcheck.php": 8 * 1024,
     ".github/workflows/validate.yml": 8 * 1024,
     **{f"content/pages/{name}": 32 * 1024 for name in (*PAGE_FILES.values(), *RESEARCH_PAGE_FILES.values())},
+    "content/pages/Help_Editing.wiki": 6 * 1024,
 }
 FORBIDDEN_DIRECTORIES = {
     "languages", "saves", "dumps", "exports", "raw", "research", "raw-research",

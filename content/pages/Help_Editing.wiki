@@ -1,0 +1,29 @@
+== Start small ==
+[[Special:UserLogin|Sign in]] or [[Special:CreateAccount|create an account]] to edit. Reading needs no account. Try a wording correction first; use your user page for practice. Accounts cannot upload files, and email password resets are unavailable.
+
+== Choose an editor ==
+'''Edit''' opens the visual editor on supported pages after it is enabled on the wiki. Select text to format it or add a link. '''Edit source''' opens wikitext and remains available. Your [[Special:Preferences#mw-prefsection-editing|editing preferences]] can change which editor you see. If Edit is unavailable or a block cannot be edited visually, use Edit source.
+
+The visual editor is best for ordinary prose and simple template calls. Do not replace a template's rendered table or image with copied text. Select the template and choose '''Edit''' to change its named fields; '''Insert > Template''' adds one. Item and Creature take a canonical page title (for example, Turnip (item) or Sceetler). Coins takes a whole-number total in copper, not silver. Grid fields preserve cell positions: do not simplify a shape or remove its holes.
+
+== Keep shared information in one place ==
+{| class="wikitable"
+! Change !! Edit here
+|-
+| Recipe ingredients, output or AP || The output item's Crafting section, not the workstation's shared recipe view.
+|-
+| Standard purchase price || The item's Buying section; merchant tables read that price.
+|-
+| Merchant wares, exceptions or availability || The merchant's Wares section, not an item's seller list.
+|-
+| Coin value, weight or stack || The coin's own page, not Currency and trading.
+|}
+
+'''Use Edit source for shared-data blocks''': Recipe row, Ware row, nested template values, and blocks containing <code>onlyinclude</code>, <code>noinclude</code>, <code>includeonly</code>, <code>#switch</code> or <code>#if</code>. These select what other pages display; they are not ordinary prose. Preserve filters, price gates, headings and stable anchors. TemplateData describes fields, but does not make selective views safe to restructure visually. Template and Lua module definitions also need source editing.
+
+== Review and save ==
+In source editing, use '''Show preview''' and '''Show changes''' before saving. In the visual editor, inspect the page, then open '''Save changes''' (or '''Publish changes''') and '''Review your changes'''. Check the source diff when templates are involved. Add a short summary explaining what changed, then confirm the save. Nothing is saved until that final confirmation.
+
+For shared data, check the owner and a page that displays it after saving. If an unexpected table, price or filter changed, cancel before saving or use page history to undo your own edit. Never remove someone else's work to resolve an edit conflict; reload and reapply your small change.
+
+Link additions may ask a CAPTCHA question. New accounts have a tighter edit rate limit; wait if asked instead of repeatedly submitting. Community edits are kept by the repository publisher, not automatically reset. Use your own wording, keep uncertainty and conditions, and do not paste game dialogue, assets or large extracts.

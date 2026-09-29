@@ -33,7 +33,7 @@ MediaWiki itself rather than a person. Then verify the site before exposing it.
 emits only titles absent from a complete current-page dump
 (`php maintenance/run.php dumpBackup --current`). Uppercase filenames stand for
 private paths outside Git. It excludes every title present in the dump's main
-and Category, Template and Module namespaces, including redirects, normalizing underscores, spaces
+and Category, Template, Help and Module namespaces, including redirects, normalizing underscores, spaces
 and the initial letter; it never emits an existing page. Unreadable or
 malformed exports fail rather than falling back to fresh mode.
 
@@ -55,7 +55,8 @@ exists or that its bytes match.
 
 Run maintenance from the same reviewed image and database configuration as the
 wiki. The image must already have Scribunto enabled before importing the
-display bundle. XML declares Template namespace 10, Module namespace 828,
+display bundle, and TemplateData before importing template metadata. XML declares
+Template namespace 10, Help namespace 12 (the exact managed `Help:Editing` page), Module namespace 828,
 and truthful `Scribunto`/`text/plain` models for Lua (`wikitext`/`text/x-wiki`
 for articles and templates). Verify these models after import, not just title
 existence. The API publisher performs the runtime preflight; `importDump`

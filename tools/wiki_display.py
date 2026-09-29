@@ -18,7 +18,7 @@ DISPLAY_FILES = {
 }
 ASSETS_TITLE = "Module:Display assets"
 DISPLAY_TITLES = {*DISPLAY_FILES, ASSETS_TITLE}
-NAMESPACES = {"": 0, "Template": 10, "Category": 14, "Module": 828}
+NAMESPACES = {"": 0, "Template": 10, "Help": 12, "Category": 14, "Module": 828}
 MAX_COPPER = 10**18 - 1
 INERT = re.compile(r"<!--.*?-->|<nowiki\b[^>]*>.*?</nowiki>|<pre\b[^>]*>.*?</pre>", re.I | re.S)
 INCLUDE = re.compile(r"(?<!\{)\{\{(?!\{)\s*([^{}|\n]+)")
@@ -32,6 +32,8 @@ def page_namespace(title):
     prefix = canonical.split(":", 1)[0]
     if prefix == "Category":
         return 14
+    if canonical == "Help:Editing":
+        return 12
     if canonical in DISPLAY_TITLES:
         return NAMESPACES[prefix]
     raise DataError(f"Unsupported publication namespace or display title: {title}")

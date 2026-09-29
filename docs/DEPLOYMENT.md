@@ -39,7 +39,7 @@ The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
 The template loads bundled ParserFunctions for named canonical views,
 Scribunto with the bundled `luastandalone` engine for [display templates](TEMPLATES.md),
-and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
+VisualEditor, TemplateData, and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
 no extension download is needed. Scribunto registers Module namespace 828
 and the `Scribunto` Lua content model. Its standard CPU/memory limits remain
 enabled, alongside the display module's explicit input/geometry bounds.
@@ -52,6 +52,61 @@ lacks the required extensions, namespaces, content models or a working Lua
 engine; it also probes unsaved module compilation. Never bypass that gate or
 seed Lua pages into the old runtime. No production action is implied by the
 repository changes. Do not roll back the runtime while live Lua readers remain.
+
+## Visual editing and REST
+
+The pinned 1.43.9 image includes matching VisualEditor and TemplateData.
+VisualEditor uses MediaWiki 1.43's **DirectParsoidClient**, backed by the integrated
+PHP Parsoid library. Do not install RESTBase, a Node Parsoid service, or configure
+`$wgVirtualRestConfig['modules']['parsoid']` for this version. It does not need
+to call the public HTTPS hostname from inside the container; port mapping and
+split DNS are not reasons to override its client.
+
+Eligible logged-in users get both **Edit** and **Edit source**, with visual editing
+enabled without a beta opt-in. Existing individual preferences remain respected.
+The classic source editor remains the default source route. Help pages are
+eligible; template definitions are source-edited, and Lua is not a visual content
+model. Anonymous edit/write API restrictions, QuestyCaptcha, shared-cache rate
+limits, uploads and email policy are unchanged.
+
+The Dockerfile sets `AllowEncodedSlashes NoDecode` **inside the active port-80
+VirtualHost**, not just the global server scope (where it is not inherited).
+This allows encoded slash-bearing titles/subpages through `rest.php`.
+The operator's reverse proxy must preserve the original escaped URI and
+`/rest.php/...` PATH_INFO, pass GET/POST requests and request bodies to the app,
+and leave `/api.php`, `/load.php` and `/index.php` accessible. Do not redirect
+REST requests to article pages, strip cookies, cache authenticated API/POST
+responses, decode `%2F` before forwarding, or disable TLS certificate checks.
+For nginx, preserve the request URI without replacing the path in `proxy_pass`.
+Keep the public HTTPS `MW_SERVER_URL` and verified proxy trust settings.
+
+**Separate operator rollout:** back up first, rebuild the reviewed image, run
+`php maintenance/run.php update --quick` using the upgrade procedure, and
+recreate the app only when separately authorized. Then verify extension
+registration, `/rest.php/v1/page/Help%3AEditing/html` (after the page exists),
+and a slash-bearing practice page through the real proxy. Sign in as a normal
+user and open, change, review and save a practice page, including a template
+parameter; also test Edit source and an unsolved add-link CAPTCHA. Extension
+presence alone is not an editor acceptance test.
+
+Only after runtime activation should the content release publish TemplateData
+and `Help:Editing`; the publisher fails closed before page edits when metadata
+is present but TemplateData is missing. A PR/merge does not activate the runtime,
+and the deployment does not publish those pages. Do not roll back TemplateData
+while pages contain its tags.
+
+**Compatibility boundary:** simple prose and display-template fields are visual
+editing targets. The disposable test exercises no-change Parsoid round trips on
+real generated item, coin, merchant and recipe pages, plus a visual prose edit
+beside wrapped selective data. Editing/restructuring `onlyinclude`, nested
+Recipe row/Ware row arguments, parser-function selectors, price gates or stable
+anchors remains a **source-editing workflow**. Metadata is field help, not proof
+that arbitrary restructuring can round-trip. Do not flatten shared views or
+move their factual owners. See [TEMPLATES.md](TEMPLATES.md).
+
+Upstream implementation references (version-specific):
+[VisualEditor client factory](https://github.com/wikimedia/mediawiki-extensions-VisualEditor/blob/REL1_43/includes/VisualEditorParsoidClientFactory.php)
+and [editor configuration](https://github.com/wikimedia/mediawiki-extensions-VisualEditor/blob/REL1_43/extension.json).
 
 ## Runtime variables
 
@@ -227,6 +282,12 @@ randomly named Compose project with temporary generated credentials, then:
   running MediaWiki's job queue. Rolling back and repeating the sync must work;
 - checks rendered category memberships, grids, shields, landmarks, guides and
   named recipe, seller, loot and pool views;
+- opens VisualEditor as an ordinary account, edits a TemplateData-backed field
+  and prose, reviews the diff and saves with a summary; exercises encoded-slash
+  REST paths, exact no-change Parsoid round trips, wrapped selective data and
+  the source preview/save fallback without changing price/view ownership;
+- rejects anonymous visual API saves and requires an add-link CAPTCHA; retains
+  synthetic editor screenshots and `editing.json` alongside Vector artifacts;
 - as a self-registered editor, edits owner pages within the newcomer limit of
   three edits per minute and checks that dependent pages update;
 - confirms that the next sync skips every page that editor changed.

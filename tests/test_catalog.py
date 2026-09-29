@@ -207,6 +207,10 @@ class CatalogTests(unittest.TestCase):
                 target = target.removeprefix(":")
                 if target.startswith("File:"):
                     continue
+                if title == "Help:Editing" and target in {
+                    "Special:UserLogin", "Special:CreateAccount", "Special:Preferences#mw-prefsection-editing",
+                }:
+                    continue
                 page, _, anchor = target.partition("#")
                 page = page or title
                 with self.subTest(source=title, target=target):

@@ -11,4 +11,20 @@ A presentation row inside an existing recipe table:
 This is a syntax example, not a recipe. Separate multiple Item calls with <nowiki><br /></nowiki>. Fractional AP is supported; for another unit use cost instead of ap. Missing values display "Unknown", not zero. Output can describe in-place construction.
 
 Keep onlyinclude/view/station filters and anchors on the output article, with the row call inside them. This template does not inherit caller parameters. Workstations transclude the filtered rows.
+<templatedata>
+{
+  "description": "A row inside an existing recipe table on the output item. Use source editing for nested templates and selective filters; never replace a workstation's transcluded view with copied rows.",
+  "params": {
+    "ingredients": {"label": "Ingredients", "description": "Item calls with quantities, separated by <br />. Omitted means no item inputs; use Unknown if undocumented.", "type": "content", "default": "No item inputs", "suggested": true, "example": "{{Item|Plant Fiber|quantity=4}}"},
+    "output": {"label": "Output", "description": "Item calls with quantities, or an in-place construction result.", "type": "content", "default": "Unknown", "suggested": true, "example": "{{Item|Bandage|quantity=1}}"},
+    "methods": {"label": "Methods", "description": "Linked crafting methods or workstations. Keep the station filter on the owning article.", "type": "content", "default": "Unknown", "suggested": true, "example": "[[Inventory crafting]]"},
+    "ap": {"label": "Base AP", "description": "Base action-point cost, including fractions. When nonempty, takes precedence over Cost.", "type": "number", "example": "2"},
+    "cost": {"label": "Other cost", "description": "Cost with its unit, used only when Base AP is omitted or empty.", "type": "content", "default": "Unknown", "example": "Unknown"},
+    "conditions": {"label": "Conditions", "description": "Preserve prerequisites and exceptions. Examples here demonstrate syntax, not actual recipes.", "type": "content", "default": "Unknown", "suggested": true, "example": "Syntax example only."},
+    "anchors": {"label": "Stable anchors (source editing)", "description": "Existing anchor markup for every grouped variant. Preserve it; do not invent or remove IDs.", "type": "content"}
+  },
+  "paramOrder": ["ingredients", "output", "methods", "ap", "cost", "conditions", "anchors"],
+  "format": "block"
+}
+</templatedata>
 </noinclude>

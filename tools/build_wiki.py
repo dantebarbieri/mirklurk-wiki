@@ -37,7 +37,7 @@ def existing_titles(path):
         page_namespace = page.findtext(f"{prefix}ns")
         if not title or not title.strip() or page_namespace is None or not page_namespace.isdecimal():
             raise DataError("existing export has an invalid page title or namespace")
-        if page_namespace in {"0", "10", "14", "828"}:
+        if page_namespace in {"0", "10", "12", "14", "828"}:
             canonical = title_key(title)
             expected = NAMESPACES.get(canonical.split(":", 1)[0], 0)
             if int(page_namespace) != expected:
