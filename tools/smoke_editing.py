@@ -171,12 +171,13 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
         def save_visual(summary):
             page.locator(".ve-ui-toolbar-saveButton").click()
             dialog = page.locator(".ve-ui-mwSaveDialog")
-            dialog.locator("textarea").fill(summary)
+            dialog.locator("textarea:visible").fill(summary)
             dialog.get_by_role("button", name="Review your changes", exact=True).click()
             page.wait_for_function("ve.init.target.saveDialog.hasDiff && !ve.init.target.saveDialog.isPending()")
             page.screenshot(path=str(folder / "editor-review.png"))
             with page.expect_response(lambda response: "/api.php" in response.url
-                                      and "paction=save" in (response.request.post_data or "")) as saving:
+                                      and b'name="paction"\r\n\r\nsave\r\n'
+                                      in (response.request.post_data_buffer or b"")) as saving:
                 dialog.locator(".oo-ui-processDialog-actions-primary .oo-ui-buttonElement-button").click()
             value = saving.value.json().get("visualeditoredit", {})
             if value.get("result") != "success":
