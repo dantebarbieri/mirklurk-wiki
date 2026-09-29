@@ -87,7 +87,8 @@ def smoke_navigation(page, api, base, folder, name):
             raise RuntimeError("Native sidebar link is not keyboard-focusable: " + label)
     if menu.get_by_role("link", name="Help about MediaWiki", exact=True).count():
         raise RuntimeError("The sidebar still points contributors to external MediaWiki help.")
-    if not menu.get_by_role("link", name="Special pages", exact=True).count():
+    if page.locator("#vector-page-tools").get_by_role(
+            "link", name="Special pages", exact=True, include_hidden=True).count() != 1:
         raise RuntimeError("The native community toolbox was removed.")
     page.screenshot(path=str(Path(folder) / (name + "-navigation.png")), full_page=True)
     menu.get_by_role("link", name="Editing help", exact=True).press("Enter")
