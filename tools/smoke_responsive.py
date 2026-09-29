@@ -103,6 +103,16 @@ def check_layout(result, width, assets):
             raise RuntimeError("An article image lost its original-file, integer-native or accessible display.")
 
 
+def wait_for_scroll(page, region):
+    # Browser rAF polling does not run with JavaScript disabled; poll from the driver.
+    for _ in range(40):
+        position = region.evaluate("(e) => e.scrollLeft")
+        if position > 0:
+            return position
+        page.wait_for_timeout(50)
+    raise RuntimeError("Native input did not scroll the focused local container within two seconds.")
+
+
 def check_keyboard(page, index):
     region = page.locator(REGIONS).nth(index)
     region.scroll_into_view_if_needed()
@@ -118,11 +128,11 @@ def check_keyboard(page, index):
     if not focus["visible"] or focus["width"] <= 0 or focus["style"] == "none":
         raise RuntimeError("Keyboard scroll focus has no visible indicator.")
     page.keyboard.press("ArrowRight")
-    page.wait_for_function("(e) => e.scrollLeft > 0", arg=region.element_handle())
+    position = wait_for_scroll(page, region)
     page.keyboard.press("Tab")
     if region.evaluate("(e) => document.activeElement === e"):
         raise RuntimeError("The horizontal scroll region traps keyboard focus.")
-    return {"scrollLeft": region.evaluate("(e) => e.scrollLeft"), "focus": focus}
+    return {"scrollLeft": position, "focus": focus}
 
 
 def check_touch(context, page, index):
@@ -142,8 +152,7 @@ def check_touch(context, page, index):
             })
             page.wait_for_timeout(30)
         session.send("Input.dispatchTouchEvent", {"type": "touchEnd", "touchPoints": []})
-        page.wait_for_function("(e) => e.scrollLeft > 0", arg=region.element_handle())
-        return {"scrollLeft": region.evaluate("(e) => e.scrollLeft")}
+        return {"scrollLeft": wait_for_scroll(page, region)}
     finally:
         session.detach()
 
@@ -194,7 +203,7 @@ def smoke_responsive(base, data, artifact_dir):
                     result = measure(page)
                     semantics = result.pop("semantics")
                     result["semanticHash"] = hashlib.sha256(json.dumps(semantics, sort_keys=True).encode()).hexdigest()
-                    record = {"viewport": name, "article": article, **result}
+                    record = {"scenario": name, "article": article, **result}
                     records.append(record)
                     save()
                     try:
