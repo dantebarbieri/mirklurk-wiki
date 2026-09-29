@@ -56,6 +56,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
     def jobs():
         before = maintenance("showJobs").strip()
         output = maintenance("runJobs", "--maxjobs", "500", "--maxtime", "60")
+        assert "ERROR" not in output and " failed" not in output, output
         after = maintenance("showJobs").strip()
         return {"before": before, "after": after, "output": output[-2000:]}
 
@@ -179,6 +180,9 @@ def exercise(admin, base, password, maintenance, report, artifacts):
                 "Synthetic resin": [(OWNER, True)],
                 "Prototype trader": [(OWNER, True)],
             })
+            populated_reader = "Prototype populated reader"
+            store(admin, populated_reader, query("Stations HOLDS 'Prototype bench'"))
+            assert "AP 2" in cached_reader(base, populated_reader)
             page.goto(url("Prototype bench"), wait_until="networkidle")
             data_link = page.locator(".prototype-result").get_by_role("link", name="Edit data", exact=True).first
             assert urllib.parse.parse_qs(urllib.parse.urlsplit(data_link.get_attribute("href")).query)["veaction"] == ["edit"]
@@ -200,7 +204,10 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert saved["comment"] == "Visual synthetic record edit" and "visualeditor" in saved["tags"]
             assert [r["AP"] for r in rows(admin) if r["Variant"] == "base"] == ["7"]
             report["checks"]["native_field_edit_owner_revision"] = True
-            freshness("visual value edit", {"Prototype bench": [("AP 7", True), ("AP 2", False)]})
+            freshness("visual value edit", {
+                "Prototype bench": [("AP 7", True), ("AP 2", False)],
+                populated_reader: [("AP 7", True), ("AP 2", False)],
+            })
             open_visual(OWNER)
             dialog = select_record()
             dialog.get_by_label("AP", exact=True).fill("8")
@@ -268,6 +275,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert {r["Owner"] for r in rows(admin, "Ingredients HOLDS 'Synthetic crystal'")} == {OWNER}
             freshness("change relationship and remove row", {
                 "Prototype bench": [(OWNER, False)],
+                populated_reader: [(OWNER, False)],
                 "Prototype new station": [(OWNER, True), (NEW_OWNER, True)],
                 "Synthetic resin": [(OWNER + " -", False), (NEW_OWNER, True)],
             })
@@ -283,7 +291,14 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             admin.call({"action": "move", "from": OWNER, "to": MOVED, "token": admin.csrf(),
                         "reason": "Synthetic lifecycle proof"}, post=True)
             moved_rows = rows(admin)
-            assert {r["Owner"] for r in moved_rows} == {MOVED, NEW_OWNER}
+            report["move_immediate_rows"] = moved_rows
+            report["move_jobs"] = jobs()
+            report["move_after_jobs_rows"] = rows(admin)
+            if {r["Owner"] for r in rows(admin)} != {MOVED, NEW_OWNER}:
+                report["move_rebuild_required"] = True
+                recreate()
+            moved_rows = rows(admin)
+            assert {r["Owner"] for r in moved_rows} == {MOVED, NEW_OWNER}, moved_rows
             assert source(admin, MOVED) == before["slots"]["main"]["content"]
             assert next(r["PageID"] for r in moved_rows if r["Owner"] == MOVED) == next(
                 r["PageID"] for r in current if r["Owner"] == OWNER)
@@ -329,6 +344,14 @@ def exercise(admin, base, password, maintenance, report, artifacts):
                 "Only query renderers are safe read-only reuse. Direct owner transclusion indexes copies and must be migrated.",
                 "No production schema migration, Page Forms installation, or original raw-table fix is included.",
             ]
+            report["acceptance_limits"] = {
+                "automatic_cached_reader_freshness": all(
+                    value["after_jobs"] for event in report["cache"] for value in event["readers"].values()),
+                "lifecycle_without_rebuild": not (report.get("move_rebuild_required")
+                                                 or report.get("restore_rebuild_required")),
+                "native_add_remove_gui_proved": False,
+                "raw_owner_transclusion_safe": False,
+            }
         except Exception:
             if "Special:UserLogin" not in urllib.parse.unquote(page.url):
                 page.screenshot(path=str(artifacts / "cargo-failure.png"), full_page=True)

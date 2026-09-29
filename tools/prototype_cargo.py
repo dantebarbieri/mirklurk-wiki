@@ -115,7 +115,7 @@ RUN printf '\\nwfLoadExtension("Cargo");\\n$wgJobRunRate = 0;\\n$wgShowException
             }, post=True)
             assert created["createaccount"]["status"] == "PASS", "Prototype signup failed."
             exercise(admin, base, editor_password, maintenance, report, artifacts)
-            report["status"] = "passed"
+            report["status"] = "completed_with_limitations"
         except Exception as error:
             report["status"] = "failed"
             report["error"] = str(error)
