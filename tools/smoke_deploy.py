@@ -38,6 +38,7 @@ from smoke_display import (
     smoke_display_rendering, smoke_editorial_release, smoke_vendor_rows,
 )
 from smoke_browser import smoke_browser
+from smoke_metadata import smoke_metadata
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
@@ -1352,6 +1353,7 @@ def smoke():
             smoke_browser(api, base, csrf, data, os.environ.get("MIRKLURK_SMOKE_ARTIFACTS", workspace / "browser"))
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
             smoke_editorial_release(api, pages)
+            smoke_metadata(run, api, base, paths["MW_LOGO_ICON_URL"], drain_jobs_bounded, opener.open)
             smoke_display_rendering(api, pages, data, catalog, details, RenderedGrids,
                                     check_parser_errors, check_shield_icon, dom)
             smoke_vendor_rows(api, pages, data, catalog, csrf, dom, check_parser_errors)

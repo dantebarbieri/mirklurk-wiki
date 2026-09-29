@@ -83,6 +83,13 @@
 !/deploy/compose.dev.yml
 !/deploy/LocalSettings.template.php
 !/deploy/mirklurk-runtime.php
+!/deploy/mirklurk-metadata.php
+!/deploy/robots.php
+!/deploy/refresh-sitemap.php
+!/deploy/metadata.conf
+!/tests/test_metadata.php
+!/tests/test_metadata.py
+!/tools/smoke_metadata.py
 !/deploy/install.php
 !/deploy/healthcheck.php
 !/.github/

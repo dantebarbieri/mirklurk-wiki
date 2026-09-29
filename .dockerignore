@@ -3,5 +3,9 @@
 !deploy/Dockerfile
 !deploy/LocalSettings.template.php
 !deploy/mirklurk-runtime.php
+!deploy/mirklurk-metadata.php
+!deploy/robots.php
+!deploy/refresh-sitemap.php
+!deploy/metadata.conf
 !deploy/install.php
 !deploy/healthcheck.php

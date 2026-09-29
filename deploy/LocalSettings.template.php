@@ -3,6 +3,7 @@ if (!defined('MEDIAWIKI')) {
     exit;
 }
 require_once __DIR__ . '/mirklurk-runtime.php';
+require_once __DIR__ . '/mirklurk-metadata.php';
 
 $wgSitename = 'MirkLurk Wiki';
 $wgMetaNamespace = 'MirkLurk_Wiki';
@@ -11,6 +12,11 @@ $wgCanonicalServer = $wgServer;
 $wgScriptPath = '';
 $wgArticlePath = '/index.php?title=$1';
 $wgLanguageCode = 'en';
+$wgEnableCanonicalServerLink = true;
+$wgSitemapNamespaces = [NS_MAIN, NS_CATEGORY];
+// Let authors opt articles out of indexing as well as category pages.
+$wgExemptFromUserRobotsControl = [];
+$wgHooks['OutputPageAfterGetHeadLinksArray'][] = MirklurkMetadata::class . '::onHeadLinks';
 
 $logo = mirklurkImageUrl('MW_LOGO_URL');
 $logoIcon = mirklurkImageUrl('MW_LOGO_ICON_URL');
