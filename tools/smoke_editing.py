@@ -1,5 +1,6 @@
 """Real VisualEditor/Parsoid and source editing on the disposable wiki only."""
 
+import difflib
 import json
 import re
 import time
@@ -229,7 +230,12 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             save_visual("Synthetic prose edit beside selective data")
             after = source(api, OWNER)
             if after.replace(" Synthetic prose-only change.", "").strip() != before.strip():
-                raise RuntimeError("A visual prose edit changed the wrapped selective owner source.")
+                diff = "".join(difflib.unified_diff(
+                    before.splitlines(keepends=True), after.splitlines(keepends=True),
+                    fromfile="before", tofile="after",
+                ))
+                (folder / "editor-selective.diff").write_text(diff, encoding="utf-8")
+                raise RuntimeError("A visual prose edit changed the wrapped selective owner source:\n" + diff)
             if projections(api) != initial_views:
                 raise RuntimeError("A visual prose edit changed a price or filtered reader view.")
             report["browser_selective_prose"] = True
