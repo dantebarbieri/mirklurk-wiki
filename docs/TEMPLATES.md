@@ -36,10 +36,19 @@ owner's headers and do not paste rendered rows into workstations or seller views
 
 The disposable editor smoke checks no-change Parsoid round trips for generated
 Iron Hand Axe, Copper Coin, Gurb-Gurb and Bandage, with all native displays and
-synthetic wrapped selective fixtures. It also checks a real browser template
-parameter edit, visual prose-only edits beside selective blocks, and source
-preview/save with filtered AP propagation. This is deliberately narrower than
-claiming arbitrary visual table/filter restructuring is safe.
+synthetic selective fixtures. Ordinary browser template edits and source
+preview/save with filtered AP propagation pass. **Modified visual editing of
+existing recipe owners is not yet safe to release**, including prose-only edits:
+each save adds another empty `onlyinclude` pair before the raw table. The strict
+second-save assertion exposes this unresolved problem.
+
+Synthetic complete-table wrappers pass two prose saves without source churn;
+synthetic flat recipe templates pass two labeled quantity/AP edits without
+changing other source or selective projections. Neither experiment changes the
+production templates or factual owners. The flat prototype still exposes raw
+view/filter routing fields and does not prove multi-row editing or automatic
+discovery of new recipes. The production editor/migration design remains
+pending; do not deploy this draft or infer arbitrary table/filter safety.
 
 ## Unverified
 

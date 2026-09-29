@@ -97,8 +97,20 @@ while pages contain its tags.
 
 **Compatibility boundary:** simple prose and display-template fields are visual
 editing targets. The disposable test exercises no-change Parsoid round trips on
-real generated item, coin, merchant and recipe pages, plus a visual prose edit
-beside wrapped selective data. Editing/restructuring `onlyinclude`, nested
+real generated item, coin, merchant and recipe pages. **This editor change is
+still a draft, not ready for runtime rollout:** modified visual saves on existing
+recipe owners add an empty `onlyinclude` pair before the HTML table on every
+save, even for prose edits. This also prevents the publisher from recognizing
+their views. The repeated-save regression remains failing; no automatic tag
+stripping, publisher relaxation or whole-owner editing restriction hides it.
+
+Synthetic-only experiments show that a complete-table presentation template
+avoids that source churn, and that a flat recipe-record template permits two
+exact quantity/AP field edits with preserved selective projections. These are
+not production migrations: the flat prototype exposes advanced routing fields,
+tests one input/row only, and needs a publisher-schema change. A broader
+editing/discovery design and preservation of community-owned revisions must be
+agreed before rollout. Editing/restructuring `onlyinclude`, nested
 Recipe row/Ware row arguments, parser-function selectors, price gates or stable
 anchors remains a **source-editing workflow**. Metadata is field help, not proof
 that arbitrary restructuring can round-trip. Do not flatten shared views or
