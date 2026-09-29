@@ -182,10 +182,20 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
                 or f"Sitemap: {origin}/sitemap.xml\n" not in robots[2].decode()
                 or "Disallow: /api.php\n" not in robots[2].decode()):
             raise RuntimeError("Robots discovery or crawler policy is missing.")
-        for path in ("/refresh-sitemap.php", "/refresh.lock", "/public/", "/sitemap/"):
-            status = get(path)[0]
-            if status not in (403, 404):
-                raise RuntimeError(f"Private sitemap path {path} became public (HTTP {status}).")
+        # Probe a real private sibling of public/. Unknown root URLs may render a
+        # wiki response instead of Apache's 404, so status alone is not a leak test.
+        marker = b"synthetic-private-sitemap-marker"
+        run("exec", "-T", "--user", "www-data", "mirklurk", "sh", "-c",
+            "cat > /var/lib/mirklurk-sitemap/sitemap-private-probe.xml", input_bytes=marker)
+        try:
+            for path in ("/sitemap-private-probe.xml", "/public/sitemap-private-probe.xml",
+                         "/sitemap/sitemap-private-probe.xml", "/refresh-sitemap.php"):
+                _, _, body = get(path)
+                if marker in body or b"<?php" in body:
+                    raise RuntimeError(f"Private sitemap content leaked through {path}.")
+        finally:
+            run("exec", "-T", "--user", "www-data", "mirklurk", "rm",
+                "/var/lib/mirklurk-sitemap/sitemap-private-probe.xml")
         return index
 
     def append_settings(text):
