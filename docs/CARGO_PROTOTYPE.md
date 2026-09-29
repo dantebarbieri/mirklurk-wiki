@@ -145,10 +145,12 @@ temporary context; Cargo, exception diagnostics and disabled opportunistic jobs
 are appended only there. Explicit job runs distinguish immediate from queued
 behavior without weakening permissions, CAPTCHA or rate limits.
 
-Alternatively, dispatch `validate.yml` on this draft branch with
-`cargo_prototype=true`. That path invokes only the focused reusable workflow;
-publication, live preview and the full smoke suite are skipped, and the publish
-job also explicitly rejects this input. The normal validation path is unchanged.
+Alternatively, dispatch **`cargo-prototype.yml` directly** on this draft branch.
+It emits only the uniquely named `cargo-prototype` check. Do not use the previous
+`validate.yml` prototype input: it has been removed because skipped jobs with
+required-check names could falsely satisfy branch protection. The normal
+`publication` and `docker-smoke` jobs remain unconditional full validation;
+focused experiments do not create even skipped instances of those contexts.
 
 Primary references:
 [Cargo compatibility](https://www.mediawiki.org/wiki/Extension:Cargo),
