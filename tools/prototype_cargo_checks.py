@@ -30,7 +30,7 @@ def store(api, title, text, **extra):
 def rows(api, where=""):
     result = api.call({
         "action": "cargoquery", "tables": "PrototypeRecords",
-        "fields": "_pageName=Owner,_pageID=PageID,Variant,Product,Quantity,AP,Inputs,Ingredients,Stations,Merchants,Condition",
+        "fields": "_pageName=Owner,_pageID=PageID,Variant,Product,Quantity,AP,Inputs,Ingredients,Stations,Merchants,Requirement",
         "where": where, "order_by": "_pageName,Variant", "limit": "100",
     })
     return [r["title"] for r in result["cargoquery"]]
@@ -67,6 +67,10 @@ def exercise(admin, base, password, maintenance, report, artifacts):
         return round(time.monotonic() - start, 3)
 
     jobs()
+    declaration = admin.call({"action": "parse", "page": TEMPLATE, "prop": "text"})["parse"]["text"]
+    assert 'class="error"' not in declaration, visible(declaration)
+    properties = admin.call({"action": "query", "titles": TEMPLATE, "prop": "pageprops"})["query"]["pages"][0]
+    assert properties.get("pageprops", {}).get("CargoTableName") == "PrototypeRecords", properties
     recreate()
     assert rows(admin) == [], "Empty index expected before authoring."
     for title, condition in READERS.items():

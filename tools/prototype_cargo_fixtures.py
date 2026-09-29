@@ -16,7 +16,7 @@ FIELDS = {
     "condition": ("Condition", "string"),
 }
 SCHEMA = ("Variant=String|Product=Page|Quantity=String|AP=Float|Ingredients=List (;) of Page"
-          "|Inputs=Text|Stations=List (;) of Page|Merchants=List (;) of Page|Condition=Text")
+          "|Inputs=Text|Stations=List (;) of Page|Merchants=List (;) of Page|Requirement=Text")
 
 LUA = r'''
 local p = {}
@@ -41,7 +41,7 @@ function p.main(frame)
         mw.ext.cargo.store('PrototypeRecords', {
             Variant=a.variant, Product=a.product, Quantity=a.quantity, AP=a.ap,
             Ingredients=table.concat(names, ';'), Inputs=table.concat(inputs, '\n'),
-            Stations=a.stations, Merchants=a.merchants, Condition=a.condition
+            Stations=a.stations, Merchants=a.merchants, Requirement=a.condition
         })
     end
     local out = mw.html.create('div'):addClass('prototype-record')
@@ -68,7 +68,7 @@ def record(variant="base", ap="2", stations="Prototype bench;Prototype camp", pr
 
 
 def query(where):
-    return ("{{#cargo_query:tables=PrototypeRecords|fields=_pageName=Owner,Variant,Product,AP,Inputs,Condition"
+    return ("{{#cargo_query:tables=PrototypeRecords|fields=_pageName=Owner,Variant,Product,AP,Inputs,Requirement"
             "|where=" + where + "|order by=_pageName,Variant|format=template|template=Prototype result"
             "|default=No matching records.}}")
 
@@ -96,6 +96,6 @@ def pages():
                   "<templatedata>" + json.dumps(metadata) + "</templatedata></noinclude>",
         "Template:Prototype result": '<includeonly><div class="prototype-result">'
                   '[[{{{Owner}}}|{{{Owner}}}]] - {{{Variant}}}: {{{Product}}}; AP {{{AP}}}; '
-                  '{{{Inputs}}}; {{{Condition}}} '
+                  '{{{Inputs}}}; {{{Requirement}}} '
                   '[{{fullurl:{{{Owner}}}|veaction=edit}} Edit data]</div></includeonly>',
     }
