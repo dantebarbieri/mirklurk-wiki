@@ -33,7 +33,10 @@ from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
 from wiki_display import page_namespace
-from smoke_display import smoke_display_install, smoke_display_propagation, smoke_display_rendering, smoke_vendor_rows
+from smoke_display import (
+    check_parser_errors, smoke_category_memberships, smoke_display_install, smoke_display_propagation,
+    smoke_display_rendering, smoke_editorial_release, smoke_vendor_rows,
+)
 from smoke_browser import smoke_browser
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
@@ -128,72 +131,6 @@ def check_shield_icon(images, links, styles, armor):
     if ("zoom:calc(2/4)" not in styles[0].replace(" ", "") or "srcset" in images[0]
             or "/thumb/" in images[0].get("src", "")):
         raise RuntimeError("A shield must display the original at exactly 2x native pixels, without a thumbnail.")
-
-
-def smoke_category_memberships(api, pages):
-    expected = {
-        title: {title_key(target) for target in re.findall(r"\[\[(Category:[^\]|]+)(?:\|[^\]]*)?\]\]", text)}
-        for title, text in pages.items()
-    }
-    titles = sorted(expected)
-    for start in range(0, len(titles), 50):
-        batch = titles[start:start + 50]
-        actual = {title: set() for title in batch}
-        seen = set()
-        continuation = {}
-        tokens = set()
-        for _ in range(100):
-            result = api({
-                "action": "query", "titles": "|".join(batch), "prop": "categories", "cllimit": "max",
-                **continuation,
-            })
-            for row in result["query"]["pages"].values():
-                title = title_key(row["title"])
-                namespace = page_namespace(title)
-                if title not in actual or "missing" in row or "invalid" in row or row["ns"] != namespace:
-                    raise RuntimeError(f"Category query returned a missing, unexpected or wrong-namespace page: {title}")
-                seen.add(title)
-                for category in row.get("categories", []):
-                    if category["ns"] != 14:
-                        raise RuntimeError(f"Category query returned a non-category membership for {title}.")
-                    actual[title].add(title_key(category["title"]))
-            if "continue" not in result:
-                break
-            continuation = result["continue"]
-            if (not isinstance(continuation, dict) or "clcontinue" not in continuation
-                    or not set(continuation) <= {"continue", "clcontinue"}
-                    or not all(isinstance(value, str) for value in continuation.values())):
-                raise RuntimeError("Category query returned invalid continuation parameters.")
-            token = tuple(sorted(continuation.items()))
-            if token in tokens:
-                raise RuntimeError("Category query repeated its continuation token.")
-            tokens.add(token)
-        else:
-            raise RuntimeError("Category query exceeded its 100-response continuation bound.")
-        if seen != set(batch):
-            raise RuntimeError(f"Category query omitted generated pages: {sorted(set(batch) - seen)}")
-        for title in batch:
-            if actual[title] != expected[title]:
-                if (actual[title] - expected[title]) & {
-                    "Category:Pages with script errors", "Category:Pages where template include size is exceeded"
-                }:
-                    result = api({"action": "parse", "page": title, "prop": "text|limitreportdata"})["parse"]
-                    print(title + " parser limits: " + json.dumps(result.get("limitreportdata", [])), flush=True)
-                    check_parser_errors(result["text"]["*"])
-                raise RuntimeError(
-                    f"Category membership mismatch for {title}: "
-                    f"missing={sorted(expected[title] - actual[title])}, extra={sorted(actual[title] - expected[title])}"
-                )
-    for title in titles:
-        if title != "Skills" and not title.startswith("Category:"):
-            continue
-        targets = {title_key(target) for target in re.findall(r"\[\[:(Category:[^\]|]+)(?:\|[^\]]*)?\]\]", pages[title])} - {title}
-        if not targets <= set(pages):
-            raise RuntimeError(f"Category browse links on {title} target pages outside the generated release.")
-        parsed = api({"action": "parse", "page": title, "prop": "links"})["parse"]
-        resolved = {title_key(link["*"]) for link in parsed["links"] if link["ns"] == 14 and "exists" in link}
-        if not targets <= resolved:
-            raise RuntimeError(f"Category browse links did not resolve on {title}: {sorted(targets - resolved)}")
 
 
 def smoke_npc_locations(api, data, catalog, image_hashes, open_media=urllib.request.urlopen):
@@ -390,31 +327,6 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
             raise RuntimeError("A required canonical guide is missing.")
 
 
-def smoke_editorial_release(api, pages):
-    from wiki_render import RETIRED_PAGES, validate_reader_text
-    for title, text in pages.items():
-        if title.startswith("Module:"):
-            continue
-        if text.startswith("#REDIRECT"):
-            target = re.fullmatch(r"#REDIRECT \[\[([^\]]+)\]\]\n", text)[1]
-            resolved = api({"action": "query", "titles": title, "redirects": "1"})["query"].get("redirects", [])
-            if not any(row["from"] == title and row["to"] == target for row in resolved):
-                raise RuntimeError(f"{title}: retirement or compatibility redirect did not resolve.")
-            continue
-        parsed = api({"action": "parse", "page": title, "prop": "text|links"})["parse"]
-        rendered = parsed["text"]["*"]
-        check_parser_errors(rendered)
-        validate_reader_text(title, rendered)
-        if any(link["*"] in RETIRED_PAGES for link in parsed["links"]):
-            raise RuntimeError(f"{title}: rendered link to retired research content.")
-    rendered = api({"action": "parse", "title": "Uncertainty smoke",
-                    "text": "Confirmed. Claim. {{Unverified}} Value: Unknown. Zero: 0.",
-                    "prop": "text"}, post=True)["parse"]["text"]["*"]
-    check_parser_errors(rendered)
-    if rendered.count("[unverified]") != 1 or 'title="This claim has not been confirmed."' not in rendered:
-        raise RuntimeError("The uncertainty marker did not render once with its short tooltip.")
-
-
 def wait_for_server_tick(api, minimum=None):
     # MediaWiki invalidates only when cache time < page_touched, both whole seconds.
     query = {"action": "query", "curtimestamp": 1}
@@ -450,13 +362,6 @@ def drain_jobs_bounded(run, timeout=90):
     return {"command": "maintenance/run.php runJobs --maxjobs 1000",
             "budget_seconds": timeout, "output_tail": output.decode(errors="replace")[-2000:],
             "remaining_jobs": remaining.decode(errors="replace").strip()}
-
-
-def check_parser_errors(rendered):
-    match = re.search(r'class="[^"]*\berror\b|Template loop detected|[Ee]xpansion[^<]*exceeded|[Ii]nclude size[^<]*exceeded|mw-broken-media|typeof="[^"]*mw:Error[^"]*mw:File', rendered)
-    if match:
-        raise RuntimeError("A canonical view produced a MediaWiki parser error, expansion limit, or missing image: "
-                           + rendered[max(0, match.start() - 120):match.end() + 400])
 
 
 class ProjectionDOM(HTMLParser):
