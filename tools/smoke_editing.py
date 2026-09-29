@@ -149,7 +149,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 raise RuntimeError("Logged-in source editing is not discoverable.")
             page.locator("#ca-ve-edit a").click()
             page.wait_for_function("window.ve?.init?.target?.active && ve.init.target.getSurface()")
-            page.wait_for_function("ve.init.target.welcomeDialogPromise")
+            page.wait_for_function("Boolean(ve.init.target.welcomeDialogPromise)")
             if page.evaluate("Boolean(ve.init.target.welcomeDialog)"):
                 page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
             page.wait_for_function("ve.init.target.active && !ve.init.target.activating && !ve.init.target.welcomeDialog")
