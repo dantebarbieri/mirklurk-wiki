@@ -268,7 +268,8 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 before = source(api, WRAPPED_OWNER)
                 open_editor(WRAPPED_OWNER)
                 page.locator(".ve-ce-documentNode .ve-ce-mwTransclusionNode").filter(
-                    has_text="Synthetic station").first.click()
+                    has_text="Synthetic station").first.hover()
+                page.locator('.ve-ce-focusableNode-highlight[title="Editor recipe record"]').click()
                 page.locator(".ve-ui-mwTransclusionContextItem").get_by_role("button", name="Edit", exact=True).click()
                 dialog = page.locator(".ve-ui-mwTemplateDialog")
                 dialog.get_by_label("Input quantity", exact=True).fill(str(4 + attempt))
