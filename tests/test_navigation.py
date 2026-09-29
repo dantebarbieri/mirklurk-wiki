@@ -71,7 +71,7 @@ class NavigationTests(unittest.TestCase):
         self.assertTrue(path_errors("content/interface/Unreviewed.wiki", "100644"))
 
     def test_browser_expectations_use_wiki_article_path_including_special_pages(self):
-        for path in ("/index.php?title=$1", "/wiki/$1"):
+        for path in ("/index.php?title=$1", "/w/$1"):
             for title, encoded in (("Game mechanics", "Game_mechanics"), ("Help:Editing", "Help:Editing"),
                                    ("Special:Random", "Special:Random"),
                                    ("Special:RecentChanges", "Special:RecentChanges")):
