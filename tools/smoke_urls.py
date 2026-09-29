@@ -184,10 +184,10 @@ def smoke_urls(api, base, token, editor_password):
         if status != 404:
             raise RuntimeError("Missing articles must remain HTTP 404.")
         check_article(html, missing, 0)
-    # %2526 must not be decoded twice into the valid '&' title.
+    # BadTitleError uses 404 in 1.43; %2526 must not become the existing '&' title.
     status, _, _ = request("/w/URL_smoke_%2526_action=edit")
-    if status != 400:
-        raise RuntimeError("A double-encoded invalid title did not retain its invalid-title response.")
+    if status != 404:
+        raise RuntimeError(f"A double-encoded invalid title returned {status}, not the upstream 404.")
 
     redirect_title = "URL smoke redirect"
     save(redirect_title, "#REDIRECT [[URL smoke]]")
