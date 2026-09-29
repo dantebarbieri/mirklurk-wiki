@@ -20,7 +20,7 @@ from wiki_display import (
     ASSETS_TITLE, DISPLAY_FILES, DISPLAY_TITLES, MAX_COPPER, content_model, dependencies,
     lua_string, page_namespace,
 )
-from wiki_render import build_pages, health_armor_icon, image_for, pixel_image, price_text
+from wiki_render import build_pages, health_armor_icon, image_for, pixel_image, price_text, recipe_groups, row_template
 
 
 class DisplayTests(unittest.TestCase):
@@ -146,6 +146,80 @@ class DisplayTests(unittest.TestCase):
             self.assertNotIn("Being-13.png", pages[ASSETS_TITLE])
             self.assertIn("{{Creature|Sceetler}}", pages["Bestiary"])
 
+    def test_item_lookup_uses_exact_catalog_titles_art_and_source_classification(self):
+        locations = page_locations(self.data, self.catalog)
+        items = {row["id"]: row for row in self.data["entities"] if row["category"] == "item"
+                 and row["id"] not in {recipe["owner_item"] for recipe in self.catalog["construction_recipes"]}}
+        registry = self.pages[ASSETS_TITLE].split("    items = {\n", 1)[1]
+        self.assertEqual(len(items), 246)
+        self.assertEqual(registry.count("        [ "), len(items))
+        for identity, item in items.items():
+            title = locations[identity]
+            line = next(line for line in registry.splitlines() if line.startswith("        [ " + lua_string(title) + " ]"))
+            self.assertIn("[[" + title + "|<nowiki>" + item["name"] + "</nowiki>]]", line)
+            image = image_for(identity, self.data["illustrations"])
+            if image:
+                self.assertIn(pixel_image(image, 32, 32, title, item["name"]), line)
+            else:
+                self.assertNotIn("[[File:", line)
+            if identity != "item-221":
+                self.assertEqual(title, item["name"])
+        for title in ("Finish Raft", "Sceetler", "Ranger Bhato", "Turnip", "Turnip (nature)", "item-14"):
+            self.assertNotIn("[ " + lua_string(title) + " ]", registry)
+        self.assertIn("{{Item|Turnip (item)}}", self.pages["Items"])
+        self.assertNotIn("{{Item|Finish Raft", "\n".join(self.pages.values()))
+        valid_titles = {locations[identity] for identity in items}
+        for source in [*self.pages.values(), (ROOT / "docs" / "TEMPLATES.md").read_text(encoding="utf-8")]:
+            for title in re.findall(r"\{\{Item\|([^{}|]+)(?:\||\}\})", source):
+                self.assertIn(title, valid_titles)
+
+    def test_item_name_only_fallback_and_literal_label_are_generated_not_guessed(self):
+        for missing in (True, False):
+            data = copy.deepcopy(self.data)
+            if missing:
+                data["illustrations"] = [image for image in data["illustrations"] if image.get("entity") != "item-14"]
+            else:
+                image_for("item-14", data["illustrations"]).update(
+                    rights_status="pending", creator=None, sha256=None, rights_basis=None, rights_note=None)
+            pages = build_pages(ROOT, data, self.catalog, self.details)
+            registry = pages[ASSETS_TITLE].split("    items = {\n", 1)[1]
+            self.assertNotIn("Item-14.png", registry)
+            self.assertIn("[[Iron Hand Axe|<nowiki>Iron Hand Axe</nowiki>]]", registry)
+        self.assertIn("{{Item|Iron Hand Axe}}", self.pages["Items"])
+        self.assertEqual(self.pages["Items"].count('id="entity-item-'), 247)
+
+    def test_actual_sources_compose_rows_and_keep_exact_owner_filters(self):
+        readers = {title: text for title, text in self.pages.items() if title not in DISPLAY_TITLES}
+        self.assertEqual(sum(text.count("{{Ware row\n") for text in readers.values()), 63)
+        recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
+        self.assertEqual((len(recipes), len(recipe_groups(recipes))), (96, 77))
+        self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 78)
+        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 1903)
+        self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
+        self.assertIn("in-place completion", self.pages["Finish Raft"])
+        self.assertEqual(sum(text.count("Standard unit price: ") for text in readers.values()), 42)
+        self.assertEqual(dependencies(self.pages["Template:Ware row"]), {"Template:Item"})
+        self.assertEqual(dependencies(self.pages["Template:Item"]), {"Module:Display"})
+        self.assertIn("Template:Recipe row", dependencies(self.pages["Simple Burn Remedy"]))
+        self.assertNotIn("Template:Item", dependencies(self.pages["Random treasure"]))
+        for reader in ("Items", "Category:Armor", "Plant harvesting", "Magus Clay"):
+            self.assertIn(reader, stale_renderings(self.pages, ["Template:Item"], set()))
+        self.assertIn("Campfire", stale_renderings(self.pages, ["Template:Recipe row"], set()))
+        self.assertIn("Iron Hand Axe", stale_renderings(self.pages, ["Template:Ware row"], set()))
+
+    def test_nested_named_arguments_leave_colon_views_visible(self):
+        text = row_template("Ware row", {"item": "Iron Hand Axe", "price": "<noinclude>{{:Iron Hand Axe}}</noinclude>"})
+        self.assertEqual(dependencies(text), {"Template:Ware row", "Iron Hand Axe"})
+        from wiki_views import transclusions
+        self.assertEqual(transclusions(text), [("Iron Hand Axe", ())])
+        recipe = row_template("Recipe row", {
+            "ingredients": "{{Item|Plant Fiber|quantity=4}}<br />{{Item|Log (Willow)|quantity=1}}",
+            "conditions": "<nowiki>A | B = C {{not a template}}</nowiki>",
+        })
+        self.assertEqual(dependencies(recipe), {"Template:Recipe row", "Template:Item"})
+        self.assertEqual(transclusions(recipe), [])
+        self.assertEqual(transclusions("<pre>{{:Not an owner}}</pre><!--{{:Also not}}--><nowiki>{{:Nor this}}</nowiki>"), [])
+
 
 class DisplayPublisherTests(unittest.TestCase):
     def setUp(self):
@@ -181,6 +255,12 @@ class DisplayPublisherTests(unittest.TestCase):
         changed = dict(self.pages, **{ASSETS_TITLE: "return { value = 2 }"})
         report = self.run_sync(wiki, changed, apply=True)
         self.assertEqual(report["refreshed"], ["Item", "Merchant", "Module:Display", "Template:Coins"])
+
+    def test_independent_row_templates_still_follow_modules_and_precede_readers(self):
+        pages = {**self.pages, "Template:Recipe row": "<tr><td>{{{ingredients|}}}</td></tr>", "Independent": "Plain text"}
+        order = write_order(pages, pages)
+        self.assertEqual(order[:2], [ASSETS_TITLE, "Module:Display"])
+        self.assertLess(order.index("Template:Recipe row"), order.index("Independent"))
 
     def test_missing_runtime_namespace_model_engine_and_invalid_lua_prevent_all_edits(self):
         for failure in ("extension", "namespace", "model", "engine", "live-model", "syntax"):

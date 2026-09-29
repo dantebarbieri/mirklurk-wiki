@@ -46,8 +46,22 @@ jobs:
         with:
           persist-credentials: false
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Install the disposable browser test runner
+        run: |
+          python3 -m pip install playwright==1.55.0
+          python3 -m playwright install --with-deps chromium
       - name: Install, publish and exercise a disposable wiki; never contacts the live wiki
+        env:
+          MIRKLURK_SMOKE_ARTIFACTS: ${{ runner.temp }}/mirklurk-browser
         run: python3 tools/smoke_deploy.py --run
+      - name: Preserve synthetic-only Vector screenshots and measured geometry
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: vector-layout
+          path: ${{ runner.temp }}/mirklurk-browser
+          if-no-files-found: warn
+          retention-days: 7
   preview:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04

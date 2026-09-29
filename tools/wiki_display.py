@@ -10,6 +10,9 @@ DISPLAY_FILES = {
     "Template:Health grid": "templates/Health_grid.wiki",
     "Template:Attack grid": "templates/Attack_grid.wiki",
     "Template:Creature": "templates/Creature.wiki",
+    "Template:Item": "templates/Item.wiki",
+    "Template:Recipe row": "templates/Recipe_row.wiki",
+    "Template:Ware row": "templates/Ware_row.wiki",
     "Module:Display": "modules/Display.lua",
 }
 ASSETS_TITLE = "Module:Display assets"
@@ -96,7 +99,7 @@ def lua_string(text):
     return "[" + equals + "[" + text + "]" + equals + "]"
 
 
-def display_pages(root, coin_icons, shield_icons, creatures):
+def display_pages(root, coin_icons, shield_icons, creatures, items):
     pages = {title: read_authored(root, title, filename, directory="",
                                  limit=16 * 1024 if title.startswith("Module:") else 4 * 1024)
              for title, filename in DISPLAY_FILES.items()}
@@ -109,6 +112,9 @@ def display_pages(root, coin_icons, shield_icons, creatures):
         + "    },\n    creatures = {\n"
         + "".join(f"        [ {lua_string(title)} ] = {lua_string(markup)},\n"
                   for title, markup in sorted(creatures.items()))
+        + "    },\n    items = {\n"
+        + "".join(f"        [ {lua_string(title)} ] = {lua_string(markup)},\n"
+                  for title, markup in sorted(items.items()))
         + "    }\n}\n"
     )
     return pages

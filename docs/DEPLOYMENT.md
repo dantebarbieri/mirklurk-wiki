@@ -171,7 +171,11 @@ volume; removing volumes destroys that development database.
 ## Validation without touching infrastructure
 
 Run `php tests/test_runtime.php` for isolated configuration tests. With Docker
-available, `python tools/smoke_deploy.py --run` builds the image in its own
+available, install the browser test runner with `python -m pip install playwright==1.55.0`
+and `python -m playwright install --with-deps chromium`. Set
+`MIRKLURK_SMOKE_ARTIFACTS` to an external scratch directory to retain synthetic
+Vector screenshots/geometry (otherwise they are temporary). Then
+`python tools/smoke_deploy.py --run` builds the image in its own
 randomly named Compose project with temporary generated credentials, then:
 
 - checks installation refusal on reuse, anonymous permissions, disabled web

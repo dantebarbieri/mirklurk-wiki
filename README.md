@@ -46,9 +46,12 @@ decoded per attack cell, not shown as misleading fractional damage.
 `{{Coins|1234}}` displays 1 gold, 2 silver and 34 copper.
 `{{Creature|Sceetler}}` displays its reviewed portrait and linked name; Bestiary
 and existing authored creature/faction lists use it without changing native
-category navigation or copying creature statistics. These four ordinary
-templates use Scribunto Lua and the same reviewed image-sizing policy as other
-artwork. See [author syntax and limits](docs/TEMPLATES.md) and the
+category navigation or copying creature statistics. `{{Item|Iron Hand Axe}}`
+is used throughout existing item lists; Recipe row and Ware row compose item
+and coin displays without moving facts from their canonical owners. Coin
+icons are centered with their denomination text and wrap between denominations.
+These seven ordinary templates reuse Scribunto Lua and the same reviewed
+image-sizing policy as other artwork. See [author syntax and limits](docs/TEMPLATES.md) and the
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication
 fails closed before page edits if the target wiki lacks working Scribunto.
 

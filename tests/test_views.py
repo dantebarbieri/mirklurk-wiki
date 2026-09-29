@@ -19,17 +19,18 @@ from smoke_deploy import check_pool_projection, dom
 
 
 def expand_selective_view(text, parameters):
-    """Evaluate only the bounded selector syntax emitted by the view helpers, not MediaWiki."""
+    """Evaluate bounded selectors, not MediaWiki; Item links stand in for real displays."""
     text = "".join(re.findall(r"<onlyinclude>(.*?)</onlyinclude>", text, re.S))
     text = re.sub(r"<noinclude>.*?</noinclude>", "", text, flags=re.S)
     text = text.replace("<includeonly>", "").replace("</includeonly>", "")
+    text = re.sub(r"\{\{Item\|([^{}|]+)\}\}", r"[[\1|\1]]", text)
     protected = []
 
     def protect(match):
         protected.append(match.group())
         return f"@LITERAL{len(protected) - 1}@"
 
-    text = re.sub(r"<nowiki>.*?</nowiki>|\[\[.*?\]\]", protect, text, flags=re.S)
+    text = re.sub(r"\{\{Ware row\n.*?\n\}\}|<nowiki>.*?</nowiki>|\[\[.*?\]\]", protect, text, flags=re.S)
 
     def selector(match):
         parts = match[2].split("|")
@@ -136,7 +137,7 @@ class SelectiveViewTests(unittest.TestCase):
                 transclusions(self.pages[locations[item]]),
             )
             self.assertIn("offers", available_views(self.pages[merchant]))
-            self.assertIn("<noinclude><td>{{:" + locations[item] + "}}</td></noinclude>", self.pages[merchant])
+            self.assertIn("|price=<noinclude>{{:" + locations[item] + "}}</noinclude>", self.pages[merchant])
             page = self.pages[locations[item]]
             self.assertEqual(page.count('id="price-' + item + '"'), 1)
             self.assertIn("== How to acquire ==", page)
@@ -313,8 +314,8 @@ class SelectiveViewTests(unittest.TestCase):
         entities = {row["id"]: row for row in self.data["entities"]}
         locations = page_locations(self.data, self.catalog)
         rendered = merchant_table(offers, [], entities, locations, True)
-        self.assertIn("<td><nowiki>19</nowiki> <nowiki>silver</nowiki></td>", rendered)
-        self.assertNotIn("<noinclude><td><nowiki>19", rendered)
+        self.assertIn("|price={{Coins|1900}}", rendered)
+        self.assertNotIn("<noinclude>{{Coins|1900}}", rendered)
         self.assertIn("<includeonly>[[", rendered)
         self.assertIn("|Standard item price]]</includeonly>", rendered)
 

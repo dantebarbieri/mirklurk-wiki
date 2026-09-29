@@ -68,7 +68,12 @@ class CatalogTests(unittest.TestCase):
                     self.assertIn(literal(shown["summary"]), page)
                 for identity in relations[entry["id"]]:
                     if entry["kind"] in {"quest", "algorithm", "recipe", "merchant"} and locations[identity] != entries[entry["id"]]:
-                        self.assertIn(f'[[{locations[identity]}', page)
+                        if entry["kind"] == "merchant" and identity == entry["details"]["item"]:
+                            self.assertIn("|item=" + locations[identity] + "\n", page)
+                        elif entry["kind"] == "recipe" and identity.startswith("item-"):
+                            self.assertIn("{{Item|" + locations[identity] + "|quantity=", page)
+                        else:
+                            self.assertIn(f'[[{locations[identity]}', page)
                     if locations[identity] != entries[entry["id"]] and "#" not in locations[identity] and entry["kind"] != "loot":
                         if entry["kind"] == "merchant" and identity == entry["details"]["item"]:
                             self.assertIn(
@@ -126,7 +131,8 @@ class CatalogTests(unittest.TestCase):
                             self.assertEqual(sum(c[bound] for row in grid["rows"] for c in row if c),
                                              profile["values"][grid["kind"] + "-pattern-" + bound])
                     elif key in folded:
-                        self.assertIn(known(folded[key]), page.split("== Recipes ==", 1)[1])
+                        self.assertIn(("|quantity=" + str(folded[key]) + "}}" if key == "craft-yield"
+                                       else "|ap=" + known(folded[key])), page.split("== Recipes ==", 1)[1])
                     elif profile["entity"] in coins and key in {"initial-price", "initial-weight", "stack-limit"}:
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
                         self.assertIn(known(coins[profile["entity"]][field]), page)
@@ -377,8 +383,8 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("Base recipe yield", campfire)
         self.assertIn('id="profile-item-38-initializer"', campfire)
         self.assertIn('id="entry-recipe-personal-crafting-menu-38"', campfire)
-        self.assertIn("<nowiki>4</nowiki> base [[Action points|AP]]", campfire)
-        self.assertIn("[[Campfire|<nowiki>Campfire</nowiki>]] x <nowiki>1</nowiki>", campfire)
+        self.assertIn("|ap=<nowiki>4</nowiki>", campfire)
+        self.assertIn("{{Item|Campfire|quantity=1}}", campfire)
         for key, value, label in (
             ("craft-ap-cost", 5, "Base crafting cost"),
             ("craft-yield", 2, "Base recipe yield (items)"),
@@ -388,8 +394,8 @@ class CatalogTests(unittest.TestCase):
             profile["values"][key] = value
             changed = build_pages(ROOT, self.data, self.catalog, details)["Campfire"]
             self.assertIn(literal(label) + " || " + known(value), changed)
-            self.assertIn("<nowiki>4</nowiki> base [[Action points|AP]]", changed)
-            self.assertIn("[[Campfire|<nowiki>Campfire</nowiki>]] x <nowiki>1</nowiki>", changed)
+            self.assertIn("|ap=<nowiki>4</nowiki>", changed)
+            self.assertIn("{{Item|Campfire|quantity=1}}", changed)
         profile = next(row for row in self.details["profiles"] if row["id"] == "item-38-initializer")
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         for change in (
@@ -586,7 +592,8 @@ class CatalogTests(unittest.TestCase):
                 seen.add(identity)
                 self.assertIn(f'[[Category:{group["title"]}]]', self.pages[locations[identity]])
                 section = self.pages[group["index"]].split(f'== {group["title"]} ==\n', 1)[1].split("\n== ", 1)[0]
-                self.assertIn(f'[[{locations[identity]}|', section)
+                self.assertIn("{{Item|" + locations[identity] + "}}" if identity.startswith("item-") and identity != "item-171"
+                              else f'[[{locations[identity]}|', section)
                 self.assertNotEqual(kinds.get(identity), "npc")
         for title in ("Sceetler", "Scaal"):
             self.assertIn("[[Category:Scaalmyr]]", self.pages[title])
@@ -640,6 +647,7 @@ class CatalogTests(unittest.TestCase):
             for identity in row["members"]:
                 expected[identity].update(ancestors(title))
                 self.assertIn("{{Creature|" + locations[identity] + "}}" if identity in creatures
+                              else "{{Item|" + locations[identity] + "}}" if identity.startswith("item-") and identity != "item-171"
                               else f"[[{locations[identity]}|", page)
         for row in self.catalog["pages"]:
             actual = set(re.findall(r"\[\[Category:([^\]|]+)", self.pages[row["title"]]))
@@ -895,7 +903,7 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("Return to the abandoned campsite with the potion", self.pages[title])
         self.assertIn("Return to the abandoned campsite with Clay's Strange Potion", self.pages["Quests and journal"])
         for title in ("Thorns of Wackah", "Serpent Fang", "Nightmare", "Viper"):
-            self.assertIn(f"[[{title}|", self.pages["Poison"])
+            self.assertIn("{{" + ("Creature" if title in {"Nightmare", "Viper"} else "Item") + "|" + title + "}}", self.pages["Poison"])
         self.assertIn("[[Poison|", self.pages["Thorns of Wackah"])
         self.assertIn('id="entity-damage-class-2"', self.pages["Damage types"])
 
@@ -924,7 +932,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(len(self.catalog["damage_sources"]), 5)
         for source in self.catalog["damage_sources"]:
             item, damage = locations[source["entity"]], locations[source["damage_type"]]
-            self.assertIn(f"[[{item}|", self.pages[damage])
+            self.assertIn("{{Item|" + item + "}}", self.pages[damage])
             self.assertIn(f"[[{damage}|", self.pages[item])
             self.assertIn(literal(source["summary"]), self.pages[item])
             self.assertNotIn(literal(source["summary"]), self.pages[damage])

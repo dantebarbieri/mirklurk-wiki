@@ -3,6 +3,7 @@
 import re
 
 from wiki_data import DataError
+from wiki_display import INERT
 
 
 VIEW_SELECTOR = "{{{view|<noinclude>page</noinclude>}}}"
@@ -47,7 +48,7 @@ def html_table(headers, rows, normal_only=()):
 
 def transclusions(text):
     references = set()
-    for match in re.finditer(r"\{\{:([^{}\n]+)\}\}", text):
+    for match in re.finditer(r"\{\{:([^{}\n]+)\}\}", INERT.sub("", text)):
         owner, *arguments = match.group(1).split("|")
         parameters = {}
         for argument in arguments:

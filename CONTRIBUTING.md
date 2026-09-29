@@ -74,7 +74,10 @@ grants rights to the game's creative content.
 ## Reusable displays
 
 Use the native `{{Coins|...}}`, `{{Health grid|...}}`,
-`{{Attack grid|...}}` and `{{Creature|Sceetler}}` syntax described in [TEMPLATES.md](docs/TEMPLATES.md).
+`{{Attack grid|...}}`, `{{Creature|Sceetler}}`, `{{Item|Iron Hand Axe}}`,
+Recipe row and Ware row syntax described in [TEMPLATES.md](docs/TEMPLATES.md).
 Keep prices in item-owned views and preserve curated grid geometry; do not
-copy display HTML or prices into readers. Lua/runtime changes require the
-deployment prerequisites in that guide.
+copy display HTML or prices into readers. Row templates stay inside the
+owner's literal selective-view filters; standard-price gates stay on merchants,
+not inside Ware row. Content-only Lua/template changes use the already deployed
+Scribunto runtime; runtime changes require the deployment prerequisites in that guide.
