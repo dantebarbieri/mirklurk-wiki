@@ -148,7 +148,9 @@ local function grid(frame, health)
         end
     end
     if health and occupied == 0 then return failure('A health grid needs at least one occupied cell.') end
-    local wrapper = mw.html.create('div'):css('overflow-x', 'auto')
+    local wrapper = mw.html.create('div'):addClass('mirklurk-scroll noresize')
+        :attr('role', 'region'):attr('tabindex', '0'):attr('aria-label', label .. ' (scroll horizontally)')
+        :css({['max-width'] = '100%', ['overflow-x'] = 'auto'})
     local gridTable = wrapper:tag('table'):addClass('mirklurk-cell-grid')
         :attr('style', 'border-collapse:separate;border-spacing:3px;text-align:center;')
     gridTable:tag('caption'):wikitext(label .. ': ' .. #rows .. ' rows x ' .. width .. ' columns')

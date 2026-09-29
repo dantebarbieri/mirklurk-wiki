@@ -51,6 +51,7 @@ ALLOWED_FILES = {
     "tools/wiki_display.py": 16 * 1024,
     "tools/smoke_display.py": 32 * 1024,
     "tools/smoke_browser.py": 24 * 1024,
+    "tools/smoke_responsive.py": 24 * 1024,
     "tools/smoke_navigation.py": 8 * 1024,
     "tools/smoke_urls.py": 24 * 1024,
     "tools/wiki_acquisition.py": 16 * 1024,
