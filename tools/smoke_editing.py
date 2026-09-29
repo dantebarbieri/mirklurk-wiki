@@ -58,12 +58,19 @@ def source(api, title):
 def projections(api):
     views = {
         "price": "{{:" + OWNER + "}}",
+        "named price": "{{:" + OWNER + "|view=price}}",
         "recipe": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
                                      ["{{:" + OWNER + "|view=recipes|station=Synthetic station}}"]) + "</div>",
+        "all recipes": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
+                                          ["{{:" + OWNER + "|view=recipes}}"]) + "</div>",
         "wrong station": SCROLL + html_table(["Inputs", "Output", "Method", "Cost", "Conditions"],
                                             ["{{:" + OWNER + "|view=recipes|station=Other station}}"]) + "</div>",
+        "default merchant": "{{:" + MERCHANT + "}}",
         "seller": "{{:" + MERCHANT + "|view=sellers|item=Iron Hand Axe}}",
+        "all sellers": "{{:" + MERCHANT + "|view=sellers}}",
         "wrong item": "{{:" + MERCHANT + "|view=sellers|item=Bandage}}",
+        "unknown owner view": "{{:" + OWNER + "|view=unknown}}",
+        "unknown merchant view": "{{:" + MERCHANT + "|view=unknown}}",
     }
     result = {}
     for name, text in views.items():
@@ -223,22 +230,31 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                     raise RuntimeError("An untouched display template was flattened by visual editing.")
             report["browser_template_edit"] = True
 
-            time.sleep(21)  # Preserve the real three-edits/minute newcomer limit.
-            before = source(api, OWNER)
-            open_editor(OWNER)
-            append_prose(" Synthetic prose-only change.")
-            save_visual("Synthetic prose edit beside selective data")
-            after = source(api, OWNER)
-            if after.replace(" Synthetic prose-only change.", "").strip() != before.strip():
-                diff = "".join(difflib.unified_diff(
-                    before.splitlines(keepends=True), after.splitlines(keepends=True),
-                    fromfile="before", tofile="after",
-                ))
-                (folder / "editor-selective.diff").write_text(diff, encoding="utf-8")
-                raise RuntimeError("A visual prose edit changed the wrapped selective owner source:\n" + diff)
-            if projections(api) != initial_views:
-                raise RuntimeError("A visual prose edit changed a price or filtered reader view.")
-            report["browser_selective_prose"] = True
+            for attempt in (1, 2):
+                time.sleep(21)  # Preserve the real three-edits/minute newcomer limit.
+                before = source(api, OWNER)
+                open_editor(OWNER)
+                addition = f" Synthetic prose-only change {attempt}."
+                append_prose(addition)
+                save_visual(f"Synthetic prose edit {attempt} beside selective data")
+                after = source(api, OWNER)
+                expected = before
+                # VE fosters an empty include marker before this HTML table. Accept
+                # that exact first-save difference only; a second save must not add more.
+                if attempt == 1:
+                    expected = before.replace(SCROLL + '<table class="wikitable">',
+                                              SCROLL + '<onlyinclude></onlyinclude><table class="wikitable">', 1)
+                if after.replace(addition, "").strip() not in {before.strip(), expected.strip()}:
+                    diff = "".join(difflib.unified_diff(
+                        before.splitlines(keepends=True), after.splitlines(keepends=True),
+                        fromfile="before", tofile="after",
+                    ))
+                    (folder / "editor-selective.diff").write_text(diff, encoding="utf-8")
+                    raise RuntimeError("A visual prose edit changed the wrapped selective owner source:\n" + diff)
+                if projections(api) != initial_views:
+                    raise RuntimeError("A visual prose edit changed a price or filtered reader view.")
+            report["browser_selective_prose_saves"] = 2
+            report["selective_empty_include_markers"] = after.count("<onlyinclude></onlyinclude>")
 
             # Source editing is the documented route for the selective data itself.
             time.sleep(21)
@@ -259,9 +275,10 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             if source(api, OWNER).strip() != updated.strip():
                 raise RuntimeError("The source form did not preserve the complete selective structure.")
             views = projections(api)
-            if views["recipe"] == initial_views["recipe"] or "3 base" not in re.sub(r"<[^>]+>", "", views["recipe"]):
-                raise RuntimeError("The source-edited canonical AP did not propagate to its filtered view.")
-            if any(views[key] != initial_views[key] for key in views if key != "recipe"):
+            for key in ("recipe", "all recipes"):
+                if views[key] == initial_views[key] or "3 base" not in re.sub(r"<[^>]+>", "", views[key]):
+                    raise RuntimeError("The source-edited canonical AP did not propagate to its recipe views.")
+            if any(views[key] != initial_views[key] for key in views if key not in {"recipe", "all recipes"}):
                 raise RuntimeError("The source edit changed an unrelated selective projection.")
             report["source_preview_save_and_projection"] = True
 
