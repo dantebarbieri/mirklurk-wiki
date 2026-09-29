@@ -110,7 +110,6 @@ def exercise(admin, base, password, maintenance, report, artifacts):
         page = context.new_page()
         page.set_default_timeout(45000)
         last_save = 0
-        welcome_handled = False
 
         def edit_delay():
             nonlocal last_save
@@ -120,17 +119,9 @@ def exercise(admin, base, password, maintenance, report, artifacts):
         def url(title, **params):
             return base + "/index.php?" + urllib.parse.urlencode({"title": title, **params})
 
-        def source_save(title, text, summary):
-            nonlocal welcome_handled
+        def wiki_save(title, text, summary):
             edit_delay()
-            page.goto(url(title, action="edit"), wait_until="networkidle")
-            if not welcome_handled:
-                page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
-                welcome_handled = True
-            page.locator("#wpTextbox1").fill(text)
-            page.locator("#wpSummary").fill(summary)
-            page.locator("#wpSave").click()
-            page.wait_for_function("window.mw?.config.get('wgAction') === 'view'")
+            store(editor, title, text, summary=summary)
             saved = revision(admin, title)
             assert saved["user"] == "TestEditor" and saved["comment"] == summary
             assert saved["slots"]["main"]["content"].strip() == text.strip()
@@ -172,7 +163,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             page.wait_for_function("window.mw?.config.get('wgUserName') === 'TestEditor'")
             text = "Synthetic author prose.\n\n" + record() + "\n\n" + record(
                 variant="rain", ap="3", stations="Prototype camp")
-            source_save(OWNER, text, "Create two synthetic variants")
+            wiki_save(OWNER, text, "Create two synthetic variants")
             initial = rows(admin)
             assert len(initial) == 2 and {r["Owner"] for r in initial} == {OWNER}, initial
             assert all("Synthetic leaf" in r["Ingredients"] and "Synthetic resin = 2" in r["Inputs"] for r in initial)
@@ -242,7 +233,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             report["checks"]["reuse_does_not_store"] = True
 
             # No Git owner list changes: author a previously unknown page after caching empty reader results.
-            source_save(NEW_OWNER, "Another author's prose.\n\n" + record(
+            wiki_save(NEW_OWNER, "Another author's prose.\n\n" + record(
                 variant="new", stations="Prototype new station"), "New owner and station through wiki editing")
             assert {r["Owner"] for r in rows(admin, "Stations HOLDS 'Prototype new station'")} == {NEW_OWNER}
             freshness("new owner discovered by previously empty query", {
@@ -255,7 +246,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
             assert changed != source(admin, OWNER), "Could not remove the synthetic variant."
             changed = changed.replace("Prototype bench;Prototype camp", "Prototype new station")
             changed = changed.replace("Synthetic resin = 2", "Synthetic crystal = 8")
-            source_save(OWNER, changed, "Change station and ingredient; remove rain variant")
+            wiki_save(OWNER, changed, "Change station and ingredient; remove rain variant")
             current = rows(admin)
             assert len(current) == 2 and all(r["Variant"] != "rain" for r in current)
             assert {r["Owner"] for r in rows(admin, "Ingredients HOLDS 'Synthetic resin'")} == {NEW_OWNER}
@@ -318,7 +309,7 @@ def exercise(admin, base, password, maintenance, report, artifacts):
                 query_seconds.append(round(time.monotonic() - started, 4))
             report["query_seconds_two_records"] = query_seconds
             report["ux_limits"] = [
-                "TemplateData field edits are visual; prototype add/remove variants use the classic source form.",
+                "TemplateData field edits are visual; add/remove variants are tested through the ordinary editor API, not a GUI.",
                 "Ingredients support arbitrary line count, but Item = quantity is paired-text notation, not repeatable controls.",
                 "Stations/merchants use semicolon-separated titles; no production autocomplete or uniqueness validation.",
                 "No production schema migration, Page Forms installation, or original raw-table fix is included.",
