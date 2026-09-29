@@ -1,6 +1,7 @@
 **
 !deploy
 !deploy/Dockerfile
+!deploy/apache-short-urls.conf
 !deploy/LocalSettings.template.php
 !deploy/mirklurk-runtime.php
 !deploy/install.php

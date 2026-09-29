@@ -79,6 +79,22 @@ def expand_selective_view(text, parameters):
 
 
 class SelectiveViewTests(unittest.TestCase):
+    def test_http_projection_parses_old_and_short_links_without_double_decoding(self):
+        for href, expected in (
+            ("/w/User:Example/Subpage", "User:Example/Subpage"),
+            ("/w/O%27Brien_%26_friends%3F#Anchor", "O'Brien & friends?#Anchor"),
+            ("/w/Plus+percent%2520", "Plus+percent%20"),
+            ("/index.php?title=Plus%2Bpercent%2520", "Plus+percent%20"),
+            ("/w/Ignored?title=Actual_title", "Actual title"),
+        ):
+            with self.subTest(href=href):
+                result = dom('<a href="' + html.escape(href, quote=True) + '">Example</a>', "Reader")
+                self.assertEqual(result.links, [{"target": expected, "text": "Example"}])
+                self.assertFalse(result.non_wiki_links)
+        for href in ("/resources/test.svg", "https://example.invalid/w/Page", "//example.invalid/w/Page"):
+            result = dom('<a href="' + href + '">External</a>', "Reader")
+            self.assertFalse(result.wiki_links)
+
     @classmethod
     def setUpClass(cls):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)

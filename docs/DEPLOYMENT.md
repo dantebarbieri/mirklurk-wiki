@@ -69,7 +69,7 @@ eligible; template definitions are source-edited, and Lua is not a visual conten
 model. Anonymous edit/write API restrictions, QuestyCaptcha, shared-cache rate
 limits, uploads and email policy are unchanged.
 
-The Dockerfile sets `AllowEncodedSlashes NoDecode` **inside the active port-80
+The Apache site sets `AllowEncodedSlashes NoDecode` **inside the active port-80
 VirtualHost**, not just the global server scope (where it is not inherited).
 This allows encoded slash-bearing titles/subpages through `rest.php`.
 The operator's reverse proxy must preserve the original escaped URI and
@@ -107,6 +107,69 @@ move their factual owners. See [TEMPLATES.md](TEMPLATES.md).
 Upstream implementation references (version-specific):
 [VisualEditor client factory](https://github.com/wikimedia/mediawiki-extensions-VisualEditor/blob/REL1_43/includes/VisualEditorParsoidClientFactory.php)
 and [editor configuration](https://github.com/wikimedia/mediawiki-extensions-VisualEditor/blob/REL1_43/extension.json).
+
+## Short article URLs
+
+Articles use `/w/$1` (for example `/w/Items`); scripts remain at the origin
+root: `/index.php`, `/api.php`, `/rest.php`, `/load.php`, `/resources`, `/skins`
+and `/images`. `MW_SERVER_URL` remains the sole canonical origin. Native
+`[[Title]]`, template and category links need no content changes. Titles, page
+IDs, revision history and the database are unchanged.
+
+The image enables `mod_rewrite` and installs `deploy/apache-short-urls.conf`
+as its port-80 virtual host. Following the
+[MediaWiki Apache short-URL instructions](https://www.mediawiki.org/wiki/Manual:Short_URL/Apache),
+only `/w`, `/w/...` and `/` are mapped internally to the fixed root `index.php`.
+The original request URI and query are preserved; **never rewrite a captured,
+decoded title into `?title=$1`**. MediaWiki parses and encodes titles itself.
+`AllowEncodedSlashes NoDecode` is set inside that virtual host, allowing encoded
+subpages on both article and REST paths without Apache decoding them first.
+
+Root and empty article paths lead to MediaWiki's configured main page, not a
+hardcoded title. A small action hook supplements core title normalization:
+plain `/index.php?title=...` GET/HEAD views, optionally with `action=view`,
+receive a 301 to MediaWiki's own title URL. It does not canonicalize duplicate
+parameters or requests with any other parameters. POSTs, special pages,
+history, old revisions, diffs, search, login, raw/render/edit/submit and API
+requests retain upstream behavior. Native wiki redirects still show their
+redirected-from notice. Browser fragments survive ordinary HTTP redirects;
+the server neither receives nor rewrites them.
+
+**Proxy prerequisite:** route `/w` and `/w/...` to this same application, in
+addition to the existing root script/static paths. Forward the original encoded
+path, query string and method without stripping `/w`, decoding `%2F`, rewriting
+titles, or dropping REST `PATH_INFO`. Do not configure an upstream catch-all
+Main Page redirect, or a redirect for all `index.php` requests. Retain the
+canonical Host/protocol and the verified forwarding-header/trusted-proxy policy.
+DNS, TLS and homeserver/proxy changes require separate operator authorization.
+
+**Rollout:** first pass the disposable image HTTP smoke, preserve the previous
+image reference and take the normal verified backup. Separately authorize and
+apply any proxy prerequisite, rebuild the reviewed image, then recreate only
+the app with the same database, images, origin and secret mounts. No schema
+change, seed import, database copy, article rename or content sync is required.
+Merging/publishing wiki text does **not** install these Apache/settings changes.
+Keep the API publisher URL ending in `/api.php`.
+
+Existing parser-cache entries may contain old generated links. After the app
+and proxy are ready, invalidate parser output using MediaWiki's supported
+`$wgCacheEpoch` deployment setting (a UTC `YYYYMMDDHHMMSS` timestamp for this
+rollout), or perform an authorized bounded page purge through the API. Then
+invalidate any proxy/CDN HTML cache, including prior `/w/...` Main Page
+responses and root redirects. Do not clear session storage or edit pages to
+refresh links. Confirm fresh article/category/template links and siteinfo,
+encoded punctuation/subpages, 404s, root scripts/assets and a login/edit/save
+through the public proxy before declaring the runtime rollout complete.
+
+**Rollback:** before public rollout, restore the previous image and matching
+proxy configuration together; no database restoration or reverse content sync
+is needed for this URL-only change. Purge affected proxy HTML/redirect caches.
+Once short URLs have been shared, a pre-short-URL image cannot serve those
+bookmarks, and browsers may retain 301s. Prefer a forward fix or rollback image
+that retains this article-path/routing pair. Do not revert just one half or
+add reverse redirects from `/w/...` to legacy views (which can loop with cached
+301s). A complete removal after public use requires a separately reviewed
+compatibility plan; clearing server caches cannot erase browser redirects.
 
 ## Runtime variables
 
@@ -272,6 +335,11 @@ randomly named Compose project with temporary generated credentials, then:
 - checks installation refusal on reuse, anonymous permissions, disabled web
   uploads, the loaded ParserFunctions extension, and CAPTCHA-protected
   self-registration;
+- exercises real Apache HTTP old/new title and revision identity, GET/HEAD,
+  root/main-page routing, punctuation, Unicode, namespaces, encoded subpages,
+  missing-page 404s, query/action semantics, REST path info and root assets;
+  a browser checks fragment retention, login with an edit return target, and
+  short-path source editing followed by an actual root-script POST save;
 - imports original synthetic solid-color PNGs for every referenced File through
   the operator `importImages` path, then checks thumbnails and anonymous reads;
 - checks the configured Vector 2022 logo, legacy logo and PNG favicon against

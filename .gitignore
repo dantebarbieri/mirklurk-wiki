@@ -64,6 +64,7 @@
 !/tools/smoke_display.py
 !/tools/smoke_browser.py
 !/tools/smoke_editing.py
+!/tools/smoke_urls.py
 !/tools/wiki_acquisition.py
 !/tools/build_wiki.py
 !/tools/sync_wiki.py
@@ -83,6 +84,7 @@
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile
+!/deploy/apache-short-urls.conf
 !/deploy/compose.dev.yml
 !/deploy/LocalSettings.template.php
 !/deploy/mirklurk-runtime.php

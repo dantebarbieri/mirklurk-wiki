@@ -15,7 +15,7 @@ from wiki_views import filtered_row, html_table, selective_view
 SIMPLE = "User:TestEditor/Visual editor smoke"
 OWNER = "Editor fixture/Owner"
 MERCHANT = "Editor fixture/Merchant"
-SCROLL = ('<div class="mirklurk-scroll" role="region" tabindex="0" '
+SCROLL = ('<div class="mirklurk-scroll" role="group" tabindex="0" '
           'aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">\n')
 
 
@@ -144,7 +144,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
             return response.json()
 
         def open_editor(title, first_edit=False):
-            page.goto(url(title), wait_until="networkidle")
+            page.goto(base + "/w/" + urllib.parse.quote(title.replace(" ", "_"), safe=":"), wait_until="networkidle")
             if page.locator("#ca-edit a").inner_text() != "Edit source":
                 raise RuntimeError("Logged-in source editing is not discoverable.")
             page.locator("#ca-ve-edit a").click()
@@ -153,6 +153,13 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
             page.wait_for_function("ve.init.target.active && !ve.init.target.activating && !ve.init.target.welcomeDialog")
             page.locator(".ve-ce-documentNode").wait_for(state="visible")
+            page.evaluate("""() => {
+                window.editorClicks = [];
+                document.addEventListener('click', e => window.editorClicks.push({
+                    tag: e.target.tagName, classes: e.target.className,
+                    text: e.target.textContent.slice(0, 100)
+                }), true);
+            }""")
 
         def append_prose(text):
             paragraph = page.locator(".ve-ce-documentNode .ve-ce-paragraphNode").first
@@ -192,7 +199,8 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 raise RuntimeError("Browser editing must use an ordinary self-registered account.")
 
             open_editor(SIMPLE, first_edit=True)
-            page.locator(".ve-ce-documentNode .ve-ce-mwTransclusionNode").first.dblclick()
+            page.locator(".ve-ce-documentNode .ve-ce-mwTransclusionNode").first.click()
+            page.locator(".ve-ui-mwTransclusionContextItem").get_by_role("button", name="Edit", exact=True).click()
             dialog = page.locator(".ve-ui-mwTemplateDialog")
             dialog.get_by_label("Quantity", exact=True).fill("5")
             if not dialog.get_by_label("Item", exact=True).count():
@@ -274,6 +282,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 state = page.evaluate("""() => ({
                     active: window.ve?.init?.target?.active,
                     activating: window.ve?.init?.target?.activating,
+                    clicks: window.editorClicks,
                     dialogs: [...document.querySelectorAll('[role=dialog]')].map(e => ({
                         classes: e.className, text: e.innerText
                     })),
