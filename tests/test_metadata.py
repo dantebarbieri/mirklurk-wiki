@@ -1,12 +1,25 @@
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import Mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from smoke_metadata import Head, check_head, sitemap_locations
+from smoke_metadata import Head, check_head, import_fixtures, sitemap_locations
 
 
 class MetadataAssertionsTests(unittest.TestCase):
+    def test_nonreader_fixtures_do_not_bypass_publication_namespaces(self):
+        run = Mock()
+        api = Mock(return_value={"query": {"tokens": {"csrftoken": "synthetic"}}})
+        import_fixtures(run, api, {"Article": "Lead.", "Category:Test": "Browse.",
+                                  "User:Test": "User.", "Talk:Test": "Talk.", "Template:Test": "Template."})
+        xml = run.call_args.kwargs["input_bytes"].decode()
+        self.assertIn("<title>Article</title>", xml)
+        for namespace in ("User", "Talk", "Template"):
+            self.assertNotIn(f"<title>{namespace}:Test</title>", xml)
+        self.assertEqual([call.args[0]["title"] for call in api.call_args_list[1:]],
+                         ["User:Test", "Talk:Test", "Template:Test"])
+
     def test_html_entities_and_unicode(self):
         head = Head('<html><head><link rel="canonical" href="https://wiki.example.invalid/?a=1&amp;b=2">'
                     '<meta property="og:title" content="&quot;A&quot; &amp; caf\u00e9">'

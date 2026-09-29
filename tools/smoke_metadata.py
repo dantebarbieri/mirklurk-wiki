@@ -71,6 +71,18 @@ def sitemap_locations(body, kind, origin):
     return locations
 
 
+def import_fixtures(run, api, fixtures):
+    reader_pages = {title: text for title, text in fixtures.items()
+                    if ":" not in title or title.startswith("Category:")}
+    run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump",
+        input_bytes=build_xml(reader_pages))
+    csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+    # Nonreader fixtures belong only in the disposable API, not the publication allowlist.
+    for title, text in fixtures.items():
+        if title not in reader_pages:
+            api({"action": "edit", "title": title, "text": text, "token": csrf}, post=True)
+
+
 def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
     fixtures = {
         TITLE: LEAD + "\n\n== Later ==\nNever use this section as the description.",
@@ -83,8 +95,7 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
         "Talk:Synthetic metadata": "Not a public article preview.",
         "Template:Synthetic metadata": "Not a public article preview.",
     }
-    run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "importDump",
-        input_bytes=build_xml(fixtures))
+    import_fixtures(run, api, fixtures)
     drain_jobs(run)
     revision = next(iter(api({"action": "query", "titles": TITLE, "prop": "revisions",
                              "rvprop": "ids"})["query"]["pages"].values()))["revisions"][0]["revid"]
