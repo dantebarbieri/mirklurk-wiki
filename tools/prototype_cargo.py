@@ -49,7 +49,7 @@ def prototype(artifacts):
         dockerfile = context / "deploy" / "Dockerfile"
         dockerfile.write_text(dockerfile.read_text() + """
 COPY Cargo /var/www/html/extensions/Cargo
-RUN printf '\\nwfLoadExtension("Cargo");\\n$wgJobRunRate = 0;\\n' >> /var/www/html/LocalSettings.php
+RUN printf '\\nwfLoadExtension("Cargo");\\n$wgJobRunRate = 0;\\n$wgShowExceptionDetails = true;\\n' >> /var/www/html/LocalSettings.php
 """, encoding="utf-8")
         # Disable opportunistic jobs only to measure immediate vs job-drained behavior.
         with socket.socket() as probe:
