@@ -18,6 +18,7 @@ OWNER = "Editor fixture/Owner"
 MERCHANT = "Editor fixture/Merchant"
 WRAPPED_OWNER = "Editor fixture/Wrapped owner"
 RECIPE_SHELL = "Template:Editor recipe shell"
+RECIPE_RECORD = "Template:Editor recipe record"
 SCROLL = ('<div class="mirklurk-scroll noresize" role="group" tabindex="0" '
           'aria-label="Table (scroll horizontally)" style="max-width:100%;overflow-x:auto;">\n')
 
@@ -38,9 +39,27 @@ def editor_fixtures():
     shell = SCROLL + html_table(
         ["Inputs", "Output", "Method", "Cost", "Conditions"], ["{{{rows|}}}"],
     ) + "</div>\n"
-    wrapped_recipe = selective_view(
-        "{{Editor recipe shell|view=" + VIEW_SELECTOR
-        + "|rows=" + filtered_row(recipe, "station", ["Synthetic station"]) + "}}", "recipes",
+    record_row = ('{{Recipe row|anchors=<span id="{{{anchor|}}}"></span>'
+                  '|ingredients={{Item|{{{input|}}}|quantity={{{quantity|}}}}}'
+                  '|output={{Item|{{{output|}}}|quantity={{{outputQuantity|}}}}}'
+                  '|methods={{{method|}}}|ap={{{ap|}}}|conditions={{{conditions|}}}}}')
+    record = ('{{#switch:{{{view|}}}|page|recipes={{#switch:{{{station|}}}||{{{method|}}}='
+              '{{Editor recipe shell|view={{{view|}}}|rows=' + record_row + '}}|#default=}}|#default=}}')
+    fields = {
+        "input": ("Input item", "wiki-page-name"), "quantity": ("Input quantity", "string"),
+        "output": ("Output item", "wiki-page-name"), "outputQuantity": ("Output quantity", "string"),
+        "method": ("Method", "string"), "ap": ("AP", "number"), "conditions": ("Conditions", "string"),
+        "anchor": ("Stable anchor (advanced)", "string"),
+        "view": ("View routing (advanced)", "string"), "station": ("Station filter (advanced)", "string"),
+    }
+    metadata = {"description": "Synthetic flat-record feasibility probe.", "format": "inline",
+                "params": {key: {"label": label, "type": kind} for key, (label, kind) in fields.items()},
+                "paramOrder": list(fields)}
+    wrapped_recipe = (
+        "<onlyinclude>{{Editor recipe record|input=Plant Fiber|quantity=4"
+        "|output=Bandage|outputQuantity=1|method=Synthetic station|ap=2"
+        "|conditions=Synthetic condition.|anchor=synthetic-recipe|view=" + VIEW_SELECTOR
+        + "|station={{{station|}}}}}</onlyinclude>"
     )
     return {
         SIMPLE: ("Synthetic editor introduction.\n\n{{Item|Plant Fiber|quantity=4}}\n\n{{Creature|Sceetler}}"
@@ -53,6 +72,8 @@ def editor_fixtures():
         MERCHANT: "Synthetic merchant introduction.\n\n" + selective_view(wares, "sellers") + "\n",
         RECIPE_SHELL: "<includeonly>{{#ifeq:{{{view|}}}|page|" + shell
                       + "|{{{rows|}}}}}</includeonly>\n",
+        RECIPE_RECORD: "<includeonly>" + record + "</includeonly><noinclude><templatedata>"
+                       + json.dumps(metadata) + "</templatedata></noinclude>\n",
         WRAPPED_OWNER: ("Synthetic wrapped-owner introduction.\n\n== Price ==\n"
                         + selective_view("{{Coins|1234}}", "price", True)
                         + "\n\n== Recipe ==\n" + wrapped_recipe + "\n"),
@@ -176,13 +197,6 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 page.locator(".ve-init-mw-welcomeDialog").get_by_role("button", name="Start editing", exact=True).click()
             page.wait_for_function("ve.init.target.active && !ve.init.target.activating && !ve.init.target.welcomeDialog")
             page.locator(".ve-ce-documentNode").wait_for(state="visible")
-            page.evaluate("""() => {
-                window.editorClicks = [];
-                document.addEventListener('click', e => window.editorClicks.push({
-                    tag: e.target.tagName, classes: e.target.className,
-                    text: e.target.textContent.slice(0, 100)
-                }), true);
-            }""")
 
         def append_prose(text):
             paragraph = page.locator(".ve-ce-documentNode .ve-ce-paragraphNode").first
@@ -244,8 +258,7 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                     raise RuntimeError("An untouched display template was flattened by visual editing.")
             report["browser_template_edit"] = True
 
-            # Synthetic-only structural experiment. The production owner assertion
-            # below remains strict and still blocks release on its known second-save bug.
+            # Synthetic-only proof; the original-owner release blocker remains below.
             wrapped_views = projections(api, WRAPPED_OWNER)
             for name, html in wrapped_views.items():
                 if re.sub(r">\s+<", "><", html) != re.sub(r">\s+<", "><", initial_views[name]):
@@ -254,51 +267,40 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 time.sleep(21)
                 before = source(api, WRAPPED_OWNER)
                 open_editor(WRAPPED_OWNER)
-                addition = f" Synthetic wrapper proof {attempt}."
-                append_prose(addition)
-                save_visual(f"Synthetic whole-table wrapper proof {attempt}")
+                page.locator(".ve-ce-documentNode .ve-ce-mwTransclusionNode").filter(
+                    has_text="Synthetic station").first.click()
+                page.locator(".ve-ui-mwTransclusionContextItem").get_by_role("button", name="Edit", exact=True).click()
+                dialog = page.locator(".ve-ui-mwTemplateDialog")
+                dialog.get_by_label("Input quantity", exact=True).fill(str(4 + attempt))
+                dialog.get_by_label("AP", exact=True).fill(str(2 + attempt))
+                page.screenshot(path=str(folder / "editor-record-fields.png"))
+                dialog.locator(".oo-ui-processDialog-actions-primary .oo-ui-buttonElement-button").click()
+                save_visual(f"Synthetic flat recipe record edit {attempt}")
                 after = source(api, WRAPPED_OWNER)
-                if after.replace(addition, "").strip() != before.strip():
+                expected = before.replace(f"|quantity={3 + attempt}|", f"|quantity={4 + attempt}|")
+                expected = expected.replace(f"|ap={1 + attempt}|", f"|ap={2 + attempt}|")
+                if after.strip() != expected.strip():
                     diff = "".join(difflib.unified_diff(
                         before.splitlines(keepends=True), after.splitlines(keepends=True),
                         fromfile="before", tofile="after",
                     ))
                     raise RuntimeError("The whole-table wrapper did not preserve source:\n" + diff)
-                if projections(api, WRAPPED_OWNER) != wrapped_views:
-                    raise RuntimeError("The whole-table wrapper changed selective projections after saving.")
-            (folder / "editor-wrapper-proof.json").write_text(json.dumps({
-                "exact_modified_round_trips": 2,
-                "matches_original_projections": sorted(wrapped_views),
+                views = projections(api, WRAPPED_OWNER)
+                for name, html in views.items():
+                    if name in {"recipe", "all recipes"}:
+                        visible = re.sub(r"<[^>]+>", "", html)
+                        if f"{2 + attempt} base" not in visible or f"x {4 + attempt}" not in visible:
+                            raise RuntimeError("Visual recipe fields did not propagate to the filtered reader.")
+                    elif html != wrapped_views[name]:
+                        raise RuntimeError("A flat-record edit changed an unrelated projection.")
+            (folder / "editor-record-proof.json").write_text(json.dumps({
+                "exact_field_edits": 2,
+                "checked_projections": sorted(wrapped_views),
                 "owner_source": after,
                 "shell_source": fixtures[RECIPE_SHELL],
-                "limitation": "Nested row fields are still wikitext, not a novice editing interface.",
+                "record_source": fixtures[RECIPE_RECORD],
+                "limitation": "One input/row only; advanced routing is visible; publisher schema needs migration.",
             }, indent=2) + "\n", encoding="utf-8")
-
-            for attempt in (1, 2):
-                time.sleep(21)  # Preserve the real three-edits/minute newcomer limit.
-                before = source(api, OWNER)
-                open_editor(OWNER)
-                addition = f" Synthetic prose-only change {attempt}."
-                append_prose(addition)
-                save_visual(f"Synthetic prose edit {attempt} beside selective data")
-                after = source(api, OWNER)
-                expected = before
-                # VE fosters an empty include marker before this HTML table. Accept
-                # that exact first-save difference only; a second save must not add more.
-                if attempt == 1:
-                    expected = before.replace(SCROLL + '<table class="wikitable">',
-                                              SCROLL + '<onlyinclude></onlyinclude><table class="wikitable">', 1)
-                if after.replace(addition, "").strip() not in {before.strip(), expected.strip()}:
-                    diff = "".join(difflib.unified_diff(
-                        before.splitlines(keepends=True), after.splitlines(keepends=True),
-                        fromfile="before", tofile="after",
-                    ))
-                    (folder / "editor-selective.diff").write_text(diff, encoding="utf-8")
-                    raise RuntimeError("A visual prose edit changed the wrapped selective owner source:\n" + diff)
-                if projections(api) != initial_views:
-                    raise RuntimeError("A visual prose edit changed a price or filtered reader view.")
-            report["browser_selective_prose_saves"] = 2
-            report["selective_empty_include_markers"] = after.count("<onlyinclude></onlyinclude>")
 
             # Source editing is the documented route for the selective data itself.
             time.sleep(21)
@@ -344,21 +346,36 @@ def smoke_editing(api, base, token, editor_password, pages, artifact_dir):
                 raise RuntimeError("The ordinary help article was not published in its editable namespace.")
             page.screenshot(path=str(folder / "editor-help.png"), full_page=True)
             (folder / "editing.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+
+            initial_views = projections(api)
+            for attempt in (1, 2):
+                time.sleep(21)  # Preserve the real three-edits/minute newcomer limit.
+                before = source(api, OWNER)
+                open_editor(OWNER)
+                addition = f" Synthetic prose-only change {attempt}."
+                append_prose(addition)
+                save_visual(f"Synthetic prose edit {attempt} beside selective data")
+                after = source(api, OWNER)
+                expected = before
+                # Accept only the observed first-save difference; never accumulation.
+                if attempt == 1:
+                    expected = before.replace(SCROLL + '<table class="wikitable">',
+                                              SCROLL + '<onlyinclude></onlyinclude><table class="wikitable">', 1)
+                if after.replace(addition, "").strip() not in {before.strip(), expected.strip()}:
+                    diff = "".join(difflib.unified_diff(
+                        before.splitlines(keepends=True), after.splitlines(keepends=True),
+                        fromfile="before", tofile="after",
+                    ))
+                    (folder / "editor-selective.diff").write_text(diff, encoding="utf-8")
+                    raise RuntimeError("A visual prose edit changed the wrapped selective owner source:\n" + diff)
+                if projections(api) != initial_views:
+                    raise RuntimeError("A visual prose edit changed a price or filtered reader view.")
+            report["browser_selective_prose_saves"] = 2
+            (folder / "editing.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         except Exception:
             # Screenshot only the disposable wiki; never persist browser cookies or login traces.
             if "Special:UserLogin" not in urllib.parse.unquote(page.url):
                 page.screenshot(path=str(folder / "editor-failure.png"), full_page=True)
-                state = page.evaluate("""() => ({
-                    active: window.ve?.init?.target?.active,
-                    activating: window.ve?.init?.target?.activating,
-                    clicks: window.editorClicks,
-                    dialogs: [...document.querySelectorAll('[role=dialog]')].map(e => ({
-                        classes: e.className, text: e.innerText
-                    })),
-                    nodes: [...document.querySelectorAll('.ve-ce-documentNode .ve-ce-mwTransclusionNode')]
-                        .map(e => ({classes: e.className, text: e.innerText}))
-                })""")
-                (folder / "editor-failure.json").write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
             raise
         finally:
             context.close()

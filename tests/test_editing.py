@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from build_wiki import EXPORT_NS, build_xml, existing_titles
-from smoke_editing import MERCHANT, OWNER, RECIPE_SHELL, SCROLL, WRAPPED_OWNER, editor_fixtures
+from smoke_editing import MERCHANT, OWNER, RECIPE_RECORD, RECIPE_SHELL, SCROLL, WRAPPED_OWNER, editor_fixtures
 from sync_wiki import SyncError, fetch_live, sync
 from test_sync import FakeWiki, edits, logged_in
 from wiki_data import DataError, title_key
@@ -116,14 +116,16 @@ class EditingTests(unittest.TestCase):
         self.assertIn("|price=<noinclude>{{:" + OWNER + "}}</noinclude>", fixtures[MERCHANT])
         self.assertIn('<noinclude><th scope="col">Price</th></noinclude>', fixtures[MERCHANT])
 
-    def test_synthetic_shell_keeps_facts_and_views_on_the_owner(self):
+    def test_synthetic_record_keeps_facts_on_the_owner_but_needs_schema_migration(self):
         fixtures = editor_fixtures()
-        self.assertEqual(available_views(fixtures[WRAPPED_OWNER]), available_views(fixtures[OWNER]))
+        self.assertEqual(available_views(fixtures[WRAPPED_OWNER]), set())
         self.assertNotIn("<table", fixtures[WRAPPED_OWNER])
         self.assertNotIn("<onlyinclude>", fixtures[RECIPE_SHELL])
-        self.assertIn("{{Recipe row", fixtures[WRAPPED_OWNER])
+        self.assertIn("{{Editor recipe record", fixtures[WRAPPED_OWNER])
+        self.assertIn("|input=Plant Fiber|quantity=4", fixtures[WRAPPED_OWNER])
         self.assertNotIn("{{Recipe row", fixtures[RECIPE_SHELL])
-        self.assertIn("|rows={{#switch:{{{station|}}}", fixtures[WRAPPED_OWNER])
+        self.assertNotIn("Plant Fiber", fixtures[RECIPE_RECORD])
+        self.assertIn('"label": "Input quantity"', fixtures[RECIPE_RECORD])
 
 
 if __name__ == "__main__":
