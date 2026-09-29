@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 
 from build_wiki import build_xml
+from smoke_urls import NoRedirect
 
 
 SITEMAP_NS = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
@@ -116,13 +117,15 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
     refresh = ("exec", "-T", "--user", "www-data", "mirklurk", "php",
                "/usr/local/lib/mirklurk/refresh-sitemap.php")
 
-    def get(path, origin=base):
+    def get(path, origin=base, follow_redirects=True):
         # The custom-origin scenario changes canonical config, not the local HTTP listener.
         local = base + path.removeprefix(origin) if path.startswith(origin + "/") else base + path
         try:
-            response = urllib.request.urlopen(local, timeout=30)
+            opener = urllib.request.build_opener() if follow_redirects else urllib.request.build_opener(NoRedirect())
+            response = opener.open(local, timeout=30)
         except urllib.error.HTTPError as error:
-            if error.code not in (401, 403, 404):
+            allowed = (401, 403, 404) if follow_redirects else (301, 302, 303, 307, 308, 401, 403, 404)
+            if error.code not in allowed:
                 raise
             response = error
         with response:
@@ -207,7 +210,7 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
         try:
             for path in ("/sitemap-private-probe.xml", "/public/sitemap-private-probe.xml",
                          "/sitemap/sitemap-private-probe.xml", "/refresh-sitemap.php"):
-                _, _, body = get(path)
+                _, _, body = get(path, follow_redirects=False)
                 if marker in body or b"<?php" in body:
                     raise RuntimeError(f"Private sitemap content leaked through {path}.")
         finally:
@@ -227,6 +230,19 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
 
     try:
         baseline = check_format(base)
+        run("exec", "-T", "mirklurk", "chmod", "0555", "/var/lib/mirklurk-sitemap/public")
+        try:
+            try:
+                run(*refresh)
+            except subprocess.CalledProcessError as error:
+                if b"Cannot publish sitemap shard" not in error.stdout + error.stderr:
+                    raise
+            else:
+                raise RuntimeError("Sitemap refresh unexpectedly wrote to read-only public storage.")
+            if get("/sitemap.xml")[2] != baseline:
+                raise RuntimeError("A shard publication failure replaced the previous complete index.")
+        finally:
+            run("exec", "-T", "mirklurk", "chmod", "0755", "/var/lib/mirklurk-sitemap/public")
         urls = {page["title"]: page["canonicalurl"] for page in api({
             "action": "query", "titles": TITLE + "|Items", "prop": "info", "inprop": "url",
         })["query"]["pages"].values()}
