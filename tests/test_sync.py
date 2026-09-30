@@ -587,6 +587,19 @@ class RealCorpusTests(unittest.TestCase):
         report = sync(FakeWiki(), self.pages, "repo-sync: 1", log=lambda _: None)
         self.assertEqual((report["blocked"], report["counts"]["create"]), ([], len(self.pages)))
 
+    def test_reconciled_item_pages_still_require_explicit_adoption(self):
+        live = {title: ours(text) for title, text in self.pages.items()}
+        human = {title: "Additional human edit.\n" + self.pages[title]
+                 for title in ("Items", "Wooden Recorder")}
+        live.update({title: (text, "HumanEditor", "Further changes") for title, text in human.items()})
+        wiki = logged_in(FakeWiki(live))
+        report = sync(wiki, self.pages, "repo-sync: reconciled-items", apply=True, log=lambda _: None)
+        self.assertEqual({row["title"] for row in report["skipped"]}, set(human))
+        self.assertEqual(edits(wiki), [])
+        for title, text in human.items():
+            self.assertEqual(wiki.text(title), text)
+            self.assertEqual(len(wiki.revisions[title]), 1)
+
     def test_every_consumer_ends_up_rendered_after_its_owners(self):
         order = write_order(self.pages, self.pages)
         position = {title: index for index, title in enumerate(order)}

@@ -1,6 +1,7 @@
-"""Exact factions, equipment capacity, armor slots and lossless image sizing."""
+"""Reviewed classifications, equipment capacity, image sizing and human edits."""
 
 import copy
+import hashlib
 import re
 import sys
 import unittest
@@ -13,6 +14,7 @@ from wiki_catalog import armor_groups, category_definitions, page_locations, pri
 from wiki_data import DataError, validate_data
 from wiki_details import load_publication_inputs, validate_capacity_profiles, validate_details
 from wiki_render import audit_report, image_caption, build_pages, icon, illustration_markup, pixel_geometry, pixel_image
+from wiki_views import scroll_open
 from smoke_deploy import smoke_pixel_art
 
 
@@ -36,6 +38,54 @@ class FollowupTests(unittest.TestCase):
         cls.audit = audit_report(cls.data, cls.catalog, cls.details)
         cls.locations = page_locations(cls.data, cls.catalog)
         cls.categories = category_definitions(cls.data, cls.catalog)
+
+    def test_recorder_quest_classification_retires_only_the_empty_misc_group(self):
+        self.assertEqual(set(self.categories["Quest items"]["members"]),
+                         {"item-75", "item-123", "item-126", "item-130", "item-132"})
+        self.assertNotIn("Miscellaneous items", self.categories)
+        self.assertNotIn("== Miscellaneous items ==", self.pages["Items"])
+        self.assertNotIn("[[:Category:Miscellaneous items|", self.pages["Category:Items"])
+        self.assertEqual(self.pages["Category:Miscellaneous items"], "#REDIRECT [[Items]]\n")
+        self.assertIn("{{Item|Wooden Recorder}}", self.pages["Category:Quest items"])
+        self.assertIn("[[Category:Quest items]]", self.pages["Wooden Recorder"])
+        self.assertNotIn("[[Category:Miscellaneous items]]", self.pages["Wooden Recorder"])
+        self.assertEqual(self.pages["Items"].count('<span id="entity-item-75"></span>'), 1)
+
+        # A populated group must remain visible; retirement cannot hide its members.
+        catalog = copy.deepcopy(self.catalog)
+        next(row for row in catalog["taxonomy"]["groups"]
+             if row["title"] == "Quest items")["members"].remove("item-75")
+        misc = {"title": "Miscellaneous items", "index": "Items", "members": ["item-75"]}
+        catalog["taxonomy"]["groups"].append(misc)
+        pages = build_pages(ROOT, self.data, catalog, self.details)
+        section = pages["Items"].split("== Miscellaneous items ==\n", 1)[1].split("\n== ", 1)[0]
+        self.assertIn("{{Item|Wooden Recorder}}", section)
+        self.assertIn("{{Item|Wooden Recorder}}", pages["Category:Miscellaneous items"])
+        self.assertIn("[[Category:Miscellaneous items]]", pages["Wooden Recorder"])
+        misc["members"] = []
+        with self.assertRaisesRegex(DataError, "primary groups cannot be empty"):
+            validate_catalog(catalog, self.data)
+
+    def test_reconciled_pages_preserve_reviewed_human_text_and_add_mobile_wrappers(self):
+        # Live Items r2996 (minus its empty Misc section) and Wooden Recorder r2995.
+        # Strip only the known mobile wrappers for this comparison, never for sync.
+        digests = {
+            "Items": "aaf1f220179afa287c55b4e32badc5993863442a30baf574ac21ed5a96a4f8f5",
+            "Wooden Recorder": "eadd66853c40f7f856eae6529e53fb8b628eea0cad2609b3afca8664efd51090",
+        }
+        for title, digest in digests.items():
+            with self.subTest(title=title):
+                text = self.pages[title]
+                table_count = 7 if title == "Items" else 1
+                self.assertEqual(text.count(scroll_open()), table_count)
+                text, count = re.subn(re.escape(scroll_open()) + r"(.*?)\n</div>\n",
+                                     r"\1\n", text, flags=re.DOTALL)
+                self.assertEqual(count, table_count)
+                if title == "Wooden Recorder":
+                    figure = scroll_open("Wooden Recorder inventory icon.", "pixel-art-figure")
+                    self.assertEqual(text.count(figure), 1)
+                    text = text.replace(figure, '<div class="pixel-art-figure" style="max-width:100%;overflow-x:auto;">')
+                self.assertEqual(hashlib.sha256(text.rstrip().encode()).hexdigest(), digest)
 
     def test_exact_factions_cover_all_beings_and_replace_primary_taxonomy(self):
         factions = self.catalog["aggression"]["factions"]

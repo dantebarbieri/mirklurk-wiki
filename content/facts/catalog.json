@@ -389,20 +389,13 @@
         "title": "Quest items",
         "index": "Items",
         "members": [
+          "item-75",
           "item-123",
           "item-126",
           "item-130",
           "item-132"
         ],
         "summary": "Items used during the main quest."
-      },
-      {
-        "title": "Miscellaneous items",
-        "index": "Items",
-        "members": [
-          "item-75"
-        ],
-        "summary": "Other items and supplies."
       },
       {
         "title": "Trees",

@@ -1633,6 +1633,8 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Category:" + category] = text
         if category == row["index"]:
             pages[row["index"]] += f'\n[[:Category:{category}|Browse the category hierarchy]]\n'
+    if catalog.get("taxonomy") and "Items" in categories and "Miscellaneous items" not in categories:
+        pages["Category:Miscellaneous items"] = "#REDIRECT [[Items]]\n"
     if any(any("{{" + name + "|" in text for name in ("Coins", "Health grid", "Attack grid", "Creature", "Item")) for text in pages.values()):
         coin_icons = {}
         needs_coins = any("{{Coins|" in text for text in pages.values())
