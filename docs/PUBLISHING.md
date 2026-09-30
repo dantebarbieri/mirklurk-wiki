@@ -152,6 +152,22 @@ The sync skips the page on every run and warns about it until it is resolved:
 To discard the person's edit instead, adopt the page without porting anything;
 the edit stays in the page history.
 
+### Items and Wooden Recorder reconciliation
+
+DavidLokison's Items **2996** (parent 2690) and Wooden Recorder **2995**
+(parent 2839) supply the reviewed Quest items correction. Catalog taxonomy
+preserves it without changing extracted facts. Only the empty Miscellaneous
+group retires; its category redirects to Items. Mobile wrappers are retained.
+
+After merged-main checks and normal publication, re-read both live sources.
+New revisions require review first. Preview with
+`python tools\sync_wiki.py --adopt "Items|Wooden Recorder"` (no `--apply`);
+require only those two updates, no other writes or blocked dependencies.
+Recheck immediately before separately approved adoption.
+**Adoption is not a two-page write filter.** It evaluates all pages, and queued
+runs do not pin reviewed revisions. `baserevid` protects only the later
+read/write window, not edits arriving before the run reads.
+
 ## Images
 
 Image bytes never enter Git. When a run lists missing images, import the

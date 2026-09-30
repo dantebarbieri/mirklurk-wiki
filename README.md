@@ -19,7 +19,8 @@ and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 original algorithm/skill summaries. The encyclopedia presentation generates
 386 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes and compatibility redirects.
-Another 101 ordinary MediaWiki category pages support hierarchical browsing.
+Another 100 ordinary MediaWiki category pages support hierarchical browsing;
+the retired Miscellaneous items category redirects to Items.
 Only `game.build` changed in the original dataset; all source
 fingerprints, entities, facts, and research entries remain unchanged.
 
