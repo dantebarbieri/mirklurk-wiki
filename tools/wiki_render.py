@@ -348,7 +348,7 @@ def recipe_profile_values(profile, recipes, constructions=()):
     return folded
 
 
-def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=(), constructions=()):
+def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=(), constructions=(), armor_guide=False):
     if not facts and not profiles:
         return ""
     rows = []
@@ -435,6 +435,8 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
         notes.append("Potential damage is before target overlap, armor, and modifiers; it is not guaranteed damage per hit.")
     if "extra-damage" in keys:
         notes.append("[[Health and armor|How ammunition bonus rolls modify an attack pattern]].")
+    if "item-armor" in keys and armor_guide:
+        notes.append("[[Armor points|How equipment armor becomes armor layers in combat]].")
     if "inventory-slots-added" in keys:
         notes.append(CAPACITY_NOTE + " [[Items#Capacity-granting_equipment|Compare capacity-granting equipment]].")
     return "\n== Stats ==\n" + markers + "\n" + table(["Detail", "Value", "Applies to / notes"], rows) + " ".join(notes) + "\n"
@@ -750,6 +752,26 @@ def capacity_table(members, details, catalog, entities, locations, markers=None)
         ]
         for identity in sorted(set(members) & profiles.keys(), key=lambda identity: entities[identity]["name"])
     ])
+
+
+def armor_table(details, catalog, entities, locations):
+    profiles = {row["entity"]: row["values"] for row in details["profiles"] if "item-armor" in row["values"]}
+    slots = {identity: row["title"] for row in catalog.get("taxonomy", {}).get("tags", [])
+             if "Equipment by slot" in row.get("parents", []) for identity in row["members"]}
+    equipped = sorted((identity for identity in profiles if identity in slots and identity in locations),
+                      key=lambda identity: (-Decimal(str(profiles[identity]["item-armor"])), entities[identity]["name"]))
+    if not equipped:
+        return ""
+    return "\n== Armor by item ==\nArmor added by each undamaged item. Damaged items add proportionally less.\n" + table(
+        ["Equipment", "Equipped slot", "Armor", "Max durability"], [
+            [
+                item_reference(identity, locations),
+                f'[[:Category:{slots[identity]}|{slots[identity]}]]',
+                profile_value("item-armor", profiles[identity]["item-armor"], entities, locations),
+                profile_value("durability-max", profiles[identity].get("durability-max"), entities, locations),
+            ]
+            for identity in equipped
+        ])
 
 
 def ingredient_table(method, ingredients, entities, locations):
@@ -1231,6 +1253,8 @@ def build_pages(root, data, catalog=None, details=None):
             if heading:
                 pages[guide["title"]] += "\n=== " + literal(heading) + " ===\n"
             pages[guide["title"]] += "\n" + linked_prose(paragraph, links) + "\n"
+        if guide["title"] == "Armor points":
+            pages[guide["title"]] += armor_table(details, catalog, entities, locations)
         if guide.get("related_pages"):
             pages[guide["title"]] += "\nRelated guides: " + " | ".join(
                 f"[[{target}]]" for target in guide["related_pages"]) + "\n"
@@ -1375,6 +1399,7 @@ def build_pages(root, data, catalog=None, details=None):
         pages[title] += stat_table(
             matching_facts, matching_profiles, properties, entities, locations,
             price_item, prices.get(price_item), coin, recipes, images, grids, catalog.get("construction_recipes", []),
+            any(guide["title"] == "Armor points" for guide in catalog.get("guides", [])),
         )
         for grid in grids:
             pages[title] += cell_grid(grid, entities[grid["entity"]]["category"], images)
