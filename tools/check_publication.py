@@ -22,7 +22,7 @@ ALLOWED_FILES = {
     "docs/PROVENANCE.md": 44 * 1024,
     "docs/IMPORTING.md": 32 * 1024,
     "docs/PUBLICATION.md": 32 * 1024,
-    "docs/DEPLOYMENT.md": 32 * 1024,
+    "docs/DEPLOYMENT.md": 36 * 1024,
     "docs/IMAGES.md": 32 * 1024,
     "docs/PUBLISHING.md": 16 * 1024,
     "docs/TEMPLATES.md": 16 * 1024,

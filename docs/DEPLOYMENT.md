@@ -40,6 +40,7 @@ Do not bind-mount another settings file over it. Rebuild/recreate for changes.
 The template loads bundled ParserFunctions for named canonical views,
 Scribunto with the bundled `luastandalone` engine for [display templates](TEMPLATES.md),
 VisualEditor, TemplateData, PageImages for per-page search and sharing icons,
+Echo, Linter and DiscussionTools for talk page replies,
 and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
 no extension download is needed. Scribunto registers Module namespace 828
 and the `Scribunto` Lua content model. Its standard CPU/memory limits remain
@@ -80,6 +81,18 @@ browser code only calls `/api.php` (Parsoid runs in-process), so no extra proxy
 routes are needed. Then, as an ordinary user, visually edit and save a practice
 page, and confirm a shared-data owner such as an item with a price offers only
 **Edit source**.
+
+## Talk page replies
+
+Bundled DiscussionTools adds **Reply** links and **Add topic** to talk pages,
+indenting and signing for editors. It requires Linter; Echo adds topic
+subscriptions and on-wiki reply/mention notifications (no email). The reply tool
+saves through `visualeditoredit`, so the shared-data refusal above still applies.
+
+**All three add database tables.** `install.php` runs `update --quick` with the
+baked settings after the core installer. Existing wikis need the upgrade
+procedure below (`update --quick` with `MW_READ_ONLY` cleared) before the new
+app starts; purge old talk pages to show their reply links.
 
 ## Responsive Vector 2022
 
@@ -503,6 +516,8 @@ randomly named Compose project with temporary generated credentials, then:
 - as a signed-in editor, checks that an ordinary page offers VisualEditor and
   loads through Parsoid, while a shared-data owner offers only source editing,
   shows its notice and refuses a VisualEditor API save without a new revision;
+- saves a DiscussionTools reply on a talk page and reads its permalink and
+  notification tables;
 - exercises real Apache HTTP old/new title and revision identity, GET/HEAD,
   root/main-page routing, punctuation, Unicode, namespaces, encoded subpages,
   missing-page 404s, query/action semantics, REST path info and root assets;

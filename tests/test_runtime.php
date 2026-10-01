@@ -97,6 +97,9 @@ try {
         && in_array('MirklurkEditing::onApiCheckCanExecute', $wgHooks['ApiCheckCanExecute'], true)
         && in_array('MirklurkEditing::onEditPageShowEditFormInitial', $wgHooks['EditPage::showEditForm:initial'], true),
         'Shared-data pages must stay source-only.');
+    check(in_array('Echo', $loaded, true) && in_array('Linter', $loaded, true)
+        && in_array('DiscussionTools', $loaded, true), 'Talk page reply tools and their dependencies missing.');
+    check($wgLinterParseOnDerivedDataUpdate === false, 'Links updates must not reparse every page for lint.');
     check($wgDefaultSkin === 'vector-2022' && $wgVectorResponsive === true,
         'Vector 2022 must use a device-width viewport, not its fixed desktop fallback.');
 

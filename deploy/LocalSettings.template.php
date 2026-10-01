@@ -155,6 +155,14 @@ $wgVisualEditorAvailableNamespaces['Template'] = false;
 $wgHooks['VisualEditorBeforeEditor'][] = MirklurkEditing::class . '::onVisualEditorBeforeEditor';
 $wgHooks['ApiCheckCanExecute'][] = MirklurkEditing::class . '::onApiCheckCanExecute';
 $wgHooks['EditPage::showEditForm:initial'][] = MirklurkEditing::class . '::onEditPageShowEditFormInitial';
+// Reply and Add topic tools on talk pages; Echo adds subscriptions and on-wiki reply/mention
+// notifications (email stays off). All three are bundled and add database tables.
+wfLoadExtension('Echo');
+wfLoadExtension('Linter');
+// DiscussionTools only needs Linter loaded; a second Parsoid parse on every links update would
+// double the cost of the many refreshes that shared-data edits trigger.
+$wgLinterParseOnDerivedDataUpdate = false;
+wfLoadExtension('DiscussionTools');
 wfLoadExtension('ConfirmEdit');
 wfLoadExtension('ConfirmEdit/QuestyCaptcha');
 $wgCaptchaClass = 'QuestyCaptcha';
