@@ -56,8 +56,21 @@ def validate_reader_pages(pages):
         validate_reader_text(title, text)
 
 
+ITEM_GROUP_NOUNS = {
+    "Clothes": "a piece of clothing", "Armor": "a piece of armor", "Weapons": "a weapon", "Tools": "a tool",
+    "Consumables": "a consumable", "Crafting materials": "a crafting material",
+    "Carrying equipment": "carrying equipment", "Camping and construction": "camping and construction gear",
+    "Ammunition": "ammunition", "Seeds": "a seed", "Coins and valuables": "a coin or valuable",
+    "Quest items": "a quest item",
+}
+
+
 def literal(value):
     return "<nowiki>" + html.escape(str(value), quote=False) + "</nowiki>"
+
+
+def prose_list(parts, joiner):
+    return parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + f" {joiner} " + parts[-1]
 
 
 def linked_prose(text, links):
@@ -1463,6 +1476,23 @@ def build_pages(root, data, catalog=None, details=None):
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
             elif not own_recipes and not offers and not loot and not documented_sources and not eligible_sources and identity not in acquisition_notes:
                 pages[title] += "Acquisition: Unknown.\n"
+            constructed = any(recipe["owner_item"] == identity for recipe in catalog.get("construction_recipes", []))
+            ways = [label for label, present in (
+                ("crafted", own_recipes or constructed), ("bought", identity in price_items or offers),
+                ("collected", loot_owners), ("found as random treasure", eligible_sources)) if present]
+            uses = sorted({owners[entry["id"]] for entry in related if entry["kind"] == "recipe"}
+                          | {locations[recipe["owner_item"]] for recipe in catalog.get("construction_recipes", [])
+                             if any(component["item"] == identity for component in recipe["inputs"])})
+            # An appositive stays grammatical for plural names such as Cranberries.
+            lead = ": " + ITEM_GROUP_NOUNS.get(item_categories.get(identity), "an item")
+            if ways:
+                lead += " that can be " + prose_list(ways, "or") + (" and is" if uses else "")
+            if uses:
+                lead += " used to make " + (prose_list([literal(use) for use in uses], "and") if len(uses) <= 3
+                                            else f"{len(uses)} different things")
+            lead += "."
+            label = anchor("entity", identity) + f"'''{literal(entities[identity]['name'])}'''"
+            pages[title] = pages[title].replace(label + "\n", label + lead + "\n", 1)
         for recipe in catalog.get("construction_recipes", []):
             if any(component["item"] == identity for component in recipe["inputs"]):
                 recipes.append(f'* [[{locations[recipe["owner_item"]]}#Recipes|{literal(locations[recipe["owner_item"]])}]]')

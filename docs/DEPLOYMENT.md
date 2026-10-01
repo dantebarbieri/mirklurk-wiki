@@ -311,9 +311,14 @@ raw wiki markup and research/editorial caveats are excluded. A description uses
 at most 240 Unicode characters, preferring a complete paragraph or whole
 sentences rather than chopping words or bytes. Paragraphs whose only text is
 links or bold labels (the `Main Page | Items` breadcrumb, the entity's bold
-name, `Related acquisition guide`) are navigation, not descriptions. If no
-suitable short lead exists, as on most generated entity pages,
-the description is omitted rather than invented. Improve the article lead
+name, `Related acquisition guide`) are navigation, not descriptions. Generated
+item pages continue the bold name with a one-line lead built from reviewed
+data, for example `Calmia Root: a crafting material that can be collected or
+found as random treasure and is used to make Simple Burn Remedy.` It names the
+primary Items group, the acquisition routes present on the page (crafted,
+bought, collected, random treasure) and up to three things it is used to make
+(otherwise a count), so it is the item's description. If no suitable short lead
+exists, the description is omitted rather than invented. Improve other leads
 through the ordinary editorial workflow; this runtime change edits no articles.
 
 `og:image` uses the article's own page image, chosen by the bundled PageImages
