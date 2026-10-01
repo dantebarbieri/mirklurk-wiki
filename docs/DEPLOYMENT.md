@@ -72,8 +72,9 @@ and refuses `visualeditoredit` API saves there. The check reads the page's
 latest revision, so it follows human edits: removing the markers re-enables
 visual editing. Pages that only *display* shared data remain visually editable.
 
-**Separate operator rollout:** back up, rebuild the reviewed image, run
-`php maintenance/run.php update --quick`, and recreate the app. VisualEditor's
+**Separate operator rollout:** back up, rebuild the reviewed image and recreate
+the app. Neither extension adds database tables, so no schema update is needed.
+VisualEditor's
 browser code only calls `/api.php` (Parsoid runs in-process), so no extra proxy
 routes are needed. Then, as an ordinary user, visually edit and save a practice
 page, and confirm a shared-data owner such as an item with a price offers only
