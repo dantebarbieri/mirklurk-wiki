@@ -56,9 +56,10 @@ image-sizing policy as other artwork. See [author syntax and limits](docs/TEMPLA
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication
 fails closed before page edits if the target wiki lacks working Scribunto.
 
-The metadata-only artwork register covers 329 reviewed selections: 243 items,
+The metadata-only artwork register covers 337 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
-Three supplementary NPC-location exteriors preserve the existing portraits.
+Three supplementary NPC-location exteriors and eight NPC overworld sprites
+preserve the existing portraits.
 Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
 Four item images are deliberately

@@ -76,7 +76,9 @@ article-routing virtual host. Neither exception permits additional files.
 No private input, XML, measurement, artwork,
 or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
 20 KiB for metadata, rights, portrait preservation, seller projections and
-synthetic-image regressions. No media exclusion is widened.
+synthetic-image regressions; `tests/test_sprites.py` is allowlisted at 8 KiB for
+NPC overworld-sprite metadata and presentation regressions. No media exclusion
+is widened.
 
 Runtime files belong outside the checkout, even when ignored. Actual
 `LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original

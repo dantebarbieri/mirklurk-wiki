@@ -30,10 +30,12 @@ Every record contains `id`, `file_title`, `caption`, `creator`,
 `evidence`, plus exactly one target: `entity`, `station`, or `health_armor`.
 Only station targets may have `variant`. A being-targeted record may additionally
 have `role: "location"`: one supplementary exterior per NPC with a reviewed
-location section. Other roles, non-being targets, duplicate location roles and
-missing location owners are rejected. Records without a role retain their primary
-image behavior; portraits, icons and existing contextual guide lookups never
-select a location image, regardless of record ordering.
+location section, or `role: "sprite"`: one supplementary overworld sprite per
+being that also has an approved primary portrait. Other roles, non-being targets,
+duplicate roles per being and missing location owners are rejected. Records
+without a role retain their primary image behavior; portraits, icons and existing
+contextual guide lookups never select a location or sprite image, regardless of
+record ordering.
 Evidence uses the existing source/section/key format; the SHA-256
 identifies the exact separately reviewed **image** bytes, not the original game
 container. Captions and rights notes are original writing.
@@ -104,7 +106,7 @@ as an ICO file. Vector 2022 shows the original logo in its native 50px header
 slot alongside the wiki title, not as a replacement wordmark.
 
 These are site-interface assets, not entity illustrations, and do not change
-the 329-entry artwork register or any gameplay page. No branding bytes,
+the 337-entry artwork register or any gameplay page. No branding bytes,
 thumbnails or encoded image fixtures belong in Git, the application image,
 CI artifacts or pull requests. Runtime paths and rollout requirements are
 documented in [Deployment](DEPLOYMENT.md#site-logo-and-favicon).
@@ -164,6 +166,38 @@ published; the sync lists every referenced File that is still missing, and an
 existing File title alone is not display evidence. Do not overwrite existing
 Files or upload smoke components, previews or unrelated artwork.
 
+## Reviewed NPC overworld sprites
+
+The 2026-10-01 selection adds exactly eight native overworld sprites for NPCs
+that previously showed only a dialogue portrait. Soldier and Unwanted Guard
+already use their overworld sprite as the primary image and are unchanged.
+Dead Unwanted's `beingDB` entry uses `spr_blank`, so it has no overworld sprite.
+All 329 previous records remain unchanged; the register is now 337, and after
+the separate import the retained uploaded game-image total is 341 before site
+branding (345 disposable synthetic fixtures).
+
+Each sprite is the `beingDB[N].sprite` association from
+`gml_Object_databank_Alarm_3`, frame 0, exported on its full padded canvas
+(matching the existing Soldier and Unwanted Guard convention) and privately
+enlarged with integer nearest-neighbor scaling. The figure follows the portrait
+on the entity page, adds `notpageimage` and never becomes the page image or icon.
+
+| NPC | New File title | Source sprite | Native | Scale | PNG bytes |
+| --- | --- | --- | --- | --- | --- |
+| Captain Eir | `File:Being-6-overworld.png` | `spr_captain_eir` | 48 x 40 | 5x | 1869 |
+| Magus Clay | `File:Being-8-overworld.png` | `spr_clay` | 40 x 40 | 6x | 2481 |
+| Ranger Bhato | `File:Being-12-overworld.png` | `spr_ranger_t` | 48 x 40 | 5x | 1641 |
+| Viend | `File:Being-19-overworld.png` | `spr_viend` | 40 x 40 | 6x | 2132 |
+| Commander Tain | `File:Being-20-overworld.png` | `spr_commander_tain` | 40 x 40 | 6x | 1583 |
+| Gurb-Gurb | `File:Being-26-overworld.png` | `spr_gurb` | 32 x 32 | 7x | 2337 |
+| Ihar | `File:Being-33-overworld.png` | `spr_ihar` | 40 x 40 | 6x | 2273 |
+| Wilda | `File:Being-34-overworld.png` | `spr_wilda` | 48 x 40 | 5x | 1892 |
+
+Exact hashes, Edym Pixels attribution, original captions and evidence are in
+the eight `role: "sprite"` records. All eight were decoded and verified to
+reduce exactly to their native frame. Import the eight exact titles with their
+attribution sidecars before publishing pages that embed them; do not overwrite
+the existing portraits.
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 entity or station record renders a neutral missing-picture notice, **not** an image or File link.
 Its reserved title and rights/evidence details remain on Source provenance.
@@ -189,7 +223,7 @@ Every approved record carries `pixel_art: {width, height, source_scale}`:
 the exact uploaded raster dimensions and its integer nearest-neighbor
 enlargement from native pixels. Dimensions must be positive, bounded integers
 divisible by the scale. This is metadata, not a new asset or permission grant.
-All 329 current PNGs were hash-matched and decoded during review: reducing
+All 329 PNGs current before the overworld sprites were hash-matched and decoded during review: reducing
 each by its recorded scale and re-enlarging with nearest-neighbor reproduces
 every RGBA pixel exactly. Existing export receipts supply most dimensions.
 The 12 active 128px nature tiles have a unique 16px/8x inverse under their
