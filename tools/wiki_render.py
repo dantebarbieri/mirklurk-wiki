@@ -56,8 +56,21 @@ def validate_reader_pages(pages):
         validate_reader_text(title, text)
 
 
+ITEM_GROUP_NOUNS = {
+    "Clothes": "a piece of clothing", "Armor": "a piece of armor", "Weapons": "a weapon", "Tools": "a tool",
+    "Consumables": "a consumable", "Crafting materials": "a crafting material",
+    "Carrying equipment": "carrying equipment", "Camping and construction": "camping and construction gear",
+    "Ammunition": "ammunition", "Seeds": "a seed", "Coins and valuables": "a coin or valuable",
+    "Quest items": "a quest item",
+}
+
+
 def literal(value):
     return "<nowiki>" + html.escape(str(value), quote=False) + "</nowiki>"
+
+
+def prose_list(parts, joiner):
+    return parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + f" {joiner} " + parts[-1]
 
 
 def linked_prose(text, links):
@@ -137,16 +150,18 @@ def pixel_geometry(image, width=224, height=288):
     return native_width * scale, native_height * scale, scale
 
 
-def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pixel-art"):
+def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pixel-art", page_image=False):
     pixels = image["pixel_art"]
     _, _, scale = pixel_geometry(image, width, height)
     label = literal(image_caption(image) if alt is None else alt)
     target = "" if link is None else "|link=" + link
+    # Inline icons, coins and shields must never become another page's PageImages thumbnail.
+    exclusion = "" if page_image else "|class=notpageimage"
     # Request the original, never an interpolated server thumbnail (including srcset variants).
     return (
         f'<span class="{css_class}" style="display:inline-block;line-height:0;image-rendering:pixelated;'
         f'zoom:calc({scale} / {pixels["source_scale"]});">'
-        f'[[{image["file_title"]}|{pixels["width"]}px{target}|alt={label}|{label}]]</span>'
+        f'[[{image["file_title"]}|{pixels["width"]}px{target}|alt={label}{exclusion}|{label}]]</span>'
     )
 
 
@@ -166,7 +181,7 @@ def illustration_markup(image, width=224, caption=None, marker=True):
     if image["rights_status"] == "approved":
         label = image_caption(image) if caption is None else caption
         return (text + "\n" + scroll_open(label, "pixel-art-figure")
-                + pixel_image(image, width=width, alt=label) + "</div>\n"
+                + pixel_image(image, width=width, alt=label, page_image=True) + "</div>\n"
                 + '<div class="pixel-art-caption">' + literal(label) + "</div>\n")
     return text + "\n"
 
@@ -1461,6 +1476,23 @@ def build_pages(root, data, catalog=None, details=None):
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
             elif not own_recipes and not offers and not loot and not documented_sources and not eligible_sources and identity not in acquisition_notes:
                 pages[title] += "Acquisition: Unknown.\n"
+            constructed = any(recipe["owner_item"] == identity for recipe in catalog.get("construction_recipes", []))
+            ways = [label for label, present in (
+                ("crafted", own_recipes or constructed), ("bought", identity in price_items or offers),
+                ("collected", loot_owners), ("found as random treasure", eligible_sources)) if present]
+            uses = sorted({owners[entry["id"]] for entry in related if entry["kind"] == "recipe"}
+                          | {locations[recipe["owner_item"]] for recipe in catalog.get("construction_recipes", [])
+                             if any(component["item"] == identity for component in recipe["inputs"])})
+            # An appositive stays grammatical for plural names such as Cranberries.
+            lead = ": " + ITEM_GROUP_NOUNS.get(item_categories.get(identity), "an item")
+            if ways:
+                lead += " that can be " + prose_list(ways, "or") + (" and is" if uses else "")
+            if uses:
+                lead += " used to make " + (prose_list([literal(use) for use in uses], "and") if len(uses) <= 3
+                                            else f"{len(uses)} different things")
+            lead += "."
+            label = anchor("entity", identity) + f"'''{literal(entities[identity]['name'])}'''"
+            pages[title] = pages[title].replace(label + "\n", label + lead + "\n", 1)
         for recipe in catalog.get("construction_recipes", []):
             if any(component["item"] == identity for component in recipe["inputs"]):
                 recipes.append(f'* [[{locations[recipe["owner_item"]]}#Recipes|{literal(locations[recipe["owner_item"]])}]]')

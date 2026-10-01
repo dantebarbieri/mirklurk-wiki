@@ -1,12 +1,67 @@
 """Browser geometry on the disposable Vector wiki; screenshots contain only synthetic art."""
 
 import json
+import math
 from pathlib import Path
 import urllib.parse
 
 from wiki_render import image_for, pixel_image
 from smoke_responsive import smoke_responsive
 from smoke_navigation import smoke_navigation
+
+
+def smoke_search_thumbnail(page, base, data):
+    """A tall item's search icon is its original lead figure, at a whole multiple of native pixels."""
+    image = image_for("item-27", data["illustrations"])
+    pixels = image["pixel_art"]
+    result = page.evaluate("""async () => {
+        const response = await fetch(mw.config.get('wgScriptPath') + '/rest.php/v1/search/title?q=Iron%20Hand%20Axe&limit=1');
+        const thumbnail = ((await response.json()).pages[0] || {}).thumbnail;
+        const require = await mw.loader.using('mirklurk.pixelThumbnails');
+        const scaling = require('mirklurk.pixelThumbnails');
+        const native = thumbnail && await scaling.nativeSize(thumbnail.url);
+        return {thumbnail, native, fit: native && scaling.fit(native.width, native.height, 80, 80)};
+    }""")
+    thumbnail = result["thumbnail"] or {}
+    filename = image["file_title"].removeprefix("File:")
+    if (not urllib.parse.unquote(thumbnail.get("url", "")).endswith("/" + filename) or "/thumb/" in thumbnail["url"]
+            or (thumbnail.get("width"), thumbnail.get("height")) != (pixels["width"], pixels["height"])):
+        raise RuntimeError(f"Search did not use the item's original lead figure: {thumbnail!r}")
+    native = {"width": pixels["width"] // math.gcd(pixels["width"], pixels["height"]),
+              "height": pixels["height"] // math.gcd(pixels["width"], pixels["height"])}
+    # Synthetic fixtures are one solid colour: the whole image is a single native block.
+    scale = min(80 // native["width"], 80 // native["height"])
+    expected = {key: value * scale for key, value in native.items()}
+    if result["native"] != native or result["fit"] != expected:
+        raise RuntimeError(f"Search thumbnail scaling lost the native pixel grid: {result!r}")
+
+    # Both rendered search boxes have an 80px inner area and receive the integer size.
+    search = page.context.new_page()
+    try:
+        search.goto(base + "/index.php?" + urllib.parse.urlencode(
+            {"title": "Special:Search", "search": "Iron Hand Axe", "fulltext": "1", "useskin": "vector-2022"}),
+            wait_until="networkidle")
+        rendered = search.wait_for_function("""() => {
+            const image = document.querySelector('.searchResultImage-thumbnail img[data-mirklurk-pixel]');
+            return image && image.style.width && {box: image.clientWidth, width: image.style.width,
+                                                   height: image.style.height};
+        }""", timeout=15000).json_value()
+        if rendered != {"box": expected["width"], "width": f'{expected["width"]}px',
+                        "height": f'{expected["height"]}px'}:
+            raise RuntimeError(f"Special:Search icon is not integer-scaled: {rendered!r}")
+        search.locator("#searchInput").first.click()
+        search.keyboard.type("Iron Hand Axe")
+        typeahead = search.wait_for_function("""() => {
+            const item = [...document.querySelectorAll('.cdx-menu-item')]
+                .find(node => node.textContent.includes('Iron Hand Axe'));
+            const image = item && item.querySelector('.cdx-thumbnail__image[data-mirklurk-pixel]');
+            return image && image.style.backgroundSize && {box: [image.clientWidth, image.clientHeight],
+                                                           size: image.style.backgroundSize};
+        }""", timeout=15000).json_value()
+        if typeahead != {"box": [80, 80], "size": f'{expected["width"]}px {expected["height"]}px'}:
+            raise RuntimeError(f"Typeahead icon is not integer-scaled in an 80px box: {typeahead!r}")
+    finally:
+        search.close()
 
 
 def smoke_browser(api, base, token, data, artifact_dir):
@@ -49,6 +104,8 @@ def smoke_browser(api, base, token, data, artifact_dir):
                           wait_until="networkidle")
                 if page.evaluate("mw.config.get('skin')") != "vector-2022":
                     raise RuntimeError("Browser smoke did not load the deployed Vector 2022 skin.")
+                if name == "desktop":
+                    smoke_search_thumbnail(page, base, data)
                 page.evaluate("""async () => {
                     await document.fonts.ready;
                     await Promise.all([...document.images].map(i => i.decode()));

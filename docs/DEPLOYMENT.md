@@ -39,7 +39,8 @@ The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
 The template loads bundled ParserFunctions for named canonical views,
 Scribunto with the bundled `luastandalone` engine for [display templates](TEMPLATES.md),
-VisualEditor, TemplateData, and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
+VisualEditor, TemplateData, PageImages for per-page search and sharing icons,
+and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
 no extension download is needed. Scribunto registers Module namespace 828
 and the `Scribunto` Lua content model. Its standard CPU/memory limits remain
 enabled, alongside the display module's explicit input/geometry bounds.
@@ -335,15 +336,60 @@ Only direct visible lead paragraphs before the first heading are candidates;
 tables, navigation, images/captions, hidden content, reference/unverified markers,
 raw wiki markup and research/editorial caveats are excluded. A description uses
 at most 240 Unicode characters, preferring a complete paragraph or whole
-sentences rather than chopping words or bytes. If no suitable short lead exists,
-the description is omitted rather than invented. Improve the article lead
-through the ordinary editorial workflow; this runtime change edits no articles.
+sentences rather than chopping words or bytes. Paragraphs whose only text is
+links or bold labels (the `Main Page | Items` breadcrumb, the entity's bold
+name, `Related acquisition guide`) are navigation, not descriptions. Generated
+item pages continue the bold name with a one-line lead from reviewed data, e.g.
+`Calmia Root: a crafting material that can be collected or found as random
+treasure and is used to make Simple Burn Remedy.`: the Items group, the
+acquisition routes on the page and up to three things it makes (else a count).
+If no suitable short lead exists, the description is omitted rather than
+invented. Improve other leads through the ordinary editorial workflow.
 
-`og:image` uses only the explicitly configured `MW_LOGO_ICON_URL`, expanded
-against the canonical origin. That setting already requires the operator's
-separately approved branding asset. With no configured icon there is no image
-tag; no game image is bundled, guessed, scraped or newly cleared for sharing.
+`og:image` uses the article's own page image, chosen by the bundled PageImages
+extension, expanded against the canonical origin. Only an entity's reviewed lead
+figure is a candidate: generated inline icons, coins, shields and portraits carry
+`class=notpageimage`, so index and guide pages without their own figure fall back.
+That figure is already publicly displayed on the article under the
+[image permission policy](IMAGES.md); sharing previews reuse the same original
+file, never a new or guessed asset. Link-preview services smooth small images
+when enlarging them, so the shared copy is that file enlarged by the largest
+whole-number factor keeping its longer side within 1024px (a 128px icon becomes
+1024px), using ImageMagick `-sample` nearest-neighbour replication: every pixel
+becomes an exact square block, with no new colours. Copies are written once to
+`images/mirklurk-preview/<sha1>-<n>x.png` (keyed by content, so a changed file
+gets a new URL) and declared with
+`og:image:width`/`height`. Files already 1024px or larger, or any failure to
+write the copy, share the original file. Deleting that directory is safe. When a page has no page image, `og:image`
+falls back to the explicitly configured `MW_LOGO_ICON_URL`, the operator's
+separately approved branding asset. With neither there is no image tag.
+PageImages' own Open Graph output is disabled so each view has one image tag.
 No analytics, external metadata service or search-engine account is involved.
+
+The same page image is the per-page icon in the Vector search typeahead and on
+`Special:Search` (`$wgThumbnailNamespaces` includes articles). The pixel-art
+figures are 80-160px wide and up to 1:5 tall, outside PageImages' default size
+and aspect-ratio preferences, so the template makes both neutral: any lead
+figure, however small or narrow, is chosen. A runtime `SearchResultProvideThumbnail`
+handler replaces PageImages' downscaled ImageMagick thumbnails with the
+original file. The `mirklurk.pixelThumbnails` module then recovers each file's
+native pixel grid (reviewed files are stored at an integer source scale) and
+sizes the icon to the largest whole multiple that fits the search box, as
+article figures do. Both search boxes are enlarged to an 80px inner area (from
+Vector's ~38px typeahead and ~74px `Special:Search` boxes) so every item figure,
+up to 16x80 native, shows at 1x or more; 16px icons show at 5x. A few large
+trees and creatures, cross-origin files and no-JavaScript views fall back to an
+uncropped `image-rendering: pixelated` fit.
+
+PageImages stores its choice in page properties during links updates. After
+deploying this runtime to an existing wiki, populate them once (then drain jobs):
+
+```sh
+docker compose exec --user www-data mirklurk php /var/www/html/maintenance/run.php \
+  /var/www/html/extensions/PageImages/maintenance/initImageData.php
+```
+
+Ordinary edits and publications keep the properties current afterwards.
 
 ### Native sitemap generation and serving
 

@@ -3,6 +3,7 @@ FROM mediawiki:1.43.9@sha256:39a6503b8739f6aa58f8a458e9537258dd537f7cec7dd93c665
 COPY deploy/LocalSettings.template.php /var/www/html/LocalSettings.php
 COPY deploy/mirklurk-runtime.php /var/www/html/mirklurk-runtime.php
 COPY deploy/mirklurk-metadata.php /var/www/html/mirklurk-metadata.php
+COPY deploy/mirklurk-pixel-thumbnails.js /var/www/html/mirklurk-pixel-thumbnails.js
 COPY deploy/mirklurk-editing.php /var/www/html/mirklurk-editing.php
 COPY deploy/install.php deploy/healthcheck.php deploy/robots.php deploy/refresh-sitemap.php /usr/local/lib/mirklurk/
 COPY deploy/metadata.conf /etc/apache2/conf-available/mirklurk-metadata.conf
@@ -12,6 +13,7 @@ RUN a2enmod rewrite \
     && apache2ctl -t \
     && test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
     && test -f /var/www/html/extensions/ParserFunctions/extension.json \
+    && test -f /var/www/html/extensions/PageImages/extension.json \
     && test -f /var/www/html/extensions/Scribunto/extension.json \
     && test -f /var/www/html/extensions/VisualEditor/extension.json \
     && test -f /var/www/html/extensions/TemplateData/extension.json \

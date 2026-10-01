@@ -204,7 +204,9 @@ inline wrapper applies `image-rendering:pixelated` and CSS
 `zoom:calc(display_scale / source_scale)`. The resulting width and height are
 exact integer multiples of the native grid, even when an upload had previously
 been enlarged 3x, 5x or 6x. Applying pixelated CSS to a blurred thumbnail would
-not restore its lost detail and is deliberately avoided.
+not restore its lost detail and is deliberately avoided. Link previews likewise
+share a nearest-neighbour whole-number enlargement of the lead figure, never a
+smoothed thumbnail (see [DEPLOYMENT.md](DEPLOYMENT.md#canonical-urls-descriptions-and-social-sharing)).
 
 Main illustrations choose the largest whole native-pixel scale within a
 224 x 288 box, with a minimum of 1x. Captions stay at normal text size.

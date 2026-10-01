@@ -29,6 +29,24 @@ descriptionIs('<p>' . str_repeat("\u{e9}", 238) . '.</p>', str_repeat("\u{e9}", 
 descriptionIs('<p>' . str_repeat("\u{e9}", 240) . '.</p>', '');
 descriptionIs('<p>' . str_repeat("\u{e9}", 239) . '. Next sentence.</p>', str_repeat("\u{e9}", 239) . '.');
 descriptionIs('<p>Pending rights, missing artwork.</p>', '');
+// Entity pages lead with a breadcrumb, the bold name label and guide links before any prose.
+descriptionIs('<p><a href="/w/Main_Page">Main Page</a> | <a href="/w/Items">Items</a></p>'
+    . '<p><span id="entity-item-142"></span><b>Calmia Root</b> <span id="x"></span></p>'
+    . '<p><a href="/w/Plant_harvesting">Related acquisition guide</a></p>', '');
+descriptionIs('<p><a href="/w/Main_Page">Main Page</a> | <a href="/w/Items">Items</a></p>'
+    . '<p><b>Sceetler</b></p><p>A <a href="/w/Swamp">swamp</a> insect that flees when hit.</p>',
+    'A swamp insect that flees when hit.');
+descriptionIs('<p><b>Calmia Root</b> is a medicinal root.</p>', 'Calmia Root is a medicinal root.');
+descriptionIs('<p><a href="/w/Main_Page">Main Page</a> | <a href="/w/Items">Items</a></p>'
+    . '<p><span id="entity-item-142"></span><b>Calmia Root</b>: a crafting material that can be collected.'
+    . "\n" . '<span id="illustration-item-142-illustration"></span></p>',
+    'Calmia Root: a crafting material that can be collected.');
+foreach ([[[128, 128], 8], [[80, 240], 4], [[1024, 512], 1], [[2000, 10], 1], [[0, 5], 1], [[171, 228], 4]]
+         as [[$width, $height], $scale]) {
+    if (MirklurkMetadata::previewScale($width, $height) !== $scale) {
+        throw new RuntimeException("Preview scale for {$width}x{$height} is not {$scale}.");
+    }
+}
 if (MirklurkMetadata::description('<p>Outside article.</p>') !== '') {
     throw new RuntimeException('Nonarticle HTML must not become a description.');
 }

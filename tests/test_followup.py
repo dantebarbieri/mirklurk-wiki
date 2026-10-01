@@ -66,6 +66,21 @@ class FollowupTests(unittest.TestCase):
         with self.assertRaisesRegex(DataError, "primary groups cannot be empty"):
             validate_catalog(catalog, self.data)
 
+    def test_item_pages_open_with_a_generated_one_line_lead(self):
+        leads = {
+            "Calmia Root": "a crafting material that can be collected or found as random treasure"
+                           " and is used to make <nowiki>Simple Burn Remedy</nowiki>.",
+            "Cranberries": "a consumable that can be collected and is used to make <nowiki>Cranberry Seeds</nowiki>,"
+                           " <nowiki>Pleasant Vegetable Soup</nowiki> and <nowiki>Tasty Crab Soup</nowiki>.",
+            "Iron Hand Axe": "a weapon that can be bought or found as random treasure.",
+        }
+        for title, lead in leads.items():
+            self.assertIn(f"'''<nowiki>{title}</nowiki>''': {lead}\n", self.pages[title])
+        items = [row["title"] for row in self.catalog["pages"] if row["entity"].startswith("item-")]
+        self.assertTrue(items)
+        for title in items:
+            self.assertRegex(self.pages[title], r"\n<span id=\"entity-item-\d+\"></span>'''[^\n]+''': [^\n]+\.\n")
+
     def test_reconciled_pages_preserve_reviewed_human_text_and_add_mobile_wrappers(self):
         # Live Items r2996 (minus its empty Misc section) and Wooden Recorder r2995.
         # Strip only the known mobile wrappers for this comparison, never for sync.
@@ -85,6 +100,9 @@ class FollowupTests(unittest.TestCase):
                     figure = scroll_open("Wooden Recorder inventory icon.", "pixel-art-figure")
                     self.assertEqual(text.count(figure), 1)
                     text = text.replace(figure, '<div class="pixel-art-figure" style="max-width:100%;overflow-x:auto;">')
+                    lead = "''': a quest item that can be collected.\n"
+                    self.assertEqual(text.count(lead), 1)
+                    text = text.replace(lead, "'''\n")
                 self.assertEqual(hashlib.sha256(text.rstrip().encode()).hexdigest(), digest)
 
     def test_exact_factions_cover_all_beings_and_replace_primary_taxonomy(self):

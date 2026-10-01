@@ -3,11 +3,17 @@ if (!defined('MEDIAWIKI')) {
     exit;
 }
 
+use MediaWiki\Config\Config;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Output\OutputPage;
+use MediaWiki\Search\Entity\SearchResultThumbnail;
+use MediaWiki\Shell\Shell;
+use MediaWiki\Title\Title;
+use PageImages\PageImages;
 
 final class MirklurkMetadata {
+    private const PREVIEW_SIZE = 1024;
     public static function description(string $html): string {
         $document = new DOMDocument();
         // Parser output is an HTML fragment, not XML. Never resolve external entities.
@@ -46,6 +52,14 @@ final class MirklurkMetadata {
                 continue;
             }
             $text = trim(preg_replace('/[\s\p{Z}]+/u', ' ', $node->textContent));
+            // Breadcrumbs, lone guide links and the bold name label are navigation, not prose.
+            $prose = '';
+            foreach ($xpath->query('.//text()[not(ancestor::a or ancestor::b or ancestor::strong)]', $node) as $part) {
+                $prose .= $part->nodeValue;
+            }
+            if (preg_replace('/[\s\p{Z}\p{P}\p{S}]+/u', '', $prose) === '') {
+                continue;
+            }
             if ($text === '' || preg_match(
                 '/\{\{|\}\}|\[\[|\]\]|__\w+__|<[^>]+>|\b(?:spoilers?|unverified|'
                 . 'not documented|unknown|initializer|provenance|editorial|'
@@ -107,9 +121,16 @@ final class MirklurkMetadata {
             ]);
             $values['og:description'] = $description;
         }
-        // Only the explicit, rights-approved site icon; never guess article artwork.
-        $image = mirklurkImageUrl('MW_LOGO_ICON_URL');
-        if ($image !== '') {
+        // The page's own reviewed lead figure, else the explicit, rights-approved site icon.
+        $file = self::pageImage($title);
+        if ($file) {
+            [$image, $width, $height] = self::previewImage($file, $out->getConfig());
+            $values['og:image'] = $services->getUrlUtils()->expand($image, PROTO_CANONICAL);
+            $values['og:image:type'] = 'image/png';
+            $values['og:image:width'] = (string)$width;
+            $values['og:image:height'] = (string)$height;
+            $values['og:image:alt'] = $title->getPrefixedText();
+        } elseif (($image = mirklurkImageUrl('MW_LOGO_ICON_URL')) !== '') {
             $values['og:image'] = $services->getUrlUtils()->expand($image, PROTO_CANONICAL);
             $values['og:image:alt'] = $out->getConfig()->get('Sitename');
         }
@@ -119,5 +140,98 @@ final class MirklurkMetadata {
             ]);
         }
         $tags['mirklurk-card'] = Html::element('meta', ['name' => 'twitter:card', 'content' => 'summary']);
+    }
+
+    /** PageImages' choice: only lead figures, because inline icons are class=notpageimage. */
+    private static function pageImage(Title $title): ?File {
+        if (!class_exists(PageImages::class)) {
+            return null;
+        }
+        $file = PageImages::getPageImage($title);
+        return $file && $file->exists() && $file->getMimeType() === 'image/png' ? $file : null;
+    }
+
+    /** Largest whole-number enlargement that keeps the longer side within the preview size. */
+    public static function previewScale(int $width, int $height): int {
+        return $width > 0 && $height > 0 ? max(1, intdiv(self::PREVIEW_SIZE, max($width, $height))) : 1;
+    }
+
+    /**
+     * Link-preview services smooth small images when they enlarge them, so share a copy
+     * already enlarged by an exact nearest-neighbour integer factor. Cached by content hash.
+     * @return array{string, int, int} URL, width, height
+     */
+    private static function previewImage(File $file, Config $config): array {
+        $width = (int)$file->getWidth();
+        $height = (int)$file->getHeight();
+        $original = [$file->getFullUrl(), $width, $height];
+        $scale = self::previewScale($width, $height);
+        $source = $file->isLocal() ? $file->getLocalRefPath() : false;
+        if ($scale < 2 || !$source || !$config->get('UseImageMagick') || Shell::isDisabled()
+            || !preg_match('/^[0-9a-z]{31}$/', $file->getSha1())) {
+            return $original;
+        }
+        $name = $file->getSha1() . '-' . $scale . 'x.png';
+        $directory = $config->get('UploadDirectory') . '/mirklurk-preview';
+        $path = $directory . '/' . $name;
+        if (!is_file($path)) {
+            if (!is_dir($directory) && !@mkdir($directory, 0755) && !is_dir($directory)) {
+                return $original;
+            }
+            $temporary = $directory . '/.' . bin2hex(random_bytes(8)) . '.png';
+            $result = Shell::command(
+                $config->get('ImageMagickConvertCommand'), $source,
+                '-sample', ($width * $scale) . 'x' . ($height * $scale) . '!', '-strip', 'PNG32:' . $temporary
+            )->execute();
+            $size = $result->getExitCode() === 0 ? @getimagesize($temporary) : false;
+            if (!$size || $size[0] !== $width * $scale || $size[1] !== $height * $scale || !rename($temporary, $path)) {
+                @unlink($temporary);
+                return $original;
+            }
+        }
+        return [$config->get('UploadPath') . '/mirklurk-preview/' . $name, $width * $scale, $height * $scale];
+    }
+
+    /**
+     * Search results show the original pixel art, never an interpolated ImageMagick thumbnail.
+     * Registered after extensions load, so this runs after PageImages has chosen the file.
+     */
+    public static function onSearchResultProvideThumbnail(array $pages, array &$results, ?int $size = null): void {
+        $services = MediaWikiServices::getInstance();
+        $repos = $services->getRepoGroup();
+        foreach ($results as $id => $thumbnail) {
+            if (!$thumbnail instanceof SearchResultThumbnail || $thumbnail->getName() === null) {
+                continue;
+            }
+            $file = $repos->findFile($thumbnail->getName());
+            if (!$file || !$file->exists() || !$file->getWidth() || !$file->getHeight()) {
+                continue;
+            }
+            $results[$id] = new SearchResultThumbnail(
+                $file->getMimeType(),
+                null,
+                $file->getWidth(),
+                $file->getHeight(),
+                null,
+                $services->getUrlUtils()->expand($file->getFullUrl(), PROTO_RELATIVE),
+                $file->getName()
+            );
+        }
+    }
+
+    public static function onBeforePageDisplay(OutputPage $out): void {
+        // Search thumbnails: whole-multiple pixel-art scaling, with an unblurred, uncropped fallback.
+        // Both search boxes get an 80px inner area so every item figure fits at 1x or more.
+        $out->addModules('mirklurk.pixelThumbnails');
+        $out->addInlineStyle(
+            '.cdx-thumbnail__image,.cdx-menu-item__thumbnail,.searchResultImage-thumbnail img'
+            . '{image-rendering:pixelated;background-size:contain;background-repeat:no-repeat;'
+            . 'object-fit:contain;object-position:center}'
+            . '.cdx-typeahead-search .cdx-thumbnail__image,.cdx-typeahead-search .cdx-thumbnail__placeholder'
+            . '{box-sizing:border-box;width:82px;height:82px;min-width:82px;min-height:82px}'
+            . '.searchResultImage .searchResultImage-thumbnail{width:98px;height:auto}'
+            . '.searchResultImage .searchResultImage-thumbnail img'
+            . '{box-sizing:content-box;width:80px;height:80px!important}'
+        );
     }
 }
