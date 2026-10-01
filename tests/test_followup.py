@@ -266,8 +266,12 @@ class FollowupTests(unittest.TestCase):
                 with self.assertRaises(DataError):
                     validate_data(data, stations=stations)
         data = copy.deepcopy(self.data)
-        other = next(row for row in data["illustrations"] if "cropped_from" in row and row["id"] != image["id"])
-        other["cropped_from"]["file_title"] = image["cropped_from"]["file_title"]
+        data["illustrations"][index]["file_title"] = "File:Unrelated-crop.png"
+        with self.assertRaisesRegex(DataError, "-cropped.png"):
+            validate_data(data, stations=stations)
+        data = copy.deepcopy(self.data)
+        other = next(row for row in data["illustrations"] if "cropped_from" not in row and "pixel_art" in row)
+        other["file_title"] = image["cropped_from"]["file_title"]
         with self.assertRaisesRegex(DataError, "retired File title"):
             validate_data(data, stations=stations)
 

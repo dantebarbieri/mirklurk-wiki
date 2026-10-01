@@ -389,6 +389,8 @@ def _cropped_from(illustration, where):
     title = source["file_title"]
     if not isinstance(title, str) or not re.fullmatch(r"File:[A-Z][A-Za-z0-9 _.-]{0,119}\.png", title):
         raise DataError(f"{where}.file_title: expected the preserved source PNG File title")
+    if illustration["file_title"] != title.removesuffix(".png") + "-cropped.png":
+        raise DataError(f"{where}: a cropped derivative must be titled File:<source base>-cropped.png")
     if not isinstance(source["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", source["sha256"]) \
             or source["sha256"] == illustration["sha256"]:
         raise DataError(f"{where}.sha256: expected the distinct SHA-256 of the preserved source bytes")

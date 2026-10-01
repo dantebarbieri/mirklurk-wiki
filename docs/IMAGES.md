@@ -161,9 +161,11 @@ The location sections now use the original-file integer-scaling policy below.
 After the [transparent-margin crops](#transparent-margin-crops), Bhato's hut is
 displayed at 192 x 168 (4x), Gurb-Gurb's hollow at 158 x 240 (2x), and Ihar's
 shipwreck at 128 x 92 (1x). Approved bytes are never rewritten.
-No compact icon consumer uses these exteriors. Import the three exact
-titles with their attribution sidecars before the pages that embed them are
-published; the sync lists every referenced File that is still missing, and an
+No compact icon consumer uses these exteriors. The three source titles above
+are preserved but no longer embedded; pages embed their `-cropped` derivatives,
+so import those three with the same attribution sidecars before publishing
+(see [transparent-margin crops](#transparent-margin-crops)). The
+sync lists every referenced File that is still missing, and an
 existing File title alone is not display evidence. Do not overwrite existing
 Files or upload smoke components, previews or unrelated artwork.
 
@@ -196,9 +198,10 @@ on the entity page, adds `notpageimage` and never becomes the page image or icon
 
 Exact hashes, Edym Pixels attribution, original captions and evidence are in
 the eight `role: "sprite"` records. All eight were decoded and verified to
-reduce exactly to their native frame. Import the eight exact titles with their
-attribution sidecars before publishing pages that embed them; do not overwrite
-the existing portraits. Pages now embed their `-cropped` derivatives (below).
+reduce exactly to their native frame. These eight source titles are imported
+and preserved, but pages now embed their `-cropped` derivatives instead; import
+those eight with the same attribution sidecars before publishing (below). Do
+not overwrite the existing portraits.
 
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 entity or station record renders a neutral missing-picture notice, **not** an image or File link.
