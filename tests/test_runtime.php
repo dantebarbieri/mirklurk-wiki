@@ -71,6 +71,21 @@ try {
     check(in_array('ParserFunctions', $loaded, true), 'Selective canonical views require ParserFunctions.');
     check(in_array('Scribunto', $loaded, true), 'Native display templates require Scribunto.');
     check($wgScribuntoDefaultEngine === 'luastandalone', 'Use the bundled bounded Lua standalone engine.');
+    check(in_array('VisualEditor', $loaded, true) && in_array('TemplateData', $loaded, true), 'Bundled editors missing.');
+    check($wgVisualEditorUseSingleEditTab === false, 'Keep visual and source tabs discoverable.');
+    check($wgVisualEditorDisableForAnons === true && !$wgGroupPermissions['*']['writeapi'], 'Anonymous write policy changed.');
+    check($wgDefaultUserOptions['visualeditor-autodisable'] === 0
+        && $wgDefaultUserOptions['visualeditor-betatempdisable'] === 0, 'Visual editing must not require opting in.');
+    check($wgDefaultUserOptions['visualeditor-newwikitext'] === 0, 'Preserve the classic source editor by default.');
+    check($wgVisualEditorAvailableNamespaces['User'] && $wgVisualEditorAvailableNamespaces['File']
+        && $wgVisualEditorAvailableNamespaces['Category'] && $wgVisualEditorAvailableNamespaces['Help']
+        && !$wgVisualEditorAvailableNamespaces['Template'],
+        'Editor namespace policy changed.');
+    check(!isset($wgVirtualRestConfig['modules']['parsoid']), 'Do not replace the integrated Parsoid client.');
+    check(in_array('MirklurkEditing::onVisualEditorBeforeEditor', $wgHooks['VisualEditorBeforeEditor'], true)
+        && in_array('MirklurkEditing::onApiCheckCanExecute', $wgHooks['ApiCheckCanExecute'], true)
+        && in_array('MirklurkEditing::onEditPageShowEditFormInitial', $wgHooks['EditPage::showEditForm:initial'], true),
+        'Shared-data pages must stay source-only.');
     check($wgDefaultSkin === 'vector-2022' && $wgVectorResponsive === true,
         'Vector 2022 must use a device-width viewport, not its fixed desktop fallback.');
 

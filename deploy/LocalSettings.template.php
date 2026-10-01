@@ -4,6 +4,7 @@ if (!defined('MEDIAWIKI')) {
 }
 require_once __DIR__ . '/mirklurk-runtime.php';
 require_once __DIR__ . '/mirklurk-metadata.php';
+require_once __DIR__ . '/mirklurk-editing.php';
 
 $wgSitename = 'MirkLurk Wiki';
 $wgMetaNamespace = 'MirkLurk_Wiki';
@@ -113,6 +114,21 @@ $wgVectorResponsive = true;
 wfLoadExtension('ParserFunctions');
 wfLoadExtension('Scribunto');
 $wgScribuntoDefaultEngine = 'luastandalone';
+// MediaWiki 1.43 bundles both and uses its integrated PHP Parsoid client; no RESTBase service.
+wfLoadExtension('TemplateData');
+wfLoadExtension('VisualEditor');
+$wgVisualEditorUseSingleEditTab = false;
+$wgVisualEditorDisableForAnons = true;
+$wgDefaultUserOptions['visualeditor-autodisable'] = 0;
+$wgDefaultUserOptions['visualeditor-betatempdisable'] = 0;
+$wgDefaultUserOptions['visualeditor-newwikitext'] = 0;
+foreach (['User', 'File', 'Category', 'Help'] as $namespace) {
+    $wgVisualEditorAvailableNamespaces[$namespace] = true;
+}
+$wgVisualEditorAvailableNamespaces['Template'] = false;
+$wgHooks['VisualEditorBeforeEditor'][] = MirklurkEditing::class . '::onVisualEditorBeforeEditor';
+$wgHooks['ApiCheckCanExecute'][] = MirklurkEditing::class . '::onApiCheckCanExecute';
+$wgHooks['EditPage::showEditForm:initial'][] = MirklurkEditing::class . '::onEditPageShowEditFormInitial';
 wfLoadExtension('ConfirmEdit');
 wfLoadExtension('ConfirmEdit/QuestyCaptcha');
 $wgCaptchaClass = 'QuestyCaptcha';

@@ -91,6 +91,11 @@ copy a menu onto every article. The sidebar is a reviewed operator-installed
 exception to automatic publication: see [Native sidebar](docs/PUBLISHING.md#native-sidebar).
 Ordinary contributors do not need interface-editing permissions.
 
+Signed-in editors can use **Edit** (VisualEditor) or **Edit source**. Pages that
+supply shared recipe, price, merchant, loot or coin data to other pages offer
+only **Edit source**, because the visual editor would rearrange their inclusion
+markers; see [Visual editing](docs/DEPLOYMENT.md#visual-editing).
+
 Merging to `main` publishes the generated pages automatically, but only onto
 pages whose latest revision came from the publishing automation. A page someone
 edited on the wiki is skipped and reported on every run; port useful edits into

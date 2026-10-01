@@ -97,6 +97,9 @@
 !/tests/test_metadata.php
 !/tests/test_metadata.py
 !/tools/smoke_metadata.py
+!/deploy/mirklurk-editing.php
+!/tests/test_editing.php
+!/tools/smoke_editing.py
 !/deploy/install.php
 !/deploy/healthcheck.php
 !/.github/
