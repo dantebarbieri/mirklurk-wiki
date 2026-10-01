@@ -176,12 +176,12 @@ def image_caption(image):
     }.get(image["id"], caption)
 
 
-def illustration_markup(image, width=224, caption=None, marker=True):
+def illustration_markup(image, width=224, caption=None, marker=True, page_image=True):
     text = anchor("illustration", image["id"]) if marker else ""
     if image["rights_status"] == "approved":
         label = image_caption(image) if caption is None else caption
         return (text + "\n" + scroll_open(label, "pixel-art-figure")
-                + pixel_image(image, width=width, alt=label, page_image=True) + "</div>\n"
+                + pixel_image(image, width=width, alt=label, page_image=page_image) + "</div>\n"
                 + '<div class="pixel-art-caption">' + literal(label) + "</div>\n")
     return text + "\n"
 
@@ -1127,6 +1127,11 @@ def build_pages(root, data, catalog=None, details=None):
         matching = [image for image in images if image.get("entity") == entity["id"] and "role" not in image]
         for image in matching:
             text += illustration_markup(image)
+        for image in images:
+            if image.get("entity") == entity["id"] and image.get("role") == "sprite":
+                if image_for(entity["id"], images) is None:
+                    raise DataError("sprite illustration: requires an approved primary portrait")
+                text += illustration_markup(image, page_image=False)
         if entity["id"] in npc_locations:
             location = npc_locations[entity["id"]]
             text += "\n== Location and access ==\n"
