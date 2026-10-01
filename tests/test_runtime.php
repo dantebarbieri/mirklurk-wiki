@@ -73,9 +73,13 @@ try {
     check(in_array('Scribunto', $loaded, true), 'Native display templates require Scribunto.');
     check(in_array('PageImages', $loaded, true), 'Per-page search and sharing icons require PageImages.');
     check($wgPageImagesOpenGraph === false, 'Only the metadata hook may emit og:image.');
-    check($wgPageImagesScores['width'] === [0 => 10], 'Small pixel-art lead figures must be page image candidates.');
+    check($wgPageImagesScores['width'] === [0 => 10] && $wgPageImagesScores['ratio'] === [0 => 0],
+        'Small and tall pixel-art lead figures must be page image candidates.');
     check($wgThumbnailNamespaces === [6, 0], 'Article search results must show page images.');
     check($wgHooks['BeforePageDisplay'] === ['MirklurkMetadata::onBeforePageDisplay'], 'Pixelated search CSS missing.');
+    check($wgResourceModules['mirklurk.pixelThumbnails']['packageFiles'] === ['mirklurk-pixel-thumbnails.js']
+        && is_file($wgResourceModules['mirklurk.pixelThumbnails']['localBasePath'] . '/mirklurk-pixel-thumbnails.js'),
+        'Integer-scaled search thumbnail module missing.');
     check(count($wgExtensionFunctions) === 1, 'Original-size search thumbnail handler missing.');
     check($wgScribuntoDefaultEngine === 'luastandalone', 'Use the bundled bounded Lua standalone engine.');
     check($wgDefaultSkin === 'vector-2022' && $wgVectorResponsive === true,

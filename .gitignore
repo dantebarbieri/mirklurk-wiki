@@ -91,6 +91,8 @@
 !/deploy/LocalSettings.template.php
 !/deploy/mirklurk-runtime.php
 !/deploy/mirklurk-metadata.php
+!/deploy/mirklurk-pixel-thumbnails.js
+!/tests/test_pixel_thumbnails.js
 !/deploy/robots.php
 !/deploy/refresh-sitemap.php
 !/deploy/metadata.conf

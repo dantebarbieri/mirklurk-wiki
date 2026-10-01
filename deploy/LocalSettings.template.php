@@ -115,17 +115,23 @@ wfLoadExtension('Scribunto');
 $wgScribuntoDefaultEngine = 'luastandalone';
 // Per-page icons for search and link previews: each page's own lead figure.
 wfLoadExtension('PageImages');
-// Pixel-art figures are small (80-160px); inline icons are excluded with class=notpageimage.
+// Pixel-art figures are small (80-160px) and some are tall (1:5); only lead figures are
+// candidates because inline icons carry class=notpageimage, so size and shape are neutral.
 $wgPageImagesScores = [
     'position' => [8, 6, 4, 3],
     'width' => [0 => 10],
     'galleryImageWidth' => [99 => -100, 100 => 0],
-    'ratio' => [3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100],
+    'ratio' => [0 => 0],
 ];
 // MirklurkMetadata emits the single og:image itself, with the site icon as fallback.
 $wgPageImagesOpenGraph = false;
 $wgThumbnailNamespaces = [NS_FILE, NS_MAIN];
 $wgHooks['BeforePageDisplay'][] = MirklurkMetadata::class . '::onBeforePageDisplay';
+$wgResourceModules['mirklurk.pixelThumbnails'] = [
+    'localBasePath' => __DIR__,
+    'remoteBasePath' => $wgScriptPath,
+    'packageFiles' => ['mirklurk-pixel-thumbnails.js'],
+];
 // Runtime handlers run after extension handlers, so this replaces PageImages' blurry thumbnails.
 $wgExtensionFunctions[] = static function (): void {
     \MediaWiki\MediaWikiServices::getInstance()->getHookContainer()->register(

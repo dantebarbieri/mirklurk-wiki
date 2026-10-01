@@ -162,7 +162,8 @@ final class MirklurkMetadata {
     }
 
     public static function onBeforePageDisplay(OutputPage $out): void {
-        // Scale search thumbnails (typeahead and Special:Search) without blur or cropping.
+        // Search thumbnails: whole-multiple pixel-art scaling, with an unblurred, uncropped fallback.
+        $out->addModules('mirklurk.pixelThumbnails');
         $out->addInlineStyle(
             '.cdx-thumbnail__image,.cdx-menu-item__thumbnail,.searchResultImage-thumbnail img'
             . '{image-rendering:pixelated;background-size:contain;background-repeat:no-repeat;'

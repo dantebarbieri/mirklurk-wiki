@@ -327,10 +327,15 @@ No analytics, external metadata service or search-engine account is involved.
 
 The same page image is the per-page icon in the Vector search typeahead and on
 `Special:Search` (`$wgThumbnailNamespaces` includes articles). The pixel-art
-figures are 80-160px, below PageImages' default 120px minimum, so the template
-sets a width score accepting any width. A runtime `SearchResultProvideThumbnail`
+figures are 80-160px wide and up to 1:5 tall, outside PageImages' default size
+and aspect-ratio preferences, so the template makes both neutral: any lead
+figure, however small or narrow, is chosen. A runtime `SearchResultProvideThumbnail`
 handler replaces PageImages' downscaled ImageMagick thumbnails with the
-original file, and inline CSS scales it with `image-rendering: pixelated`.
+original file. The `mirklurk.pixelThumbnails` module then recovers each file's
+native pixel grid (reviewed files are stored at an integer source scale) and
+sizes the icon to the largest whole multiple that fits the search box, as
+article figures do. Art too large for the box at 1x, cross-origin files and
+no-JavaScript views fall back to an uncropped `image-rendering: pixelated` fit.
 
 PageImages stores its choice in page properties during links updates. After
 deploying this runtime to an existing wiki, populate them once (then drain jobs):

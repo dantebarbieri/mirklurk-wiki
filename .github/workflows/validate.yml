@@ -38,6 +38,7 @@ jobs:
           php -l deploy/healthcheck.php
           php tests/test_runtime.php
           php tests/test_metadata.php
+          node tests/test_pixel_thumbnails.js
   docker-smoke:
     needs: publication
     runs-on: ubuntu-24.04

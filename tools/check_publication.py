@@ -76,6 +76,8 @@ ALLOWED_FILES = {
     "deploy/LocalSettings.template.php": 16 * 1024,
     "deploy/mirklurk-runtime.php": 16 * 1024,
     "deploy/mirklurk-metadata.php": 12 * 1024,
+    "deploy/mirklurk-pixel-thumbnails.js": 8 * 1024,
+    "tests/test_pixel_thumbnails.js": 4 * 1024,
     "deploy/robots.php": 4 * 1024,
     "deploy/refresh-sitemap.php": 12 * 1024,
     "deploy/metadata.conf": 4 * 1024,

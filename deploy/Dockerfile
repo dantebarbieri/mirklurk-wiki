@@ -3,6 +3,7 @@ FROM mediawiki:1.43.9@sha256:39a6503b8739f6aa58f8a458e9537258dd537f7cec7dd93c665
 COPY deploy/LocalSettings.template.php /var/www/html/LocalSettings.php
 COPY deploy/mirklurk-runtime.php /var/www/html/mirklurk-runtime.php
 COPY deploy/mirklurk-metadata.php /var/www/html/mirklurk-metadata.php
+COPY deploy/mirklurk-pixel-thumbnails.js /var/www/html/mirklurk-pixel-thumbnails.js
 COPY deploy/install.php deploy/healthcheck.php deploy/robots.php deploy/refresh-sitemap.php /usr/local/lib/mirklurk/
 COPY deploy/metadata.conf /etc/apache2/conf-available/mirklurk-metadata.conf
 COPY deploy/apache-short-urls.conf /etc/apache2/sites-available/000-default.conf
