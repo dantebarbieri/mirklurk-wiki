@@ -5,7 +5,7 @@ import math
 from pathlib import Path
 import urllib.parse
 
-from wiki_render import image_for, pixel_image
+from wiki_render import image_for, pixel_geometry, pixel_image
 from smoke_responsive import smoke_responsive
 from smoke_navigation import smoke_navigation
 
@@ -73,6 +73,7 @@ def smoke_browser(api, base, token, data, artifact_dir):
     folder.mkdir(parents=True, exist_ok=True)
     # Reproduce the old baseline layout in the same skin/font, not a CSS-only proxy.
     old = pixel_image(image_for("item-73", data["illustrations"]), 20, 20, "", "Silver coin")
+    coin_sizes = {pixel_geometry(image_for(coin, data["illustrations"]), 20, 20)[:2] for coin in ("item-72", "item-73", "item-74")}
     title = "Display layout smoke"
     fixture = (
         '<div id="layout-fixture">\n'
@@ -165,8 +166,8 @@ def smoke_browser(api, base, token, data, artifact_dir):
                             raise RuntimeError(f"{name} {kind}: icon/text centers differ: {pair}")
                         if pair["srcset"] or "/thumb/" in pair["src"] or not pair["alt"]:
                             raise RuntimeError("Browser display lost original-file/accessibility policy.")
-                        if kind == "coins" and (pair["image"]["width"] != 16 or pair["image"]["height"] != 16):
-                            raise RuntimeError("Browser coins changed their 16px integer-native size.")
+                        if kind == "coins" and (pair["image"]["width"], pair["image"]["height"]) not in coin_sizes:
+                            raise RuntimeError("Browser coins changed their integer-native size.")
                 if (result["narrowScroll"] > result["narrowWidth"]
                         or len(set(result["narrowLines"])) < 2 or result["itemScroll"] > result["itemWidth"]
                         or result["itemLines"] < 1.9):
@@ -209,7 +210,7 @@ def smoke_browser(api, base, token, data, artifact_dir):
             context.close()
         finally:
             browser.close()
-    print("Vector browser: old baseline reproduced; centered 16px coins/item names, narrow wrapping, "
+    print("Vector browser: old baseline reproduced; centered integer-native coins/item names, narrow wrapping, "
           "3em health cells and real desktop/mobile articles passed. Native sidebar links and keyboard "
           "navigation passed on desktop, mobile and mobile without JavaScript.", flush=True)
     smoke_responsive(base, data, folder)

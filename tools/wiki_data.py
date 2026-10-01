@@ -360,7 +360,7 @@ def _validate_illustrations(records, sources, entities, stations=None):
     seen_sources = set()
     for where, source in source_titles:
         if source in titles or source in seen_sources:
-            raise DataError(f"{where}.file_title: a crop source must be a distinct, retired File title")
+            raise DataError(f"{where}.cropped_from.file_title: a crop source must be a distinct, retired File title")
         seen_sources.add(source)
 
 
