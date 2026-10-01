@@ -48,6 +48,7 @@ CATEGORY_PAGES = {
 }
 FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS}
 CONFIDENCES = {"observed", "inferred", "localization-described"}
+ILLUSTRATION_ROLES = {"location", "sprite"}
 MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
     "Temperature", "Wellbeing", "Foods", "Resting", "Weather",
@@ -282,7 +283,7 @@ def _validate_illustrations(records, sources, entities, stations=None):
     seen = set()
     titles = set()
     armor_levels = set()
-    location_entities = set()
+    role_entities = set()
     for index, illustration in enumerate(_records(records, "illustrations")):
         where = f"illustrations[{index}]"
         _object(
@@ -299,16 +300,17 @@ def _validate_illustrations(records, sources, entities, stations=None):
             raise DataError(f"{where}: provide exactly one entity, station, or health_armor target")
         if "variant" in illustration and "station" not in illustration:
             raise DataError(f"{where}: a variant belongs only to a station")
-        if "role" in illustration and ("entity" not in illustration or illustration["role"] != "location"):
-            raise DataError(f"{where}.role: only entity location illustrations have a role")
+        if "role" in illustration and ("entity" not in illustration or illustration["role"] not in ILLUSTRATION_ROLES):
+            raise DataError(f"{where}.role: only entity location or sprite illustrations have a role")
         if "entity" in illustration:
             entity_id = _identifier(illustration["entity"], f"{where}.entity")
             if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being", "nature", "skill"}:
                 raise DataError(f"{where}.entity: must reference an item, being, nature record, or skill")
             if "role" in illustration:
-                if entities[entity_id]["category"] != "being" or entity_id in location_entities:
-                    raise DataError(f"{where}.role: expected one location illustration per being")
-                location_entities.add(entity_id)
+                key = (illustration["role"], entity_id)
+                if entities[entity_id]["category"] != "being" or key in role_entities:
+                    raise DataError(f"{where}.role: expected one {illustration['role']} illustration per being")
+                role_entities.add(key)
         elif "station" in illustration:
             station_id = _identifier(illustration["station"], f"{where}.station")
             if not stations or station_id not in stations:

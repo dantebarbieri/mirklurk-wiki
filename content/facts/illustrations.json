@@ -9613,6 +9613,182 @@
         "height": 96,
         "source_scale": 1
       }
+    },
+    {
+      "id": "being-6-sprite-illustration",
+      "entity": "being-6",
+      "role": "sprite",
+      "file_title": "File:Being-6-overworld.png",
+      "caption": "Captain Eir as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "b25233858bdededa32d6ffdbb42dd86b7eca0544077875c639376312b88ce948",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[6].sprite/spr_captain_eir.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "6"}
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 200,
+        "source_scale": 5
+      }
+    },
+    {
+      "id": "being-8-sprite-illustration",
+      "entity": "being-8",
+      "role": "sprite",
+      "file_title": "File:Being-8-overworld.png",
+      "caption": "Magus Clay as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "9250a76d2fd4cdf0d01074d4fe75340a2c05852178789482412f0f83c9994782",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[8].sprite/spr_clay.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "8"}
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 6
+      }
+    },
+    {
+      "id": "being-12-sprite-illustration",
+      "entity": "being-12",
+      "role": "sprite",
+      "file_title": "File:Being-12-overworld.png",
+      "caption": "Ranger Bhato as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "c0e0610b3070be722110d56667678207a4818582eb73239da820b8b789cca2c6",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[12].sprite/spr_ranger_t.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "12"}
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 200,
+        "source_scale": 5
+      }
+    },
+    {
+      "id": "being-19-sprite-illustration",
+      "entity": "being-19",
+      "role": "sprite",
+      "file_title": "File:Being-19-overworld.png",
+      "caption": "Viend as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "a3745dd07cb26d9b59f00cef26d23ed3530abdefd08b72fe817ca9371a04ff3f",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[19].sprite/spr_viend.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "19"}
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 6
+      }
+    },
+    {
+      "id": "being-20-sprite-illustration",
+      "entity": "being-20",
+      "role": "sprite",
+      "file_title": "File:Being-20-overworld.png",
+      "caption": "Commander Tain as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "d6e05be33d26e5f2add5955c8d0437cb678a6e8165f48cc9739f128a57900eac",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[20].sprite/spr_commander_tain.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "20"}
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 6
+      }
+    },
+    {
+      "id": "being-26-sprite-illustration",
+      "entity": "being-26",
+      "role": "sprite",
+      "file_title": "File:Being-26-overworld.png",
+      "caption": "Gurb-Gurb as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "94fdd0f5db20e03d189b74283639cebf8bf9f03f98623a0021064260d7b57f9b",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[26].sprite/spr_gurb.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "26"}
+      ],
+      "pixel_art": {
+        "width": 224,
+        "height": 224,
+        "source_scale": 7
+      }
+    },
+    {
+      "id": "being-33-sprite-illustration",
+      "entity": "being-33",
+      "role": "sprite",
+      "file_title": "File:Being-33-overworld.png",
+      "caption": "Ihar as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "568124edd6c7dc6ad2b22bfc4fda51466a3b0c437f281b29846518267f9a7222",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[33].sprite/spr_ihar.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "33"}
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 6
+      }
+    },
+    {
+      "id": "being-34-sprite-illustration",
+      "entity": "being-34",
+      "role": "sprite",
+      "file_title": "File:Being-34-overworld.png",
+      "caption": "Wilda as seen in the overworld.",
+      "creator": "Edym Pixels",
+      "sha256": "07a6c436e910178de117633dbead2884cd9511e179189a9e95de2f87968d5bad",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This overworld sprite selection was requested for supplementary NPC-page display on 2026-10-01. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[34].sprite/spr_wilda.frame0"},
+        {"source": "beings-en", "section": "Titles", "key": "34"}
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 200,
+        "source_scale": 5
+      }
     }
   ]
 }

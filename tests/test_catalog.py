@@ -146,7 +146,7 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        self.assertEqual(len(self.data["illustrations"]), 329)
+        self.assertEqual(len(self.data["illustrations"]), 337)
         images = [{key: value for key, value in row.items() if key != "pixel_art"}
                   for row in self.data["illustrations"] if "role" not in row]
         self.assertEqual(
