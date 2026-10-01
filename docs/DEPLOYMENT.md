@@ -39,7 +39,7 @@ The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
 The template loads bundled ParserFunctions for named canonical views,
 Scribunto with the bundled `luastandalone` engine for [display templates](TEMPLATES.md),
-and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
+VisualEditor, TemplateData, and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
 no extension download is needed. Scribunto registers Module namespace 828
 and the `Scribunto` Lua content model. Its standard CPU/memory limits remain
 enabled, alongside the display module's explicit input/geometry bounds.
@@ -52,6 +52,31 @@ lacks the required extensions, namespaces, content models or a working Lua
 engine; it also probes unsaved module compilation. Never bypass that gate or
 seed Lua pages into the old runtime. No production action is implied by the
 repository changes. Do not roll back the runtime while live Lua readers remain.
+
+## Visual editing
+
+Signed-in editors get both **Edit** (VisualEditor) and **Edit source** on
+articles and Help pages; anonymous users cannot edit. VisualEditor uses
+MediaWiki 1.43's integrated PHP Parsoid client, so no RESTBase or Node Parsoid
+service is needed; do not configure `$wgVirtualRestConfig['modules']['parsoid']`.
+Templates, modules and interface pages remain source-edited.
+
+**Shared-data owners stay source-only.** A page whose current wikitext contains
+`onlyinclude`, `includeonly` or `noinclude` supplies data other pages transclude
+(recipes, prices, wares, loot, pools, coin values). VisualEditor moves those
+markers around table rows on every save, which breaks the selective views and
+the publisher's view detection. `deploy/mirklurk-editing.php` therefore hides the
+visual tab and section links on those pages, explains why on the source editor,
+and refuses `visualeditoredit` API saves there. The check reads the page's
+latest revision, so it follows human edits: removing the markers re-enables
+visual editing. Pages that only *display* shared data remain visually editable.
+
+**Separate operator rollout:** back up, rebuild the reviewed image, run
+`php maintenance/run.php update --quick`, and recreate the app. The reverse
+proxy must pass `/rest.php/...` and `/api.php` POSTs unchanged (including
+encoded slashes). Then, as an ordinary user, visually edit and save a practice
+page, and confirm a shared-data owner such as an item with a price offers only
+**Edit source**.
 
 ## Responsive Vector 2022
 
@@ -425,8 +450,11 @@ Vector screenshots/geometry (otherwise they are temporary). Then
 randomly named Compose project with temporary generated credentials, then:
 
 - checks installation refusal on reuse, anonymous permissions, disabled web
-  uploads, the loaded ParserFunctions extension, and CAPTCHA-protected
-  self-registration;
+  uploads, the loaded ParserFunctions, VisualEditor and TemplateData extensions,
+  and CAPTCHA-protected self-registration;
+- as a signed-in editor, checks that an ordinary page offers VisualEditor and
+  loads through Parsoid, while a shared-data owner offers only source editing,
+  shows its notice and refuses a VisualEditor API save without a new revision;
 - exercises real Apache HTTP old/new title and revision identity, GET/HEAD,
   root/main-page routing, punctuation, Unicode, namespaces, encoded subpages,
   missing-page 404s, query/action semantics, REST path info and root assets;

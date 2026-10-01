@@ -38,6 +38,7 @@ from smoke_display import (
     smoke_display_rendering, smoke_editorial_release, smoke_vendor_rows,
 )
 from smoke_browser import smoke_browser
+from smoke_editing import smoke_editor_selection
 from smoke_metadata import smoke_metadata
 from smoke_navigation import install_sidebar_fixture
 from smoke_urls import smoke_urls
@@ -1308,6 +1309,8 @@ def smoke():
                 raise RuntimeError("The installed ParserFunctions extension is not loaded.")
             if not any(row["name"] == "Scribunto" for row in extensions):
                 raise RuntimeError("The installed Scribunto extension is not loaded.")
+            if not {"VisualEditor", "TemplateData"} <= {row["name"] for row in extensions}:
+                raise RuntimeError("The bundled visual editor or template metadata is not loaded.")
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -1368,6 +1371,7 @@ def smoke():
             smoke_browser(api, base, csrf, data, os.environ.get("MIRKLURK_SMOKE_ARTIFACTS", workspace / "browser"))
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
             smoke_editorial_release(api, pages)
+            smoke_editor_selection(api, base, csrf, pages, opener.open)
             smoke_display_rendering(api, pages, data, catalog, details, RenderedGrids,
                                     check_parser_errors, check_shield_icon, dom)
             smoke_vendor_rows(api, pages, data, catalog, csrf, dom, check_parser_errors)
