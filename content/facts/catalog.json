@@ -6507,6 +6507,72 @@
           "key": "player_endturn.minute+=8/energy_gain/actionPoints/wellbeing"
         }
       ]
+    },
+    {
+      "title": "Armor points",
+      "section_titles": [
+        "Total armor",
+        "Durability",
+        "From armor value to armor points",
+        "Three-layer limit",
+        "Placing armor points",
+        "Changing equipment in combat",
+        "Creature armor"
+      ],
+      "paragraphs": [
+        "Every equipped item with an armor value adds it to your Total Armor, shown on the equipment screen. Clothing counts as well as armor: shirts, socks, hoods and cloaks often add a fraction of a point. All four hand slots count, so a shield on your inactive weapon set still adds its armor.",
+        "Each item adds its armor value multiplied by its current durability divided by its maximum durability, rounded to two decimals. A Steel Chestplate (6 armor, 300 durability) adds 6 when undamaged and 3 at 150 durability. Total Armor is then rounded to one decimal.",
+        "When combat begins, Total Armor is rounded down to whole armor points. Fractions are added together before rounding, so a 0.5 shirt, 0.5 pants and 0.1 socks give 1.1 Total Armor and 1 armor point. Each armor point adds one armor layer to one HP cell. A 2.9 total still gives only 2 points.",
+        "Each HP cell holds at most three armor layers. You receive at most three points for each HP cell still alive when combat begins; any Total Armor beyond that cap is not used for that fight.",
+        "You must place your armor points before combat can proceed. Left-click an HP cell to add a layer and right-click to remove one. Even clears your placement and fills cells row by row from the top left, one layer per cell on each pass. Random clears your placement and puts each point on a random cell. Done finishes placement; any points not yet placed are lost for that fight. Ending your turn is blocked until you press Done.",
+        "Equipping armor during combat gives no extra points until the next fight. Unequipping an item with an armor value during combat strips its full undamaged armor value, rounded to the nearest whole number with halves rounding up, from random armored cells. When no hostiles remain, all armor layers are removed until the next fight.",
+        "Creatures do not choose placement. Their armor is layered automatically when they appear, row by row from the top left like Even. Their health grids show the result; see Health and armor."
+      ],
+      "related_entities": [],
+      "related_pages": ["Health and armor", "Action points"],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_update_gearstats.totalArmor;player_real_combat_check.armorAddPoints/reset;being_initiate.addArmor"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myEquips.subSlots[wep1-wep4].active"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_durfix_value.durability/durabilityMax;item_unequip.armorToLose"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_armor_max"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "armorAddPoints.leftRelease/rightRelease;Done/Random/Even"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "draw_talkbox.armorAddPoints[-1/-2/-3]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "keyEndTurn.armorAddPoints"
+        },
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "25/Random/Even/Done"
+        }
+      ]
     }
   ],
   "item_effects": [

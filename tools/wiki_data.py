@@ -50,7 +50,7 @@ FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES, 
 CONFIDENCES = {"observed", "inferred", "localization-described"}
 MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
-    "Temperature", "Wellbeing", "Foods", "Resting", "Weather",
+    "Temperature", "Wellbeing", "Foods", "Resting", "Weather", "Armor points",
 }
 HEALTH_ARMOR_ICONS = {
     1: ("File:Health-armor-1.png", "Bronze"),

@@ -35,6 +35,30 @@ class CatalogTests(unittest.TestCase):
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
         cls.audit = audit_report(cls.data, cls.catalog, cls.details)
 
+    def test_armor_points_guide_explains_and_lists_equipment_armor(self):
+        page = self.pages["Armor points"]
+        self.assertIn("rounded down to whole armor points", page)
+        self.assertIn("at most three points for each HP cell", page)
+        self.assertIn("multiplied by its current durability", page)
+        self.assertIn("[[Armor points]]", self.pages["Game mechanics"])
+        self.assertIn("[[Armor points]]", self.pages["Health and armor"])
+        table = page.split("== Armor by item ==", 1)[1]
+        armored = {row["entity"] for row in self.details["profiles"] if "item-armor" in row["values"]}
+        locations = page_locations(self.data, self.catalog)
+        for identity in armored:
+            self.assertIn("{{Item|" + locations[identity] + "}}", table)
+        self.assertLess(table.index("{{Item|Steel Chestplate}}"), table.index("{{Item|Worn Socks}}"))
+        self.assertIn("{{Item|Steel Chestplate}} || [[:Category:Outer torso equipment|Outer torso equipment]] || <nowiki>6</nowiki> || <nowiki>300</nowiki>", table)
+        link = "[[Armor points|How equipment armor becomes armor layers in combat]]"
+        self.assertIn(link, self.pages["Steel Chestplate"])
+        self.assertIn(link, self.pages["Worn Socks"])
+        self.assertNotIn(link, self.pages["Iron Hand Axe"])
+        without = copy.deepcopy(self.catalog)
+        without["guides"] = [row for row in without["guides"] if row["title"] != "Armor points"]
+        pages = build_pages(ROOT, self.data, without, self.details)
+        self.assertNotIn("Armor points", pages)
+        self.assertNotIn(link, pages["Steel Chestplate"])
+
     def test_ordinary_titles_qualify_only_collisions(self):
         locations = page_locations(self.data, self.catalog)
         self.assertEqual(locations["item-0"], "Wood Buckler")
@@ -43,7 +67,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
-        self.assertEqual(sum(":" not in title for title in self.pages), 386)
+        self.assertEqual(sum(":" not in title for title in self.pages), 387)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 101)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)
