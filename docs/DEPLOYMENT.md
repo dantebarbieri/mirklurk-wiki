@@ -56,7 +56,8 @@ repository changes. Do not roll back the runtime while live Lua readers remain.
 ## Visual editing
 
 Signed-in editors get both **Edit** (VisualEditor) and **Edit source** on
-articles and Help pages; anonymous users cannot edit. VisualEditor uses
+articles, User, Category, Help and File description pages (uploads stay
+disabled; only a file's description text is editable); anonymous users cannot edit. VisualEditor uses
 MediaWiki 1.43's integrated PHP Parsoid client, so no RESTBase or Node Parsoid
 service is needed; do not configure `$wgVirtualRestConfig['modules']['parsoid']`.
 Templates, modules and interface pages remain source-edited.

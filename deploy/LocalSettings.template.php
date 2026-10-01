@@ -122,7 +122,9 @@ $wgVisualEditorDisableForAnons = true;
 $wgDefaultUserOptions['visualeditor-autodisable'] = 0;
 $wgDefaultUserOptions['visualeditor-betatempdisable'] = 0;
 $wgDefaultUserOptions['visualeditor-newwikitext'] = 0;
-$wgVisualEditorAvailableNamespaces['Help'] = true;
+foreach (['User', 'File', 'Category', 'Help'] as $namespace) {
+    $wgVisualEditorAvailableNamespaces[$namespace] = true;
+}
 $wgVisualEditorAvailableNamespaces['Template'] = false;
 $wgHooks['VisualEditorBeforeEditor'][] = MirklurkEditing::class . '::onVisualEditorBeforeEditor';
 $wgHooks['ApiCheckCanExecute'][] = MirklurkEditing::class . '::onApiCheckCanExecute';

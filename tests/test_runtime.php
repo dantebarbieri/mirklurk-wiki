@@ -77,7 +77,9 @@ try {
     check($wgDefaultUserOptions['visualeditor-autodisable'] === 0
         && $wgDefaultUserOptions['visualeditor-betatempdisable'] === 0, 'Visual editing must not require opting in.');
     check($wgDefaultUserOptions['visualeditor-newwikitext'] === 0, 'Preserve the classic source editor by default.');
-    check($wgVisualEditorAvailableNamespaces['Help'] && !$wgVisualEditorAvailableNamespaces['Template'],
+    check($wgVisualEditorAvailableNamespaces['User'] && $wgVisualEditorAvailableNamespaces['File']
+        && $wgVisualEditorAvailableNamespaces['Category'] && $wgVisualEditorAvailableNamespaces['Help']
+        && !$wgVisualEditorAvailableNamespaces['Template'],
         'Editor namespace policy changed.');
     check(!isset($wgVirtualRestConfig['modules']['parsoid']), 'Do not replace the integrated Parsoid client.');
     check(in_array('MirklurkEditing::onVisualEditorBeforeEditor', $wgHooks['VisualEditorBeforeEditor'], true)
