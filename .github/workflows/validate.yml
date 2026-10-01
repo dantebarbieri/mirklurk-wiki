@@ -39,6 +39,7 @@ jobs:
           php tests/test_runtime.php
           php tests/test_metadata.php
           node tests/test_pixel_thumbnails.js
+          php tests/test_editing.php
   docker-smoke:
     needs: publication
     runs-on: ubuntu-24.04

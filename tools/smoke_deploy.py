@@ -38,6 +38,7 @@ from smoke_display import (
     smoke_display_rendering, smoke_editorial_release, smoke_vendor_rows,
 )
 from smoke_browser import smoke_browser
+from smoke_editing import smoke_editor_selection
 from smoke_metadata import Head, smoke_metadata
 from smoke_navigation import install_sidebar_fixture
 from smoke_urls import smoke_urls
@@ -208,26 +209,30 @@ def smoke_pixel_art(api, data):
                 raise RuntimeError("Pixel art used a resampled source, lost aspect ratio or lost its integer-native scale.")
 
 
+def first(api, **params):
+    return next(iter(api({"action": "query", "titles": params.pop("t"), **params})["query"]["pages"].values()))
+
+
 def smoke_link_preview(api, title, filename, open_media=urllib.request.urlopen):
-    """Link previews share an exact integer enlargement of the page's own figure, without nav text."""
-    page = next(iter(api({"action": "query", "titles": title, "prop": "info", "inprop": "url"})["query"]["pages"].values()))
-    with open_media(page["fullurl"], timeout=30) as response:
+    """Search and link previews use the page's own figure; previews an exact integer enlargement."""
+    if first(api, t=title, prop="pageimages", piprop="name", pilicense="any").get("pageimage") != filename.replace(" ", "_"):
+        raise RuntimeError("A page's search and preview icon is not its own lead figure.")
+    with open_media(first(api, t=title, prop="info", inprop="url")["fullurl"], timeout=30) as response:
         meta = Head(response.read().decode()).meta
-    info = next(iter(api({"action": "query", "titles": "File:" + filename, "prop": "imageinfo",
-                          "iiprop": "url|size"})["query"]["pages"].values()))["imageinfo"][0]
+    info = first(api, t="File:" + filename, prop="imageinfo", iiprop="url|size")["imageinfo"][0]
     scale = max(1, 1024 // max(info["width"], info["height"]))
     size = (info["width"] * scale, info["height"] * scale)
+    url = meta.get("og:image", "")
     if (meta.get("og:image:type") != "image/png" or meta.get("og:image:alt") != title
             or (meta.get("og:image:width"), meta.get("og:image:height")) != tuple(map(str, size))
-            or (scale > 1) != ("/mirklurk-preview/" in meta.get("og:image", ""))
-            or (scale == 1 and meta.get("og:image") != info["url"])):
+            or not ("/mirklurk-preview/" in url if scale > 1 else url == info["url"])):
         raise RuntimeError(f"Link preview is not the page's own integer-enlarged figure: {meta!r}")
-    with open_media(meta["og:image"], timeout=30) as response:
+    with open_media(url, timeout=30) as response:
         body = response.read()
-        if (response.status != 200 or response.headers.get_content_type() != "image/png"
+        if (response.headers.get_content_type() != "image/png"
                 or body[:8] != b"\x89PNG\r\n\x1a\n" or struct.unpack(">II", body[16:24]) != size):
-            raise RuntimeError("The shared link-preview image is not a public PNG of the declared size.")
-    if "Main Page" in meta.get("og:description", "") or "Main Page" in meta.get("description", ""):
+            raise RuntimeError("The shared link-preview image is not a PNG of the declared size.")
+    if "Main Page" in meta.get("og:description", "") + meta.get("description", ""):
         raise RuntimeError("Breadcrumb navigation became the link-preview description.")
 
 
@@ -246,20 +251,13 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
             raise RuntimeError("A tree page does not use its reviewed mature composition exclusively.")
         if "shape varies" not in parsed["text"]["*"]:
             raise RuntimeError("A mature-tree caption lost its shape qualification.")
-        # Search results and link previews use only the page's own lead figure.
-        chosen = next(iter(api({"action": "query", "titles": locations[identity], "prop": "pageimages",
-                                "piprop": "name", "pilicense": "any"})["query"]["pages"].values()))
-        if chosen.get("pageimage") != filename.replace(" ", "_"):
-            raise RuntimeError("A page's search and preview icon is not its own lead figure.")
         smoke_link_preview(api, locations[identity], filename, open_media)
         info = next(iter(api({"action": "query", "titles": "File:" + old_filename,
                               "prop": "imageinfo", "iiprop": "url"})["query"]["pages"].values()))
         with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
             if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
                 raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
-    index = next(iter(api({"action": "query", "titles": "Items", "prop": "pageimages",
-                           "piprop": "name", "pilicense": "any"})["query"]["pages"].values()))
-    if "pageimage" in index:
+    if "pageimage" in first(api, t="Items", prop="pageimages", piprop="name", pilicense="any"):
         raise RuntimeError("An index page borrowed an inline icon as its search and preview icon.")
     axe = image_for("item-27", data["illustrations"])
     smoke_link_preview(api, locations["item-27"], axe["file_title"].removeprefix("File:"), open_media)
@@ -1343,6 +1341,8 @@ def smoke():
                 raise RuntimeError("The installed ParserFunctions extension is not loaded.")
             if not any(row["name"] == "Scribunto" for row in extensions):
                 raise RuntimeError("The installed Scribunto extension is not loaded.")
+            if not {"VisualEditor", "TemplateData"} <= {row["name"] for row in extensions}:
+                raise RuntimeError("The bundled visual editor or template metadata is not loaded.")
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
@@ -1403,6 +1403,7 @@ def smoke():
             smoke_browser(api, base, csrf, data, os.environ.get("MIRKLURK_SMOKE_ARTIFACTS", workspace / "browser"))
             smoke_reader_release(api, pages, data, catalog, details, image_hashes)
             smoke_editorial_release(api, pages)
+            smoke_editor_selection(api, base, csrf, pages, opener.open)
             smoke_display_rendering(api, pages, data, catalog, details, RenderedGrids,
                                     check_parser_errors, check_shield_icon, dom)
             smoke_vendor_rows(api, pages, data, catalog, csrf, dom, check_parser_errors)
