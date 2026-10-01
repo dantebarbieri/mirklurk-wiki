@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 import urllib.parse
 
+from wiki_render import image_for, pixel_geometry
+
 
 ARTICLES = (
     "Items", "Bestiary", "Iron Hand Axe", "Survivor's Field Kit", "Gurb-Gurb",
@@ -69,7 +71,7 @@ def measure(page):
     }""")
 
 
-def check_layout(result, width, assets):
+def check_layout(result, width, assets, coin_sizes):
     if result["errors"]:
         raise RuntimeError("Responsive article contains parser/image errors.")
     if (result["viewport"] != width or result["client"] != width or result["scroll"] > width + 1
@@ -88,7 +90,7 @@ def check_layout(result, width, assets):
     if any(c["minWidth"] < 3 * c["em"] or c["box"]["height"] < 3 * c["em"] for c in result["cells"]):
         raise RuntimeError("Health/attack cells shrank below their existing 3em geometry.")
     for coin in result["coins"]:
-        if coin["delta"] > 0.5 or coin["image"]["width"] != 16 or coin["image"]["height"] != 16:
+        if coin["delta"] > 0.5 or (coin["image"]["width"], coin["image"]["height"]) not in coin_sizes:
             raise RuntimeError("Responsive layout changed coin size or line-box centering.")
     if any(i["delta"] > 0.5 or i["gap"] < -0.5 for i in result["items"]):
         raise RuntimeError("Responsive layout overlaps item labels or changes their centering.")
@@ -166,6 +168,7 @@ def smoke_responsive(base, data, artifact_dir):
     folder.mkdir(parents=True, exist_ok=True)
     assets = {i["file_title"].removeprefix("File:").replace(" ", "_"): i["pixel_art"]
               for i in data["illustrations"] if i["rights_status"] == "approved"}
+    coin_sizes = {pixel_geometry(image_for(coin, data["illustrations"]), 20, 20)[:2] for coin in ("item-72", "item-73", "item-74")}
     records, baseline = [], {}
 
     def save():
@@ -207,7 +210,7 @@ def smoke_responsive(base, data, artifact_dir):
                     records.append(record)
                     save()
                     try:
-                        check_layout(result, width, assets)
+                        check_layout(result, width, assets, coin_sizes)
                         image_sizes = [(i["src"], i["width"], i["height"]) for i in result["images"]]
                         if name == "desktop":
                             baseline[article] = (result["semanticHash"], image_sizes)
@@ -253,10 +256,10 @@ def smoke_responsive(base, data, artifact_dir):
                         if name == "desktop" and article == "Scaal":
                             page.set_viewport_size({"width": 320, "height": 900})
                             record["resizedPhone"] = measure(page)
-                            check_layout(record["resizedPhone"], 320, assets)
+                            check_layout(record["resizedPhone"], 320, assets, coin_sizes)
                             page.set_viewport_size({"width": width, "height": 900})
                             restored = measure(page)
-                            check_layout(restored, width, assets)
+                            check_layout(restored, width, assets, coin_sizes)
                             if [t["box"]["width"] for t in restored["tables"]] != [t["box"]["width"] for t in result["tables"]]:
                                 raise RuntimeError("Resizing back to desktop did not restore table layout.")
                             record["resizeRestored"] = True
