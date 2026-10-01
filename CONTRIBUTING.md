@@ -94,7 +94,8 @@ Ordinary contributors do not need interface-editing permissions.
 Signed-in editors can use **Edit** (VisualEditor) or **Edit source**. Pages that
 supply shared recipe, price, merchant, loot or coin data to other pages offer
 only **Edit source**, because the visual editor would rearrange their inclusion
-markers; see [Visual editing](docs/DEPLOYMENT.md#visual-editing).
+markers; see [Visual editing](docs/DEPLOYMENT.md#visual-editing). On talk pages,
+use **Reply** under a comment or **Add topic**; they indent and sign for you.
 
 Merging to `main` publishes the generated pages automatically, but only onto
 pages whose latest revision came from the publishing automation. A page someone

@@ -36,6 +36,30 @@ try {
     exit(1);
 }
 
+if (getenv('MIRKLURK_INSTALL_STAGE') !== 'core') {
+    // The core installer only sees its generated settings, so the baked settings' extensions
+    // (Echo, Linter, DiscussionTools) create their tables in a follow-up schema update.
+    $runChild = static function (array $command): int {
+        $process = proc_open($command, [STDIN, STDOUT, STDERR], $pipes);
+        return is_resource($process) ? proc_close($process) : 1;
+    };
+    putenv('MIRKLURK_INSTALL_STAGE=core');
+    $status = $runChild([PHP_BINARY, __FILE__,
+        '--admin', $options['admin'], '--password-file', $options['password-file']]);
+    putenv('MIRKLURK_INSTALL_STAGE');
+    if ($status !== 0) {
+        fwrite(STDERR, "Installation failed; the extension schema update was not run.\n");
+        exit($status);
+    }
+    // A brand-new wiki has no readers to protect, and update.php refuses read-only mode.
+    putenv('MW_READ_ONLY');
+    $status = $runChild([PHP_BINARY, '/var/www/html/maintenance/run.php', 'update', '--quick']);
+    if ($status !== 0) {
+        fwrite(STDERR, "Installation completed, but the extension schema update failed; rerun update.\n");
+    }
+    exit($status);
+}
+
 $temporary = sys_get_temp_dir() . '/mirklurk-install-' . bin2hex(random_bytes(12));
 if (!mkdir($temporary, 0700)) {
     fwrite(STDERR, "Installation could not create its private temporary directory.\n");

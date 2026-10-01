@@ -1,6 +1,7 @@
 """Disposable check that VisualEditor is offered on ordinary pages but not shared-data owners."""
 
 import re
+import time
 import urllib.parse
 
 SHARED_MARKUP = re.compile(r"<\s*/?\s*(?:onlyinclude|includeonly|noinclude)\b", re.IGNORECASE)
@@ -46,3 +47,47 @@ def smoke_editor_selection(api, base, csrf, pages, open_url):
     if before != after:
         raise RuntimeError("A refused VisualEditor save changed a shared-data owner.")
     print(f"Editor smoke: VisualEditor on {ordinary}; source-only on {owner}.", flush=True)
+
+
+def smoke_discussions(api, base, csrf, open_url):
+    """Requires a signed-in account behind `api`; proves the reply tool and its tables work."""
+    talk = "Talk:Synthetic discussion"
+    saved = api({
+        "action": "edit", "title": talk, "createonly": 1, "token": csrf, "summary": "Discussion smoke",
+        "text": "== Synthetic topic ==\nA synthetic opening comment. ~~~~\n",
+    }, post=True)
+    if saved.get("edit", {}).get("result") != "Success":
+        raise RuntimeError("The discussion smoke could not create a talk page.")
+    with open_url(base + "/w/" + urllib.parse.quote(talk.replace(" ", "_")), timeout=30) as response:
+        if "ext-discussiontools-init-replylink" not in response.read().decode():
+            raise RuntimeError("Talk pages do not offer DiscussionTools reply links.")
+
+    def comments(items):
+        for item in items:
+            if item.get("type") == "comment":
+                yield item
+            yield from comments(item.get("replies", []))
+
+    info = api({"action": "discussiontoolspageinfo", "page": talk, "prop": "threaditemshtml"})
+    opening = next(comments(info["discussiontoolspageinfo"]["threaditemshtml"]), None)
+    if opening is None:
+        raise RuntimeError("DiscussionTools found no comment on the synthetic talk page.")
+    reply = api({
+        "action": "discussiontoolsedit", "paction": "addcomment", "page": talk,
+        "commentid": opening["id"], "wikitext": "A synthetic reply.", "token": csrf,
+    }, post=True)
+    if reply.get("discussiontoolsedit", {}).get("result") != "success":
+        raise RuntimeError("The DiscussionTools reply tool could not save a reply.")
+    text = api({"action": "parse", "page": talk, "prop": "wikitext"})["parse"]["wikitext"]["*"]
+    if not re.search(r"^:A synthetic reply\. \[\[User:", text, re.MULTILINE):
+        raise RuntimeError("The DiscussionTools reply was not saved as an indented, signed comment.")
+    # Both queries read the extensions' own tables, which a missed schema update leaves absent.
+    for _ in range(10):
+        found = api({"action": "discussiontoolsfindcomment", "idorname": opening["id"]})
+        if any(row.get("title") == talk for row in found["discussiontoolsfindcomment"]):
+            break
+        time.sleep(1)
+    else:
+        raise RuntimeError("DiscussionTools did not persist comment permalinks.")
+    api({"action": "query", "meta": "notifications"})["query"]["notifications"]
+    print(f"Discussion smoke: replied on {talk}; permalinks and notifications available.", flush=True)

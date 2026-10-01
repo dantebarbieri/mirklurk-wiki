@@ -40,6 +40,7 @@ Do not bind-mount another settings file over it. Rebuild/recreate for changes.
 The template loads bundled ParserFunctions for named canonical views,
 Scribunto with the bundled `luastandalone` engine for [display templates](TEMPLATES.md),
 VisualEditor, TemplateData, PageImages for per-page search and sharing icons,
+Echo, Linter and DiscussionTools for talk page replies,
 and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
 no extension download is needed. Scribunto registers Module namespace 828
 and the `Scribunto` Lua content model. Its standard CPU/memory limits remain
@@ -80,6 +81,28 @@ browser code only calls `/api.php` (Parsoid runs in-process), so no extra proxy
 routes are needed. Then, as an ordinary user, visually edit and save a practice
 page, and confirm a shared-data owner such as an item with a price offers only
 **Edit source**.
+
+## Talk page replies
+
+Bundled DiscussionTools adds **Reply** links under signed comments and an
+**Add topic** form on talk pages, so editors no longer hand-indent with `:` and
+type `~~~~`. It requires Linter and uses the integrated Parsoid client like
+VisualEditor. Echo supplies topic subscriptions and the on-wiki notification
+bell for replies and mentions; with outgoing email disabled it sends no mail.
+Talk pages carrying shared-data markers stay protected by the source-only
+refusal above, because the reply tool saves through `visualeditoredit`.
+
+Unlike the editors, **all three extensions add database tables.** A fresh
+`install.php` runs `update --quick` with the baked settings after the core
+installer and fails if that update fails. For an existing wiki follow the
+upgrade procedure below: back up, rebuild the reviewed image, run
+`php maintenance/run.php update --quick` in a one-off app container with
+`MW_READ_ONLY` cleared, then recreate the app. Existing talk pages gain reply
+links as their cached rendering expires; purge a page to see them at once, and
+optionally run
+`php maintenance/run.php ./extensions/DiscussionTools/maintenance/persistRevisionThreadItems.php --current`
+to backfill comment permalinks for older discussions. Then reply to a comment
+on a practice talk page as an ordinary user.
 
 ## Responsive Vector 2022
 
@@ -498,11 +521,15 @@ Vector screenshots/geometry (otherwise they are temporary). Then
 randomly named Compose project with temporary generated credentials, then:
 
 - checks installation refusal on reuse, anonymous permissions, disabled web
-  uploads, the loaded ParserFunctions, VisualEditor and TemplateData extensions,
+  uploads, the loaded ParserFunctions, VisualEditor, TemplateData, Echo, Linter
+  and DiscussionTools extensions,
   and CAPTCHA-protected self-registration;
 - as a signed-in editor, checks that an ordinary page offers VisualEditor and
   loads through Parsoid, while a shared-data owner offers only source editing,
   shows its notice and refuses a VisualEditor API save without a new revision;
+- creates a talk page, checks its reply links, saves a reply with the
+  DiscussionTools API, and confirms comment permalinks and notifications load
+  from their extension tables;
 - exercises real Apache HTTP old/new title and revision identity, GET/HEAD,
   root/main-page routing, punctuation, Unicode, namespaces, encoded subpages,
   missing-page 404s, query/action semantics, REST path info and root assets;
