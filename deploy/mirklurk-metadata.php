@@ -209,7 +209,7 @@ final class MirklurkMetadata {
             }
             $results[$id] = new SearchResultThumbnail(
                 $file->getMimeType(),
-                $file->getSize(),
+                null,
                 $file->getWidth(),
                 $file->getHeight(),
                 null,
