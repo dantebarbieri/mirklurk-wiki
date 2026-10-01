@@ -373,8 +373,8 @@ editorial navigation, not biological claims.
 `guides` contains bounded original paragraphs, existing related-entity IDs,
 confidence and evidence for the seven damage owners and the finite mechanics
 owners: Health and armor, Action points, Satiation, Stamina, Focus, Temperature,
-Wellbeing, Foods, Resting, and Weather. Optional `related_pages` links only to
-other existing reviewed guide records. New mechanics owners are generated only
+Wellbeing, Foods, Resting, Weather and Armor points. Optional `related_pages`
+links only to other existing reviewed guide records. New mechanics owners are generated only
 when their evidence-backed guide exists, never as empty schema placeholders.
 Optional `image_entity` and `image_caption` must appear together and reuse an
 already approved illustration with a contextual caption, not a fabricated stat

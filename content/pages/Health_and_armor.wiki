@@ -1,6 +1,6 @@
 Combat uses shaped health and attack grids. See [[Bestiary|creature]], [[NPCs|character]] and [[Items|item]] pages for their patterns.
 
-An armored health cell shows a shield: bronze means 1 armor layer, silver means 2, and gold means 3. Hover over a cell for its HP and armor count.
+An armored health cell shows a shield: bronze means 1 armor layer, silver means 2, and gold means 3. Hover over a cell for its HP and armor count. See [[Armor points]] for how your equipment's armor becomes layers on your health grid.
 
 Attack cells show damage ranges. Empty positions are blank.
 
