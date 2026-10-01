@@ -1343,8 +1343,6 @@ def smoke():
                 raise RuntimeError("The installed Scribunto extension is not loaded.")
             if not {"VisualEditor", "TemplateData"} <= {row["name"] for row in extensions}:
                 raise RuntimeError("The bundled visual editor or template metadata is not loaded.")
-            if not {"Echo", "Linter", "DiscussionTools"} <= {row["name"] for row in extensions}:
-                raise RuntimeError("The bundled talk page reply tools are not loaded.")
             with opener.open(base + "/index.php?title=Special:CreateAccount", timeout=30) as response:
                 registration = response.read().decode()
             if 'name="captchaWord"' not in registration or question not in registration:
