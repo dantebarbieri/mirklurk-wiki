@@ -215,7 +215,7 @@ reflected into error HTML or arbitrary attributes.
 `Module:Display assets` (including the item and creature lookups) is generated from the existing approved
 `illustrations.json` metadata using the **same `pixel_image()` formatter** as
 other illustrations. It contains exact escaped markup, not a second image
-registry or Lua sizing policy. Coins use the 20px budget (16px native display);
+registry or Lua sizing policy. Coins use the 20px budget (cropped 10px native coins display at 2x, 20px);
 shields use the 32px budget (2x native display). Both use original uploads,
 integer-native zoom and no thumbnail/srcset. Image bytes stay outside Git.
 
@@ -288,6 +288,6 @@ All 246 item lookups, authored lists, nested row arguments, exact prices,
 filtered rows and ordinary template-edit propagation are parsed by MediaWiki.
 The disposable browser runner uses the deployed Vector 2022 skin at desktop/mobile widths after
 fonts and images load. It reproduces the old baseline error, measures coin
-and item icon/text centers (at most 0.5 CSS px rounding error), checks native
-16px coins, narrow wrapping and unchanged health cells, and saves synthetic-only
+and item icon/text centers (at most 0.5 CSS px rounding error), checks integer-native
+coin sizes, narrow wrapping and unchanged health cells, and saves synthetic-only
 screenshots plus `geometry.json` in the CI `vector-layout` artifact.

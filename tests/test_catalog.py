@@ -17,7 +17,7 @@ from wiki_catalog import (
     category_definitions, default_catalog, entry_owners, entry_relations, fact_owners, page_locations,
     parse_catalog, validate_catalog,
 )
-from wiki_data import DataError, load_data
+from wiki_data import DataError, load_data, uncropped
 from wiki_details import (
     MAX_DETAILS_BYTES, empty_details, load_publication_inputs, parse_details,
     parse_illustrations, validate_details,
@@ -171,7 +171,9 @@ class CatalogTests(unittest.TestCase):
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
         self.assertEqual(len(self.data["illustrations"]), 337)
-        images = [{key: value for key, value in row.items() if key != "pixel_art"}
+        self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 295)
+        current = {row["id"]: row for row in self.data["illustrations"]}
+        images = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
                   for row in self.data["illustrations"] if "role" not in row]
         self.assertEqual(
             hashlib.sha256((json.dumps({"schema_version": 1, "illustrations": images}, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
@@ -196,10 +198,14 @@ class CatalogTests(unittest.TestCase):
         for image in original_batch["illustrations"]:
             title = locations[image["entity"]] if "entity" in image else stations[image["station"]]["title"]
             page = self.pages[title]
+            image = current[image["id"]]
             figures = [part.split("</div>", 1)[0] for part in page.split('class="pixel-art-figure"')[1:]]
             self.assertEqual(sum(figure.count(f'[[{image["file_title"]}|') for figure in figures), 1)
             self.assertIn(literal(image["sha256"]), self.audit)
             self.assertNotIn(image["sha256"], page)
+            if "cropped_from" in image:
+                self.assertNotIn(image["cropped_from"]["file_title"] + "|", page)
+                self.assertIn(literal(image["cropped_from"]["file_title"]), self.audit)
             self.assertIn(literal(image_caption(image)), page)
         for identity in ("nature-6",):
             self.assertIn("not a complete mature specimen", self.pages[locations[identity]])
@@ -837,7 +843,7 @@ class CatalogTests(unittest.TestCase):
         rendered = self.pages["Module:Display assets"]
         for number, name in ((74, "Gold"), (73, "Silver"), (72, "Copper")):
             image = next(row for row in self.data["illustrations"] if row.get("entity") == f"item-{number}")
-            self.assertIn(f'[[File:Item-{number}.png|{image["pixel_art"]["width"]}px|link=|alt=<nowiki>{name} coin</nowiki>', rendered)
+            self.assertIn(f'[[{image["file_title"]}|{image["pixel_art"]["width"]}px|link=|alt=<nowiki>{name} coin</nowiki>', rendered)
         for value in (Decimal("0.001"), Decimal("1.23000000000000000000000000000000001")):
             with self.assertRaises(DataError):
                 price_text({"value": value}, [])

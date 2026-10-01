@@ -165,6 +165,16 @@ def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pi
     )
 
 
+def crop_text(row):
+    source = row.get("cropped_from")
+    if not source:
+        return ""
+    scale = source["pixel_art"]["source_scale"]
+    return (f'; transparent margins cropped from {literal(source["file_title"])} (SHA-256 {source["sha256"]}, '
+            f'{source["pixel_art"]["width"]} x {source["pixel_art"]["height"]}) at native offset '
+            f'{source["left"] // scale}, {source["top"] // scale}')
+
+
 def image_caption(image):
     caption = image["caption"]
     caption = caption.replace(" in-game sprite, shown in a representative frame.", ".")
@@ -946,7 +956,7 @@ def source_page(data, catalog, details, locations, facts, entries):
     lines.extend(["", "== Artwork review ==", table(["File", "Creator", "Reviewed image SHA-256", "Uploaded pixels / source scale", "Rights review", "Evidence"], [
         [literal(row["file_title"]), known(row["creator"]), known(row["sha256"]),
          (f'{row["pixel_art"]["width"]} x {row["pixel_art"]["height"]}; {row["pixel_art"]["source_scale"]}x native'
-          if "pixel_art" in row else "Not reviewed"),
+          + crop_text(row) if "pixel_art" in row else "Not reviewed"),
          literal(row["rights_status"]) + "; " + known(row["rights_basis"]) + "; " + known(row["rights_note"]),
          evidence_text(row["evidence"])]
         for row in sorted(data.get("illustrations", []), key=lambda row: row["id"])

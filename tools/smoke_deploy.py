@@ -48,12 +48,12 @@ from wiki_views import selective_view
 
 ROOT = Path(__file__).resolve().parents[1]
 MATURE_TREES = {
-    "nature-4": (588, 564), "nature-7": (684, 912), "nature-17": (340, 540), "nature-20": (256, 256),
+    "nature-4": (508, 520), "nature-7": (616, 860), "nature-17": (272, 484), "nature-20": (196, 220),
 }
 LANDMARK_IMAGES = {
-    "Ranger-Bhato-hut-exterior.png": (48, 48),
-    "Gurb-Gurb-hollow-exterior.png": (80, 128),
-    "Ihar-shipwreck-exterior.png": (128, 96),
+    "Ranger-Bhato-hut-exterior-cropped.png": (48, 42),
+    "Gurb-Gurb-hollow-exterior-cropped.png": (79, 120),
+    "Ihar-shipwreck-exterior-cropped.png": (128, 92),
 }
 BRANDING_IMAGES = {
     "MW_LOGO_URL": ("Synthetic-logo-128.png", 128, bytes((41, 73, 19, 255))),

@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from wiki_catalog import armor_groups, category_definitions, page_locations, primary_groups, validate_catalog
-from wiki_data import DataError, validate_data
+from wiki_data import DataError, uncropped, validate_data
 from wiki_details import load_publication_inputs, validate_capacity_profiles, validate_details
 from wiki_render import audit_report, image_caption, build_pages, icon, illustration_markup, pixel_geometry, pixel_image
 from wiki_views import scroll_open
@@ -103,6 +103,12 @@ class FollowupTests(unittest.TestCase):
                     lead = "''': a quest item that can be collected.\n"
                     self.assertEqual(text.count(lead), 1)
                     text = text.replace(lead, "'''\n")
+                    # The live revision predates the transparent-margin crop of its icon.
+                    recorder = next(row for row in self.data["illustrations"] if "cropped_from" in row
+                                    and self.locations.get(row.get("entity")) == title)
+                    markup = pixel_image(recorder, alt="Wooden Recorder inventory icon.", page_image=True)
+                    self.assertEqual(text.count(markup), 1)
+                    text = text.replace(markup, pixel_image(uncropped(recorder), alt="Wooden Recorder inventory icon.", page_image=True))
                 self.assertEqual(hashlib.sha256(text.rstrip().encode()).hexdigest(), digest)
 
     def test_exact_factions_cover_all_beings_and_replace_primary_taxonomy(self):
@@ -230,7 +236,7 @@ class FollowupTests(unittest.TestCase):
                 self.assertIn("|link=" + self.locations[image["entity"]], icon(image["entity"], [image], entities, self.locations))
         self.assertFalse(any(re.search(r"\[\[File:[^\n]*\|(?:thumb|frameless)(?:\||\]\])", page) for page in self.pages.values()))
         hut = next(image for image in self.data["illustrations"] if image["id"] == "being-12-location-illustration")
-        self.assertEqual(pixel_geometry(hut), (192, 192, 4))
+        self.assertEqual(pixel_geometry(hut), (192, 168, 4))
         shield = next(image for image in self.data["illustrations"] if image.get("health_armor") == 1)
         self.assertEqual(pixel_geometry(shield, 32, 32), (32, 32, 2))
 
@@ -240,6 +246,30 @@ class FollowupTests(unittest.TestCase):
             data["illustrations"][0]["pixel_art"].update(mutation)
             with self.assertRaises(DataError):
                 validate_data(data, stations={row["id"]: row for row in self.catalog["stations"]})
+
+    def test_cropped_derivatives_keep_native_grid_and_retire_distinct_sources(self):
+        stations = {row["id"]: row for row in self.catalog["stations"]}
+        index, image = next((i, row) for i, row in enumerate(self.data["illustrations"]) if "cropped_from" in row)
+        full = uncropped(image)
+        self.assertEqual(list(full), [key for key in image if key != "cropped_from"])
+        self.assertNotIn("cropped_from", full)
+        scale = image["pixel_art"]["source_scale"]
+        mutations = (
+            {"left": scale + 1}, {"left": full["pixel_art"]["width"]}, {"sha256": image["sha256"]},
+            {"file_title": image["file_title"]}, {"file_title": "File:Thing.gif"},
+            {"pixel_art": dict(image["pixel_art"])}, {"pixel_art": dict(full["pixel_art"], source_scale=1)},
+        )
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                data = copy.deepcopy(self.data)
+                data["illustrations"][index]["cropped_from"].update(mutation)
+                with self.assertRaises(DataError):
+                    validate_data(data, stations=stations)
+        data = copy.deepcopy(self.data)
+        other = next(row for row in data["illustrations"] if "cropped_from" in row and row["id"] != image["id"])
+        other["cropped_from"]["file_title"] = image["cropped_from"]["file_title"]
+        with self.assertRaisesRegex(DataError, "retired File title"):
+            validate_data(data, stations=stations)
 
     def test_smoke_rejects_resampled_sources_and_stripped_scaling(self):
         image = next(row for row in self.data["illustrations"] if row.get("health_armor") == 1)
