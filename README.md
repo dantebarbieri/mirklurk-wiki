@@ -59,7 +59,9 @@ fails closed before page edits if the target wiki lacks working Scribunto.
 The metadata-only artwork register covers 337 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
 Three supplementary NPC-location exteriors and eight NPC overworld sprites
-preserve the existing portraits.
+preserve the existing portraits. 295 records now embed transparent-margin crops
+under new `-cropped` File titles; the original Files are kept
+([details](docs/IMAGES.md#transparent-margin-crops)).
 Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
 Four item images are deliberately

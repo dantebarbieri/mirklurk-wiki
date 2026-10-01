@@ -25,9 +25,14 @@ from test_wiki import synthetic_data
 
 
 LANDMARKS = {
-    "being-12": ("Ranger-Bhato-hut-exterior.png", "c25cc3db9e4414f8ff9c4349dd6d5b094ff52c2cdd109024dca721beb88b8d7a"),
-    "being-26": ("Gurb-Gurb-hollow-exterior.png", "0d6c1233ce177559e4a4246619300fe10db86ecb2c1ab30651dbcb2918932c6f"),
-    "being-33": ("Ihar-shipwreck-exterior.png", "fae9cbf6070fdccd29c765dddd31e160b2c92c75911ecaab5f641881fa702d53"),
+    "being-12": ("Ranger-Bhato-hut-exterior-cropped.png", "aa3f457832b60d1b48977cd30f11f9da2c10bf9956bcb52cf5b354b248da471f"),
+    "being-26": ("Gurb-Gurb-hollow-exterior-cropped.png", "797c6aab7f6cec8c8555d0edf501cd60c88386279b6973f3df0a6ab162132429"),
+    "being-33": ("Ihar-shipwreck-exterior-cropped.png", "90d58e082b943d71275478d88972d99f1dd203ebe3f3e9faa0fe9893d5545c1c"),
+}
+SOURCES = {  # Preserved native exports the transparent-margin crops derive from.
+    "being-12": "c25cc3db9e4414f8ff9c4349dd6d5b094ff52c2cdd109024dca721beb88b8d7a",
+    "being-26": "0d6c1233ce177559e4a4246619300fe10db86ecb2c1ab30651dbcb2918932c6f",
+    "being-33": "fae9cbf6070fdccd29c765dddd31e160b2c92c75911ecaab5f641881fa702d53",
 }
 
 
@@ -48,6 +53,8 @@ class LandmarkTests(unittest.TestCase):
             self.assertEqual(image["id"], identity + "-location-illustration")
             self.assertEqual(image["file_title"], "File:" + filename)
             self.assertEqual(image["sha256"], digest)
+            self.assertEqual(image["cropped_from"]["file_title"], "File:" + filename.replace("-cropped", ""))
+            self.assertEqual(image["cropped_from"]["sha256"], SOURCES[identity])
             self.assertEqual(image["creator"], "Edym Pixels")
             self.assertEqual(image["rights_status"], "approved")
             self.assertIn("2026-09-26", image["rights_note"])
@@ -333,13 +340,15 @@ class LandmarkTests(unittest.TestCase):
     def test_synthetic_landmarks_keep_exact_originals_for_browser_integer_upscaling(self):
         specs = synthetic_image_specs(self.data)
         self.assertEqual(LANDMARK_IMAGES, {
-            "Ranger-Bhato-hut-exterior.png": (48, 48),
-            "Gurb-Gurb-hollow-exterior.png": (80, 128),
-            "Ihar-shipwreck-exterior.png": (128, 96),
+            "Ranger-Bhato-hut-exterior-cropped.png": (48, 42),
+            "Gurb-Gurb-hollow-exterior-cropped.png": (79, 120),
+            "Ihar-shipwreck-exterior-cropped.png": (128, 92),
         })
         for filename, size in LANDMARK_IMAGES.items():
             self.assertEqual(specs[filename][:2], size)
             self.assertEqual(specs[filename][3], 32)
+            image = next(row for row in self.images.values() if row["file_title"] == "File:" + filename)
+            self.assertEqual(size, (image["pixel_art"]["width"], image["pixel_art"]["height"]))
 
     def test_runtime_checks_actual_portraits_landmark_imgs_and_served_native_bytes(self):
         def chunk(kind, body):
@@ -402,11 +411,11 @@ class LandmarkTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 run_case(changed_parses=altered)
         altered = copy.deepcopy(infos)
-        altered["File:Ranger-Bhato-hut-exterior.png"]["width"] = 49
+        altered["File:Ranger-Bhato-hut-exterior-cropped.png"]["width"] = 49
         with self.assertRaisesRegex(RuntimeError, "native PNG metadata"):
             run_case(changed_infos=altered)
         altered_bodies = dict(bodies)
-        altered_bodies[infos["File:Ranger-Bhato-hut-exterior.png"]["url"]] += b"changed"
+        altered_bodies[infos["File:Ranger-Bhato-hut-exterior-cropped.png"]["url"]] += b"changed"
         with self.assertRaisesRegex(RuntimeError, "exact native import"):
             run_case(changed_bodies=altered_bodies)
 

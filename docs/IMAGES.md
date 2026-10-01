@@ -157,9 +157,10 @@ and the operator-reported permission basis are in the three `role: "location"`
 records. Gurb-Gurb's smoke is a separate runtime effect, not an overlay in the
 PNG. Bhato's frame 0 is the hut, not the different frame 1 entrance.
 
-The location sections now use the original-file integer-scaling policy below:
-Bhato's hut is displayed at 192 x 192 (4x), Gurb-Gurb's hollow at 160 x 256 (2x),
-and Ihar's shipwreck at 128 x 96 (1x). Approved bytes are never rewritten.
+The location sections now use the original-file integer-scaling policy below.
+After the [transparent-margin crops](#transparent-margin-crops), Bhato's hut is
+displayed at 192 x 168 (4x), Gurb-Gurb's hollow at 158 x 240 (2x), and Ihar's
+shipwreck at 128 x 92 (1x). Approved bytes are never rewritten.
 No compact icon consumer uses these exteriors. Import the three exact
 titles with their attribution sidecars before the pages that embed them are
 published; the sync lists every referenced File that is still missing, and an
@@ -197,7 +198,8 @@ Exact hashes, Edym Pixels attribution, original captions and evidence are in
 the eight `role: "sprite"` records. All eight were decoded and verified to
 reduce exactly to their native frame. Import the eight exact titles with their
 attribution sidecars before publishing pages that embed them; do not overwrite
-the existing portraits.
+the existing portraits. Pages now embed their `-cropped` derivatives (below).
+
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 entity or station record renders a neutral missing-picture notice, **not** an image or File link.
 Its reserved title and rights/evidence details remain on Source provenance.
@@ -216,6 +218,47 @@ Publish approved metadata only after the corresponding operator import is ready.
 Titles are restricted to simple ASCII raster-image basenames: PNG, JPEG, or
 WebP. Use stable names, not version-specific host URLs. MediaWiki resolves these
 relative File references after a domain migration.
+
+## Transparent-margin crops
+
+The 2026-10-02 crop pass removes empty transparent padding without rewriting
+any approved bytes. Each derivative is uploaded under a **new** title,
+`File:<source base>-cropped.png` (for example `File:Item-0-cropped.png` or
+`File:Being-6-overworld-cropped.png`). The suffix keeps the source's identity
+and sort order, cannot collide with an existing export convention, and lets
+anyone find the preserved original by deleting one word. Old Files remain on
+the wiki unchanged; never overwrite, rename or delete them.
+
+Method: every active PNG was downloaded and hash-checked against its record,
+then cropped to its alpha > 0 bounding box snapped **outward** to multiples of
+`source_scale`, so the result is still an exact integer nearest-neighbor
+enlargement and the native grid is unchanged. Exact RGBA values are kept.
+Of 337 records, 295 were cropped (243 items, 35 beings including the eight
+overworld sprites, 12 nature records including the four mature trees, the
+three location exteriors, and two workstations). Skipped: 39 images with no
+trimmable native pixel (four fully opaque nature tiles, 25 skills, nine beings
+and the later Alchemy workstation frame) and the three health-armor shields,
+whose fixed 32 x 32 overlay geometry is part of the health grid. Uploaded
+area fell by 34% (10.7 to 7.1 million pixels); bytes from 198 KB to 155 KB.
+
+Each cropped record keeps the same `id`, captions, rights and evidence. It
+gets the new `file_title`, `sha256` and `pixel_art`, plus `cropped_from`:
+the preserved source title, its SHA-256 and `pixel_art`, and the `left`/`top`
+offset in uploaded pixels. The validator requires offsets on the native grid,
+the crop to fit inside and be strictly smaller than its source, the same scale,
+a distinct hash, and a source title that is no longer active. Source provenance
+names the source, hash and native offset. Smaller canvases may now display at
+a larger whole-number scale within the same figure, icon and coin budgets.
+
+Every derivative was decoded by two independent decoders (a pure-Python codec
+and System.Drawing): each reduces exactly by its scale, contains every
+non-transparent source pixel at the recorded offset, and drops only fully
+transparent pixels. The operator's private import list (title, SHA-256,
+bytes, source title and hash, offset) and the 295 PNGs are kept outside Git
+alongside the other private staging. Import all 295 titles with the same
+attribution sidecars as their sources before publishing pages that embed them.
+The active register stays at 337; after import the retained uploaded
+game-image total is 636 before site branding. Synthetic fixtures stay at 345.
 
 ## Crisp integer-scaled presentation
 

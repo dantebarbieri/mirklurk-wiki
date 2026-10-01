@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from wiki_catalog import page_locations
-from wiki_data import DataError
+from wiki_data import DataError, uncropped
 from wiki_details import load_publication_inputs, parse_illustrations
 from wiki_render import build_pages, image_for
 
@@ -44,8 +44,11 @@ class OverworldSpriteTests(unittest.TestCase):
         for identity, (sprite, (width, height, scale)) in OVERWORLD_SPRITES.items():
             image = self.sprites[identity]
             self.assertEqual(image["id"], identity + "-sprite-illustration")
-            self.assertEqual(image["file_title"], f"File:{identity.capitalize()}-overworld.png")
-            self.assertEqual(image["pixel_art"], {"width": width, "height": height, "source_scale": scale})
+            # The full padded-canvas export is preserved; pages show its transparent-margin crop.
+            self.assertEqual(uncropped(image)["file_title"], f"File:{identity.capitalize()}-overworld.png")
+            self.assertEqual(uncropped(image)["pixel_art"], {"width": width, "height": height, "source_scale": scale})
+            self.assertEqual(image["file_title"], f"File:{identity.capitalize()}-overworld-cropped.png")
+            width = image["pixel_art"]["width"]
             self.assertEqual(image["rights_status"], "approved")
             self.assertEqual(image["creator"], "Edym Pixels")
             self.assertIn(f"beingDB[{identity.split('-')[1]}].sprite/{sprite}.frame0",

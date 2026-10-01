@@ -284,13 +284,14 @@ def _validate_illustrations(records, sources, entities, stations=None):
     titles = set()
     armor_levels = set()
     role_entities = set()
+    source_titles = []
     for index, illustration in enumerate(_records(records, "illustrations")):
         where = f"illustrations[{index}]"
         _object(
             illustration,
             {"id", "file_title", "caption", "creator", "sha256", "rights_status",
              "rights_basis", "rights_note", "confidence", "evidence"},
-            {"entity", "station", "variant", "health_armor", "role", "pixel_art"}, where,
+            {"entity", "station", "variant", "health_armor", "role", "pixel_art", "cropped_from"}, where,
         )
         identity = _identifier(illustration["id"], f"{where}.id")
         if identity in seen:
@@ -351,15 +352,58 @@ def _validate_illustrations(records, sources, entities, stations=None):
         if illustration["rights_status"] == "approved" and "pixel_art" not in illustration:
             raise DataError(f"{where}: approved images require reviewed pixel dimensions")
         if "pixel_art" in illustration:
-            pixels = illustration["pixel_art"]
-            _object(pixels, {"width", "height", "source_scale"}, set(), f"{where}.pixel_art")
-            for key in ("width", "height", "source_scale"):
-                _number(pixels[key], f"{where}.pixel_art.{key}", minimum=1,
-                        maximum=16 if key == "source_scale" else 4096, integer=True)
-            if any(pixels[key] % pixels["source_scale"] for key in ("width", "height")):
-                raise DataError(f"{where}: uploaded dimensions must be integer multiples of native pixels")
+            _pixel_art(illustration["pixel_art"], f"{where}.pixel_art")
+        if "cropped_from" in illustration:
+            source_titles.append((where, _cropped_from(illustration, f"{where}.cropped_from")))
         _confidence(illustration["confidence"], f"{where}.confidence")
         _evidence(illustration["evidence"], sources, f"{where}.evidence")
+    seen_sources = set()
+    for where, source in source_titles:
+        if source in titles or source in seen_sources:
+            raise DataError(f"{where}.file_title: a crop source must be a distinct, retired File title")
+        seen_sources.add(source)
+
+
+def uncropped(illustration):
+    """The preserved pre-crop record, for regressions pinned to the original reviewed uploads."""
+    if "cropped_from" not in illustration:
+        return illustration
+    source = illustration["cropped_from"]
+    row = {key: value for key, value in illustration.items() if key != "cropped_from"}
+    row.update(file_title=source["file_title"], sha256=source["sha256"], pixel_art=source["pixel_art"])
+    return row
+
+
+def _pixel_art(pixels, where):
+    _object(pixels, {"width", "height", "source_scale"}, set(), where)
+    for key in ("width", "height", "source_scale"):
+        _number(pixels[key], f"{where}.{key}", minimum=1, maximum=16 if key == "source_scale" else 4096, integer=True)
+    if any(pixels[key] % pixels["source_scale"] for key in ("width", "height")):
+        raise DataError(f"{where}: uploaded dimensions must be integer multiples of native pixels")
+
+
+def _cropped_from(illustration, where):
+    """A transparent-margin crop of a preserved, separately reviewed upload; geometry must stay native."""
+    source = illustration["cropped_from"]
+    _object(source, {"file_title", "sha256", "pixel_art", "left", "top"}, set(), where)
+    title = source["file_title"]
+    if not isinstance(title, str) or not re.fullmatch(r"File:[A-Z][A-Za-z0-9 _.-]{0,119}\.png", title):
+        raise DataError(f"{where}.file_title: expected the preserved source PNG File title")
+    if not isinstance(source["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", source["sha256"]) \
+            or source["sha256"] == illustration["sha256"]:
+        raise DataError(f"{where}.sha256: expected the distinct SHA-256 of the preserved source bytes")
+    if "pixel_art" not in illustration or "health_armor" in illustration:
+        raise DataError(f"{where}: only reviewed entity or station artwork may be a cropped derivative")
+    _pixel_art(source["pixel_art"], f"{where}.pixel_art")
+    crop, full = illustration["pixel_art"], source["pixel_art"]
+    scale = full["source_scale"]
+    for key in ("left", "top"):
+        _number(source[key], f"{where}.{key}", minimum=0, maximum=4095, integer=True)
+    if (crop["source_scale"] != scale or source["left"] % scale or source["top"] % scale
+            or source["left"] + crop["width"] > full["width"] or source["top"] + crop["height"] > full["height"]
+            or (crop["width"], crop["height"]) == (full["width"], full["height"])):
+        raise DataError(f"{where}: expected a smaller crop on the source's native-pixel grid")
+    return " ".join(title.replace("_", " ").split())
 
 
 def validate_data(data, stations=None):
