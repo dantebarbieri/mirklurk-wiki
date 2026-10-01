@@ -173,7 +173,6 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(len(self.data["illustrations"]), 337)
         self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 295)
         current = {row["id"]: row for row in self.data["illustrations"]}
-        # Pins cover the original reviewed uploads; cropped derivatives restore them exactly.
         images = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
                   for row in self.data["illustrations"] if "role" not in row]
         self.assertEqual(
