@@ -113,6 +113,26 @@ $wgVectorResponsive = true;
 wfLoadExtension('ParserFunctions');
 wfLoadExtension('Scribunto');
 $wgScribuntoDefaultEngine = 'luastandalone';
+// Per-page icons for search and link previews: each page's own lead figure.
+wfLoadExtension('PageImages');
+// Pixel-art figures are small (80-160px); inline icons are excluded with class=notpageimage.
+$wgPageImagesScores = [
+    'position' => [8, 6, 4, 3],
+    'width' => [0 => 10],
+    'galleryImageWidth' => [99 => -100, 100 => 0],
+    'ratio' => [3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100],
+];
+// MirklurkMetadata emits the single og:image itself, with the site icon as fallback.
+$wgPageImagesOpenGraph = false;
+$wgThumbnailNamespaces = [NS_FILE, NS_MAIN];
+$wgHooks['BeforePageDisplay'][] = MirklurkMetadata::class . '::onBeforePageDisplay';
+// Runtime handlers run after extension handlers, so this replaces PageImages' blurry thumbnails.
+$wgExtensionFunctions[] = static function (): void {
+    \MediaWiki\MediaWikiServices::getInstance()->getHookContainer()->register(
+        'SearchResultProvideThumbnail',
+        MirklurkMetadata::class . '::onSearchResultProvideThumbnail'
+    );
+};
 wfLoadExtension('ConfirmEdit');
 wfLoadExtension('ConfirmEdit/QuestyCaptcha');
 $wgCaptchaClass = 'QuestyCaptcha';

@@ -137,16 +137,18 @@ def pixel_geometry(image, width=224, height=288):
     return native_width * scale, native_height * scale, scale
 
 
-def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pixel-art"):
+def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pixel-art", page_image=False):
     pixels = image["pixel_art"]
     _, _, scale = pixel_geometry(image, width, height)
     label = literal(image_caption(image) if alt is None else alt)
     target = "" if link is None else "|link=" + link
+    # Inline icons, coins and shields must never become another page's PageImages thumbnail.
+    exclusion = "" if page_image else "|class=notpageimage"
     # Request the original, never an interpolated server thumbnail (including srcset variants).
     return (
         f'<span class="{css_class}" style="display:inline-block;line-height:0;image-rendering:pixelated;'
         f'zoom:calc({scale} / {pixels["source_scale"]});">'
-        f'[[{image["file_title"]}|{pixels["width"]}px{target}|alt={label}|{label}]]</span>'
+        f'[[{image["file_title"]}|{pixels["width"]}px{target}|alt={label}{exclusion}|{label}]]</span>'
     )
 
 
@@ -166,7 +168,7 @@ def illustration_markup(image, width=224, caption=None, marker=True):
     if image["rights_status"] == "approved":
         label = image_caption(image) if caption is None else caption
         return (text + "\n" + scroll_open(label, "pixel-art-figure")
-                + pixel_image(image, width=width, alt=label) + "</div>\n"
+                + pixel_image(image, width=width, alt=label, page_image=True) + "</div>\n"
                 + '<div class="pixel-art-caption">' + literal(label) + "</div>\n")
     return text + "\n"
 

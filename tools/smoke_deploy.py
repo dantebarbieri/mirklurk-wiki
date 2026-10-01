@@ -223,11 +223,20 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
             raise RuntimeError("A tree page does not use its reviewed mature composition exclusively.")
         if "shape varies" not in parsed["text"]["*"]:
             raise RuntimeError("A mature-tree caption lost its shape qualification.")
+        # Search results and link previews use only the page's own lead figure.
+        chosen = next(iter(api({"action": "query", "titles": locations[identity], "prop": "pageimages",
+                                "piprop": "name", "pilicense": "any"})["query"]["pages"].values()))
+        if chosen.get("pageimage") != filename.replace(" ", "_"):
+            raise RuntimeError("A page's search and preview icon is not its own lead figure.")
         info = next(iter(api({"action": "query", "titles": "File:" + old_filename,
                               "prop": "imageinfo", "iiprop": "url"})["query"]["pages"].values()))
         with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
             if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
                 raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
+    index = next(iter(api({"action": "query", "titles": "Items", "prop": "pageimages",
+                           "piprop": "name", "pilicense": "any"})["query"]["pages"].values()))
+    if "pageimage" in index:
+        raise RuntimeError("An index page borrowed an inline icon as its search and preview icon.")
     for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]:
         if "image_entity" not in guide:
             continue

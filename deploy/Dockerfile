@@ -11,6 +11,7 @@ RUN a2enmod rewrite \
     && apache2ctl -t \
     && test -f /var/www/html/extensions/ConfirmEdit/QuestyCaptcha/extension.json \
     && test -f /var/www/html/extensions/ParserFunctions/extension.json \
+    && test -f /var/www/html/extensions/PageImages/extension.json \
     && test -f /var/www/html/extensions/Scribunto/extension.json \
     && test -f /var/www/html/skins/Vector/skin.json \
     && php -l /var/www/html/LocalSettings.php \

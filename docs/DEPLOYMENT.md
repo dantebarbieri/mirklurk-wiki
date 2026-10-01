@@ -39,7 +39,8 @@ The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
 Do not bind-mount another settings file over it. Rebuild/recreate for changes.
 The template loads bundled ParserFunctions for named canonical views,
 Scribunto with the bundled `luastandalone` engine for [display templates](TEMPLATES.md),
-and ConfirmEdit/QuestyCaptcha. The Docker build asserts the extensions exist;
+PageImages for per-page search and sharing icons, and ConfirmEdit/QuestyCaptcha.
+The Docker build asserts the extensions exist;
 no extension download is needed. Scribunto registers Module namespace 828
 and the `Scribunto` Lua content model. Its standard CPU/memory limits remain
 enabled, alongside the display module's explicit input/geometry bounds.
@@ -312,11 +313,34 @@ sentences rather than chopping words or bytes. If no suitable short lead exists,
 the description is omitted rather than invented. Improve the article lead
 through the ordinary editorial workflow; this runtime change edits no articles.
 
-`og:image` uses only the explicitly configured `MW_LOGO_ICON_URL`, expanded
-against the canonical origin. That setting already requires the operator's
-separately approved branding asset. With no configured icon there is no image
-tag; no game image is bundled, guessed, scraped or newly cleared for sharing.
+`og:image` uses the article's own page image, chosen by the bundled PageImages
+extension, expanded against the canonical origin. Only an entity's reviewed lead
+figure is a candidate: generated inline icons, coins, shields and portraits carry
+`class=notpageimage`, so index and guide pages without their own figure fall back.
+That figure is already publicly displayed on the article under the
+[image permission policy](IMAGES.md); sharing previews reuse the same original
+file, never a new or guessed asset. When a page has no page image, `og:image`
+falls back to the explicitly configured `MW_LOGO_ICON_URL`, the operator's
+separately approved branding asset. With neither there is no image tag.
+PageImages' own Open Graph output is disabled so each view has one image tag.
 No analytics, external metadata service or search-engine account is involved.
+
+The same page image is the per-page icon in the Vector search typeahead and on
+`Special:Search` (`$wgThumbnailNamespaces` includes articles). The pixel-art
+figures are 80-160px, below PageImages' default 120px minimum, so the template
+sets a width score accepting any width. A runtime `SearchResultProvideThumbnail`
+handler replaces PageImages' downscaled ImageMagick thumbnails with the
+original file, and inline CSS scales it with `image-rendering: pixelated`.
+
+PageImages stores its choice in page properties during links updates. After
+deploying this runtime to an existing wiki, populate them once (then drain jobs):
+
+```sh
+docker compose exec --user www-data mirklurk php /var/www/html/maintenance/run.php \
+  /var/www/html/extensions/PageImages/maintenance/initImageData.php
+```
+
+Ordinary edits and publications keep the properties current afterwards.
 
 ### Native sitemap generation and serving
 

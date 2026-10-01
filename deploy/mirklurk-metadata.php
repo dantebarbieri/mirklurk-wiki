@@ -6,6 +6,9 @@ if (!defined('MEDIAWIKI')) {
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Output\OutputPage;
+use MediaWiki\Search\Entity\SearchResultThumbnail;
+use MediaWiki\Title\Title;
+use PageImages\PageImages;
 
 final class MirklurkMetadata {
     public static function description(string $html): string {
@@ -107,11 +110,12 @@ final class MirklurkMetadata {
             ]);
             $values['og:description'] = $description;
         }
-        // Only the explicit, rights-approved site icon; never guess article artwork.
-        $image = mirklurkImageUrl('MW_LOGO_ICON_URL');
+        // The page's own reviewed lead figure, else the explicit, rights-approved site icon.
+        $file = self::pageImage($title);
+        $image = $file ? $file->getFullUrl() : mirklurkImageUrl('MW_LOGO_ICON_URL');
         if ($image !== '') {
             $values['og:image'] = $services->getUrlUtils()->expand($image, PROTO_CANONICAL);
-            $values['og:image:alt'] = $out->getConfig()->get('Sitename');
+            $values['og:image:alt'] = $file ? $title->getPrefixedText() : $out->getConfig()->get('Sitename');
         }
         foreach ($values as $property => $value) {
             $tags['mirklurk-' . $property] = Html::element('meta', [
@@ -119,5 +123,50 @@ final class MirklurkMetadata {
             ]);
         }
         $tags['mirklurk-card'] = Html::element('meta', ['name' => 'twitter:card', 'content' => 'summary']);
+    }
+
+    /** PageImages' choice: only lead figures, because inline icons are class=notpageimage. */
+    private static function pageImage(Title $title): ?File {
+        if (!class_exists(PageImages::class)) {
+            return null;
+        }
+        $file = PageImages::getPageImage($title);
+        return $file && $file->exists() && str_starts_with($file->getMimeType(), 'image/') ? $file : null;
+    }
+
+    /**
+     * Search results show the original pixel art, never an interpolated ImageMagick thumbnail.
+     * Registered after extensions load, so this runs after PageImages has chosen the file.
+     */
+    public static function onSearchResultProvideThumbnail(array $pages, array &$results, ?int $size = null): void {
+        $services = MediaWikiServices::getInstance();
+        $repos = $services->getRepoGroup();
+        foreach ($results as $id => $thumbnail) {
+            if (!$thumbnail instanceof SearchResultThumbnail || $thumbnail->getName() === null) {
+                continue;
+            }
+            $file = $repos->findFile($thumbnail->getName());
+            if (!$file || !$file->exists() || !$file->getWidth() || !$file->getHeight()) {
+                continue;
+            }
+            $results[$id] = new SearchResultThumbnail(
+                $file->getMimeType(),
+                $file->getSize(),
+                $file->getWidth(),
+                $file->getHeight(),
+                null,
+                $services->getUrlUtils()->expand($file->getFullUrl(), PROTO_RELATIVE),
+                $file->getName()
+            );
+        }
+    }
+
+    public static function onBeforePageDisplay(OutputPage $out): void {
+        // Scale search thumbnails (typeahead and Special:Search) without blur or cropping.
+        $out->addInlineStyle(
+            '.cdx-thumbnail__image,.cdx-menu-item__thumbnail,.searchResultImage-thumbnail img'
+            . '{image-rendering:pixelated;background-size:contain;background-repeat:no-repeat;'
+            . 'object-fit:contain;object-position:center}'
+        );
     }
 }

@@ -2,6 +2,7 @@
 define('MEDIAWIKI', true);
 define('CACHE_DB', 1);
 define('NS_MAIN', 0);
+define('NS_FILE', 6);
 define('NS_CATEGORY', 14);
 $loaded = [];
 function wfLoadSkin(string $name): void {
@@ -70,6 +71,12 @@ try {
     check(in_array('ConfirmEdit/QuestyCaptcha', $loaded, true), 'CAPTCHA extension not loaded.');
     check(in_array('ParserFunctions', $loaded, true), 'Selective canonical views require ParserFunctions.');
     check(in_array('Scribunto', $loaded, true), 'Native display templates require Scribunto.');
+    check(in_array('PageImages', $loaded, true), 'Per-page search and sharing icons require PageImages.');
+    check($wgPageImagesOpenGraph === false, 'Only the metadata hook may emit og:image.');
+    check($wgPageImagesScores['width'] === [0 => 10], 'Small pixel-art lead figures must be page image candidates.');
+    check($wgThumbnailNamespaces === [6, 0], 'Article search results must show page images.');
+    check($wgHooks['BeforePageDisplay'] === ['MirklurkMetadata::onBeforePageDisplay'], 'Pixelated search CSS missing.');
+    check(count($wgExtensionFunctions) === 1, 'Original-size search thumbnail handler missing.');
     check($wgScribuntoDefaultEngine === 'luastandalone', 'Use the bundled bounded Lua standalone engine.');
     check($wgDefaultSkin === 'vector-2022' && $wgVectorResponsive === true,
         'Vector 2022 must use a device-width viewport, not its fixed desktop fallback.');

@@ -250,7 +250,8 @@ not assets bundled in Git or the application image.
 
 The runtime also supplies native canonical links and an operator-refreshed
 MediaWiki sitemap, with safe descriptions and social previews from live article
-leads. URLs follow runtime configuration, and optional preview artwork uses only
+leads. URLs follow runtime configuration. Search results and link previews show
+each page's own reviewed lead figure (via bundled PageImages), falling back to
 the separately approved site icon. See the [metadata rollout and refresh
 contract](docs/DEPLOYMENT.md#canonical-urls-descriptions-and-social-sharing);
 content publication alone does not deploy these features.

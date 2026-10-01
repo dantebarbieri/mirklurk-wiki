@@ -83,6 +83,26 @@ class DisplayTests(unittest.TestCase):
         self.assertNotIn("pixel_art", self.pages["Module:Display"])
         self.assertNotIn("File:", self.pages["Module:Display"])
 
+    def test_only_each_pages_own_lead_figure_is_a_page_image_candidate(self):
+        files = re.compile(r"\[\[(File:[^|\]]+)\|([^\]]*)\]\]")
+        candidates = lambda text: [name for name, options in files.findall(text)
+                                   if "class=notpageimage" not in options.split("|")]
+        self.assertFalse(candidates(self.pages[ASSETS_TITLE]))
+        locations = page_locations(self.data, self.catalog)
+        checked = 0
+        for identity, title in locations.items():
+            image = image_for(identity, self.data["illustrations"])
+            page = self.pages.get(title, "")
+            if image is None or page.startswith("#REDIRECT"):
+                continue
+            lead = re.split(r"(?m)^==", page, maxsplit=1)[0]
+            with self.subTest(title=title):
+                self.assertEqual(candidates(lead)[:1], [image["file_title"]])
+            checked += 1
+        self.assertGreater(checked, 300)
+        for title in ("Items", "Bestiary", "Merchants"):
+            self.assertFalse(candidates(re.split(r"(?m)^==", self.pages[title], maxsplit=1)[0]), title)
+
     def test_exact_price_conversion_and_boundaries(self):
         for copper in (0, 1, 99, 100, 999, 1000, 1234, 9007199254740993, MAX_COPPER):
             self.assertEqual(price_text({"value": Decimal(copper) / 100}), "{{Coins|" + str(copper) + "}}")
