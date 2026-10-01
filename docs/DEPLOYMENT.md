@@ -73,9 +73,9 @@ latest revision, so it follows human edits: removing the markers re-enables
 visual editing. Pages that only *display* shared data remain visually editable.
 
 **Separate operator rollout:** back up, rebuild the reviewed image, run
-`php maintenance/run.php update --quick`, and recreate the app. The reverse
-proxy must pass `/rest.php/...` and `/api.php` POSTs unchanged (including
-encoded slashes). Then, as an ordinary user, visually edit and save a practice
+`php maintenance/run.php update --quick`, and recreate the app. VisualEditor's
+browser code only calls `/api.php` (Parsoid runs in-process), so no extra proxy
+routes are needed. Then, as an ordinary user, visually edit and save a practice
 page, and confirm a shared-data owner such as an item with a price offers only
 **Edit source**.
 
