@@ -38,7 +38,7 @@ from smoke_display import (
     smoke_display_rendering, smoke_editorial_release, smoke_vendor_rows,
 )
 from smoke_browser import smoke_browser
-from smoke_metadata import smoke_metadata
+from smoke_metadata import Head, smoke_metadata
 from smoke_navigation import install_sidebar_fixture
 from smoke_urls import smoke_urls
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
@@ -208,6 +208,29 @@ def smoke_pixel_art(api, data):
                 raise RuntimeError("Pixel art used a resampled source, lost aspect ratio or lost its integer-native scale.")
 
 
+def smoke_link_preview(api, title, filename, open_media=urllib.request.urlopen):
+    """Link previews share an exact integer enlargement of the page's own figure, without nav text."""
+    page = next(iter(api({"action": "query", "titles": title, "prop": "info", "inprop": "url"})["query"]["pages"].values()))
+    with open_media(page["fullurl"], timeout=30) as response:
+        meta = Head(response.read().decode()).meta
+    info = next(iter(api({"action": "query", "titles": "File:" + filename, "prop": "imageinfo",
+                          "iiprop": "url|size"})["query"]["pages"].values()))["imageinfo"][0]
+    scale = max(1, 1024 // max(info["width"], info["height"]))
+    size = (info["width"] * scale, info["height"] * scale)
+    if (meta.get("og:image:type") != "image/png" or meta.get("og:image:alt") != title
+            or (meta.get("og:image:width"), meta.get("og:image:height")) != tuple(map(str, size))
+            or (scale > 1) != ("/mirklurk-preview/" in meta.get("og:image", ""))
+            or (scale == 1 and meta.get("og:image") != info["url"])):
+        raise RuntimeError(f"Link preview is not the page's own integer-enlarged figure: {meta!r}")
+    with open_media(meta["og:image"], timeout=30) as response:
+        body = response.read()
+        if (response.status != 200 or response.headers.get_content_type() != "image/png"
+                or body[:8] != b"\x89PNG\r\n\x1a\n" or struct.unpack(">II", body[16:24]) != size):
+            raise RuntimeError("The shared link-preview image is not a public PNG of the declared size.")
+    if "Main Page" in meta.get("og:description", "") or "Main Page" in meta.get("description", ""):
+        raise RuntimeError("Breadcrumb navigation became the link-preview description.")
+
+
 def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_media=urllib.request.urlopen):
     smoke_category_memberships(api, pages)
     smoke_npc_locations(api, data, catalog, image_hashes, open_media)
@@ -228,6 +251,7 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
                                 "piprop": "name", "pilicense": "any"})["query"]["pages"].values()))
         if chosen.get("pageimage") != filename.replace(" ", "_"):
             raise RuntimeError("A page's search and preview icon is not its own lead figure.")
+        smoke_link_preview(api, locations[identity], filename, open_media)
         info = next(iter(api({"action": "query", "titles": "File:" + old_filename,
                               "prop": "imageinfo", "iiprop": "url"})["query"]["pages"].values()))
         with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
@@ -237,6 +261,8 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
                            "piprop": "name", "pilicense": "any"})["query"]["pages"].values()))
     if "pageimage" in index:
         raise RuntimeError("An index page borrowed an inline icon as its search and preview icon.")
+    axe = image_for("item-27", data["illustrations"])
+    smoke_link_preview(api, locations["item-27"], axe["file_title"].removeprefix("File:"), open_media)
     for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]:
         if "image_entity" not in guide:
             continue

@@ -20,7 +20,7 @@ def smoke_search_thumbnail(page, base, data):
         const require = await mw.loader.using('mirklurk.pixelThumbnails');
         const scaling = require('mirklurk.pixelThumbnails');
         const native = thumbnail && await scaling.nativeSize(thumbnail.url);
-        return {thumbnail, native, fit: native && scaling.fit(native.width, native.height, 74, 74)};
+        return {thumbnail, native, fit: native && scaling.fit(native.width, native.height, 80, 80)};
     }""")
     thumbnail = result["thumbnail"] or {}
     filename = image["file_title"].removeprefix("File:")
@@ -30,9 +30,38 @@ def smoke_search_thumbnail(page, base, data):
     native = {"width": pixels["width"] // math.gcd(pixels["width"], pixels["height"]),
               "height": pixels["height"] // math.gcd(pixels["width"], pixels["height"])}
     # Synthetic fixtures are one solid colour: the whole image is a single native block.
-    scale = min(74 // native["width"], 74 // native["height"])
-    if result["native"] != native or result["fit"] != {key: value * scale for key, value in native.items()}:
+    scale = min(80 // native["width"], 80 // native["height"])
+    expected = {key: value * scale for key, value in native.items()}
+    if result["native"] != native or result["fit"] != expected:
         raise RuntimeError(f"Search thumbnail scaling lost the native pixel grid: {result!r}")
+
+    # Both rendered search boxes have an 80px inner area and receive the integer size.
+    search = page.context.new_page()
+    try:
+        search.goto(base + "/index.php?" + urllib.parse.urlencode(
+            {"title": "Special:Search", "search": "Iron Hand Axe", "fulltext": "1", "useskin": "vector-2022"}),
+            wait_until="networkidle")
+        rendered = search.wait_for_function("""() => {
+            const image = document.querySelector('.searchResultImage-thumbnail img[data-mirklurk-pixel]');
+            return image && image.style.width && {box: image.clientWidth, width: image.style.width,
+                                                   height: image.style.height};
+        }""", timeout=15000).json_value()
+        if rendered != {"box": expected["width"], "width": f'{expected["width"]}px',
+                        "height": f'{expected["height"]}px'}:
+            raise RuntimeError(f"Special:Search icon is not integer-scaled: {rendered!r}")
+        search.locator("#searchInput").first.click()
+        search.keyboard.type("Iron Hand Axe")
+        typeahead = search.wait_for_function("""() => {
+            const item = [...document.querySelectorAll('.cdx-menu-item')]
+                .find(node => node.textContent.includes('Iron Hand Axe'));
+            const image = item && item.querySelector('.cdx-thumbnail__image[data-mirklurk-pixel]');
+            return image && image.style.backgroundSize && {box: [image.clientWidth, image.clientHeight],
+                                                           size: image.style.backgroundSize};
+        }""", timeout=15000).json_value()
+        if typeahead != {"box": [80, 80], "size": f'{expected["width"]}px {expected["height"]}px'}:
+            raise RuntimeError(f"Typeahead icon is not integer-scaled in an 80px box: {typeahead!r}")
+    finally:
+        search.close()
 
 
 def smoke_browser(api, base, token, data, artifact_dir):

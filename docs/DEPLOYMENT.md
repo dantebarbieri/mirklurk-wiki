@@ -309,7 +309,10 @@ Only direct visible lead paragraphs before the first heading are candidates;
 tables, navigation, images/captions, hidden content, reference/unverified markers,
 raw wiki markup and research/editorial caveats are excluded. A description uses
 at most 240 Unicode characters, preferring a complete paragraph or whole
-sentences rather than chopping words or bytes. If no suitable short lead exists,
+sentences rather than chopping words or bytes. Paragraphs whose only text is
+links or bold labels (the `Main Page | Items` breadcrumb, the entity's bold
+name, `Related acquisition guide`) are navigation, not descriptions. If no
+suitable short lead exists, as on most generated entity pages,
 the description is omitted rather than invented. Improve the article lead
 through the ordinary editorial workflow; this runtime change edits no articles.
 
@@ -319,7 +322,16 @@ figure is a candidate: generated inline icons, coins, shields and portraits carr
 `class=notpageimage`, so index and guide pages without their own figure fall back.
 That figure is already publicly displayed on the article under the
 [image permission policy](IMAGES.md); sharing previews reuse the same original
-file, never a new or guessed asset. When a page has no page image, `og:image`
+file, never a new or guessed asset. Link-preview services smooth small images
+when enlarging them, so the shared copy is that file enlarged by the largest
+whole-number factor keeping its longer side within 1024px (a 128px icon becomes
+1024px), using ImageMagick `-sample` nearest-neighbour replication: every pixel
+becomes an exact square block, with no new colours. Copies are written once to
+`images/mirklurk-preview/<sha1>-<n>x.png` (keyed by content, so a changed file
+gets a new URL and preview services refetch it) and declared with
+`og:image:width`/`height`. Files already 1024px or larger, or any failure to
+write the copy, share the original file. Deleting that directory is safe; copies
+are regenerated on the next view. When a page has no page image, `og:image`
 falls back to the explicitly configured `MW_LOGO_ICON_URL`, the operator's
 separately approved branding asset. With neither there is no image tag.
 PageImages' own Open Graph output is disabled so each view has one image tag.
@@ -334,8 +346,11 @@ handler replaces PageImages' downscaled ImageMagick thumbnails with the
 original file. The `mirklurk.pixelThumbnails` module then recovers each file's
 native pixel grid (reviewed files are stored at an integer source scale) and
 sizes the icon to the largest whole multiple that fits the search box, as
-article figures do. Art too large for the box at 1x, cross-origin files and
-no-JavaScript views fall back to an uncropped `image-rendering: pixelated` fit.
+article figures do. Both search boxes are enlarged to an 80px inner area (from
+Vector's ~38px typeahead and ~74px `Special:Search` boxes) so every item figure,
+up to 16x80 native, shows at 1x or more; 16px icons show at 5x. A few large
+trees and creatures, cross-origin files and no-JavaScript views fall back to an
+uncropped `image-rendering: pixelated` fit.
 
 PageImages stores its choice in page properties during links updates. After
 deploying this runtime to an existing wiki, populate them once (then drain jobs):

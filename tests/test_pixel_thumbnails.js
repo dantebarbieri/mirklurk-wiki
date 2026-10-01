@@ -40,8 +40,9 @@ assert.strictEqual(blockSize(noisy, 64, 64), 4);
 assert.strictEqual(blockSize(new Uint8ClampedArray(24 * 16 * 4).fill(255), 24, 16), 8);
 
 assert.deepStrictEqual(fit(16, 16, 40, 40), { width: 32, height: 32 });
-assert.deepStrictEqual(fit(32, 16, 74, 74), { width: 64, height: 32 });
-assert.deepStrictEqual(fit(16, 48, 74, 74), { width: 16, height: 48 });
+assert.deepStrictEqual(fit(32, 16, 80, 80), { width: 64, height: 32 });
+assert.deepStrictEqual(fit(16, 48, 80, 80), { width: 16, height: 48 });
+assert.deepStrictEqual(fit(32, 80, 80, 80), { width: 32, height: 80 });
 assert.strictEqual(fit(16, 48, 40, 40), null);
 assert.strictEqual(fit(16, 16, 0, 0), null);
 console.log('Pixel thumbnail scaling tests passed.');
