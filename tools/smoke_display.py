@@ -298,15 +298,18 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             raise RuntimeError(f"Coins {amount}: exact denomination arithmetic failed ({terms}).")
         images = parse_grids()
         images.feed(rendered)
+        zooms = []
         for image, (_, name) in zip(images.images, expected):
-            file = {"gold": "Item-74.png", "silver": "Item-73.png", "copper": "Item-72.png"}[name]
+            coin = image_for({"gold": "item-74", "silver": "item-73", "copper": "item-72"}[name], data["illustrations"])
+            file, size = coin["file_title"].removeprefix("File:"), coin["pixel_art"]
+            zooms.append(f'zoom:calc({pixel_geometry(coin, 20, 20)[2]}/{size["source_scale"]})')
             if (image.get("alt") != name.capitalize() + " coin" or file not in urllib.parse.unquote(image.get("src", ""))
-                    or image.get("width") != "128" or image.get("height") != "128"
+                    or (image.get("width"), image.get("height")) != (str(size["width"]), str(size["height"]))
                     or "srcset" in image or "/thumb/" in image.get("src", "")):
                 raise RuntimeError("Native Coins swapped denomination identity or image policy.")
         if len(images.images) != len(expected) or len(images.pixel_styles) != len(expected) or images.links:
             raise RuntimeError("Coins lost nonlinked, accessible denomination icons.")
-        if any("zoom:calc(1/8)" not in style.replace(" ", "") for style in images.pixel_styles):
+        if any(zoom not in style.replace(" ", "") for zoom, style in zip(zooms, images.pixel_styles)):
             raise RuntimeError("Native coin icons no longer follow shared integer-native sizing.")
 
     valid = {

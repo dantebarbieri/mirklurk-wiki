@@ -189,7 +189,7 @@ class DisplayTests(unittest.TestCase):
                 image.update(rights_status="pending", creator=None, sha256=None, rights_basis=None, rights_note=None)
             pages = build_pages(ROOT, data, self.catalog, self.details)
             self.assertIn(lua_string("[[Sceetler|<nowiki>Sceetler</nowiki>]]"), pages[ASSETS_TITLE])
-            self.assertNotIn("Being-13.png", pages[ASSETS_TITLE])
+            self.assertNotIn("Being-13-cropped", pages[ASSETS_TITLE])
             self.assertIn("{{Creature|Sceetler}}", pages["Bestiary"])
 
     def test_item_lookup_uses_exact_catalog_titles_art_and_source_classification(self):
@@ -229,7 +229,7 @@ class DisplayTests(unittest.TestCase):
                     rights_status="pending", creator=None, sha256=None, rights_basis=None, rights_note=None)
             pages = build_pages(ROOT, data, self.catalog, self.details)
             registry = pages[ASSETS_TITLE].split("    items = {\n", 1)[1]
-            self.assertNotIn("Item-14.png", registry)
+            self.assertNotIn("Item-14-cropped", registry)
             self.assertIn("[[Iron Hand Axe|<nowiki>Iron Hand Axe</nowiki>]]", registry)
         self.assertIn("{{Item|Iron Hand Axe}}", self.pages["Items"])
         self.assertEqual(self.pages["Items"].count('id="entity-item-'), 247)
