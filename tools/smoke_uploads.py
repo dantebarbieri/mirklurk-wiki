@@ -154,10 +154,16 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
     rejected(oversized, "badupload")
     if oversized["error"].get("size") != 10485760:
         raise RuntimeError("PHP must reject uploads above exactly 10 MiB.")
-    # Declared assembled size cannot bypass the cap through chunking.
-    rejected(admin.request({"action": "upload", "filename": "Chunk-too-big.png", "token": admin.token,
-                            "stash": 1, "filesize": 10485761, "offset": 0}, png(), file_field="chunk"),
-             "file-too-large", "upload-error")
+    # Core clamps the declared filesize; the actual assembled bytes must still stay within it.
+    content = png(size=10485761)
+    split = 5 * 1024 * 1024
+    chunk_parameters = {"action": "upload", "filename": "Chunk-too-big.png", "token": admin.token,
+                        "stash": 1, "filesize": len(content), "ignorewarnings": 1}
+    partial = admin.request(dict(chunk_parameters, offset=0), content[:split], file_field="chunk")
+    if partial.get("upload", {}).get("result") != "Continue" or partial["upload"].get("offset") != split:
+        raise RuntimeError(f"The bounded first chunk was not stashed: {partial}")
+    rejected(admin.request(dict(chunk_parameters, offset=split, filekey=partial["upload"]["filekey"]),
+                           content[split:], file_field="chunk"), "invalid-chunk")
 
     # Native autoconfirmation requires BOTH thresholds. Alter only a disposable fixture account.
     run("exec", "-T", "mirklurk", "php", "maintenance/run.php", "createAndPromote",
