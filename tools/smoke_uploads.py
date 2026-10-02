@@ -78,15 +78,24 @@ def rejected(result, *codes):
         raise RuntimeError(f"Upload must fail with {codes}, got {result}")
 
 
+def confirm_editor(api, confirmed=True):
+    token = api({"action": "query", "meta": "tokens", "type": "userrights"})["query"]["tokens"]["userrightstoken"]
+    api({"action": "userrights", "user": "TestEditor", "add" if confirmed else "remove": "confirmed",
+         "reason": "Synthetic contributor eligibility", "token": token}, post=True)
+
+
 def smoke_uploads(run, api, base, admin_password, editor_password):
     anonymous = UploadClient(base)
     rejected(anonymous.upload("Anonymous-denied.png", png()), "mustbeloggedin", "permissiondenied", "writeapidenied")
     editor = UploadClient(base)
     editor.login("TestEditor", editor_password)
     rejected(editor.upload("Newcomer-denied.png", png()), "permissiondenied")
-    user_token = api({"action": "query", "meta": "tokens", "type": "userrights"})["query"]["tokens"]["userrightstoken"]
-    api({"action": "userrights", "user": "TestEditor", "add": "confirmed",
-         "reason": "Synthetic uploader confirmation", "token": user_token}, post=True)
+    edit = {"action": "edit", "title": "User:TestEditor", "text": "Synthetic newcomer edit.", "token": editor.token}
+    if editor.request(edit).get("edit", {}).get("result") != "Success":
+        raise RuntimeError("Unconfirmed contributors must still be able to edit.")
+    # In 1.43 the API authorization and edit constraint each count an edit-limit hit.
+    rejected(editor.request(dict(edit, text="Synthetic rapid follow-up.")), "ratelimited")
+    confirm_editor(api)
     rights = editor.request({"action": "query", "meta": "userinfo", "uiprop": "rights|groups"})["query"]["userinfo"]
     if not {"upload", "reupload-own"} <= set(rights["rights"]) or {"sysop", "bureaucrat"} & set(rights["groups"]):
         raise RuntimeError("Manual confirmation did not enable uploads without administrator privileges.")
@@ -214,8 +223,8 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
     finally:
         run("exec", "-T", "mirklurk", "php", "-r", "unlink('/var/lib/mirklurk-backup/read-only');")
     # Restore the original newcomer policy for the rest of the integration suite.
-    api({"action": "userrights", "user": "TestEditor", "remove": "confirmed",
-         "reason": "End of upload fixture", "token": user_token}, post=True)
+    confirm_editor(api, confirmed=False)
+    rejected(editor.upload("Confirmation-removed.png", png()), "permissiondenied")
     run("up", "-d", "--force-recreate", "--wait", "mirklurk")
     with urllib.request.urlopen(second["imageinfo"]["url"], timeout=30) as response:
         if response.headers.get_content_type() != "image/png" or response.read() != png(pixel=b"\x22\x44\x66"):

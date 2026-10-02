@@ -37,7 +37,7 @@ from smoke_editing import smoke_discussions, smoke_editor_selection
 from smoke_metadata import Head, smoke_metadata
 from smoke_navigation import install_sidebar_fixture
 from smoke_urls import smoke_urls
-from smoke_uploads import smoke_uploads
+from smoke_uploads import confirm_editor, smoke_uploads
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
@@ -1456,6 +1456,7 @@ def smoke(uploads_only=False):
             publish(baseline, "repeat", created=[], updated=[], refreshed=[], skipped=[])
 
             # Ordinary editors edit owner pages; later syncs must leave their edits alone.
+            confirm_editor(api)
             opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
             token = api({"action": "query", "meta": "tokens", "type": "login"})["query"]["tokens"]["logintoken"]
             login = api({
@@ -1466,7 +1467,7 @@ def smoke(uploads_only=False):
             editor = api({"action": "query", "meta": "userinfo", "uiprop": "rights|groups"})["query"]["userinfo"]
             if "edit" not in editor["rights"] or "sysop" in editor["groups"]:
                 raise RuntimeError("The ordinary registered-editor permissions are incorrect.")
-            # Respect the stricter three-edits/minute newcomer policy without exempting the account.
+            # API saves count multiple edit-limit hits; pace this confirmed editor's bulk checks.
             minimum_edit_interval = 21
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
@@ -1499,8 +1500,6 @@ def smoke(uploads_only=False):
                 raise RuntimeError("A registered editor cannot update a coin-owned weight.")
             print("Owner edit timestamp:", coin_edit["edit"]["newtimestamp"], flush=True)
             refreshed_transclusion(run, api, "Currency and trading", "26 g", 'id="entity-item-72"', coin_title)
-            if "upload" in editor["rights"]:
-                raise RuntimeError("The unconfirmed newcomer unexpectedly has upload permission.")
             preserved = "Original live edit for the disposable integration test."
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":

@@ -305,8 +305,10 @@ and record the first administrator's credentials securely.
 Bundled ConfirmEdit/QuestyCaptcha protects registration, bad logins, and link
 additions. Shared database caches support account and edit rate limits across
 Apache workers. Limits include three registrations per IP per hour and ten
-per day; authenticated edits are limited to ten per minute, with tighter new-user
-limits. Review moderation burden and false positives after launch.
+per day; edit buckets allow ten checks per minute, or three for newcomers.
+MediaWiki 1.43 API saves count both authorization and edit-constraint checks, so
+these are not guaranteed numbers of successful saves. Review moderation burden
+and false positives after launch.
 
 For upgrades, back up and verify the database and image storage together, stop all web/background writers,
 build the reviewed new image, and run
