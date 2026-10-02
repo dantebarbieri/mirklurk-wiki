@@ -101,6 +101,9 @@
 !/tests/test_metadata.py
 !/tools/smoke_metadata.py
 !/deploy/mirklurk-editing.php
+!/deploy/mirklurk-uploads.php
+!/tests/test_uploads.php
+!/tools/smoke_uploads.py
 !/tests/test_editing.php
 !/tools/smoke_editing.py
 !/deploy/install.php

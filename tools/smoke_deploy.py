@@ -1,9 +1,4 @@
-"""Opt-in Docker integration test in an isolated, disposable Compose project.
-
-Builds the pinned image, installs a throwaway wiki, publishes the generated
-release with tools/sync_wiki.py, and checks what readers and editors see.
-It never contacts a live wiki.
-"""
+"""Disposable Docker wiki: install, publish, and exercise native reader/editor/upload behavior."""
 
 import argparse
 import hashlib
@@ -42,6 +37,7 @@ from smoke_editing import smoke_discussions, smoke_editor_selection
 from smoke_metadata import Head, smoke_metadata
 from smoke_navigation import install_sidebar_fixture
 from smoke_urls import smoke_urls
+from smoke_uploads import smoke_uploads
 from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
@@ -1237,7 +1233,7 @@ def smoke_branding(api, base, paths, image_hashes, open_media=urllib.request.url
     print("Branding passed: Vector 2022 logo, legacy logo, favicon markup and anonymous exact PNG reads.")
 
 
-def smoke():
+def smoke(uploads_only=False):
     project = "mirklurk-smoke-" + secrets.token_hex(6)
     with tempfile.TemporaryDirectory(prefix="mirklurk-smoke-") as folder:
         workspace = Path(folder)
@@ -1334,8 +1330,8 @@ def smoke():
             if not {"read", "createaccount"} <= set(rights) or "edit" in rights:
                 raise RuntimeError("Anonymous permissions violate the public-read/account-edit policy.")
             general = api({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
-            if "uploadsenabled" in general:
-                raise RuntimeError("Web uploads are unexpectedly enabled.")
+            if "uploadsenabled" not in general:
+                raise RuntimeError("Native uploads are not enabled.")
             extensions = api({"action": "query", "meta": "siteinfo", "siprop": "extensions"})["query"]["extensions"]
             if not any(row["name"] == "ParserFunctions" and row.get("version") for row in extensions):
                 raise RuntimeError("The installed ParserFunctions extension is not loaded.")
@@ -1375,10 +1371,10 @@ def smoke():
             if login.get("login", {}).get("result") != "Success":
                 raise RuntimeError("The freshly created administrator cannot log in.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
+            smoke_uploads(run, api, base, password_file.read_text(encoding="utf-8"), editor_password)
+            if uploads_only:
+                return
             smoke_urls(api, base, csrf, editor_password)
-            api({
-                "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
-            }, post=True, expected_error="uploaddisabled")
 
             data, catalog, details = load_publication_inputs(ROOT)
             pages = build_pages(ROOT, data, catalog, details)
@@ -1503,9 +1499,8 @@ def smoke():
                 raise RuntimeError("A registered editor cannot update a coin-owned weight.")
             print("Owner edit timestamp:", coin_edit["edit"]["newtimestamp"], flush=True)
             refreshed_transclusion(run, api, "Currency and trading", "26 g", 'id="entity-item-72"', coin_title)
-            api({
-                "action": "upload", "filename": "Web-upload-must-stay-disabled.png", "token": csrf,
-            }, post=True, expected_error="uploaddisabled")
+            if "upload" in editor["rights"]:
+                raise RuntimeError("The unconfirmed newcomer unexpectedly has upload permission.")
             preserved = "Original live edit for the disposable integration test."
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":
@@ -1548,8 +1543,9 @@ def smoke():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", required=True, action="store_true", help="Create and remove test-only Docker resources")
-    parser.parse_args()
-    smoke()
+    parser.add_argument("--uploads-only", action="store_true", help="Run only the native upload integration checks")
+    args = parser.parse_args()
+    smoke(uploads_only=args.uploads_only)
 
 
 if __name__ == "__main__":
