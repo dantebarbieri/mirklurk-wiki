@@ -107,6 +107,14 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
         with urllib.request.urlopen(upload["imageinfo"]["url"], timeout=30) as response:
             if response.headers.get_content_type() != "image/png":
                 raise RuntimeError("Public uploads must remain anonymously readable as images.")
+    page = next(iter(api({"action": "query", "titles": "File:Contributor-diagram.png", "prop": "imageinfo",
+                          "iiprop": "url|size", "iiurlwidth": 16})["query"]["pages"].values()))
+    thumbnail = page["imageinfo"][0]
+    if (thumbnail.get("thumbwidth"), thumbnail.get("thumbheight")) != (16, 8):
+        raise RuntimeError("A contributor's upload did not generate the expected thumbnail.")
+    with urllib.request.urlopen(thumbnail["thumburl"], timeout=30) as response:
+        if response.headers.get_content_type() != "image/png" or response.headers.get("X-Content-Type-Options") != "nosniff":
+            raise RuntimeError("Upload thumbnail delivery is missing its image type or nosniff policy.")
 
     admin = UploadClient(base)
     admin.login("WikiAdmin", admin_password)
@@ -142,8 +150,10 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
     stash = success(admin.upload("Stashed.png", png(pixel=b"\x11\x22\x33"), stash=1))
     success(admin.upload("Stashed.png", filekey=stash["filekey"]))
     success(admin.upload("Exact-10-MiB.png", png(size=10 * 1024 * 1024)))
-    rejected(admin.upload("Over-10-MiB.png", png(size=10 * 1024 * 1024 + 1)),
-             "file-too-large", "upload-error")
+    oversized = admin.upload("Over-10-MiB.png", png(size=10 * 1024 * 1024 + 1))
+    rejected(oversized, "badupload")
+    if oversized["error"].get("size") != 10485760:
+        raise RuntimeError("PHP must reject uploads above exactly 10 MiB.")
     # Declared assembled size cannot bypass the cap through chunking.
     rejected(admin.request({"action": "upload", "filename": "Chunk-too-big.png", "token": admin.token,
                             "stash": 1, "filesize": 10485761, "offset": 0}, png(), file_field="chunk"),
@@ -202,7 +212,7 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
          "reason": "End of upload fixture", "token": user_token}, post=True)
     run("up", "-d", "--force-recreate", "--wait", "mirklurk")
     with urllib.request.urlopen(second["imageinfo"]["url"], timeout=30) as response:
-        if response.headers.get_content_type() != "image/png":
+        if response.headers.get_content_type() != "image/png" or response.read() != png(pixel=b"\x22\x44\x66"):
             raise RuntimeError("Images were not preserved across container recreation.")
     print("Native uploads passed: eligibility, formats, limits, replacements, rate limit, storage protection and backup lock.",
           flush=True)
