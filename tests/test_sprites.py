@@ -151,6 +151,8 @@ class HealingAbilityTests(unittest.TestCase):
             {"paragraphs": ["x" * 801]}, {"related_entities": ["item-missing"]},
             {"related_entities": ["being-19"]}, {"related_entities": ["item-141", "item-141"]},
             {"related_pages": ["Unknown guide"]}, {"related_pages": ["Resting", "Resting"]},
+            {"related_pages": ["Main Page"]}, {"related_pages": ["Research policy"]},
+            {"related_pages": ["Evidence and spoilers"]}, {"related_pages": ["Items"]},
             {"confidence": "certain"}, {"evidence": []},
         )
         for change in changes:

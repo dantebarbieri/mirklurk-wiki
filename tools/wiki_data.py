@@ -106,6 +106,14 @@ def _text(value, location, limit=160):
     return value
 
 
+def prose_link_parts(text, labels):
+    """Split prose around whole-label matches, preferring longer labels."""
+    if not labels:
+        return [text]
+    names = "|".join(re.escape(label) for label in sorted(labels, key=len, reverse=True))
+    return re.split(r"(?<!\w)(" + names + r")(?!\w)", text)
+
+
 def title_key(title):
     normalized = " ".join(title.replace("_", " ").split())
     prefix, separator, name = normalized.partition(":")

@@ -224,6 +224,13 @@ class DialogueTests(unittest.TestCase):
             {"links": [{"label": "Aggression rules", "target": "Bestiary#bad#anchor"}]},
             {"links": [{"label": "Aggression rules", "target": "https://example.invalid"}]},
             {"links": [{"label": "Aggression rules", "target": "Bestiary"}] * 2},
+            *({"paragraphs": paragraphs,
+               "links": [{"label": label, "target": "Resting"} for label in labels]}
+              for paragraphs, labels in (
+                  (["Resting"], ["Rest"]), (["_Rest Rest1"], ["Rest"]),
+                  (["Rest stop"], ["Rest", "Rest stop"]),
+                  (["Rest", "stop"], ["Rest stop"]),
+              )),
             {"unknown": "field"},
         ]
         for mutation in mutations:
@@ -257,11 +264,13 @@ class DialogueTests(unittest.TestCase):
     def test_plain_prose_cannot_execute_wiki_markup(self):
         catalog = copy.deepcopy(self.catalog)
         topic = next(row for row in catalog["classifications"] if row["entity"] == "being-5")["dialogue"][0]
-        topic["paragraphs"] = ["Synthetic <b>text</b> and {{Unsafe}}. Aggression rules."]
-        topic["links"] = [{"label": "Aggression rules", "target": "Bestiary"}]
+        topic["paragraphs"] = ["Synthetic <b>text</b> and {{Unsafe}}. Rest stop.", "Rest! [Rest+]"]
+        topic["links"] = [{"label": label, "target": "Resting"} for label in ("Rest", "Rest stop", "Rest+")]
         validate_catalog(catalog, self.data)
         page = build_pages(ROOT, self.data, catalog, self.details)["Soldier"]
         self.assertIn("<nowiki>Synthetic &lt;b&gt;text&lt;/b&gt; and {{Unsafe}}. </nowiki>", page)
+        for link in topic["links"]:
+            self.assertEqual(page.count(f'[[Resting|{literal(link["label"])}]]'), 1)
         visible = re.sub(r"<nowiki>.*?</nowiki>", "", page, flags=re.S)
         self.assertNotIn("{{Unsafe}}", visible)
 

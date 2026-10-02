@@ -185,7 +185,9 @@ original `paragraphs` (at most 1200 characters each), `links`, a boolean `spoile
 `confidence`, and `evidence`. Links contain a unique `label` used in the prose and
 a `target`: a canonical page title, optionally followed by an explicit stable
 anchor. The builder rejects missing destinations and anchors. At most twelve
-links are allowed per topic. These are original summaries, never dialogue
+links are allowed per topic. Each label must match at non-word boundaries in
+the prose; longer overlapping labels take precedence, as in the renderer.
+These are original summaries, never dialogue
 quotations; menu labels such as Information and Advice are short factual names.
 
 The NPC owns its `dialogue-<id>` anchors and guidance. Story-sensitive topics
@@ -263,7 +265,7 @@ without rewriting historical evidence:
   `role: "location"` illustrations require that owner and never replace portraits.
   A being may also have one `ability` object with a plain `title`, one to six
   original `paragraphs` (at most 800 characters each), up to eight unique
-  `related_entities` and eight `related_pages` pointing to existing guides,
+  `related_entities` and eight `related_pages` pointing to reviewed catalog guides,
   plus its own `confidence` and `evidence`. The section lives only on that
   being's page; its evidence appears only in the local audit report.
   An optional `role: "ability"` illustration requires this owner, stays inside

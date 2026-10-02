@@ -9,7 +9,7 @@ from pathlib import Path
 from wiki_data import (
     CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS,
     _confidence, _entity_reference, _evidence, _identifier, _item_quantities, _nullable_text, _number,
-    _object, _records, _text, _title, entry_page, title_key,
+    _object, _records, _text, _title, entry_page, prose_link_parts, title_key,
 )
 from wiki_acquisition import validate_acquisition
 
@@ -399,9 +399,13 @@ def validate_catalog(catalog, data):
                     _title(page)
                     if separator:
                         _identifier(fragment, "NPC dialogue link.anchor")
-                    if link["label"] in labels or not any(link["label"] in paragraph for paragraph in paragraphs):
+                    if link["label"] in labels:
                         raise DataError("NPC dialogue link: expected unique label used in its paragraphs")
                     labels.add(link["label"])
+                used_labels = {label for paragraph in paragraphs
+                               for label in prose_link_parts(paragraph, labels)[1::2]}
+                if used_labels != labels:
+                    raise DataError("NPC dialogue link: every label must render a link in its paragraphs")
                 _confidence(topic["confidence"], "NPC dialogue.confidence")
                 _evidence(topic["evidence"], sources, "NPC dialogue.evidence")
         if "location" in row:
@@ -436,7 +440,7 @@ def validate_catalog(catalog, data):
                 raise DataError("being ability: expected at most eight unique related entities")
             related_pages = ability["related_pages"]
             if not isinstance(related_pages, list) or len(related_pages) > 8 or any(
-                not isinstance(target, str) or target not in {*PAGE_FILES, *registered_guides}
+                not isinstance(target, str) or target not in registered_guides
                 for target in related_pages
             ) or len(related_pages) != len(set(related_pages)):
                 raise DataError("being ability: expected at most eight unique related guides")

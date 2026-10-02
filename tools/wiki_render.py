@@ -11,7 +11,7 @@ from wiki_catalog import (
     CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
-from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, read_authored, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, prose_link_parts, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
 from wiki_views import filtered_row, html_row, html_table, scroll_open, selective_view, validate_transclusions
@@ -76,10 +76,9 @@ def prose_list(parts, joiner):
 def linked_prose(text, links):
     if not links:
         return literal(text)
-    names = "|".join(re.escape(name) for name in sorted(links, key=len, reverse=True))
     return "".join(
         f"[[{links[part]}|{literal(part)}]]" if part in links else literal(part)
-        for part in re.split(r"(?<!\w)(" + names + r")(?!\w)", text) if part
+        for part in prose_link_parts(text, links) if part
     )
 
 
