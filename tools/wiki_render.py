@@ -11,7 +11,7 @@ from wiki_catalog import (
     CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
-from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, read_authored, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, prose_link_parts, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
 from wiki_views import filtered_row, html_row, html_table, scroll_open, selective_view, validate_transclusions
@@ -76,10 +76,9 @@ def prose_list(parts, joiner):
 def linked_prose(text, links):
     if not links:
         return literal(text)
-    names = "|".join(re.escape(name) for name in sorted(links, key=len, reverse=True))
     return "".join(
         f"[[{links[part]}|{literal(part)}]]" if part in links else literal(part)
-        for part in re.split(r"(?<!\w)(" + names + r")(?!\w)", text) if part
+        for part in prose_link_parts(text, links) if part
     )
 
 
@@ -852,6 +851,20 @@ def source_page(data, catalog, details, locations, facts, entries):
              literal(row["location"]["confidence"]), evidence_text(row["location"]["evidence"])]
             for row in sorted(npc_locations, key=lambda row: row["entity"])
         ])])
+    dialogue = [(row["entity"], topic) for row in catalog["classifications"] for topic in row.get("dialogue", [])]
+    if dialogue:
+        lines.extend(["", "== NPC dialogue evidence ==", table(["Editable owner", "Topic", "Confidence", "Evidence"], [
+            [f'[[{locations[identity]}#dialogue-{topic["id"]}|{literal(locations[identity])}]]',
+             literal(topic["title"]), literal(topic["confidence"]), evidence_text(topic["evidence"])]
+            for identity, topic in dialogue
+        ])])
+    abilities = [row for row in catalog["classifications"] if "ability" in row]
+    if abilities:
+        lines.extend(["", "== Being ability evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+            [f'[[{locations[row["entity"]]}#{row["ability"]["title"].replace(" ", "_")}|{literal(locations[row["entity"]])}]]',
+             literal(row["ability"]["confidence"]), evidence_text(row["ability"]["evidence"])]
+            for row in sorted(abilities, key=lambda row: row["entity"])
+        ])])
     lines.extend(["", "== Property definitions ==", table(["Property", "Label", "Unit", "Interpretation"], [
         [literal(row["id"]), literal(row["label"]), known(row["unit"]), literal(row["description"])]
         for row in sorted(details["properties"], key=lambda row: row["id"])
@@ -1125,6 +1138,8 @@ def build_pages(root, data, catalog=None, details=None):
 
     classification_summaries = {row["entity"]: row["summary"] for row in catalog["classifications"] if "summary" in row}
     npc_locations = {row["entity"]: row["location"] for row in catalog["classifications"] if "location" in row}
+    npc_dialogue = {row["entity"]: row["dialogue"] for row in catalog["classifications"] if "dialogue" in row}
+    abilities = {row["entity"]: row["ability"] for row in catalog["classifications"] if "ability" in row}
     factions = {identity: row for row in faction_groups(catalog) for identity in row["members"]}
     if "aggression" in catalog:
         pages["Bestiary"] += "\n== Aggression rules ==\n" + "\n\n".join(
@@ -1132,6 +1147,8 @@ def build_pages(root, data, catalog=None, details=None):
             for paragraph in catalog["aggression"]["paragraphs"]) + "\n"
     if any(image.get("role") == "location" and image["entity"] not in npc_locations for image in images):
         raise DataError("location illustration: requires a reviewed NPC location owner")
+    if any(image.get("role") == "ability" and image["entity"] not in abilities for image in images):
+        raise DataError("ability illustration: requires a reviewed being ability owner")
     stations = {method: row for row in catalog.get("stations", []) for method in row["methods"]}
     if "Loot mechanics" in owners.values():
         pages["Loot mechanics"] = "[[Loot tables]] | [[Main Page]]\n\nHow quantities, treasure budgets, and corpse contents are selected.\n"
@@ -1172,6 +1189,25 @@ def build_pages(root, data, catalog=None, details=None):
                     text += illustration_markup(image)
             links = {entities[identity]["name"]: locations[identity] for identity in location["related_entities"]}
             text += "\n\n".join(linked_prose(paragraph, links) for paragraph in location["paragraphs"]) + "\n"
+        if entity["id"] in abilities:
+            ability = abilities[entity["id"]]
+            text += "\n== " + literal(ability["title"]) + " ==\n"
+            for image in images:
+                if image.get("entity") == entity["id"] and image.get("role") == "ability":
+                    text += illustration_markup(image, width=64, page_image=False)
+            links = {entities[identity]["name"]: locations[identity] for identity in ability["related_entities"]}
+            links.update({title: title for title in ability["related_pages"]})
+            text += "\n\n".join(linked_prose(paragraph, links) for paragraph in ability["paragraphs"]) + "\n"
+        if entity["id"] in npc_dialogue:
+            text += "\n== Dialogue and guidance ==\n"
+            for topic in npc_dialogue[entity["id"]]:
+                text += "\n" + anchor("dialogue", topic["id"]) + f'\n=== {literal(topic["title"])} ===\n'
+                if topic["spoiler"]:
+                    text += '<div class="mw-collapsible mw-collapsed">\nStory spoilers\n<div class="mw-collapsible-content">\n'
+                links = {link["label"]: link["target"] for link in topic["links"]}
+                text += "\n\n".join(linked_prose(paragraph, links) for paragraph in topic["paragraphs"]) + "\n"
+                if topic["spoiler"]:
+                    text += "</div></div>\n"
         pages[row["title"]] = text
         for alias in row["aliases"]:
             pages[alias] = f'#REDIRECT [[{row["title"]}]]\n'
@@ -1741,6 +1777,12 @@ def build_pages(root, data, catalog=None, details=None):
                           for grid in details.get("grids", []))}
         pages.update(display_pages(root, coin_icons, shields,
                                    creature_markup, item_markup))
+    for topics in npc_dialogue.values():
+        for topic in topics:
+            for link in topic["links"]:
+                title, separator, fragment = link["target"].partition("#")
+                if title not in pages or (separator and f'id="{fragment}"' not in pages[title]):
+                    raise DataError(f'NPC dialogue: missing linked page or explicit anchor: {link["target"]}')
     validate_transclusions(pages)
     validate_display_dependencies(pages)
     return pages

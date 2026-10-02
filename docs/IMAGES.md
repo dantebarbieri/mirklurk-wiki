@@ -31,7 +31,8 @@ Every record contains `id`, `file_title`, `caption`, `creator`,
 Only station targets may have `variant`. A being-targeted record may additionally
 have `role: "location"`: one supplementary exterior per NPC with a reviewed
 location section, or `role: "sprite"`: one supplementary overworld sprite per
-being that also has an approved primary portrait. Other roles, non-being targets,
+being that also has an approved primary portrait, or `role: "ability"`: one
+supplementary effect image per being with a reviewed ability section. Other roles, non-being targets,
 duplicate roles per being and missing location owners are rejected. Records
 without a role retain their primary image behavior; portraits, icons and existing
 contextual guide lookups never select a location or sprite image, regardless of
@@ -82,6 +83,28 @@ The Health and armor guide owns the three-shield legend.
 The frame association is cited through `hpcell_draw` in Source provenance.
 Actual PNG hashes, rights, and exact evidence keys are in each metadata record.
 No additional health art or other frames are included in this approval.
+
+## Viend's healing indicator
+
+The 2026-10-02 selection adds `File:Healing-popup.png` as an ability illustration
+on Viend's page. It is the shared healing popup from
+`spr_ui_16x16_fullycenter`, frame 10, called by `being_heal` when Viend restores
+a wound. It is not a unique spell portrait or a replacement for his existing
+dialogue and overworld images.
+
+The 16 x 16 native frame has no removable transparent margin. Its reviewed
+64 x 64 PNG is a 4x nearest-neighbor enlargement, 292 bytes, SHA-256
+`26b01e30c749985620208d1e2db64e9b11df2046711c46b4de545d84700169ff`.
+The section displays it at 64px using the existing original-file pixel-art
+renderer and excludes it from PageImages. The artwork is attributed to
+Edym Pixels under the operator-reported public-wiki permission; the operator
+expressly authorized this one-image import. PNG bytes and the attribution
+sidecar stay outside Git and use the normal operator-only import below.
+The one-file batch was imported on 2026-10-02 after a dry run and paired
+database/image backup. Anonymous reads confirmed the attribution, dimensions
+and exact image hash; a second paired backup preserves the imported state.
+The active register is now 338; all 337 previous records are unchanged.
+Synthetic smoke fixtures include the new title automatically.
 
 ## Site branding
 

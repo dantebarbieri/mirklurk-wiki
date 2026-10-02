@@ -9,7 +9,7 @@ from pathlib import Path
 from wiki_data import (
     CATEGORY_PAGES, DataError, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS,
     _confidence, _entity_reference, _evidence, _identifier, _item_quantities, _nullable_text, _number,
-    _object, _records, _text, _title, entry_page, title_key,
+    _object, _records, _text, _title, entry_page, prose_link_parts, title_key,
 )
 from wiki_acquisition import validate_acquisition
 
@@ -348,7 +348,8 @@ def validate_catalog(catalog, data):
         _evidence(effect["evidence"], sources, "item effect.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
-        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, {"summary", "location"}, "classification")
+        _object(row, {"entity", "kind", "confidence", "evidence", "note"},
+                {"summary", "location", "ability", "dialogue"}, "classification")
         identity = row["entity"]
         if (
             not isinstance(identity, str) or identity not in entities
@@ -363,6 +364,50 @@ def validate_catalog(catalog, data):
         _text(row["note"], "classification.note", 500)
         if "summary" in row:
             _text(row["summary"], "classification.summary", 500)
+        if "dialogue" in row:
+            if row["kind"] != "npc":
+                raise DataError("classification.dialogue: requires an NPC owner")
+            topics = row["dialogue"]
+            if not isinstance(topics, list) or not 1 <= len(topics) <= 8:
+                raise DataError("NPC dialogue: expected one to eight topics")
+            topic_ids, topic_titles = set(), set()
+            for topic in topics:
+                _object(topic, {"id", "title", "paragraphs", "links", "spoiler", "confidence", "evidence"},
+                        set(), "NPC dialogue")
+                _identifier(topic["id"], "NPC dialogue.id")
+                _title(topic["title"])
+                if topic["id"] in topic_ids or title_key(topic["title"]) in topic_titles:
+                    raise DataError("NPC dialogue: duplicate topic")
+                topic_ids.add(topic["id"])
+                topic_titles.add(title_key(topic["title"]))
+                if type(topic["spoiler"]) is not bool:
+                    raise DataError("NPC dialogue.spoiler: expected boolean")
+                paragraphs = topic["paragraphs"]
+                if not isinstance(paragraphs, list) or not 1 <= len(paragraphs) <= 4:
+                    raise DataError("NPC dialogue: expected one to four original paragraphs")
+                for paragraph in paragraphs:
+                    _text(paragraph, "NPC dialogue.paragraph", 1200)
+                links = topic["links"]
+                if not isinstance(links, list) or len(links) > 12:
+                    raise DataError("NPC dialogue: expected at most twelve links")
+                labels = set()
+                for link in links:
+                    _object(link, {"label", "target"}, set(), "NPC dialogue link")
+                    _text(link["label"], "NPC dialogue link.label", 160)
+                    _text(link["target"], "NPC dialogue link.target", 255)
+                    page, separator, fragment = link["target"].partition("#")
+                    _title(page)
+                    if separator:
+                        _identifier(fragment, "NPC dialogue link.anchor")
+                    if link["label"] in labels:
+                        raise DataError("NPC dialogue link: expected unique label used in its paragraphs")
+                    labels.add(link["label"])
+                used_labels = {label for paragraph in paragraphs
+                               for label in prose_link_parts(paragraph, labels)[1::2]}
+                if used_labels != labels:
+                    raise DataError("NPC dialogue link: every label must render a link in its paragraphs")
+                _confidence(topic["confidence"], "NPC dialogue.confidence")
+                _evidence(topic["evidence"], sources, "NPC dialogue.evidence")
         if "location" in row:
             if row["kind"] != "npc":
                 raise DataError("classification.location: requires an NPC owner")
@@ -379,6 +424,28 @@ def validate_catalog(catalog, data):
                 raise DataError("NPC location: expected at most eight unique related entities")
             _confidence(location["confidence"], "NPC location.confidence")
             _evidence(location["evidence"], sources, "NPC location.evidence")
+        if "ability" in row:
+            ability = row["ability"]
+            _object(ability, {"title", "paragraphs", "related_entities", "related_pages", "confidence", "evidence"},
+                    set(), "being ability")
+            _title(ability["title"])
+            if not isinstance(ability["paragraphs"], list) or not 1 <= len(ability["paragraphs"]) <= 6:
+                raise DataError("being ability: expected one to six original paragraphs")
+            for paragraph in ability["paragraphs"]:
+                _text(paragraph, "being ability.paragraph", 800)
+            related = ability["related_entities"]
+            if not isinstance(related, list) or len(related) > 8 or any(
+                not isinstance(target, str) or target not in required or target == identity for target in related
+            ) or len(related) != len(set(related)):
+                raise DataError("being ability: expected at most eight unique related entities")
+            related_pages = ability["related_pages"]
+            if not isinstance(related_pages, list) or len(related_pages) > 8 or any(
+                not isinstance(target, str) or target not in registered_guides
+                for target in related_pages
+            ) or len(related_pages) != len(set(related_pages)):
+                raise DataError("being ability: expected at most eight unique related guides")
+            _confidence(ability["confidence"], "being ability.confidence")
+            _evidence(ability["evidence"], sources, "being ability.evidence")
     if "aggression" in catalog:
         aggression = catalog["aggression"]
         _object(aggression, {"factions", "paragraphs", "confidence", "evidence"}, set(), "aggression")
