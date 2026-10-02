@@ -78,6 +78,7 @@
 !/tests/test_views.py
 !/tests/test_landmarks.py
 !/tests/test_sprites.py
+!/tests/test_dialogue.py
 !/tests/test_followup.py
 !/tests/test_acquisition.py
 !/tests/test_sync.py

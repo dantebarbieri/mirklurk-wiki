@@ -56,7 +56,7 @@ image-sizing policy as other artwork. See [author syntax and limits](docs/TEMPLA
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication
 fails closed before page edits if the target wiki lacks working Scribunto.
 
-The metadata-only artwork register covers 337 reviewed selections: 243 items,
+The metadata-only artwork register covers 338 reviewed selections: 243 items,
 36 beings, 25 skills, 16 nature records, and three workstation variants.
 Three supplementary NPC-location exteriors and eight NPC overworld sprites
 preserve the existing portraits. 295 records now embed transparent-margin crops
@@ -73,6 +73,11 @@ the three NPC exteriors are added. Older tree
 File pages and bytes remain live history, not overwritten artwork. Other nature
 pictures retain their explicit ground-tile or branch qualifications. Image bytes
 stay in separately approved server storage.
+
+Viend's Healing section explains his automatic wound healing, target priority,
+range, AP cost and idle-turn frequency, with the game's shared health-plus
+indicator. It distinguishes wounds from burns and status effects, without
+duplicating natural-healing rules or exposing internal evidence in the article.
 
 Separate Satiation, Stamina, Focus, Temperature, Wellbeing, Foods, and Resting
 guides explain the survival meters, threshold effects, recovery, weather
@@ -114,6 +119,13 @@ hut, hollow and shipwreck exteriors. Bhato's directions link to Captain Eir;
 Gurb-Gurb's one-time smoke cue and Ihar's conditional shoreline placement retain
 their source qualifications. These are supplementary native sprites, not
 screenshots or replacements for dialogue portraits.
+
+Seven characters have original Information, Advice, trade-tip and quest-briefing
+summaries, with the actual menu labels kept distinct. Linked mechanics and journal
+objectives explain the practical consequences; story-sensitive guidance is
+collapsed. Eir owns Fort Solid's turn-end curfew hours, escort behavior and separate
+undercroft/fort permissions. Soldier, Clay, Viend and the NPC index link to
+that owner. Dialogue quotations and raw game code remain outside the publication.
 
 The **World generation** guide separates
 the initial biome/landmark-zone map from terrain generated on entry. It documents
