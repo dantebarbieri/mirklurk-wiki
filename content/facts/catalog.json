@@ -2878,7 +2878,26 @@
           "key": "beingDB[5].sprite/team"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "nighttime-rule",
+          "title": "Fort Solid at night",
+          "paragraphs": [
+            "The fort's curfew escorts you away; it does not order Soldiers or Captain Eir to attack you. See Eir's nighttime rules for the hours, perimeter and story permissions. Attacking friendly characters can still cause retaliation; see Aggression rules."
+          ],
+          "links": [
+            {"label": "Eir's nighttime rules", "target": "Captain Eir#dialogue-fort-curfew"},
+            {"label": "Aggression rules", "target": "Bestiary"}
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.night/transPort;attack_aftermath.retaliation"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target.team0-player-exclusion"}
+          ]
+        }
+      ]
     },
     {
       "entity": "being-6",
@@ -2901,7 +2920,127 @@
           "key": "dialogue.NPC[6].porPic[0]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "information",
+          "title": "Information",
+          "paragraphs": [
+            "Eir explains that newcomers may visit Magus Clay in the undercroft during the day, but must leave the fort's perimeter at night. Clay buys and sells supplies there. Her Information option disappears once she grants access to the commander."
+          ],
+          "links": [{"label": "Magus Clay", "target": "Magus Clay"}],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Eir", "key": "102"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC6.Information/main<15"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC6.main13->15"}
+          ]
+        },
+        {
+          "id": "advice",
+          "title": "Advice",
+          "paragraphs": [
+            "Early on, Eir suggests visiting the two other Unwanted at the camp marked on your starting map. This is the lead into the camp investigation, not a repeatable errand.",
+            "After you hand over the Wooden Recorder, choosing Advice goes straight to her survival tips instead. Before that, More Advice follows the camp suggestion."
+          ],
+          "links": [
+            {"label": "camp investigation", "target": "Quests and journal#entry-journal-1"},
+            {"label": "Wooden Recorder", "target": "Wooden Recorder"}
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Eir", "key": "104/105"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC6.Advice/main>=2/action105;local104/MoreAdvice"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC6.item75/main2"}
+          ]
+        },
+        {
+          "id": "more-advice",
+          "title": "More Advice",
+          "paragraphs": [
+            "Eir recommends preparing above ground before exploring caves: collect larger branches from dead trees during daylight, look for Flint among rocks, and build a Campfire before a cold night.",
+            "This is preparation advice, not a cave-entry requirement. Tree harvesting and Ground debris explain the material sources. A campfire needs fuel and a separate ignition attempt; Temperature explains warmth, wet clothing and exposure."
+          ],
+          "links": [
+            {"label": "Flint", "target": "Flint"},
+            {"label": "Campfire", "target": "Campfire"},
+            {"label": "Tree harvesting", "target": "Tree and shrub harvesting"},
+            {"label": "Ground debris", "target": "Mixed ground debris"},
+            {"label": "Temperature", "target": "Temperature"}
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Eir", "key": "105"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.station38.activeTurns"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "fire-menu.startAPcost/fuel/ignition"}
+          ]
+        },
+        {
+          "id": "fort-curfew",
+          "title": "Fort Solid at night",
+          "paragraphs": [
+            "The curfew causes an escort-out scene, not a night-only attack by Soldiers or Eir. It checks after a turn advances the clock, from 21:00 through 05:00 inclusive. At exactly 05:00 it still applies; after 05:00 and before 21:00 it does not. These are fixed hours, not the lighting system's dusk or dawn.",
+            "Until you earn permission to remain, the outdoor check covers a 10-tile radius around the fort's reference point, not its entire world-map zone. Inside Clay's undercroft, the early-game check applies throughout that interior. A fade moves you out rather than starting a guard fight; the outdoor escort also advances another turn.",
+            "The escort check does not require a nearby Soldier or Eir, and is skipped while a screen transition is already running. Their normal friendly targeting and retaliation rules are separate; see Aggression rules."
+          ],
+          "links": [{"label": "Aggression rules", "target": "Bestiary"}],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.minute+=8/hour>=21||hour<=5/no-screenfader/main<15/area30/main<6/radius160"},
+            {"source": "game-data", "section": "gml_Object_obj_screenfader_Step_0", "key": "withinArea.player_endturn/fort-offset256/player_move_psynch;area30/rm_basement_clay"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target.team0-player-exclusion"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_aftermath.retaliation"}
+          ]
+        },
+        {
+          "id": "curfew-permissions",
+          "title": "Earning nighttime access",
+          "paragraphs": [
+            "The undercroft exemption begins when you deliver the three rift samples to Clay. You may then remain inside at night, although the outdoor perimeter restriction still applies. Continue his conversation for permission to use his storage chest and alchemy station.",
+            "The remaining curfew ends after you bring Viend back and speak with Eir. Her invitation to meet Commander Tain grants fort access and removes the outdoor escort restriction. Simply delivering the Wooden Recorder or reaching the next midnight does not lift it."
+          ],
+          "links": [
+            {"label": "three rift samples", "target": "Quests and journal#entry-journal-5"},
+            {"label": "bring Viend back", "target": "Quests and journal#entry-journal-13"},
+            {"label": "meet Commander Tain", "target": "Quests and journal#entry-journal-15"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.main<15/area30/main<6"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC8.samples3/main5->6/local203;NPC6.main13->15/commander-door"},
+            {"source": "beings-en", "section": "Clay", "key": "202/203"},
+            {"source": "beings-en", "section": "Eir", "key": "205/206"}
+          ]
+        },
+        {
+          "id": "quest-guidance",
+          "title": "Quest guidance",
+          "paragraphs": [
+            "The camp lead continues by taking the Wooden Recorder to Eir. Wait for the next midnight, then speak with her again to be sent to Clay. Returning immediately at midnight can still trigger the curfew; the quest timer and nighttime access are different rules.",
+            "Once Clay has the rift samples, Eir supplies the direction to Ranger Bhato. Follow the journal's direction for your world and Bhato's location instructions."
+          ],
+          "links": [
+            {"label": "taking the Wooden Recorder to Eir", "target": "Quests and journal#entry-journal-1"},
+            {"label": "next midnight", "target": "Quests and journal#entry-journal-2"},
+            {"label": "sent to Clay", "target": "Quests and journal#entry-journal-4"},
+            {"label": "journal's direction", "target": "Quests and journal#entry-journal-7"},
+            {"label": "Bhato's location instructions", "target": "Ranger Bhato"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC6.item75/main2/main3->4/main6->7/rangerCamp-direction"},
+            {"source": "game-data", "section": "gml_Object_manager_day_Step_0", "key": "midnight.main2->3"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.night/main<15"},
+            {"source": "beings-en", "section": "Eir", "key": "200/201/202/203"}
+          ]
+        }
+      ]
     },
     {
       "entity": "being-7",
@@ -2942,7 +3081,69 @@
           "key": "dialogue.NPC[8].porPic[1]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "advice",
+          "title": "Advice",
+          "paragraphs": [
+            "Clay recommends searching beneath rocks and boulders for useful finds, including small animals, and examining creatures before fighting them.",
+            "Ground debris and Searching boulders list the possible finds and their conditions; a search does not guarantee every item he mentions. Use Examine to inspect a creature rather than guessing its capabilities. The Bestiary, Health and armor and Damage types pages explain the combat information."
+          ],
+          "links": [
+            {"label": "Ground debris", "target": "Mixed ground debris"},
+            {"label": "Searching boulders", "target": "Searching boulders"},
+            {"label": "Bestiary", "target": "Bestiary"},
+            {"label": "Health and armor", "target": "Health and armor"},
+            {"label": "Damage types", "target": "Damage types"}
+          ],
+          "spoiler": false,
+          "confidence": "localization-described",
+          "evidence": [
+            {"source": "beings-en", "section": "Clay", "key": "104"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC8.Advice/action104;beast-info.hostileDistString"}
+          ]
+        },
+        {
+          "id": "undercroft-access",
+          "title": "Undercroft at night",
+          "paragraphs": [
+            "Early visits to the undercroft are subject to Eir's nighttime rules. The undercroft earns its own exemption before the rest of the fort; see nighttime access for the quest requirements."
+          ],
+          "links": [
+            {"label": "Eir's nighttime rules", "target": "Captain Eir#dialogue-fort-curfew"},
+            {"label": "nighttime access", "target": "Captain Eir#dialogue-curfew-permissions"}
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.area30/main<6/main<15"}
+          ]
+        },
+        {
+          "id": "quest-guidance",
+          "title": "Quest guidance",
+          "paragraphs": [
+            "After Eir sends you to him, Clay requests three rift samples. Handing them over advances his research; continue talking to obtain access to the storage chest and Alchemy workstation, then return to Eir.",
+            "Later, bring Bhato's rune to Clay. He provides Clay's Strange Potion for the return to the dead camp. His subsequent instructions send you to investigate ruins and warn about the toadkin around them. Follow the journal's old-records objective rather than treating his ordinary Advice option as another quest."
+          ],
+          "links": [
+            {"label": "three rift samples", "target": "Quests and journal#entry-journal-5"},
+            {"label": "Alchemy workstation", "target": "Alchemy workstation"},
+            {"label": "Bhato's rune", "target": "Quests and journal#entry-journal-10"},
+            {"label": "Clay's Strange Potion", "target": "Clay's Strange Potion"},
+            {"label": "return to the dead camp", "target": "Quests and journal#entry-journal-11"},
+            {"label": "old-records objective", "target": "Quests and journal#entry-journal-17"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Clay", "key": "200/201/202/203/204/205/206/207"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC8.main5/samples3/main6/local203/unlock;main10/item123"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue_action.NPC8.local205/item126/main11;local207/main17"}
+          ]
+        }
+      ]
     },
     {
       "entity": "being-9",
@@ -3025,6 +3226,48 @@
         }
       ],
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "advice",
+          "title": "Advice",
+          "paragraphs": [
+            "Bhato recommends retreating from an area that is too difficult and returning after improving your skills and supplies. This is general survival guidance, not a level requirement imposed by the conversation. Level progression explains advancement; Resting explains recovery before another expedition."
+          ],
+          "links": [
+            {"label": "Level progression", "target": "Level progression"},
+            {"label": "Resting", "target": "Resting"}
+          ],
+          "spoiler": false,
+          "confidence": "localization-described",
+          "evidence": [
+            {"source": "beings-en", "section": "Bhato", "key": "104"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC12.Advice/action104"}
+          ]
+        },
+        {
+          "id": "quest-guidance",
+          "title": "Quest guidance",
+          "paragraphs": [
+            "When Eir sends you to Bhato, he describes a poisonous Sceetler that fled into an ancient cellar and gives you two Minor Antidotes. Follow the cellar objective, not the entrance to his hut. Poison explains the damage and remedies.",
+            "Recover the creature's rune and report back to Bhato. His reward conversation unlocks his storage chest and Workstation and sends you to Clay with the rune."
+          ],
+          "links": [
+            {"label": "Sceetler", "target": "Sceetler"},
+            {"label": "Minor Antidotes", "target": "Minor Antidote"},
+            {"label": "cellar objective", "target": "Quests and journal#entry-journal-8"},
+            {"label": "Poison", "target": "Poison"},
+            {"label": "report back to Bhato", "target": "Quests and journal#entry-journal-9"},
+            {"label": "Workstation", "target": "Armor workstation"},
+            {"label": "Clay with the rune", "target": "Quests and journal#entry-journal-10"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Bhato", "key": "200/201/202/203/204"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC12.local202/item84x2/main8;item123/main9->10/local204/unlock"}
+          ]
+        }
+      ],
       "location": {
         "paragraphs": [
           "Bhato's hideout is in a Common Bog directly north, south, east or west of Fort Solid, never diagonally. Its zone is chosen at world creation.",
@@ -3174,7 +3417,43 @@
           "key": "dialogue.NPC[19].porPic[4]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "information",
+          "title": "Information",
+          "paragraphs": [
+            "Viend says he formerly practiced healing magic and was exiled for helping people the Kingdom rejected. Continue the conversation to hear why he dislikes the magi's practice of treating everyone else as inferior.",
+            "These two Information responses describe his background; they are not a request to collect items. His later trading access is separate from this conversation."
+          ],
+          "links": [],
+          "spoiler": false,
+          "confidence": "localization-described",
+          "evidence": [
+            {"source": "beings-en", "section": "Viend", "key": "104/105"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC19.Information/action104/Continue105/trade-main>=27"}
+          ]
+        },
+        {
+          "id": "quest-guidance",
+          "title": "Quest guidance",
+          "paragraphs": [
+            "After his revival, Viend asks you to escort him to Fort Solid because Eir still believes him dead. Follow Escort Viend and then A successful return. Talking to Eir afterward is also the step that earns full nighttime access."
+          ],
+          "links": [
+            {"label": "Escort Viend", "target": "Quests and journal#entry-journal-12"},
+            {"label": "A successful return", "target": "Quests and journal#entry-journal-13"},
+            {"label": "nighttime access", "target": "Captain Eir#dialogue-curfew-permissions"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Viend", "key": "200/201/202"},
+            {"source": "ui-en", "section": "Journal", "key": "12/13"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC6.main13->15"}
+          ]
+        }
+      ]
     },
     {
       "entity": "being-20",
@@ -3197,7 +3476,44 @@
           "key": "dialogue.NPC[20].porPic[5]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "trade",
+          "title": "Trade",
+          "paragraphs": [
+            "Tain directs ordinary supply requests to Magus Clay and offers map ledgers himself. His ordinary menu has Trade, not a separate Information or Advice option; his expedition guidance occurs during the main quest."
+          ],
+          "links": [{"label": "Magus Clay", "target": "Magus Clay"}],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Tain", "key": "101"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC20.local-1/options101/100"}
+          ]
+        },
+        {
+          "id": "quest-guidance",
+          "title": "Quest guidance",
+          "paragraphs": [
+            "Tain points you toward the ancient-city expedition and recommends training and preparing before departure. Speak to Clay first: Prepare for the journey leads into the old-records search. The location he names is taken from your world's Library coordinates, not a fixed map square.",
+            "Continuing his briefing grants one Summoning Stone for calling an ally. This is a story reward, not a purchase from his map stock."
+          ],
+          "links": [
+            {"label": "Prepare for the journey", "target": "Quests and journal#entry-journal-16"},
+            {"label": "old-records search", "target": "Quests and journal#entry-journal-17"},
+            {"label": "Library coordinates", "target": "Quests and journal#entry-journal-17-location"},
+            {"label": "Summoning Stone", "target": "Summoning Stone"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Tain", "key": "200/201/202"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC20.local201/libraryArea"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue_action.NPC20.action201/main16;action202/item127x1"}
+          ]
+        }
+      ]
     },
     {
       "entity": "being-21",
@@ -3311,6 +3627,41 @@
         }
       ],
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "information",
+          "title": "Information",
+          "paragraphs": [
+            "Gurb-Gurb identifies himself as toadkin, but says his unusual awareness and ability to converse set him apart. He cannot clearly remember how this change happened. This is his personal account, not an explanation of a player transformation mechanic or a quest objective."
+          ],
+          "links": [],
+          "spoiler": false,
+          "confidence": "localization-described",
+          "evidence": [
+            {"source": "beings-en", "section": "Gurb", "key": "102"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC26.Information/action102"}
+          ]
+        },
+        {
+          "id": "field-kit-tip",
+          "title": "Field-kit tip during Trade",
+          "paragraphs": [
+            "Gurb-Gurb's practical tip is in Trade: a Survivor's Field Kit is useful away from permanent workstations, but you must supply its fire yourself.",
+            "The kit's crafting menu is available only while its fire is active. See Survivor's Field Kit for recipes and Campfire for the separate fuel and lighting requirements; owning the kit alone does not make those recipes usable."
+          ],
+          "links": [
+            {"label": "Survivor's Field Kit", "target": "Survivor's Field Kit"},
+            {"label": "Campfire", "target": "Campfire"}
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en", "section": "Gurb", "key": "101"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC26.Trade/action101;fire-menu.startAPcost/fuel/ignition"},
+            {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.station172.activeTurns/recipe-menu-close"}
+          ]
+        }
+      ],
       "location": {
         "paragraphs": [
           "Gurb-Gurb's hollow is placed when you first enter a Drowned Fen while it remains uncreated. Revisits and loading an outdoor save also trigger the check; caves do not. A Savage Mirk is eligible only in a world with no Drowned Fen. Normal new worlds always have one.",
@@ -3461,6 +3812,36 @@
         }
       ],
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "dialogue": [
+        {
+          "id": "information",
+          "title": "Information",
+          "paragraphs": [
+            "Ihar says he fled to the Mirk while still wanted by the Kingdom, rather than being sentenced to exile as an Unwanted. Continue to hear about his failed rebellion and his doubts about his own ambitions.",
+            "This is character history, not a rebellion quest or a requirement for buying his goods."
+          ],
+          "links": [],
+          "spoiler": false,
+          "confidence": "localization-described",
+          "evidence": [
+            {"source": "beings-en", "section": "Ihar", "key": "104/105"},
+            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC33.Information/action104/Continue105/Trade101"}
+          ]
+        },
+        {
+          "id": "trade",
+          "title": "Trade",
+          "paragraphs": [
+            "Ihar explains that he claimed the shipwreck and its cargo of military equipment after losing his own boat. This supplies the background to his shop, not a separate treasure-recovery objective. His wares are listed below."
+          ],
+          "links": [],
+          "spoiler": false,
+          "confidence": "localization-described",
+          "evidence": [
+            {"source": "beings-en", "section": "Ihar", "key": "-1/101"}
+          ]
+        }
+      ],
       "location": {
         "paragraphs": [
           "Ihar lives in a wooden shipwreck on a Broken Fen shoreline. Entering a Broken Fen attempts to place it if it has not appeared yet. A search can fail after 1280 attempts to find suitable sand and water, even when a valid spot exists.",

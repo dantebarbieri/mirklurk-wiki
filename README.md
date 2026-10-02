@@ -115,6 +115,13 @@ Gurb-Gurb's one-time smoke cue and Ihar's conditional shoreline placement retain
 their source qualifications. These are supplementary native sprites, not
 screenshots or replacements for dialogue portraits.
 
+Seven characters have original Information, Advice, trade-tip and quest-briefing
+summaries, with the actual menu labels kept distinct. Linked mechanics and journal
+objectives explain the practical consequences; story-sensitive guidance is
+collapsed. Eir owns Fort Solid's turn-end curfew hours, escort behavior and separate
+undercroft/fort permissions. Soldier, Clay, Viend and the NPC index link to
+that owner. Dialogue quotations and raw game code remain outside the publication.
+
 The **World generation** guide separates
 the initial biome/landmark-zone map from terrain generated on entry. It documents
 Fort Solid's edge columns, Scaal's reflected lair zone, the Library's distance

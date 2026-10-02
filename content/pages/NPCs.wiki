@@ -5,4 +5,9 @@ See [[World generation#Finding_NPCs|World generation]] for placement rules, or g
 
 Friendly characters can retaliate when attacked. Trading and dialogue may depend on story progress.
 
+== Information and advice ==
+Character pages explain conversation topics and link practical tips to mechanics or journal objectives. [[Captain Eir#dialogue-fort-curfew|Fort Solid's nighttime rules]] cover the curfew and its story exceptions; it is an escort-out rule, not an order for Soldiers to attack.
+
+See [[Captain Eir#dialogue-advice|Eir's camp lead]], [[Magus Clay#dialogue-advice|Clay's search and combat tips]], [[Ranger Bhato#dialogue-advice|Bhato's preparation advice]] and [[Gurb-Gurb#dialogue-field-kit-tip|Gurb-Gurb's field-kit tip]]. [[Viend#dialogue-information|Viend]] and [[Ihar#dialogue-information|Ihar]] discuss their backgrounds. [[Commander Tain#dialogue-quest-guidance|Tain's expedition briefing]] is part of the main quest rather than a separate Advice option.
+
 [[Main Page]] | [[Bestiary]]

@@ -177,6 +177,43 @@ and Broken Fens: the former makes Gurb-Gurb's Savage Mirk fallback unnecessary
 in ordinary new worlds; Ihar has no alternative-biome fallback. These are
 source observations, not measured spawn probabilities or live gameplay tests.
 
+## NPC conversation guidance
+
+An NPC classification may include `dialogue`, an ordered list of one to eight
+reviewed topics. Each topic requires a unique `id` and `title`, one to four
+original `paragraphs` (at most 1200 characters each), `links`, a boolean `spoiler`,
+`confidence`, and `evidence`. Links contain a unique `label` used in the prose and
+a `target`: a canonical page title, optionally followed by an explicit stable
+anchor. The builder rejects missing destinations and anchors. At most twelve
+links are allowed per topic. These are original summaries, never dialogue
+quotations; menu labels such as Information and Advice are short factual names.
+
+The NPC owns its `dialogue-<id>` anchors and guidance. Story-sensitive topics
+render collapsed, and no dialogue prose is included in merchant offer views.
+Evidence stays in the local audit report's NPC dialogue section. A localized
+account of character history is not evidence of a quest or a player ability.
+Menu routing establishes which response appears under each option: Viend and
+Ihar use Information for responses whose internal keys are 104 and 105; Tain's
+briefing is a quest conversation, and Gurb-Gurb's field-kit tip is in Trade.
+No missing Wilda dialogue is fabricated from the menu's presence alone.
+
+For the existing `game-data` fingerprint, Eir's curfew explanation follows
+`player_endturn` and the screen transition, not an inference from her warning.
+The check uses the post-turn clock: hour >= 21 or hour <= 5, including 05:00.
+Before main stage 15 it escorts players within 160 pixels (ten tiles) of the
+fort reference point; the undercroft uses a separate whole-interior check only
+before stage 6. Clay's sample handover reaches stage 6; Eir's conversation after
+Viend's return reaches stage 15. Neither midnight nor the recorder handover grants
+those permissions. The escort branch does not assign hostile NPC targets; normal
+friendly targeting and damage-triggered retaliation remain separate. These are
+source observations for build 0.8.1.5, not a live playtest.
+
+The bounded publication allowance for `wiki_render.py` is 108 KiB to cover the
+dialogue rendering and destination checks; `tests/test_dialogue.py` is an exact
+allowlisted 16 KiB test file. This provenance reference has a 48 KiB allowance
+for the added schema and source-scope documentation. Other limits and historical
+research are unchanged.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

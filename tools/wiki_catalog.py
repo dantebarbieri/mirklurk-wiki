@@ -348,7 +348,7 @@ def validate_catalog(catalog, data):
         _evidence(effect["evidence"], sources, "item effect.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
-        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, {"summary", "location"}, "classification")
+        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, {"summary", "location", "dialogue"}, "classification")
         identity = row["entity"]
         if (
             not isinstance(identity, str) or identity not in entities
@@ -363,6 +363,46 @@ def validate_catalog(catalog, data):
         _text(row["note"], "classification.note", 500)
         if "summary" in row:
             _text(row["summary"], "classification.summary", 500)
+        if "dialogue" in row:
+            if row["kind"] != "npc":
+                raise DataError("classification.dialogue: requires an NPC owner")
+            topics = row["dialogue"]
+            if not isinstance(topics, list) or not 1 <= len(topics) <= 8:
+                raise DataError("NPC dialogue: expected one to eight topics")
+            topic_ids, topic_titles = set(), set()
+            for topic in topics:
+                _object(topic, {"id", "title", "paragraphs", "links", "spoiler", "confidence", "evidence"},
+                        set(), "NPC dialogue")
+                _identifier(topic["id"], "NPC dialogue.id")
+                _title(topic["title"])
+                if topic["id"] in topic_ids or title_key(topic["title"]) in topic_titles:
+                    raise DataError("NPC dialogue: duplicate topic")
+                topic_ids.add(topic["id"])
+                topic_titles.add(title_key(topic["title"]))
+                if type(topic["spoiler"]) is not bool:
+                    raise DataError("NPC dialogue.spoiler: expected boolean")
+                paragraphs = topic["paragraphs"]
+                if not isinstance(paragraphs, list) or not 1 <= len(paragraphs) <= 4:
+                    raise DataError("NPC dialogue: expected one to four original paragraphs")
+                for paragraph in paragraphs:
+                    _text(paragraph, "NPC dialogue.paragraph", 1200)
+                links = topic["links"]
+                if not isinstance(links, list) or len(links) > 12:
+                    raise DataError("NPC dialogue: expected at most twelve links")
+                labels = set()
+                for link in links:
+                    _object(link, {"label", "target"}, set(), "NPC dialogue link")
+                    _text(link["label"], "NPC dialogue link.label", 160)
+                    _text(link["target"], "NPC dialogue link.target", 255)
+                    page, separator, fragment = link["target"].partition("#")
+                    _title(page)
+                    if separator:
+                        _identifier(fragment, "NPC dialogue link.anchor")
+                    if link["label"] in labels or not any(link["label"] in paragraph for paragraph in paragraphs):
+                        raise DataError("NPC dialogue link: expected unique label used in its paragraphs")
+                    labels.add(link["label"])
+                _confidence(topic["confidence"], "NPC dialogue.confidence")
+                _evidence(topic["evidence"], sources, "NPC dialogue.evidence")
         if "location" in row:
             if row["kind"] != "npc":
                 raise DataError("classification.location: requires an NPC owner")
