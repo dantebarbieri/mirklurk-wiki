@@ -859,6 +859,13 @@ def source_page(data, catalog, details, locations, facts, entries):
              literal(topic["title"]), literal(topic["confidence"]), evidence_text(topic["evidence"])]
             for identity, topic in dialogue
         ])])
+    abilities = [row for row in catalog["classifications"] if "ability" in row]
+    if abilities:
+        lines.extend(["", "== Being ability evidence ==", table(["Editable owner", "Confidence", "Evidence"], [
+            [f'[[{locations[row["entity"]]}#{row["ability"]["title"].replace(" ", "_")}|{literal(locations[row["entity"]])}]]',
+             literal(row["ability"]["confidence"]), evidence_text(row["ability"]["evidence"])]
+            for row in sorted(abilities, key=lambda row: row["entity"])
+        ])])
     lines.extend(["", "== Property definitions ==", table(["Property", "Label", "Unit", "Interpretation"], [
         [literal(row["id"]), literal(row["label"]), known(row["unit"]), literal(row["description"])]
         for row in sorted(details["properties"], key=lambda row: row["id"])
@@ -1133,6 +1140,7 @@ def build_pages(root, data, catalog=None, details=None):
     classification_summaries = {row["entity"]: row["summary"] for row in catalog["classifications"] if "summary" in row}
     npc_locations = {row["entity"]: row["location"] for row in catalog["classifications"] if "location" in row}
     npc_dialogue = {row["entity"]: row["dialogue"] for row in catalog["classifications"] if "dialogue" in row}
+    abilities = {row["entity"]: row["ability"] for row in catalog["classifications"] if "ability" in row}
     factions = {identity: row for row in faction_groups(catalog) for identity in row["members"]}
     if "aggression" in catalog:
         pages["Bestiary"] += "\n== Aggression rules ==\n" + "\n\n".join(
@@ -1140,6 +1148,8 @@ def build_pages(root, data, catalog=None, details=None):
             for paragraph in catalog["aggression"]["paragraphs"]) + "\n"
     if any(image.get("role") == "location" and image["entity"] not in npc_locations for image in images):
         raise DataError("location illustration: requires a reviewed NPC location owner")
+    if any(image.get("role") == "ability" and image["entity"] not in abilities for image in images):
+        raise DataError("ability illustration: requires a reviewed being ability owner")
     stations = {method: row for row in catalog.get("stations", []) for method in row["methods"]}
     if "Loot mechanics" in owners.values():
         pages["Loot mechanics"] = "[[Loot tables]] | [[Main Page]]\n\nHow quantities, treasure budgets, and corpse contents are selected.\n"
@@ -1180,6 +1190,15 @@ def build_pages(root, data, catalog=None, details=None):
                     text += illustration_markup(image)
             links = {entities[identity]["name"]: locations[identity] for identity in location["related_entities"]}
             text += "\n\n".join(linked_prose(paragraph, links) for paragraph in location["paragraphs"]) + "\n"
+        if entity["id"] in abilities:
+            ability = abilities[entity["id"]]
+            text += "\n== " + literal(ability["title"]) + " ==\n"
+            for image in images:
+                if image.get("entity") == entity["id"] and image.get("role") == "ability":
+                    text += illustration_markup(image, width=64, page_image=False)
+            links = {entities[identity]["name"]: locations[identity] for identity in ability["related_entities"]}
+            links.update({title: title for title in ability["related_pages"]})
+            text += "\n\n".join(linked_prose(paragraph, links) for paragraph in ability["paragraphs"]) + "\n"
         if entity["id"] in npc_dialogue:
             text += "\n== Dialogue and guidance ==\n"
             for topic in npc_dialogue[entity["id"]]:

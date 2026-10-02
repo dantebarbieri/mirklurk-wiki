@@ -11854,6 +11854,28 @@
         "left": 35,
         "top": 30
       }
+    },
+    {
+      "id": "being-19-healing-illustration",
+      "entity": "being-19",
+      "role": "ability",
+      "file_title": "File:Healing-popup.png",
+      "caption": "The healing indicator shown above a healed character.",
+      "creator": "Edym Pixels",
+      "sha256": "26b01e30c749985620208d1e2db64e9b11df2046711c46b4de545d84700169ff",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25 and requested this healing indicator for Viend's page on 2026-10-02, including its live import. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data", "section": "gml_Object_obj_being_Step_0", "key": "being19.special/being_heal[target,2]"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_heal.popup_sprite/spr_ui_16x16_fullycenter.frame10"}
+      ],
+      "pixel_art": {
+        "width": 64,
+        "height": 64,
+        "source_scale": 4
+      }
     }
   ]
 }

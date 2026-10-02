@@ -47,7 +47,7 @@ class LandmarkTests(unittest.TestCase):
 
     def test_exact_native_landmarks_are_supplementary_not_portraits(self):
         self.assertEqual(set(self.images), set(LANDMARKS))
-        self.assertEqual(len(self.data["illustrations"]), 337)
+        self.assertEqual(len(self.data["illustrations"]), 338)
         for identity, (filename, digest) in LANDMARKS.items():
             image = self.images[identity]
             self.assertEqual(image["id"], identity + "-location-illustration")

@@ -145,6 +145,8 @@ class DialogueTests(unittest.TestCase):
             })
             self.assertNotIn("Dialogue and guidance", selected)
             self.assertNotIn('id="dialogue-', selected)
+            self.assertNotIn("Healing-popup.png", selected)
+            self.assertNotIn("Viend automatically heals", selected)
             for topic in self.topics[owner]:
                 for paragraph in topic["paragraphs"]:
                     self.assertNotIn(paragraph, selected)
@@ -176,6 +178,39 @@ class DialogueTests(unittest.TestCase):
                 baseline[owner].split("== Stats ==", 1)[1],
             )
         self.assertEqual(self.pages["Quests and journal"], baseline["Quests and journal"])
+
+    def test_viend_healing_and_dialogue_coexist_in_order_without_duplicate_content(self):
+        page = self.pages["Viend"]
+        healing = page.index("== <nowiki>Healing</nowiki> ==")
+        dialogue = page.index("== Dialogue and guidance ==")
+        stats = page.index("== Stats ==")
+        self.assertLess(healing, dialogue)
+        self.assertLess(dialogue, stats)
+        self.assertEqual(page.count("Viend automatically heals"), 1)
+        self.assertEqual(page.count("[[File:Healing-popup.png|"), 1)
+        self.assertIn("[[File:Healing-popup.png|", page[healing:dialogue])
+        self.assertNotIn("dialogue-information", page[healing:dialogue])
+        self.assertIn('id="dialogue-information"', page[dialogue:stats])
+        self.assertIn('id="dialogue-quest-guidance"', page[dialogue:stats])
+        self.assertNotIn("Viend automatically heals", page[dialogue:stats])
+        audit = audit_report(self.data, self.catalog, self.details)
+        self.assertIn("[[Viend#Healing|", audit)
+        self.assertIn("[[Viend#dialogue-information|", audit)
+
+        catalog = copy.deepcopy(self.catalog)
+        viend = next(row for row in catalog["classifications"] if row["entity"] == "being-19")
+        viend["location"] = {
+            "paragraphs": ["Synthetic location for the combined section-order regression."],
+            "related_entities": [],
+            "confidence": "observed",
+            "evidence": copy.deepcopy(viend["evidence"]),
+        }
+        validate_catalog(catalog, self.data)
+        page = build_pages(ROOT, self.data, catalog, self.details)["Viend"]
+        headings = ("== Location and access ==", "== <nowiki>Healing</nowiki> ==",
+                    "== Dialogue and guidance ==", "== Stats ==")
+        self.assertEqual([page.index(heading) for heading in headings],
+                         sorted(page.index(heading) for heading in headings))
 
     def test_schema_rejects_unbounded_unsafe_and_incomplete_topics(self):
         base = self.topic("Captain Eir", "fort-curfew")

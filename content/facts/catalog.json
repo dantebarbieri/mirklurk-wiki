@@ -3453,7 +3453,29 @@
             {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC6.main13->15"}
           ]
         }
-      ]
+      ],
+      "ability": {
+        "title": "Healing",
+        "paragraphs": [
+          "Viend automatically heals up to two ordinary wounds on one character within 16 tiles. Each cast restores 1 HP to each of two randomly chosen wounded health cells, or just 1 HP if only one cell is wounded. It costs him 10 action points, his full turn's allowance, and has no separate cooldown.",
+          "The player always takes priority, even if someone else is closer or more badly injured. Otherwise, Viend heals himself if wounded, then the nearest eligible friendly character. He does not heal dead or incapacitated NPCs. Walls and other obstacles do not block the spell.",
+          "Healing restores HP, not armor or wellbeing, and does not remove poison, bleeding or sickness. Burns cannot be healed directly: use Simple Burn Remedy to turn them into ordinary wounds first. See Resting for natural wound healing.",
+          "Viend checks for wounds before moving or attacking whenever he can act with all 10 action points available. Ongoing damage or a stun can delay or prevent his action. Healing needs no conversation, payment or supplies, works outside combat, and does not depend on his shop or alchemy workstation.",
+          "During his escort or an active summon, Viend receives an action each turn. When nearby but idle, neither fighting nor detecting an enemy, he normally has a 10% chance to act each turn, so healing can be intermittent. While you rest in a bed or sleeping gear, this idle chance falls to 1.5% if at least two conditions are met: satiation above its low threshold, stamina above its low threshold, and temperature inside its comfortable range."
+        ],
+        "related_entities": ["item-141"],
+        "related_pages": ["Resting"],
+        "confidence": "observed",
+        "evidence": [
+          {"source": "game-data", "section": "gml_Object_manager_area_Step_0", "key": "being19.AP>=10/wounds/range256/player-priority100/teams0-1/distance-priority/special-before-movement"},
+          {"source": "game-data", "section": "gml_Object_obj_being_Step_0", "key": "being19.special/being_heal[target,2]/AP-=10"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_heal.defaults/wounded-cell-sampling;being_get_wounds;in_ignore_state;is_follower;being_endturn.AP-reset"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.turnList/reallyResting/moveChance*0.15;delayed_effects_check;attack_lands.fire"},
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[19].APmax10/moveChance0.1/team0"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_smartones", "key": "quest_active_check.being19.stage12/14;dist_methat;chance"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "healing-grid.fireFixItem/hpgrid[-1-to-0]/healItem"}
+        ]
+      }
     },
     {
       "entity": "being-20",

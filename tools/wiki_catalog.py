@@ -348,7 +348,8 @@ def validate_catalog(catalog, data):
         _evidence(effect["evidence"], sources, "item effect.evidence")
     classified = set()
     for row in _records(catalog["classifications"], "catalog.classifications"):
-        _object(row, {"entity", "kind", "confidence", "evidence", "note"}, {"summary", "location", "dialogue"}, "classification")
+        _object(row, {"entity", "kind", "confidence", "evidence", "note"},
+                {"summary", "location", "ability", "dialogue"}, "classification")
         identity = row["entity"]
         if (
             not isinstance(identity, str) or identity not in entities
@@ -419,6 +420,28 @@ def validate_catalog(catalog, data):
                 raise DataError("NPC location: expected at most eight unique related entities")
             _confidence(location["confidence"], "NPC location.confidence")
             _evidence(location["evidence"], sources, "NPC location.evidence")
+        if "ability" in row:
+            ability = row["ability"]
+            _object(ability, {"title", "paragraphs", "related_entities", "related_pages", "confidence", "evidence"},
+                    set(), "being ability")
+            _title(ability["title"])
+            if not isinstance(ability["paragraphs"], list) or not 1 <= len(ability["paragraphs"]) <= 6:
+                raise DataError("being ability: expected one to six original paragraphs")
+            for paragraph in ability["paragraphs"]:
+                _text(paragraph, "being ability.paragraph", 800)
+            related = ability["related_entities"]
+            if not isinstance(related, list) or len(related) > 8 or any(
+                not isinstance(target, str) or target not in required or target == identity for target in related
+            ) or len(related) != len(set(related)):
+                raise DataError("being ability: expected at most eight unique related entities")
+            related_pages = ability["related_pages"]
+            if not isinstance(related_pages, list) or len(related_pages) > 8 or any(
+                not isinstance(target, str) or target not in {*PAGE_FILES, *registered_guides}
+                for target in related_pages
+            ) or len(related_pages) != len(set(related_pages)):
+                raise DataError("being ability: expected at most eight unique related guides")
+            _confidence(ability["confidence"], "being ability.confidence")
+            _evidence(ability["evidence"], sources, "being ability.evidence")
     if "aggression" in catalog:
         aggression = catalog["aggression"]
         _object(aggression, {"factions", "paragraphs", "confidence", "evidence"}, set(), "aggression")

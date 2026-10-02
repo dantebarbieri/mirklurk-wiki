@@ -48,7 +48,7 @@ CATEGORY_PAGES = {
 }
 FACT_PAGES = {"Game mechanics", *CATEGORY_PAGES.values(), *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS}
 CONFIDENCES = {"observed", "inferred", "localization-described"}
-ILLUSTRATION_ROLES = {"location", "sprite"}
+ILLUSTRATION_ROLES = {"location", "sprite", "ability"}
 MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
     "Temperature", "Wellbeing", "Foods", "Resting", "Weather", "Armor points",
@@ -302,7 +302,7 @@ def _validate_illustrations(records, sources, entities, stations=None):
         if "variant" in illustration and "station" not in illustration:
             raise DataError(f"{where}: a variant belongs only to a station")
         if "role" in illustration and ("entity" not in illustration or illustration["role"] not in ILLUSTRATION_ROLES):
-            raise DataError(f"{where}.role: only entity location or sprite illustrations have a role")
+            raise DataError(f"{where}.role: only entity location, sprite, or ability illustrations have a role")
         if "entity" in illustration:
             entity_id = _identifier(illustration["entity"], f"{where}.entity")
             if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being", "nature", "skill"}:

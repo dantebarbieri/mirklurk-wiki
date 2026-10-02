@@ -76,9 +76,12 @@ article-routing virtual host. Neither exception permits additional files.
 No private input, XML, measurement, artwork,
 or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
 20 KiB for metadata, rights, portrait preservation, seller projections and
-synthetic-image regressions; `tests/test_sprites.py` is allowlisted at 8 KiB for
-NPC overworld-sprite metadata and presentation regressions. No media exclusion
-is widened.
+synthetic-image regressions; `tests/test_sprites.py` is allowlisted at 12 KiB for
+NPC overworld-sprite and healing-ability metadata and presentation regressions.
+The combined ability and dialogue sections use 48 KiB for `docs/PROVENANCE.md`,
+108 KiB for `tools/wiki_render.py`, and 60 KiB for `tools/wiki_catalog.py`.
+`tests/test_dialogue.py` is separately allowlisted at 16 KiB for conversation,
+curfew and combined-section regressions. No media exclusion is widened.
 
 Runtime files belong outside the checkout, even when ignored. Actual
 `LocalSettings.php` is forbidden; `deploy/LocalSettings.template.php` is original

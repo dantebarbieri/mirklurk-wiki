@@ -214,6 +214,11 @@ allowlisted 16 KiB test file. This provenance reference has a 48 KiB allowance
 for the added schema and source-scope documentation. Other limits and historical
 research are unchanged.
 
+Ability and dialogue metadata can coexist on one being. Rendering keeps location,
+ability (Viend's Healing), dialogue, and stats in that order, with separate audit
+records and no ability or dialogue prose in merchant offer views. Their combined
+validator uses a 60 KiB `wiki_catalog.py` allowance.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts
@@ -256,6 +261,16 @@ without rewriting historical evidence:
   `confidence` and `evidence`. It owns original location/access prose separately
   from trade availability; citations remain in Source provenance. Supplementary
   `role: "location"` illustrations require that owner and never replace portraits.
+  A being may also have one `ability` object with a plain `title`, one to six
+  original `paragraphs` (at most 800 characters each), up to eight unique
+  `related_entities` and eight `related_pages` pointing to existing guides,
+  plus its own `confidence` and `evidence`. The section lives only on that
+  being's page; its evidence appears only in the local audit report.
+  An optional `role: "ability"` illustration requires this owner, stays inside
+  the ability section at a compact integer scale, and cannot become a portrait,
+  entity icon or PageImages thumbnail. Viend's Healing section documents wound
+  selection, range, priority, AP cost, exclusions and turn scheduling; it does
+  not change the original research records or copy Resting's natural-healing rules.
 - `entry_links`: `{entry, entities}` for reviewed editorial crosslinks to
   existing records. These are see-also relationships, not a place to add a
   mechanic or unsupported semantic claim.
