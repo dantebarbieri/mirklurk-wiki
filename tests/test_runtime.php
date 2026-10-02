@@ -58,7 +58,33 @@ try {
     check(count($wgHooks['MediaWikiPerformAction']) === 1, 'Legacy view compatibility hook missing.');
     check($wgGroupPermissions['*']['read'] && $wgGroupPermissions['*']['createaccount'], 'Public access missing.');
     check(!$wgGroupPermissions['*']['edit'] && $wgGroupPermissions['user']['edit'], 'Editing policy mismatch.');
-    check(!$wgEnableUploads && !$wgEnableEmail, 'Disabled functionality unexpectedly enabled.');
+    check($wgEnableUploads && !$wgEnableEmail, 'Upload/email policy mismatch.');
+    check($wgAutoConfirmAge === 86400 && $wgAutoConfirmCount === 5, 'Upload eligibility thresholds changed.');
+    foreach (['*', 'user'] as $group) {
+        foreach (['upload', 'reupload', 'reupload-own', 'reupload-shared'] as $right) {
+            check($wgGroupPermissions[$group][$right] === false, 'Default upload grants must be removed.');
+        }
+    }
+    foreach (['confirmed', 'autoconfirmed'] as $group) {
+        check($wgGroupPermissions[$group]['upload'] && $wgGroupPermissions[$group]['reupload-own'],
+            'Eligible editors must upload and replace only their own files.');
+        check(empty($wgGroupPermissions[$group]['reupload']), 'Contributors may not replace others\' files.');
+    }
+    check($wgGroupPermissions['confirmed']['autoconfirmed']
+        && $wgGroupPermissions['sysop']['upload'] && $wgGroupPermissions['sysop']['reupload'],
+        'Manual confirmation and administrator upload rights missing.');
+    check(in_array('confirmed', $wgAddGroups['sysop'], true)
+        && in_array('confirmed', $wgRemoveGroups['sysop'], true), 'Administrators must manage confirmed uploaders.');
+    check($wgFileExtensions === ['png', 'jpg', 'jpeg', 'webp']
+        && $wgCheckFileExtensions && $wgStrictFileExtensions && $wgVerifyMimeType && !$wgDisableUploadScriptChecks,
+        'Strict raster upload verification missing.');
+    check($wgMaxUploadSize === 10485760, 'Uploads must be capped at exactly 10 MiB.');
+    check($wgRateLimits['upload'] === ['user' => [20, 3600], 'newbie' => [20, 3600]],
+        'Native upload rate limits missing.');
+    check($wgHooks['UploadVerifyFile'] === ['MirklurkUploads::onUploadVerifyFile']
+        && $wgHooks['UploadForm:initial'] === ['MirklurkUploads::onUploadFormInitial'],
+        'Hard dimension validation and upload instructions missing.');
+    check($wgReadOnlyFile === '/var/lib/mirklurk-backup/read-only', 'Coordinated backup lock missing.');
     check(!$wgAllowCopyUploads && !$wgAllowExternalImages, 'Remote image access unexpectedly enabled.');
     check($wgUseImageMagick === true, 'CLI-imported images require the installed ImageMagick renderer.');
     check($wgImageMagickConvertCommand === '/usr/bin/convert', 'Pinned image renderer path mismatch.');

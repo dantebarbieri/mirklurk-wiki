@@ -250,15 +250,17 @@ creature drop, gatherable or purchase; material-family browsing remains intact.
 
 [Deployment instructions](docs/DEPLOYMENT.md) describe the reusable image and
 secret-file interface. The default policy is public reading, open registration,
-logged-in editing, no anonymous edits, and no uploads. Required QuestyCaptcha
+logged-in editing, no anonymous edits, and bounded native image uploads for
+confirmed or autoconfirmed editors. Required QuestyCaptcha
 questions and shared-cache rate limits provide a baseline against signup spam;
 they are not a substitute for moderation. Email and email-based resets are
 disabled.
 
 Optional [illustration references](docs/IMAGES.md) keep all image bytes outside
-Git. Only separately rights-approved pictures may be imported by an operator
-into MediaWiki storage; pending references never embed artwork, and public web
-uploads remain disabled.
+Git. Separately rights-approved curated pictures may be imported by an operator;
+pending references never embed artwork. Contributors use `Special:Upload` for
+appropriately attributed PNG, JPEG or WebP images, limited to 10 MiB, 12 megapixels
+and 8,192 pixels per side. See [eligibility, limits and rollout](docs/DEPLOYMENT.md#native-image-uploads).
 The [site logo and PNG favicon](docs/DEPLOYMENT.md#site-logo-and-favicon) likewise
 use separately approved server-only images and optional runtime settings,
 not assets bundled in Git or the application image.

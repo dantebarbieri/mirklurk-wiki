@@ -73,6 +73,12 @@ checks; `tools/sync_wiki.py` has a 32 KiB cap and `tests/test_sync.py` 40 KiB.
 `tools/smoke_urls.py` is separately bounded at 24 KiB for disposable HTTP/browser
 URL checks; `deploy/apache-short-urls.conf` is bounded at 4 KiB for the image's
 article-routing virtual host. Neither exception permits additional files.
+`deploy/mirklurk-uploads.php` and `tests/test_uploads.php` are each bounded at
+8 KiB for native upload validation and synthetic boundary tests;
+`tools/smoke_uploads.py` is bounded at 24 KiB for disposable upload regressions.
+All image fixtures are generated in memory or disposable storage, never committed.
+`docs/DEPLOYMENT.md` is bounded at 40 KiB including upload policy and coordinated
+backup/rollout instructions.
 No private input, XML, measurement, artwork,
 or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
 20 KiB for metadata, rights, portrait preservation, seller projections and

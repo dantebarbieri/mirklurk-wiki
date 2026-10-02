@@ -24,15 +24,18 @@ through an operator-managed TLS proxy; do not publish the database port. The app
 joins a proxy network and a private database network; MariaDB joins only the
 database network.
 
-Store MariaDB data, any optional images directory, backups, and secret files
-outside the checkout. Uploads are disabled, so an images volume is not needed for
-the initial functionality. If one is mounted at `/var/www/html/images`, provision
-it deliberately for Apache's `www-data` user (UID/GID 33 in the pinned image);
+Store MariaDB data, images, backups, and secret files outside the checkout.
+Persist `/var/www/html/images` and provision it deliberately for Apache's
+`www-data` user (UID/GID 33 in the pinned image);
 never recursively change ownership of a shared parent directory.
+Preserve existing contents and ACLs; never mount an empty directory over live images.
+Development Compose provides a named images volume; production owns its existing
+bind mount and coordinated database/files backup.
 
 Future rights-approved server-only illustrations use [the private operator import
-workflow](IMAGES.md). No artwork is supplied or cleared by this repository, and
-web uploads remain disabled. The runtime explicitly uses the pinned image's
+workflow](IMAGES.md). No artwork is supplied or cleared by this repository.
+Contributors use the bounded [native upload workflow](#native-image-uploads).
+The runtime explicitly uses the pinned image's
 `/usr/bin/convert` (ImageMagick) for thumbnails; it does not rely on PHP GD.
 
 The original nonsecret template is baked as `/var/www/html/LocalSettings.php`.
@@ -58,8 +61,8 @@ repository changes. Do not roll back the runtime while live Lua readers remain.
 ## Visual editing
 
 Signed-in editors get both **Edit** (VisualEditor) and **Edit source** on
-articles, User, Category, Help and File description pages (uploads stay
-disabled; only a file's description text is editable); anonymous users cannot edit. VisualEditor uses
+articles, User, Category, Help and File description pages; anonymous users cannot edit.
+Image uploads have their own eligibility policy below. VisualEditor uses
 MediaWiki 1.43's integrated PHP Parsoid client, so no RESTBase or Node Parsoid
 service is needed; do not configure `$wgVirtualRestConfig['modules']['parsoid']`.
 Templates, modules and interface pages remain source-edited.
@@ -295,17 +298,19 @@ database-backed site statistics; it makes no external request.
 ## Access, moderation, and upgrades
 
 Public users can read and register. Logged-in users can edit; anonymous users
-cannot edit or create pages. Uploads, remote image embedding, outgoing email,
+cannot edit or create pages. Uploads require confirmation; remote image embedding, outgoing email,
 and email-based password resets are off. Plan administrator-assisted recovery
 and record the first administrator's credentials securely.
 
 Bundled ConfirmEdit/QuestyCaptcha protects registration, bad logins, and link
 additions. Shared database caches support account and edit rate limits across
 Apache workers. Limits include three registrations per IP per hour and ten
-per day; authenticated edits are limited to ten per minute, with tighter new-user
-limits. Review moderation burden and false positives after launch.
+per day; edit buckets allow ten checks per minute, or three for newcomers.
+MediaWiki 1.43 API saves count both authorization and edit-constraint checks, so
+these are not guaranteed numbers of successful saves. Review moderation burden
+and false positives after launch.
 
-For upgrades, back up and verify the database, stop all web/background writers,
+For upgrades, back up and verify the database and image storage together, stop all web/background writers,
 build the reviewed new image, and run
 `php maintenance/run.php update --quick` in a one-off app container with
 `MW_READ_ONLY` cleared. Check its exit status before starting the new app.
@@ -316,10 +321,100 @@ Maintain encrypted, access-controlled backups outside Git. Verify a restore
 into a **separate disposable database** before relying on the backup. Do not
 test restores against production or assume an XML content export preserves
 accounts, permissions, and all database state.
+Include original images, prior versions, deleted files, thumbnails and separate
+branding in the same recoverable snapshot. Deleted files and backups are private.
 
 Changing domains is an operator action: update `MW_SERVER_URL`, rebuild only
 if source changes, recreate the app, and handle redirects/TLS externally.
 Authored pages and the seed contain no deployment hostname.
+
+## Native image uploads
+
+Use core `Special:Upload`, not a custom upload endpoint or filesystem copying.
+It creates ordinary `File:` descriptions, upload logs and revision history.
+No UploadWizard extension, anonymous upload grant, or new file hosting service is needed.
+
+| Policy | Runtime setting/behavior |
+| --- | --- |
+| Eligibility | `autoconfirmed` requires both 24 hours and 5 edits; `confirmed` is a manually assigned alternative. |
+| Replacement | Eligible contributors have `upload` and `reupload-own`, not `reupload`. Core interprets "own" as the **latest uploader**. An admin replacement ends that contributor's replacement privilege. |
+| Administration | Sysops can upload/replace any file and add/remove `confirmed` via `Special:UserRights`. Do not make contributors administrators or bots. |
+| Formats | Strict allowlist: `png`, `jpg`, `jpeg`, `webp`; native MIME and script checks remain enabled. No SVG, GIF, documents, archives or saves. |
+| Bytes | `$wgMaxUploadSize` = 10,485,760 bytes (10 MiB), including assembled uploads. PHP `upload_max_filesize=10M`, `post_max_size=12M`. |
+| Dimensions | Both axes at most 8,192 pixels and their product at most 12,000,000. `UploadVerifyFile` checks without decoding the bitmap, including normal stash verification. Admins have no size/dimension exemption. |
+| Throttling | Native `upload` user/newbie buckets: 20 per 3,600 seconds. Existing edit throttles also apply. Sysops/bots retain core `noratelimit`; do not grant it to contributors. |
+| Sources | Local file selection only. URL uploads and external image embedding remain disabled. |
+
+Core grants are cumulative: default `user` upload/reupload/reupload-own/reupload-shared
+grants are explicitly removed before eligible groups are granted limited rights.
+The manual `confirmed` group also grants the native `autoconfirmed` right, so
+confirmed editors are no longer treated as newbies for existing limits.
+Raising automatic confirmation thresholds likewise affects existing newbie edit
+limits; it does not revoke ordinary logged-in editing.
+
+The small hook in `deploy/mirklurk-uploads.php` supplies the hard dimension check
+and a visible notice on the native upload form explaining limits and attribution.
+`$wgMaxImageArea` is left at its upstream thumbnail limit: it is **not** an upload
+rejection policy (ImageMagick JPEGs bypass it). Native content checking remains
+authoritative; dimension checks are additional, not a substitute.
+
+Prefer PNG for pixel art and annotated comparison strips. Contributors should
+identify source, creator/rightsholder, permission or license basis, and game
+version in the File description. This is an editorial requirement, not automated
+rights verification. Use descriptive filenames and `[[File:Name.png|thumb|Caption]]`
+to place an image in an article; uploaded bytes stay outside Git. See
+[contributor attribution and curated imports](IMAGES.md#contributor-uploads).
+
+Apache applies image-directory safety in its virtual host, not a volume's
+possibly missing `.htaccess`: no PHP execution, CGI, server-side includes or
+directory listings; `nosniff` on responses; only allowed raster extensions served.
+`images/deleted` and `images/temp` are explicitly denied over HTTP. Deleted files
+stay at core's existing `images/deleted` path; no migration or history deletion.
+Older revisions in `images/archive` are still public, as in core MediaWiki.
+If the proxy serves images directly, apply equivalent restrictions there too.
+
+### Backup and deployment order
+
+The app sets native `$wgReadOnlyFile` to `/var/lib/mirklurk-backup/read-only`.
+An optional dedicated operator-controlled directory is mounted read-only at
+`/var/lib/mirklurk-backup`; a nonempty marker makes the wiki read-only with the
+marker text as its reason. `MW_READ_ONLY` continues to work independently.
+This is **not** a drain barrier for requests already running. With `CACHE_DB`
+sessions, logins can also be unavailable while locked; the anonymous statistics
+healthcheck remains usable. Operators, not `Special:UnlockDB`, remove their own marker.
+
+The coordinated homeserver design uses a brief daily wiki interruption, approved
+by the operator: a shared deployment/maintenance lock, a native marker,
+graceful shutdown of the wiki frontend, then a database dump and full images/
+branding snapshot while writers are stopped. Restart the same frontend and
+verify health before removing the owned marker. CLI imports, background jobs
+and administrative filesystem writers must honor that same maintenance lock.
+The homeserver runbook owns schedules, retention, permissions, offsite copies
+and recovery; this image does not schedule or run backups.
+
+Before enabling uploads:
+
+1. Confirm the existing images mount, contents and UID 33 write access. Provision
+   only the dedicated backup-control directory; preserve image/branding mounts.
+   Keep proxy POST limits at least 12 MiB, including multipart overhead.
+2. Take a coordinated full baseline snapshot, and verify restoration in an
+   isolated environment. SQL-only dumps are not complete file-library backups.
+3. Build/recreate the reviewed application image with the same data, origin and
+   secret mounts. No schema changes are needed for this upload policy. A content
+   publishing merge alone does not deploy it.
+4. Verify native upload/newbie denial, PNG/JPEG/WebP acceptance, exact byte and
+   dimension boundaries, replacement permissions, thumbnail/public reads,
+   private-path denial, and recreation persistence. Enable the coordinated
+   backup schedule and monitor storage, inodes, snapshot age and offsite copies.
+5. In `Special:UserRights`, locate DavidLokison's **actual wiki account** (a chat
+   display name is not proof), grant only `confirmed`, and confirm the upload
+   form appears. No live account grant is performed by this repository.
+
+Native upload rate limits are not byte/storage quotas and do not bound all
+temporary staging activity. Monitor originals, old revisions, deleted files,
+stashes and thumbnails. Retain core image-processing resource limits and review
+abuse in `Special:Log/upload` and `Special:ListFiles`. Existing curated artwork
+must not be replaced casually; operator imports keep their separate rights review.
 
 ## Canonical URLs, descriptions and social sharing
 
@@ -497,12 +592,13 @@ docker compose -f deploy/compose.dev.yml up -d --wait mirklurk
 ```
 
 These commands require Docker Engine and Compose v2. Do not start this stack
-alongside an existing production integration. A normal `down` leaves the database
-volume; removing volumes destroys that development database.
+alongside an existing production integration. A normal `down` leaves database
+and images volumes; removing volumes destroys both development data sets.
 
 ## Validation without touching infrastructure
 
-Run `php tests/test_runtime.php` for isolated configuration tests. With Docker
+Run `php tests/test_runtime.php` and `php tests/test_uploads.php` for isolated
+configuration and exact dimension-boundary tests. With Docker
 available, install the browser test runner with `python -m pip install playwright==1.55.0`
 and `python -m playwright install --with-deps chromium`. Set
 `MIRKLURK_SMOKE_ARTIFACTS` to an external scratch directory to retain synthetic
@@ -510,9 +606,12 @@ Vector screenshots/geometry (otherwise they are temporary). Then
 `python tools/smoke_deploy.py --run` builds the image in its own
 randomly named Compose project with temporary generated credentials, then:
 
-- checks installation refusal on reuse, anonymous permissions, disabled web
+- checks installation refusal on reuse, anonymous permissions, confirmed/native
   uploads, the loaded ParserFunctions, VisualEditor and TemplateData extensions,
   and CAPTCHA-protected self-registration;
+- checks byte/dimension boundaries, PNG/JPEG/WebP, invalid formats, stash
+  verification, replacement rights, autoconfirmation, upload throttling,
+  image-directory protection, backup lock/health and recreation persistence;
 - as a signed-in editor, checks that an ordinary page offers VisualEditor and
   loads through Parsoid, while a shared-data owner offers only source editing,
   shows its notice and refuses a VisualEditor API save without a new revision;

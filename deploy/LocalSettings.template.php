@@ -5,6 +5,7 @@ if (!defined('MEDIAWIKI')) {
 require_once __DIR__ . '/mirklurk-runtime.php';
 require_once __DIR__ . '/mirklurk-metadata.php';
 require_once __DIR__ . '/mirklurk-editing.php';
+require_once __DIR__ . '/mirklurk-uploads.php';
 
 $wgSitename = 'MirkLurk Wiki';
 $wgMetaNamespace = 'MirkLurk_Wiki';
@@ -82,7 +83,31 @@ $wgGroupPermissions['user']['edit'] = true;
 $wgGroupPermissions['user']['createpage'] = true;
 $wgGroupPermissions['user']['createtalk'] = true;
 $wgGroupPermissions['user']['writeapi'] = true;
-$wgEnableUploads = false;
+$wgEnableUploads = true;
+$wgAutoConfirmAge = 86400;
+$wgAutoConfirmCount = 5;
+foreach (['*', 'user'] as $group) {
+    foreach (['upload', 'reupload', 'reupload-own', 'reupload-shared'] as $right) {
+        $wgGroupPermissions[$group][$right] = false;
+    }
+}
+foreach (['autoconfirmed', 'confirmed'] as $group) {
+    $wgGroupPermissions[$group]['upload'] = true;
+    $wgGroupPermissions[$group]['reupload-own'] = true;
+}
+$wgGroupPermissions['confirmed']['autoconfirmed'] = true;
+$wgGroupPermissions['sysop']['upload'] = true;
+$wgGroupPermissions['sysop']['reupload'] = true;
+$wgAddGroups['sysop'][] = 'confirmed';
+$wgRemoveGroups['sysop'][] = 'confirmed';
+$wgFileExtensions = ['png', 'jpg', 'jpeg', 'webp'];
+$wgCheckFileExtensions = true;
+$wgStrictFileExtensions = true;
+$wgVerifyMimeType = true;
+$wgDisableUploadScriptChecks = false;
+$wgMaxUploadSize = MirklurkUploads::MAX_BYTES;
+$wgHooks['UploadVerifyFile'][] = MirklurkUploads::class . '::onUploadVerifyFile';
+$wgHooks['UploadForm:initial'][] = MirklurkUploads::class . '::onUploadFormInitial';
 $wgAllowCopyUploads = false;
 $wgAllowExternalImages = false;
 $wgUseImageMagick = true;
@@ -96,6 +121,7 @@ $wgRightsUrl = '';
 $wgRightsIcon = '';
 
 $wgRateLimits['edit'] = ['user' => [10, 60], 'newbie' => [3, 60], 'ip' => [15, 60]];
+$wgRateLimits['upload'] = ['user' => [20, 3600], 'newbie' => [20, 3600]];
 $wgRateLimits['createaccount'] = ['ip' => [3, 3600]];
 $wgRateLimits['badcaptcha'] = ['ip' => [10, 60], 'user' => [10, 60]];
 $wgRateLimits['sendemail'] = ['user' => [0, 86400]];
@@ -174,6 +200,8 @@ $wgCaptchaTriggers['addurl'] = true;
 $wgCaptchaTriggers['edit'] = false;
 $wgCaptchaTriggers['create'] = false;
 
+// The backup operator owns this optional lock; do not place it in public image storage.
+$wgReadOnlyFile = '/var/lib/mirklurk-backup/read-only';
 $readOnly = mirklurkEnv('MW_READ_ONLY', '');
 if ($readOnly !== '') {
     $wgReadOnly = $readOnly;

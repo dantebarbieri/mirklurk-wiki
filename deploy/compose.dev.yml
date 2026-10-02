@@ -33,6 +33,8 @@ services:
       - frontend
     tmpfs:
       - /tmp
+    volumes:
+      - images:/var/www/html/images
 
   mirklurk-db:
     image: mariadb:11.4.13@sha256:70cc072b29b4a89ae07abb2d4da2c64678a7f2dfe092751bb51c87d67dc1338b
@@ -62,6 +64,7 @@ networks:
 
 volumes:
   database:
+  images:
 
 secrets:
   MIRKLURK_DB_PASSWORD:

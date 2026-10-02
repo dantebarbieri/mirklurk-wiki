@@ -2,14 +2,34 @@
 
 Image bytes never belong in this repository, its Git history, CI artifacts,
 issues, or pull requests. MediaWiki may serve separately approved pictures from
-its persistent `/var/www/html/images` storage. That is an operator workflow,
-not an exception to the repository's asset exclusions.
+its persistent `/var/www/html/images` storage. Curated imports and contributor
+uploads are not exceptions to the repository's asset exclusions.
 
 On 2026-09-25, the wiki operator reported permission to display game artwork
 on the public wiki. This is **not permission to put assets in Git or grant
 a redistribution license**. Each selected image still requires verified
-identity, attribution, bytes, and an operator-reviewed import. Owning or
+identity, attribution, bytes, and rights review. Curated artwork still uses
+operator-reviewed imports. Owning or
 inspecting the game would not itself establish that permission.
+
+## Contributor uploads
+
+Eligible contributors use native `Special:Upload` for relevant, appropriately
+attributed PNG, JPEG and WebP screenshots and diagrams. See
+[eligibility, limits and deployment](DEPLOYMENT.md#native-image-uploads).
+The upload form displays the limits and contribution instructions; it does not
+automatically determine copyright permissions. In each File description, state
+what the image shows, who created the image and underlying artwork, its source,
+the actual permission/license basis and relevant game version. Do not select or
+claim a blanket free license for game material. Keep private permission evidence
+and personal information off the public File page.
+
+Choose a descriptive title (for example, `Jumper-adjacent-tile-comparison.png`)
+and add it through normal `[[File:...]]` markup. Native upload history retains
+earlier versions; eligible contributors may replace a file only when they are
+its latest uploader. Administrators handle other replacements and moderation.
+Community uploads do not automatically join `illustrations.json`, authorize
+repository asset publication, or change the separately reviewed curated register.
 
 ## Metadata only
 
@@ -346,10 +366,10 @@ in the operator's private records and publish only the appropriate attribution.
 
 The pinned MediaWiki CLI supports `importImages`, `--dry`, `--comment-ext`,
 `--skip-dupes`, and `--extensions`. It publishes through the local file backend
-rather than the web-upload form. No change to `$wgEnableUploads` is made:
-anonymous and registered-user web uploads remain disabled.
+rather than the web-upload form. This remains a separate operator-only workflow;
+anonymous and unconfirmed accounts cannot use the web-upload form.
 
-Thumbnail generation requires a renderer even though web uploads are disabled.
+Thumbnail generation requires a renderer for both imported and web-uploaded images.
 The runtime template explicitly enables ImageMagick at `/usr/bin/convert`, already
 installed in the pinned MediaWiki image; PHP GD is not available there. Rebuild
 and recreate the app from the reviewed template rather than editing live settings.
@@ -380,7 +400,7 @@ File title now exists, so inspect them rather than ignoring them.
 
 Check the command's exit status and its added/skipped/failed counts. Verify each
 File page's title, attribution, served image and reviewed bytes; verify thumbnail
-display and public read access while web uploads remain disabled. Preserve the
+display and public read access under the configured upload policy. Preserve the
 rights record privately as required. Update approved reference metadata and
 merge affected live wiki pages through the normal review process.
 
@@ -392,7 +412,7 @@ an RGB thumbnail fixture and distinct RGBA fixtures under the shield, contextual
 guide, mature-tree, and legacy-tree File titles.
 It reads and decodes resized thumbnails over anonymous HTTP, including 32x32
 shield fixtures, then checks actual MediaWiki-parsed shield cells and the legend
-while web uploads stay disabled. Those fixtures are not game artwork or evidence
+alongside the native contributor-upload smoke. Those fixtures are not game artwork or evidence
 of approved game-image hashes. No image fixture is stored in Git or CI artifacts.
 This does not import game images or establish that any artwork is cleared for publication.
 The same smoke checks guide images and links, mature-tree captions/references,
