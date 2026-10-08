@@ -59,6 +59,30 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("Armor points", pages)
         self.assertNotIn(link, pages["Steel Chestplate"])
 
+    def test_tree_health_guide_explains_life_and_lists_chopping_tools(self):
+        page = self.pages["Tree health and chopping"]
+        self.assertIn("Life never goes back up", page)
+        self.assertIn("ten times cheaper", page)
+        self.assertIn("[[Tree health and chopping]]", self.pages["Game mechanics"])
+        for title in ("Willow", "Cypress", "Trollgnarl", "Elderwort Shrub", "Brambles", "Rift Vine", "Nature"):
+            self.assertIn("[[Tree health and chopping]]", self.pages[title])
+        self.assertIn("[[Tree health and chopping]]", self.pages["Tree and shrub harvesting"])
+        table = page.split("== Tools by chopping strength ==", 1)[1]
+        tools = {row["entity"] for row in self.details["profiles"] if "chopping-capability" in row["values"]}
+        locations = page_locations(self.data, self.catalog)
+        self.assertEqual(len(tools), 20)
+        for identity in tools:
+            self.assertIn("{{Item|" + locations[identity] + "}}", table)
+        self.assertLess(table.index("{{Item|Steel Felling Axe}}"), table.index("{{Item|Unarmed}}"))
+        self.assertLess(table.index("{{Item|Unarmed}}"), table.index("{{Item|Serpent Fang}}"))
+        self.assertIn("{{Item|Steel Felling Axe}} || <nowiki>4.2</nowiki> || <nowiki>7.6 AP</nowiki> || "
+                      "<nowiki>9.2 AP</nowiki> (too high) || <nowiki>15.2 AP</nowiki> (too high)", table)
+        self.assertIn("{{Item|Iron Felling Axe}} || <nowiki>4</nowiki> || <nowiki>8 AP</nowiki> ||", table)
+        link = "[[Tree health and chopping|How chopping strength changes the AP cost of chopping]]"
+        self.assertIn(link, self.pages["Iron Hand Axe"])
+        self.assertNotIn(link, self.pages["Steel Chestplate"])
+
+
     def test_ordinary_titles_qualify_only_collisions(self):
         locations = page_locations(self.data, self.catalog)
         self.assertEqual(locations["item-0"], "Wood Buckler")
@@ -67,7 +91,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 331)
-        self.assertEqual(sum(":" not in title for title in self.pages), 387)
+        self.assertEqual(sum(":" not in title for title in self.pages), 388)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 101)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 331)

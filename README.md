@@ -17,7 +17,7 @@ The expanded reference retains that baseline and now contains **107 numeric fact
 and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
 96 station-specific recipe variants, 70 conditional loot entries, and 33
 original algorithm/skill summaries. The encyclopedia presentation generates
-386 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
+388 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
 plus workstation articles, topic guides/indexes and compatibility redirects.
 Another 100 ordinary MediaWiki category pages support hierarchical browsing;
 the retired Miscellaneous items category redirects to Items.
