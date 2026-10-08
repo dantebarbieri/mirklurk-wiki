@@ -11,6 +11,10 @@ import urllib.request
 import zlib
 
 
+def next_second():
+    time.sleep(1.05 - time.time() % 1)
+
+
 def png(width=32, height=16, pixel=b"\x12\x34\x56", size=None):
     def chunk(kind, data):
         return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
@@ -106,6 +110,7 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
     if not all(text in form for text in ("wpUploadFile", "12 megapixels", "permission or", "20 upload attempts")):
         raise RuntimeError("Special:Upload is missing its native form or contribution instructions.")
     first = success(editor.upload("Contributor-diagram.png", png()))
+    next_second()  # Replacements archive the old version under a one-second timestamp name.
     second = success(editor.upload("Contributor-diagram.png", png(pixel=b"\x34\x56\x78")))
     history = api({"action": "query", "titles": "File:Contributor-diagram.png",
                    "prop": "imageinfo", "iiprop": "user|url", "iilimit": 5})["query"]["pages"]
@@ -129,6 +134,7 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
     admin.login("WikiAdmin", admin_password)
     success(admin.upload("Operator-artwork.png", png(pixel=b"\x78\x56\x34")))
     rejected(editor.upload("Operator-artwork.png", png()), "fileexists-forbidden", "fileexists-shared-forbidden")
+    next_second()
     success(admin.upload("Contributor-diagram.png", png(pixel=b"\x22\x44\x66")))
     # Replacement must not allow a contributor to reclaim a file last uploaded by an admin.
     rejected(editor.upload("Contributor-diagram.png", png()), "fileexists-forbidden")
