@@ -1338,7 +1338,7 @@ def build_pages(root, data, catalog=None, details=None):
             pages[guide["title"]] += "\nRelated guides: " + " | ".join(
                 f"[[{target}]]" for target in guide["related_pages"]) + "\n"
         if guide["related_entities"]:
-            pages[guide["title"]] += "\nRelated items and skills: " + " | ".join(
+            pages[guide["title"]] += "\nRelated entries: " + " | ".join(
                 listed_entity(identity) for identity in guide["related_entities"]) + "\n"
             for identity in guide["related_entities"]:
                 pages[locations[identity]] += f'\n[[{guide["title"]}]]\n'

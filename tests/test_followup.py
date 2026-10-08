@@ -199,6 +199,17 @@ class FollowupTests(unittest.TestCase):
         with self.assertRaises(DataError):
             validate_capacity_profiles(catalog, self.details)
 
+    def test_chopping_strength_validation_requires_positive_item_numbers(self):
+        for value in (None, True, 0, -1):
+            details = copy.deepcopy(self.details)
+            next(row for row in details["profiles"] if row["entity"] == "item-30")["values"]["chopping-capability"] = value
+            with self.assertRaises(DataError):
+                validate_details(details, self.data)
+        details = copy.deepcopy(self.details)
+        next(row for row in details["profiles"] if not row["entity"].startswith("item-"))["values"]["chopping-capability"] = 2
+        with self.assertRaises(DataError):
+            validate_details(details, self.data)
+
     def test_armor_groups_cover_each_item_once_using_reviewed_slots(self):
         expected = {
             "Head armor": {54, 116, 117, 119}, "Torso armor": {43, 55, 147, 194},

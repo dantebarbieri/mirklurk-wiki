@@ -77,6 +77,10 @@ def validate_details(details, data):
             if value is not None and type(value) is not bool:
                 _number(value, f"profile.values.{key}", minimum=-(10**15))
         values = row["values"]
+        if "chopping-capability" in values:
+            strength = values["chopping-capability"]
+            if entities[entity]["category"] != "item" or type(strength) not in {int, float} or not strength > 0:
+                raise DataError("chopping-capability: expected a positive number on an item")
         if CAPACITY_PROPERTIES & values.keys():
             if not CAPACITY_PROPERTIES <= values.keys() or entities[entity]["category"] != "item" or entity in capacity_owners:
                 raise DataError("capacity: expected one complete storage profile per item")
