@@ -4,7 +4,7 @@ import html
 import json
 import re
 from collections import defaultdict
-from decimal import Decimal, localcontext
+from decimal import ROUND_HALF_UP, Decimal, localcontext
 from fractions import Fraction
 
 from wiki_catalog import (
@@ -347,7 +347,7 @@ def recipe_profile_values(profile, recipes, constructions=()):
     return folded
 
 
-def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=(), constructions=(), armor_guide=False):
+def stat_table(facts, profiles, properties, entities, locations, price_item=None, price=None, coin=None, recipes=(), images=(), grids=(), constructions=(), armor_guide=False, chop_guide=False):
     if not facts and not profiles:
         return ""
     rows = []
@@ -436,6 +436,8 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
         notes.append("[[Health and armor|How ammunition bonus rolls modify an attack pattern]].")
     if "item-armor" in keys and armor_guide:
         notes.append("[[Armor points|How equipment armor becomes armor layers in combat]].")
+    if "chopping-capability" in keys and chop_guide:
+        notes.append("[[Tree health and chopping|How chopping strength changes the AP cost of chopping]].")
     if "inventory-slots-added" in keys:
         notes.append(CAPACITY_NOTE + " [[Items#Capacity-granting_equipment|Compare capacity-granting equipment]].")
     return "\n== Stats ==\n" + markers + "\n" + table(["Detail", "Value", "Applies to / notes"], rows) + " ".join(notes) + "\n"
@@ -771,6 +773,45 @@ def armor_table(details, catalog, entities, locations):
             ]
             for identity in equipped
         ])
+
+
+CHOP_COST_CAPS = (("Willow", Decimal("32")), ("Cypress", Decimal("38.4")), ("Trollgnarl", Decimal("64")))
+MAX_CHOP_AP = Decimal("8")
+
+
+def chop_cost(cap, strength):
+    steps = (cap / strength * 5).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+    return max(steps / 5, Decimal("0.2"))
+
+
+def chopping_table(details, entities, locations):
+    profiles = {row["entity"]: row["values"]["chopping-capability"] for row in details["profiles"]
+                if "chopping-capability" in row["values"]}
+    tools = sorted((identity for identity in profiles if identity in locations),
+                   key=lambda identity: (-Decimal(str(profiles[identity])), entities[identity]["name"]))
+    if not tools:
+        return ""
+
+    def cost(cap, identity):
+        value = chop_cost(cap, Decimal(str(profiles[identity])))
+        text = literal(decimal_text(value) + " AP")
+        return text if value <= MAX_CHOP_AP else text + " (too high)"
+
+    return (
+        "\n== Tools by chopping strength ==\n"
+        "Every chopping tool, strongest first. The cost columns show the most a single fresh part can cost "
+        "after the 32 AP cap and the species multiplier, divided by the tool and rounded to the nearest 0.2 AP. "
+        "A cost above the 8 AP maximum is refused; pick a smaller or drier part instead, as those cost less. "
+        "For what chopping yields, see [[Tree and shrub harvesting]].\n"
+        + table(["Tool", "Chopping strength", *(f"Hardest {name} cut" for name, _ in CHOP_COST_CAPS)], [
+            [
+                item_reference(identity, locations),
+                profile_value("chopping-capability", profiles[identity], entities, locations),
+                *(cost(cap, identity) for _, cap in CHOP_COST_CAPS),
+            ]
+            for identity in tools
+        ])
+    )
 
 
 def ingredient_table(method, ingredients, entities, locations):
@@ -1291,11 +1332,13 @@ def build_pages(root, data, catalog=None, details=None):
             pages[guide["title"]] += "\n" + linked_prose(paragraph, links) + "\n"
         if guide["title"] == "Armor points":
             pages[guide["title"]] += armor_table(details, catalog, entities, locations)
+        if guide["title"] == "Tree health and chopping":
+            pages[guide["title"]] += chopping_table(details, entities, locations)
         if guide.get("related_pages"):
             pages[guide["title"]] += "\nRelated guides: " + " | ".join(
                 f"[[{target}]]" for target in guide["related_pages"]) + "\n"
         if guide["related_entities"]:
-            pages[guide["title"]] += "\nRelated items and skills: " + " | ".join(
+            pages[guide["title"]] += "\nRelated entries: " + " | ".join(
                 listed_entity(identity) for identity in guide["related_entities"]) + "\n"
             for identity in guide["related_entities"]:
                 pages[locations[identity]] += f'\n[[{guide["title"]}]]\n'
@@ -1436,6 +1479,7 @@ def build_pages(root, data, catalog=None, details=None):
             matching_facts, matching_profiles, properties, entities, locations,
             price_item, prices.get(price_item), coin, recipes, images, grids, catalog.get("construction_recipes", []),
             any(guide["title"] == "Armor points" for guide in catalog.get("guides", [])),
+            any(guide["title"] == "Tree health and chopping" for guide in catalog.get("guides", [])),
         )
         for grid in grids:
             pages[title] += cell_grid(grid, entities[grid["entity"]]["category"], images)

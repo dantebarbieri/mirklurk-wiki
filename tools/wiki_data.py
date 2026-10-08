@@ -52,6 +52,7 @@ ILLUSTRATION_ROLES = {"location", "sprite", "ability"}
 MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
     "Temperature", "Wellbeing", "Foods", "Resting", "Weather", "Armor points",
+    "Tree health and chopping",
 }
 HEALTH_ARMOR_ICONS = {
     1: ("File:Health-armor-1.png", "Bronze"),

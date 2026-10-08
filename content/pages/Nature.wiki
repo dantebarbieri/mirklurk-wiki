@@ -1,5 +1,5 @@
 Browse trees, rift growth, food plants, ground cover and other terrain features.
 
-See [[Plant harvesting]] and [[Tree and shrub harvesting]] for yields. Some edible plants cause sickness.
+See [[Plant harvesting]] and [[Tree and shrub harvesting]] for yields, and [[Tree health and chopping]] for how trees dry out and what chopping costs. Some edible plants cause sickness.
 
 [[Main Page]] | [[Items]]

@@ -6976,6 +6976,42 @@
           "key": "25/Random/Even/Done"
         }
       ]
+    },
+    {
+      "title": "Tree health and chopping",
+      "section_titles": ["Tree life", "Do trees slowly die?", "Branches follow their parent", "Rifts", "Dead wood", "Chop cost and dryness", "Trunks and part names", "Willow", "Cypress", "Trollgnarl", "Elderwort Shrub", "Brambles and Rift Vine", "Tools", "Paying for a chop", "Felling and accidents"],
+      "paragraphs": [
+        "Every part of a tree or shrub, from trunk to twig, has its own life value between 0 and 1. The Harvest menu shows it as a freshness label: Very Fresh from about 0.88 life, Fresh from about 0.63, Half Dead from about 0.38, Mostly Dead from about 0.13 and Dead below that. A plant starts at full life, and each new branch starts with the life of the part it grows from.",
+        "No. Life never goes back up, but most trees lose almost none. Plants grow only while you are away: when you return to an outdoor area, each plant catches up about one growth step per three hours you were gone, counting at most 240 hours. On each step a part of a Willow, Cypress, Trollgnarl or Elderwort Shrub has a small chance to lose some life. The chance is negligible on low, wet ground and rises the higher the ground sits within the range where the species grows. A trunk at the top of that range loses about a third of its life over a ten-day absence on average, while a lowland tree stays fresh. Low inner branches of tall trees are far more at risk and can die off on high ground. Trees in Withered Mire and Rift-Thorn Mire decay slightly faster, Elderwort Shrubs eight times slower, and Brambles and Rift Vine never lose life this way.",
+        "A branch cannot stay much healthier than the part it grows from. On each growth step where a part's parent has lower life, the part's life moves halfway to its parent's. Once a parent falls below 0.33 life, the parts on it stop growing, so a dying trunk drags its whole crown down with it.",
+        "Rifts dry out nearby plants of every kind, including Brambles and Rift Vine. When a rift opens, and every in-game hour while it stays open in your area, each plant part within 60 pixels of a small rift or 192 pixels of a large one has a two-in-three chance to lose 0.01 to 0.1 life. That averages about 0.04 life per hour, so a fresh part beside an open rift falls below 0.33 in roughly 18 hours. Plants still catching up on growth are skipped.",
+        "A part at 0.33 life or less is dead wood: it shows no leaves and grows no new branches. This point falls inside the Mostly Dead label. Lower life also makes new branches less likely and fades a part toward pale grey. A part at 0.001 life or less becomes fully dead at 0.",
+        "Chopping a part costs action points. The cost starts at 24 times the part's size, divided by a dryness factor: the life the part has lost, rounded to the nearest tenth and counted as at least 0.1, times 5. A nearly full-life part costs 48 times its size, a half-dead part 9.6 times and a dead part 4.8 times, so dead wood is ten times cheaper to cut.",
+        "On a Willow, Cypress or Trollgnarl the trunk's cost is multiplied by 1.33 plus its size. The menu names a trunk a Branch below size 0.2, a Thick Branch below 0.3 and a Trunk otherwise; other parts are Twigs below 0.2, Branches below 0.4 and Thick Branches above. Every cost is then capped at 32 AP before the species multiplier and the tool are applied.",
+        "Willow has no species multiplier, so its hardest fresh cut costs 32 AP before the tool.",
+        "Cypress costs 1.2 times as much after the cap, up to 38.4 AP before the tool. It is common in Drowned Fen.",
+        "Trollgnarl is the hardest tree to chop: its cost is doubled after the cap, up to 64 AP before the tool. It is common in Withered Mire.",
+        "Elderwort Shrub ignores dryness and the trunk multiplier: its stem costs 8 times its size and other parts 4 times theirs. Parts below size 0.33 are Twigs and the rest Branches. It is common in Sunken Ancient Ruins.",
+        "Brambles and Rift Vine use only the basic size and dryness cost, and every part is listed as a Twig. Since they never lose life while growing, only rifts dry them out. Rift Vine is common in Rift-Thorn Mire.",
+        "The cost is divided by the chopping strength of the tool you pick, rounded to the nearest 0.2 AP, and is never below 0.2 AP. Any carried item with a chopping strength can be picked; with no tool you chop barehanded at strength 1. Felling axes are strongest, while a Serpent Fang doubles the cost. Each successful chop wears down the tool, but bare hands never wear out.",
+        "Action points are not whole numbers: a chop takes exactly the cost shown, such as 2.4 AP, and costs are shown to one decimal place. A chop is refused if it costs more than your 8 AP maximum, and a falling part cannot be chopped. Outside combat you may chop with less AP than the cost: your AP drops to 0, your turn ends and the shortfall comes out of your next turn. In combat you must have enough AP. Like any action, chopping tires you; see Stamina.",
+        "When the cut lands, the part falls with everything growing from it. With low focus or stamina, or under some effects, a swing can go wrong: the AP is spent, the part stays standing and you lose 2 wellbeing."
+      ],
+      "related_entities": ["nature-4", "nature-7", "nature-17", "nature-20", "nature-6", "nature-13"],
+      "related_pages": ["Action points", "Stamina", "Focus", "Wellbeing"],
+      "image_entity": "nature-4",
+      "image_caption": "A Willow; each trunk, branch and twig keeps its own life value.",
+      "confidence": "observed",
+      "evidence": [
+        { "source": "game-data", "section": "gml_GlobalScript_scr_nature", "key": "tree_initiate;tree_grow;nature_is_tree" },
+        { "source": "game-data", "section": "gml_Object_obj_screenfader_Step_0", "key": "forceGrowth" },
+        { "source": "game-data", "section": "gml_Object_obj_rift_Alarm_0", "key": "life" },
+        { "source": "game-data", "section": "gml_Room_rm_int_Create", "key": "NATDEAD" },
+        { "source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_ap_lose;player_ap_or_combat;player_get_accident" },
+        { "source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "apKost" },
+        { "source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "chopMod" },
+        { "source": "ui-en", "section": "TreeStuff", "key": "Fresh0-4" }
+      ]
     }
   ],
   "item_effects": [
