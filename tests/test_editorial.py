@@ -35,8 +35,8 @@ class EditorialTests(unittest.TestCase):
 
     def test_base_values_use_coins_and_state_sub_copper_fractions(self):
         for value, expected in ((Decimal("2.2"), "{{Coins|220}}"), (0, "{{Coins|0}}"),
-                                (Decimal("0.005"), "less than {{Coins|1}} (<nowiki>0.5</nowiki> copper)"),
-                                (Decimal("0.125"), "between {{Coins|12}} and {{Coins|13}} (<nowiki>12.5</nowiki> copper)")):
+                                (Decimal("0.005"), "{{Coins|1}} per 2"), (Decimal("0.002"), "{{Coins|1}} per 5"),
+                                (Decimal("0.001"), "{{Coins|1}} per 10"), (Decimal("0.125"), "{{Coins|25}} per 2")):
             self.assertEqual(base_value_text(value), expected)
         for value in ("-1", "NaN"):
             with self.subTest(value=value), self.assertRaises(DataError):

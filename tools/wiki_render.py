@@ -306,21 +306,14 @@ def price_text(price, images=None):
 
 
 def base_value_text(value):
-    """Show a base value in coins, stating fractions of a copper coin exactly instead of rounding them."""
+    """Show a base value in coins; a fraction of a copper becomes the smallest quantity worth whole copper."""
     amount = Decimal(str(value))
     if not amount.is_finite() or amount < 0:
         raise DataError("base value must be a finite nonnegative amount")
-    with localcontext() as context:
-        context.prec = max(28, len(amount.as_tuple().digits) + 3)
-        copper = amount * 100
-    whole = int(copper)
-    if copper == whole:
+    copper = Fraction(amount) * 100
+    if copper.denominator == 1:
         return price_text({"value": amount})
-    exact = " (" + literal(decimal_text(copper)) + " copper)"
-    if whole == 0:
-        return "less than " + price_text({"value": Decimal("0.01")}) + exact
-    return ("between " + price_text({"value": Decimal(whole) / 100}) + " and "
-            + price_text({"value": Decimal(whole + 1) / 100}) + exact)
+    return price_text({"value": Decimal(copper.numerator) / 100}) + " per " + str(copper.denominator)
 
 
 def recipe_profile_values(profile, recipes, constructions=()):
