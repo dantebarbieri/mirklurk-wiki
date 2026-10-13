@@ -184,7 +184,8 @@ class CatalogTests(unittest.TestCase):
                                        else "|ap=" + known(folded[key])), page.split("== Recipes ==", 1)[1])
                     elif profile["entity"] in coins and key in {"initial-price", "initial-weight", "stack-limit"}:
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
-                        self.assertIn(known(coins[profile["entity"]][field]), page)
+                        expected = coins[profile["entity"]][field]
+                        self.assertIn(price_text({"value": expected}) if key == "initial-price" else known(expected), page)
                     elif key == "initial-price" and profile["entity"] in prices:
                         self.assertIn(selective_view(price_text(prices[profile["entity"]], self.data["illustrations"]), "price", True), page)
                     else:

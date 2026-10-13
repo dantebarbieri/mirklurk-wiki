@@ -111,6 +111,10 @@ class FollowupTests(unittest.TestCase):
                     markup = pixel_image(recorder, alt="Wooden Recorder inventory icon.", page_image=True)
                     self.assertEqual(text.count(markup), 1)
                     text = text.replace(markup, pixel_image(uncropped(recorder), alt="Wooden Recorder inventory icon.", page_image=True))
+                    # Base values now display as coins rather than silver equivalents.
+                    value = "|| {{Coins|0}} ||"
+                    self.assertEqual(text.count(value), 1)
+                    text = text.replace(value, "|| <nowiki>0</nowiki> silver equivalents ||")
                 self.assertEqual(hashlib.sha256(text.rstrip().encode()).hexdigest(), digest)
 
     def test_exact_factions_cover_all_beings_and_replace_primary_taxonomy(self):
