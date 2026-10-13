@@ -262,7 +262,8 @@ link to each existing page linked from its New content or Changes sections.
 Reader text names story events instead of the code's numbered main-quest
 stages, for example "after you report Scaal's defeat" for stage 30. Clay's
 boss form (`being-41`) displays Clay's name, so its page is titled
-"Magus Clay (boss)". The new entities have no reviewed artwork yet.
+"Magus Clay (boss)". The new entities gained reviewed artwork on 2026-10-13
+(see `docs/IMAGES.md`).
 
 The Survivors' camp uses the same delayed area-entry check as Gurb-Gurb's
 hollow and Ihar's wreck: the first outdoor entry into any Savage Mirk while it

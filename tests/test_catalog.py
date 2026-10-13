@@ -194,11 +194,16 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        self.assertEqual(len(self.data["illustrations"]), 338)
-        self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 295)
+        self.assertEqual(len(self.data["illustrations"]), 362)
+        self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 318)
         current = {row["id"]: row for row in self.data["illustrations"]}
-        images = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
-                  for row in self.data["illustrations"] if "role" not in row]
+        # Art for the 0.8.9.9 additions and the world-only Finish Raft was reviewed in a later batch.
+        added = {f"item-{n}" for n in (*range(258, 263), *range(264, 276))} | {f"being-{n}" for n in range(36, 42)}
+        later = added | {"item-171"}
+        every = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
+                 for row in self.data["illustrations"] if "role" not in row]
+        self.assertEqual({row.get("entity") for row in every[-len(later):]}, later)
+        images = [row for row in every if row.get("entity") not in later]
         self.assertEqual(
             hashlib.sha256((json.dumps({"schema_version": 1, "illustrations": images}, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
             "b423fc3efd7daa2e754845f5ad83180ac7dd3803216c27b408638185a031e7e0",
@@ -220,11 +225,17 @@ class CatalogTests(unittest.TestCase):
             row for row in restored if "entity" in row and row["entity"] not in replaced_trees]}
         self.assertEqual(hashlib.sha256((json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
                          "16e17eb58db7b29c276393755aa73df2a6315607c9e621d1f260f21f84d0b799")
-        missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in images if "entity" in row}
-        # Entities added in 0.8.9.9 have no reviewed art yet and use name-only displays.
-        added = {f"item-{n}" for n in (*range(258, 263), *range(264, 276))} | {f"being-{n}" for n in range(36, 42)}
-        self.assertEqual(missing, {"item-31", "item-48", "item-49", "item-171"} | added)
+        missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in every if "entity" in row}
+        self.assertEqual(missing, {"item-31", "item-48", "item-49"})
         locations = page_locations(self.data, self.catalog)
+        for row in self.data["illustrations"][-len(later):]:
+            page = self.pages[locations[row["entity"]]]
+            self.assertEqual(page.count(f'[[{row["file_title"]}|'), 1)
+            self.assertIn(literal(image_caption(row)), page)
+            if "cropped_from" in row:
+                self.assertNotIn(row["cropped_from"]["file_title"] + "|", page)
+        self.assertIn("no inventory icon", self.pages[locations["item-171"]])
+        self.assertNotIn("{{Item|Finish Raft", "".join(self.pages.values()))
         stations = {row["id"]: row for row in self.catalog["stations"]}
         for image in original_batch["illustrations"]:
             title = locations[image["entity"]] if "entity" in image else stations[image["station"]]["title"]

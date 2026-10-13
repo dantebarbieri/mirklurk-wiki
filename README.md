@@ -67,15 +67,15 @@ image-sizing policy as other artwork. See [author syntax and limits](docs/TEMPLA
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication
 fails closed before page edits if the target wiki lacks working Scribunto.
 
-The metadata-only artwork register covers 338 reviewed selections: 243 items,
-36 beings, 25 skills, 16 nature records, and three workstation variants.
+The metadata-only artwork register covers 362 reviewed selections: 261 items,
+42 beings, 25 skills, 16 nature records, and three workstation variants.
 Three supplementary NPC-location exteriors and eight NPC overworld sprites
-preserve the existing portraits. 295 records now embed transparent-margin crops
+preserve the existing portraits. 318 records now embed transparent-margin crops
 under new `-cropped` File titles; the original Files are kept
 ([details](docs/IMAGES.md#transparent-margin-crops)).
 Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.
-Four item images are deliberately
+Three item images (Unarmed, Flax and Linen) are deliberately
 omitted rather than replaced with placeholders or guessed frames. Willow, Cypress,
 Trollgnarl, and Elderwort Shrub now use distinct reviewed mature compositions
 assembled from native parts and the verified tree rules. That earlier replacement
@@ -83,8 +83,9 @@ preserved the other 322 selections. All 326 prior records remain unchanged when
 the three NPC exteriors are added. Older tree
 File pages and bytes remain live history, not overwritten artwork. Other nature
 pictures retain their explicit ground-tile or branch qualifications. Image bytes
-stay in separately approved server storage. The 0.8.9.9 items and beings have no
-reviewed artwork yet; their pages and lists show linked names only.
+stay in separately approved server storage. The 0.8.9.9 items and beings and
+the world-only finished raft gained reviewed artwork on 2026-10-13
+([details](docs/IMAGES.md#version-0899-additions-and-the-finished-raft)).
 
 Viend's Healing section explains his automatic wound healing, target priority,
 range, AP cost and idle-turn frequency, with the game's shared health-plus

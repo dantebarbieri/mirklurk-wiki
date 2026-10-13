@@ -78,7 +78,8 @@ The original metadata batch contains 323 selections: 243 items, 36 beings,
 Unarmed's internal pixel placeholder is not
 used as artwork. Flax and Linen lack verified initializer image associations.
 Finish Raft requests an out-of-range sprite frame; no wraparound or replacement
-frame is guessed. These four item pages therefore have no image reference.
+frame is guessed. These four item pages therefore had no image reference until
+Finish Raft received its world sprite (see below).
 
 Some nature records use their associated ground tile, explicitly captioned as
 not a complete mature specimen; Rift Vine uses a branch detail. Do not relabel
@@ -125,6 +126,38 @@ database/image backup. Anonymous reads confirmed the attribution, dimensions
 and exact image hash; a second paired backup preserves the imported state.
 The active register is now 338; all 337 previous records are unchanged.
 Synthetic smoke fixtures include the new title automatically.
+
+## Version 0.8.9.9 additions and the finished raft
+
+The 2026-10-13 selection adds 24 primary illustrations: the 17 items added in
+0.8.9.9 (258-262 and 264-275), the six beings 36-41 (Grand Mother, the four
+bats including the Terror, and Magus Clay's boss entry), and Finish Raft.
+Items use the frame named by `itemDB[N].sprite/pic`; beings use frame 0 of
+`beingDB[N].sprite`. Magus Clay's boss entry uses plain `spr_clay`, so its
+full canvas is byte-identical to `File:Being-8-overworld.png`; it still gets
+its own File title so the boss page has an independent record.
+
+Finish Raft has no inventory icon: its `itemDB` picture is an out-of-range
+frame of `spr_ui_items64x48`. The finished raft only exists in the world as an
+`obj_station` with `index=171`, drawn from `spr_placed_16x16_wider` frame 1
+(frame 0 is the placed Raft Base; frame 2 is shown while steering). The
+association is cited from the crafting completion in `UI` Draw 64 and
+`player_raft_ensure`. Its caption says that it is the world appearance.
+
+Each full padded canvas was enlarged by `min(8, floor(256 / longest native
+side))` with nearest-neighbor scaling, fully transparent pixels normalized
+to zero, and cropped by the transparent-margin rule above. 23 records use a
+`-cropped` title; Item-261 has no transparent margin and uses its original.
+Every file was decoded independently and checked against its native frame.
+
+The pixels were exported from the installed `next_version_tester` build after
+a 2026-10-13 data.win-only hotfix (SHA-256 prefix `55fbc0b8`), not from the
+fingerprinted 0.8.9.9 file. The two databank initializers that choose these
+sprites decompile byte-identically to 0.8.9.9, so evidence still cites
+`game-data-0899`; texture bytes could not be compared with the original file.
+Confidence is therefore `inferred`. The 47 PNGs (24 originals, 23 crops) were
+imported with the standard attribution sidecars. The active register is 362
+with 318 crops; all 338 previous records are unchanged.
 
 ## Site branding
 
