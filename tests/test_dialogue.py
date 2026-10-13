@@ -35,6 +35,11 @@ class DialogueTests(unittest.TestCase):
             '<span id="dialogue-', 1
         )[0].split("== Stats ==", 1)[0]
 
+    def test_magus_clay_npc_and_boss_pages_link_to_each_other(self):
+        self.assertIn("[[Magus Clay (boss)|", self.pages["Magus Clay"])
+        for target in ("Magus Clay", "Magus' Shard"):
+            self.assertIn(f"[[{target}|", self.pages["Magus Clay (boss)"])
+
     def test_covers_available_conversations_without_inventing_missing_dialogue(self):
         self.assertEqual(set(self.topics), {
             "Soldier", "Captain Eir", "Magus Clay", "Ranger Bhato",
