@@ -231,7 +231,7 @@ def profile_value(key, value, entities, locations):
             return literal(decimal_text(amount * 1000)) + " g"
         return literal(decimal_text(amount)) + " kg"
     if key == "initial-price":
-        return known(value) + " silver equivalents"
+        return base_value_text(value)
     if key == "inventory-slots-added":
         return "+" + known(value) + " inventory slots"
     if key == "tile-range":
@@ -303,6 +303,24 @@ def price_text(price, images=None):
     if copper > MAX_COPPER:
         raise DataError(f"price exceeds the Coins limit of {MAX_COPPER} copper")
     return "{{Coins|" + str(int(copper)) + "}}"
+
+
+def base_value_text(value):
+    """Show a base value in coins, stating fractions of a copper coin exactly instead of rounding them."""
+    amount = Decimal(str(value))
+    if not amount.is_finite() or amount < 0:
+        raise DataError("base value must be a finite nonnegative amount")
+    with localcontext() as context:
+        context.prec = max(28, len(amount.as_tuple().digits) + 3)
+        copper = amount * 100
+    whole = int(copper)
+    if copper == whole:
+        return price_text({"value": amount})
+    exact = " (" + literal(decimal_text(copper)) + " copper)"
+    if whole == 0:
+        return "less than " + price_text({"value": Decimal("0.01")}) + exact
+    return ("between " + price_text({"value": Decimal(whole) / 100}) + " and "
+            + price_text({"value": Decimal(whole + 1) / 100}) + exact)
 
 
 def recipe_profile_values(profile, recipes, constructions=()):
@@ -1083,9 +1101,9 @@ def entities_name(data, identity):
 def coin_summary(coin, entities, locations):
     return (
         "\n== Coin value and weight ==\n<onlyinclude>\n"
-        + table(["Coin", "Value in silver", "Weight", "Maximum stack"], [[
+        + table(["Coin", "Value", "Weight", "Maximum stack"], [[
             anchor("coin", coin["entity"]) + entity_link(coin["entity"], entities, locations),
-            known(coin["value_in_silver"]), known(coin["weight_grams"]) + " g", known(coin["stack_limit"]),
+            price_text({"value": coin["value_in_silver"]}), known(coin["weight_grams"]) + " g", known(coin["stack_limit"]),
         ]]) + "</onlyinclude>\n\n[[Currency and trading|Barter, change, and coin consolidation]]\n"
     )
 
@@ -1108,7 +1126,7 @@ def currency_page(currency, entities, locations):
     for rule in currency["rules"]:
         text += "\n" + anchor("currency", rule["id"]) + f'\n== {CURRENCY_RULE_TITLES[rule["id"]]} ==\n'
         if rule["id"] == "coin-denominations":
-            text += "Compare each coin's value in silver equivalents:\n\n"
+            text += "Compare each coin's value:\n\n"
             text += "\n".join("{{:" + locations[coin["entity"]] + "}}" for coin in coins) + "\n"
         elif rule["id"] == "coin-weight-units":
             text += "A coin stack's weight is its per-coin weight multiplied by the quantity. Consolidating equal value into higher denominations reduces carried weight.\n"

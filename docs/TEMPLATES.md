@@ -150,6 +150,9 @@ unbounded floating-point precision.
 
 The generator still reads exact silver-equivalent `Decimal` prices and
 multiplies by 100, rejecting sub-copper precision or out-of-domain totals.
+Item base values (not shop prices) also display with `{{Coins|...}}`; a base
+value with a fraction of a copper is shown honestly as "less than 1 copper" or
+"between N and N+1 copper", followed by the exact copper amount, never rounded.
 Items own their selective `price` blocks and default price-only transclusions.
 Merchants still include those item views, never copied prices. Coin articles
 retain their own default value/weight/stack summary contracts.
