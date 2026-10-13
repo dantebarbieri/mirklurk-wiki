@@ -62,6 +62,7 @@
 !/tools/wiki_details.py
 !/tools/wiki_render.py
 !/tools/wiki_views.py
+!/tools/wiki_beings.py
 !/tools/wiki_display.py
 !/tools/smoke_display.py
 !/tools/smoke_browser.py
@@ -84,6 +85,7 @@
 !/tests/test_acquisition.py
 !/tests/test_sync.py
 !/tests/test_display.py
+!/tests/test_beings.py
 !/tests/test_editorial.py
 !/tests/test_navigation.py
 !/tests/test_runtime.php

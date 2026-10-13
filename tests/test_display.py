@@ -117,8 +117,8 @@ class DisplayTests(unittest.TestCase):
         self.assertEqual(sum(text.count("|label=Ranged attack}}") for text in articles.values()), 8)
         self.assertFalse(any('class="mirklurk-cell-grid"' in text for text in articles.values()))
         for title in ("Sceetler", "Nightmare"):
-            self.assertIn("== Base health ==", self.pages[title])
-            self.assertIn("== Melee attack ==", self.pages[title])
+            self.assertIn("=== Health ===", self.pages[title])
+            self.assertIn("=== Melee attack ===", self.pages[title])
         self.assertIn("{{Health grid|0,1,0;1,4,1;0,1,0}}", self.pages["Sceetler"])
         self.assertEqual({title for title in self.pages if title.startswith("Template:")}, set(DISPLAY_FILES) - {"Module:Display"})
 

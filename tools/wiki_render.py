@@ -1477,14 +1477,21 @@ def build_pages(root, data, catalog=None, details=None):
         recipes = [row for row in matching_entries if row["kind"] == "recipe"]
         grids = sorted((grid for grid in details.get("grids", []) if grid["entity"] in entity_ids),
                        key=lambda row: (row["kind"] != "health", row["kind"]))
-        pages[title] += stat_table(
-            matching_facts, matching_profiles, properties, entities, locations,
-            price_item, prices.get(price_item), coin, recipes, images, grids, catalog.get("construction_recipes", []),
-            any(guide["title"] == "Armor points" for guide in catalog.get("guides", [])),
-            any(guide["title"] == "Tree health and chopping" for guide in catalog.get("guides", [])),
-        )
-        for grid in grids:
-            pages[title] += cell_grid(grid, entities[grid["entity"]]["category"], images)
+        if entity_ids and all(entities[identity]["category"] == "being" for identity in entity_ids):
+            from wiki_beings import being_article
+            pages[title] += being_article(
+                matching_facts, matching_profiles, properties, entities, locations, grids,
+                next((factions[identity] for identity in sorted(entity_ids) if identity in factions), None),
+            )
+        else:
+            pages[title] += stat_table(
+                matching_facts, matching_profiles, properties, entities, locations,
+                price_item, prices.get(price_item), coin, recipes, images, grids, catalog.get("construction_recipes", []),
+                any(guide["title"] == "Armor points" for guide in catalog.get("guides", [])),
+                any(guide["title"] == "Tree health and chopping" for guide in catalog.get("guides", [])),
+            )
+            for grid in grids:
+                pages[title] += cell_grid(grid, entities[grid["entity"]]["category"], images)
         if coin is not None:
             pages[title] += coin_summary(coin, entities, locations)
         for kind, renderer in (
