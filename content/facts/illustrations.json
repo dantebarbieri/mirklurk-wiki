@@ -11876,6 +11876,868 @@
         "height": 64,
         "source_scale": 4
       }
+    },
+    {
+      "id": "item-171-illustration",
+      "entity": "item-171",
+      "file_title": "File:Item-171-cropped.png",
+      "caption": "The finished raft as it appears in the world; it has no inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "43a17bd4b9a5824865c1f7ffc1ba749fdd2977c30df2c1f573b1e98f94c4c103",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "CRAFTINDEX[171].parentID.index/image_index"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_raft_ensure.obj_station[171].sprite_index/image_index"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "171"
+        }
+      ],
+      "pixel_art": {
+        "width": 184,
+        "height": 184,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-171.png",
+        "sha256": "91bbffdcb6c78ecef7163b13bd10d4c52c1cc4bdb44d3c959030289c79a5897e",
+        "pixel_art": {"width": 192, "height": 192, "source_scale": 8},
+        "left": 0,
+        "top": 8
+      }
+    },
+    {
+      "id": "item-258-illustration",
+      "entity": "item-258",
+      "file_title": "File:Item-258-cropped.png",
+      "caption": "Bat Hide inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "63605fb1fabc032cbc4cb8123fd0e70225af6603fb8265057acb3984089ab118",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[258].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "258"
+        }
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 232,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-258.png",
+        "sha256": "ea9b514382f82c8992c82309ea0e486e66297d2dfeb410bd1c744f4967b548b9",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 8,
+        "top": 16
+      }
+    },
+    {
+      "id": "item-259-illustration",
+      "entity": "item-259",
+      "file_title": "File:Item-259-cropped.png",
+      "caption": "Bat Meat inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "bafe41a893541683939ce5a5fd9d0343b9a82592bdaba564641e64eddeeb31fb",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[259].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "259"
+        }
+      ],
+      "pixel_art": {
+        "width": 70,
+        "height": 225,
+        "source_scale": 5
+      },
+      "cropped_from": {
+        "file_title": "File:Item-259.png",
+        "sha256": "b98ce8546d01f0123d07fd406a42a2983129dfb24e538c57358ce3961b1df081",
+        "pixel_art": {"width": 80, "height": 240, "source_scale": 5},
+        "left": 5,
+        "top": 5
+      }
+    },
+    {
+      "id": "item-260-illustration",
+      "entity": "item-260",
+      "file_title": "File:Item-260-cropped.png",
+      "caption": "Grilled Bat Meat inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "941b16e7685917484ae713554ba037bf264f1aedd12b62358db1d07bc71f7d77",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[260].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "260"
+        }
+      ],
+      "pixel_art": {
+        "width": 60,
+        "height": 210,
+        "source_scale": 5
+      },
+      "cropped_from": {
+        "file_title": "File:Item-260.png",
+        "sha256": "6982d9e34b0519c56172107a2c804b441e20c58f7a05ad2152ec76c9da8365f8",
+        "pixel_art": {"width": 80, "height": 240, "source_scale": 5},
+        "left": 10,
+        "top": 15
+      }
+    },
+    {
+      "id": "item-261-illustration",
+      "entity": "item-261",
+      "file_title": "File:Item-261.png",
+      "caption": "Head of The Terror inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "6ad908fe51c84b6ed66a535f3c4003fe0be1fe68c6a7da9643f5343fb6f5ba43",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[261].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "261"
+        }
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 240,
+        "source_scale": 5
+      }
+    },
+    {
+      "id": "item-262-illustration",
+      "entity": "item-262",
+      "file_title": "File:Item-262-cropped.png",
+      "caption": "Magus' Shard inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "386df4b7d3dcea27722447b993ede305bbb891885fc5c0c33a17738926aec1ec",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[262].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "262"
+        }
+      ],
+      "pixel_art": {
+        "width": 104,
+        "height": 240,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-262.png",
+        "sha256": "a548bd16cf276cbe7a1f8926446ef08dd4628d1a91e3f4f168d94f4dd98605e6",
+        "pixel_art": {"width": 128, "height": 256, "source_scale": 8},
+        "left": 16,
+        "top": 8
+      }
+    },
+    {
+      "id": "item-264-illustration",
+      "entity": "item-264",
+      "file_title": "File:Item-264-cropped.png",
+      "caption": "Clays' Magus Hood inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "6b94556511429bd3fb6885612328eee20462cff9d46618fbe596f0bb32aaf138",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[264].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "264"
+        }
+      ],
+      "pixel_art": {
+        "width": 216,
+        "height": 240,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-264.png",
+        "sha256": "105c1ec2e9fc06f250388be1bd0b232ada00e1326bd9986003fb031fadd56d61",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 8,
+        "top": 8
+      }
+    },
+    {
+      "id": "item-265-illustration",
+      "entity": "item-265",
+      "file_title": "File:Item-265-cropped.png",
+      "caption": "Magi's Ropebelt inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "b201663ec0b9039071f32d5784988bdb5962f1a2701668b6fc884443adbd78d4",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[265].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "265"
+        }
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 112,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-265.png",
+        "sha256": "cfb190535f30b1f91d02ee1b2588ae9e60b8cca32b053f1ab9862391017879fc",
+        "pixel_art": {"width": 256, "height": 128, "source_scale": 8},
+        "left": 8,
+        "top": 8
+      }
+    },
+    {
+      "id": "item-266-illustration",
+      "entity": "item-266",
+      "file_title": "File:Item-266-cropped.png",
+      "caption": "Staff of The Fire Eater inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "373700f836916042d5d5d3cf5d171d72ee67e9d00e5b3735a4440f33ef580d45",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[266].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "266"
+        }
+      ],
+      "pixel_art": {
+        "width": 56,
+        "height": 248,
+        "source_scale": 4
+      },
+      "cropped_from": {
+        "file_title": "File:Item-266.png",
+        "sha256": "f42811fd7a44125ca8f31c612e681a5ed0b52a5f2d98bbf3f92b732a57fe7c39",
+        "pixel_art": {"width": 64, "height": 256, "source_scale": 4},
+        "left": 4,
+        "top": 4
+      }
+    },
+    {
+      "id": "item-267-illustration",
+      "entity": "item-267",
+      "file_title": "File:Item-267-cropped.png",
+      "caption": "Orb of Poison inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "c6f66fada74a7ad6b862e352b279f4f68a7d3b9969a51740d1b20fc0ead50c4a",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[267].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "267"
+        }
+      ],
+      "pixel_art": {
+        "width": 192,
+        "height": 192,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-267.png",
+        "sha256": "2b17801c4884e144ab50c93a084dfd3811e71fcc6c7752a638768ece5863e231",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 32,
+        "top": 24
+      }
+    },
+    {
+      "id": "item-268-illustration",
+      "entity": "item-268",
+      "file_title": "File:Item-268-cropped.png",
+      "caption": "Orb of Greater Poison inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "1d87cd57ca8b86986b347cdf70b25f0acfb26a73e881ea97fc88388a39a5b6a6",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[268].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "268"
+        }
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 240,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-268.png",
+        "sha256": "b0976d3e30b4ad1b038e3898cc272c4a9af59b342a520692ad432bfb61af6269",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 8,
+        "top": 8
+      }
+    },
+    {
+      "id": "item-269-illustration",
+      "entity": "item-269",
+      "file_title": "File:Item-269-cropped.png",
+      "caption": "Orb of Fire inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "a83a64b2bfadcf5909b0f3aea3a93698f35fbe4b12edf2851bbbd60c24f4e8d1",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[269].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "269"
+        }
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 192,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-269.png",
+        "sha256": "f42fbac002808e777e638cd2681dee2069ae5c1aefa72d1a35549d28a2204a1b",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 48,
+        "top": 24
+      }
+    },
+    {
+      "id": "item-270-illustration",
+      "entity": "item-270",
+      "file_title": "File:Item-270-cropped.png",
+      "caption": "Orb of Greater Fire inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "5a9eef67ea6080a0a94247e52ce46b8dcdfebebe2c22dd3ab4730873dcabbcc4",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[270].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "270"
+        }
+      ],
+      "pixel_art": {
+        "width": 224,
+        "height": 224,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-270.png",
+        "sha256": "019f0f1f35dfe6313d8731fa6047203fd1cb04737db928a59a9828a5b3a5c834",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 16,
+        "top": 8
+      }
+    },
+    {
+      "id": "item-271-illustration",
+      "entity": "item-271",
+      "file_title": "File:Item-271-cropped.png",
+      "caption": "Orb of Iron Essence inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "c31699109f0cbc967ff3ecc0d1943be7ec49356f331e389dedf5d0480e360efd",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[271].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "271"
+        }
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 192,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-271.png",
+        "sha256": "3ce0b3450c9b588700cb18791bec90040a258643f41ff27b7582622772975e7a",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 48,
+        "top": 24
+      }
+    },
+    {
+      "id": "item-272-illustration",
+      "entity": "item-272",
+      "file_title": "File:Item-272-cropped.png",
+      "caption": "Orb of Steel Essence inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "29d4fdfacd8972d9407a0a9c684aabed5cbde27d4a97ffaa02e172c3c80add39",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[272].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "272"
+        }
+      ],
+      "pixel_art": {
+        "width": 160,
+        "height": 192,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-272.png",
+        "sha256": "a6eebce2a3521e98b9aab69ca9bc659e252416baadc7cc4d3b8ac00da9c9bd94",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 48,
+        "top": 24
+      }
+    },
+    {
+      "id": "item-273-illustration",
+      "entity": "item-273",
+      "file_title": "File:Item-273-cropped.png",
+      "caption": "Orb of Wind inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "18366944de891251ea37854298d0ff45e12d5e7de582186c9128a394989256a0",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[273].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "273"
+        }
+      ],
+      "pixel_art": {
+        "width": 192,
+        "height": 208,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-273.png",
+        "sha256": "272fa8362c2eb656dfcf86a05f48fc5cd57ae80b084d3596e1fd87990894d132",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 32,
+        "top": 16
+      }
+    },
+    {
+      "id": "item-274-illustration",
+      "entity": "item-274",
+      "file_title": "File:Item-274-cropped.png",
+      "caption": "Orb of Storm inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "07dac14975214f9745dc022f33053cf878e695c7184e4d6c05134683e4049464",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[274].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "274"
+        }
+      ],
+      "pixel_art": {
+        "width": 200,
+        "height": 216,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Item-274.png",
+        "sha256": "66d9a034e17ce6af42aee250ec314267c585b25763528813964b2a9d15610a3b",
+        "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
+        "left": 24,
+        "top": 16
+      }
+    },
+    {
+      "id": "item-275-illustration",
+      "entity": "item-275",
+      "file_title": "File:Item-275-cropped.png",
+      "caption": "Storage Chest inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "f488f46064bb80de1dd83d61450f88321c3e5dd533d13c3415f2c4ab9cea43b8",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[275].sprite/pic"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "275"
+        }
+      ],
+      "pixel_art": {
+        "width": 220,
+        "height": 215,
+        "source_scale": 5
+      },
+      "cropped_from": {
+        "file_title": "File:Item-275.png",
+        "sha256": "4de1dfa188ed436adc91f5a28a2ace76997483b1995c80efaa82e34e7ef4687c",
+        "pixel_art": {"width": 240, "height": 240, "source_scale": 5},
+        "left": 10,
+        "top": 15
+      }
+    },
+    {
+      "id": "being-36-illustration",
+      "entity": "being-36",
+      "file_title": "File:Being-36-cropped.png",
+      "caption": "Grand Mother in-game sprite, shown in a representative frame.",
+      "creator": "Edym Pixels",
+      "sha256": "0f9a1346a660c2af8c6c4225c0b2959baaaddb23bcdeb73cf48f96af47beaded",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[36].sprite"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        }
+      ],
+      "pixel_art": {
+        "width": 90,
+        "height": 156,
+        "source_scale": 6
+      },
+      "cropped_from": {
+        "file_title": "File:Being-36.png",
+        "sha256": "6b01268a7f803df57df6cd2ca0b1e9310774d99a763e3ef3b10746849213516c",
+        "pixel_art": {"width": 144, "height": 240, "source_scale": 6},
+        "left": 30,
+        "top": 66
+      }
+    },
+    {
+      "id": "being-37-illustration",
+      "entity": "being-37",
+      "file_title": "File:Being-37-cropped.png",
+      "caption": "Mirkfang Matriarch in-game sprite, shown in a representative frame.",
+      "creator": "Edym Pixels",
+      "sha256": "20ef98fb161fab6f37fa55e43838a86f3850f01378a9239aed019ea06d21ceb6",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[37].sprite"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "37"
+        }
+      ],
+      "pixel_art": {
+        "width": 235,
+        "height": 120,
+        "source_scale": 5
+      },
+      "cropped_from": {
+        "file_title": "File:Being-37.png",
+        "sha256": "7ccba297a17891e870c78e6bdcdbd5a169e25071576df8708866e7dda44670a0",
+        "pixel_art": {"width": 240, "height": 240, "source_scale": 5},
+        "left": 5,
+        "top": 60
+      }
+    },
+    {
+      "id": "being-38-illustration",
+      "entity": "being-38",
+      "file_title": "File:Being-38-cropped.png",
+      "caption": "Mirkfang in-game sprite, shown in a representative frame.",
+      "creator": "Edym Pixels",
+      "sha256": "7a62fa372ba7d00252afa424aaff50deeb138cf0b9592f081af35cb55ccde120",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[38].sprite"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "38"
+        }
+      ],
+      "pixel_art": {
+        "width": 184,
+        "height": 88,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Being-38.png",
+        "sha256": "1bc679aaf4b0e7314b5b67e3781266a5bafa3c947187a18c05d9b033ccf7caf3",
+        "pixel_art": {"width": 192, "height": 192, "source_scale": 8},
+        "left": 8,
+        "top": 56
+      }
+    },
+    {
+      "id": "being-39-illustration",
+      "entity": "being-39",
+      "file_title": "File:Being-39-cropped.png",
+      "caption": "Giant Mirkfang in-game sprite, shown in a representative frame.",
+      "creator": "Edym Pixels",
+      "sha256": "5c118c92f0424bde2cdebf4ec13eed2d930340e4a7d40760e2c23a92e35d0b64",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[39].sprite"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "39"
+        }
+      ],
+      "pixel_art": {
+        "width": 240,
+        "height": 120,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Being-39.png",
+        "sha256": "09ed30feff1ec25b2049a1c219ba4066af5395ef16c0dd64c236c5618a9ae111",
+        "pixel_art": {"width": 248, "height": 248, "source_scale": 8},
+        "left": 8,
+        "top": 64
+      }
+    },
+    {
+      "id": "being-40-illustration",
+      "entity": "being-40",
+      "file_title": "File:Being-40-cropped.png",
+      "caption": "The Terror in-game sprite, shown in a representative frame.",
+      "creator": "Edym Pixels",
+      "sha256": "a366524e1e23ddf5371d0fcfafa6b5160f199fa23068fc5aaa6b374f71d22e7d",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[40].sprite"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        }
+      ],
+      "pixel_art": {
+        "width": 235,
+        "height": 120,
+        "source_scale": 5
+      },
+      "cropped_from": {
+        "file_title": "File:Being-40.png",
+        "sha256": "8e9518a6aa6d5155c03d7e537c2f9a6d2c3490c6c8c67deac7f24681e554506e",
+        "pixel_art": {"width": 240, "height": 240, "source_scale": 5},
+        "left": 5,
+        "top": 60
+      }
+    },
+    {
+      "id": "being-41-illustration",
+      "entity": "being-41",
+      "file_title": "File:Being-41-cropped.png",
+      "caption": "Magus Clay in-game sprite during his boss encounter, shown in a representative frame.",
+      "creator": "Edym Pixels",
+      "sha256": "26af089dcc06aebdabfc1b35a122842c9a0159123ab9c9a418158fa0d0b0eda7",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].sprite"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        }
+      ],
+      "pixel_art": {
+        "width": 78,
+        "height": 174,
+        "source_scale": 6
+      },
+      "cropped_from": {
+        "file_title": "File:Being-41.png",
+        "sha256": "9250a76d2fd4cdf0d01074d4fe75340a2c05852178789482412f0f83c9994782",
+        "pixel_art": {"width": 240, "height": 240, "source_scale": 6},
+        "left": 84,
+        "top": 42
+      }
     }
   ]
 }

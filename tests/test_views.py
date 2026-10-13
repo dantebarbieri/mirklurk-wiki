@@ -483,8 +483,8 @@ class SelectiveViewTests(unittest.TestCase):
             "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
             "nature-20": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
         }
-        self.assertEqual(len(self.data["illustrations"]), 338)
-        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 326)
+        self.assertEqual(len(self.data["illustrations"]), 362)
+        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 350)
         for identity, digest in hashes.items():
             images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
             self.assertEqual(len(images), 1)
