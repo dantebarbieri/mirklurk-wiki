@@ -234,6 +234,8 @@ def profile_value(key, value, entities, locations):
         return known(value) + " silver equivalents"
     if key == "inventory-slots-added":
         return "+" + known(value) + " inventory slots"
+    if key == "tile-range":
+        return known(value) + " tiles"
     if key == "extra-damage":
         amount = Decimal(str(value))
         low = int(amount)
@@ -848,7 +850,7 @@ def source_page(data, catalog, details, locations, facts, entries):
         "Source files and game assets are not distributed with the repository.",
         "", "[[Research policy]] | [[Evidence and spoilers]] | [[Main Page]]",
         "", "== Build identification ==",
-        "[[Game mechanics#Version|The installed build]] is confirmed by the wiki operator and corroborated by the menu-label trace below. The operator's statement that it is the latest patch is a user report, not an independent check of all published releases."
+        "[[Game mechanics#Version|The installed build]] is confirmed by the wiki operator and corroborated by the menu-label trace below. Its release status is a user report from the operator, not an independent check of all published releases."
         if data["game"]["build"] is not None else "The installed build is not identified in this dataset.",
         "", "== Source files ==",
         table(["Source", "Installation-relative path", "SHA-256", "Build"], [
@@ -1619,7 +1621,8 @@ def build_pages(root, data, catalog=None, details=None):
         if recipes:
             pages[title] += "\n== Used in ==\n" + "\n".join(sorted(set(recipes))) + "\n"
         if quests:
-            pages[title] += "\n== Main quest ==\n" + "\n".join(text for _, text in sorted(quests)) + "\n"
+            main = all(text.startswith("* [[Quests and journal#entry-journal") for _, text in quests)
+            pages[title] += f'\n== {"Main quest" if main else "Quests"} ==\n' + "\n".join(text for _, text in sorted(quests)) + "\n"
         if other:
             pages[title] += "\n== Related pages ==\n" + "\n".join(sorted(set(other))) + "\n"
         if entities[identity]["category"] == "item" and not any(facts[fact["id"]] == title for fact in data["facts"]) and not any(profile["entity"] == identity for profile in details["profiles"]):
@@ -1641,7 +1644,7 @@ def build_pages(root, data, catalog=None, details=None):
         if uses:
             text += table(["Source", "Attack"], [
                 [listed_entity(identity), ", ".join(sorted(labels))]
-                for identity, labels in sorted(uses.items(), key=lambda pair: entities[pair[0]]["name"])
+                for identity, labels in sorted(uses.items(), key=lambda pair: (entities[pair[0]]["name"], pair[0]))
             ])
         else:
             text += "Weapons and creature attacks: Not documented.\n"
@@ -1652,7 +1655,8 @@ def build_pages(root, data, catalog=None, details=None):
             + entity_link(source["damage_type"], entities, locations) + "\n\n" + literal(source["summary"]) + "\n"
         )
     for effect in catalog.get("item_effects", []):
-        pages[locations[effect["entity"]]] += "\n== Consumption effects ==\n" + "\n\n".join(
+        heading = "Consumption effects" if item_categories.get(effect["entity"]) == "Consumables" else "Effects"
+        pages[locations[effect["entity"]]] += f"\n== {heading} ==\n" + "\n\n".join(
             literal(paragraph) for paragraph in effect["paragraphs"]
         ) + "\n"
 
@@ -1725,6 +1729,17 @@ def build_pages(root, data, catalog=None, details=None):
         for entry in entries:
             if entry["kind"] == "merchant" and "[[Currency and trading" not in pages[owners[entry["id"]]]:
                 pages[owners[entry["id"]]] += "\n[[Currency and trading|How prices, condition, and change work]]\n"
+    for title in [title for title in PAGE_FILES if title.startswith("Version ")]:
+        section, labels = None, {}
+        for line in pages[title].splitlines():
+            if line.startswith("== "):
+                section = line.strip("= ")
+            for target in re.findall(r"\[\[([^\]|#]+)", line):
+                if section in ("New content", "Changes") and target in pages and target not in {title, *PAGE_FILES} \
+                        and not pages[target].startswith("#REDIRECT"):
+                    labels[target] = "Changed" if section == "Changes" else labels.get(target, "New")
+        for target, label in sorted(labels.items()):
+            pages[target] += f"\n{label} in [[{title}|{title.lower()}]].\n"
     categories = category_definitions(data, catalog)
     memberships = defaultdict(set)
 

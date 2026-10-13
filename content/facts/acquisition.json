@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "build": "0.8.1.5",
+  "build": "0.8.9.9",
   "sources": [
     {
       "id": "starting-equipment",
@@ -472,8 +472,8 @@
       "conditions": [
         "Candidates must fit the remaining budget and the source's minimum item value. Coins and valuables bypass the minimum but still spend the budget. The minimum does not shrink as the budget is spent.",
         "Ordinary skeleton, chest, ruin and nest pools exclude food and material/ignition items, including wood, rocks, flint, feathers, pelts and several potion ingredients.",
-        "Raving Unwanted and Mutated Unwanted allow those item classes but have a smaller fixed budget. Creature meat and gland drops and the dead camp's supplies are separate.",
-        "Random budgets favor smaller amounts by mixing several uniform integer ranges. The Unwanted corpse budget is fixed. Each accepted item spends its base value, even if worn.",
+        "Raving Unwanted, Mutated Unwanted and Survivors allow those item classes but have smaller fixed budgets. Creature meat and gland drops and the dead camp's supplies are separate.",
+        "Random budgets favor smaller amounts by mixing several uniform integer ranges. Unwanted and Survivor corpse budgets are fixed. Each accepted item spends its base value, even if worn.",
         "Generation stops when the budget is spent or 500 counted candidates have been tried. Value and type rejections count; undefined items and the early Summoning Stone story exclusion do not. The limit can leave a budget partly unspent.",
         "Coins and valuables stack through repeated 80% continuation checks. Each extra unit must fit the stack limit and cost strictly less than the extra-unit budget. Other items usually receive wear, reducing resale value.",
         "Story requirements below also apply. Non-lootable items stay excluded.",
@@ -490,7 +490,8 @@
         "ruins-small",
         "nest-tiny",
         "cracks-tiny",
-        "unwanted-remains"
+        "unwanted-remains",
+        "survivor-remains"
       ],
       "related_pages": [
         "Skeletons and corpses",
@@ -506,29 +507,35 @@
         "item-74",
         "item-127",
         "being-31",
-        "being-32"
+        "being-32",
+        "being-35"
       ],
       "image_entity": "item-73",
       "image_caption": "Coins are one possible treasure find.",
       "confidence": "observed",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray;loot_amountchances"
+          "key": "treasure_get_lootarray.irandom(275);loot_amountchances"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_menu_related",
           "key": "menu_add.unopened-treasure.budgets"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "corpse.31/32.treasure_get_lootarray[1,1,0.1]"
         },
         {
-          "source": "ui-en",
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "corpse.35.treasure_get_lootarray[1,1.5,0.2]"
+        },
+        {
+          "source": "ui-en-0899",
           "section": "Journal",
           "key": "15"
         }
@@ -543,7 +550,8 @@
         "Indoor remains have larger budgets and higher minimum non-valuable item values than outdoor remains.",
         "All three appearances use the same treasure rules.",
         "Reopening does not reroll treasure. Contents can deteriorate or disappear over time.",
-        "Fresh creature drops, Raving and Mutated Unwanted loot and the dead camp's supplies use separate rules."
+        "Fresh creature drops, Raving and Mutated Unwanted loot and the dead camp's supplies use separate rules.",
+        "Remains and chests within 6.5 tiles of the Survivors' camp in the Savage Mirk are removed when the camp first appears."
       ],
       "rows": [],
       "pool_refs": [
@@ -582,6 +590,11 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_items",
           "key": "container_time_pass"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "createdCamp.areaType5.obj_container[149/150/151/152].rad104.instance_destroy"
         }
       ]
     },
@@ -666,6 +679,46 @@
           "source": "game-data",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "case31/case32.treasure_get_lootarray[1,1,0.1]/stuckArrows"
+        }
+      ]
+    },
+    {
+      "id": "survivor-remains",
+      "title": "Survivor loot",
+      "kind": "enemy",
+      "summary": "A Survivor generates a small random treasure selection when its loot corpse is created. Like Raving and Mutated Unwanted, it skips the restricted item classes of ordinary world skeletons, but its budget is larger.",
+      "conditions": [
+        "Three Survivors appear with Wilda when the Survivors' camp in the Savage Mirk is first generated.",
+        "Eligible food and materials are allowed here, unlike ordinary skeleton treasure. The pool's value-budget and minimum-value rules are documented on Random treasure.",
+        "Quantity and final odds depend on the random budget-filling process. No particular eligible item is guaranteed. Recovered stuck arrows are additional to the generated pool."
+      ],
+      "rows": [],
+      "pool_refs": [
+        {
+          "pool": "survivor-remains",
+          "condition": "Loot corpse of a Survivor."
+        }
+      ],
+      "related_entities": [
+        "being-35"
+      ],
+      "related_pages": [
+        "Random treasure",
+        "Raving and Mutated Unwanted loot"
+      ],
+      "image_entity": "being-35",
+      "image_caption": "A Survivor's corpse uses its own small treasure pool.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "case35.treasure_get_lootarray[1,1.5,0.2]/stuckArrows"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "createdCamp.areaType5.npc[0]=being34/npc[1..3]=being35"
         }
       ]
     },
@@ -1868,11 +1921,11 @@
           "item": "item-60",
           "quantity": {
             "min": 1,
-            "max": 4
+            "max": 5
           },
           "probability": {
-            "numerator": 163,
-            "denominator": 300,
+            "numerator": 71,
+            "denominator": 120,
             "scope": "Conditional on no snake interruption; base roll only, not combined with the independent bonus."
           },
           "odds_note": null,
@@ -1881,9 +1934,14 @@
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_items",
               "key": "loot_generate.case51.loot_amountchances[0,5]"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances.b<a->b=a/for-i=a..b/i_r(a,i)"
             }
           ]
         },
@@ -1892,11 +1950,11 @@
           "item": "item-62",
           "quantity": {
             "min": 1,
-            "max": 4
+            "max": 5
           },
           "probability": {
-            "numerator": 163,
-            "denominator": 300,
+            "numerator": 71,
+            "denominator": 120,
             "scope": "Conditional on no snake interruption; base roll only, not combined with the independent bonus."
           },
           "odds_note": null,
@@ -1905,9 +1963,14 @@
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_items",
               "key": "loot_generate.case51.loot_amountchances[0,5]"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances.b<a->b=a/for-i=a..b/i_r(a,i)"
             }
           ]
         },
@@ -2374,22 +2437,27 @@
           "item": "item-180",
           "quantity": {
             "min": 1,
-            "max": 2
+            "max": 3
           },
           "probability": {
-            "numerator": 559,
-            "denominator": 900,
+            "numerator": 65,
+            "denominator": 96,
             "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
           },
           "odds_note": null,
-          "condition": "The mixed zero-to-two quantity roll gets a 38% rescue chance when it initially selects zero.",
+          "condition": "The mixed zero-to-three quantity roll gets a 38% rescue chance when it initially selects zero.",
           "coverage": "conditional",
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_items",
-              "key": "loot_generate.case64.creeperAmount"
+              "key": "loot_generate.case64.creeperAmount=loot_amountchances[0,3]/chance0.38"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances.b<a->b=a/for-i=a..b/i_r(a,i)"
             }
           ]
         },
@@ -2398,22 +2466,27 @@
           "item": "item-182",
           "quantity": {
             "min": 1,
-            "max": 1
+            "max": 2
           },
           "probability": {
-            "numerator": 29,
-            "denominator": 80,
+            "numerator": 173,
+            "denominator": 360,
             "scope": "Per normal loot-generation pass; this is an independent check, not a combined chance across multiple checks."
           },
           "odds_note": null,
-          "condition": "The mixed zero-or-one quantity roll gets a 15% rescue chance when it initially selects zero.",
+          "condition": "The mixed zero-to-two quantity roll gets a 15% rescue chance when it initially selects zero.",
           "coverage": "conditional",
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_items",
-              "key": "loot_generate.case64.jasperAmount"
+              "key": "loot_generate.case64.jasperAmount=loot_amountchances[0,2]/chance0.15"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances.b<a->b=a/for-i=a..b/i_r(a,i)"
             }
           ]
         }
@@ -2613,7 +2686,7 @@
           "item": "item-91",
           "quantity": {
             "min": 1,
-            "max": 14
+            "max": 10
           },
           "probability": {
             "numerator": 1,
@@ -2621,14 +2694,19 @@
             "scope": "The main item is produced when harvesting the specified qualifying plant stage; quantity remains variable."
           },
           "odds_note": null,
-          "condition": "Harvest Fern. Growth-stage base ranges from one to five; the mixed quantity roll spans that base through three times that base minus one. Before Green Fingers.",
+          "condition": "Harvest Fern. Growth-stage base ranges from one to five; the mixed quantity roll spans that base through twice that base. Before Green Fingers.",
           "coverage": "conditional",
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_items",
-              "key": "loot_generate.case57"
+              "key": "loot_generate.case57.loot_amountchances[fibBase,fibBase*2]"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances.b<a->b=a/for-i=a..b/i_r(a,i)"
             }
           ]
         },
@@ -2661,7 +2739,7 @@
           "item": "item-225",
           "quantity": {
             "min": 2,
-            "max": 11
+            "max": 8
           },
           "probability": {
             "numerator": 1,
@@ -2674,9 +2752,14 @@
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_items",
-              "key": "loot_generate.case1068.HT[162..164]"
+              "key": "loot_generate.case1068.HT[162..164].loot_amountchances[c,c*2]"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances.b<a->b=a/for-i=a..b/i_r(a,i)"
             }
           ]
         },
@@ -2685,7 +2768,7 @@
           "item": "item-226",
           "quantity": {
             "min": 1,
-            "max": 12
+            "max": 8
           },
           "probability": {
             "numerator": 1,
@@ -2698,9 +2781,14 @@
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_items",
-              "key": "loot_generate.case1069.HT[170..179]/round-ties-to-even"
+              "key": "loot_generate.case1069.HT[170..179].loot_amountchances[c,round(c*1.5)]/round-ties-to-even"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_items",
+              "key": "loot_amountchances.b<a->b=a/for-i=a..b/i_r(a,i)"
             }
           ]
         },
@@ -3962,11 +4050,12 @@
       "id": "mapmaking",
       "title": "Mapmaking",
       "kind": "item-use",
-      "summary": "A Map Drawing Kit can produce a Map of area when used outdoors.",
+      "summary": "A Map Drawing Kit can produce a Map of area when used outdoors, unless you already carry a map of that area.",
       "image_entity": "item-156",
       "image_caption": "Map Drawing Kit: an item-use route to a map, separate from Captain Eir's starting supplies.",
       "conditions": [
         "Using the kit indoors is refused and does not consume a use. A successful outdoor use follows the kit's normal use/durability consumption.",
+        "If you already carry a Map of area for the current area, the kit is refused and does not consume a use. A map of another area does not block it.",
         "Use the kit directly; no workstation is needed."
       ],
       "rows": [
@@ -3983,14 +4072,14 @@
             "scope": "When the row's condition is met."
           },
           "odds_note": null,
-          "condition": "Use a Map Drawing Kit outdoors.",
+          "condition": "Use a Map Drawing Kit outdoors while not carrying a Map of area for that area.",
           "coverage": "conditional",
           "confidence": "inferred",
           "evidence": [
             {
-              "source": "game-data",
+              "source": "game-data-0899",
               "section": "gml_GlobalScript_scr_basic_useful",
-              "key": "use_item.index156.grant89"
+              "key": "use_item.index156.has89-current-area/grant89"
             }
           ]
         }
@@ -4002,9 +4091,19 @@
       "confidence": "observed",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "use_item.index156.area_is_outside/grant89/doRemove"
+          "key": "use_item.index156.area_is_outside/has89-current-area/AlreadyMap/grant89/doRemove"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_inventory_get_amount[89].connectedArea==current-area"
+        },
+        {
+          "source": "ui-en-0899",
+          "section": "Pops",
+          "key": "AlreadyMap"
         }
       ]
     }
@@ -4014,7 +4113,7 @@
       "id": "skeleton-outdoors",
       "title": "Outdoor skeletons and remains",
       "owner_source": "random-treasure",
-      "summary": "The rolled budget ranges from 30 copper to 5 silver and 20 copper. The minimum non-valuable item value is one quarter of that particular budget.",
+      "summary": "The rolled budget ranges from 30 copper to 4 silver and 90 copper. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-0",
         "item-1",
@@ -4023,7 +4122,6 @@
         "item-4",
         "item-5",
         "item-9",
-        "item-10",
         "item-12",
         "item-13",
         "item-14",
@@ -4036,7 +4134,6 @@
         "item-23",
         "item-24",
         "item-27",
-        "item-29",
         "item-32",
         "item-33",
         "item-41",
@@ -4078,9 +4175,7 @@
         "item-144",
         "item-145",
         "item-146",
-        "item-147",
         "item-153",
-        "item-156",
         "item-157",
         "item-158",
         "item-160",
@@ -4119,19 +4214,24 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.status[-214].maxam=loot_amountchances[3.25,50]/10"
         }
       ]
     },
@@ -4139,7 +4239,7 @@
       "id": "skeleton-indoors",
       "title": "Indoor skeletons and remains",
       "owner_source": "random-treasure",
-      "summary": "Indoors, the ordinary remains budget receives an extra 2 silver and 50 copper, giving a range of 2 silver and 80 copper to 7 silver and 70 copper. The minimum non-valuable item value is one quarter of the rolled budget.",
+      "summary": "Indoors, the ordinary remains budget receives an extra 2 silver and 50 copper, giving a range of 2 silver and 80 copper to 7 silver and 40 copper. The minimum non-valuable item value is one quarter of the rolled budget.",
       "eligible_item_ids": [
         "item-1",
         "item-3",
@@ -4155,7 +4255,6 @@
         "item-23",
         "item-24",
         "item-27",
-        "item-28",
         "item-29",
         "item-33",
         "item-43",
@@ -4189,7 +4288,6 @@
         "item-147",
         "item-148",
         "item-153",
-        "item-155",
         "item-156",
         "item-157",
         "item-158",
@@ -4221,19 +4319,24 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.status[-214].maxam=loot_amountchances[3.25,50]/10+2.5-not-outside"
         }
       ]
     },
@@ -4241,7 +4344,7 @@
       "id": "chest-common",
       "title": "Common treasure-chest tier",
       "owner_source": "random-treasure",
-      "summary": "This chest tier rolls a budget from 3 to 22 silver. The minimum non-valuable item value is one quarter of that particular budget.",
+      "summary": "This chest tier rolls a budget from 3 to 19 silver. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-1",
         "item-3",
@@ -4249,7 +4352,6 @@
         "item-5",
         "item-6",
         "item-7",
-        "item-8",
         "item-9",
         "item-10",
         "item-11",
@@ -4296,7 +4398,6 @@
         "item-116",
         "item-117",
         "item-119",
-        "item-127",
         "item-137",
         "item-138",
         "item-139",
@@ -4310,7 +4411,6 @@
         "item-156",
         "item-157",
         "item-158",
-        "item-159",
         "item-160",
         "item-161",
         "item-165",
@@ -4318,9 +4418,6 @@
         "item-167",
         "item-168",
         "item-176",
-        "item-184",
-        "item-186",
-        "item-188",
         "item-190",
         "item-191",
         "item-192",
@@ -4340,30 +4437,37 @@
         "item-252",
         "item-253",
         "item-256",
-        "item-257"
+        "item-257",
+        "item-267",
+        "item-269",
+        "item-271",
+        "item-273"
       ],
       "quantity": null,
       "probability": null,
       "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
-      "item_conditions": {
-        "item-127": "Summoning Stone is excluded until the Fort Solid access story milestone."
-      },
+      "item_conditions": {},
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.index149.maxam=loot_amountchances[3.5,20]"
         }
       ]
     },
@@ -4371,7 +4475,7 @@
       "id": "chest-middle",
       "title": "Middle treasure-chest tier",
       "owner_source": "random-treasure",
-      "summary": "This chest tier rolls a budget from 5 to 44 silver. The minimum non-valuable item value is one quarter of that particular budget.",
+      "summary": "This chest tier rolls a budget from 5 to 40 silver. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-1",
         "item-4",
@@ -4458,7 +4562,16 @@
         "item-251",
         "item-252",
         "item-253",
-        "item-256"
+        "item-256",
+        "item-266",
+        "item-267",
+        "item-268",
+        "item-269",
+        "item-270",
+        "item-271",
+        "item-272",
+        "item-273",
+        "item-274"
       ],
       "quantity": null,
       "probability": null,
@@ -4469,19 +4582,24 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.index150.maxam=loot_amountchances[5,40]"
         }
       ]
     },
@@ -4489,7 +4607,7 @@
       "id": "chest-rich",
       "title": "Rich treasure-chest tier",
       "owner_source": "random-treasure",
-      "summary": "This chest tier rolls a budget from 10 to 59 silver. The minimum non-valuable item value is one quarter of that particular budget.",
+      "summary": "This chest tier rolls a budget from 10 to 50 silver. The minimum non-valuable item value is one quarter of that particular budget.",
       "eligible_item_ids": [
         "item-4",
         "item-5",
@@ -4558,7 +4676,17 @@
         "item-209",
         "item-251",
         "item-252",
-        "item-256"
+        "item-256",
+        "item-265",
+        "item-266",
+        "item-267",
+        "item-268",
+        "item-269",
+        "item-270",
+        "item-271",
+        "item-272",
+        "item-273",
+        "item-274"
       ],
       "quantity": null,
       "probability": null,
@@ -4569,19 +4697,24 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.index151.maxam=loot_amountchances[10,50]"
         }
       ]
     },
@@ -4589,10 +4722,9 @@
       "id": "ruins-large",
       "title": "Larger searchable ruins",
       "owner_source": "random-treasure",
-      "summary": "The budget ranges from 1 silver to 3 silver and 40 copper. Non-valuable items must be worth at least 1 silver, and every item must occupy fewer than four inventory squares.",
+      "summary": "The budget ranges from 1 silver to 2 silver and 50 copper. Non-valuable items must be worth at least 1 silver, and every item must occupy fewer than four inventory squares.",
       "eligible_item_ids": [
         "item-3",
-        "item-5",
         "item-9",
         "item-13",
         "item-27",
@@ -4611,8 +4743,6 @@
         "item-153",
         "item-157",
         "item-166",
-        "item-167",
-        "item-176",
         "item-253"
       ],
       "quantity": null,
@@ -4622,19 +4752,24 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case59.maxam=loot_amountchances[10,25]/10"
         }
       ]
     },
@@ -4642,18 +4777,15 @@
       "id": "ruins-small",
       "title": "Smaller searchable ruins",
       "owner_source": "random-treasure",
-      "summary": "The unadjusted budget ranges from 30 copper to 1 silver and 50 copper. Budgets below the 50-copper minimum non-valuable item value are raised to 60 copper. Items must occupy fewer than four inventory squares.",
+      "summary": "The unadjusted budget ranges from 30 copper to 1 silver and 20 copper. Budgets below the 50-copper minimum non-valuable item value are raised to 60 copper. Items must occupy fewer than four inventory squares.",
       "eligible_item_ids": [
         "item-3",
-        "item-13",
         "item-32",
         "item-68",
         "item-72",
         "item-73",
-        "item-101",
         "item-113",
         "item-115",
-        "item-138",
         "item-139",
         "item-257"
       ],
@@ -4664,19 +4796,24 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case60.maxam=loot_amountchances[3,12.5]/10"
         }
       ]
     },
@@ -4721,7 +4858,7 @@
       "id": "cracks-tiny",
       "title": "Cave-floor crack bonus treasure",
       "owner_source": "random-treasure",
-      "summary": "The budget ranges from 5 copper to 1 silver and 4 copper. The minimum non-valuable item value is half a copper, and only one-square items qualify.",
+      "summary": "The budget ranges from 5 copper to 1 silver. The minimum non-valuable item value is half a copper, and only one-square items qualify.",
       "eligible_item_ids": [
         "item-32",
         "item-72",
@@ -4737,19 +4874,24 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case64.treshBase=loot_amountchances[5,100]/100"
         }
       ]
     },
@@ -4829,7 +4971,8 @@
         "item-245",
         "item-246",
         "item-255",
-        "item-257"
+        "item-257",
+        "item-258"
       ],
       "quantity": null,
       "probability": null,
@@ -4838,19 +4981,125 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "case31/case32.treasure_get_lootarray[1,1,0.1]"
+        }
+      ]
+    },
+    {
+      "id": "survivor-remains",
+      "title": "Survivor corpse treasure",
+      "owner_source": "random-treasure",
+      "summary": "Survivors use their own pool: a fixed budget of 1 silver and 50 copper and a minimum non-valuable item value of 20 copper, without the ordinary treasure pool's food, material-class or size exclusions.",
+      "eligible_item_ids": [
+        "item-0",
+        "item-2",
+        "item-3",
+        "item-12",
+        "item-13",
+        "item-15",
+        "item-18",
+        "item-20",
+        "item-21",
+        "item-22",
+        "item-23",
+        "item-24",
+        "item-25",
+        "item-32",
+        "item-33",
+        "item-41",
+        "item-43",
+        "item-59",
+        "item-68",
+        "item-72",
+        "item-73",
+        "item-84",
+        "item-85",
+        "item-90",
+        "item-93",
+        "item-95",
+        "item-101",
+        "item-113",
+        "item-114",
+        "item-115",
+        "item-118",
+        "item-119",
+        "item-134",
+        "item-135",
+        "item-136",
+        "item-137",
+        "item-138",
+        "item-139",
+        "item-140",
+        "item-141",
+        "item-142",
+        "item-144",
+        "item-162",
+        "item-163",
+        "item-164",
+        "item-178",
+        "item-182",
+        "item-183",
+        "item-194",
+        "item-195",
+        "item-196",
+        "item-199",
+        "item-202",
+        "item-203",
+        "item-204",
+        "item-205",
+        "item-207",
+        "item-208",
+        "item-220",
+        "item-235",
+        "item-236",
+        "item-237",
+        "item-254",
+        "item-255",
+        "item-257",
+        "item-258"
+      ],
+      "quantity": null,
+      "probability": null,
+      "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.",
+      "item_conditions": {},
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "case35.treasure_get_lootarray[1,1.5,0.2]"
         }
       ]
     }
@@ -4928,68 +5177,51 @@
     {
       "item": "item-48",
       "kind": "unverified",
-      "text": "Availability in 0.8.1.5: Unknown. No acquisition method is documented.",
+      "text": "Availability in 0.8.9.9: Unknown. No acquisition method is documented.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "all-populated-itemDB-records.absent48/49"
+          "key": "all-populated-itemDB-records.absent48/49/263"
         }
       ]
     },
     {
       "item": "item-49",
       "kind": "unverified",
-      "text": "Availability in 0.8.1.5: Unknown. No acquisition method is documented.",
+      "text": "Availability in 0.8.9.9: Unknown. No acquisition method is documented.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "all-populated-itemDB-records.absent48/49"
+          "key": "all-populated-itemDB-records.absent48/49/263"
         }
       ]
     },
     {
       "item": "item-40",
       "kind": "unverified",
-      "text": "Acquisition in 0.8.1.5: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted corpse budget. Recipes, fixed finds and sellers are not documented.",
+      "text": "Acquisition in 0.8.9.9: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "item40/254.type18/price"
+          "key": "item40.type18/price2.25"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
           "key": "treasure_get_lootarray.type/budget"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
-          "key": "case31/32.budget1"
-        }
-      ]
-    },
-    {
-      "item": "item-254",
-      "kind": "unverified",
-      "text": "Acquisition in 0.8.1.5: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted corpse budget. Recipes, fixed finds and sellers are not documented.",
-      "evidence": [
-        {
-          "source": "game-data",
-          "section": "gml_Object_databank_Alarm_1",
-          "key": "item40/254.type18/price"
+          "key": "case31/32.budget1;case35.budget1.5"
         },
         {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.type/budget"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_obj_being_Alarm_0",
-          "key": "case31/32.budget1"
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "trade.stock-lists.no-item40"
         }
       ]
     }

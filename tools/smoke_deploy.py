@@ -1042,10 +1042,12 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
             raise RuntimeError("A complete item page lost a pool variant or exceeded its expansion budget.")
     gate = next(pool["item_conditions"]["item-127"] for pool in pools.values() if "item-127" in pool["item_conditions"])
     chest_condition = sources["treasure-chests"]["pool_refs"][0]["condition"]
+    chest_pool = pools[sources["treasure-chests"]["pool_refs"][0]["pool"]]["eligible_item_ids"]
+    reader = locations["item-127" if "item-127" in chest_pool else min(chest_pool)]
     for owner, before, after, expected, targets in (
         ("Random treasure", gate, "Synthetic story requirement 997", "Synthetic story requirement 997",
          ["Summoning Stone", "Treasure chests"]),
-        ("Treasure chests", chest_condition, chest_condition.replace("88.2%", "81.7%"), "81.7%", ["Summoning Stone"]),
+        ("Treasure chests", chest_condition, chest_condition.replace("88.2%", "81.7%"), "81.7%", [reader]),
     ):
         original = pages[owner]
         if original.count(literal(before)) != 1:

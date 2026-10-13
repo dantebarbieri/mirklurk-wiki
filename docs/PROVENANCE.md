@@ -140,12 +140,10 @@ source fingerprints, 336 entities, 107 facts, and 293 entries: 31 quest/journal,
 records remain in `game.json`; the encyclopedia adds separately reviewed
 presentation, profiles, and server-only image metadata.
 
-The wiki operator confirmed installed build `0.8.1.5`, matching the menu label.
-Only the formerly null `game.build` metadata field changes; reverting that
-field restores the exact earlier file fingerprint. The operator's
-latest-patch assertion is recorded as a user report in Source provenance,
-not an independent global release check. Source record build fields/hashes,
-all entities, and every historical fact/entry remain unchanged.
+For that snapshot the wiki operator confirmed installed build `0.8.1.5`,
+matching the menu label; its latest-patch assertion was a user report, not an
+independent global release check. The 0.8.9.9 update below replaces the
+documented build and records each deliberate amendment to earlier records.
 Coverage gaps are stated on the relevant pages. Reviewed creature death handlers
 are documented, but base generation is not a guaranteed harvested yield;
 runtime harvesting/recovery modifiers and some merchant locations/prices remain
@@ -208,18 +206,69 @@ before stage 6. Clay's sample handover reaches stage 6; Eir's conversation after
 Viend's return reaches stage 15. Neither midnight nor the recorder handover grants
 those permissions. The escort branch does not assign hostile NPC targets; normal
 friendly targeting and damage-triggered retaliation remain separate. These are
-source observations for build 0.8.1.5, not a live playtest.
+source observations for build 0.8.1.5, re-checked against 0.8.9.9, not a live playtest.
 
 The bounded publication allowance for `wiki_render.py` is 108 KiB to cover the
 dialogue rendering and destination checks; `tests/test_dialogue.py` is an exact
-allowlisted 16 KiB test file. This provenance reference has a 48 KiB allowance
-for the added schema and source-scope documentation. Other limits and historical
+allowlisted 16 KiB test file. This provenance reference has a 56 KiB allowance
+for the added schema, source-scope and version-update documentation. Other limits and historical
 research are unchanged.
 
 Ability and dialogue metadata can coexist on one being. Rendering keeps location,
 ability (Viend's Healing), dialogue, and stats in that order, with separate audit
 records and no ability or dialogue prose in merchant offer views. Their combined
 validator uses a 60 KiB `wiki_catalog.py` allowance.
+
+## Version 0.8.9.9 update
+
+On 2026-10-13 the operator installed 0.8.9.9 from the Steam beta branch
+`next_version_tester`, a test build released before the official patch.
+`game.build`, the currency build confirmation and `acquisition.json` record it,
+and the new `data.win` menu label matches. The replaced `data.win` matches the
+original `game-data` fingerprint; both builds were decompiled privately and
+compared, and no dump is stored here.
+
+New sources `game-data-0899`, `items-en-0899`, `beings-en-0899` and
+`ui-en-0899` carry build `0.8.9.9`. The original five source records are
+unchanged, and `nature-en` still matches the new `Nature.ini`.
+
+Additions cite the new fingerprints: 24 entities, 43 entries, profiles and
+grids for the new entities, a `tile-range` property with range profiles for
+the 48 weapons that declare a reach, and catalog pages, classifications,
+factions 10 and 11, taxonomy, guides, item effects, merchant profiles and prices.
+
+Earlier records amended on purpose, each re-cited to the 0.8.9.9 fingerprints:
+
+- Entities `being-35` (Unwanted Guard to Survivor) and `skill-1-0` (Fire
+  Striker to Fire Bond); the old titles become redirects.
+- Facts `master-basher-stun` (1.5 to 1.2 per rank, melee only) and
+  `fire-striker-chance` (entity name only).
+- Sixteen corpse quantities. `loot_amountchances(a, b)` now draws from `a`
+  to `max(a, b)`; it previously reached `a + b - 1`. Calls with `a = 1` are
+  unaffected. Also `loot-amount-distribution` (treasure IDs 0-275),
+  `skill-1-0-mechanics`, `crafting-station-modifiers` and
+  `corpse-budgeted-treasure`, with matching `entry_display` corrections.
+- Profiles: six food AP costs, the Iron and Steel Battleaxe attack patterns,
+  and the Wilda and Survivor idle-move chances.
+
+Every other existing profile and grid was regenerated from the new item and
+being definitions and matched exactly, so unchanged records keep their 0.8.1.5
+citations. Acquisition rows, pools and budgets were recomputed the same way.
+
+Pages show 0.8.9.9 values. The authored **Version 0.8.9.9** changelog keeps
+the 0.8.1.5 values beside them; the builder adds a "New in" or "Changed in"
+link to each existing page linked from its New content or Changes sections.
+
+Reader text names story events instead of the code's numbered main-quest
+stages, for example "after you report Scaal's defeat" for stage 30. Clay's
+boss form (`being-41`) displays Clay's name, so its page is titled
+"Magus Clay (boss)". The new entities have no reviewed artwork yet.
+
+The Survivors' camp uses the same delayed area-entry check as Gurb-Gurb's
+hollow and Ihar's wreck: the first outdoor entry into any Savage Mirk while it
+does not exist, including revisits and older saves. The Terror spawns only at
+night in that area while Wilda's request is active, and never within 16 tiles
+of the camp. These are source observations, not live playtests.
 
 ## Build output
 
@@ -236,7 +285,7 @@ is embedded; entity and File links are relative MediaWiki links.
 
 ## Encyclopedia identities and ownership
 
-`content/facts/catalog.json` (224 KiB maximum) contains `schema_version: 1`,
+`content/facts/catalog.json` (352 KiB maximum) contains `schema_version: 1`,
 `pages`, `classifications`, and `entry_links`, with reviewed `entry_display`,
 `stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, `guides`, and `item_effects` additions. It changes presentation
 without rewriting historical evidence:
@@ -416,7 +465,8 @@ material and fire-making supply. Food ingredients are exactly the intersection
 of reviewed food definitions and inventory-recipe inputs. Lamp Oil stays out
 of food. Repair kits, successful outdoor Map Drawing Kit use, and thrown
 Summoning Stone are consumed by their traced handlers; a rejected indoor map
-attempt does not consume a kit. Summoning Stone is not a damaging thrown flask.
+attempt does not consume a kit, and from 0.8.9.9 neither does an attempt while
+already carrying a map of the current area. Summoning Stone is not a damaging thrown flask.
 Flax and Linen remain explicitly localization-only. Numeric facts, recipes,
 acquisition rows and illustrations are not rewritten for classification.
 

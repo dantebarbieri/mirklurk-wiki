@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.8.1.5",
+    "build": "0.8.9.9",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -36,6 +36,30 @@
       "path": "data.win",
       "sha256": "163d02abb9e514b603736633121bb3e6240e88dc81fb66a83b6f43f3d7660205",
       "build": null
+    },
+    {
+      "id": "items-en-0899",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "6f850e9d113e124164dabc6e7a794e5466f11a787fadd4550d4ae6e8cab1090f",
+      "build": "0.8.9.9"
+    },
+    {
+      "id": "beings-en-0899",
+      "path": "Languages\\English\\Bestiary.ini",
+      "sha256": "042e4426966ea14e13a02358c5da586f253e17b49c4b7589c5316419b2c86b11",
+      "build": "0.8.9.9"
+    },
+    {
+      "id": "ui-en-0899",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "a275d3bfc1f040bb054e0ad6770ad9064387c078f87039f193d5a68e6fd134e1",
+      "build": "0.8.9.9"
+    },
+    {
+      "id": "game-data-0899",
+      "path": "data.win",
+      "sha256": "18d2c332a34fac0379d183c4e887e9eb3b67dc86023b3f988b330e65244e6142",
+      "build": "0.8.9.9"
     }
   ],
   "entities": [
@@ -3708,11 +3732,11 @@
     {
       "id": "being-35",
       "category": "being",
-      "name": "Unwanted Guard",
+      "name": "Survivor",
       "confidence": "observed",
       "evidence": [
         {
-          "source": "beings-en",
+          "source": "beings-en-0899",
           "section": "Titles",
           "key": "35"
         }
@@ -4064,11 +4088,11 @@
     {
       "id": "skill-1-0",
       "category": "skill",
-      "name": "Fire Striker",
+      "name": "Fire Bond",
       "confidence": "observed",
       "evidence": [
         {
-          "source": "ui-en",
+          "source": "ui-en-0899",
           "section": "SkillsTitle1",
           "key": "0"
         }
@@ -4431,6 +4455,328 @@
           "key": "24"
         }
       ]
+    },
+    {
+      "id": "item-258",
+      "category": "item",
+      "name": "Bat Hide",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "258"
+        }
+      ]
+    },
+    {
+      "id": "item-259",
+      "category": "item",
+      "name": "Bat Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "259"
+        }
+      ]
+    },
+    {
+      "id": "item-260",
+      "category": "item",
+      "name": "Grilled Bat Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "260"
+        }
+      ]
+    },
+    {
+      "id": "item-261",
+      "category": "item",
+      "name": "Head of The Terror",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "261"
+        }
+      ]
+    },
+    {
+      "id": "item-262",
+      "category": "item",
+      "name": "Magus' Shard",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "262"
+        }
+      ]
+    },
+    {
+      "id": "item-264",
+      "category": "item",
+      "name": "Clays' Magus Hood",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "264"
+        }
+      ]
+    },
+    {
+      "id": "item-265",
+      "category": "item",
+      "name": "Magi's Ropebelt",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "265"
+        }
+      ]
+    },
+    {
+      "id": "item-266",
+      "category": "item",
+      "name": "Staff of The Fire Eater",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "266"
+        }
+      ]
+    },
+    {
+      "id": "item-267",
+      "category": "item",
+      "name": "Orb of Poison",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "267"
+        }
+      ]
+    },
+    {
+      "id": "item-268",
+      "category": "item",
+      "name": "Orb of Greater Poison",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "268"
+        }
+      ]
+    },
+    {
+      "id": "item-269",
+      "category": "item",
+      "name": "Orb of Fire",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "269"
+        }
+      ]
+    },
+    {
+      "id": "item-270",
+      "category": "item",
+      "name": "Orb of Greater Fire",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "270"
+        }
+      ]
+    },
+    {
+      "id": "item-271",
+      "category": "item",
+      "name": "Orb of Iron Essence",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "271"
+        }
+      ]
+    },
+    {
+      "id": "item-272",
+      "category": "item",
+      "name": "Orb of Steel Essence",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "272"
+        }
+      ]
+    },
+    {
+      "id": "item-273",
+      "category": "item",
+      "name": "Orb of Wind",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "273"
+        }
+      ]
+    },
+    {
+      "id": "item-274",
+      "category": "item",
+      "name": "Orb of Storm",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "274"
+        }
+      ]
+    },
+    {
+      "id": "item-275",
+      "category": "item",
+      "name": "Storage Chest",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "275"
+        }
+      ]
+    },
+    {
+      "id": "being-36",
+      "category": "being",
+      "name": "Grand Mother",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        }
+      ]
+    },
+    {
+      "id": "being-37",
+      "category": "being",
+      "name": "Mirkfang Matriarch",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "37"
+        }
+      ]
+    },
+    {
+      "id": "being-38",
+      "category": "being",
+      "name": "Mirkfang",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "38"
+        }
+      ]
+    },
+    {
+      "id": "being-39",
+      "category": "being",
+      "name": "Giant Mirkfang",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "39"
+        }
+      ]
+    },
+    {
+      "id": "being-40",
+      "category": "being",
+      "name": "The Terror",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        }
+      ]
+    },
+    {
+      "id": "being-41",
+      "category": "being",
+      "name": "Magus Clay",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].name"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "examine.beingName[41->8]"
+        }
+      ]
+    },
+    {
+      "id": "damage-class-27",
+      "category": "damage_class",
+      "name": "Leeching",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en-0899",
+          "section": "DamageClasses",
+          "key": "27"
+        }
+      ]
     }
   ],
   "facts": [
@@ -4517,14 +4863,14 @@
     {
       "id": "fire-striker-chance",
       "page": "Game mechanics",
-      "entity": "Fire Striker",
+      "entity": "Fire Bond",
       "property": "Fire-starting chance bonus per rank (%)",
       "value": 3.0,
       "description": "The localization assigns a per-rank bonus to fire-starting attempts.",
       "confidence": "localization-described",
       "evidence": [
         {
-          "source": "ui-en",
+          "source": "ui-en-0899",
           "section": "SkillsDesc1",
           "key": "0"
         }
@@ -4727,14 +5073,19 @@
       "page": "Game mechanics",
       "entity": "Master Basher",
       "property": "Blunt-melee stun-chance bonus per rank (%)",
-      "value": 1.5,
-      "description": "The description associates the chance bonus with blunt melee attacks.",
+      "value": 1.2,
+      "description": "The description associates the chance bonus with blunt melee attacks; ranged blunt attacks do not receive it.",
       "confidence": "localization-described",
       "evidence": [
         {
-          "source": "ui-en",
+          "source": "ui-en-0899",
           "section": "SkillsDesc3",
           "key": "1"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_aftermath.stunChance0.1/fighterSkills[1]*0.012/!weapon_is_ranged"
         }
       ]
     },
@@ -15367,15 +15718,20 @@
     {
       "id": "skill-1-0-mechanics",
       "kind": "algorithm",
-      "title": "Fire Striker: described effects",
-      "summary": "Fire Striker adds three percentage points per rank to a fire-starting attempt.",
+      "title": "Fire Bond: described effects",
+      "summary": "Fire Bond adds three percentage points per rank to a fire-starting attempt. From rank 5, each turn spent resting or sleeping has a 4% chance to treat one burnt hit point, turning it into an ordinary wound; from rank 10 the chance is 8%.",
       "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
       "confidence": "localization-described",
       "evidence": [
         {
-          "source": "ui-en",
+          "source": "ui-en-0899",
           "section": "SkillsDesc1",
           "key": "0"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal0.04/x2.being_heal_burnt"
         }
       ],
       "details": {
@@ -16878,6 +17234,11 @@
       "confidence": "inferred",
       "evidence": [
         {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;treasure_get_lootarray.irandom(275)"
+        },
+        {
           "source": "game-data",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances/treasure_get_lootarray"
@@ -16886,8 +17247,8 @@
       "details": {
         "page": "Loot tables",
         "steps": [
-          "The amount helper builds progressively wider inclusive integer draws, then chooses one of those draws uniformly. Low quantities therefore occur more frequently.",
-          "The treasure helper repeatedly samples an item ID from zero through 257, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
+          "The amount helper builds progressively wider inclusive integer draws from the minimum up to the stated maximum, then chooses one of those draws uniformly. Low quantities therefore occur more frequently.",
+          "The treasure helper repeatedly samples an item ID from zero through 275, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
           "Accepted items reduce the remaining value budget. Defined-item attempts increment a counter capped at 500; undefined-item draws and the early story-gated rejection are not counted.",
           "Durability and stack size can be randomized after selection. Listed shared bonus checks are additive rather than mutually exclusive weights."
         ],
@@ -16931,6 +17292,11 @@
           "source": "game-data",
           "section": "gml_Object_UI_Draw_64",
           "key": "fire-menu.startAPcost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "nearby_containers_get_amount/nearby_containers_lose_amount"
         }
       ],
       "details": {
@@ -16941,8 +17307,9 @@
           "At station IDs 53, 131 and 172, Brewer multiplies crafting AP by one minus 0.08 per rank, with a nonnegative floor.",
           "At the same station IDs, each ingredient-consumption check can save one required unit with a threshold of 0.20 per completed three Brewer ranks.",
           "A zero-quantity component is a presence requirement rather than a consumed ingredient. Component ID 10000 instead checks a carried tool's chopping capability.",
-          "Lighting a fire uses a separate one-AP attempt, fuel and ignition checks. Once lit, a Campfire offers fourteen cooking recipes; a Survivor's Field Kit instead offers fifteen alchemy recipes.",
-          "The fire-linked recipe menu is available only while the station has positive active fire time, and is closed when its fire expires."
+          "Lighting a fire uses a separate one-AP attempt, fuel and ignition checks. Once lit, a Campfire offers fifteen cooking recipes; a Survivor's Field Kit instead offers fifteen alchemy recipes.",
+          "The fire-linked recipe menu is available only while the station has positive active fire time, and is closed when its fire expires.",
+          "Ingredient checks and consumption use the player inventory first, then containers within 64 pixels of the player."
         ],
         "fact_ids": []
       }
@@ -17002,7 +17369,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[30].item[66]"
         },
@@ -17022,9 +17389,9 @@
           "key": "66"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances"
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17032,7 +17399,7 @@
         "outcome": "item-66",
         "quantity": {
           "min": 2,
-          "max": 4
+          "max": 3
         },
         "weight": null,
         "probability": 1,
@@ -17094,7 +17461,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[1].item[69]"
         },
@@ -17114,9 +17481,9 @@
           "key": "69"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances"
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17124,7 +17491,7 @@
         "outcome": "item-69",
         "quantity": {
           "min": 2,
-          "max": 4
+          "max": 3
         },
         "weight": null,
         "probability": 1,
@@ -17140,7 +17507,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[27].item[69]"
         },
@@ -17160,9 +17527,9 @@
           "key": "69"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances"
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17170,7 +17537,7 @@
         "outcome": "item-69",
         "quantity": {
           "min": 2,
-          "max": 4
+          "max": 3
         },
         "weight": null,
         "probability": 1,
@@ -17186,7 +17553,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[25].item[69]"
         },
@@ -17206,9 +17573,9 @@
           "key": "69"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances"
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17216,7 +17583,7 @@
         "outcome": "item-69",
         "quantity": {
           "min": 2,
-          "max": 4
+          "max": 3
         },
         "weight": null,
         "probability": 1,
@@ -17232,7 +17599,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[28].item[69]"
         },
@@ -17252,9 +17619,9 @@
           "key": "69"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances"
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17262,7 +17629,7 @@
         "outcome": "item-69",
         "quantity": {
           "min": 4,
-          "max": 9
+          "max": 6
         },
         "weight": null,
         "probability": 1,
@@ -17790,12 +18157,12 @@
       "id": "corpse-13-107",
       "kind": "loot",
       "title": "Sceetler: Rift Weave",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[13].item[107]"
         },
@@ -17813,6 +18180,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "107"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17820,7 +18192,7 @@
         "outcome": "item-107",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -17831,12 +18203,12 @@
       "id": "corpse-13-124",
       "kind": "loot",
       "title": "Sceetler: Glow Goo",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[13].item[124]"
         },
@@ -17854,6 +18226,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "124"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17861,7 +18238,7 @@
         "outcome": "item-124",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -17872,12 +18249,12 @@
       "id": "corpse-14-107",
       "kind": "loot",
       "title": "Scaalmyr Grunt: Rift Weave",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[14].item[107]"
         },
@@ -17895,6 +18272,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "107"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17902,7 +18284,7 @@
         "outcome": "item-107",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -17913,12 +18295,12 @@
       "id": "corpse-14-124",
       "kind": "loot",
       "title": "Scaalmyr Grunt: Glow Goo",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[14].item[124]"
         },
@@ -17936,6 +18318,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "124"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17943,7 +18330,7 @@
         "outcome": "item-124",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -17954,12 +18341,12 @@
       "id": "corpse-14-129",
       "kind": "loot",
       "title": "Scaalmyr Grunt: Scaalmyr Husk",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[14].item[129]"
         },
@@ -17977,6 +18364,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "129"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -17984,7 +18376,7 @@
         "outcome": "item-129",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -17995,12 +18387,12 @@
       "id": "corpse-15-107",
       "kind": "loot",
       "title": "Scaalmyr Warrior: Rift Weave",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[15].item[107]"
         },
@@ -18018,6 +18410,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "107"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -18025,7 +18422,7 @@
         "outcome": "item-107",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -18036,12 +18433,12 @@
       "id": "corpse-15-124",
       "kind": "loot",
       "title": "Scaalmyr Warrior: Glow Goo",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[15].item[124]"
         },
@@ -18059,6 +18456,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "124"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -18066,7 +18468,7 @@
         "outcome": "item-124",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -18077,12 +18479,12 @@
       "id": "corpse-16-107",
       "kind": "loot",
       "title": "Scaalmyr Geomancer: Rift Weave",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[16].item[107]"
         },
@@ -18100,6 +18502,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "107"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -18107,7 +18514,7 @@
         "outcome": "item-107",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -18118,12 +18525,12 @@
       "id": "corpse-16-124",
       "kind": "loot",
       "title": "Scaalmyr Geomancer: Glow Goo",
-      "summary": "The quantity expression clamps a zero-or-one amount draw to at least one, so this initial corpse contribution is exactly one.",
+      "summary": "The corpse is initialized with this item. Its count is drawn from zero to two and then raised to at least one, so one is the most common result.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[16].item[124]"
         },
@@ -18141,6 +18548,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "124"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -18148,7 +18560,7 @@
         "outcome": "item-124",
         "quantity": {
           "min": 1,
-          "max": 1
+          "max": 2
         },
         "weight": null,
         "probability": 1,
@@ -18246,7 +18658,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[29].item[103]"
         },
@@ -18264,6 +18676,11 @@
           "source": "items-en",
           "section": "ItemTitles",
           "key": "103"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -18271,7 +18688,7 @@
         "outcome": "item-103",
         "quantity": {
           "min": 2,
-          "max": 4
+          "max": 3
         },
         "weight": null,
         "probability": 1,
@@ -18487,12 +18904,12 @@
       "id": "corpse-4-82",
       "kind": "loot",
       "title": "Mire Serpent: Snake Meat",
-      "summary": "The handler adds four Snake Meat stacks, each with a biased four-to-eleven count. The table reports their aggregate sixteen-to-forty-four total, not one oversized uniform stack.",
+      "summary": "The handler adds four Snake Meat stacks, each with a biased four-to-eight count. The table reports their aggregate sixteen-to-thirty-two total, not one oversized uniform stack.",
       "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
           "key": "death.corpse[4].item[82]"
         },
@@ -18512,9 +18929,9 @@
           "key": "82"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances"
+          "key": "loot_amountchances[min..max]"
         }
       ],
       "details": {
@@ -18522,7 +18939,7 @@
         "outcome": "item-82",
         "quantity": {
           "min": 16,
-          "max": 44
+          "max": 32
         },
         "weight": null,
         "probability": 1,
@@ -18759,14 +19176,14 @@
       "id": "corpse-budgeted-treasure",
       "kind": "algorithm",
       "title": "Budgeted creature treasure and recovered projectiles",
-      "summary": "Raving Unwanted, Mutated Unwanted use budget-generated treasure rather than a fixed item list. Loot-bearing corpse inventories also receive the being's stored arrow entries.",
+      "summary": "Raving Unwanted, Mutated Unwanted and Survivors use budget-generated treasure rather than a fixed item list. Loot-bearing corpse inventories also receive the being's stored arrow entries.",
       "conditions": "The corpse must be generated. Stored arrows are not evidence that every fired arrow is recoverable.",
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_being_Alarm_0",
-          "key": "corpse[31]/corpse[32]/stuckArrows"
+          "key": "corpse[31]/corpse[32]/corpse[35]/stuckArrows"
         },
         {
           "source": "game-data",
@@ -18777,11 +19194,1712 @@
       "details": {
         "page": "Loot tables",
         "steps": [
-          "The two creature cases call the treasure generator with category one, a total base-value budget of one, and a minimum item value of 0.1.",
+          "The two Unwanted cases call the treasure generator with category one, a total base-value budget of one and a minimum item value of 0.1; the Survivor case uses a budget of 1.5 and a minimum of 0.2.",
           "The generator's type restrictions, nonlootable exclusions, story gates, durability handling and rejection loop still apply.",
           "After the creature-specific base inventory is built, each stored arrow entry is appended. The hit/recovery process that populated that list is a separate mechanic."
         ],
         "fact_ids": []
+      }
+    },
+    {
+      "id": "merchant-8-item-275",
+      "kind": "merchant",
+      "title": "Magus Clay: Storage Chest",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[8].item[275]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "8"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "275"
+        },
+        {
+          "source": "beings-en",
+          "section": "Eir",
+          "key": "102"
+        }
+      ],
+      "details": {
+        "merchant": "being-8",
+        "item": "item-275",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Fort Solid undercroft"
+      }
+    },
+    {
+      "id": "merchant-19-item-275",
+      "kind": "merchant",
+      "title": "Viend: Storage Chest",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[19].item[275]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "19"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "275"
+        },
+        {
+          "source": "beings-en",
+          "section": "Eir",
+          "key": "213"
+        }
+      ],
+      "details": {
+        "merchant": "being-19",
+        "item": "item-275",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Fort Solid after the late-story change of trader"
+      }
+    },
+    {
+      "id": "merchant-19-item-28",
+      "kind": "merchant",
+      "title": "Viend: Steel Hand Axe",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[19].item[28]"
+        },
+        {
+          "source": "beings-en",
+          "section": "Titles",
+          "key": "19"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "28"
+        },
+        {
+          "source": "beings-en",
+          "section": "Eir",
+          "key": "213"
+        }
+      ],
+      "details": {
+        "merchant": "being-19",
+        "item": "item-28",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Fort Solid after the late-story change of trader"
+      }
+    },
+    {
+      "id": "merchant-34-item-144",
+      "kind": "merchant",
+      "title": "Wilda: Bandage",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[144]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "144"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-144",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-32",
+      "kind": "merchant",
+      "title": "Wilda: Lesser Wound Salve",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[32]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "32"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-32",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-84",
+      "kind": "merchant",
+      "title": "Wilda: Minor Antidote",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[84]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "84"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-84",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-85",
+      "kind": "merchant",
+      "title": "Wilda: Sickness Remedy",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[85]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "85"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-85",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-45",
+      "kind": "merchant",
+      "title": "Wilda: Iron Arrow",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[45]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "45"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-45",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-174",
+      "kind": "merchant",
+      "title": "Wilda: Poison Arrow",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[174]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "174"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-174",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-219",
+      "kind": "merchant",
+      "title": "Wilda: Poison Arrow II",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[219]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "219"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-219",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-212",
+      "kind": "merchant",
+      "title": "Wilda: Improvised Enduring Torch",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[212]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "212"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-212",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-113",
+      "kind": "merchant",
+      "title": "Wilda: Cloth Repair Kit",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[113]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "113"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-113",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-115",
+      "kind": "merchant",
+      "title": "Wilda: Metal Repair Kit",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[115]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "115"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-115",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-34-item-114",
+      "kind": "merchant",
+      "title": "Wilda: Wood Repair Kit",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[34].item[114]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "34"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "114"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[34].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-34",
+        "item": "item-114",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Survivors' camp in the Savage Mirk"
+      }
+    },
+    {
+      "id": "merchant-36-item-127",
+      "kind": "merchant",
+      "title": "Grand Mother: Summoning Stone",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[127]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "127"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-127",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-266",
+      "kind": "merchant",
+      "title": "Grand Mother: Staff of The Fire Eater",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[266]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "266"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-266",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-272",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Steel Essence",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[272]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "272"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-272",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-271",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Iron Essence",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[271]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "271"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-271",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-270",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Greater Fire",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[270]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "270"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-270",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-269",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Fire",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[269]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "269"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-269",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-268",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Greater Poison",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[268]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "268"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-268",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-267",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Poison",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[267]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "267"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-267",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-274",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Storm",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[274]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "274"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-274",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-273",
+      "kind": "merchant",
+      "title": "Grand Mother: Orb of Wind",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[273]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "273"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-273",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "merchant-36-item-262",
+      "kind": "merchant",
+      "title": "Grand Mother: Magus' Shard",
+      "summary": "The trade-menu initialization lists this item for this character. A displayed offer is not evidence of a finite stock count or fixed transaction price.",
+      "conditions": "The character's trading dialogue must be available. Story gating, actual quantity and final price require further verification.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].item[262]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "262"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.NPC[36].local0-1.no-trade"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].MAINQUESTSTAGE>=30.item[262]"
+        }
+      ],
+      "details": {
+        "merchant": "being-36",
+        "item": "item-262",
+        "quantity": null,
+        "price": null,
+        "currency": null,
+        "location": "Grand Mother's hut at the Survivors' camp"
+      }
+    },
+    {
+      "id": "recipe-campfire-260",
+      "kind": "recipe",
+      "title": "Grilled Bat Meat at Campfire",
+      "summary": "Listed inputs and yield are the base recipe. Skill or station modifiers can reduce AP expenditure or ingredient consumption; this is not a claim about every effective crafting cost.",
+      "conditions": "Requires the listed ingredients and sufficient AP. The station must have an active fire; its recipe menu closes when the fire runs out.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[260].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.station[38].activeTurns/CM.item[260]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_inventory_has_reqs/nearby_containers_get_amount"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "crafting.result.craftReturn"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "260"
+        }
+      ],
+      "details": {
+        "station": "Campfire",
+        "inputs": [
+          {
+            "item": "item-259",
+            "quantity": 1
+          }
+        ],
+        "outputs": [
+          {
+            "item": "item-260",
+            "quantity": 1
+          }
+        ],
+        "cost": {
+          "amount": 2.0,
+          "unit": "base AP"
+        }
+      }
+    },
+    {
+      "id": "corpse-38-259",
+      "kind": "loot",
+      "title": "Mirkfang: Bat Meat",
+      "summary": "Always in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[38].item[259]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "38"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "259"
+        }
+      ],
+      "details": {
+        "table": "corpse-38",
+        "outcome": "item-259",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-38-258",
+      "kind": "loot",
+      "title": "Mirkfang: Bat Hide",
+      "summary": "Always in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[38].item[258]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "38"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "258"
+        }
+      ],
+      "details": {
+        "table": "corpse-38",
+        "outcome": "item-258",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-39-259",
+      "kind": "loot",
+      "title": "Giant Mirkfang: Bat Meat",
+      "summary": "Always in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[39].item[259]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "39"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "259"
+        }
+      ],
+      "details": {
+        "table": "corpse-39",
+        "outcome": "item-259",
+        "quantity": {
+          "min": 2,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-39-258",
+      "kind": "loot",
+      "title": "Giant Mirkfang: Bat Hide",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[39].item[258]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "39"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "258"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
+        }
+      ],
+      "details": {
+        "table": "corpse-39",
+        "outcome": "item-258",
+        "quantity": {
+          "min": 2,
+          "max": 3
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-37-259",
+      "kind": "loot",
+      "title": "Mirkfang Matriarch: Bat Meat",
+      "summary": "Base corpse loot, split into full stacks; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[37].item[259]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "37"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "259"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
+        }
+      ],
+      "details": {
+        "table": "corpse-37",
+        "outcome": "item-259",
+        "quantity": {
+          "min": 8,
+          "max": 12
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-37-258",
+      "kind": "loot",
+      "title": "Mirkfang Matriarch: Bat Hide",
+      "summary": "Base corpse loot, split into full stacks; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[37].item[258]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "37"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "258"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
+        }
+      ],
+      "details": {
+        "table": "corpse-37",
+        "outcome": "item-258",
+        "quantity": {
+          "min": 7,
+          "max": 10
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-40-259",
+      "kind": "loot",
+      "title": "The Terror: Bat Meat",
+      "summary": "Base corpse loot, split into full stacks; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[40].item[259]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "259"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
+        }
+      ],
+      "details": {
+        "table": "corpse-40",
+        "outcome": "item-259",
+        "quantity": {
+          "min": 8,
+          "max": 12
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-40-258",
+      "kind": "loot",
+      "title": "The Terror: Bat Hide",
+      "summary": "Base corpse loot, split into full stacks; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[40].item[258]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "258"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
+        }
+      ],
+      "details": {
+        "table": "corpse-40",
+        "outcome": "item-258",
+        "quantity": {
+          "min": 7,
+          "max": 10
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-40-261-quest",
+      "kind": "loot",
+      "title": "The Terror: Head of The Terror",
+      "summary": "Always in The Terror's corpse. Take it to Wilda to finish the Survivors' camp request.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[40].item[261]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "261"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[40].campQUESTstage=1"
+        }
+      ],
+      "details": {
+        "table": "corpse-40",
+        "outcome": "item-261",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-41-74",
+      "kind": "loot",
+      "title": "Magus Clay: Gold Coin",
+      "summary": "Base corpse loot; lower quantities are more likely.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[41].item[74]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "74"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances[min..max]"
+        }
+      ],
+      "details": {
+        "table": "corpse-41",
+        "outcome": "item-74",
+        "quantity": {
+          "min": 6,
+          "max": 10
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-41-264",
+      "kind": "loot",
+      "title": "Magus Clay: Clays' Magus Hood",
+      "summary": "Always in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[41].item[264]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "264"
+        }
+      ],
+      "details": {
+        "table": "corpse-41",
+        "outcome": "item-264",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-41-265",
+      "kind": "loot",
+      "title": "Magus Clay: Magi's Ropebelt",
+      "summary": "Always in the base corpse loot.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[41].item[265]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "stateswitch.death.alarm[0]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "265"
+        }
+      ],
+      "details": {
+        "table": "corpse-41",
+        "outcome": "item-265",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "journal-30-hidden-realm",
+      "kind": "quest",
+      "title": "Clay's hidden realm",
+      "summary": "After you report Scaal's defeat, Eir has an extra Clay? topic. She explains that magi keep hidden realms reached with a magical key. From then on Grand Mother also sells Magus' Shard; throwing the shard opens a portal into Clay's realm.",
+      "conditions": null,
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.being6.MAINQUESTSTAGE30.option116"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Eir",
+          "key": "116"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36].MAINQUESTSTAGE>=30.item[262]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_projectile_Destroy_0",
+          "key": "thrown[262].obj_eff_light.portal"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "newArea37.rm_realm_magus"
+        }
+      ],
+      "details": {
+        "quest_id": "30",
+        "stage": "Hidden realm"
+      }
+    },
+    {
+      "id": "journal-31",
+      "kind": "quest",
+      "title": "Clay defeated",
+      "summary": "Clay is dead. The journal suggests reporting to Eir at Fort Solid. Defeating him in his hidden realm sets this stage.",
+      "conditions": "Story spoilers. This summarizes the localized journal stage, not a fully verified trigger or reward.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en-0899",
+          "section": "Journal",
+          "key": "31"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[41].MAINQUESTSTAGE31/journal_update"
+        }
+      ],
+      "details": {
+        "quest_id": "31",
+        "stage": "Journal stage 31"
+      }
+    },
+    {
+      "id": "journal-32",
+      "kind": "quest",
+      "title": "Peace at Fort Solid",
+      "summary": "Speaking with Eir after Clay's death closes his story: she is at peace, and so is the protagonist.",
+      "conditions": "Story spoilers. This summarizes the localized journal stage, not a fully verified trigger or reward.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en-0899",
+          "section": "Journal",
+          "key": "32"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.being6.MAINQUESTSTAGE31.local4->216/MAINQUESTSTAGE32"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Eir",
+          "key": "216"
+        }
+      ],
+      "details": {
+        "quest_id": "32",
+        "stage": "Journal stage 32"
+      }
+    },
+    {
+      "id": "camp-1-trust",
+      "kind": "quest",
+      "title": "Survivors' camp: earning Wilda's trust",
+      "summary": "Choose Trust when talking to Wilda at the Survivors' camp. She asks you to kill The Terror, an unusually dangerous Mirkfang Matriarch that hunts the camp's Savage Mirk area at night, and bring back its head.",
+      "conditions": "Side quest without journal entries. The Terror can only appear after Wilda has made this request.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.being34.option115/action200"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.being34.local200.campQUESTstage0"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Wilda",
+          "key": "200"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "areaType5.dark.campQUESTstage0.terrorWeight"
+        }
+      ],
+      "details": {
+        "quest_id": "Camp",
+        "stage": "Request"
+      }
+    },
+    {
+      "id": "camp-2-access",
+      "kind": "quest",
+      "title": "Survivors' camp: Grand Mother's blessing",
+      "summary": "Talk to Wilda while carrying the Head of The Terror. She takes it, unlocks the ladder to Grand Mother's hut and agrees to answer a Summoning Stone. Grand Mother's first greeting grants one skill point, and she then trades magic items.",
+      "conditions": "Side quest without journal entries.",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.being34.item261.local201/local202.transPoint36.campQUESTstage2"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.being36.local1.skillPoints++"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.item127.tempBeings.campQUESTstage>=2.being34"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Wilda",
+          "key": "202"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Mother",
+          "key": "1"
+        }
+      ],
+      "details": {
+        "quest_id": "Camp",
+        "stage": "Access granted"
       }
     }
   ]

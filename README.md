@@ -9,30 +9,41 @@ The initial curated snapshot contains 336 name records and 79 numeric facts
 supported by five source-file fingerprints. Names establish source associations,
 not availability or combat behavior. The 28 localization-described mechanics have
 not been runtime-verified; the other 51 facts are qualified initializer
-observations. The operator confirmed the installed build as **0.8.1.5**,
-corroborating the inspected menu label. The claim that this is the latest patch
-is operator-reported, not an independent release-feed check.
+observations. The operator first confirmed build **0.8.1.5**, corroborating
+the inspected menu label.
 
-The expanded reference retains that baseline and now contains **107 numeric facts
-and 293 structured entries**: 31 quest/journal notes, 63 merchant offers,
-96 station-specific recipe variants, 70 conditional loot entries, and 33
-original algorithm/skill summaries. The encyclopedia presentation generates
-388 main-namespace pages: 331 individual item, being, nature, skill, and damage-type pages,
-plus workstation articles, topic guides/indexes and compatibility redirects.
-Another 100 ordinary MediaWiki category pages support hierarchical browsing;
-the retired Miscellaneous items category redirects to Items.
-Only `game.build` changed in the original dataset; all source
-fingerprints, entities, facts, and research entries remain unchanged.
+The wiki now documents **0.8.9.9**, a test build the operator installed from
+the Steam beta branch `next_version_tester` on 2026-10-13, before its official
+release. Its menu label matches. Four changed files (`data.win`, `Items.ini`,
+`Bestiary.ini` and `UI.ini`) have new source fingerprints alongside the
+0.8.1.5 ones; `Nature.ini` is unchanged. The update adds 24 entities
+(17 items, six beings and the Leeching damage type), renames Unwanted Guard
+to Survivor and Fire Striker to Fire Bond, and adds 43 entries: 25 merchant
+offers, one recipe, 12 corpse-loot entries and five quest notes. Changed
+values cite the 0.8.9.9 fingerprints; unchanged records keep their 0.8.1.5
+citations. Pages show 0.8.9.9 values. The public **Version 0.8.9.9** changelog
+lists the new content and every documented value that changed, with its 0.8.1.5
+and 0.8.9.9 values; each page it links gets a "New in" or "Changed in" link
+back. [Provenance](docs/PROVENANCE.md#version-0899-update) records the amendments.
 
-Supplemental source-scoped profiles preserve **2,559 scalar values**
-in 475 profiles across 297 entities: 245 items, 36 beings, and 16 nature records.
-Their 49 shared property definitions distinguish literal initializer values,
+The reference now contains **107 numeric facts and 336 structured entries**:
+36 quest/journal notes, 88 merchant offers, 97 station-specific recipe
+variants, 82 conditional loot entries, and 33 original algorithm/skill
+summaries. The encyclopedia presentation generates 420 main-namespace pages:
+355 individual item, being, nature, skill, and damage-type pages, plus
+workstation articles, topic guides/indexes, the version page and compatibility
+redirects. Another 104 ordinary MediaWiki category pages support hierarchical
+browsing; the retired Miscellaneous items category redirects to Items.
+
+Supplemental source-scoped profiles preserve **2,887 scalar values**
+in 585 profiles across 320 entities: 262 items, 42 beings, and 16 nature records.
+Their 53 shared property definitions distinguish literal initializer values,
 computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
 have localized names but no reviewed initializer profile; no stats are invented
-for them. The original 372 profiles are unchanged; 103 additions document
-equipment AP costs separately from attack/use costs.
+for them. Equipment AP costs are documented separately from attack/use costs,
+and 48 range profiles record each weapon's literal reach in tiles.
 
-The 118 curated grids preserve 36 base health shapes and 82 attack patterns,
+The 139 curated grids preserve 42 base health shapes and 97 attack patterns,
 including holes, orientation, armor layers, and occupied zero-to-one cells.
 Native `{{Health grid|...}}` and `{{Attack grid|...}}` templates render accessible
 tables with coordinate/value hover titles. They reference three separately approved shield
@@ -72,7 +83,8 @@ preserved the other 322 selections. All 326 prior records remain unchanged when
 the three NPC exteriors are added. Older tree
 File pages and bytes remain live history, not overwritten artwork. Other nature
 pictures retain their explicit ground-tile or branch qualifications. Image bytes
-stay in separately approved server storage.
+stay in separately approved server storage. The 0.8.9.9 items and beings have no
+reviewed artwork yet; their pages and lists show linked names only.
 
 Viend's Healing section explains his automatic wound healing, target priority,
 range, AP cost and idle-turn frequency, with the game's shared health-plus
@@ -84,7 +96,9 @@ guides explain the survival meters, threshold effects, recovery, weather
 exposure, and combat-healing distinction. They reuse approved item pictures in
 context, not invented stat icons. Meter-specific rates stay on meter pages,
 combined effects on Wellbeing, bed recovery and natural healing on Resting,
-and ten reviewed consumption effects on their item owners.
+and ten reviewed consumption effects on their item owners. Magic weapons,
+new equipment, Storage Chest, Magus' Shard, Head of The Terror and Summoning Stone
+describe their effects the same way.
 
 Gameplay pages use compact tables and ordinary names. Source records, confidence
 and citations stay in repository data and the local `wiki_render.audit_report()`,
@@ -95,7 +109,7 @@ so sync replaces their old contents without deleting history. See the
 Each detail has **one editable wiki owner**:
 recipes on output items, offers on merchants, quest prose in the journal, and
 workstation behavior on its own page. Identical recipes across stations share
-one row; 96 original variants form 77 condition-preserving recipe groups.
+one row; 97 variants form 78 condition-preserving recipe groups.
 Workstations show the complete applicable recipe rows by selective transclusion
 from their output-item owners; editing ingredients or AP there updates every
 station view. A separately evidenced Finish Raft action adds an in-place
@@ -118,9 +132,11 @@ Ranger Bhato, Gurb-Gurb and Ihar have location/access sections with their review
 hut, hollow and shipwreck exteriors. Bhato's directions link to Captain Eir;
 Gurb-Gurb's one-time smoke cue and Ihar's conditional shoreline placement retain
 their source qualifications. These are supplementary native sprites, not
-screenshots or replacements for dialogue portraits.
+screenshots or replacements for dialogue portraits. Wilda, the Survivors and
+Grand Mother have text-only location sections for the Survivors' camp, which
+also has its own guide.
 
-Seven characters have original Information, Advice, trade-tip and quest-briefing
+Nine characters have original Information, Advice, trade-tip and quest-briefing
 summaries, with the actual menu labels kept distinct. Linked mechanics and journal
 objectives explain the practical consequences; story-sensitive guidance is
 collapsed. Eir owns Fort Solid's turn-end curfew hours, escort behavior and separate
@@ -131,8 +147,9 @@ The **World generation** guide separates
 the initial biome/landmark-zone map from terrain generated on entry. It documents
 Fort Solid's edge columns, Scaal's reflected lair zone, the Library's distance
 constraints and guaranteed fen biomes. Bhato's Common Bog can be north or south
-of the fort. Gurb-Gurb and Ihar have entry-triggered placement checks, including
-revisits and save loads; Ihar's failed shoreline searches can retry. The active
+of the fort. Gurb-Gurb, Ihar and the 0.8.9.9 Survivors' camp have entry-triggered
+placement checks, including revisits and save loads; Ihar's failed shoreline
+searches can retry, and the camp is built in the first Savage Mirk entered. The active
 generators do not use the internal seed draw or the unused reseeding helpers,
 so the guide does not imply a reusable world seed. The main page and mechanics,
 NPC and merchant indexes link to the guide; its finding-NPCs section leads to
@@ -140,20 +157,20 @@ the character-owned search instructions and exterior images. **World seed logic*
 redirects to the new title, retaining historical fact and entry anchors at the
 destination. Supplemental citations retain the original research records unchanged.
 
-Twenty-one source pages own 130 additional acquisition rows, covering starting
+Twenty-two source pages own 130 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree
-harvesting, insects, story rewards, and mapmaking. All 27 historical world-loot
+harvesting, insects, story rewards, Survivor corpses and mapmaking. All 27 historical world-loot
 records move to named owners without changing their evidence or losing old
-anchors. Random treasure owns ten source-specific pools with 538 verified
+anchors. Random treasure owns eleven source-specific pools with 610 verified
 eligibility memberships, not invented per-item probabilities. Shared interruption
 and story gates remain visible in filtered item views. Pools show alphabetical
 item/category lists beneath their budget rules, not repeated unknown quantity
 and probability cells. Item readers get short named-source references after
-their recipes, sellers and specific acquisition records. All 247 item pages have
-documented methods or explicit notes: 243 cover acquisition, built-in equipment,
-or construction actions; four explain the limits of the available evidence.
+their recipes, sellers and specific acquisition records. All 264 item pages have
+documented methods or explicit notes: 261 cover acquisition, built-in equipment,
+or construction actions; three explain the limits of the available evidence.
 
-Forty-two verified standard unit prices cover all 63 offers. Each offered
+Fifty-eight verified standard unit prices cover all 88 offers. Each offered
 item owns one `<onlyinclude>` price value, and
 merchant tables transclude it rather than copying prices.
 The Currency and trading guide likewise transcludes coin-owned denomination,
@@ -176,7 +193,7 @@ entries or facts; schema support is not a claim that a subsystem is fully docume
 Reviewed death-handler cases document base creature loot, and lit campfire/
 field-kit menus are traced. Some procedural quantities, final item-specific
 treasure probabilities and some merchant locations
-remain explicitly limited or unverified. Eligibility is exhaustive for the ten
+remain explicitly limited or unverified. Eligibility is exhaustive for the eleven
 documented pools, not a measurement of each item's final drop rate.
 
 ## Contents
@@ -240,8 +257,8 @@ skill tree.
 The Clothes section in Items and its category expose Headwear, Shirts,
 Outerwear, Cloaks, Gloves, Pants, Socks and Footwear, derived from those same
 reviewed slots without moving an item's primary group. Recipe-ingredient
-acquisition browsing joins the 53 actual inputs to existing source owners:
-12 creature-drop ingredients, 36 gatherables, one purchased ingredient
+acquisition browsing joins the 54 actual inputs to existing source owners:
+13 creature-drop ingredients, 36 gatherables, one purchased ingredient
 (Iron Arrow), four crafted ingredients, and Flint's additional starting grant.
 These method groups can overlap. Random eligibility alone does not qualify a
 creature drop, gatherable or purchase; material-family browsing remains intact.

@@ -37,8 +37,10 @@ class OverworldSpriteTests(unittest.TestCase):
     def test_every_portrait_npc_with_a_world_sprite_also_shows_it(self):
         self.assertEqual(set(self.sprites), set(OVERWORLD_SPRITES))
         npcs = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "npc"}
-        portraits = {identity for identity in npcs
-                     if "portrait" in image_for(identity, self.data["illustrations"])["caption"]}
+        images = {identity: image_for(identity, self.data["illustrations"]) for identity in npcs}
+        # Grand Mother (0.8.9.9) has no reviewed art yet and keeps a name-only display.
+        self.assertEqual({identity for identity, image in images.items() if image is None}, {"being-36"})
+        portraits = {identity for identity, image in images.items() if image and "portrait" in image["caption"]}
         # Dead Unwanted's beingDB entry uses spr_blank, so it has no overworld sprite to show.
         self.assertEqual(portraits - set(self.sprites), {"being-9"})
         for identity, (sprite, (width, height, scale)) in OVERWORLD_SPRITES.items():

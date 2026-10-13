@@ -15,7 +15,7 @@ from wiki_acquisition import validate_acquisition
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
-MAX_CATALOG_BYTES = 256 * 1024
+MAX_CATALOG_BYTES = 352 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS, "NPCs", "Source provenance", "Loot mechanics"}
 CURRENCY_RULE_TITLES = {
     "coin-denominations": "Denominations",
@@ -107,7 +107,8 @@ def default_catalog(data):
         for entity in sorted(entities, key=lambda row: row["id"]):
             title = name
             if len(entities) > 1 or title in RESERVED_TITLES:
-                title += f' ({entity["category"]})'
+                shared = sum(row["category"] == entity["category"] for row in entities) > 1
+                title += f' ({entity["id"] if shared else entity["category"]})'
             if re.search(r"[\[\]{}|<>#:/\\]", title):
                 title = f'Entity {entity["id"]}'
             pages.append({"entity": entity["id"], "title": title, "aliases": []})

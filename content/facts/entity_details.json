@@ -312,6 +312,12 @@
       "label": "Storage grid rows",
       "unit": "cells",
       "description": "Rows in the item's own storage grid; storage from multiple equipped items is not one merged rectangle."
+    },
+    {
+      "id": "tile-range",
+      "label": "Attack range",
+      "unit": "tiles",
+      "description": "Literal weapon reach from the item definition, measured in tiles."
     }
   ],
   "profiles": [
@@ -2425,7 +2431,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[66].weight/price/stackLimit/durabilityMax/apCost/hungerGain/sicknessRisk"
         },
@@ -2440,7 +2446,7 @@
         "initial-price": 0.08,
         "stack-limit": 5,
         "durability-max": 1,
-        "item-ap-cost": 2,
+        "item-ap-cost": 2.2,
         "satiation-gain": 0.3,
         "sickness-risk": 0.15
       }
@@ -2509,7 +2515,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[69].weight/price/stackLimit/durabilityMax/apCost/hungerGain/sicknessRisk"
         },
@@ -2524,7 +2530,7 @@
         "initial-price": 0.01,
         "stack-limit": 5,
         "durability-max": 1,
-        "item-ap-cost": 2,
+        "item-ap-cost": 3,
         "satiation-gain": 0.15,
         "sickness-risk": 0.33
       }
@@ -2817,7 +2823,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[82].weight/price/stackLimit/durabilityMax/apCost/hungerGain/sicknessRisk"
         },
@@ -2832,7 +2838,7 @@
         "initial-price": 0.1,
         "stack-limit": 10,
         "durability-max": 1,
-        "item-ap-cost": 1.6,
+        "item-ap-cost": 2,
         "satiation-gain": 0.2,
         "sickness-risk": 0.15
       }
@@ -2977,7 +2983,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[88].weight/price/stackLimit/durabilityMax/apCost/craftCost/craftReturn/hungerGain/sicknessRisk"
         },
@@ -2992,7 +2998,7 @@
         "initial-price": 0.07,
         "stack-limit": 8,
         "durability-max": 1,
-        "item-ap-cost": 1,
+        "item-ap-cost": 1.2,
         "craft-ap-cost": 0.6,
         "craft-yield": 1,
         "satiation-gain": 0.15,
@@ -3428,7 +3434,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[103].weight/price/stackLimit/durabilityMax/apCost/hungerGain/sicknessRisk"
         },
@@ -3443,7 +3449,7 @@
         "initial-price": 0.05,
         "stack-limit": 3,
         "durability-max": 1,
-        "item-ap-cost": 2,
+        "item-ap-cost": 3,
         "satiation-gain": 0.25,
         "sickness-risk": 0.5
       }
@@ -4929,7 +4935,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[163].weight/price/stackLimit/durabilityMax/apCost/craftCost/craftReturn/hungerGain/sicknessRisk"
         },
@@ -4944,7 +4950,7 @@
         "initial-price": 0.35,
         "stack-limit": 3,
         "durability-max": 1,
-        "item-ap-cost": 3,
+        "item-ap-cost": 2.6,
         "craft-ap-cost": 2,
         "craft-yield": 1,
         "satiation-gain": 0.35,
@@ -5754,7 +5760,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[188].attackPattern/rangedAttackPattern;postprocessing.damage"
         },
@@ -5765,8 +5771,8 @@
         }
       ],
       "values": {
-        "melee-pattern-min": 16,
-        "melee-pattern-max": 23
+        "melee-pattern-min": 14,
+        "melee-pattern-max": 21
       }
     },
     {
@@ -5805,7 +5811,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[189].attackPattern/rangedAttackPattern;postprocessing.damage"
         },
@@ -5816,7 +5822,7 @@
         }
       ],
       "values": {
-        "melee-pattern-min": 24,
+        "melee-pattern-min": 22,
         "melee-pattern-max": 27
       }
     },
@@ -9784,17 +9790,17 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[34].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/rangedAttackCost/dodgeChance/damageClass"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[34].rangedDamageClass/hpgridsize"
         },
         {
-          "source": "beings-en",
+          "source": "beings-en-0899",
           "section": "Titles",
           "key": "34"
         }
@@ -9803,7 +9809,7 @@
         "base-xp": 200,
         "being-armor": 0,
         "tile-speed": 6,
-        "idle-move-chance": 0.08,
+        "idle-move-chance": 0.06,
         "base-speed": 1,
         "awareness-distance": 14,
         "awareness-chance": 0.85,
@@ -9850,12 +9856,12 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[35].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
         },
         {
-          "source": "beings-en",
+          "source": "beings-en-0899",
           "section": "Titles",
           "key": "35"
         }
@@ -9864,7 +9870,7 @@
         "base-xp": 150,
         "being-armor": 0,
         "tile-speed": 6,
-        "idle-move-chance": 0.08,
+        "idle-move-chance": 0.04,
         "base-speed": 1,
         "awareness-distance": 12,
         "awareness-chance": 0.85,
@@ -9890,7 +9896,7 @@
           "key": "beingDB[35].attackPattern/rangedAttackPattern;postprocessing.damage"
         },
         {
-          "source": "beings-en",
+          "source": "beings-en-0899",
           "section": "Titles",
           "key": "35"
         }
@@ -13221,6 +13227,2295 @@
         "inventory-slots-added": 6,
         "storage-grid-width": 3,
         "storage-grid-height": 2
+      }
+    },
+    {
+      "id": "item-258-initializer",
+      "entity": "item-258",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[258].weight/price/stackLimit/durabilityMax/burnTime"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "258"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.25,
+        "initial-price": 0.4,
+        "stack-limit": 8,
+        "durability-max": 50,
+        "burn-time": 2.4
+      }
+    },
+    {
+      "id": "item-259-initializer",
+      "entity": "item-259",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[259].weight/price/stackLimit/durabilityMax/apCost/hungerGain/sicknessRisk"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "259"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.25,
+        "initial-price": 0.02,
+        "stack-limit": 4,
+        "durability-max": 1,
+        "item-ap-cost": 3,
+        "satiation-gain": 0.25,
+        "sickness-risk": 0.95
+      }
+    },
+    {
+      "id": "item-260-initializer",
+      "entity": "item-260",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[260].weight/price/stackLimit/durabilityMax/apCost/hungerGain/sicknessRisk/craftCost/craftReturn"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "260"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.25,
+        "initial-price": 0.04,
+        "stack-limit": 4,
+        "durability-max": 1,
+        "item-ap-cost": 2,
+        "satiation-gain": 0.25,
+        "sickness-risk": 0.35,
+        "craft-ap-cost": 2,
+        "craft-yield": 1
+      }
+    },
+    {
+      "id": "item-261-initializer",
+      "entity": "item-261",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[261].weight/price/stackLimit/durabilityMax/NONLOOTABLE"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "261"
+        }
+      ],
+      "values": {
+        "initial-weight": 4.5,
+        "initial-price": 0,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "random-treasure-exclusion": true
+      }
+    },
+    {
+      "id": "item-262-initializer",
+      "entity": "item-262",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[262].weight/price/stackLimit/durabilityMax/apCost/NONLOOTABLE"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "262"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.35,
+        "initial-price": 50,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 2,
+        "random-treasure-exclusion": true
+      }
+    },
+    {
+      "id": "item-264-initializer",
+      "entity": "item-264",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[264].weight/price/stackLimit/durabilityMax/armor/waterproof/burnTime/insulation/NONLOOTABLE"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "264"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.6,
+        "initial-price": 80,
+        "stack-limit": 1,
+        "durability-max": 100,
+        "item-armor": 1,
+        "waterproof": 0.85,
+        "burn-time": 20,
+        "insulation": 0.5,
+        "random-treasure-exclusion": true
+      }
+    },
+    {
+      "id": "item-264-equip-cost",
+      "entity": "item-264",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[264].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-265-initializer",
+      "entity": "item-265",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[265].weight/price/stackLimit/durabilityMax/waterproof"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "265"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.25,
+        "initial-price": 45,
+        "stack-limit": 1,
+        "durability-max": 45,
+        "waterproof": 0.35
+      }
+    },
+    {
+      "id": "item-265-equip-cost",
+      "entity": "item-265",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[265].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x16",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 0.8
+      }
+    },
+    {
+      "id": "item-266-initializer",
+      "entity": "item-266",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[266].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "266"
+        }
+      ],
+      "values": {
+        "initial-weight": 1,
+        "initial-price": 22.5,
+        "stack-limit": 1,
+        "durability-max": 135,
+        "item-ap-cost": 5,
+        "damage-class-id": 18
+      }
+    },
+    {
+      "id": "item-266-attack-pattern-totals",
+      "entity": "item-266",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[266].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "266"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 24,
+        "melee-pattern-max": 30
+      }
+    },
+    {
+      "id": "item-266-equip-cost",
+      "entity": "item-266",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[266].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items16x64",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-267-initializer",
+      "entity": "item-267",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[267].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "267"
+        }
+      ],
+      "values": {
+        "initial-weight": 1,
+        "initial-price": 10,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 4,
+        "damage-class-id": 2
+      }
+    },
+    {
+      "id": "item-267-attack-pattern-totals",
+      "entity": "item-267",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[267].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "267"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 4,
+        "melee-pattern-max": 12
+      }
+    },
+    {
+      "id": "item-267-equip-cost",
+      "entity": "item-267",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[267].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-268-initializer",
+      "entity": "item-268",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[268].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "268"
+        }
+      ],
+      "values": {
+        "initial-weight": 1,
+        "initial-price": 32.5,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 4,
+        "damage-class-id": 2
+      }
+    },
+    {
+      "id": "item-268-attack-pattern-totals",
+      "entity": "item-268",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[268].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "268"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 12,
+        "melee-pattern-max": 28
+      }
+    },
+    {
+      "id": "item-268-equip-cost",
+      "entity": "item-268",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[268].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-269-initializer",
+      "entity": "item-269",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[269].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "269"
+        }
+      ],
+      "values": {
+        "initial-weight": 1,
+        "initial-price": 10,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 4,
+        "damage-class-id": 18
+      }
+    },
+    {
+      "id": "item-269-attack-pattern-totals",
+      "entity": "item-269",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[269].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "269"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 6,
+        "melee-pattern-max": 11
+      }
+    },
+    {
+      "id": "item-269-equip-cost",
+      "entity": "item-269",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[269].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-270-initializer",
+      "entity": "item-270",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[270].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "270"
+        }
+      ],
+      "values": {
+        "initial-weight": 1,
+        "initial-price": 30,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 4,
+        "damage-class-id": 18
+      }
+    },
+    {
+      "id": "item-270-attack-pattern-totals",
+      "entity": "item-270",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[270].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "270"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 19,
+        "melee-pattern-max": 27
+      }
+    },
+    {
+      "id": "item-270-equip-cost",
+      "entity": "item-270",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[270].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-271-initializer",
+      "entity": "item-271",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[271].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "271"
+        }
+      ],
+      "values": {
+        "initial-weight": 1.5,
+        "initial-price": 10,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 4,
+        "damage-class-id": 15
+      }
+    },
+    {
+      "id": "item-271-attack-pattern-totals",
+      "entity": "item-271",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[271].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "271"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 6,
+        "melee-pattern-max": 11
+      }
+    },
+    {
+      "id": "item-271-equip-cost",
+      "entity": "item-271",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[271].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-272-initializer",
+      "entity": "item-272",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[272].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "272"
+        }
+      ],
+      "values": {
+        "initial-weight": 1.5,
+        "initial-price": 20,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 4,
+        "damage-class-id": 15
+      }
+    },
+    {
+      "id": "item-272-attack-pattern-totals",
+      "entity": "item-272",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[272].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "272"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 12,
+        "melee-pattern-max": 17
+      }
+    },
+    {
+      "id": "item-272-equip-cost",
+      "entity": "item-272",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[272].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-273-initializer",
+      "entity": "item-273",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[273].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "273"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.8,
+        "initial-price": 8,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 2,
+        "damage-class-id": 24
+      }
+    },
+    {
+      "id": "item-273-attack-pattern-totals",
+      "entity": "item-273",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[273].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "273"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 1,
+        "melee-pattern-max": 1
+      }
+    },
+    {
+      "id": "item-273-equip-cost",
+      "entity": "item-273",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[273].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-274-initializer",
+      "entity": "item-274",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[274].weight/price/stackLimit/durabilityMax/apCost/damageClass"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "274"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.8,
+        "initial-price": 25,
+        "stack-limit": 1,
+        "durability-max": 1,
+        "item-ap-cost": 2,
+        "damage-class-id": 16
+      }
+    },
+    {
+      "id": "item-274-attack-pattern-totals",
+      "entity": "item-274",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[274].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "274"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 2,
+        "melee-pattern-max": 2
+      }
+    },
+    {
+      "id": "item-274-equip-cost",
+      "entity": "item-274",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[274].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "spr_ui_items32x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 1.6
+      }
+    },
+    {
+      "id": "item-275-initializer",
+      "entity": "item-275",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[275].weight/price/stackLimit/apCost/NONLOOTABLE"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "275"
+        }
+      ],
+      "values": {
+        "initial-weight": 8,
+        "initial-price": 15,
+        "stack-limit": 1,
+        "item-ap-cost": 1.2,
+        "random-treasure-exclusion": true
+      }
+    },
+    {
+      "id": "item-264-capacity",
+      "entity": "item-264",
+      "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(264).subParts/inventory.grid/item_pickup.equipped-items"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemTitles",
+          "key": "264"
+        }
+      ],
+      "values": {
+        "inventory-slots-added": 9,
+        "storage-grid-width": 3,
+        "storage-grid-height": 3
+      }
+    },
+    {
+      "id": "item-2-range",
+      "entity": "item-2",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[2].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-3-range",
+      "entity": "item-3",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[3].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-4-range",
+      "entity": "item-4",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[4].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-5-range",
+      "entity": "item-5",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[5].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-6-range",
+      "entity": "item-6",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[6].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-7-range",
+      "entity": "item-7",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[7].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-8-range",
+      "entity": "item-8",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[8].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-9-range",
+      "entity": "item-9",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[9].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-10-range",
+      "entity": "item-10",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[10].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-11-range",
+      "entity": "item-11",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[11].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-27-range",
+      "entity": "item-27",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[27].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-28-range",
+      "entity": "item-28",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[28].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-29-range",
+      "entity": "item-29",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[29].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-30-range",
+      "entity": "item-30",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[30].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-31-range",
+      "entity": "item-31",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[31].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-41-range",
+      "entity": "item-41",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[41].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-44-range",
+      "entity": "item-44",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[44].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 10
+      }
+    },
+    {
+      "id": "item-90-range",
+      "entity": "item-90",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[90].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-93-range",
+      "entity": "item-93",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[93].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 8
+      }
+    },
+    {
+      "id": "item-96-range",
+      "entity": "item-96",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[96].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-105-range",
+      "entity": "item-105",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[105].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 16
+      }
+    },
+    {
+      "id": "item-106-range",
+      "entity": "item-106",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[106].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 18
+      }
+    },
+    {
+      "id": "item-157-range",
+      "entity": "item-157",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[157].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-158-range",
+      "entity": "item-158",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[158].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-159-range",
+      "entity": "item-159",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[159].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-160-range",
+      "entity": "item-160",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[160].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-161-range",
+      "entity": "item-161",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[161].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-169-range",
+      "entity": "item-169",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[169].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-179-range",
+      "entity": "item-179",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[179].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 12
+      }
+    },
+    {
+      "id": "item-184-range",
+      "entity": "item-184",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[184].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-185-range",
+      "entity": "item-185",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[185].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-186-range",
+      "entity": "item-186",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[186].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-187-range",
+      "entity": "item-187",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[187].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-188-range",
+      "entity": "item-188",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[188].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-189-range",
+      "entity": "item-189",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[189].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-190-range",
+      "entity": "item-190",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[190].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-191-range",
+      "entity": "item-191",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[191].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-206-range",
+      "entity": "item-206",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[206].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-212-range",
+      "entity": "item-212",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[212].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
+      }
+    },
+    {
+      "id": "item-266-range",
+      "entity": "item-266",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[266].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 2.5
+      }
+    },
+    {
+      "id": "item-267-range",
+      "entity": "item-267",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[267].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 10
+      }
+    },
+    {
+      "id": "item-268-range",
+      "entity": "item-268",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[268].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 13
+      }
+    },
+    {
+      "id": "item-269-range",
+      "entity": "item-269",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[269].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 10
+      }
+    },
+    {
+      "id": "item-270-range",
+      "entity": "item-270",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[270].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 13
+      }
+    },
+    {
+      "id": "item-271-range",
+      "entity": "item-271",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[271].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 8
+      }
+    },
+    {
+      "id": "item-272-range",
+      "entity": "item-272",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[272].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 10
+      }
+    },
+    {
+      "id": "item-273-range",
+      "entity": "item-273",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[273].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 12
+      }
+    },
+    {
+      "id": "item-274-range",
+      "entity": "item-274",
+      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[274].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 16
+      }
+    },
+    {
+      "id": "being-36-initializer",
+      "entity": "being-36",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[36].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        }
+      ],
+      "values": {
+        "base-xp": 500,
+        "being-armor": 0,
+        "tile-speed": 6,
+        "idle-move-chance": 0,
+        "base-speed": 1,
+        "awareness-distance": 7,
+        "awareness-chance": 0,
+        "maximum-ap": 10,
+        "melee-ap-cost": 6,
+        "melee-distance": 2.25,
+        "ranged-distance": 0,
+        "dodge-chance": 0,
+        "damage-class-id": 15,
+        "hp-grid-width": 5,
+        "hp-grid-height": 4
+      }
+    },
+    {
+      "id": "being-37-initializer",
+      "entity": "being-37",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[37].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "37"
+        }
+      ],
+      "values": {
+        "base-xp": 300,
+        "being-armor": 0,
+        "tile-speed": 10,
+        "idle-move-chance": 0.55,
+        "base-speed": 1.2,
+        "awareness-distance": 10,
+        "awareness-chance": 0.55,
+        "maximum-ap": 10,
+        "melee-ap-cost": 5,
+        "melee-distance": 1.5,
+        "ranged-distance": -1,
+        "dodge-chance": 0.3,
+        "damage-class-id": 27,
+        "hp-grid-width": 9,
+        "hp-grid-height": 5
+      }
+    },
+    {
+      "id": "being-37-attack-pattern-totals",
+      "entity": "being-37",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[37].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "37"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 6,
+        "melee-pattern-max": 10
+      }
+    },
+    {
+      "id": "being-38-initializer",
+      "entity": "being-38",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[38].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "38"
+        }
+      ],
+      "values": {
+        "base-xp": 25,
+        "being-armor": 0,
+        "tile-speed": 8,
+        "idle-move-chance": 0.35,
+        "base-speed": 2.5,
+        "awareness-distance": 10,
+        "awareness-chance": 0.5,
+        "maximum-ap": 10,
+        "melee-ap-cost": 6,
+        "melee-distance": 1.5,
+        "ranged-distance": -1,
+        "dodge-chance": 0.4,
+        "damage-class-id": 27,
+        "hp-grid-width": 3,
+        "hp-grid-height": 3
+      }
+    },
+    {
+      "id": "being-38-attack-pattern-totals",
+      "entity": "being-38",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[38].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "38"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 0,
+        "melee-pattern-max": 2
+      }
+    },
+    {
+      "id": "being-39-initializer",
+      "entity": "being-39",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[39].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "39"
+        }
+      ],
+      "values": {
+        "base-xp": 50,
+        "being-armor": 0,
+        "tile-speed": 8,
+        "idle-move-chance": 0.35,
+        "base-speed": 2.5,
+        "awareness-distance": 10,
+        "awareness-chance": 0.5,
+        "maximum-ap": 10,
+        "melee-ap-cost": 6,
+        "melee-distance": 1.5,
+        "ranged-distance": -1,
+        "dodge-chance": 0.35,
+        "damage-class-id": 27,
+        "hp-grid-width": 5,
+        "hp-grid-height": 4
+      }
+    },
+    {
+      "id": "being-39-attack-pattern-totals",
+      "entity": "being-39",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[39].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "39"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 2,
+        "melee-pattern-max": 4
+      }
+    },
+    {
+      "id": "being-40-initializer",
+      "entity": "being-40",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[40].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        }
+      ],
+      "values": {
+        "base-xp": 500,
+        "being-armor": 0,
+        "tile-speed": 9,
+        "idle-move-chance": 0.5,
+        "base-speed": 1.2,
+        "awareness-distance": 9,
+        "awareness-chance": 0.75,
+        "maximum-ap": 10,
+        "melee-ap-cost": 5,
+        "melee-distance": 1.5,
+        "ranged-distance": -1,
+        "dodge-chance": 0.25,
+        "damage-class-id": 27,
+        "hp-grid-width": 9,
+        "hp-grid-height": 5
+      }
+    },
+    {
+      "id": "being-40-attack-pattern-totals",
+      "entity": "being-40",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[40].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 6,
+        "melee-pattern-max": 10
+      }
+    },
+    {
+      "id": "being-41-initializer",
+      "entity": "being-41",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/rangedAttackCost/dodgeChance/damageClass"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].rangedDamageClass/hpgridsize"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        }
+      ],
+      "values": {
+        "base-xp": 750,
+        "being-armor": 0,
+        "tile-speed": 6,
+        "idle-move-chance": 0.5,
+        "base-speed": 1,
+        "awareness-distance": 10,
+        "awareness-chance": 1,
+        "maximum-ap": 10,
+        "melee-ap-cost": 5,
+        "melee-distance": 1.5,
+        "ranged-distance": 16,
+        "ranged-ap-cost": 5,
+        "dodge-chance": 0.25,
+        "damage-class-id": 18,
+        "ranged-damage-class-id": 18,
+        "hp-grid-width": 7,
+        "hp-grid-height": 7
+      }
+    },
+    {
+      "id": "being-41-attack-pattern-totals",
+      "entity": "being-41",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 6,
+        "melee-pattern-max": 8,
+        "ranged-pattern-min": 15,
+        "ranged-pattern-max": 15
       }
     }
   ],
@@ -19425,8 +21720,8 @@
             "max": 2
           },
           {
-            "min": 1,
-            "max": 2
+            "min": 0,
+            "max": 1
           },
           null,
           null
@@ -19441,8 +21736,8 @@
             "max": 2
           },
           {
-            "min": 1,
-            "max": 2
+            "min": 0,
+            "max": 1
           },
           null
         ],
@@ -19469,7 +21764,7 @@
       "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[188].attackPattern"
         },
@@ -19505,7 +21800,7 @@
             "max": 3
           },
           {
-            "min": 2,
+            "min": 1,
             "max": 2
           },
           null,
@@ -19521,7 +21816,7 @@
             "max": 3
           },
           {
-            "min": 2,
+            "min": 1,
             "max": 2
           },
           null
@@ -19549,7 +21844,7 @@
       "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[189].attackPattern"
         },
@@ -20488,6 +22783,1689 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_gui_general",
           "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-266-melee",
+      "entity": "item-266",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 3,
+            "max": 3
+          },
+          {
+            "min": 3,
+            "max": 3
+          }
+        ],
+        [
+          {
+            "min": 3,
+            "max": 3
+          },
+          {
+            "min": 3,
+            "max": 3
+          }
+        ],
+        [
+          {
+            "min": 2,
+            "max": 3
+          },
+          {
+            "min": 2,
+            "max": 3
+          }
+        ],
+        [
+          {
+            "min": 2,
+            "max": 3
+          },
+          {
+            "min": 2,
+            "max": 3
+          }
+        ],
+        [
+          {
+            "min": 2,
+            "max": 3
+          },
+          {
+            "min": 2,
+            "max": 3
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[266].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-267-melee",
+      "entity": "item-267",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 3
+          }
+        ],
+        [
+          {
+            "min": 1,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 3
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[267].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-268-melee",
+      "entity": "item-268",
+      "kind": "melee",
+      "rows": [
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[268].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-269-melee",
+      "entity": "item-269",
+      "kind": "melee",
+      "rows": [
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 2,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[269].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-270-melee",
+      "entity": "item-270",
+      "kind": "melee",
+      "rows": [
+        [
+          null,
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 3,
+            "max": 3
+          },
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          null
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[270].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-271-melee",
+      "entity": "item-271",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 2,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[271].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-272-melee",
+      "entity": "item-272",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 3,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 2,
+            "max": 3
+          },
+          null
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 3,
+            "max": 3
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[272].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-273-melee",
+      "entity": "item-273",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 1
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[273].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-274-melee",
+      "entity": "item-274",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 2,
+            "max": 2
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[274].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-36-health",
+      "entity": "being-36",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ]
+      ],
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[36].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[36].hpgrid-shape/inherent-armor/row-major-armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints.hpgrid-positive-cell-count"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor-overlay"
+        }
+      ]
+    },
+    {
+      "id": "being-37-melee",
+      "entity": "being-37",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 2,
+            "max": 3
+          },
+          null,
+          {
+            "min": 2,
+            "max": 3
+          }
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[37].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-37-health",
+      "entity": "being-37",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          null,
+          null,
+          null
+        ]
+      ],
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[37].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[37].hpgrid-shape/inherent-armor/row-major-armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints.hpgrid-positive-cell-count"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor-overlay"
+        }
+      ]
+    },
+    {
+      "id": "being-38-melee",
+      "entity": "being-38",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 0,
+            "max": 1
+          },
+          null,
+          {
+            "min": 0,
+            "max": 1
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[38].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-38-health",
+      "entity": "being-38",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ]
+      ],
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[38].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[38].hpgrid-shape/inherent-armor/row-major-armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints.hpgrid-positive-cell-count"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor-overlay"
+        }
+      ]
+    },
+    {
+      "id": "being-39-melee",
+      "entity": "being-39",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[39].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-39-health",
+      "entity": "being-39",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null
+        ]
+      ],
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[39].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[39].hpgrid-shape/inherent-armor/row-major-armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints.hpgrid-positive-cell-count"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor-overlay"
+        }
+      ]
+    },
+    {
+      "id": "being-40-melee",
+      "entity": "being-40",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 2,
+            "max": 3
+          },
+          null,
+          {
+            "min": 2,
+            "max": 3
+          }
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[40].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-40-health",
+      "entity": "being-40",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 1
+          },
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 2
+          },
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 1
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          }
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          null,
+          null,
+          null
+        ]
+      ],
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[40].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[40].hpgrid-shape/inherent-armor/row-major-armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints.hpgrid-positive-cell-count"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor-overlay"
+        }
+      ]
+    },
+    {
+      "id": "being-41-melee",
+      "entity": "being-41",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 2,
+            "max": 2
+          }
+        ],
+        [
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].attackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-41-ranged",
+      "entity": "being-41",
+      "kind": "ranged",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 1
+          },
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 1
+          }
+        ],
+        [
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 3,
+            "max": 3
+          },
+          {
+            "min": 2,
+            "max": 2
+          }
+        ],
+        [
+          {
+            "min": 1,
+            "max": 1
+          },
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 1
+          }
+        ]
+      ],
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].rangedAttackPattern"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-41-health",
+      "entity": "being-41",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ]
+      ],
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[41].hpgrid-shape/inherent-armor/row-major-armor"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints.hpgrid-positive-cell-count"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor-overlay"
         }
       ]
     }

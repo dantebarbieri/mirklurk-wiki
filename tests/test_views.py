@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from wiki_catalog import entry_owners, entry_relations, page_locations, validate_catalog
 from wiki_data import DataError, MECHANIC_GUIDE_TITLES
 from wiki_details import load_publication_inputs
-from wiki_render import audit_report, image_caption, build_pages, display_entry, linked_prose, merchant_table, recipe_groups
+from wiki_render import audit_report, image_caption, build_pages, display_entry, linked_prose, literal, merchant_table, recipe_groups
 from wiki_views import available_views, selective_view, transclusions, validate_transclusions
 from smoke_deploy import check_pool_projection, dom
 
@@ -177,7 +177,7 @@ class SelectiveViewTests(unittest.TestCase):
         locations = page_locations(self.data, self.catalog)
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
-        self.assertEqual(owner.count('id="pool-item-'), 538)
+        self.assertEqual(owner.count('id="pool-item-'), 610)
         for placeholder in ("Budget-dependent", "Unknown", "Eligible, not guaranteed."):
             self.assertNotIn(placeholder, owner)
         for pool in self.catalog["acquisition"]["pools"]:
@@ -203,12 +203,13 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertIn("Food and materials can appear", self.pages["Loot mechanics"])
 
     def test_compact_pool_projection_rejects_missing_members_and_invented_odds(self):
-        pool = next(row for row in self.catalog["acquisition"]["pools"] if row["id"] == "chest-common")
+        # 0.8.9.9 dropped the Summoning Stone condition from common chests; middle chests keep it.
+        pool = next(row for row in self.catalog["acquisition"]["pools"] if row["id"] == "chest-middle")
         locations = page_locations(self.data, self.catalog)
         item = "item-127"
         rendered = expand_selective_view(self.pages["Random treasure"], {"view": "pool", "pool": pool["id"], "item": item})
         for changed in (
-            rendered.replace("pool-item-chest-common-item-127", "missing"),
+            rendered.replace("pool-item-chest-middle-item-127", "missing"),
             rendered.replace("(eligible)", "(100% drop)"),
             rendered.replace(pool["item_conditions"][item], ""),
             rendered + "<table></table>",
@@ -255,7 +256,7 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertIn("[[:Category:Merchants#Trading_rules|shared trading rules]]", self.pages["Merchants"])
         self.assertNotIn("{{:Currency and trading|view=stock}}", self.pages["Merchants"])
         merchants = set(self.catalog["currency"]["standard_merchants"])
-        self.assertEqual(merchants, {"being-8", "being-12", "being-19", "being-20", "being-26", "being-33"})
+        self.assertEqual(merchants, {"being-8", "being-12", "being-19", "being-20", "being-26", "being-33", "being-34", "being-36"})
         for identity in merchants:
             page = self.pages[locations[identity]]
             self.assertNotIn(rule["text"], page)
@@ -276,12 +277,13 @@ class SelectiveViewTests(unittest.TestCase):
                     self.assertNotIn("Quantity is not established", parsed.text)
                     self.assertFalse(any(link["target"].startswith("Category:Merchants") for link in parsed.links))
         self.assertIn("[[Category:NPCs]]", self.pages["Category:Merchants"])
-        self.assertNotIn("[[Category:Merchants]]", self.pages["Wilda"])
-        self.assertNotIn("[[Wilda|", self.pages["Category:Merchants"])
+        # Wilda trades since 0.8.9.9; Survivors are the non-trading camp NPCs.
+        self.assertNotIn("[[Category:Merchants]]", self.pages["Survivor"])
+        self.assertNotIn("[[Survivor|", self.pages["Category:Merchants"])
         self.assertIn("Quest items cannot be sold", self.pages["Currency and trading"])
         self.assertIn("Rift Weave cannot be sold", self.pages["Currency and trading"])
         self.assertIn("no merchant, player or difficulty markup", self.pages["Currency and trading"])
-        self.assertNotIn("Wares", self.pages["Wilda"])
+        self.assertNotIn("Wares", self.pages["Survivor"])
 
     def test_merchant_story_availability_is_owned_inside_offer_views(self):
         locations = page_locations(self.data, self.catalog)
@@ -314,8 +316,8 @@ class SelectiveViewTests(unittest.TestCase):
                             if row["kind"] == "merchant" and row["details"]["merchant"] == merchant}
                   for merchant in ("being-8", "being-19", "being-20")}
         clay, viend = offers["being-8"], offers["being-19"]
-        self.assertEqual((len(clay), len(viend), len(clay.keys() & viend.keys())), (16, 15, 12))
-        self.assertEqual(viend.keys() - clay.keys(), {"item-138", "item-139", "item-252"})
+        self.assertEqual((len(clay), len(viend), len(clay.keys() & viend.keys())), (17, 17, 13))
+        self.assertEqual(viend.keys() - clay.keys(), {"item-28", "item-138", "item-139", "item-252"})
         self.assertEqual(clay.keys() - viend.keys(), {"item-14", "item-27", "item-44", "item-57"})
         self.assertEqual(set(offers["being-20"]), {"item-252"})
         comparison = self.pages["Viend"].split("== Comparing stock ==", 1)[1].split("\n== ", 1)[0]
@@ -407,12 +409,20 @@ class SelectiveViewTests(unittest.TestCase):
 
     def test_food_effect_amounts_have_one_item_owner_not_copied_guide_values(self):
         locations = page_locations(self.data, self.catalog)
+        consumables = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Consumables")["members"]
+        headings = {"Consumption effects": 0, "Effects": 0}
         for effect in self.catalog["item_effects"]:
             text = "\n\n".join(effect["paragraphs"])
-            self.assertIn("== Consumption effects ==", self.pages[locations[effect["entity"]]])
-            self.assertIn(text, self.pages[locations[effect["entity"]]])
+            page = self.pages[locations[effect["entity"]]]
+            # Since 0.8.9.9 only consumables use "Consumption effects"; equipment and other items use "Effects".
+            heading = "Consumption effects" if effect["entity"] in consumables else "Effects"
+            headings[heading] += 1
+            self.assertIn(f"== {heading} ==\n" + literal(effect["paragraphs"][0]), page)
+            self.assertNotIn("== Consumption effects ==" if heading == "Effects" else "== Effects ==", page)
+            self.assertIn(text, page)
             for guide in self.catalog["guides"]:
                 self.assertNotIn(text, self.pages[guide["title"]])
+        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 14})
         bursthopper = next(row for row in self.catalog["item_effects"] if row["entity"] == "item-243")
         self.assertIn("15 percentage points of stamina", bursthopper["paragraphs"][0])
         self.assertNotIn("focus", bursthopper["paragraphs"][0].lower())
@@ -453,9 +463,15 @@ class SelectiveViewTests(unittest.TestCase):
         }
         self.assertTrue({"Category:" + title for title in historical_categories} <= set(self.pages))
         from wiki_display import DISPLAY_TITLES
-        old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"}
+        # 0.8.9.9 added entity pages and release notes and renamed two titles; the old titles stay as redirects.
+        locations = page_locations(self.data, self.catalog)
+        added = {locations[row["id"]] for row in self.data["entities"][336:]} | {"Version 0.8.9.9", "Survivor", "Fire Bond"}
+        self.assertEqual(len(added), 27)
+        old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
         self.assertEqual(len(old_titles), 401)
+        self.assertEqual(self.pages["Unwanted Guard"], "#REDIRECT [[Survivor]]\n")
+        self.assertEqual(self.pages["Fire Striker"], "#REDIRECT [[Fire Bond]]\n")
         self.assertEqual(hashlib.sha256(("\n".join(old_titles) + "\n").encode()).hexdigest(),
                          "b32b5d0645406b2b6e8073d4c355ebca0eacf1fbd554ba1b6dfdc1bbffc78b75")
 
