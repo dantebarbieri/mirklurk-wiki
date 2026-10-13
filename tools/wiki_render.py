@@ -1488,7 +1488,16 @@ def build_pages(root, data, catalog=None, details=None):
         recipes = [row for row in matching_entries if row["kind"] == "recipe"]
         grids = sorted((grid for grid in details.get("grids", []) if grid["entity"] in entity_ids),
                        key=lambda row: (row["kind"] != "health", row["kind"]))
-        if entity_ids and all(entities[identity]["category"] == "being" for identity in entity_ids):
+        chop_guide = any(guide["title"] == "Tree health and chopping" for guide in catalog.get("guides", []))
+        armor_guide = any(guide["title"] == "Armor points" for guide in catalog.get("guides", []))
+        if any(entities[identity]["category"] == "item" for identity in entity_ids):
+            from wiki_items import item_article
+            pages[title] += item_article(
+                entities[next(iter(sorted(entity_ids)))]["name"], matching_facts, matching_profiles, properties,
+                entities, locations, prices.get(price_item), coin, recipes, grids,
+                catalog.get("construction_recipes", []), armor_guide, chop_guide,
+            )
+        elif entity_ids and all(entities[identity]["category"] == "being" for identity in entity_ids):
             from wiki_beings import being_article
             pages[title] += being_article(
                 matching_facts, matching_profiles, properties, entities, locations, grids,
@@ -1498,8 +1507,7 @@ def build_pages(root, data, catalog=None, details=None):
             pages[title] += stat_table(
                 matching_facts, matching_profiles, properties, entities, locations,
                 price_item, prices.get(price_item), coin, recipes, images, grids, catalog.get("construction_recipes", []),
-                any(guide["title"] == "Armor points" for guide in catalog.get("guides", [])),
-                any(guide["title"] == "Tree health and chopping" for guide in catalog.get("guides", [])),
+                armor_guide, chop_guide,
             )
             for grid in grids:
                 pages[title] += cell_grid(grid, entities[grid["entity"]]["category"], images)

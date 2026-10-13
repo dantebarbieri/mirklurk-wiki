@@ -211,6 +211,7 @@ documented pools, not a measurement of each item's final drop rate.
 | `tools/sync_wiki.py` | Publishes changed pages through the MediaWiki API; skips person-edited pages unless explicitly adopted |
 | `tools/wiki_views.py` | Named selective-view contracts and explicit dependencies |
 | `tools/wiki_beings.py` | Combat summary, behavior and attack sections for creature and character pages |
+| `tools/wiki_items.py` | Item articles: summary box, attack patterns with damage type, and stat prose |
 | `tools/wiki_acquisition.py` | Bounded source, probability, membership, and ownership validation |
 | `tools/check_publication.py` | Exact-file, size, text, secret-pattern checks and a complete staged rebuild |
 | `tools/smoke_deploy.py` | Disposable Docker install, publication, and reader/editor checks |

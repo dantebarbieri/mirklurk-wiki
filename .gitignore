@@ -63,6 +63,7 @@
 !/tools/wiki_render.py
 !/tools/wiki_views.py
 !/tools/wiki_beings.py
+!/tools/wiki_items.py
 !/tools/wiki_display.py
 !/tools/smoke_display.py
 !/tools/smoke_browser.py

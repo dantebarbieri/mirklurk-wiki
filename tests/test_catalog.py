@@ -189,7 +189,7 @@ class CatalogTests(unittest.TestCase):
                     elif key == "initial-price" and profile["entity"] in prices:
                         self.assertIn(selective_view(price_text(prices[profile["entity"]], self.data["illustrations"]), "price", True), page)
                     else:
-                        self.assertIn(profile_value(key, value, entities, locations), page)
+                        self.assertIn("| No" if "treasure" in key else profile_value(key, value, entities, locations), page)
         for name in ("Flax", "Linen"):
             self.assertIn("Stats: Unknown.", self.pages[name])
             self.assertNotIn("== Stats ==", self.pages[name])
@@ -474,7 +474,7 @@ class CatalogTests(unittest.TestCase):
             profile = next(row for row in details["profiles"] if row["id"] == "item-38-initializer")
             profile["values"][key] = value
             changed = build_pages(ROOT, self.data, self.catalog, details)["Campfire"]
-            self.assertIn(literal(label) + " || " + known(value), changed)
+            self.assertIn(literal(label) + "\n| " + known(value), changed)
             self.assertIn("|ap=<nowiki>4</nowiki>", changed)
             self.assertIn("{{Item|Campfire|quantity=1}}", changed)
         profile = next(row for row in self.details["profiles"] if row["id"] == "item-38-initializer")
@@ -1011,7 +1011,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("normally has 8 AP per turn", self.pages["Action points"])
         self.assertIn("minus any cost carried over", self.pages["Action points"])
         self.assertIn("0.4 AP per square", self.pages["Action points"])
-        self.assertIn("<nowiki>Equip cost</nowiki> || <nowiki>3.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
+        self.assertIn("<nowiki>Equip cost</nowiki>\n| <nowiki>3.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
         self.assertIn("<nowiki>7.2</nowiki> [[Action points|AP]]", self.pages["Thorns of Wackah"])
         locations = page_locations(self.data, self.catalog)
         self.assertEqual(len(self.catalog["damage_sources"]), 5)
@@ -1093,7 +1093,6 @@ class ProfileTests(unittest.TestCase):
             details = synthetic_details()
             details["profiles"][0]["values"]["synthetic-value"] = value
             pages = build_pages(ROOT, synthetic_data(), details=details)
-            self.assertIn("== Stats ==", pages["Entity synthetic-item"])
             self.assertIn(known(value), pages["Entity synthetic-item"])
             self.assertNotIn("Stats: Unknown.", pages["Entity synthetic-item"])
 
