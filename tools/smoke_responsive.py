@@ -249,7 +249,7 @@ def smoke_responsive(base, data, artifact_dir):
                             "Items", "Gurb-Gurb", "Alchemy workstation", "Scaal", "Nightmare",
                         }:
                             target = ("#Wares" if article == "Gurb-Gurb" else
-                                      "#Base_health" if article in {"Scaal", "Nightmare"} else
+                                      "#Health" if article in {"Scaal", "Nightmare"} else
                                       "#Ammunition" if article == "Items" else "#What_you_can_craft")
                             page.locator(target).scroll_into_view_if_needed()
                             page.screenshot(path=str(folder / (name + "-responsive-" + article.replace(" ", "-") + ".png")))
