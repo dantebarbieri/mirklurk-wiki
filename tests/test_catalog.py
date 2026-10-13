@@ -194,7 +194,7 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        self.assertEqual(len(self.data["illustrations"]), 362)
+        self.assertEqual(len(self.data["illustrations"]), 364)
         self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 318)
         current = {row["id"]: row for row in self.data["illustrations"]}
         # Art for the 0.8.9.9 additions and the world-only Finish Raft was reviewed in a later batch.
@@ -228,7 +228,7 @@ class CatalogTests(unittest.TestCase):
         missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in every if "entity" in row}
         self.assertEqual(missing, {"item-31", "item-48", "item-49"})
         locations = page_locations(self.data, self.catalog)
-        for row in self.data["illustrations"][-len(later):]:
+        for row in (row for row in self.data["illustrations"] if row.get("entity") in later):
             page = self.pages[locations[row["entity"]]]
             self.assertEqual(page.count(f'[[{row["file_title"]}|'), 1)
             self.assertIn(literal(image_caption(row)), page)

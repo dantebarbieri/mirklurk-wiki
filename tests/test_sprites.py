@@ -35,9 +35,15 @@ class OverworldSpriteTests(unittest.TestCase):
         cls.sprites = {row["entity"]: row for row in cls.data["illustrations"] if row.get("role") == "sprite"}
 
     def test_every_portrait_npc_with_a_world_sprite_also_shows_it(self):
-        self.assertEqual(set(self.sprites), set(OVERWORLD_SPRITES))
+        self.assertEqual(set(self.sprites), set(OVERWORLD_SPRITES) | {"being-36", "being-41"})
         npcs = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "npc"}
         images = {identity: image_for(identity, self.data["illustrations"]) for identity in npcs}
+        for identity in ("being-36", "being-41"):  # Sprite titles predate these portraits.
+            title = "File:" + identity.capitalize()
+            self.assertEqual((image_for(identity, self.data["illustrations"])["file_title"], uncropped(self.sprites[identity])["file_title"]),
+                             (title + "-portrait.png", title + ".png"))
+            lead = self.pages[self.locations[identity]].split("\n==", 1)[0]
+            self.assertLess(lead.index(title + "-portrait.png|"), lead.index(title + "-cropped.png|"))
         self.assertEqual({identity for identity, image in images.items() if image is None}, set())
         portraits = {identity for identity, image in images.items() if image and "portrait" in image["caption"]}
         # Dead Unwanted's beingDB entry uses spr_blank, so it has no overworld sprite to show.

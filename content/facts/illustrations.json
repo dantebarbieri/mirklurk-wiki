@@ -12524,10 +12524,11 @@
       }
     },
     {
-      "id": "being-36-illustration",
+      "id": "being-36-sprite-illustration",
       "entity": "being-36",
+      "role": "sprite",
       "file_title": "File:Being-36-cropped.png",
-      "caption": "Grand Mother in-game sprite, shown in a representative frame.",
+      "caption": "Grand Mother as seen in the overworld.",
       "creator": "Edym Pixels",
       "sha256": "0f9a1346a660c2af8c6c4225c0b2959baaaddb23bcdeb73cf48f96af47beaded",
       "rights_status": "approved",
@@ -12538,7 +12539,7 @@
         {
           "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_3",
-          "key": "beingDB[36].sprite"
+          "key": "beingDB[36].sprite/spr_mother.frame0"
         },
         {
           "source": "beings-en-0899",
@@ -12704,10 +12705,11 @@
       }
     },
     {
-      "id": "being-41-illustration",
+      "id": "being-41-sprite-illustration",
       "entity": "being-41",
+      "role": "sprite",
       "file_title": "File:Being-41-cropped.png",
-      "caption": "Magus Clay in-game sprite during his boss encounter, shown in a representative frame.",
+      "caption": "Magus Clay as seen in his hidden realm.",
       "creator": "Edym Pixels",
       "sha256": "26af089dcc06aebdabfc1b35a122842c9a0159123ab9c9a418158fa0d0b0eda7",
       "rights_status": "approved",
@@ -12718,7 +12720,7 @@
         {
           "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_3",
-          "key": "beingDB[41].sprite"
+          "key": "beingDB[41].sprite/spr_clay.frame0"
         },
         {
           "source": "beings-en-0899",
@@ -12737,6 +12739,64 @@
         "pixel_art": {"width": 240, "height": 240, "source_scale": 6},
         "left": 84,
         "top": 42
+      }
+    },
+    {
+      "id": "being-36-illustration",
+      "entity": "being-36",
+      "file_title": "File:Being-36-portrait.png",
+      "caption": "Grand Mother dialogue portrait.",
+      "creator": "Edym Pixels",
+      "sha256": "3599433a168b479c71de0205252b0364318c5596920867a1657a81b40ba127ac",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[36].porPic[9]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        }
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
+      }
+    },
+    {
+      "id": "being-41-illustration",
+      "entity": "being-41",
+      "file_title": "File:Being-41-portrait.png",
+      "caption": "Magus Clay dialogue portrait during his boss encounter.",
+      "creator": "Edym Pixels",
+      "sha256": "7e0a5fb453ade6e9abd25d269f491be829d831dd8371daf04c3cf4b90dc435c0",
+      "rights_status": "approved",
+      "rights_basis": "Permission reported by the wiki operator for public-wiki display",
+      "rights_note": "The wiki operator confirmed permission to display game artwork publicly on 2026-09-25. This selection was requested on 2026-10-13 for pages that had no picture. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[41].porPic[10]"
+        },
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        }
+      ],
+      "pixel_art": {
+        "width": 168,
+        "height": 240,
+        "source_scale": 3
       }
     }
   ]
