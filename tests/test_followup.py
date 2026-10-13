@@ -18,15 +18,16 @@ from wiki_views import scroll_open
 from smoke_deploy import smoke_pixel_art
 
 
-FACTIONS = {
-    0: [5, 6, 8, 9, 12, 19, 20, 26, 33, 34, 35],
+FACTIONS = {  # 0.8.9.9 moved Wilda and the Survivors into the camp faction (10) and added Mirkfangs (11).
+    0: [5, 6, 8, 9, 12, 19, 20, 26, 33],
     3: [1, 2, 4, 7, 11, 17, 24, 25, 27, 29, 30],
-    4: [0], 5: [13, 14, 15, 16, 22, 32], 6: [21], 7: [10, 23], 8: [28, 31], 9: [3, 18],
+    4: [0], 5: [13, 14, 15, 16, 22, 32], 6: [21], 7: [10, 23], 8: [28, 31, 41], 9: [3, 18],
+    10: [34, 35, 36], 11: [37, 38, 39, 40],
 }
 CAPACITY = {
     12: (35, 7, 5), 14: (49, 7, 7), 148: (56, 8, 7), 26: (72, 8, 9),
     13: (8, 4, 2), 166: (10, 5, 2), 167: (12, 6, 2), 168: (16, 8, 2),
-    196: (9, 3, 3), 197: (12, 3, 4), 198: (16, 4, 4), 24: (6, 3, 2), 21: (6, 3, 2),
+    196: (9, 3, 3), 197: (12, 3, 4), 198: (16, 4, 4), 24: (6, 3, 2), 21: (6, 3, 2), 264: (9, 3, 3),
 }
 
 
@@ -41,7 +42,7 @@ class FollowupTests(unittest.TestCase):
 
     def test_recorder_quest_classification_retires_only_the_empty_misc_group(self):
         self.assertEqual(set(self.categories["Quest items"]["members"]),
-                         {"item-75", "item-123", "item-126", "item-130", "item-132"})
+                         {"item-75", "item-123", "item-126", "item-130", "item-132", "item-261", "item-262"})
         self.assertNotIn("Miscellaneous items", self.categories)
         self.assertNotIn("== Miscellaneous items ==", self.pages["Items"])
         self.assertNotIn("[[:Category:Miscellaneous items|", self.pages["Category:Items"])
@@ -83,9 +84,10 @@ class FollowupTests(unittest.TestCase):
 
     def test_reconciled_pages_preserve_reviewed_human_text_and_add_mobile_wrappers(self):
         # Live Items r2996 (minus its empty Misc section) and Wooden Recorder r2995.
+        # Items is re-pinned for 0.8.9.9: its only changes are additive rows for new items and sellers.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
-            "Items": "aaf1f220179afa287c55b4e32badc5993863442a30baf574ac21ed5a96a4f8f5",
+            "Items": "45c699b3360c3350f5328581fcc0a7c52b9c6f53481e7eac503798c17f826eb4",
             "Wooden Recorder": "eadd66853c40f7f856eae6529e53fb8b628eea0cad2609b3afca8664efd51090",
         }
         for title, digest in digests.items():
@@ -116,11 +118,11 @@ class FollowupTests(unittest.TestCase):
         self.assertEqual({row["id"]: {int(identity.split("-")[1]) for identity in row["members"]}
                           for row in factions}, {team: set(members) for team, members in FACTIONS.items()})
         groups = [row for row in primary_groups(self.catalog) if row["index"] == "Bestiary"]
-        self.assertEqual(len(groups), 7)
-        self.assertEqual(sum(len(row["members"]) for row in groups), 25)
+        self.assertEqual(len(groups), 8)
+        self.assertEqual(sum(len(row["members"]) for row in groups), 30)
         for faction in factions:
             title = faction["title"]
-            index = "NPCs" if faction["id"] == 0 else "Bestiary"
+            index = "NPCs" if faction["id"] in {0, 10} else "Bestiary"
             self.assertEqual(self.categories[title]["index"], index)
             for identity in faction["members"]:
                 page = self.pages[self.locations[identity]]
@@ -138,8 +140,8 @@ class FollowupTests(unittest.TestCase):
         for phrase in ("Nightmare", "Raving Unwanted", "retaliate", "without the usual faction check",
                        "never themselves", "separate faction", "distance", "line-of-sight"):
             self.assertIn(phrase, rules)
-        for title in ("Nightmare", "Raving Unwanted"):
-            self.assertIn("Both Nightmare and Raving Unwanted can select other members", self.pages[title])
+        for title in ("Nightmare", "Raving Unwanted", "Magus Clay (boss)"):
+            self.assertIn("Nightmare, Raving Unwanted and Clay's boss form can select other members", self.pages[title])
         self.assertIn("[[Category:Scaalmyr faction]]", self.pages["Mutated Unwanted"])
         self.assertIn("[[Category:Wildlife faction]]", self.pages["Mire Serpent"])
         self.assertNotIn("[[Category:Viper faction]]", self.pages["Mire Serpent"])

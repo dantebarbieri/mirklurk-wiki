@@ -70,7 +70,8 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(count_range(None), "Unknown")
         self.assertEqual(known(0), "<nowiki>0</nowiki>")
         self.assertEqual(known(False), "No")
-        for title in ("Flax", "Linen", "Firesteel", "Unwanted Guard"):
+        # 0.8.9.9 documented the former Unwanted Guard (now Survivor), so it no longer shows Unknown.
+        for title in ("Flax", "Linen", "Firesteel", "Mixed ground debris"):
             self.assertIn("Unknown", self.pages[title])
         variable = next(row for source in self.catalog["acquisition"]["sources"]
                         for row in source["rows"] if row["probability"] is None)

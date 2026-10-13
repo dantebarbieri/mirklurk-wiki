@@ -21,6 +21,15 @@ from wiki_catalog import entry_owners, entry_relations, default_catalog, page_lo
 from wiki_render import audit_report, recipe_groups
 from smoke_deploy import smoke_category_memberships, smoke_reader_release, wait_for_server_tick
 
+# Original 0.8.1.5 fields of the records that the reviewed 0.8.9.9 update deliberately renamed or re-evidenced.
+AMENDED_0815 = {
+    "being-35": {"name": "Unwanted Guard", "evidence": [{"source": "beings-en", "section": "Titles", "key": "35"}]},
+    "skill-1-0": {"name": "Fire Striker", "evidence": [{"source": "ui-en", "section": "SkillsTitle1", "key": "0"}]},
+    "fire-striker-chance": {"entity": "Fire Striker", "evidence": [{"source": "ui-en", "section": "SkillsDesc1", "key": "0"}]},
+    "master-basher-stun": {"value": 1.5, "description": "The description associates the chance bonus with blunt melee attacks.",
+                           "evidence": [{"source": "ui-en", "section": "SkillsDesc3", "key": "1"}]},
+}
+
 
 def synthetic_data():
     reference = {"source": "synthetic", "section": "SyntheticTitles", "key": "1"}
@@ -271,28 +280,39 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 5, "entities": 336, "facts": 107, "entries": 293},
+            {"sources": 9, "entities": 360, "facts": 107, "entries": 336},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
-            {"quest": 31, "merchant": 63, "recipe": 96, "loot": 70, "algorithm": 33},
+            {"quest": 36, "merchant": 88, "recipe": 97, "loot": 82, "algorithm": 33},
         )
-        extension = {"sources": [], "entities": [], "facts": data["facts"][79:], "entries": data["entries"][:249]}
+        # 0.8.9.9 deliberately amended these original entries; the rest of the handoff stays pinned.
+        amended = {"skill-1-0-mechanics", "loot-amount-distribution", "crafting-station-modifiers",
+                   "corpse-budgeted-treasure", "corpse-30-66", "corpse-29-103", "corpse-4-82", "corpse-14-129",
+                   *(f"corpse-{n}-69" for n in (1, 25, 27, 28)),
+                   *(f"corpse-{n}-{m}" for n in (13, 14, 15, 16) for m in (107, 124))}
+        extension = {"sources": [], "entities": [], "facts": data["facts"][79:],
+                     "entries": [row for row in data["entries"][:249] if row["id"] not in amended]}
         raw = json.dumps(extension, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "a850094c2624cf2db5262bea5bc6647954de639cefc90a7f3d2adcc3a62ec270")
-        supplement = {"sources": [], "entities": [], "facts": [], "entries": data["entries"][249:]}
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "02dd1c444ac4114c1d4fdfbf8f498507ee371c2960f0630b50038112e2894d2d")
+        supplement = {"sources": [], "entities": [], "facts": [],
+                      "entries": [row for row in data["entries"][249:293] if row["id"] not in amended]}
         raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "2c5261500e871c46dfaa0ee7d62c69592c2349726293be3ee9772d13da00e3c2")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "d6aa4b58cbb7179362901457682a3e5270931d4fa9fb1846beaa2e26520686cc")
+        update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
+        self.assertEqual(len(update), 63)
+        raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "8f2fc9bf05236fcdd809dc3f2fe48a0fcae9d2d302c3a0ae92902ac5e44ca469")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len(pages), 379)
+        self.assertEqual(len(pages), 404)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("0.8.1.5", pages["Game mechanics"])
+        self.assertIn("These guides cover '''0.8.9.9'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -304,10 +324,15 @@ class DataTests(unittest.TestCase):
             "facts": (79, "cc0c1c66f198029fffe8fa1de023fcbd1d5c5d59722d328b4d6d320aa358dc7e"),
         }
         for key, (count, digest) in baseline.items():
-            records = sorted(data[key][:count], key=lambda record: record["id"])
+            # Restoring the deliberate 0.8.9.9 amendments must reproduce the original pins exactly.
+            records = sorted(({**record, **AMENDED_0815.get(record["id"], {})} for record in data[key][:count]),
+                             key=lambda record: record["id"])
             raw = json.dumps(records, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
             self.assertEqual(hashlib.sha256(raw).hexdigest(), digest, f"Original {key} changed")
-        self.assertEqual(data["game"]["build"], "0.8.1.5")
+        amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
+        raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "b01bcaa107dafc8f873b5c978fe3fb27905e4f7bdee8f18cb337f41ff65254ee")
+        self.assertEqual(data["game"]["build"], "0.8.9.9")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
@@ -571,8 +596,9 @@ class HealthArmorTests(unittest.TestCase):
     def test_shields_replace_only_occupied_armored_cells_at_exact_levels(self):
         from wiki_display import grid_argument
         from wiki_render import cell_grid
+        # 0.8.9.9 pin: adds the new beings' and magic weapons' grids and the reviewed item-188/189 melee changes.
         self.assertEqual(hashlib.sha256(json.dumps(self.details["grids"], sort_keys=True).encode()).hexdigest(),
-                         "d693bb51f80cbd3ad1502cd260c6eca44351c9bd3f1d4f8fda87eb75d3bb693b")
+                         "95b0b013c1329c2025f6d7fc978ea4e409fa2dc32880232eb37cff7587bc92c5")
         totals = {0: 0, 1: 0, 2: 0, 3: 0}
         for grid in self.details["grids"]:
             rendered = cell_grid(grid, "being", self.data["illustrations"])
@@ -591,7 +617,7 @@ class HealthArmorTests(unittest.TestCase):
                         else:
                             visible = str(expected["min"]) if expected["min"] == expected["max"] else f'{expected["min"]}-{expected["max"]}'
                             self.assertEqual(cell, visible)
-        self.assertEqual(totals, {0: 259, 1: 189, 2: 22, 3: 10})
+        self.assertEqual(totals, {0: 366, 1: 210, 2: 35, 3: 10})
         self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 6)
         guide = self.pages["Health and armor"]
         for armor, name in ((1, "Bronze"), (2, "Silver"), (3, "Gold")):

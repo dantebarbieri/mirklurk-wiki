@@ -216,6 +216,8 @@ class LandmarkTests(unittest.TestCase):
 
     def test_filtered_sellers_link_to_new_location_without_copying_prose_or_stale_nulls(self):
         profiles = {row["entity"]: row["location"] for row in self.catalog["classifications"] if "location" in row}
+        # The 0.8.9.9 camp NPCs have reviewed location text but no landmark image.
+        self.assertEqual(set(profiles) - set(self.images), {"being-34", "being-35", "being-36"})
         for identity, location in profiles.items():
             owner = self.locations[identity]
             self.assertNotIn("Location: Unknown", self.pages[owner])
@@ -228,7 +230,8 @@ class LandmarkTests(unittest.TestCase):
                 self.assertNotIn("Location: Unknown", selected.text)
                 for paragraph in location["paragraphs"]:
                     self.assertNotIn(paragraph, selected.text)
-                self.assertNotIn(self.images[identity]["file_title"], rendered)
+                if identity in self.images:
+                    self.assertNotIn(self.images[identity]["file_title"], rendered)
                 check_seller_context(
                     {"templates": [{"*": title} for title in (owner, "Template:Ware row", "Template:Item",
                                                              "Module:Display", "Module:Display assets")], "text": {"*": rendered}},
@@ -304,8 +307,9 @@ class LandmarkTests(unittest.TestCase):
         self.assertEqual(set(category["members"]), merchants)
         self.assertEqual(merchants, set(self.catalog["currency"]["standard_merchants"]))
         self.assertEqual(category["parents"], ["NPCs"])
-        self.assertEqual(len(merchants), 6)
-        self.assertNotIn("being-34", merchants)
+        self.assertEqual(len(merchants), 8)
+        # 0.8.9.9 gave Wilda and Grand Mother wares; Survivors remain non-trading NPCs.
+        self.assertNotIn("being-35", merchants)
         self.assertIn("== Trading rules ==", self.pages["Category:Merchants"])
         self.assertEqual(self.pages["Category:Merchants"].count("{{:Currency and trading|view=stock}}"), 1)
 

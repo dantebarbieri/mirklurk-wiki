@@ -97,7 +97,8 @@ def lua_string(text):
     equals = "="
     while "]" + equals + "]" in text:
         equals += "="
-    return "[" + equals + "[" + text + "]" + equals + "]"
+    # Lua drops a newline that directly follows the opening bracket; it keeps "[[" links off the delimiter.
+    return "[" + equals + "[" + ("\n" if text.startswith("[") else "") + text + "]" + equals + "]"
 
 
 def display_pages(root, coin_icons, shield_icons, creatures, items):

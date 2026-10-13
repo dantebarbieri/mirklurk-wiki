@@ -20,6 +20,7 @@ PAGE_FILES = {
     "Damage types": "Damage_types.wiki",
     "Action points": "Action_points.wiki",
     "Health and armor": "Health_and_armor.wiki",
+    "Version 0.8.9.9": "Version_0.8.9.9.wiki",
 }
 RESEARCH_PAGE_FILES = {
     "Quests and journal": "Quests_and_journal.wiki",
@@ -52,7 +53,7 @@ ILLUSTRATION_ROLES = {"location", "sprite", "ability"}
 MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
     "Temperature", "Wellbeing", "Foods", "Resting", "Weather", "Armor points",
-    "Tree health and chopping",
+    "Tree health and chopping", "Magic weapons", "Survivors' camp", "Placing objects", "Strict move",
 }
 HEALTH_ARMOR_ICONS = {
     1: ("File:Health-armor-1.png", "Bronze"),

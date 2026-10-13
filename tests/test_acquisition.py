@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tests"))
 
 from wiki_catalog import category_definitions, entry_owners, entry_relations, ingredient_acquisition, page_locations, validate_catalog
 from wiki_data import DataError
@@ -26,7 +27,7 @@ class AcquisitionTests(unittest.TestCase):
 
     def test_every_item_has_a_verified_method_or_an_explicit_scoped_note(self):
         document = self.catalog["acquisition"]
-        self.assertEqual(len(document["sources"]), 21)
+        self.assertEqual(len(document["sources"]), 22)
         self.assertEqual(sum(len(source["rows"]) for source in document["sources"]), 130)
         normal = {row["item"] for source in document["sources"] for row in source["rows"]}
         normal.update(item for pool in document["pools"] for item in pool["eligible_item_ids"])
@@ -40,9 +41,10 @@ class AcquisitionTests(unittest.TestCase):
                 normal.add(entry["details"]["outcome"])
         notes = {note["item"]: note for note in document["item_notes"]}
         unverified = {identity for identity, note in notes.items() if note["kind"] == "unverified"}
-        self.assertEqual(unverified, {"item-40", "item-48", "item-49", "item-254"})
+        self.assertEqual(unverified, {"item-40", "item-48", "item-49"})
         self.assertFalse(normal & unverified)
-        self.assertEqual(len(normal | (notes.keys() - unverified)), 243)
+        self.assertIn("item-254", normal)
+        self.assertEqual(len(normal | (notes.keys() - unverified)), 261)
         self.assertEqual(normal | notes.keys(), {entity["id"] for entity in self.data["entities"] if entity["category"] == "item"})
         self.assertFalse(any("No documented acquisition source is available yet." in text for text in self.pages.values()))
         self.assertIn("built-in", self.pages["Unarmed"])
@@ -56,8 +58,8 @@ class AcquisitionTests(unittest.TestCase):
 
     def test_clothing_is_browsable_in_items_and_category_by_reviewed_slots(self):
         clothes = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Clothes")
-        expected = {"Headwear": 4, "Shirts": 3, "Outerwear": 3, "Cloaks": 5, "Gloves": 4,
-                    "Pants": 3, "Socks": 3, "Footwear": 5}
+        expected = {"Headwear": 5, "Shirts": 3, "Outerwear": 3, "Cloaks": 5, "Gloves": 4,
+                    "Pants": 3, "Socks": 3, "Footwear": 5, "Other clothing": 1}
         groups = clothing_subgroups(self.catalog, clothes["members"])
         self.assertEqual({label: len(members) for label, members, _ in groups}, expected)
         self.assertEqual(set().union(*(members for _, members, _ in groups)), set(clothes["members"]))
@@ -70,7 +72,7 @@ class AcquisitionTests(unittest.TestCase):
                 for slot in slots:
                     self.assertIn("[[:Category:" + slot + "|", section)
         anchors = re.findall(r'id="entity-(item-\d+)"', self.pages["Items"])
-        self.assertEqual(len(anchors), 247)
+        self.assertEqual(len(anchors), 264)
         self.assertEqual(set(anchors), {row["id"] for row in self.data["entities"] if row["category"] == "item"})
 
     def test_overlapping_clothing_tags_never_duplicate_primary_index_anchors(self):
@@ -86,7 +88,7 @@ class AcquisitionTests(unittest.TestCase):
         hood = next(row for row in catalog["taxonomy"]["tags"] if row["title"] == "Hood-slot equipment")
         hood["members"].remove("item-42")
         self.assertEqual(dict((label, members) for label, members, _ in clothing_subgroups(catalog, clothes["members"]))["Other clothing"],
-                         {"item-42"})
+                         {"item-42", "item-265"})
 
     def test_ingredient_groups_are_exact_input_source_joins_not_material_or_ware_lists(self):
         inputs = {row["item"] for entry in self.data["entries"] if entry["kind"] == "recipe"
@@ -94,8 +96,8 @@ class AcquisitionTests(unittest.TestCase):
         inputs.update(row["item"] for recipe in self.catalog["construction_recipes"] for row in recipe["inputs"])
         routes = ingredient_acquisition(self.data, self.catalog)
         self.assertEqual(set(routes), inputs)
-        self.assertEqual(len(inputs), 53)
-        expected = {"Creature drops": 12, "Gatherables": 36, "Purchased ingredients": 1,
+        self.assertEqual(len(inputs), 54)
+        expected = {"Creature drops": 13, "Gatherables": 36, "Purchased ingredients": 1,
                     "Crafted ingredients": 4, "Other ingredient sources": 1}
         categories = category_definitions(self.data, self.catalog)
         self.assertEqual(set(categories["Recipe ingredients"]["members"]), inputs)
@@ -160,7 +162,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "9c8409e2bf72884a6245e81db5b4455c4a250965e3bd2f3c5b8f40fda28eb8f0")
+                         "7e716d536188b6b5a2cd107f0c4827867c961ba9f26c80555abb042fef72e81c")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
@@ -169,19 +171,20 @@ class AcquisitionTests(unittest.TestCase):
         rows = [row for source in self.catalog["acquisition"]["sources"] if source["id"] in identities for row in source["rows"]]
         from test_editorial import gameplay_record
         self.assertEqual(hashlib.sha256((json.dumps([gameplay_record(row) for row in rows], sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "d40ee9d0abb30505c6a71086c5c015e0059982202c26206243462c95ba84ae7e")
+                         "ca3989c85242bae95b6f3fee84550bfb95762cb455f4533e2e193ab4bd66475d")
         for path in ("ground", "berries"):
             insects = [row for row in sources["harvested-insects"]["rows"] if row["id"].startswith("extra-bug-" + path + "-")]
             self.assertEqual(len(insects), 7)
             self.assertEqual(sum(Fraction(row["probability"]["numerator"], row["probability"]["denominator"]) for row in insects), 1)
             self.assertTrue(all("check succeeding" in row["probability"]["scope"] for row in insects))
         by_id = {row["id"]: row for row in rows}
-        for identity, minimum, maximum in (("harvest-fern-fiber", 1, 14), ("harvest-cranberries", 2, 11),
-                                           ("harvest-watercress", 1, 12), ("harvest-turnip", 1, 2),
+        for identity, minimum, maximum in (("harvest-fern-fiber", 1, 10), ("harvest-cranberries", 2, 8),
+                                           ("harvest-watercress", 1, 8), ("harvest-turnip", 1, 2),
                                            ("harvest-calmia-root", 1, 3), ("harvest-water-lily", 1, 2),
                                            ("beehive-honey", 1, 4), ("beehive-beeswax", 1, 4)):
             self.assertEqual(by_id[identity]["quantity"], {"min": minimum, "max": maximum})
         self.assertIsNone(by_id["harvest-ash-coal"]["quantity"])
+        self.assertIn("Map of area for the current area", " ".join(sources["mapmaking"]["conditions"]))
         self.assertIn("no fixed item count for a whole tree", sources["tree-shrub-harvesting"]["loot_context"])
         self.assertIn("not the chance per harvested plant", sources["harvested-insects"]["loot_context"])
         self.assertIn("[[Harvested insects]]", self.pages["Creepy-Crawlies"])
@@ -335,12 +338,16 @@ class AcquisitionTests(unittest.TestCase):
         from test_editorial import gameplay_record
         unchanged = [gameplay_record(pool) for pool in document["pools"]]
         self.assertEqual(hashlib.sha256((json.dumps(unchanged, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "bfbe0e4b620ce63f58b49882f7067a046bb26b5fb9f51fe07c2c372d66159571")
+                         "89036ca3713c305c14ce405d2186fb1e08042f85606b19969de1cea2cdf0f8ea")
         self.assertEqual({identity: len(pool["eligible_item_ids"]) for identity, pool in pools.items()}, {
-            "skeleton-outdoors": 95, "skeleton-indoors": 72, "chest-common": 98, "chest-middle": 86,
-            "chest-rich": 68, "ruins-large": 23, "ruins-small": 12, "nest-tiny": 7,
-            "cracks-tiny": 6, "unwanted-remains": 71,
+            "skeleton-outdoors": 91, "skeleton-indoors": 70, "chest-common": 96, "chest-middle": 95,
+            "chest-rich": 78, "ruins-large": 20, "ruins-small": 9, "nest-tiny": 7,
+            "cracks-tiny": 6, "unwanted-remains": 72, "survivor-remains": 66,
         })
+        self.assertEqual(pools["chest-common"]["item_conditions"], {})
+        self.assertIn("item-258", set(pools["unwanted-remains"]["eligible_item_ids"]) & set(pools["survivor-remains"]["eligible_item_ids"]))
+        self.assertIn("item-254", pools["survivor-remains"]["eligible_item_ids"])
+        self.assertNotIn("item-254", pools["unwanted-remains"]["eligible_item_ids"])
         self.assertFalse(set(pools["skeleton-outdoors"]["eligible_item_ids"]) <= set(pools["skeleton-indoors"]["eligible_item_ids"]))
         locations = page_locations(self.data, self.catalog)
         for source in sources.values():
@@ -360,17 +367,19 @@ class AcquisitionTests(unittest.TestCase):
                         self.assertEqual(self.pages[owner].count('id="pool-item-' + pool["id"] + "-" + item + '"'), 1)
         for title in ("Raving Unwanted", "Mutated Unwanted"):
             self.assertIn("[[Raving and Mutated Unwanted loot", self.pages[title])
+        self.assertIn("[[Survivor loot", self.pages["Survivor"])
 
     def test_shared_story_gate_and_boulder_context_have_one_owner(self):
         pools = self.catalog["acquisition"]["pools"]
         gate = next(pool["item_conditions"]["item-127"] for pool in pools if "item-127" in pool["item_conditions"])
         self.assertEqual(self.pages["Random treasure"].count(literal(gate)), 1)
-        self.assertIn("|chest-common|chest-middle|chest-rich=", self.pages["Random treasure"])
+        self.assertIn("|chest-middle|chest-rich=", self.pages["Random treasure"])
+        self.assertNotIn("|chest-common|chest-middle|chest-rich=", self.pages["Random treasure"])
         source = next(source for source in self.catalog["acquisition"]["sources"] if source["id"] == "boulders")
         self.assertEqual(self.pages[source["title"]].count(literal(source["loot_context"])), 1)
         self.assertIn("10% chance", source["loot_context"])
         self.assertIn("Viper", source["loot_context"])
-        self.assertEqual({row["id"] for row in source["rows"] if row["quantity"] == {"min": 1, "max": 4}},
+        self.assertEqual({row["id"] for row in source["rows"] if row["quantity"] == {"min": 1, "max": 5}},
                          {"boulders-base-maggot", "boulders-base-beetle"})
         for row in source["rows"]:
             self.assertNotIn("10%", row["probability"]["scope"])
@@ -388,10 +397,10 @@ class AcquisitionTests(unittest.TestCase):
             self.assertIn('id="entry-' + identity + '"', self.pages[previous[identity]])
             self.assertIn("[[" + target + "#entry-" + identity + "|", self.pages[previous[identity]])
         rows = {row["id"]: row for source in sources for row in source["rows"]}
-        for identity, numerator, denominator in (("boulders-base-maggot", 163, 300),
-                                                ("boulders-base-beetle", 163, 300),
-                                                ("cracks-cave-creeper", 559, 900),
-                                                ("cracks-drake-jasper", 29, 80)):
+        for identity, numerator, denominator in (("boulders-base-maggot", 71, 120),
+                                                ("boulders-base-beetle", 71, 120),
+                                                ("cracks-cave-creeper", 65, 96),
+                                                ("cracks-drake-jasper", 173, 360)):
             self.assertEqual((rows[identity]["probability"]["numerator"], rows[identity]["probability"]["denominator"]),
                              (numerator, denominator))
 
@@ -406,7 +415,8 @@ class AcquisitionTests(unittest.TestCase):
             lambda d: d["pools"].append(copy.deepcopy(d["pools"][0])),
             lambda d: next(s for s in d["sources"] if s["id"] == "random-treasure").update(pool_ids=[]),
             lambda d: next(s for s in d["sources"] if s["id"] == "treasure-chests")["pool_refs"][0].update(pool="missing"),
-            lambda d: next(p for p in d["pools"] if p["id"] == "chest-common")["item_conditions"].update({"item-127": "Conflicting condition"}),
+            lambda d: next(p for p in d["pools"] if p["id"] == "chest-middle")["item_conditions"].update({"item-127": "Conflicting condition"}),
+            lambda d: next(p for p in d["pools"] if p["id"] == "chest-common")["item_conditions"].update({"item-127": "Not a member"}),
         )
         for change in changes:
             catalog = copy.deepcopy(self.catalog)

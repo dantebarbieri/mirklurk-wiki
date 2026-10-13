@@ -1,6 +1,6 @@
 Choose [[Inventory crafting]] or a workstation below to browse what it can make.
 
-Recipes list ingredients, outputs, base AP costs and requirements.
+Recipes list ingredients, outputs, base AP costs and requirements. Crafting uses ingredients from your inventory first, then from containers within 4 tiles of you.
 
 Find [[Items#Recipe_ingredients_by_acquisition|ingredients by acquisition]] or browse [[:Category:Crafting materials|materials]].
 

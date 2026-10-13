@@ -1,0 +1,57 @@
+'''Version 0.8.9.9''' is a test build released on 13 October 2026 through the Steam beta branch ''next_version_tester'', ahead of the official patch. This wiki now documents it; the previous documented version was 0.8.1.5.
+
+To try it, right-click MirkLurk in your Steam Library, open '''Properties''', then '''Game Versions & Betas''', and choose ''next_version_tester''.
+
+'''Spoilers:''' this page names late-story content.
+
+== New content ==
+=== Story ===
+* The main quest continues after Scaal: Eir points you toward [[Quests and journal#entry-journal-30-hidden-realm|Clay's hidden realm]], where you face [[Magus Clay (boss)]]. Two new journal entries follow.
+
+=== Survivors' camp ===
+* The [[Survivors' camp]] appears in the first Savage Mirk area you enter. In older saves it appears the next time you enter one.
+* [[Wilda]] now trades and asks you to hunt [[The Terror]] and bring back the [[Head of The Terror]].
+* [[Grand Mother]] lives in the camp's main hut. Her blessing grants a skill point, and she sells magic weapons.
+* The former Unwanted Guard is now the [[Survivor]], one of the camp's guards.
+
+=== Creatures ===
+* [[Mirkfang]], [[Giant Mirkfang]] and [[Mirkfang Matriarch]] hunt at night and roost in caves by day.
+* Two bosses: [[The Terror]] and [[Magus Clay (boss)]].
+* New damage type: [[Leeching]].
+
+=== Items ===
+* [[Magic weapons]]: eight orbs and [[Staff of The Fire Eater]].
+* [[Storage Chest]], a placeable chest that keeps its contents safe.
+* [[Magus' Shard]], [[Clays' Magus Hood]], [[Magi's Ropebelt]], [[Head of The Terror]], [[Bat Hide]], [[Bat Meat]] and [[Grilled Bat Meat]].
+
+=== Controls ===
+* [[Strict move]]: hold Left Ctrl to walk to a tile without interacting with what is there.
+* [[Placing objects]]: press the Weapon Swap key while placing to flip an object.
+
+== Changes ==
+=== Crafting and building ===
+* [[Crafting]] takes ingredients from containers within 4 tiles once your inventory runs out.
+* You can place objects directly from a nearby container.
+* Early in the story, you cannot build within 30 tiles of Fort Solid (was 14).
+* A [[Campfire]] cannot be packed up while it is burning. Nearby fires and lit torches in your hands make lighting a fire more likely.
+
+=== Merchants and allies ===
+* [[Magus Clay]] and [[Viend]] sell the [[Storage Chest]]. Viend also sells the [[Steel Hand Axe]].
+* [[Summoning Stone]] allies are available only once Eir grants you access to Fort Solid. Clay leaves the list after you report Scaal's defeat, and Wilda joins once she trusts you.
+
+=== Skills and combat ===
+* Fire Striker is now [[Fire Bond]]. From rank 5 it can also treat burns while you rest.
+* [[Blunt]] stun chance is 10% (was 12%). [[Master Basher]] adds 1.2% per rank (was 1.5%); it and [[Force Fighter]] now only boost melee weapons.
+* [[Iron Battleaxe]] and [[Steel Battleaxe]] deal less damage with the inner cells of their attack patterns.
+* Creatures may give up a chase, and idle creatures often ignore one another.
+* Item tooltips now show weapon range.
+
+=== Items and loot ===
+* Eating AP costs changed: [[Crab Meat]] 2.2, [[Bug Meat]] 3, [[Snake Meat]] 2, [[Fried Egg]] 1.2, [[Vile Meat]] 3 and [[Grilled Toadkin Meat]] 2.6.
+* [[Iron Reinforced Gloves]] are repaired with a [[Metal Repair Kit]] instead of a [[Cloth Repair Kit]].
+* Several drops are smaller. For example, [[Titanspine Crab]] drops 2-3 [[Crab Meat]] (was 2-4) and [[Mire Serpent]] 16-32 [[Snake Meat]] (was 16-44). Scaalmyr and Sceetlers can now drop two [[Rift Weave]] or [[Glow Goo]].
+* [[Random treasure]] budgets are lower, and the new magic weapons, [[Magi's Ropebelt]] and [[Bat Hide]] can appear as treasure.
+* Some gathering amounts changed; see each item's page.
+* [[Map Drawing Kit]] is not used up if you already carry a map of the current area.
+
+[[Game mechanics]] | [[Main Page]]

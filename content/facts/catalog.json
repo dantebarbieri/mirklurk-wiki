@@ -100,7 +100,9 @@
           "item-205",
           "item-207",
           "item-208",
-          "item-209"
+          "item-209",
+          "item-264",
+          "item-265"
         ]
       },
       {
@@ -131,7 +133,7 @@
       {
         "title": "Weapons",
         "index": "Items",
-        "summary": "Melee weapons, bows and thrown flasks. Unarmed is a built-in attack, not a carried item. Arrows are under Ammunition.",
+        "summary": "Melee weapons, bows, magic weapons and thrown flasks. Unarmed is a built-in attack, not a carried item. Arrows are under Ammunition.",
         "members": [
           "item-2",
           "item-3",
@@ -168,7 +170,16 @@
           "item-189",
           "item-190",
           "item-191",
-          "item-206"
+          "item-206",
+          "item-266",
+          "item-267",
+          "item-268",
+          "item-269",
+          "item-270",
+          "item-271",
+          "item-272",
+          "item-273",
+          "item-274"
         ]
       },
       {
@@ -256,7 +267,9 @@
           "item-246",
           "item-247",
           "item-251",
-          "item-253"
+          "item-253",
+          "item-259",
+          "item-260"
         ]
       },
       {
@@ -301,7 +314,8 @@
           "item-214",
           "item-215",
           "item-216",
-          "item-224"
+          "item-224",
+          "item-258"
         ]
       },
       {
@@ -338,7 +352,8 @@
           "item-249",
           "item-250",
           "item-256",
-          "item-257"
+          "item-257",
+          "item-275"
         ],
         "summary": "Camp equipment, workstations and building supplies."
       },
@@ -393,9 +408,11 @@
           "item-123",
           "item-126",
           "item-130",
-          "item-132"
+          "item-132",
+          "item-261",
+          "item-262"
         ],
-        "summary": "Items used during the main quest."
+        "summary": "Items used during the main quest and the Survivors' camp request."
       },
       {
         "title": "Trees",
@@ -586,7 +603,9 @@
           "item-244",
           "item-245",
           "item-246",
-          "item-247"
+          "item-247",
+          "item-259",
+          "item-260"
         ]
       },
       {
@@ -606,7 +625,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "One-handed weapons, two-handed weapons and torches. Two-handed melee weapons occupy both hands; bows use arrows in the off hand.",
-        "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7", "item-8", "item-9", "item-10", "item-11", "item-27", "item-28", "item-29", "item-30", "item-41", "item-44", "item-90", "item-93", "item-96", "item-105", "item-106", "item-157", "item-158", "item-159", "item-160", "item-161", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-190", "item-191", "item-206", "item-212"],
+        "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7", "item-8", "item-9", "item-10", "item-11", "item-27", "item-28", "item-29", "item-30", "item-41", "item-44", "item-90", "item-93", "item-96", "item-105", "item-106", "item-157", "item-158", "item-159", "item-160", "item-161", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-190", "item-191", "item-206", "item-212", "item-266", "item-267", "item-268", "item-269", "item-270", "item-271", "item-272", "item-273", "item-274"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[16,17,23]"},
@@ -644,7 +663,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Hoods worn separately from helmets.",
-        "members": ["item-42", "item-146", "item-204", "item-205"],
+        "members": ["item-42", "item-146", "item-204", "item-205", "item-264"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[2]"},
@@ -679,8 +698,8 @@
         "title": "Belt-slot equipment",
         "index": "Items",
         "parents": ["Equipment by slot"],
-        "summary": "Herbalist belts. Backpacks use a separate slot.",
-        "members": ["item-13", "item-166", "item-167", "item-168"],
+        "summary": "Herbalist belts and Magi's Ropebelt. Backpacks use a separate slot.",
+        "members": ["item-13", "item-166", "item-167", "item-168", "item-265"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[5]"},
@@ -811,7 +830,7 @@
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Melee weapons occupy both hands. Bows instead use off-hand ammunition.",
-        "members": ["item-29", "item-30", "item-44", "item-93", "item-105", "item-106", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-206"],
+        "members": ["item-29", "item-30", "item-44", "item-93", "item-105", "item-106", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-206", "item-266"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[17]"},
@@ -831,8 +850,8 @@
         "title": "Poison weapons",
         "index": "Items",
         "parents": ["Weapons"],
-        "summary": "Weapons that inflict Poison, including Venom Flask. Poison arrows are under Ammunition.",
-        "members": ["item-159", "item-206", "item-251"],
+        "summary": "Weapons that inflict Poison, including Venom Flask and the poison orbs. Poison arrows are under Ammunition.",
+        "members": ["item-159", "item-206", "item-251", "item-267", "item-268"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[159,206].damageClass"},
@@ -844,14 +863,14 @@
         "index": "Items",
         "parents": ["Food and drink"],
         "summary": "Raw meat, eggs and edible small creatures, including live insects. Some cause sickness.",
-        "members": ["item-60", "item-62", "item-64", "item-66", "item-69", "item-82", "item-87", "item-95", "item-103", "item-162", "item-180", "item-241", "item-242", "item-243", "item-247"]
+        "members": ["item-60", "item-62", "item-64", "item-66", "item-69", "item-82", "item-87", "item-95", "item-103", "item-162", "item-180", "item-241", "item-242", "item-243", "item-247", "item-259"]
       },
       {
         "title": "Prepared foods",
         "index": "Items",
         "parents": ["Food and drink"],
         "summary": "Bread, cooked food and meals. Check each food for sickness risk and other effects.",
-        "members": ["item-25", "item-61", "item-63", "item-65", "item-67", "item-70", "item-83", "item-88", "item-104", "item-163", "item-181", "item-222", "item-235", "item-236", "item-237", "item-244", "item-245", "item-246"]
+        "members": ["item-25", "item-61", "item-63", "item-65", "item-67", "item-70", "item-83", "item-88", "item-104", "item-163", "item-181", "item-222", "item-235", "item-236", "item-237", "item-244", "item-245", "item-246", "item-260"]
       },
       {
         "title": "Plant foods",
@@ -873,7 +892,7 @@
         "title": "Mapping supplies",
         "index": "Items",
         "parents": ["Tools", "Consumables"],
-        "summary": "Map Drawing Kit is consumed after a successful outdoor use, not an indoor attempt. Finished maps and Map Ledger are not consumed.",
+        "summary": "Map Drawing Kit is consumed after a successful outdoor use. It is not used up indoors or when you already carry a map of the current area. Finished maps and Map Ledger are not consumed.",
         "members": ["item-156"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[156].doRemove/amount"}]
@@ -918,7 +937,7 @@
         "index": "Items",
         "parents": ["Crafting materials"],
         "summary": "Pelts, hides, husks, feathers, wax, fat, glands and Glow Goo. Large Scaalmyr Husk also serves as a shield.",
-        "members": ["item-50", "item-52", "item-77", "item-102", "item-120", "item-124", "item-129", "item-134", "item-135", "item-136", "item-178"]
+        "members": ["item-50", "item-52", "item-77", "item-102", "item-120", "item-124", "item-129", "item-134", "item-135", "item-136", "item-178", "item-258"]
       },
       {
         "title": "Mineral materials",
@@ -939,7 +958,7 @@
         "index": "Items",
         "parents": ["Crafting materials", "Food and drink"],
         "summary": "Foods also used in recipes, including meals, remedies and other crafting.",
-        "members": ["item-51", "item-60", "item-62", "item-64", "item-66", "item-69", "item-70", "item-82", "item-87", "item-103", "item-162", "item-180", "item-217", "item-218", "item-221", "item-223", "item-225", "item-226", "item-241", "item-242", "item-243", "item-247"]
+        "members": ["item-51", "item-60", "item-62", "item-64", "item-66", "item-69", "item-70", "item-82", "item-87", "item-103", "item-162", "item-180", "item-217", "item-218", "item-221", "item-223", "item-225", "item-226", "item-241", "item-242", "item-243", "item-247", "item-259"]
       },
       {
         "title": "Bugs",
@@ -1053,9 +1072,10 @@
           "item-197",
           "item-198",
           "item-24",
-          "item-21"
+          "item-21",
+          "item-264"
         ],
-        "summary": "Backpacks, herbalist belts, pocketed vests, Hiker's Shirt and Hiker's Pants add storage cells, not weight allowance.",
+        "summary": "Backpacks, herbalist belts, pocketed vests, Hiker's Shirt, Hiker's Pants and Clays' Magus Hood add storage cells, not weight allowance.",
         "confidence": "inferred",
         "evidence": [
           {
@@ -1079,6 +1099,54 @@
             "key": "12/14/148/26/13/166/167/168/196/197/198/24/21"
           }
         ]
+      },
+      {
+        "title": "Magic weapons",
+        "index": "Items",
+        "parents": [
+          "Weapons"
+        ],
+        "summary": "Orbs cast spells at range and drain one of your survival meters per cast. Staff of The Fire Eater is a two-handed fire weapon.",
+        "members": [
+          "item-266",
+          "item-267",
+          "item-268",
+          "item-269",
+          "item-270",
+          "item-271",
+          "item-272",
+          "item-273",
+          "item-274"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[266-274].type/damageClass/bonuses"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "weapon_is_orb"
+          },
+          {
+            "source": "ui-en-0899",
+            "section": "TTgen",
+            "key": "45"
+          }
+        ]
+      },
+      {
+        "title": "Mirkfangs",
+        "index": "Bestiary",
+        "members": [
+          "being-37",
+          "being-38",
+          "being-39",
+          "being-40"
+        ],
+        "summary": "Grouped by appearance; aggression factions may differ."
       }
     ]
   },
@@ -1517,8 +1585,10 @@
     },
     {
       "entity": "skill-1-0",
-      "title": "Fire Striker",
-      "aliases": []
+      "title": "Fire Bond",
+      "aliases": [
+        "Fire Striker"
+      ]
     },
     {
       "entity": "item-247",
@@ -2637,8 +2707,10 @@
     },
     {
       "entity": "being-35",
-      "title": "Unwanted Guard",
-      "aliases": []
+      "title": "Survivor",
+      "aliases": [
+        "Unwanted Guard"
+      ]
     },
     {
       "entity": "being-19",
@@ -2768,6 +2840,126 @@
     {
       "entity": "item-138",
       "title": "Wound Salve",
+      "aliases": []
+    },
+    {
+      "entity": "item-258",
+      "title": "Bat Hide",
+      "aliases": []
+    },
+    {
+      "entity": "item-259",
+      "title": "Bat Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-260",
+      "title": "Grilled Bat Meat",
+      "aliases": []
+    },
+    {
+      "entity": "item-261",
+      "title": "Head of The Terror",
+      "aliases": []
+    },
+    {
+      "entity": "item-262",
+      "title": "Magus' Shard",
+      "aliases": []
+    },
+    {
+      "entity": "item-264",
+      "title": "Clays' Magus Hood",
+      "aliases": []
+    },
+    {
+      "entity": "item-265",
+      "title": "Magi's Ropebelt",
+      "aliases": []
+    },
+    {
+      "entity": "item-266",
+      "title": "Staff of The Fire Eater",
+      "aliases": []
+    },
+    {
+      "entity": "item-267",
+      "title": "Orb of Poison",
+      "aliases": []
+    },
+    {
+      "entity": "item-268",
+      "title": "Orb of Greater Poison",
+      "aliases": []
+    },
+    {
+      "entity": "item-269",
+      "title": "Orb of Fire",
+      "aliases": []
+    },
+    {
+      "entity": "item-270",
+      "title": "Orb of Greater Fire",
+      "aliases": []
+    },
+    {
+      "entity": "item-271",
+      "title": "Orb of Iron Essence",
+      "aliases": []
+    },
+    {
+      "entity": "item-272",
+      "title": "Orb of Steel Essence",
+      "aliases": []
+    },
+    {
+      "entity": "item-273",
+      "title": "Orb of Wind",
+      "aliases": []
+    },
+    {
+      "entity": "item-274",
+      "title": "Orb of Storm",
+      "aliases": []
+    },
+    {
+      "entity": "item-275",
+      "title": "Storage Chest",
+      "aliases": []
+    },
+    {
+      "entity": "being-36",
+      "title": "Grand Mother",
+      "aliases": []
+    },
+    {
+      "entity": "being-37",
+      "title": "Mirkfang Matriarch",
+      "aliases": []
+    },
+    {
+      "entity": "being-38",
+      "title": "Mirkfang",
+      "aliases": []
+    },
+    {
+      "entity": "being-39",
+      "title": "Giant Mirkfang",
+      "aliases": []
+    },
+    {
+      "entity": "being-40",
+      "title": "The Terror",
+      "aliases": []
+    },
+    {
+      "entity": "being-41",
+      "title": "Magus Clay (boss)",
+      "aliases": []
+    },
+    {
+      "entity": "damage-class-27",
+      "title": "Leeching",
       "aliases": []
     }
   ],
@@ -3039,6 +3231,26 @@
             {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.night/main<15"},
             {"source": "beings-en", "section": "Eir", "key": "200/201/202/203"}
           ]
+        },
+        {
+          "id": "clay-hidden-realm",
+          "title": "Clay's whereabouts",
+          "paragraphs": [
+            "After you report Scaal's defeat, Eir has a Clay? topic. She has heard that magi keep hidden realms opened with a magical key, and suggests finding someone who sells magical items: Grand Mother sells Magus' Shard.",
+            "Once Clay is dead, talking to Eir closes his story and the journal."
+          ],
+          "links": [
+            {"label": "Grand Mother", "target": "Grand Mother"},
+            {"label": "Magus' Shard", "target": "Magus' Shard"},
+            {"label": "Clay is dead", "target": "Magus Clay (boss)"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "beings-en-0899", "section": "Eir", "key": "116/216"},
+            {"source": "game-data-0899", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being6.MAINQUESTSTAGE30.option116"},
+            {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.being6.MAINQUESTSTAGE31.local4->216/MAINQUESTSTAGE32"}
+          ]
         }
       ]
     },
@@ -3141,6 +3353,23 @@
             {"source": "beings-en", "section": "Clay", "key": "200/201/202/203/204/205/206/207"},
             {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC8.main5/samples3/main6/local203/unlock;main10/item123"},
             {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue_action.NPC8.local205/item126/main11;local207/main17"}
+          ]
+        },
+        {
+          "id": "later-story",
+          "title": "Later story",
+          "paragraphs": [
+            "Clay can be summoned with a Summoning Stone only until you report Scaal's defeat. Afterward he waits as an enemy in his hidden realm; see Magus Clay (boss)."
+          ],
+          "links": [
+            {"label": "Summoning Stone", "target": "Summoning Stone"},
+            {"label": "Magus Clay (boss)", "target": "Magus Clay (boss)"}
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.item127.tempBeings.being8.MAINQUESTSTAGE<30"},
+            {"source": "game-data-0899", "section": "gml_RoomCC_rm_realm_magus_0_Create", "key": "being_initiate[41]"}
           ]
         }
       ]
@@ -3458,7 +3687,7 @@
         "title": "Healing",
         "paragraphs": [
           "Viend automatically heals up to two ordinary wounds on one character within 16 tiles. Each cast restores 1 HP to each of two randomly chosen wounded health cells, or just 1 HP if only one cell is wounded. It costs him 10 action points, his full turn's allowance, and has no separate cooldown.",
-          "The player always takes priority, even if someone else is closer or more badly injured. Otherwise, Viend heals himself if wounded, then the nearest eligible friendly character. He does not heal dead or incapacitated NPCs. Walls and other obstacles do not block the spell.",
+          "The player always takes priority, even if someone else is closer or more badly injured. Otherwise, Viend heals himself if wounded, then the nearest eligible friendly character. He does not heal dead or incapacitated NPCs. Walls and other obstacles do not block the spell. He does not heal Wilda, Grand Mother or the Survivors.",
           "Healing restores HP, not armor or wellbeing, and does not remove poison, bleeding or sickness. Burns cannot be healed directly: use Simple Burn Remedy to turn them into ordinary wounds first. See Resting for natural wound healing.",
           "Viend checks for wounds before moving or attacking whenever he can act with all 10 action points available. Ongoing damage or a stun can delay or prevent his action. Healing needs no conversation, payment or supplies, works outside combat, and does not depend on his shop or alchemy workstation.",
           "During his escort or an active summon, Viend receives an action each turn. When nearby but idle, neither fighting nor detecting an enemy, he normally has a 10% chance to act each turn, so healing can be intermittent. While you rest in a bed or sleeping gear, this idle chance falls to 1.5% if at least two conditions are met: satiation above its low threshold, stamina above its low threshold, and temperature inside its comfortable range."
@@ -3889,22 +4118,198 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "beings-en",
+          "source": "beings-en-0899",
           "section": "Titles",
           "key": "34"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_3",
-          "key": "beingDB[34].sprite/team"
+          "key": "beingDB[34].sprite/team10"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_UI_Draw_64",
           "key": "dialogue.NPC[34].porPic[8]"
         }
       ],
-      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior."
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "summary": "Wilda leads the Survivors' camp. She trades supplies, gives the camp's request to hunt The Terror, and can later be summoned as an ally.",
+      "location": {
+        "paragraphs": [
+          "Wilda leads the Survivors' camp, which is built the first time you enter a Savage Mirk area in a world. A message about torchlight and five white dots point toward it when it appears. There is only one camp per world.",
+          "The camp has three huts, two permanent torches and a cleared yard. Wilda and three Survivor guards stay nearby. Grand Mother lives inside the main hut, whose ladder stays locked until Wilda trusts you.",
+          "You may not place or build anything within about 26 tiles of the camp. Mirkfangs and other creatures do not spawn within 16 tiles of it, and The Terror retreats rather than attack you there."
+        ],
+        "related_entities": [
+          "being-35",
+          "being-36",
+          "being-40"
+        ],
+        "confidence": "observed",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Alarm_6",
+            "key": "createdCamp/areaType5/spr_building_48x48_tall/index-2987/transPoint36/npcs34+35x3/IseeTorchlight"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_obj_eff_popup_Draw_0",
+            "key": "marker-2987/five-white-direction-dots"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_GlobalScript_scr_saveload",
+            "key": "camp/createdCamp"
+          },
+          {
+            "source": "ui-en-0899",
+            "section": "LocTitles",
+            "key": "5"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_cursor_Draw_73",
+            "key": "placement.areaType5.solid-2987.cradius420"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "spot_is_private.areaType5.solid-2987.256"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Alarm_4",
+            "key": "spawn.spot_is_private"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Step_0",
+            "key": "being40.spot_is_private.retreat"
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "id": "introduction",
+          "title": "First meeting",
+          "paragraphs": [
+            "Wilda first checks that you are not working for the Kingdom, then lets you visit the camp. She forbids building nearby and keeps Grand Mother off-limits until you earn her trust. Trade opens after this introduction."
+          ],
+          "links": [
+            {
+              "label": "Grand Mother",
+              "target": "Grand Mother"
+            }
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {
+              "source": "beings-en-0899",
+              "section": "Wilda",
+              "key": "0/1/115"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_Object_UI_Draw_64",
+              "key": "dialogue.being34.local0/1/-1"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_menu_related",
+              "key": "menu_psynch.NPC[34].local0-1.no-trade"
+            }
+          ]
+        },
+        {
+          "id": "information",
+          "title": "Information",
+          "paragraphs": [
+            "Wilda and Grand Mother are exiles who have survived in the Mirk for months. They gathered other exiles, who now call themselves Survivors, and settled in the Savage Mirk because Fort Solid would not tolerate a growing group nearby. Grand Mother's calming presence holds them together."
+          ],
+          "links": [
+            {
+              "label": "Survivors",
+              "target": "Survivor"
+            }
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {
+              "source": "beings-en-0899",
+              "section": "Wilda",
+              "key": "104/105"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_Object_UI_Draw_64",
+              "key": "dialogue.being34.option102->action104/105"
+            }
+          ]
+        },
+        {
+          "id": "trust",
+          "title": "Trust",
+          "paragraphs": [
+            "Choosing Trust starts the camp's request: kill The Terror and bring Wilda the Head of The Terror. The Terror is a Mirkfang Matriarch that only hunts the camp's area at night, never close to the camp, and only after Wilda has asked.",
+            "Talk to Wilda while carrying the head. She keeps it, unlocks the ladder to Grand Mother's hut and adds herself to the Summoning Stone's list of allies."
+          ],
+          "links": [
+            {
+              "label": "The Terror",
+              "target": "The Terror"
+            },
+            {
+              "label": "Head of The Terror",
+              "target": "Head of The Terror"
+            },
+            {
+              "label": "Mirkfang Matriarch",
+              "target": "Mirkfang Matriarch"
+            },
+            {
+              "label": "Grand Mother's hut",
+              "target": "Grand Mother"
+            },
+            {
+              "label": "Summoning Stone",
+              "target": "Summoning Stone"
+            }
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {
+              "source": "beings-en-0899",
+              "section": "Wilda",
+              "key": "200/201/202"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_Object_UI_Draw_64",
+              "key": "dialogue.being34.option115/local115/201/202"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_menu_related",
+              "key": "menu_psynch.being34.item261/transPoint36/campQUESTstage2"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_menu_related",
+              "key": "menu_psynch.item127.tempBeings.being34"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_Object_manager_area_Alarm_4",
+              "key": "areaType5.dark.campQUESTstage0.terrorWeight"
+            }
+          ]
+        }
+      ]
     },
     {
       "entity": "being-35",
@@ -3912,54 +4317,455 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "beings-en",
+          "source": "beings-en-0899",
           "section": "Titles",
           "key": "35"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_databank_Alarm_3",
-          "key": "beingDB[35].sprite/team"
+          "key": "beingDB[35].sprite/team10"
         },
         {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_ai_related",
-          "key": "being_get_target.team0-player-exclusion/target_is_hostile.teams0-1"
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "createdCamp.npcs34+35x3"
         },
         {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "attack_aftermath.damage-retaliation-target"
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "interact.being35.CamperGreet/CamperGreetFriendly"
         },
         {
-          "source": "game-data",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "all-class-selection-tables"
+          "source": "game-data-0899",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.areaType5.being35.TooCloseCamp"
         },
         {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_mapcreations",
-          "key": "dungeonlike_areas.creature-creation"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_UI_Draw_64",
-          "key": "dialogue.being-index-switch.no-case35"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_menu_related",
-          "key": "menu_add.merchants8/12/20/19/26/33;menu_psynch[127].choices6/8/12/19"
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[35].treasure_get_lootarray[1,1.5,0.2]"
         }
       ],
-      "note": "The base friendly faction and player-target exclusion are source-observed, not a quest-specific override. NPC placement remains an editorial inference: the inspected creation, dialogue and merchant routes do not establish an ordinary encounter or story role. Generic retaliation is distinct from normal target acquisition.",
-      "summary": "Unwanted Guard belongs to the friendly faction and can retaliate when attacked. Normal encounter and summoning availability: Unknown. Dialogue, wares and quest role: Not documented."
+      "note": "Renamed from Unwanted Guard in 0.8.9.9 and moved to the camp faction. NPC grouping follows its friendly faction and camp role.",
+      "summary": "Survivors guard the Survivors' camp. They do not hold conversations: talking to one gets a short greeting, friendlier once Wilda trusts you. They warn you off if you try to build near the camp. A Survivor's corpse holds random treasure.",
+      "location": {
+        "paragraphs": [
+          "Three Survivors guard the Survivors' camp with Wilda. They stay near the camp rather than roaming the Savage Mirk."
+        ],
+        "related_entities": [
+          "being-34"
+        ],
+        "confidence": "observed",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Alarm_6",
+            "key": "createdCamp/areaType5/spr_building_48x48_tall/index-2987/transPoint36/npcs34+35x3/IseeTorchlight"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_obj_eff_popup_Draw_0",
+            "key": "marker-2987/five-white-direction-dots"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_GlobalScript_scr_saveload",
+            "key": "camp/createdCamp"
+          },
+          {
+            "source": "ui-en-0899",
+            "section": "LocTitles",
+            "key": "5"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "being-36",
+      "kind": "npc",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "36"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[36].sprite/team10/attackPattern[[0]]/hostileChance0"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "dialogue.NPC[36].porPic[9]"
+        }
+      ],
+      "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
+      "summary": "Grand Mother is Wilda's grandmother. She has no attack. Her blessing grants a skill point, and she sells the game's magic weapons.",
+      "location": {
+        "paragraphs": [
+          "Grand Mother sits inside the main hut of the Survivors' camp. Its ladder is locked until Wilda trusts you; see Wilda's Trust topic."
+        ],
+        "related_entities": [
+          "being-34"
+        ],
+        "confidence": "observed",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Alarm_6",
+            "key": "solid-2987.transPoint36.locked-212"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_RoomCC_rm_hut_mothers_0_Create",
+            "key": "being_initiate[36]"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_GlobalScript_scr_smartones",
+            "key": "transPoint.solid-2987.locked.Forbidden"
+          }
+        ]
+      },
+      "dialogue": [
+        {
+          "id": "blessing",
+          "title": "Blessing",
+          "paragraphs": [
+            "Grand Mother greets each newcomer with a blessing. Finishing this first conversation grants one skill point. Trade, Information and Advice become available afterward."
+          ],
+          "links": [
+            {
+              "label": "skill point",
+              "target": "Level progression"
+            }
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {
+              "source": "beings-en-0899",
+              "section": "Mother",
+              "key": "0/1"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_menu_related",
+              "key": "menu_psynch.being36.local1.skillPoints++"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_Object_UI_Draw_64",
+              "key": "dialogue.being36.local0->1->-1"
+            }
+          ]
+        },
+        {
+          "id": "information",
+          "title": "Information",
+          "paragraphs": [
+            "Grand Mother is Wilda's grandmother and was also the wise woman of their home village. She describes such wise women as gifted in ways similar to magi, which the Kingdom does not tolerate."
+          ],
+          "links": [
+            {
+              "label": "Wilda",
+              "target": "Wilda"
+            }
+          ],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {
+              "source": "beings-en-0899",
+              "section": "Mother",
+              "key": "102"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_Object_UI_Draw_64",
+              "key": "dialogue.being36.option102"
+            }
+          ]
+        },
+        {
+          "id": "advice",
+          "title": "Advice",
+          "paragraphs": [
+            "Her advice is about calm and staying present, not a game mechanic."
+          ],
+          "links": [],
+          "spoiler": false,
+          "confidence": "observed",
+          "evidence": [
+            {
+              "source": "beings-en-0899",
+              "section": "Mother",
+              "key": "104"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_Object_UI_Draw_64",
+              "key": "dialogue.being36.option104"
+            }
+          ]
+        },
+        {
+          "id": "trade",
+          "title": "Trade",
+          "paragraphs": [
+            "Grand Mother sells magic weapons and Summoning Stones. After you report Scaal's defeat to Eir, she also sells Magus' Shard, the key to Clay's hidden realm."
+          ],
+          "links": [
+            {
+              "label": "magic weapons",
+              "target": "Magic weapons"
+            },
+            {
+              "label": "Summoning Stones",
+              "target": "Summoning Stone"
+            },
+            {
+              "label": "Magus' Shard",
+              "target": "Magus' Shard"
+            },
+            {
+              "label": "Clay's hidden realm",
+              "target": "Magus Clay (boss)"
+            }
+          ],
+          "spoiler": true,
+          "confidence": "observed",
+          "evidence": [
+            {
+              "source": "beings-en-0899",
+              "section": "Mother",
+              "key": "101"
+            },
+            {
+              "source": "game-data-0899",
+              "section": "gml_GlobalScript_scr_menu_related",
+              "key": "menu_add.trade.vendor[36]/MAINQUESTSTAGE>=30.item[262]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "entity": "being-37",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "37"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[37].sprite/team11"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index38->39(areaType5|20%)->37(4%)"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility.",
+      "summary": "A rare Mirkfang Matriarch replaces 4% of Giant Mirkfang spawns. With 10 AP and a 5 AP bite, it can attack twice in a turn when it does not need to move. Its Leeching bites heal it."
+    },
+    {
+      "entity": "being-38",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "38"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[38].sprite/team11"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn.class38.dark-weights/cave-day-30%"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility.",
+      "summary": "Mirkfangs are flying creatures that hunt outdoors at night and roost in caves during the day. In a Savage Mirk every Mirkfang spawn becomes a Giant Mirkfang; elsewhere 20% do. Their bites deal Leeching damage."
+    },
+    {
+      "entity": "being-39",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "39"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[39].sprite/team11"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index38->39(areaType5|20%)->37(4%)"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility.",
+      "summary": "A larger Mirkfang. Every Mirkfang spawn in a Savage Mirk, and 20% elsewhere, becomes one. Its bites deal Leeching damage."
+    },
+    {
+      "entity": "being-40",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "40"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[40].sprite/team11"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "areaType5.dark.campQUESTstage0.terrorWeight25"
+        }
+      ],
+      "note": "Creature or enemy presentation grouping; this does not assert universal hostility.",
+      "summary": "The Terror is the boss of the Survivors' camp request: an unusually tough Mirkfang Matriarch with armored body cells. She can attack twice in a turn when she does not move, and her bites deal Leeching damage.",
+      "ability": {
+        "title": "Screech and hunting",
+        "paragraphs": [
+          "Every third turn while she has a target, The Terror screeches instead of attacking. The screech removes 25% focus directly; difficulty and Focused Mind do not reduce it.",
+          "She appears only at night, only in the Savage Mirk area with the Survivors' camp, and only after Wilda asks you to hunt her. Only one exists at a time, and she never spawns within 16 tiles of the camp.",
+          "If you stand within 16 tiles of the camp, she screeches and breaks off instead of attacking. Her corpse always holds the Head of The Terror, plus bat meat and hides."
+        ],
+        "related_entities": [
+          "being-34",
+          "item-261",
+          "item-259",
+          "item-258"
+        ],
+        "related_pages": [
+          "Focus"
+        ],
+        "confidence": "observed",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Step_0",
+            "key": "being40.turnCounter>=3.doSpecial/spot_is_private.retreat"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_obj_being_Step_0",
+            "key": "being40.special.player_focus_lose[0.25,true]/AP=0"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_GlobalScript_scr_basic_useful",
+            "key": "player_focus_lose.arg1-bypasses-difficulty-and-skill"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Alarm_4",
+            "key": "areaType5.dark.campQUESTstage0.alreadyGotBat/spot_is_private/terrorWeight25"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_obj_being_Alarm_0",
+            "key": "death.corpse[40]"
+          },
+          {
+            "source": "beings-en-0899",
+            "section": "Desc",
+            "key": "40"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "being-41",
+      "kind": "creature",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "beings-en-0899",
+          "section": "Titles",
+          "key": "8"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[41].name/sprite/team8"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_RoomCC_rm_realm_magus_0_Create",
+          "key": "being_initiate[41]"
+        }
+      ],
+      "note": "Boss form of Magus Clay, grouped as an enemy because it always attacks; the friendly NPC record is separate.",
+      "summary": "Clay's boss form waits in his hidden Magus realm, reached with Magus' Shard after you report Scaal's defeat to Eir. He fights with fire spells at range and in melee. Defeating him continues the main quest.",
+      "ability": {
+        "title": "Blink and rewards",
+        "paragraphs": [
+          "Clay starts the fight as soon as you arrive. Every third turn while he has a target, he teleports to a random free spot in the realm at least 7 tiles from you, usually 10 or more.",
+          "His corpse holds 6 to 10 Gold Coins, Clays' Magus Hood and Magi's Ropebelt."
+        ],
+        "related_entities": [
+          "being-8",
+          "item-264",
+          "item-265",
+          "item-74",
+          "item-262"
+        ],
+        "related_pages": [],
+        "confidence": "observed",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_obj_being_Alarm_10",
+            "key": "being41.forced-dialogue/combat"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_manager_area_Step_0",
+            "key": "being41.turnCounter>=3.doSpecial"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_obj_being_Step_0",
+            "key": "being41.special.blink[1040-1320,1140-1340]/mind160|112"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_obj_being_Alarm_0",
+            "key": "death.corpse[41].items74/264/265/MAINQUESTSTAGE31"
+          }
+        ]
+      }
     }
   ],
   "entry_links": [
     {
       "entry": "world-seed-boundaries",
-      "entities": ["being-12", "being-22", "being-26", "being-33"]
+      "entities": ["being-12", "being-22", "being-26", "being-33", "being-34", "being-35", "being-36"]
     },
     {
       "entry": "journal-1",
@@ -4097,6 +4903,45 @@
       "entities": [
         "skill-1-2"
       ]
+    },
+    {
+      "entry": "journal-30-hidden-realm",
+      "entities": [
+        "being-6",
+        "being-36",
+        "item-262",
+        "being-41"
+      ]
+    },
+    {
+      "entry": "journal-31",
+      "entities": [
+        "being-41",
+        "being-6"
+      ]
+    },
+    {
+      "entry": "journal-32",
+      "entities": [
+        "being-6"
+      ]
+    },
+    {
+      "entry": "camp-1-trust",
+      "entities": [
+        "being-34",
+        "being-40",
+        "item-261"
+      ]
+    },
+    {
+      "entry": "camp-2-access",
+      "entities": [
+        "being-34",
+        "being-36",
+        "item-261",
+        "item-127"
+      ]
     }
   ],
   "entry_display": [
@@ -4179,9 +5024,14 @@
     {
       "entry": "skill-1-0-mechanics",
       "title": "Effects",
-      "summary": "Start fires more reliably. Each rank adds 3 percentage points to the success chance of a fire-starting attempt.",
+      "summary": "Start fires more reliably. Each rank adds 3 percentage points to the success chance of a fire-starting attempt. From rank 5, each turn spent resting or sleeping has a 4% chance to treat one burnt hit point, turning it into an ordinary wound; from rank 10 the chance is 8%.",
       "conditions": null,
-      "steps": []
+      "steps": [],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "ui-en-0899", "section": "SkillsDesc1", "key": "0"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal0.04/x2.being_heal_burnt"}
+      ]
     },
     {
       "entry": "skill-1-1-mechanics",
@@ -4214,9 +5064,15 @@
     {
       "entry": "skill-2-0-mechanics",
       "title": "Effects",
-      "summary": "Spend 0.3 less AP on bow use per rank. Rank 5 allows close-range bow attacks; rank 10 gives a 12.5% chance for a shot to cost no AP.",
+      "summary": "Spend 0.3 less AP on bow use per rank. Rank 5 allows close-range bow attacks; rank 10 gives a 12.5% chance for a shot to cost no AP. Magic orbs do not use these bonuses.",
       "conditions": null,
-      "steps": []
+      "steps": [],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "ui-en-0899", "section": "SkillsDesc2", "key": "0"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_attackcost.!weapon_is_orb"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "ranged.freeChance.!weapon_is_orb"}
+      ]
     },
     {
       "entry": "skill-2-1-mechanics",
@@ -4256,16 +5112,26 @@
     {
       "entry": "skill-3-1-mechanics",
       "title": "Effects",
-      "summary": "Stun more often with blunt melee attacks: each rank adds 1.5 percentage points to the stun chance. Every third rank also reduces their AP cost by 1.",
+      "summary": "Stun more often with blunt melee weapons: each rank adds 1.2 percentage points to the stun chance. Ranged blunt attacks, such as essence orbs, do not benefit. Every third rank also reduces blunt melee AP costs by 1.",
       "conditions": null,
-      "steps": []
+      "steps": [],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "ui-en-0899", "section": "SkillsDesc3", "key": "1"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_aftermath.stunChance0.1/fighterSkills[1]*0.012/!weapon_is_ranged"}
+      ]
     },
     {
       "entry": "skill-3-2-mechanics",
       "title": "Effects",
-      "summary": "Improve force melee attacks. Each rank adds 2 percentage points to their bonus-damage chance, and every third rank reduces their AP cost by 1.",
+      "summary": "Improve force melee attacks. Each rank adds 2 percentage points to their bonus-damage chance; ranged force attacks do not benefit. Every third rank reduces their AP cost by 1.",
       "conditions": null,
-      "steps": []
+      "steps": [],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "ui-en-0899", "section": "SkillsDesc3", "key": "2"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.forceChance+0.02*fighterSkills[2]/!weapon_is_ranged"}
+      ]
     },
     {
       "entry": "skill-3-3-mechanics",
@@ -4540,50 +5406,18 @@
       "conditions": null,
       "steps": [
         "Entering an unsaved zone creates fresh terrain. Saved zones load their existing terrain instead.",
-        "Gurb-Gurb and Ihar can still appear on first visits, revisits or outdoor save loads until their locations have been created. See their pages for biome and placement rules."
+        "Gurb-Gurb, Ihar and the Survivors' camp can still appear on first visits, revisits or outdoor save loads until their locations have been created. See their pages for biome and placement rules."
       ],
       "confidence": "observed",
       "evidence": [
-        {
-          "source": "game-data",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid/fort/rangerCamp/riftQuestArea/libraryArea/biome-placement-and-fill"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "alarm[6]/saved-Ygrid-exit/seed/noise-offsets/terrain_link_lerp/terrain_link_layer/landmarks"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_manager_area_Alarm_6",
-          "key": "createdGurbsHut/createdShipwreck/areaType/placement-success"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_mapcreations",
-          "key": "rift-depths-1-2-3/being22"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_saveload",
-          "key": "worldGrid/rangerCamp/libraryArea/riftQuestArea/landmark-flags/no-world-seed"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Room_rm_int_Create",
-          "key": "randomize"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_seeds",
-          "key": "seed_random/seed_noedges/seed_random_1d/no-live-callers"
-        },
-        {
-          "source": "ui-en",
-          "section": "LocTitles",
-          "key": "0/1/3/4/5/22/23/100"
-        }
+        {"source": "game-data", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid/fort/rangerCamp/riftQuestArea/libraryArea/biome-placement-and-fill"},
+        {"source": "game-data", "section": "gml_Object_manager_area_Alarm_2", "key": "alarm[6]/saved-Ygrid-exit/seed/noise-offsets/terrain_link_lerp/terrain_link_layer/landmarks"},
+        {"source": "game-data-0899", "section": "gml_Object_manager_area_Alarm_6", "key": "createdGurbsHut/createdShipwreck/createdCamp/areaType/placement-success"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_mapcreations", "key": "rift-depths-1-2-3/being22"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_saveload", "key": "worldGrid/rangerCamp/libraryArea/riftQuestArea/landmark-flags/no-world-seed"},
+        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "randomize"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_seeds", "key": "seed_random/seed_noedges/seed_random_1d/no-live-callers"},
+        {"source": "ui-en", "section": "LocTitles", "key": "0/1/3/4/5/22/23/100"}
       ]
     },
     {
@@ -4601,12 +5435,17 @@
     {
       "entry": "corpse-budgeted-treasure",
       "steps": [
-        "The treasure budget is 1 silver, with a minimum non-valuable item value of 10 copper. Coins and gems bypass that minimum but must fit the budget.",
+        "The treasure budget is 1 silver for the Unwanted and 1.5 silver for Survivors. Non-valuable items must be worth at least 10 copper, or 20 copper for Survivors. Coins and gems bypass that minimum but must fit the budget.",
         "Food and materials can appear, unlike ordinary skeleton treasure. Other exclusions, story requirements, wear and selection limits still apply.",
         "Recovered arrows are added after the base loot."
       ],
-      "summary": "Raving Unwanted and Mutated Unwanted have random treasure rather than fixed loot. Lootable corpses can also contain recovered arrows.",
-      "conditions": "Only arrows retained by the recovery check are added; not every fired arrow is recoverable."
+      "summary": "Raving Unwanted, Mutated Unwanted and Survivors have random treasure rather than fixed loot. Lootable corpses can also contain recovered arrows.",
+      "conditions": "Only arrows retained by the recovery check are added; not every fired arrow is recoverable.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[31]/corpse[32]/corpse[35].treasure_get_lootarray"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray"}
+      ]
     },
     {
       "entry": "crafting-station-modifiers",
@@ -4614,7 +5453,14 @@
       "summary": "Different crafting methods offer different recipes.",
       "steps": [
         "Some components are required as tools rather than consumed ingredients.",
-        "Where chopping is required, a carried tool must meet the recipe's chopping-capability requirement."
+        "Where chopping is required, a carried tool must meet the recipe's chopping-capability requirement.",
+        "Ingredients are taken from your inventory first, then from containers within 4 tiles of you."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_inventory_has_reqs/player_inventory_lose_reqs.nearby_containers"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "nearby_containers_get_amount/nearby_containers_lose_amount.point_distance<=64"},
+        {"source": "ui-en-0899", "section": "TTgen", "key": "48"}
       ]
     },
     {
@@ -4737,48 +5583,93 @@
     },
     {
       "entry": "corpse-13-107",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[13].item[107].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-13-124",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[13].item[124].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-14-107",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[14].item[107].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-14-124",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[14].item[124].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-14-129",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[14].item[129].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-15-107",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[15].item[107].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-15-124",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[15].item[124].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-16-107",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[16].item[107].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-16-124",
-      "summary": "Exactly one in the base corpse loot.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "One or two in the base corpse loot; two is uncommon.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[16].item[124].max(1,lac(0,2))"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-11-103",
@@ -4822,8 +5713,13 @@
     },
     {
       "entry": "corpse-4-82",
-      "summary": "Four Snake Meat stacks of 4-11 each, favoring lower counts: 16-44 total.",
-      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."
+      "summary": "Four Snake Meat stacks of 4-8 each, favoring lower counts: 16-32 total.",
+      "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_being_Alarm_0", "key": "death.corpse[4].item[82]"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances[min..max]"}
+      ]
     },
     {
       "entry": "corpse-0-none",
@@ -4849,6 +5745,10 @@
       "entry": "corpse-22-none",
       "summary": "Leaves no lootable corpse. XP and story rewards are separate.",
       "conditions": "No lootable corpse; other rewards may still apply."
+    },
+    {
+      "entry": "journal-30",
+      "summary": "After Scaal's defeat, the protagonist wonders about one day returning home."
     }
   ],
   "stations": [
@@ -4912,45 +5812,19 @@
       "acquisition": null,
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_menu_related",
-          "key": "menu_psynch.station[38].activeTurns/CM.item[65]"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_obj_station_Alarm_0",
-          "key": "localMenu"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_items",
-          "key": "item_get_real_craftcost"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "player_inventory_get_amount/player_inventory_lose_reqs"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_menu_related",
-          "key": "menu_psynch.activeTurns/CM"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_smartones",
-          "key": "station_turnpass.activeTurns"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_UI_Draw_64",
-          "key": "fire-menu.startAPcost"
-        }
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.station[38].activeTurns/CM.item[65]"},
+        {"source": "game-data", "section": "gml_Object_obj_station_Alarm_0", "key": "localMenu"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_get_real_craftcost"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_inventory_get_amount/player_inventory_lose_reqs"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.activeTurns/CM"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_smartones", "key": "station_turnpass.activeTurns"},
+        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "fire-menu.startAPcost"},
+        {"source": "game-data-0899", "section": "gml_Object_UI_Draw_64", "key": "station-menu.PTII[38].activeTurns<=0;fire-menu.fireSelfC.stations<=24px/torch*0.33/held-lit-torch+0.3"}
       ],
       "notes": [
         "Lighting a fire is a separate one-AP attempt that also requires fuel and a successful ignition check.",
-        "Fire-linked crafting is available only while the fire remains active; its recipe menu closes when the fire goes out."
+        "Fire-linked crafting is available only while the fire remains active; its recipe menu closes when the fire goes out.",
+        "You cannot pack up a campfire while it is burning. Burning fires within about 1.5 tiles and lit torches in your hands raise the chance of lighting a new fire."
       ]
     },
     {
@@ -4964,23 +5838,14 @@
       "acquisition": null,
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_menu_related",
-          "key": "menu_psynch.station[172].activeTurns/CM.item[140]"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_menu_related",
-          "key": "menu_open.fieldkit.activeTurns/CM"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_obj_station_Alarm_0",
-          "key": "station[53]/station[131].localMenu"
-        }
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.station[172].activeTurns/CM.item[140]"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_open.fieldkit.activeTurns/CM"},
+        {"source": "game-data", "section": "gml_Object_obj_station_Alarm_0", "key": "station[53]/station[131].localMenu"},
+        {"source": "game-data-0899", "section": "gml_Object_UI_Draw_64", "key": "station-menu.PTII[38/172].!area_is_private&&activeTurns<=0"}
       ],
-      "notes": [],
+      "notes": [
+        "You cannot pack up the kit while its fire is burning."
+      ],
       "related_stations": [
         "alchemy-workstation"
       ],
@@ -5279,12 +6144,33 @@
         {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being33.introduction/trade101"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.being33/menu_psynch"}
       ]
+    },
+    {
+      "entity": "being-34",
+      "conditions": "Finish Wilda's introduction at the Survivors' camp to unlock Trade.",
+      "spoiler": false,
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being34.local-1/5.trade101"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.being34/menu_psynch.local0-1"}
+      ]
+    },
+    {
+      "entity": "being-36",
+      "conditions": "Grand Mother trades after Wilda grants access to her hut and her first greeting is finished. Magus' Shard joins her stock once you have reported Scaal's defeat to Eir.",
+      "spoiler": true,
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being36.local-1.trade101"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.being36/MAINQUESTSTAGE>=30.item262/menu_psynch.local0-1"},
+        {"source": "game-data-0899", "section": "gml_Object_manager_area_Alarm_6", "key": "solid-2987.transPoint36.locked-212"}
+      ]
     }
   ],
   "unit_prices": {
     "schema_version": 1,
     "unit": "silver coin equivalents",
-    "context": "Standard unit purchase cost: the trade menu sums final item-definition price times quantity. The original definitions either have no components or are the explicitly excluded Lamp Oil recipe. Six additional definitions retain their initializer prices after the actual numeric-ID-ordered recipe-value pass, including its comparison and rounding semantics. These are not resale values of damaged or partly burned items; separately authored vendor-specific prices remain distinct.",
+    "context": "Standard unit purchase cost: the trade menu sums final item-definition price times quantity. The original definitions either have no components or are the explicitly excluded Lamp Oil recipe. Nine additional definitions retain their initializer prices after the actual numeric-ID-ordered recipe-value pass, including its comparison and rounding semantics. These are not resale values of damaged or partly burned items; separately authored vendor-specific prices remain distinct.",
     "prices": [
       {
         "entity": "item-8",
@@ -6125,6 +7011,358 @@
           {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
           {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
         ]
+      },
+      {
+        "entity": "item-275",
+        "value": 15,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[275].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-28",
+        "value": 7.5,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[28].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-174",
+        "value": 0.08,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[174].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-219",
+        "value": 0.12,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[219].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-212",
+        "value": 0.08,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[212].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-127",
+        "value": 20,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[127].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-266",
+        "value": 22.5,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[266].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-272",
+        "value": 20,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[272].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-271",
+        "value": 10,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[271].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-270",
+        "value": 30,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[270].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-269",
+        "value": 10,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[269].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-268",
+        "value": 32.5,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[268].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-267",
+        "value": 10,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[267].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-274",
+        "value": 25,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[274].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-273",
+        "value": 8,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[273].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
+      },
+      {
+        "entity": "item-262",
+        "value": 50,
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[262].price/recipe-postprocessing-eligibility"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          },
+          {
+            "source": "game-data-0899",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.change.gold/silver/copper"
+          }
+        ]
       }
     ],
     "covered_offers": [
@@ -6190,23 +7428,48 @@
       "merchant-19-item-139",
       "merchant-26-item-138",
       "merchant-26-item-139",
-      "merchant-26-item-248"
+      "merchant-26-item-248",
+      "merchant-8-item-275",
+      "merchant-19-item-275",
+      "merchant-19-item-28",
+      "merchant-34-item-144",
+      "merchant-34-item-32",
+      "merchant-34-item-84",
+      "merchant-34-item-85",
+      "merchant-34-item-45",
+      "merchant-34-item-174",
+      "merchant-34-item-219",
+      "merchant-34-item-212",
+      "merchant-34-item-113",
+      "merchant-34-item-115",
+      "merchant-34-item-114",
+      "merchant-36-item-127",
+      "merchant-36-item-266",
+      "merchant-36-item-272",
+      "merchant-36-item-271",
+      "merchant-36-item-270",
+      "merchant-36-item-269",
+      "merchant-36-item-268",
+      "merchant-36-item-267",
+      "merchant-36-item-274",
+      "merchant-36-item-273",
+      "merchant-36-item-262"
     ],
     "unresolved_offers": []
   },
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.8.1.5",
-      "confirmation": "The wiki operator identified the installed game as the latest patch, 0.8.1.5, on 2026-09-25. The inspected menu code independently contains the same displayed version label; no external release-feed verification is asserted.",
+      "version": "0.8.9.9",
+      "confirmation": "The wiki operator installed version 0.8.9.9 on 2026-10-13. It is a test build from the Steam beta branch next_version_tester, published before the official patch. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data",
+          "source": "game-data-0899",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -6352,33 +7615,14 @@
       {
         "id": "trade-stock-and-funds",
         "text": "Listed wares do not run out, and merchants have unlimited buying funds.",
-        "qualification": "These rules apply to available shops, not story gifts or exchanges. Dialogue and sale restrictions still apply. Display quantities are samples, not finite stock. Summoned characters cannot be interacted with. Clay, Bhato, Tain, Viend, Gurb-Gurb and Ihar have wares; Wilda's Trade option has no wares. Wilda's normal encounter availability is unknown.",
+        "qualification": "These rules apply to available shops, not story gifts or exchanges. Dialogue and sale restrictions still apply. Display quantities are samples, not finite stock. Summoned characters cannot be interacted with. Clay, Bhato, Tain, Viend, Gurb-Gurb, Ihar, Wilda and Grand Mother have wares.",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_text_related",
-            "key": "dialogue_action101.myTradeMenu"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_menu_related",
-            "key": "menu_add.type8.merchants8/12/20/19/26/33"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_Object_UI_Draw_64",
-            "key": "trade.cart-quantity/confirmation.fresh-items/change/no-stock-or-purse-decrement"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_Object_UI_Draw_64",
-            "key": "dialogue.being34.trade-option101"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_smartones",
-            "key": "player_interact.turnLimit>=0/SummonBlock"
-          }
+          {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue_action101.myTradeMenu"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.type8.merchants8/12/20/19/26/33"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.cart-quantity/confirmation.fresh-items/change/no-stock-or-purse-decrement"},
+          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.being34.trade-option101"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_smartones", "key": "player_interact.turnLimit>=0/SummonBlock"},
+          {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.type8.merchants8/12/20/19/26/33/34/36"}
         ]
       },
       {
@@ -6423,7 +7667,7 @@
         ]
       }
     ],
-    "standard_merchants": ["being-8", "being-12", "being-20", "being-19", "being-26", "being-33"],
+    "standard_merchants": ["being-8", "being-12", "being-20", "being-19", "being-26", "being-33", "being-34", "being-36"],
     "confidence": "inferred"
   },
   "guides": [
@@ -6508,24 +7752,17 @@
     {
       "title": "Blunt",
       "paragraphs": [
-        "Blunt damage removes armor before the protected hit point. A successful blunt attack has a base 12% chance to stun a surviving target, making it lose its next turn.",
-        "Master Basher raises stun chance and reduces blunt melee AP costs at rank milestones."
+        "Blunt damage removes armor before the protected hit point. A successful blunt attack has a base 10% chance to stun a surviving target, making it lose its next turn.",
+        "Master Basher raises stun chance with blunt melee weapons and reduces their AP costs at rank milestones. Blunt orbs get only the base chance."
       ],
       "related_entities": [
         "skill-3-1"
       ],
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "ui-en",
-          "section": "TTgen",
-          "key": "33"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "attack_lands;attack_aftermath.stunChance;delayed_effects_check.stunned"
-        }
+        {"source": "ui-en-0899", "section": "TTgen", "key": "33"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_aftermath.stunChance0.1/fighterSkills[1]*0.012/!weapon_is_ranged"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_lands;attack_aftermath.stunChance;delayed_effects_check.stunned"}
       ]
     },
     {
@@ -6553,56 +7790,37 @@
       "title": "Force",
       "paragraphs": [
         "Force damage removes armor before the protected hit point. Each positive-damage attack cell that hits a living part of the target has a base 15% chance to deal one extra damage to an eligible neighboring cell.",
-        "The extra hit can strike diagonally and must remove armor before HP. Force Fighter raises this chance and reduces force melee AP costs at rank milestones."
+        "The extra hit can strike diagonally and must remove armor before HP. Force Fighter raises this chance for force melee weapons only and reduces their AP costs at rank milestones."
       ],
       "related_entities": [
         "skill-3-2"
       ],
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "ui-en",
-          "section": "TTgen",
-          "key": "37"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_ai_related",
-          "key": "being_attacks_target.forceChance/force_spread"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "force_spread.extraCells/attack_lands"
-        }
+        {"source": "ui-en", "section": "TTgen", "key": "37"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.forceChance/force_spread"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "force_spread.extraCells/attack_lands"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.forceChance/!weapon_is_ranged"}
       ]
     },
     {
       "title": "Fire",
       "paragraphs": [
-        "Ordinary direct fire attacks remove armor before burning the hit point underneath. Thrown fire has different rules; see the flask's effect. Wound salves and resting cannot restore burned cells.",
+        "Ordinary direct fire attacks remove armor before burning the hit point underneath. Thrown fire has different rules; see the flask's effect. Wound salves and ordinary resting cannot restore burned cells, but Fire Bond from rank 5 and Staff of The Fire Eater can treat them.",
         "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward."
       ],
       "related_entities": [
-        "item-141"
+        "item-141",
+        "skill-1-0",
+        "item-266"
       ],
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "ui-en",
-          "section": "TTgen",
-          "key": "35"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "attack_lands.fire/hpgrid[-1];player_endturn.heal-grid-equals-zero"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_UI_Draw_64",
-          "key": "healing-grid.fireFixItem/hpgrid[-1-to-0]/healItem"
-        }
+        {"source": "ui-en", "section": "TTgen", "key": "35"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_lands.fire/hpgrid[-1];player_endturn.heal-grid-equals-zero"},
+        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "healing-grid.fireFixItem/hpgrid[-1-to-0]/healItem"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.survivorSkills[0]>=5.being_heal_burnt"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "attack.hits>1.item266.being_heal_burnt"}
       ]
     },
     {
@@ -6613,16 +7831,8 @@
       "related_entities": [],
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "ui-en",
-          "section": "TTgen",
-          "key": "38"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "attack_lands.default-damage"
-        }
+        {"source": "ui-en-0899", "section": "TTgen", "key": "39"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_lands.default-damage"}
       ]
     },
     {
@@ -6633,42 +7843,22 @@
         "Place an attack pattern over the target's health grid. Only overlapping cells can hit. Each number is that cell's damage range; rotation and dodging change the overlap.",
         "The grids show starting health and armor. Wounds, story events, equipment, skills, ammunition and status effects can change combat results.",
         "Ammunition adds bonus damage to a bow's pattern. Roll its bonus range separately for each occupied attack cell.",
-        "Wellbeing is separate from combat HP. Resting can heal ordinary wounds when its recovery conditions are met, but not burns."
+        "Wellbeing is separate from combat HP. Resting can heal ordinary wounds when its recovery conditions are met, but not burns unless you have Fire Bond at rank 5 or higher."
       ],
       "related_entities": [],
-      "related_pages": ["Wellbeing", "Resting"],
+      "related_pages": [
+        "Wellbeing",
+        "Resting"
+      ],
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_ai_related",
-          "key": "being_get_hitpoints;being_attacks_target.AttPatt/overlap"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "being_initiate.hpgrid/armor;attack_lands"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_gui_general",
-          "key": "hpcell_draw.hpValue/armor;attack_draw"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_obj_projectile_Step_0",
-          "key": "ammoDat.extraDamage/minD/maxD/extraDmg"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_ai_related",
-          "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "player_endturn.rest-healing.haelth>=0.5/hpgrid==0"
-        }
+        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_hitpoints;being_attacks_target.AttPatt/overlap"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.hpgrid/armor;attack_lands"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_gui_general", "key": "hpcell_draw.hpValue/armor;attack_draw"},
+        {"source": "game-data", "section": "gml_Object_obj_projectile_Step_0", "key": "ammoDat.extraDamage/minD/maxD/extraDmg"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.rest-healing.haelth>=0.5/hpgrid==0"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.survivorSkills[0]>=5.being_heal_burnt"}
       ]
     },
     {
@@ -6678,11 +7868,27 @@
         "At 50% or more, satiation adds 0.5 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 1 percentage point per turn at zero satiation.",
         "Slow Metabolism reduces satiation loss. Skill and difficulty modifiers multiply; see Wellbeing for difficulty rates.",
         "Eating without getting sick grants Well fed if satiation ends above 90%. Duration depends on the food's base satiation, up to 35 turns. Well fed reduces stamina loss, not wellbeing loss directly; see Stamina.",
-        "See Foods for filling meals and sickness risks. Herbivore improves satiation from foods the game treats as plant-based."
+        "See Foods for filling meals and sickness risks. Herbivore improves satiation from foods the game treats as plant-based. Casting an essence orb drains satiation; see Magic weapons."
       ],
-      "section_titles": ["Eating and ordinary loss", "Contribution to wellbeing", "Skills and difficulty", "Well fed", "Choosing food"],
-      "related_entities": ["skill-1-1", "skill-4-2", "item-25"],
-      "related_pages": ["Foods", "Wellbeing", "Stamina", "Resting"],
+      "section_titles": [
+        "Eating and ordinary loss",
+        "Contribution to wellbeing",
+        "Skills and difficulty",
+        "Well fed",
+        "Choosing food"
+      ],
+      "related_entities": [
+        "skill-1-1",
+        "skill-4-2",
+        "item-25"
+      ],
+      "related_pages": [
+        "Foods",
+        "Wellbeing",
+        "Stamina",
+        "Resting",
+        "Magic weapons"
+      ],
       "image_entity": "item-25",
       "image_caption": "Loaf of Bread is one source of satiation.",
       "confidence": "observed",
@@ -6690,7 +7896,8 @@
         {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "hungerGainTresh/hungerLoseTresh/FEDMAX"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_hunger_lose;player_get_stat_changes[0];player_endturn;player_item_consume.food/fedTime"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_get_real_satiation/item_is_greenfood"},
-        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "resting[14];sleeping[19].player_endturn"}
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "resting[14];sleeping[19].player_endturn"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses[8].player_hunger_lose"}
       ]
     },
     {
@@ -6701,11 +7908,30 @@
         "Stamina below 30%, 15% and 5% adds 1, 2 and 3 percentage points of accident risk, respectively: cumulative totals of 1%, 3% and 6%. This applies to actions with accident checks, not every turn. Focus and encumbrance can add more risk.",
         "Well fed halves stamina loss. It multiplies with the difficulty rates on Wellbeing and does not reduce unused-AP recovery. See Satiation for how to gain it.",
         "Swimming drains stamina at turn end instead of restoring it; running out can cause drowning. Beds and bedrolls have their own recovery. Normal AP replenishment pauses in bed, so do not count unused-AP recovery twice. See Resting.",
-        "Wayfarer's Vigor restores stamina over time. Bramble Berries and Bursthopper restore it immediately."
+        "Wayfarer's Vigor restores stamina over time. Bramble Berries and Bursthopper restore it immediately. Casting a wind or storm orb drains stamina; see Magic weapons."
       ],
-      "section_titles": ["Unused AP and recovery", "Contribution to wellbeing", "Accident checks", "Loss modifiers", "Swimming and bed rest", "Items that restore stamina"],
-      "related_entities": ["item-176", "item-217", "item-243", "item-68"],
-      "related_pages": ["Action points", "Satiation", "Focus", "Wellbeing", "Resting"],
+      "section_titles": [
+        "Unused AP and recovery",
+        "Contribution to wellbeing",
+        "Accident checks",
+        "Loss modifiers",
+        "Swimming and bed rest",
+        "Items that restore stamina"
+      ],
+      "related_entities": [
+        "item-176",
+        "item-217",
+        "item-243",
+        "item-68"
+      ],
+      "related_pages": [
+        "Action points",
+        "Satiation",
+        "Focus",
+        "Wellbeing",
+        "Resting",
+        "Magic weapons"
+      ],
       "image_entity": "item-176",
       "image_caption": "Wayfarer's Vigor grants temporary stamina recovery.",
       "confidence": "observed",
@@ -6715,7 +7941,8 @@
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_energy_lose;player_get_stat_changes[1];player_get_accident;player_endturn.energy/swimming/staminaBoostTime"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[176/217/243]"},
         {"source": "game-data", "section": "gml_Object_obj_player_Alarm_0", "key": "AP-refill.excludes-state19"},
-        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state19.rest/sleep.player_energy_gain"}
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state19.rest/sleep.player_energy_gain"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses[9].player_energy_lose"}
       ]
     },
     {
@@ -6724,12 +7951,30 @@
         "On Medium difficulty, an ordinary active turn removes 0.56 percentage points of focus before skill modifiers. Resting and sleeping restore focus and reduce its loss.",
         "At 50% or more, focus adds 0.2 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 0.5 percentage points per turn at zero focus.",
         "Focus below 30%, 15% and 5% adds 1, 2 and 3 percentage points of accident risk, respectively: cumulative totals of 1%, 3% and 6%. The action must have an accident check. Stamina and encumbrance can add more risk.",
-        "Focused Mind and difficulty modify focus loss, not direct gains from rest or sleep. See Wellbeing for difficulty rates.",
-        "Cranberries restore focus immediately. Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule, not a fixed turn count."
+        "Focused Mind and difficulty modify focus loss, not direct gains from rest or sleep. See Wellbeing for difficulty rates. Casting a poison orb drains focus directly, and The Terror's screech removes 25% at once; neither is reduced by skills or difficulty.",
+        "Cranberries restore focus immediately. Magi's Ropebelt restores 4% for every 4 unspent AP when you end a turn standing. Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule, not a fixed turn count."
       ],
-      "section_titles": ["Ordinary loss and recovery", "Contribution to wellbeing", "Accident checks", "Loss modifiers", "Food and sleep"],
-      "related_entities": ["skill-1-2", "item-225", "item-68", "item-154", "item-256"],
-      "related_pages": ["Resting", "Stamina", "Wellbeing", "Foods"],
+      "section_titles": [
+        "Ordinary loss and recovery",
+        "Contribution to wellbeing",
+        "Accident checks",
+        "Loss modifiers",
+        "Food and sleep"
+      ],
+      "related_entities": [
+        "skill-1-2",
+        "item-225",
+        "item-68",
+        "item-154",
+        "item-256"
+      ],
+      "related_pages": [
+        "Resting",
+        "Stamina",
+        "Wellbeing",
+        "Foods",
+        "Magic weapons"
+      ],
       "image_entity": "item-68",
       "image_caption": "A Tattered Bedroll provides a place to rest or sleep.",
       "confidence": "observed",
@@ -6737,7 +7982,9 @@
         {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "focusGainTresh/focusLoseTresh"},
         {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "focusLittle/focusLow/focusLowest"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_focus_lose;player_get_stat_changes[2];player_get_accident;player_item_consume[225]"},
-        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state14;state19.targetAction[7/8/9]/focusNext"}
+        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state14;state19.targetAction[7/8/9]/focusNext"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_focus_lose.arg1-direct"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state0.item265"}
       ]
     },
     {
@@ -6748,11 +7995,34 @@
         "Each turn, body temperature moves one third of the way toward local ambient temperature before cooling modifiers. Insulation pulls it toward the comfortable midpoint. Wetness pulls it toward 10%, so rain and immersion can chill you even in mild air.",
         "Body Warmth reduces cooling loss and improves drying. Difficulty also modifies cooling losses, not every temperature change; see Wellbeing.",
         "Nearby active fires warm and dry you. Warm to the core halves ambient cooling; see Wellbeing for its other bonus. Shelter reduces rain exposure and can cool hot conditions. Equipment condition affects insulation and waterproofing; sleeping gear helps while in use.",
-        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse does too, but also causes a fire hit."
+        "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse does too, but also causes a fire hit. Casting a fire orb drains warmth; see Magic weapons."
       ],
-      "section_titles": ["The comfortable range", "Contribution to wellbeing", "Ambient temperature and wetness", "Cooling modifiers", "Fire, shelter and clothing", "Warm food"],
-      "related_entities": ["skill-1-3", "item-38", "item-172", "item-235", "item-236", "item-237", "item-242", "item-256"],
-      "related_pages": ["Weather", "Wellbeing", "Resting", "Foods", "Fire"],
+      "section_titles": [
+        "The comfortable range",
+        "Contribution to wellbeing",
+        "Ambient temperature and wetness",
+        "Cooling modifiers",
+        "Fire, shelter and clothing",
+        "Warm food"
+      ],
+      "related_entities": [
+        "skill-1-3",
+        "item-38",
+        "item-172",
+        "item-235",
+        "item-236",
+        "item-237",
+        "item-242",
+        "item-256"
+      ],
+      "related_pages": [
+        "Weather",
+        "Wellbeing",
+        "Resting",
+        "Foods",
+        "Fire",
+        "Magic weapons"
+      ],
       "image_entity": "item-38",
       "image_caption": "An active nearby Campfire can warm and dry you.",
       "confidence": "observed",
@@ -6760,7 +8030,8 @@
         {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "warmthLoseLow/warmthLoseHigh/wetTempTresh"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_warmth_lose;player_get_stat_changes[3];player_endturn.warmth/insulation/wetness"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet;player_update_gearstats;player_get_combined_wellbeing"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[235/236/237/242]"}
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[235/236/237/242]"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses[7].player_warmth_lose"}
       ]
     },
     {
@@ -6771,12 +8042,34 @@
         "Warm to the core and Well rested each add 1 percentage point per turn. Well fed instead conserves stamina. See Temperature, Resting and Satiation for their triggers.",
         "Sickness I, II and III remove 1, 2 and 3 percentage points per turn; only the highest active level counts. Being very overburdened removes 1 and extremely overburdened removes 2. The lighter overburdened state increases movement costs and accident risk without a direct wellbeing penalty.",
         "Compared with Medium, Easy multiplies satiation, stamina, focus and cooling losses by 0.67; Hard multiplies them by 1.2. Skill and temporary-effect modifiers multiply with these rates. Direct recovery gains are unaffected, and cooling modifiers do not slow every temperature change.",
-        "High wellbeing does not instantly restore combat HP. See Resting for natural wound healing; burns cannot heal this way.",
+        "High wellbeing does not instantly restore combat HP. See Resting for natural wound healing; burns cannot heal this way. If a magic orb costs more of a meter than you have, the shortfall is taken from wellbeing.",
         "Honey improves wellbeing and shortens sickness. Riftvine Berries reduce wellbeing."
       ],
-      "section_titles": ["Combining the four meters", "Units and rounding", "Helpful effects", "Sickness and carrying too much", "Difficulty and loss modifiers", "Wellbeing is not combat HP", "Direct food effects"],
-      "related_entities": ["item-51", "item-218", "item-85", "item-86"],
-      "related_pages": ["Satiation", "Stamina", "Focus", "Temperature", "Resting", "Health and armor", "Foods"],
+      "section_titles": [
+        "Combining the four meters",
+        "Units and rounding",
+        "Helpful effects",
+        "Sickness and carrying too much",
+        "Difficulty and loss modifiers",
+        "Wellbeing is not combat HP",
+        "Direct food effects"
+      ],
+      "related_entities": [
+        "item-51",
+        "item-218",
+        "item-85",
+        "item-86"
+      ],
+      "related_pages": [
+        "Satiation",
+        "Stamina",
+        "Focus",
+        "Temperature",
+        "Resting",
+        "Health and armor",
+        "Foods",
+        "Magic weapons"
+      ],
       "image_entity": "item-51",
       "image_caption": "Honey has a direct wellbeing benefit as well as food value.",
       "confidence": "observed",
@@ -6785,7 +8078,8 @@
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_hunger_lose;player_energy_lose;player_focus_lose;player_warmth_lose"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[51/218]"},
         {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "wellbeing-grid;haelth<=0.death"},
-        {"source": "ui-en", "section": "AEs", "key": "20/21/22/24/25/26"}
+        {"source": "ui-en", "section": "AEs", "key": "20/21/22/24/25/26"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.wbDrain.player_wellbeing_dmg"}
       ]
     },
     {
@@ -6796,12 +8090,34 @@
         "Bed and bedroll rest gives the same focus gain and half-rate losses, plus 32 percentage points of stamina per turn. Sleep gives 2.5 focus and 32 stamina, with satiation and focus losses at 35% of normal. Normal AP replenishment pauses in bed; do not double-count stamina recovery.",
         "Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule. Disturbance can wake you. Below 45% wellbeing, a falling wellbeing trend can also force you awake.",
         "Sleeping can grant Well rested above 95% focus, with satiation and stamina above 20% and temperature strictly inside its comfortable range. Sleeping-item comfort sets the duration added, up to 35 turns. The timer can pause in bed when at least two of the three supporting conditions hold. See Wellbeing for its bonus.",
-        "At 50% wellbeing or more, resting can heal one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and the temperature penalty. With full supporting meters and no temperature penalty, it is 5% per resting turn. Burns cannot heal this way.",
+        "At 50% wellbeing or more, resting can heal one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and the temperature penalty. With full supporting meters and no temperature penalty, it is 5% per resting turn. Burns cannot heal this way; Fire Bond from rank 5 gives a separate chance to treat one.",
         "Find shelter, warmth and food before a long rest. Sleeping gear contributes insulation and waterproofing while in use. Great Bedroll and Furhide Bedroll also slow Warm to the core decay, but hunger, cold, sickness and interruptions still apply."
       ],
-      "section_titles": ["Time keeps passing", "Resting on the ground", "Beds and sleeping", "Waking and interruption", "Well rested", "Natural healing", "Preparing a resting place"],
-      "related_entities": ["item-68", "item-154", "item-256", "item-38"],
-      "related_pages": ["Focus", "Stamina", "Satiation", "Temperature", "Weather", "Wellbeing", "Action points", "Health and armor"],
+      "section_titles": [
+        "Time keeps passing",
+        "Resting on the ground",
+        "Beds and sleeping",
+        "Waking and interruption",
+        "Well rested",
+        "Natural healing",
+        "Preparing a resting place"
+      ],
+      "related_entities": [
+        "item-68",
+        "item-154",
+        "item-256",
+        "item-38"
+      ],
+      "related_pages": [
+        "Focus",
+        "Stamina",
+        "Satiation",
+        "Temperature",
+        "Weather",
+        "Wellbeing",
+        "Action points",
+        "Health and armor"
+      ],
       "image_entity": "item-154",
       "image_caption": "A Great Bedroll provides sleeping comfort and protection.",
       "confidence": "observed",
@@ -6810,7 +8126,8 @@
         {"source": "game-data", "section": "gml_Object_obj_player_Alarm_0", "key": "AP-refill.excludes-state19"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.minute+=8/restedTime/warmthTime/rest-healing"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_update_gearstats.sleeping-item;player_get_combined_wellbeing"},
-        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "RESTEDMAX/warmthLoseLow/warmthLoseHigh"}
+        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "RESTEDMAX/warmthLoseLow/warmthLoseHigh"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal"}
       ]
     },
     {
@@ -6866,7 +8183,7 @@
         "Outside combat, some actions can exceed your remaining AP and carry the excess into the next turn. In combat, the required AP must be available.",
         "Unused AP can restore stamina, with swimming and bed-rest exceptions; see Stamina. The clock advances per completed turn, not per AP.",
         "Equipping costs a base 0.4 AP per square of inventory footprint, separate from attacking or using the item.",
-        "Fast Draw reduces bow costs; Blade Master, Master Basher and Force Fighter reduce costs for their weapon types. Brewer reduces alchemy costs.",
+        "Fast Draw reduces bow costs, but not orb costs; Blade Master, Master Basher and Force Fighter reduce costs for their weapon types. Brewer reduces alchemy costs.",
         "Completed turns also update satiation, focus, temperature and wellbeing. Rest and sleep change recovery rates but do not pause these meters."
       ],
       "related_entities": [
@@ -6876,39 +8193,24 @@
         "skill-3-2",
         "skill-4-3"
       ],
-      "related_pages": ["Stamina", "Satiation", "Focus", "Temperature", "Wellbeing", "Resting", "Weather"],
+      "related_pages": [
+        "Stamina",
+        "Satiation",
+        "Focus",
+        "Temperature",
+        "Wellbeing",
+        "Resting",
+        "Weather"
+      ],
       "confidence": "inferred",
       "evidence": [
-        {
-          "source": "ui-en",
-          "section": "TTgen",
-          "key": "2/19"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_obj_player_Create_0",
-          "key": "actionPointsMax/actionPoints[8]"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_obj_player_Alarm_0",
-          "key": "actionPointsMax-apDelayed/refill"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "player_ap_lose/player_ap_or_combat/player_endturn.minute/player_get_attackcost"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_databank_Alarm_1",
-          "key": "item_is_equippable/equipCost/width/height"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "player_endturn.minute+=8/energy_gain/actionPoints/wellbeing"
-        }
+        {"source": "ui-en", "section": "TTgen", "key": "2/19"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "actionPointsMax/actionPoints[8]"},
+        {"source": "game-data", "section": "gml_Object_obj_player_Alarm_0", "key": "actionPointsMax-apDelayed/refill"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_ap_lose/player_ap_or_combat/player_endturn.minute/player_get_attackcost"},
+        {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "item_is_equippable/equipCost/width/height"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.minute+=8/energy_gain/actionPoints/wellbeing"},
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_attackcost.!weapon_is_orb"}
       ]
     },
     {
@@ -7012,6 +8314,294 @@
         { "source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "chopMod" },
         { "source": "ui-en", "section": "TreeStuff", "key": "Fresh0-4" }
       ]
+    },
+    {
+      "title": "Leeching",
+      "paragraphs": [
+        "Leeching attacks remove armor before the hit point beneath it, like Weak attacks. Each hit point a leeching attack destroys can restore one wounded hit point to the attacker.",
+        "Mirkfangs, Giant Mirkfangs, Mirkfang Matriarchs and The Terror attack with Leeching damage."
+      ],
+      "related_entities": [
+        "being-38",
+        "being-39",
+        "being-37",
+        "being-40"
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en-0899",
+          "section": "TTgen",
+          "key": "38"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands.damageClass27.statusgrid28/being_heal[attacker,1,tryFire]"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_heal.arg2-burnt-cells"
+        }
+      ]
+    },
+    {
+      "title": "Magic weapons",
+      "section_titles": [
+        "Orbs",
+        "Casting cost",
+        "What orbs ignore",
+        "Staff of The Fire Eater",
+        "Where to get them"
+      ],
+      "paragraphs": [
+        "Orbs are one-handed ranged weapons. They need no ammunition and never lose durability. Each has its own damage type, attack pattern and range: poison, fire, blunt (iron and steel essence), weak (wind) or force (storm).",
+        "Every cast drains one of your survival meters: focus for poison orbs, warmth for fire orbs, satiation for essence orbs and stamina for wind and storm. If the meter is lower than the cost, the shortfall is taken from wellbeing instead.",
+        "Orbs can be used at any distance up to their range, including next to an enemy. Fast Draw's AP reduction and free-shot chance apply to bows, not orbs. Master Basher and Force Fighter bonuses apply only to melee weapons, so they do not boost blunt or force orbs.",
+        "Staff of The Fire Eater is a two-handed melee fire weapon with no casting cost. Whenever an attack hits more than one cell, it also treats one of your burnt hit points.",
+        "Grand Mother at the Survivors' camp sells every orb and the staff. They are not crafted."
+      ],
+      "related_entities": [
+        "item-266",
+        "item-267",
+        "item-268",
+        "item-269",
+        "item-270",
+        "item-271",
+        "item-272",
+        "item-273",
+        "item-274",
+        "being-36"
+      ],
+      "related_pages": [
+        "Focus",
+        "Temperature",
+        "Satiation",
+        "Stamina",
+        "Wellbeing"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[266-274].bonuses/damageClass/apCost/tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/no-ammo;attack.hits>1.item266.being_heal_burnt"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "weapon_is_orb/item_durloss.orb-exit/weapon_is_ranged.orb"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_attackcost.orb-no-hunter-reduction;stunChance.ranged-excluded"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "attack.orb.tile_is_in_rangedarray"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "forceChance.ranged-excluded"
+        },
+        {
+          "source": "ui-en-0899",
+          "section": "TTgen",
+          "key": "45"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[36]"
+        }
+      ]
+    },
+    {
+      "title": "Survivors' camp",
+      "section_titles": [
+        "Finding the camp",
+        "Camp rules",
+        "Earning Wilda's trust",
+        "Grand Mother's hut",
+        "After the request"
+      ],
+      "paragraphs": [
+        "The camp is built the first time you enter a Savage Mirk area, so each world has one. A torchlight message and five white dots point toward it when it appears.",
+        "Wilda and three Survivor guards live here. You may trade with Wilda, but you cannot place or build anything within about 26 tiles of the camp. No creatures spawn within 16 tiles of it.",
+        "Choose Trust in Wilda's conversation. She asks you to kill The Terror, a Mirkfang Matriarch that stalks the camp's area at night, and bring back the Head of The Terror. The Terror only appears after this request and never near the camp.",
+        "Hand the head to Wilda to unlock the ladder to Grand Mother's hut. Grand Mother's first greeting grants one skill point. She sells magic weapons, Summoning Stones and, later in the main quest, Magus' Shard.",
+        "Wilda can then be summoned with a Summoning Stone, and the Survivors greet you as a friend."
+      ],
+      "related_entities": [
+        "being-34",
+        "being-35",
+        "being-36",
+        "being-40",
+        "item-261",
+        "item-127",
+        "item-262"
+      ],
+      "related_pages": [
+        "Placing objects",
+        "Magic weapons"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "createdCamp/areaType5/spr_building_48x48_tall/index-2987/transPoint36/npcs34+35x3/IseeTorchlight"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_eff_popup_Draw_0",
+          "key": "marker-2987/five-white-direction-dots"
+        },
+        {
+          "source": "ui-en-0899",
+          "section": "LocTitles",
+          "key": "5"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.areaType5.solid-2987.cradius420"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "spot_is_private.areaType5.256"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn.spot_is_private/areaType5.terrorWeight"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.being34/being36/item127.tempBeings"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "being35.CamperGreetFriendly.campQUESTstage>=2"
+        }
+      ]
+    },
+    {
+      "title": "Placing objects",
+      "section_titles": [
+        "Flipping",
+        "Placing from containers",
+        "Where you cannot build",
+        "Storage Chest"
+      ],
+      "paragraphs": [
+        "While placing an object, press the Weapon Swap key (Z by default) to flip it horizontally before you confirm.",
+        "An object can be placed directly from a nearby container, not only from your inventory.",
+        "You cannot place objects within about 26 tiles of the Survivors' camp. Until you bring Viend back to the fort, the same applies within 30 tiles of Fort Solid. Placement also fails on water, slopes, plants, goo and occupied tiles.",
+        "Storage Chest is a placeable 7 x 5 container. Items inside lose no durability, stay dry and never go missing, unlike items left in ordinary stashes. Clay and Viend sell it."
+      ],
+      "related_entities": [
+        "item-275",
+        "being-8",
+        "being-19"
+      ],
+      "related_pages": [
+        "Survivors' camp"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.keySwap.placeXscale/item_delete_inventory/fradius480/cradius420/tile_is_goo"
+        },
+        {
+          "source": "ui-en-0899",
+          "section": "TTgen",
+          "key": "47"
+        },
+        {
+          "source": "ui-en-0899",
+          "section": "KeyNames",
+          "key": "Swap"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_startups",
+          "key": "Keys.Swap.default90"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item(275).inventory[7,5]/container_get_stats[275]"
+        },
+        {
+          "source": "items-en-0899",
+          "section": "ItemDesc",
+          "key": "275"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_add.trade.vendor[8/19].item[275]"
+        }
+      ]
+    },
+    {
+      "title": "Strict move",
+      "paragraphs": [
+        "Hold Left Ctrl (the Strict Move key) while clicking to walk to a tile without interacting with whatever is there. Objects are not highlighted while the key is held.",
+        "This avoids opening containers, harvesting plants or talking to characters when you only meant to move. Strict Move can be rebound in the key settings."
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Action points"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_startups",
+          "key": "Keys.StrictMove.default162"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_cursor_Step_1",
+          "key": "keyStrict=keymouse_held(inputStrict)"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_player_Step_1",
+          "key": "keyStrict.highlightInstance=-4"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "leftRelease&&!keyStrict.targetInstance"
+        },
+        {
+          "source": "ui-en-0899",
+          "section": "TTgen",
+          "key": "46"
+        },
+        {
+          "source": "ui-en-0899",
+          "section": "KeyNames",
+          "key": "StrictMove"
+        }
+      ]
     }
   ],
   "item_effects": [
@@ -7074,6 +8664,142 @@
       "paragraphs": ["Eating Bursthopper restores 15 percentage points of stamina."],
       "confidence": "observed",
       "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[243].first-reachable-branch"}]
+    },
+    {
+      "entity": "item-267",
+      "paragraphs": ["Each cast drains 8% focus. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[267].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-268",
+      "paragraphs": ["Each cast drains 10% focus. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[268].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-269",
+      "paragraphs": ["Each cast drains 15% warmth. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[269].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-270",
+      "paragraphs": ["Each cast drains 25% warmth. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[270].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-271",
+      "paragraphs": ["Each cast drains 10% satiation. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[271].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-272",
+      "paragraphs": ["Each cast drains 12.5% satiation. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[272].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-273",
+      "paragraphs": ["Each cast drains 10% stamina. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[273].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-274",
+      "paragraphs": ["Each cast drains 15% stamina. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[274].bonuses"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+      ]
+    },
+    {
+      "entity": "item-266",
+      "paragraphs": ["Each attack that hits more than one cell also treats one of your burnt hit points, turning it into an ordinary wound."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "attack.hits>1.item266.being_heal_burnt"},
+        {"source": "items-en-0899", "section": "ItemDesc", "key": "266"}
+      ]
+    },
+    {
+      "entity": "item-264",
+      "paragraphs": ["Its 3 x 3 pocket is magic: items stored inside add no weight to the hood or to your carried load."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "item_added/item_removed.parentIndex264.weight-skip"},
+        {"source": "items-en-0899", "section": "ItemDesc", "key": "264"}
+      ]
+    },
+    {
+      "entity": "item-265",
+      "paragraphs": ["When you end your turn standing, it restores 4% focus for every 4 unspent action points."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state0.item265.actionPoints div 4*0.04"},
+        {"source": "items-en-0899", "section": "ItemDesc", "key": "265"}
+      ]
+    },
+    {
+      "entity": "item-262",
+      "paragraphs": ["Throw it to open a portal where it lands, then step into the portal to enter Clay's hidden Magus realm."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[262].obj_eff_light.portal"},
+        {"source": "game-data-0899", "section": "gml_Object_obj_screenfader_Step_0", "key": "newArea37.rm_realm_magus;obj_eff_light[262].fadePower"},
+        {"source": "items-en-0899", "section": "ItemDesc", "key": "262"}
+      ]
+    },
+    {
+      "entity": "item-127",
+      "paragraphs": ["Throw it to summon an ally for 10 turns. Captain Eir, Ranger Bhato and Viend become available once Eir grants you access to Fort Solid. Magus Clay is available from then until you report Scaal's defeat. Wilda joins the list once she trusts you."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.item127.tempBeings.MAINQUESTSTAGE>=15/<30/campQUESTstage>=2"},
+        {"source": "items-en-0899", "section": "ItemDesc", "key": "127"}
+      ]
+    },
+    {
+      "entity": "item-275",
+      "paragraphs": ["Place it to get a 7 x 5 storage container. Items inside lose no durability, stay dry and never go missing."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "item(275).inventory[7,5]/container_get_stats[275]=[0,0,1,0]"},
+        {"source": "game-data-0899", "section": "gml_Object_cursor_Draw_73", "key": "placement.item275.obj_container"},
+        {"source": "items-en-0899", "section": "ItemDesc", "key": "275"}
+      ]
+    },
+    {
+      "entity": "item-261",
+      "paragraphs": ["Talk to Wilda while carrying it to finish the Survivors' camp request. She keeps the head."],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.being34.item261.player_inventory_lose_amount/local201"}
+      ]
     }
   ],
   "construction_recipes": [
@@ -7139,22 +8865,12 @@
           "being-19",
           "being-20",
           "being-26",
-          "being-33",
-          "being-34",
-          "being-35"
+          "being-33"
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[5,6,8,9,12,19,20,26,33,34,35].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[5,6,8,9,12,19,20,26,33].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       },
       {
@@ -7176,16 +8892,8 @@
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[1,2,4,7,11,17,24,25,27,29,30].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[1,2,4,7,11,17,24,25,27,29,30].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       },
       {
@@ -7197,16 +8905,8 @@
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[0].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[0].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       },
       {
@@ -7223,16 +8923,8 @@
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[13].team/beingDB[14].team/beingDB[15].team/beingDB[16].team/beingDB[22].team/beingDB[32].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[13].team/beingDB[14].team/beingDB[15].team/beingDB[16].team/beingDB[22].team/beingDB[32].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       },
       {
@@ -7244,16 +8936,8 @@
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[21].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[21].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       },
       {
@@ -7266,38 +8950,23 @@
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[10].team/beingDB[23].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[10].team/beingDB[23].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       },
       {
         "id": 8,
         "title": "Nightmare faction",
-        "summary": "Both Nightmare and Raving Unwanted can select other members of this same faction as targets. Neither selects itself.",
+        "summary": "Nightmare, Raving Unwanted and Clay's boss form can select other members of this same faction as targets. None selects itself.",
         "members": [
           "being-28",
-          "being-31"
+          "being-31",
+          "being-41"
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[28].team/beingDB[31].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[28].team/beingDB[31].team/beingDB[41].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       },
       {
@@ -7310,47 +8979,58 @@
         ],
         "confidence": "inferred",
         "evidence": [
-          {
-            "source": "game-data",
-            "section": "gml_Object_databank_Alarm_3",
-            "key": "beingDB[3].team/beingDB[18].team"
-          },
-          {
-            "source": "game-data",
-            "section": "gml_GlobalScript_scr_ai_related",
-            "key": "being_get_target"
-          }
+          {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[3].team/beingDB[18].team"},
+          {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Survivor camp faction",
+        "summary": "Wilda, Grand Mother and the Survivors share this faction. Like friendly NPCs, they skip the player and each other during normal target acquisition, but can retaliate when attacked.",
+        "members": [
+          "being-34",
+          "being-35",
+          "being-36"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[34,35,36].team"},
+          {"source": "game-data-0899", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target.team10-player-exclusion/target_is_hostile.team10"}
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Mirkfang faction",
+        "summary": "Mirkfangs, Giant Mirkfangs, Mirkfang Matriarchs and The Terror share a faction and normally avoid targeting one another.",
+        "members": [
+          "being-37",
+          "being-38",
+          "being-39",
+          "being-40"
+        ],
+        "confidence": "inferred",
+        "evidence": [
+          {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[37,38,39,40].team"},
+          {"source": "game-data-0899", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       }
     ],
     "paragraphs": [
-      "Beings normally avoid targeting their own faction. Nightmare and Raving Unwanted are exceptions: they can target each other, but never themselves.",
-      "Friendly NPCs also avoid targeting the player, who belongs to a separate faction.",
+      "Beings normally avoid targeting their own faction. Nightmare, Raving Unwanted and Clay's boss form are exceptions: they can target each other, but never themselves. After Clay flees Fort Solid, Captain Eir and Magus Clay also treat each other as enemies.",
+      "Friendly NPCs and the Survivor camp faction also avoid targeting the player, who belongs to a separate faction.",
       "An eligible target must still pass distance, detection, reachability and sometimes line-of-sight checks. Aggression chance and current targets also matter.",
+      "Creatures without a current target often ignore other creatures: wildlife, Giant Slugs, Toadkin, the Nightmare faction, trolls and Mirkfangs pass over a non-player target 60% of the time. Hostile creatures may also give up a chase once you are more than one and a half times their targeting distance away.",
       "Taking damage can make a being retaliate without the usual faction check. Friendly NPCs and faction-mates can therefore fight back."
     ],
     "confidence": "inferred",
     "evidence": [
-      {
-        "source": "game-data",
-        "section": "gml_Object_databank_Alarm_3",
-        "key": "global.beingDB member team fields"
-      },
-      {
-        "source": "beings-en",
-        "section": "Titles",
-        "key": "0 through 35"
-      },
-      {
-        "source": "game-data",
-        "section": "gml_GlobalScript_scr_ai_related",
-        "key": "being_get_target"
-      },
-      {
-        "source": "game-data",
-        "section": "gml_GlobalScript_scr_basic_useful",
-        "key": "attack_aftermath retaliation target assignment"
-      }
+      {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "global.beingDB member team fields"},
+      {"source": "beings-en-0899", "section": "Titles", "key": "0 through 41"},
+      {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"},
+      {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_aftermath retaliation target assignment"},
+      {"source": "game-data-0899", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target.questEnemies.main>26.6<->8"},
+      {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.!target.teams4/3/11/8/9/6.chance0.6"},
+      {"source": "game-data-0899", "section": "gml_Object_manager_area_Step_0", "key": "doFightChance[1/0.825/0.65/0.5]"}
     ]
   },
   "fact_display": [

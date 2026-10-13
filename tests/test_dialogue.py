@@ -38,12 +38,13 @@ class DialogueTests(unittest.TestCase):
     def test_covers_available_conversations_without_inventing_missing_dialogue(self):
         self.assertEqual(set(self.topics), {
             "Soldier", "Captain Eir", "Magus Clay", "Ranger Bhato",
-            "Viend", "Commander Tain", "Gurb-Gurb", "Ihar",
+            "Viend", "Commander Tain", "Gurb-Gurb", "Ihar", "Wilda", "Grand Mother",
         })
-        self.assertEqual(sum(map(len, self.topics.values())), 20)
+        self.assertEqual(sum(map(len, self.topics.values())), 29)
         for title in self.topics:
             self.assertEqual(self.pages[title].count("== Dialogue and guidance =="), 1)
-        for title in ("Wilda", "Unwanted Guard", "Dead Unwanted"):
+        # 0.8.9.9 documented Wilda's dialogue; Survivors (formerly Unwanted Guard) only give greetings.
+        for title in ("Survivor", "Dead Unwanted"):
             self.assertNotIn("== Dialogue and guidance ==", self.pages[title])
         self.assertIn("not a separate Information or Advice option", self.pages["Commander Tain"])
         self.assertEqual(self.topic("Gurb-Gurb", "field-kit-tip")["title"], "Field-kit tip during Trade")
@@ -150,7 +151,7 @@ class DialogueTests(unittest.TestCase):
             for topic in self.topics[owner]:
                 for paragraph in topic["paragraphs"]:
                     self.assertNotIn(paragraph, selected)
-        self.assertEqual(count, 63)
+        self.assertEqual(count, 88)
 
     def test_curfew_crosslinks_preserve_single_detailed_owner(self):
         for owner in ("Soldier", "Magus Clay", "NPCs"):
