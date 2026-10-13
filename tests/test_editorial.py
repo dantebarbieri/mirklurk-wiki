@@ -2,6 +2,7 @@ import copy
 import re
 import sys
 import unittest
+from decimal import Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,7 +13,7 @@ from wiki_data import DataError
 from wiki_details import load_publication_inputs
 from wiki_display import content_model, dependencies, page_namespace
 from wiki_render import (
-    RETIRED_PAGES, acquisition_probability, audit_report, build_pages, count_range,
+    RETIRED_PAGES, acquisition_probability, audit_report, base_value_text, build_pages, count_range,
     known, validate_reader_pages, validate_reader_text,
 )
 
@@ -31,6 +32,17 @@ class EditorialTests(unittest.TestCase):
     def setUpClass(cls):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+
+    def test_base_values_use_coins_and_state_sub_copper_fractions(self):
+        for value, expected in ((Decimal("2.2"), "{{Coins|220}}"), (0, "{{Coins|0}}"),
+                                (Decimal("0.005"), "{{Coins|1}} per 2"), (Decimal("0.002"), "{{Coins|1}} per 5"),
+                                (Decimal("0.001"), "{{Coins|1}} per 10"), (Decimal("0.125"), "{{Coins|25}} per 2")):
+            self.assertEqual(base_value_text(value), expected)
+        for value in ("-1", "NaN"):
+            with self.subTest(value=value), self.assertRaises(DataError):
+                base_value_text(Decimal(value))
+        self.assertFalse(any("silver equivalents" in text for text in self.pages.values()))
+        self.assertIn("|| {{Coins|100}} ||", self.pages["Silver Coin"])
 
     def test_complete_publication_is_reader_facing(self):
         validate_reader_pages(self.pages)
