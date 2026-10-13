@@ -1729,6 +1729,17 @@ def build_pages(root, data, catalog=None, details=None):
         for entry in entries:
             if entry["kind"] == "merchant" and "[[Currency and trading" not in pages[owners[entry["id"]]]:
                 pages[owners[entry["id"]]] += "\n[[Currency and trading|How prices, condition, and change work]]\n"
+    for title in [title for title in PAGE_FILES if title.startswith("Version ")]:
+        section, labels = None, {}
+        for line in pages[title].splitlines():
+            if line.startswith("== "):
+                section = line.strip("= ")
+            for target in re.findall(r"\[\[([^\]|#]+)", line):
+                if section in ("New content", "Changes") and target in pages and target not in {title, *PAGE_FILES} \
+                        and not pages[target].startswith("#REDIRECT"):
+                    labels[target] = "Changed" if section == "Changes" else labels.get(target, "New")
+        for target, label in sorted(labels.items()):
+            pages[target] += f"\n{label} in [[{title}|{title.lower()}]].\n"
     categories = category_definitions(data, catalog)
     memberships = defaultdict(set)
 

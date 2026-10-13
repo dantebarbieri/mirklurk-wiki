@@ -255,6 +255,10 @@ Every other existing profile and grid was regenerated from the new item and
 being definitions and matched exactly, so unchanged records keep their 0.8.1.5
 citations. Acquisition rows, pools and budgets were recomputed the same way.
 
+Pages show 0.8.9.9 values. The authored **Version 0.8.9.9** changelog keeps
+the 0.8.1.5 values beside them; the builder adds a "New in" or "Changed in"
+link to each existing page linked from its New content or Changes sections.
+
 Reader text names story events instead of the code's numbered main-quest
 stages, for example "after you report Scaal's defeat" for stage 30. Clay's
 boss form (`being-41`) displays Clay's name, so its page is titled

@@ -21,8 +21,10 @@ release. Its menu label matches. Four changed files (`data.win`, `Items.ini`,
 to Survivor and Fire Striker to Fire Bond, and adds 43 entries: 25 merchant
 offers, one recipe, 12 corpse-loot entries and five quest notes. Changed
 values cite the 0.8.9.9 fingerprints; unchanged records keep their 0.8.1.5
-citations. The public **Version 0.8.9.9** page lists what changed, and
-[provenance](docs/PROVENANCE.md#version-0899-update) records the amendments.
+citations. Pages show 0.8.9.9 values. The public **Version 0.8.9.9** changelog
+lists the new content and every documented value that changed, with its 0.8.1.5
+and 0.8.9.9 values; each page it links gets a "New in" or "Changed in" link
+back. [Provenance](docs/PROVENANCE.md#version-0899-update) records the amendments.
 
 The reference now contains **107 numeric facts and 336 structured entries**:
 36 quest/journal notes, 88 merchant offers, 97 station-specific recipe

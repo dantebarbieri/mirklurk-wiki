@@ -1,4 +1,4 @@
-'''Version 0.8.9.9''' is a test build released on 13 October 2026 through the Steam beta branch ''next_version_tester'', ahead of the official patch. This wiki now documents it; the previous documented version was 0.8.1.5.
+'''Version 0.8.9.9''' is a test build released on 13 October 2026 through the Steam beta branch ''next_version_tester'', ahead of the official patch. This wiki shows 0.8.9.9 values. This page lists what is new and every documented value that changed from 0.8.1.5.
 
 To try it, right-click MirkLurk in your Steam Library, open '''Properties''', then '''Game Versions & Betas''', and choose ''next_version_tester''.
 
@@ -10,9 +10,9 @@ To try it, right-click MirkLurk in your Steam Library, open '''Properties''', th
 
 === Survivors' camp ===
 * The [[Survivors' camp]] appears in the first Savage Mirk area you enter. In older saves it appears the next time you enter one.
-* [[Wilda]] now trades and asks you to hunt [[The Terror]] and bring back the [[Head of The Terror]].
+* [[Wilda]] trades and asks you to hunt [[The Terror]] and bring back the [[Head of The Terror]].
 * [[Grand Mother]] lives in the camp's main hut. Her blessing grants a skill point, and she sells magic weapons.
-* The former Unwanted Guard is now the [[Survivor]], one of the camp's guards.
+* [[Survivor]] guards protect the camp. A Survivor's corpse holds [[Survivor loot|random treasure]].
 
 === Creatures ===
 * [[Mirkfang]], [[Giant Mirkfang]] and [[Mirkfang Matriarch]] hunt at night and roost in caves by day.
@@ -20,38 +20,256 @@ To try it, right-click MirkLurk in your Steam Library, open '''Properties''', th
 * New damage type: [[Leeching]].
 
 === Items ===
-* [[Magic weapons]]: eight orbs and [[Staff of The Fire Eater]].
+* [[Magic weapons]]: [[Orb of Poison]], [[Orb of Greater Poison]], [[Orb of Fire]], [[Orb of Greater Fire]], [[Orb of Iron Essence]], [[Orb of Steel Essence]], [[Orb of Wind]], [[Orb of Storm]] and [[Staff of The Fire Eater]].
 * [[Storage Chest]], a placeable chest that keeps its contents safe.
-* [[Magus' Shard]], [[Clays' Magus Hood]], [[Magi's Ropebelt]], [[Head of The Terror]], [[Bat Hide]], [[Bat Meat]] and [[Grilled Bat Meat]].
+* [[Magus' Shard]], [[Clays' Magus Hood]], [[Magi's Ropebelt]], [[Head of The Terror]], [[Bat Hide]], [[Bat Meat]] and [[Grilled Bat Meat]] (cooked at a [[Campfire]]).
 
 === Controls ===
 * [[Strict move]]: hold Left Ctrl to walk to a tile without interacting with what is there.
 * [[Placing objects]]: press the Weapon Swap key while placing to flip an object.
+* Item tooltips now show weapon range. Every weapon page lists its attack range.
 
 == Changes ==
-=== Crafting and building ===
-* [[Crafting]] takes ingredients from containers within 4 tiles once your inventory runs out.
-* You can place objects directly from a nearby container.
-* Early in the story, you cannot build within 30 tiles of Fort Solid (was 14).
-* A [[Campfire]] cannot be packed up while it is burning. Nearby fires and lit torches in your hands make lighting a fire more likely.
+=== Renamed ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Renamed (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! 0.8.1.5 name !! 0.8.9.9 name
+|-
+| Unwanted Guard || [[Survivor]]
+|-
+| Fire Striker || [[Fire Bond]]
+|}
+</div>
 
-=== Merchants and allies ===
-* [[Magus Clay]] and [[Viend]] sell the [[Storage Chest]]. Viend also sells the [[Steel Hand Axe]].
-* [[Summoning Stone]] allies are available only once Eir grants you access to Fort Solid. Clay leaves the list after you report Scaal's defeat, and Wilda joins once she trusts you.
+=== Skills and damage ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Skills and damage (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Change !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Blunt]] base stun chance || 12% || 10%
+|-
+| [[Master Basher]] stun chance per rank || +1.5% || +1.2%, melee weapons only
+|-
+| [[Force Fighter]] bonus-damage chance per rank || +2% || +2%, melee weapons only
+|-
+| [[Fire Bond]] burn treatment while resting or sleeping || None || 4% per turn from rank 5, 8% from rank 10
+|-
+| [[Fast Draw]] || Bows || Bows only; orbs get no AP reduction or free shots
+|}
+</div>
 
-=== Skills and combat ===
-* Fire Striker is now [[Fire Bond]]. From rank 5 it can also treat burns while you rest.
-* [[Blunt]] stun chance is 10% (was 12%). [[Master Basher]] adds 1.2% per rank (was 1.5%); it and [[Force Fighter]] now only boost melee weapons.
-* [[Iron Battleaxe]] and [[Steel Battleaxe]] deal less damage with the inner cells of their attack patterns.
-* Creatures may give up a chase, and idle creatures often ignore one another.
-* Item tooltips now show weapon range.
+=== Food AP costs ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Food AP costs (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Food !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Crab Meat]] || 2 AP || 2.2 AP
+|-
+| [[Bug Meat]] || 2 AP || 3 AP
+|-
+| [[Snake Meat]] || 1.6 AP || 2 AP
+|-
+| [[Fried Egg]] || 1 AP || 1.2 AP
+|-
+| [[Vile Meat]] || 2 AP || 3 AP
+|-
+| [[Grilled Toadkin Meat]] || 3 AP || 2.6 AP
+|}
+</div>
 
-=== Items and loot ===
-* Eating AP costs changed: [[Crab Meat]] 2.2, [[Bug Meat]] 3, [[Snake Meat]] 2, [[Fried Egg]] 1.2, [[Vile Meat]] 3 and [[Grilled Toadkin Meat]] 2.6.
-* [[Iron Reinforced Gloves]] are repaired with a [[Metal Repair Kit]] instead of a [[Cloth Repair Kit]].
-* Several drops are smaller. For example, [[Titanspine Crab]] drops 2-3 [[Crab Meat]] (was 2-4) and [[Mire Serpent]] 16-32 [[Snake Meat]] (was 16-44). Scaalmyr and Sceetlers can now drop two [[Rift Weave]] or [[Glow Goo]].
-* [[Random treasure]] budgets are lower, and the new magic weapons, [[Magi's Ropebelt]] and [[Bat Hide]] can appear as treasure.
-* Some gathering amounts changed; see each item's page.
-* [[Map Drawing Kit]] is not used up if you already carry a map of the current area.
+=== Weapons and equipment ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Weapons and equipment (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Item !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Iron Battleaxe]] || Potential damage 16 to 23; two inner cells deal 1-2 || Potential damage 14 to 21; those cells deal 0-1
+|-
+| [[Steel Battleaxe]] || Potential damage 24 to 27; two inner cells deal 2 || Potential damage 22 to 27; those cells deal 1-2
+|-
+| [[Iron Reinforced Gloves]] || Repaired with [[Cloth Repair Kit]] || Repaired with [[Metal Repair Kit]]
+|}
+</div>
+
+=== Characters ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Characters (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Character !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Wilda]] || Friendly NPC faction; idle movement 8%; Trade had no wares || Survivor camp faction; idle movement 6%; sells 11 wares; gives the camp request
+|-
+| [[Survivor]] || Friendly NPC faction; idle movement 8% || Survivor camp faction; idle movement 4%; guards the camp
+|-
+| [[Magus Clay]] || Summoning Stone ally at any time || Summoning Stone ally until you report Scaal's defeat; sells [[Storage Chest]]
+|-
+| [[Viend]] || 15 wares || Also sells [[Storage Chest]] and [[Steel Hand Axe]]; does not heal camp residents
+|-
+| [[Captain Eir]] || No later Clay topic || Clay? topic after you report Scaal's defeat; late in the story she and Clay treat each other as enemies
+|-
+| [[Summoning Stone]] allies || Eir, Clay, Bhato and Viend at any time || Eir, Bhato and Viend once Eir grants fort access; Clay until Scaal's defeat is reported; Wilda once she trusts you
+|}
+</div>
+
+=== Creature drops ===
+Ranges are inclusive; lower amounts are more likely.
+
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Creature drops (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Creature !! Drop !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Titanspine Crab]] || [[Crab Meat]] || 2-4 || 2-3
+|-
+| [[Dreadfly]] || [[Bug Meat]] || 2-4 || 2-3
+|-
+| [[Deathfly]] || [[Bug Meat]] || 2-4 || 2-3
+|-
+| [[Firelouse]] || [[Bug Meat]] || 2-4 || 2-3
+|-
+| [[Nightmare]] || [[Bug Meat]] || 4-9 || 4-6
+|-
+| [[Mirk Mauler]] || [[Vile Meat]] || 2-4 || 2-3
+|-
+| [[Mire Serpent]] || [[Snake Meat]] || 16-44 (four stacks of 4-11) || 16-32 (four stacks of 4-8)
+|-
+| [[Sceetler]] || [[Rift Weave]] || 1 || 1-2
+|-
+| [[Sceetler]] || [[Glow Goo]] || 1 || 1-2
+|-
+| [[Scaalmyr Grunt]] || [[Rift Weave]] || 1 || 1-2
+|-
+| [[Scaalmyr Grunt]] || [[Glow Goo]] || 1 || 1-2
+|-
+| [[Scaalmyr Grunt]] || [[Scaalmyr Husk]] || 1 || 1-2
+|-
+| [[Scaalmyr Warrior]] || [[Rift Weave]] || 1 || 1-2
+|-
+| [[Scaalmyr Warrior]] || [[Glow Goo]] || 1 || 1-2
+|-
+| [[Scaalmyr Geomancer]] || [[Rift Weave]] || 1 || 1-2
+|-
+| [[Scaalmyr Geomancer]] || [[Glow Goo]] || 1 || 1-2
+|}
+</div>
+
+=== Gathering and searching ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Gathering and searching (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Where !! Item !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Searching boulders]] || [[Large Maggot]] || 1-4, 54.3% chance || 1-5, 59.2% chance
+|-
+| [[Searching boulders]] || [[Large Beetle]] || 1-4, 54.3% chance || 1-5, 59.2% chance
+|-
+| [[Cave-floor cracks]] || [[Cave Creeper]] || 1-2, 62.1% chance || 1-3, 67.7% chance
+|-
+| [[Cave-floor cracks]] || [[Drake Jasper]] || 1, 36.3% chance || 1-2, 48.1% chance
+|-
+| [[Plant harvesting]] || [[Plant Fiber]] from ferns || 1-14 || 1-10
+|-
+| [[Plant harvesting]] || [[Cranberries]] || 2-11 || 2-8
+|-
+| [[Plant harvesting]] || [[Watercress]] || 1-12 || 1-8
+|}
+</div>
+
+=== Random treasure budgets ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Random treasure budgets (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Pool !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Random treasure#pool-skeleton-outdoors|Outdoor skeletons and remains]] || 30 copper to 5 silver 20 copper || 30 copper to 4 silver 90 copper
+|-
+| [[Random treasure#pool-skeleton-indoors|Indoor skeletons and remains]] || 2 silver 80 copper to 7 silver 70 copper || 2 silver 80 copper to 7 silver 40 copper
+|-
+| [[Random treasure#pool-chest-common|Common treasure chests]] || 3 to 22 silver || 3 to 19 silver
+|-
+| [[Random treasure#pool-chest-middle|Middle treasure chests]] || 5 to 44 silver || 5 to 40 silver
+|-
+| [[Random treasure#pool-chest-rich|Rich treasure chests]] || 10 to 59 silver || 10 to 50 silver
+|-
+| [[Random treasure#pool-ruins-large|Larger searchable ruins]] || 1 silver to 3 silver 40 copper || 1 silver to 2 silver 50 copper
+|-
+| [[Random treasure#pool-ruins-small|Smaller searchable ruins]] || 30 copper to 1 silver 50 copper || 30 copper to 1 silver 20 copper
+|-
+| [[Random treasure#pool-cracks-tiny|Cave-floor crack bonus]] || 5 copper to 1 silver 4 copper || 5 copper to 1 silver
+|-
+| [[Survivor loot|Survivor corpses]] || None || 1 silver 50 copper; items worth at least 20 copper
+|}
+</div>
+
+=== Random treasure pools ===
+Lower budgets drop items that now cost more than a pool's largest budget. Each removed item can still appear in at least one other pool.
+
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Random treasure pools (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Pool !! Items 0.8.1.5 / 0.8.9.9 !! No longer possible !! Newly possible
+|-
+| [[Random treasure#pool-skeleton-outdoors|Outdoor skeletons and remains]] || 95 / 91 || [[Steel Shortsword]], [[Iron Felling Axe]], [[Troll Skin Vest]], [[Map Drawing Kit]] || None
+|-
+| [[Random treasure#pool-skeleton-indoors|Indoor skeletons and remains]] || 72 / 70 || [[Steel Hand Axe]], [[Waxed Linen Tent]] || None
+|-
+| [[Random treasure#pool-chest-common|Common treasure chests]] || 98 / 96 || [[Steel Longsword]], [[Summoning Stone]], [[Serpent Fang]], [[Iron Greatsword]], [[Iron Warhammer]], [[Iron Battleaxe]] || [[Orb of Poison]], [[Orb of Fire]], [[Orb of Iron Essence]], [[Orb of Wind]]
+|-
+| [[Random treasure#pool-chest-middle|Middle treasure chests]] || 86 / 95 || None || [[Staff of The Fire Eater]] and all eight orbs
+|-
+| [[Random treasure#pool-chest-rich|Rich treasure chests]] || 68 / 78 || None || [[Magi's Ropebelt]], [[Staff of The Fire Eater]] and all eight orbs
+|-
+| [[Random treasure#pool-ruins-large|Larger searchable ruins]] || 23 / 20 || [[Decent Hunting Knife]], [[Expert Herbalist's Belt]], [[Wayfarer's Vigor]] || None
+|-
+| [[Random treasure#pool-ruins-small|Smaller searchable ruins]] || 12 / 9 || [[Apprentice Herbalist's Belt]], [[Topaz]], [[Wound Salve]] || None
+|-
+| [[Random treasure#pool-unwanted-remains|Raving and Mutated Unwanted corpses]] || 71 / 72 || None || [[Bat Hide]]
+|-
+| [[Random treasure#pool-survivor-remains|Survivor corpses]] || None / 66 || None || New pool
+|}
+</div>
+
+=== Merchants ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Merchants (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Merchant !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Magus Clay]] || 16 wares || Adds [[Storage Chest]] (1 gold 5 silver)
+|-
+| [[Viend]] || 15 wares || Adds [[Storage Chest]] and [[Steel Hand Axe]]
+|-
+| [[Wilda]] || No wares || 11 wares: remedies, arrows, an enduring torch and repair kits
+|-
+| [[Grand Mother]] || Did not exist || [[Summoning Stone]], [[Staff of The Fire Eater]], all eight orbs, and later [[Magus' Shard]]
+|}
+</div>
+
+=== Other rules ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Other rules (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Rule !! 0.8.1.5 !! 0.8.9.9
+|-
+| [[Crafting]] ingredients || Inventory only || Inventory first, then containers within 4 tiles
+|-
+| [[Placing objects]] || From your inventory || Also from a nearby container; can be flipped
+|-
+| No-build zone around Fort Solid, until Viend returns || 14 tiles || 30 tiles
+|-
+| No-build zone around the [[Survivors' camp]] || None || About 26 tiles
+|-
+| [[Map Drawing Kit]] || Used up by any outdoor map || Not used up if you already carry a map of the current area
+|-
+| Packing up a [[Campfire]] or [[Survivor's Field Kit]] || Allowed while burning || Only once its fire is out
+|-
+| Fire-lighting bonus from nearby fire || The fire being relit, or one nearby campfire || Every burning fire or placed torch within 1.5 tiles (torches count a third), plus 30% per lit torch in hand, up to 100%
+|-
+| Sleeping-place concealment indoors and underground || Full || Halved
+|-
+| Raving Unwanted share of cave spawns || 2% || 2.5%
+|-
+| Creatures chasing you || Kept chasing within range || May give up once you are more than 1.5 times their targeting distance away
+|-
+| Idle creatures and other creatures || Targeted normally || Wildlife, Giant Slugs, Toadkin, the Nightmare faction, trolls and Mirkfangs ignore non-player targets 60% of the time
+|-
+| [[Random treasure]] candidates || 0.8.1.5 items only || Also the new orbs, staff, belt and bat items
+|}
+</div>
+
+=== Story ===
+* [[Quests and journal#entry-journal-30|A possible homecoming]] is no longer the last journal entry: [[Quests and journal#entry-journal-31|Clay defeated]] and [[Quests and journal#entry-journal-32|Peace at Fort Solid]] follow.
 
 [[Game mechanics]] | [[Main Page]]
