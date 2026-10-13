@@ -197,9 +197,14 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                 or parsed.creatures[0].get("aria-label") != title or projection.text.strip() != title):
             raise RuntimeError("A creature lost its canonical visible name, tooltip or accessible label.")
         links = projection.wiki_links
-        if [link["target"] for link in links] != [title, title] or any(link["redlink"] for link in links):
+        expected_links = [title, title] if image is not None else [title]
+        if [link["target"] for link in links] != expected_links or any(link["redlink"] for link in links):
             raise RuntimeError("Creature portrait/name links did not resolve to the same canonical article.")
-        if image is None or len(parsed.images) != 1 or len(parsed.pixel_styles) != 1:
+        if image is None:
+            if parsed.images or parsed.pixel_styles or "mirklurk-cell-grid" in rendered:
+                raise RuntimeError("A creature without a reviewed portrait rendered an image or statistics.")
+            continue
+        if len(parsed.images) != 1 or len(parsed.pixel_styles) != 1:
             raise RuntimeError("The curated creature fixture lacks its reviewed portrait.")
         pixels = image["pixel_art"]
         actual = parsed.images[0]
@@ -283,8 +288,8 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                 raise RuntimeError("Attack sums or caveats changed.")
         if "overflow-x:auto" not in rendered.replace(" ", ""):
             raise RuntimeError("Native grids lost horizontal overflow.")
-    if totals != {0: 259, 1: 189, 2: 22, 3: 10}:
-        raise RuntimeError("The 36 native health grids differ from the reviewed HP/armor totals.")
+    if totals != {0: 366, 1: 210, 2: 35, 3: 10}:
+        raise RuntimeError("The 42 native health grids differ from the reviewed HP/armor totals.")
 
     for amount in (0, 1, 99, 100, 999, 1000, 1234, 9007199254740993, 999999999999999999):
         rendered = parse("{{Coins|" + str(amount) + "}}")
@@ -335,7 +340,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                         "1," * 32 + "1", ";".join(["1"] * 33), "1" * 16385],
         "Attack grid": ["", "0-0", "2-1", "1:4", "1.4", "-1", "1001", "0-1001", "1,", "1;;1", "1,2;3",
                         "0 - 1", "1e2", "1 " * 8193],
-        "Creature": ["", "Not a creature", "Ranger Bhato", "Unwanted Guard", "being-13", "Template:Coins",
+        "Creature": ["", "Not a creature", "Ranger Bhato", "Survivor", "being-13", "Template:Coins",
                      "Sceetler#Stats", "File:Being-13.png", "NIGHTMARE", "x" * 161],
         "Item": ["", "Sceetler", "Ranger Bhato", "Finish Raft", "item-14", "File:Item-14.png", "Item:Iron Hand Axe",
                  "Turnip", "Turnip (nature)", "Iron Hand Axe#Stats", "IRON HAND AXE", "x" * 161,
@@ -374,7 +379,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             "No item inputs", "Unknown", "Unknown", cost, "Unknown"
         ]:
             raise RuntimeError("Recipe row invented a default value or lost a custom/zero cost.")
-    print("Native displays: all 118 grids, exact coins, 246 items, 25 creature portraits and authored lists, "
+    print("Native displays: all 139 grids, exact coins, 263 items, 30 creatures and authored lists, "
           "images, accessibility, invalid inputs and resource bounds passed.", flush=True)
 
 
