@@ -67,9 +67,9 @@ image-sizing policy as other artwork. See [author syntax and limits](docs/TEMPLA
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication
 fails closed before page edits if the target wiki lacks working Scribunto.
 
-The metadata-only artwork register covers 362 reviewed selections: 261 items,
+The metadata-only artwork register covers 364 reviewed selections: 261 items,
 42 beings, 25 skills, 16 nature records, and three workstation variants.
-Three supplementary NPC-location exteriors and eight NPC overworld sprites
+Three supplementary NPC-location exteriors and ten overworld sprites
 preserve the existing portraits. 318 records now embed transparent-margin crops
 under new `-cropped` File titles; the original Files are kept
 ([details](docs/IMAGES.md#transparent-margin-crops)).

@@ -159,6 +159,23 @@ Confidence is therefore `inferred`. The 47 PNGs (24 originals, 23 crops) were
 imported with the standard attribution sidecars. The active register is 362
 with 318 crops; all 338 previous records are unchanged.
 
+Grand Mother and Magus Clay's boss entry also have dialogue portraits:
+`gml_Object_UI_Draw_64` selects `spr_ui_portraits` frame 9 for being 36 and
+frame 10 for being 41 (the NPC Clay uses frame 1). Frame 10 is Clay's hooded
+portrait with glowing eyes; 144 of its 4,480 native pixels differ from frame 1.
+Both were added on 2026-10-13 as primary images, matching the other NPCs:
+`File:Being-36-portrait.png` (SHA-256 `3599433a...`) and
+`File:Being-41-portrait.png` (`7e0a5fb4...`), each a fully opaque 56 x 80
+frame at 3x (168 x 240) with no crop. The two earlier sprite records became
+`role: sprite` overworld images. They keep their already-published
+`File:Being-36(-cropped).png` and `File:Being-41(-cropped).png` titles rather
+than duplicating the bytes under `-overworld` names. The register is now 364.
+
+Re-exporting frames 0-8 from the hotfixed build reproduced the eight live
+portraits pixel for pixel, except Wilda's (frame 8), which differs in 7 native
+pixels. The hotfix therefore can touch textures. Frames 9 and 10 have no
+pre-hotfix comparison, and the live Wilda portrait was left unchanged.
+
 ## Site branding
 
 On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and
