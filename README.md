@@ -75,7 +75,8 @@ The metadata-only artwork register covers 364 reviewed selections: 261 items,
 42 beings, 25 skills, 16 nature records, and three workstation variants.
 Three supplementary NPC-location exteriors and ten overworld sprites
 preserve the existing portraits. 318 records now embed transparent-margin crops
-under new `-cropped` File titles; the original Files are kept
+under `(cropped)` File titles; the original Files are kept. All File titles
+use readable [page-title names](docs/IMAGES.md#file-titles)
 ([details](docs/IMAGES.md#transparent-margin-crops)).
 Three shared health shields show
 bronze for 1 armor layer, silver for 2, and gold for 3 at a compact 32px size.

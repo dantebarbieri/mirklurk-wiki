@@ -49,7 +49,8 @@ changes, redirect ambiguous names to one arbitrary entity, delete old
 histories, or silently retarget community links. For transcluded information,
 edit the owner page rather than generated copies. Rights-reviewed images have
 their own operator import; metadata alone does not prove that a File title
-exists or that its bytes match.
+exists or that its bytes match. File renames follow the reviewed move plan in
+[IMAGES.md](IMAGES.md#renaming-files).
 
 ## Docker handoff
 

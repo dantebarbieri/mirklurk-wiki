@@ -77,6 +77,7 @@
 !/tools/wiki_references.py
 !/tools/build_wiki.py
 !/tools/sync_wiki.py
+!/tools/plan_file_moves.py
 !/tools/smoke_deploy.py
 !/tests/
 !/tests/test_safety.py
@@ -96,6 +97,7 @@
 !/tests/test_navigation.py
 !/tests/test_terrain.py
 !/tests/test_references.py
+!/tests/test_identifiers.py
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile

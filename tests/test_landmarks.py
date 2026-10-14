@@ -25,9 +25,9 @@ from test_wiki import synthetic_data
 
 
 LANDMARKS = {
-    "being-12": ("Ranger-Bhato-hut-exterior-cropped.png", "aa3f457832b60d1b48977cd30f11f9da2c10bf9956bcb52cf5b354b248da471f"),
-    "being-26": ("Gurb-Gurb-hollow-exterior-cropped.png", "797c6aab7f6cec8c8555d0edf501cd60c88386279b6973f3df0a6ab162132429"),
-    "being-33": ("Ihar-shipwreck-exterior-cropped.png", "90d58e082b943d71275478d88972d99f1dd203ebe3f3e9faa0fe9893d5545c1c"),
+    "being-12": ("Ranger Bhato exterior (cropped).png", "aa3f457832b60d1b48977cd30f11f9da2c10bf9956bcb52cf5b354b248da471f"),
+    "being-26": ("Gurb-Gurb exterior (cropped).png", "797c6aab7f6cec8c8555d0edf501cd60c88386279b6973f3df0a6ab162132429"),
+    "being-33": ("Ihar exterior (cropped).png", "90d58e082b943d71275478d88972d99f1dd203ebe3f3e9faa0fe9893d5545c1c"),
 }
 SOURCES = {  # Preserved native exports the transparent-margin crops derive from.
     "being-12": "c25cc3db9e4414f8ff9c4349dd6d5b094ff52c2cdd109024dca721beb88b8d7a",
@@ -53,7 +53,7 @@ class LandmarkTests(unittest.TestCase):
             self.assertEqual(image["id"], identity + "-location-illustration")
             self.assertEqual(image["file_title"], "File:" + filename)
             self.assertEqual(image["sha256"], digest)
-            self.assertEqual(image["cropped_from"]["file_title"], "File:" + filename.replace("-cropped", ""))
+            self.assertEqual(image["cropped_from"]["file_title"], "File:" + filename.replace(" (cropped)", ""))
             self.assertEqual(image["cropped_from"]["sha256"], SOURCES[identity])
             self.assertEqual(image["creator"], "Edym Pixels")
             self.assertEqual(image["rights_status"], "approved")
@@ -61,7 +61,7 @@ class LandmarkTests(unittest.TestCase):
             self.assertTrue(any(".frame0" in row["key"] for row in image["evidence"]))
             page = self.pages[self.locations[identity]]
             portrait = image_for(identity, self.data["illustrations"])
-            self.assertEqual(portrait["file_title"], "File:" + identity.capitalize() + ".png")
+            self.assertEqual(portrait["file_title"], f"File:{self.locations[identity]} portrait.png")
             self.assertEqual(page.count("[[" + portrait["file_title"] + "|"), 1)
             self.assertEqual(page.count("[[File:" + filename + "|"), 1)
             self.assertNotIn("|thumb", page)
@@ -251,7 +251,7 @@ class LandmarkTests(unittest.TestCase):
             page = pages[self.locations[identity]]
             self.assertNotIn("[[File:" + filename, page)
             self.assertNotIn("[[:File:" + filename, page)
-            self.assertIn("[[File:" + identity.capitalize() + ".png|", page)
+            self.assertIn(f"[[File:{self.locations[identity]} portrait.png|", page)
             self.assertNotIn("No reviewed picture is available yet.", page)
 
     def test_location_images_reject_unreviewed_roles_owners_duplicates_and_rights(self):
@@ -344,9 +344,9 @@ class LandmarkTests(unittest.TestCase):
     def test_synthetic_landmarks_keep_exact_originals_for_browser_integer_upscaling(self):
         specs = synthetic_image_specs(self.data)
         self.assertEqual(LANDMARK_IMAGES, {
-            "Ranger-Bhato-hut-exterior-cropped.png": (48, 42),
-            "Gurb-Gurb-hollow-exterior-cropped.png": (79, 120),
-            "Ihar-shipwreck-exterior-cropped.png": (128, 92),
+            "Ranger Bhato exterior (cropped).png": (48, 42),
+            "Gurb-Gurb exterior (cropped).png": (79, 120),
+            "Ihar exterior (cropped).png": (128, 92),
         })
         for filename, size in LANDMARK_IMAGES.items():
             self.assertEqual(specs[filename][:2], size)
@@ -364,12 +364,12 @@ class LandmarkTests(unittest.TestCase):
             pixels = (b"\0" + b"\x44\x99\x11" * width) * height
             body = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
                     + chunk(b"IDAT", zlib.compress(pixels)) + chunk(b"IEND", b""))
-            url = "https://example.invalid/images/" + filename
+            url = "https://example.invalid/images/" + filename.replace(" ", "_")
             bodies[url] = body
             hashes[filename] = hashlib.sha256(body).hexdigest()
-            portrait = identity.capitalize() + ".png"
+            portrait = f"{self.locations[identity]} portrait.png".replace(" ", "_")
             scale = {"being-12": 4, "being-26": 2, "being-33": 1}[identity]
-            parses[self.locations[identity]] = {"images": [filename, portrait], "text": {"*":
+            parses[self.locations[identity]] = {"images": [filename.replace(" ", "_"), portrait], "text": {"*":
                 f'<span class="pixel-art" style="image-rendering:pixelated;zoom:calc({scale} / 1);">'
                 f'<img src="{url}" width="{width}" height="{height}" /></span>'
                 f'<img src="https://example.invalid/images/{portrait}" />'}}
@@ -408,18 +408,18 @@ class LandmarkTests(unittest.TestCase):
             lambda page: page["text"].update({"*": page["text"]["*"].split("/>", 1)[0] + "/>"}),
             lambda page: page["text"].update({"*": page["text"]["*"].replace('width="48"', 'width="220"')}),
             lambda page: page["text"].update({"*": page["text"]["*"].replace("images/Ranger", "wrong/Ranger")}),
-            lambda page: page.update(images=["Being-12.png"]),
+            lambda page: page.update(images=["Ranger_Bhato_portrait.png"]),
         ):
             altered = copy.deepcopy(parses)
             change(altered["Ranger Bhato"])
             with self.assertRaises(RuntimeError):
                 run_case(changed_parses=altered)
         altered = copy.deepcopy(infos)
-        altered["File:Ranger-Bhato-hut-exterior-cropped.png"]["width"] = 49
+        altered["File:Ranger Bhato exterior (cropped).png"]["width"] = 49
         with self.assertRaisesRegex(RuntimeError, "native PNG metadata"):
             run_case(changed_infos=altered)
         altered_bodies = dict(bodies)
-        altered_bodies[infos["File:Ranger-Bhato-hut-exterior-cropped.png"]["url"]] += b"changed"
+        altered_bodies[infos["File:Ranger Bhato exterior (cropped).png"]["url"]] += b"changed"
         with self.assertRaisesRegex(RuntimeError, "exact native import"):
             run_case(changed_bodies=altered_bodies)
 

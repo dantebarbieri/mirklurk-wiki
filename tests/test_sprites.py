@@ -38,12 +38,12 @@ class OverworldSpriteTests(unittest.TestCase):
         self.assertEqual(set(self.sprites), set(OVERWORLD_SPRITES) | {"being-36", "being-41"})
         npcs = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "npc"}
         images = {identity: image_for(identity, self.data["illustrations"]) for identity in npcs}
-        for identity in ("being-36", "being-41"):  # Sprite titles predate these portraits.
-            title = "File:" + identity.capitalize()
+        for identity in ("being-36", "being-41"):
+            title = "File:" + self.locations[identity]
             self.assertEqual((image_for(identity, self.data["illustrations"])["file_title"], uncropped(self.sprites[identity])["file_title"]),
-                             (title + "-portrait.png", title + ".png"))
+                             (title + " portrait.png", title + " sprite.png"))
             lead = self.pages[self.locations[identity]].split("\n==", 1)[0]
-            self.assertLess(lead.index(title + "-portrait.png|"), lead.index(title + "-cropped.png|"))
+            self.assertLess(lead.index(title + " portrait.png|"), lead.index(title + " sprite (cropped).png|"))
         self.assertEqual({identity for identity, image in images.items() if image is None}, set())
         portraits = {identity for identity, image in images.items() if image and "portrait" in image["caption"]}
         # Dead Unwanted's beingDB entry uses spr_blank, so it has no overworld sprite to show.
@@ -52,9 +52,9 @@ class OverworldSpriteTests(unittest.TestCase):
             image = self.sprites[identity]
             self.assertEqual(image["id"], identity + "-sprite-illustration")
             # The full padded-canvas export is preserved; pages show its transparent-margin crop.
-            self.assertEqual(uncropped(image)["file_title"], f"File:{identity.capitalize()}-overworld.png")
+            self.assertEqual(uncropped(image)["file_title"], f"File:{self.locations[identity]} sprite.png")
             self.assertEqual(uncropped(image)["pixel_art"], {"width": width, "height": height, "source_scale": scale})
-            self.assertEqual(image["file_title"], f"File:{identity.capitalize()}-overworld-cropped.png")
+            self.assertEqual(image["file_title"], f"File:{self.locations[identity]} sprite (cropped).png")
             width = image["pixel_art"]["width"]
             self.assertEqual(image["rights_status"], "approved")
             self.assertEqual(image["creator"], "Edym Pixels")
@@ -119,7 +119,7 @@ class HealingAbilityTests(unittest.TestCase):
     def test_healing_icon_is_supplementary_and_pixel_exact_metadata(self):
         image = self.image
         self.assertEqual(image["entity"], "being-19")
-        self.assertEqual(image["file_title"], "File:Healing-popup.png")
+        self.assertEqual(image["file_title"], "File:Viend ability (healing popup).png")
         self.assertEqual(image["sha256"], "26b01e30c749985620208d1e2db64e9b11df2046711c46b4de545d84700169ff")
         self.assertEqual(image["pixel_art"], {"width": 64, "height": 64, "source_scale": 4})
         self.assertEqual(image["creator"], "Edym Pixels")
@@ -127,18 +127,18 @@ class HealingAbilityTests(unittest.TestCase):
         self.assertIn("spr_ui_16x16_fullycenter.frame10", image["evidence"][1]["key"])
         page = self.pages["Viend"]
         section = page.split("== <nowiki>Healing</nowiki> ==", 1)[1].split("\n== ", 1)[0]
-        self.assertEqual(page.count("[[File:Healing-popup.png|"), 1)
-        self.assertIn("[[File:Healing-popup.png|64px|", section)
+        self.assertEqual(page.count("[[File:Viend ability (healing popup).png|"), 1)
+        self.assertIn("[[File:Viend ability (healing popup).png|64px|", section)
         self.assertIn("|class=notpageimage|", section)
         self.assertIn("zoom:calc(4 / 4)", section)
         self.assertNotIn("|thumb", section)
         self.assertNotIn("|frameless", section)
         portrait = image_for("being-19", self.data["illustrations"])
         self.assertIs(portrait, image_for("being-19", [image, portrait]))
-        self.assertNotIn("Healing-popup.png", page.split("== <nowiki>Healing", 1)[0])
+        self.assertNotIn("Viend ability (healing popup).png", page.split("== <nowiki>Healing", 1)[0])
         from smoke_deploy import require_image_coverage, synthetic_image_specs
         specs = synthetic_image_specs(self.data)
-        self.assertEqual(specs["Healing-popup.png"][:2], (64, 64))
+        self.assertEqual(specs["Viend ability (healing popup).png"][:2], (64, 64))
         require_image_coverage(specs, self.pages)
 
     def test_no_other_page_or_existing_image_changes(self):
@@ -187,7 +187,7 @@ class HealingAbilityTests(unittest.TestCase):
         data = copy.deepcopy(self.data)
         next(row for row in data["illustrations"] if row["id"] == self.image["id"])["rights_status"] = "pending"
         page = build_pages(ROOT, data, self.catalog, self.details)["Viend"]
-        self.assertNotIn("File:Healing-popup.png", page)
+        self.assertNotIn("File:Viend ability (healing popup).png", page)
         self.assertIn("== <nowiki>Healing</nowiki> ==", page)
         self.assertIn(image_for("being-19", data["illustrations"])["file_title"], page)
 
@@ -207,14 +207,14 @@ class JumperMechanicsTests(unittest.TestCase):
         self.assertNotIn("DavidLokison", page)
         table_end, notes = section.index("|}"), section.index("* <nowiki>Water:")
         example = section.index("<nowiki>For example,")
-        adjacent = section.index("[[File:Jumper-adjacent-jump-costs.png|1200px|")
+        adjacent = section.index("[[File:Jumper mechanics (adjacent jump costs).png|1200px|")
         self.assertLess(table_end, notes)
         self.assertLess(notes, example)
         self.assertLess(example, adjacent)
-        self.assertLess(adjacent, section.index("[[File:Jumper-two-tile-jump-costs.png|930px|"))
+        self.assertLess(adjacent, section.index("[[File:Jumper mechanics (two-tile jump costs).png|930px|"))
         self.assertEqual(section.count("|class=notpageimage|"), 2)
-        self.assertEqual(page.count("[[File:Skill-0-2.png|"), 1)
-        self.assertEqual(image_for("skill-0-2", self.data["illustrations"])["file_title"], "File:Skill-0-2.png")
+        self.assertEqual(page.count("[[File:Jumper icon.png|"), 1)
+        self.assertEqual(image_for("skill-0-2", self.data["illustrations"])["file_title"], "File:Jumper icon.png")
 
     def test_mechanics_role_requires_a_skill_with_effects(self):
         image = next(row for row in self.data["illustrations"] if row.get("role") == "mechanics")

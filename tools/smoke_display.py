@@ -167,7 +167,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             actual = parsed.images[0]
             pixels = image["pixel_art"]
             scale = pixel_geometry(image, 32, 32)[2]
-            if (image["file_title"].removeprefix("File:") not in urllib.parse.unquote(actual.get("src", ""))
+            if (image["file_title"].removeprefix("File:").replace(" ", "_") not in urllib.parse.unquote(actual.get("src", ""))
                     or actual.get("alt") != item["name"] or actual.get("width") != str(pixels["width"])
                     or actual.get("height") != str(pixels["height"]) or "srcset" in actual
                     or "/thumb/" in actual.get("src", "") or len(parsed.pixel_styles) != 1
@@ -209,7 +209,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             raise RuntimeError("The curated creature fixture lacks its reviewed portrait.")
         pixels = image["pixel_art"]
         actual = parsed.images[0]
-        filename = image["file_title"].removeprefix("File:")
+        filename = image["file_title"].removeprefix("File:").replace(" ", "_")
         if (filename not in urllib.parse.unquote(actual.get("src", "")) or actual.get("alt") != title + " portrait"
                 or actual.get("width") != str(pixels["width"]) or actual.get("height") != str(pixels["height"])
                 or "srcset" in actual or "/thumb/" in actual.get("src", "")):
@@ -307,7 +307,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
         zooms = []
         for image, (_, name) in zip(images.images, expected):
             coin = image_for({"gold": "item-74", "silver": "item-73", "copper": "item-72"}[name], data["illustrations"])
-            file, size = coin["file_title"].removeprefix("File:"), coin["pixel_art"]
+            file, size = coin["file_title"].removeprefix("File:").replace(" ", "_"), coin["pixel_art"]
             zooms.append(f'zoom:calc({pixel_geometry(coin, 20, 20)[2]}/{size["source_scale"]})')
             if (image.get("alt") != name.capitalize() + " coin" or file not in urllib.parse.unquote(image.get("src", ""))
                     or (image.get("width"), image.get("height")) != (str(size["width"]), str(size["height"]))

@@ -497,14 +497,14 @@ class SelectiveViewTests(unittest.TestCase):
         for identity, digest in hashes.items():
             images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
             self.assertEqual(len(images), 1)
-            image = images[0]
+            image, name = images[0], locations[identity]
             self.assertEqual(image["cropped_from"]["sha256"], digest)
-            self.assertEqual(image["cropped_from"]["file_title"], "File:" + identity.capitalize() + "-mature.png")
-            self.assertEqual(image["file_title"], "File:" + identity.capitalize() + "-mature-cropped.png")
+            self.assertEqual(image["cropped_from"]["file_title"], f"File:{name} sprite (mature).png")
+            self.assertEqual(image["file_title"], f"File:{name} sprite (mature, cropped).png")
             page = self.pages[locations[identity]]
             self.assertIn("[[" + image["file_title"] + "|" + str(image["pixel_art"]["width"]) + "px|", page)
             self.assertNotIn("[[File:" + identity.capitalize() + ".png", page)
-            self.assertNotIn("[[File:" + identity.capitalize() + "-mature.png", page)
+            self.assertNotIn(f"[[File:{name} sprite (mature).png", page)
             self.assertIn("shape varies", page)
             self.assertIn(locations[identity], image["caption"])
             self.assertEqual({row["section"] for row in image["evidence"]}, {

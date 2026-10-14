@@ -10,7 +10,7 @@ import html
 import re
 from collections import Counter
 
-from wiki_data import DataError
+from wiki_data import SOURCE_ID, DataError
 from wiki_display import INERT
 
 
@@ -23,6 +23,8 @@ SPAN_ID = re.compile(r'<span id="([^"{}]+)"></span>')
 HEADING = re.compile(r"^(={2,6})[ \t]*(.+?)[ \t]*\1[ \t]*$", re.M)
 LINK = re.compile(r"\[\[([^\[\]|{}#\n]*)#([^\[\]|{}\n]+)(?:\|[^\[\]\n]*)?\]\]")
 REDIRECT = re.compile(r"#REDIRECT \[\[([^\]#|]+)")
+VIEW_ARGUMENT = re.compile(r"\|\s*item\s*=([^|{}\[\]\n]*)")
+FILE_LINK = re.compile(r"\[\[:?(File:[^\[\]|]+)")
 
 
 def encode(title):
@@ -170,3 +172,16 @@ def validate_anchors(pages, lenient=()):
                 raise DataError(f"{title}: linked page is missing: {target}#{part}")
             if encode(part) not in known[page] and part[:1].islower():
                 raise DataError(f"{title}: missing anchor {page}#{part}")
+
+
+def validate_readable_identifiers(pages):
+    """Anchors, item= view arguments and File titles name things by title, never by source ID."""
+    for title, text in pages.items():
+        visible = INERT.sub("", text)
+        found = [("File title", value.strip()) for value in FILE_LINK.findall(visible)]
+        if not title.startswith(("Module:", "MediaWiki:")):
+            found += [("anchor", value) for value in anchor_ids(text) + re.findall(r'\bid="([^"]*)"', text)]
+            found += [("item= argument", value.strip()) for value in VIEW_ARGUMENT.findall(visible)]
+        for kind, value in found:
+            if SOURCE_ID.search(value):
+                raise DataError(f"{title}: {kind} {value!r} uses a source ID; use the canonical page title")

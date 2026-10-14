@@ -2,6 +2,7 @@
 
 import json
 import re
+from collections import Counter
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -116,11 +117,14 @@ def default_catalog(data):
             names.setdefault(title_key(entity["name"]), []).append(entity)
     pages = []
     for name, entities in sorted(names.items()):
+        ordinal = Counter()
         for entity in sorted(entities, key=lambda row: row["id"]):
             title = name
             if len(entities) > 1 or title in RESERVED_TITLES:
+                # Proposed titles stay readable; reviewers replace ordinals with real distinctions.
+                ordinal[entity["category"]] += 1
                 shared = sum(row["category"] == entity["category"] for row in entities) > 1
-                title += f' ({entity["id"] if shared else entity["category"]})'
+                title += f' ({entity["category"]}' + (f' {ordinal[entity["category"]]})' if shared else ")")
             if re.search(r"[\[\]{}|<>#:/\\]", title):
                 title = f'Entity {entity["id"]}'
             pages.append({"entity": entity["id"], "title": title, "aliases": []})

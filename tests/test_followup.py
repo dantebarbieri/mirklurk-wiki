@@ -91,8 +91,8 @@ class FollowupTests(unittest.TestCase):
         # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
-            "Items": "21b884e858d38abdf2003c6d84d2283884807f29ea6dd4ad871f40310393aa36",
-            "Wooden Recorder": "33dfefaf8d46c42e1b36fb1f6991e7aea278e97d835fb2e8ab6621d2c432f5b5",
+            "Items": "408eb33965a984e68db0e91b71ce27bc412a7d1c2b645a28589904536b97657d",
+            "Wooden Recorder": "f7fe0957468e0da67a0eb1232118a09a2116ded853a81dd3b4180efd7cbc5571",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):
@@ -300,7 +300,7 @@ class FollowupTests(unittest.TestCase):
                     scale = pixel_geometry(image, width, height)[2]
                     style = f"image-rendering:pixelated;zoom:calc({scale} / 4);" if style_override is None else style_override
                     html += (f'<span class="pixel-art" style="{style}">'
-                             f'<img src="/images/{image_source}Health-armor-1.png" width="64" height="64" {image_attrs}/></span>')
+                             f'<img src="/images/{image_source}Armor_shield_(bronze).png" width="64" height="64" {image_attrs}/></span>')
                 return {"parse": {"text": {"*": html}}}
             return api
         smoke_pixel_art(rendered_case(), {"illustrations": [image]})

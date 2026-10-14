@@ -23,7 +23,7 @@ separate permission request is needed for game artwork or screenshots. Do not
 claim a blanket free license for game material, and keep personal information
 off the public File page.
 
-Choose a descriptive title (for example, `Jumper-adjacent-tile-comparison.png`)
+Choose a descriptive title (for example, `Jumper mechanics (rank 10 comparison).png`)
 and add it through normal `[[File:...]]` markup. Native upload history retains
 earlier versions; eligible contributors may replace a file only when they are
 its latest uploader. Administrators handle other replacements and moderation.
@@ -33,7 +33,8 @@ repository asset publication, or change the separately reviewed curated register
 ## Metadata only
 
 Optional `illustrations` records associate an item, being, nature record, or
-skill with a stable local title such as `File:Item-2.png`. The encyclopedia
+skill with a local title that follows the [File title convention](#file-titles),
+such as `File:Wood Buckler icon.png`. The encyclopedia
 stores new records in the exact allowlisted `content/facts/illustrations.json`
 with root `{"schema_version": 1, "illustrations": [...]}` and a 512 KiB cap.
 Non-item workstation illustrations use `station` instead of `entity`, with an
@@ -99,9 +100,9 @@ Three shared shield records originally brought the total to 326. They use `healt
 
 | Armor layers | Shield | File title | Sprite frame | PNG bytes |
 | --- | --- | --- | --- | --- |
-| 1 | Bronze | `File:Health-armor-1.png` | 11 | 188 |
-| 2 | Silver | `File:Health-armor-2.png` | 12 | 213 |
-| 3 | Gold | `File:Health-armor-3.png` | 13 | 230 |
+| 1 | Bronze | `File:Armor shield (bronze).png` | 11 | 188 |
+| 2 | Silver | `File:Armor shield (silver).png` | 12 | 213 |
+| 3 | Gold | `File:Armor shield (gold).png` | 13 | 230 |
 
 The reviewed `spr_ui_16x16` frames are native 16x16 RGBA overlays, privately
 scaled to 64x64 PNG using integer nearest-neighbor scaling. The health-cell
@@ -115,7 +116,7 @@ No additional health art or other frames are included in this approval.
 
 ## Viend's healing indicator
 
-The 2026-10-02 selection adds `File:Healing-popup.png` as an ability illustration
+The 2026-10-02 selection adds `File:Viend ability (healing popup).png` as an ability illustration
 on Viend's page. It is the shared healing popup from
 `spr_ui_16x16_fullycenter`, frame 10, called by `being_heal` when Viend restores
 a wound. It is not a unique spell portrait or a replacement for his existing
@@ -140,8 +141,8 @@ Synthetic smoke fixtures include the new title automatically.
 The 2026-10-14 selection adds two `role: "mechanics"` figures to the Jumper
 page: in-game screenshots by DavidLokison, shared with the community on
 2026-10-02 (game 0.8.1.5), showing the cursor's AP cost at ranks 0 to 10.
-`File:Jumper-adjacent-jump-costs.png` (1200 x 200, 6,913 bytes) covers a jump to
-an adjacent tile; `File:Jumper-two-tile-jump-costs.png` (930 x 80, 3,041 bytes)
+`File:Jumper mechanics (adjacent jump costs).png` (1200 x 200, 6,913 bytes) covers
+a jump to an adjacent tile; `File:Jumper mechanics (two-tile jump costs).png` (930 x 80, 3,041 bytes)
 covers a jump two tiles away. Both are native-scale screenshots with
 `source_scale: 1`. The Effects section gives the cost calculation reviewed in
 the 0.9.0.0 `data.win` as a per-rank table with modifier notes; the table
@@ -157,7 +158,7 @@ The 2026-10-13 selection adds 24 primary illustrations: the 17 items added in
 bats including the Terror, and Magus Clay's boss entry), and Finish Raft.
 Items use the frame named by `itemDB[N].sprite/pic`; beings use frame 0 of
 `beingDB[N].sprite`. Magus Clay's boss entry uses plain `spr_clay`, so its
-full canvas is byte-identical to `File:Being-8-overworld.png`; it still gets
+full canvas is byte-identical to `File:Magus Clay sprite.png`; it still gets
 its own File title so the boss page has an independent record.
 
 Finish Raft has no inventory icon: its `itemDB` picture is an out-of-range
@@ -172,7 +173,7 @@ Because it is not an `{{Item}}`, the Items list shows the same sprite as a
 Each full padded canvas was enlarged by `min(8, floor(256 / longest native
 side))` with nearest-neighbor scaling, fully transparent pixels normalized
 to zero, and cropped by the transparent-margin rule above. 23 records use a
-`-cropped` title; Item-261 has no transparent margin and uses its original.
+`cropped` title; Item-261 has no transparent margin and uses its original.
 Every file was decoded independently and checked against its native frame.
 
 The pixels were exported from the installed `next_version_tester` build after
@@ -189,12 +190,11 @@ Grand Mother and Magus Clay's boss entry also have dialogue portraits:
 frame 10 for being 41 (the NPC Clay uses frame 1). Frame 10 is Clay's hooded
 portrait with glowing eyes; 144 of its 4,480 native pixels differ from frame 1.
 Both were added on 2026-10-13 as primary images, matching the other NPCs:
-`File:Being-36-portrait.png` (SHA-256 `3599433a...`) and
-`File:Being-41-portrait.png` (`7e0a5fb4...`), each a fully opaque 56 x 80
+`File:Grand Mother portrait.png` (SHA-256 `3599433a...`) and
+`File:Magus Clay (boss) portrait.png` (`7e0a5fb4...`), each a fully opaque 56 x 80
 frame at 3x (168 x 240) with no crop. The two earlier sprite records became
-`role: sprite` overworld images. They keep their already-published
-`File:Being-36(-cropped).png` and `File:Being-41(-cropped).png` titles rather
-than duplicating the bytes under `-overworld` names. The register is now 364.
+`role: sprite` overworld images, now `File:Grand Mother sprite.png` and
+`File:Magus Clay (boss) sprite.png` (plus crops). The register is now 364.
 
 Re-exporting frames 0-8 from the hotfixed build reproduced the eight live
 portraits pixel for pixel, except Wilda's (frame 8), which differs in 7 native
@@ -246,16 +246,16 @@ sprites or a promise to replay one random in-game specimen.
 
 | Preserved old File title | New File title | PNG dimensions | PNG bytes |
 | --- | --- | --- | --- |
-| `File:Nature-4.png` | `File:Nature-4-mature.png` | 588 x 564 | 7512 |
-| `File:Nature-7.png` | `File:Nature-7-mature.png` | 684 x 912 | 15112 |
-| `File:Nature-17.png` | `File:Nature-17-mature.png` | 340 x 540 | 4356 |
-| `File:Nature-20.png` | `File:Nature-20-mature.png` | 256 x 256 | 2441 |
+| `File:Nature-4.png` | `File:Willow sprite (mature).png` | 588 x 564 | 7512 |
+| `File:Nature-7.png` | `File:Cypress sprite (mature).png` | 684 x 912 | 15112 |
+| `File:Nature-17.png` | `File:Trollgnarl sprite (mature).png` | 340 x 540 | 4356 |
+| `File:Nature-20.png` | `File:Elderwort Shrub sprite (mature).png` | 256 x 256 | 2441 |
 
 The reviewed hashes and assembly evidence are in `illustrations.json`.
 Elderwort is naturally a small flowering shrub, not a tall-trunk tree.
 Import exactly the four new titles with their attribution sidecars through
-the approved operator workflow; do not overwrite, rename, or delete the old
-File pages or image bytes. That replacement retained 326 active authored
+the approved operator workflow. The four old File pages are not in the data
+and were not moved by the [File title rename](#renaming-files). That replacement retained 326 active authored
 selections while reaching 330 uploaded game images after the separate import.
 Guide pictures reuse existing approved File titles and require no extra
 uploads or duplicate metadata. This document is not deployment authorization.
@@ -271,9 +271,9 @@ thumbnail test image; that is not a production count.
 
 | NPC / preserved portrait | New File title | Native dimensions | PNG bytes | Source frame |
 | --- | --- | --- | --- | --- |
-| Ranger Bhato / `File:Being-12.png` | `File:Ranger-Bhato-hut-exterior.png` | 48 x 48 | 2850 | `spr_built_48x32`, 0 |
-| Gurb-Gurb / `File:Being-26.png` | `File:Gurb-Gurb-hollow-exterior.png` | 80 x 128 | 4558 | `spr_building_80x80`, 0 |
-| Ihar / `File:Being-33.png` | `File:Ihar-shipwreck-exterior.png` | 128 x 96 | 5379 | `spr_building_128x64`, 0 |
+| Ranger Bhato / `File:Ranger Bhato portrait.png` | `File:Ranger Bhato exterior.png` | 48 x 48 | 2850 | `spr_built_48x32`, 0 |
+| Gurb-Gurb / `File:Gurb-Gurb portrait.png` | `File:Gurb-Gurb exterior.png` | 80 x 128 | 4558 | `spr_building_80x80`, 0 |
+| Ihar / `File:Ihar portrait.png` | `File:Ihar exterior.png` | 128 x 96 | 5379 | `spr_building_128x64`, 0 |
 
 Exact native-image hashes, Edym Pixels attribution, original captions, evidence
 and the operator-reported permission basis are in the three `role: "location"`
@@ -308,20 +308,20 @@ on the entity page, adds `notpageimage` and never becomes the page image or icon
 
 | NPC | New File title | Source sprite | Native | Scale | PNG bytes |
 | --- | --- | --- | --- | --- | --- |
-| Captain Eir | `File:Being-6-overworld.png` | `spr_captain_eir` | 48 x 40 | 5x | 1869 |
-| Magus Clay | `File:Being-8-overworld.png` | `spr_clay` | 40 x 40 | 6x | 2481 |
-| Ranger Bhato | `File:Being-12-overworld.png` | `spr_ranger_t` | 48 x 40 | 5x | 1641 |
-| Viend | `File:Being-19-overworld.png` | `spr_viend` | 40 x 40 | 6x | 2132 |
-| Commander Tain | `File:Being-20-overworld.png` | `spr_commander_tain` | 40 x 40 | 6x | 1583 |
-| Gurb-Gurb | `File:Being-26-overworld.png` | `spr_gurb` | 32 x 32 | 7x | 2337 |
-| Ihar | `File:Being-33-overworld.png` | `spr_ihar` | 40 x 40 | 6x | 2273 |
-| Wilda | `File:Being-34-overworld.png` | `spr_wilda` | 48 x 40 | 5x | 1892 |
+| Captain Eir | `File:Captain Eir sprite.png` | `spr_captain_eir` | 48 x 40 | 5x | 1869 |
+| Magus Clay | `File:Magus Clay sprite.png` | `spr_clay` | 40 x 40 | 6x | 2481 |
+| Ranger Bhato | `File:Ranger Bhato sprite.png` | `spr_ranger_t` | 48 x 40 | 5x | 1641 |
+| Viend | `File:Viend sprite.png` | `spr_viend` | 40 x 40 | 6x | 2132 |
+| Commander Tain | `File:Commander Tain sprite.png` | `spr_commander_tain` | 40 x 40 | 6x | 1583 |
+| Gurb-Gurb | `File:Gurb-Gurb sprite.png` | `spr_gurb` | 32 x 32 | 7x | 2337 |
+| Ihar | `File:Ihar sprite.png` | `spr_ihar` | 40 x 40 | 6x | 2273 |
+| Wilda | `File:Wilda sprite.png` | `spr_wilda` | 48 x 40 | 5x | 1892 |
 
 Exact hashes, Edym Pixels attribution, original captions and evidence are in
 the eight `role: "sprite"` records. All eight were decoded and verified to
 reduce exactly to their native frame. Import the eight exact titles with their
 attribution sidecars before publishing pages that embed them; do not overwrite
-the existing portraits. Pages now embed their `-cropped` derivatives (below).
+the existing portraits. Pages now embed their `cropped` derivatives (below).
 
 For `rights_status: pending`, creator/hash/rights fields may be null. A pending
 entity or station record renders a neutral missing-picture notice, **not** an image or File link.
@@ -338,19 +338,74 @@ An approved flag is a recorded human decision, not a legal conclusion made by
 the software. The builder cannot verify permission or the live file's existence.
 Publish approved metadata only after the corresponding operator import is ready.
 
-Titles are restricted to simple ASCII raster-image basenames: PNG, JPEG, or
-WebP. Use stable names, not version-specific host URLs. MediaWiki resolves these
-relative File references after a domain migration.
+## File titles
+
+Every curated File is named `File:<page title> <role>[ (<qualifiers>)].png`,
+with spaces as MediaWiki shows them. The page title is the canonical title of
+the page the image belongs to, disambiguator included (`Turnip (item)`). Never
+use source IDs such as `Item-27` or `being-7` in any letter case; the validator
+rejects them in `file_title` and `cropped_from` (see `tests/test_identifiers.py`).
+
+| Role | Used for | Example |
+| --- | --- | --- |
+| `icon` | item and skill icons | `File:Turnip (item) icon.png` |
+| `portrait` | dialogue portraits | `File:Grand Mother portrait.png` |
+| `sprite` | other being, world, workstation and assembled sprites | `File:Alchemy workstation sprite (later game).png` |
+| `exterior` | NPC location exteriors | `File:Ihar exterior.png` |
+| `ability` | ability effects | `File:Viend ability (healing popup).png` |
+| `mechanics` | mechanics figures | `File:Jumper mechanics (adjacent jump costs).png` |
+| `tile` | nature and guide tiles | `File:Soil tile (high).png` |
+| `area` | explored-area maps | `File:Common Bog area.png` |
+| `shield` | health-armor overlays | `File:Armor shield (bronze).png` |
+
+Qualifiers separate variants of one role. A transparent-margin crop adds
+`cropped` as the last qualifier, so its preserved original is the same title
+without it (`File:Wood Buckler icon (cropped).png` and `File:Wood Buckler icon.png`;
+`File:Willow sprite (mature, cropped).png` and `File:Willow sprite (mature).png`).
+Titles are ASCII raster basenames (PNG, JPEG or WebP) of letters, digits,
+spaces and `_.,'()-`, never URLs. MediaWiki resolves these relative File
+references after a domain migration.
+
+## Renaming Files
+
+On 2026-10-14 every curated title moved to this convention: 397 active titles
+and 318 crop sources, 715 moves. Sections above and below quote the new titles.
+Change only `file_title` values; hashes, provenance and every other field stay
+as they are. The planner proves that and prints the move list without
+contacting any wiki:
+
+```text
+uv run --no-project python tools/plan_file_moves.py --base <ref live on the wiki> --output moves.txt
+```
+
+It matches records by `id`, rejects any other edit, duplicate or reused title
+or source ID, and writes `File:Old.png|File:New.png` lines. The page sync never
+moves or uploads Files; until the moves run it lists every new title as
+missing and pages show red links. A reviewed live migration therefore runs
+**before** the page sync, during an edit freeze:
+
+1. Take a paired database and images backup. Confirm that no target title
+   exists and every source title does.
+2. Move each File page with its upload and history, suppressing redirects:
+   `php maintenance/run.php moveBatch --noredirects -u <operator> -r "Readable File titles" moves.txt`
+   (or API `action=move` with `noredirect` and `movetalk`, which needs the
+   `movefile` and `suppressredirect` rights). Moves keep the bytes, so the
+   recorded SHA-256 values stay valid.
+3. Re-download a sample by its new title and compare hashes; a sync dry run
+   must report no missing Files. Then sync pages and take a second backup.
+
+No redirects or aliases are kept: links to old File titles break by design.
+Uploads outside the data, such as the four pre-mature `File:Nature-4.png`,
+`File:Nature-7.png`, `File:Nature-17.png` and `File:Nature-20.png` tiles, are
+not moved; a reviewer decides whether to delete them.
 
 ## Transparent-margin crops
 
 The 2026-10-02 crop pass removes empty transparent padding without rewriting
-any approved bytes. Each derivative is uploaded under a **new** title,
-`File:<source base>-cropped.png` (for example `File:Item-0-cropped.png` or
-`File:Being-6-overworld-cropped.png`). The suffix keeps the source's identity
-and sort order, cannot collide with an existing export convention, and lets
-anyone find the preserved original by deleting one word. Old Files remain on
-the wiki unchanged; never overwrite, rename or delete them.
+any approved bytes. Each derivative is uploaded under a **new** title with a
+`cropped` qualifier (for example `File:Captain Eir sprite (cropped).png`), so
+anyone finds the preserved original by deleting one word. Never overwrite or
+delete the originals; rename them only as described in [Renaming Files](#renaming-files).
 
 Method: every active PNG was downloaded and hash-checked against its record,
 then cropped to its alpha > 0 bounding box snapped **outward** to multiples of
@@ -430,12 +485,13 @@ only the individually reviewed images for this batch. Exclude symlinks,
 unexpected formats, oversized images, unnecessary embedded metadata, and any
 unreviewed export. Compare each image's SHA-256 with its approved record.
 
-The basename becomes the MediaWiki File title: `Item-2.png` becomes
-`File:Item-2.png`. Check existing titles before import and do not rename files
-casually.
+The basename becomes the MediaWiki File title: `Wood Buckler icon.png` becomes
+`File:Wood Buckler icon.png`. Follow the [File title convention](#file-titles),
+check existing titles before import, and rename only through the
+[reviewed move plan](#renaming-files).
 
 Place an original attribution sidecar beside each image, for example
-`Item-2.png.txt`. Its wikitext should identify the creator/rightsholder, describe
+`Wood Buckler icon.png.txt`. Its wikitext should identify the creator/rightsholder, describe
 the actual permission or license basis, record the source and review scope,
 and give the original caption and image fingerprint. Do not reproduce
 localization prose, private correspondence, personal paths, or confidential

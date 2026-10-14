@@ -115,6 +115,11 @@ grants rights to the game's creative content.
 Use the native `{{Coins|...}}`, `{{Health grid|...}}`,
 `{{Attack grid|...}}`, `{{Creature|Sceetler}}`, `{{Item|Iron Hand Axe}}`,
 Recipe row and Ware row syntax described in [TEMPLATES.md](docs/TEMPLATES.md).
+Name things by canonical page title, never by source ID: generated anchors,
+`item=` view selectors and File titles that look like `being-7`, `item-27`,
+`nature-`, `skill-`, `skill-group-` or `damage-class-` plus a digit fail the
+build (`validate_readable_identifiers`) and `tests/test_identifiers.py`.
+New images follow the [File title convention](docs/IMAGES.md#file-titles).
 Keep prices in item-owned views and preserve curated grid geometry; do not
 copy display HTML or prices into readers. Row templates stay inside the
 owner's literal selective-view filters; standard-price gates stay on merchants,
