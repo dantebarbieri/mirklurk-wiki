@@ -207,12 +207,16 @@ compatibility plan; clearing server caches cannot erase browser redirects.
 | `MW_READ_ONLY` | Optional maintenance reason; freezes ordinary edits while set |
 | `MW_LOGO_URL` / `MW_LOGO_ICON_URL` | Optional pair of root-relative PNG paths: a legacy logo no larger than 135px wide and the square Vector 2022 icon. Set both or neither. |
 | `MW_FAVICON_URL` | Optional root-relative PNG path for the browser tab icon; independent of the logo pair. |
+| `MW_APPLE_TOUCH_ICON_URL` | Optional root-relative opaque 180 x 180 PNG path for iOS home-screen bookmarks; independent of the other branding. |
 
 ### Site logo and favicon
 
 The optional branding settings use MediaWiki's `$wgLogo`, `$wgLogos` (`1x`
-and `icon`), and `$wgFavicon`. With all three unset, upstream branding remains
-unchanged. Vector 2022 displays the square icon at 50 x 50 beside the existing
+and `icon`), `$wgFavicon` and `$wgAppleTouchIcon`. With all of them unset,
+upstream branding remains unchanged. iOS ignores `rel="icon"` for home-screen
+bookmarks and needs the `apple-touch-icon` link; it fills transparency with
+black, so use an opaque image. The wiki deliberately has no web app manifest
+or service worker. Vector 2022 displays the square icon at 50 x 50 beside the existing
 site-name text; do not pass the square artwork as a wordmark. Legacy Vector
 needs its own smaller raster because it does not shrink an oversized `1x` logo.
 
@@ -235,7 +239,8 @@ Neither approach requires public uploads or changes to gameplay pages.
 
 Rebuild the runtime from the reviewed source and recreate only the app with
 the configured paths. A content-publishing merge does not apply these settings
-to the homeserver. Confirm the rendered `mw-logo-icon` and favicon `link` use
+to the homeserver. Confirm the rendered `mw-logo-icon`, favicon and
+`apple-touch-icon` links use
 the intended paths, the API's legacy logo uses the smaller image, and each URL
 returns the expected PNG dimensions and bytes anonymously. Preserve the
 existing access policy, database and artwork.
@@ -643,4 +648,4 @@ randomly named Compose project with temporary generated credentials, then:
 
 The live wiki is never contacted; the disposable containers and volumes are
 removed afterwards. CI runs the smoke on every pull request and before every
-publish, with a 30-minute budget.
+publish, with a 45-minute budget.

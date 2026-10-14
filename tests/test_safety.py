@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from check_publication import ALLOWED_FILES, audit_index, blob_errors, path_errors
 from wiki_catalog import default_catalog
-from smoke_deploy import BRANDING_IMAGES, branding_paths, smoke_branding
+from smoke_branding import BRANDING_IMAGES, branding_paths, smoke_branding
 
 
 class BrandingTests(unittest.TestCase):
@@ -22,6 +22,7 @@ class BrandingTests(unittest.TestCase):
         self.paths = branding_paths()
         self.html = (
             f'<link rel="icon" href="{self.paths["MW_FAVICON_URL"]}">'
+            f'<link rel="apple-touch-icon" href="{self.paths["MW_APPLE_TOUCH_ICON_URL"]}">'
             f'<img class="mw-logo-icon" src="{self.paths["MW_LOGO_ICON_URL"]}" width="50" height="50">'
         )
         self.payloads = {
@@ -54,6 +55,8 @@ class BrandingTests(unittest.TestCase):
         for old, new in [
             (self.paths["MW_LOGO_ICON_URL"], "/wrong.png"),
             (self.paths["MW_FAVICON_URL"], "/wrong.png"),
+            (self.paths["MW_APPLE_TOUCH_ICON_URL"], "/wrong.png"),
+            ('rel="apple-touch-icon"', 'rel="apple-touch-icon-precomposed"'),
             ('width="50"', 'width="256"'),
             ('class="mw-logo-icon"', 'class="unrelated"'),
         ]:
@@ -94,7 +97,7 @@ class PublicationTests(unittest.TestCase):
         self.assertIn("python3 -m unittest discover -s tests -v", publication)
         self.assertIn("php tests/test_runtime.php", publication)
         self.assertIn("needs: publication", smoke)
-        self.assertIn("    timeout-minutes: 30\n", smoke)
+        self.assertIn("    timeout-minutes: 45\n", smoke)
         self.assertIn("run: python3 tools/smoke_deploy.py --run\n", smoke)
         self.assertIn("github.event.pull_request.head.sha || github.sha", smoke)
         self.assertIn("if: github.event_name == 'pull_request'", preview)

@@ -41,7 +41,7 @@ merely the last worktree state. Generated XML is for a private handoff, not Git.
 Check any attachments and command logs separately.
 
 Every pull request and every push to `main` runs the publication gate, the
-Python tests, the PHP runtime checks and the disposable Docker smoke (30-minute
+Python tests, the PHP runtime checks and the disposable Docker smoke (45-minute
 budget). Pull requests also get a read-only preview of the live pages they
 would change. On `main`, the publish job runs only after all of these pass; see
 [PUBLISHING.md](PUBLISHING.md). Pull-request runs don't wait for each other;

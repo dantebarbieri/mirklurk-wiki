@@ -190,12 +190,17 @@ display permission above, not licensed for redistribution through Git.
 
 Preserve these exact originals. Privately derive a separate 128 x 128
 nearest-neighbor logo for legacy skins, which otherwise crop a 256px `1x`
-image. Stage the three distinct PNGs in a dedicated, backed-up read-only
+image. Stage the four distinct PNGs in a dedicated, backed-up read-only
 branding mount with a public attribution text file, or import them with original
 attribution sidecars. Verify their served bytes before configuring the runtime.
 Attribution must identify the derivative's source fingerprint and resizing method.
 The 184px PNG is supported directly as the favicon; do not relabel PNG bytes
-as an ICO file. Vector 2022 shows the original logo in its native 50px header
+as an ICO file. For the iOS home-screen icon (2026-10-14), privately crop 2px
+from each edge of the favicon to an exact 180 x 180 PNG (SHA-256
+`03e3c5eaf38ef15f90d9bdda88e4322ba4fa2ae8421dd35b4a06990be79b3f23`, 4743
+bytes): every pixel is unchanged, with no resampling. It is already opaque.
+Pixel art that is too small should be enlarged only by integer nearest-neighbor
+scaling. Vector 2022 shows the original logo in its native 50px header
 slot alongside the wiki title, not as a replacement wordmark.
 
 These are site-interface assets, not entity illustrations, and do not change
