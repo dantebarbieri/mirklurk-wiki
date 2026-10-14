@@ -107,7 +107,7 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
         raise RuntimeError("Ordinary uploaders inherited replacement or throttle bypass permissions.")
     with editor.opener.open(base + "/w/Special:Upload", timeout=30) as response:
         form = response.read().decode()
-    if not all(text in form for text in ("wpUploadFile", "12 megapixels", "permission or", "20 upload attempts")):
+    if not all(text in form for text in ("wpUploadFile", "12 megapixels", "game artwork and screenshots", "20 upload attempts")):
         raise RuntimeError("Special:Upload is missing its native form or contribution instructions.")
     first = success(editor.upload("Contributor-diagram.png", png()))
     next_second()  # Replacements archive the old version under a one-second timestamp name.

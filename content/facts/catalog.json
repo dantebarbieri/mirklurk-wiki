@@ -5023,9 +5023,39 @@
     {
       "entry": "skill-0-2-mechanics",
       "title": "Effects",
-      "summary": "Jump farther and spend less on each jump as you raise this skill.",
+      "summary": "Jumper increases the maximum jump range and lowers the AP cost of jumping. A jump costs 8 AP multiplied by its distance divided by the maximum range, rounded to the nearest 0.2 AP, so a jump at full range costs 8 AP at any rank. Distance is measured in a straight line between tile centers: a diagonal neighbor is about 1.41 tiles away.",
       "conditions": null,
-      "steps": []
+      "steps": [],
+      "table": {
+        "headers": ["Rank", "Maximum range (tiles)", "Adjacent jump (AP)", "Two-tile jump (AP)"],
+        "rows": [
+          ["0", "2", "4.0", "8.0"],
+          ["1", "2.25", "3.6", "7.2"],
+          ["2", "2.5", "3.2", "6.4"],
+          ["3", "3", "2.6", "5.4"],
+          ["4", "3.25", "2.4", "5.0"],
+          ["5", "3.5", "2.2", "4.6"],
+          ["6", "3.75", "2.2", "4.2"],
+          ["7", "4", "2.0", "4.0"],
+          ["8", "4.25", "1.8", "3.8"],
+          ["9", "4.5", "1.8", "3.6"],
+          ["10", "4.75", "1.6", "3.4"]
+        ]
+      },
+      "notes": [
+        "Water: jumping out of medium-depth water adds 3 AP to the 8 AP base, and deep water adds 7 AP. Jumping is impossible from the deepest water.",
+        "Higher ground: jumping up onto a higher terrain level adds 8 AP to the base. Standing on raised footing, such as an obstacle, reduces either penalty by 3 AP, or by 6 AP on higher footing.",
+        "Encumbrance: the cost is multiplied by 1.2 when overburdened, 1.6 when very overburdened (10 or more over the carry limit) and 2.0 when extremely overburdened (20 or more over).",
+        "A target beyond the maximum range is pulled back toward the jumper. A jump that costs more than the maximum AP cannot be made."
+      ],
+      "example": "For example, a jump to an adjacent tile on flat, dry ground costs 8 x 1 / 2 = 4.0 AP at rank 0. At rank 10 the range is 4.75 tiles, so the same jump costs 8 x 1 / 4.75 = 1.68, shown in game as 1.6 AP. The screenshots below show the cost of an adjacent jump and a two-tile jump at each rank.",
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "jump state[3].maxDistance/skillDist/jumpPenalty/jumpCost"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_moment_aps"},
+        {"source": "game-data-0900", "section": "gml_Object_obj_player_Step_0", "key": "carry/player_get_carrymax.aeList[24-26]"},
+        {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "mountainTresh/dryestTresh"}
+      ]
     },
     {
       "entry": "skill-0-3-mechanics",

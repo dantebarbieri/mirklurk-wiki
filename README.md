@@ -281,8 +281,9 @@ they are not a substitute for moderation. Email and email-based resets are
 disabled.
 
 Optional [illustration references](docs/IMAGES.md) keep all image bytes outside
-Git. Separately rights-approved curated pictures may be imported by an operator;
-pending references never embed artwork. Contributors use `Special:Upload` for
+Git. The developer approves game artwork and screenshots on the wiki; curated
+register pictures are imported by an operator, and pending references never
+embed artwork. Contributors use `Special:Upload` for
 appropriately attributed PNG, JPEG or WebP images, limited to 10 MiB, 12 megapixels
 and 8,192 pixels per side. See [eligibility, limits and rollout](docs/DEPLOYMENT.md#native-image-uploads).
 The [site logo and PNG favicon](docs/DEPLOYMENT.md#site-logo-and-favicon) likewise

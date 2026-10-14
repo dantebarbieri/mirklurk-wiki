@@ -192,5 +192,57 @@ class HealingAbilityTests(unittest.TestCase):
         self.assertIn(image_for("being-19", data["illustrations"])["file_title"], page)
 
 
+class JumperMechanicsTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
+        cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+
+    def test_jump_costs_and_strips_follow_effects(self):
+        page = self.pages["Jumper"]
+        section = page.split("== <nowiki>Effects</nowiki> ==", 1)[1]
+        self.assertIn("! <nowiki>Rank</nowiki> !! <nowiki>Maximum range (tiles)</nowiki>", section)
+        self.assertIn("| <nowiki>10</nowiki> || <nowiki>4.75</nowiki> || <nowiki>1.6</nowiki> || <nowiki>3.4</nowiki>", section)
+        self.assertNotIn("\n# ", section)
+        self.assertNotIn("DavidLokison", page)
+        table_end, notes = section.index("|}"), section.index("* <nowiki>Water:")
+        example = section.index("<nowiki>For example,")
+        adjacent = section.index("[[File:Jumper-adjacent-jump-costs.png|1200px|")
+        self.assertLess(table_end, notes)
+        self.assertLess(notes, example)
+        self.assertLess(example, adjacent)
+        self.assertLess(adjacent, section.index("[[File:Jumper-two-tile-jump-costs.png|930px|"))
+        self.assertEqual(section.count("|class=notpageimage|"), 2)
+        self.assertEqual(page.count("[[File:Skill-0-2.png|"), 1)
+        self.assertEqual(image_for("skill-0-2", self.data["illustrations"])["file_title"], "File:Skill-0-2.png")
+
+    def test_mechanics_role_requires_a_skill_with_effects(self):
+        image = next(row for row in self.data["illustrations"] if row.get("role") == "mechanics")
+        base = {key: value for key, value in self.data.items() if key != "illustrations"}
+        moved = dict(image, entity="being-19", id="moved", file_title="File:Moved.png")
+        with self.assertRaisesRegex(DataError, "mechanics illustrations belong to a skill"):
+            parse_illustrations(json.dumps({"schema_version": 1, "illustrations": [moved]}).encode(), base, self.catalog)
+        data = copy.deepcopy(self.data)
+        data["illustrations"].append(dict(image, entity="skill-0-3", id="climber", file_title="File:Climber.png"))
+        data["entries"] = [row for row in data["entries"] if row["id"] != "skill-0-3-mechanics"]
+        catalog = copy.deepcopy(self.catalog)
+        catalog["entry_display"] = [row for row in catalog["entry_display"] if row["entry"] != "skill-0-3-mechanics"]
+        with self.assertRaisesRegex(DataError, "skill's own Effects section"):
+            build_pages(ROOT, data, catalog, self.details)
+
+    def test_effects_table_rows_must_match_headers(self):
+        catalog = copy.deepcopy(self.catalog)
+        row = next(row for row in catalog["entry_display"] if row["entry"] == "skill-0-2-mechanics")
+        row["table"]["rows"][0].append("extra")
+        with self.assertRaisesRegex(DataError, "matching rows"):
+            validate_catalog(catalog, self.data)
+        del row["table"]
+        kinds = {entry["id"]: entry["kind"] for entry in self.data["entries"]}
+        other = next(row for row in catalog["entry_display"] if kinds[row["entry"]] != "algorithm")
+        other["notes"] = ["Not an algorithm."]
+        with self.assertRaisesRegex(DataError, "require an algorithm entry"):
+            validate_catalog(catalog, self.data)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -361,11 +361,13 @@ without rewriting historical evidence:
 - `entry_links`: `{entry, entities}` for reviewed editorial crosslinks to
   existing records. These are see-also relationships, not a place to add a
   mechanic or unsupported semantic claim.
-- `entry_display`: `{entry, title?, summary?, conditions?, steps?, confidence?, evidence?}` gives
+- `entry_display`: `{entry, title?, summary?, conditions?, steps?, confidence?, evidence?, table?, notes?, example?}` gives
   bounded original reader wording for an existing entry. Omitted fields keep
   their original value; conditions alone may be null. An empty override `steps`
   list suppresses technical boilerplate while keeping its evidence and original
-  record. Technical stage/table
+  record. Algorithm entries may add a `table` (`{headers, rows}`, two to six
+  columns and up to thirty rows) shown before the steps, bulleted `notes`, and
+  an `example` paragraph shown just before any mechanics illustrations. Technical stage/table
   labels can be replaced by reviewed descriptive titles without changing IDs,
   ordering, source evidence, or the underlying record. No guessed names for
   unidentified categories are introduced.

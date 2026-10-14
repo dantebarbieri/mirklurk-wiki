@@ -12798,6 +12798,56 @@
         "height": 240,
         "source_scale": 3
       }
+    },
+    {
+      "id": "skill-0-2-adjacent-jump-illustration",
+      "entity": "skill-0-2",
+      "role": "mechanics",
+      "file_title": "File:Jumper-adjacent-jump-costs.png",
+      "caption": "AP cost of a jump to an adjacent tile at Jumper ranks 0 to 10, left to right.",
+      "creator": "DavidLokison (screenshots); game artwork by Edym Pixels",
+      "sha256": "fc2a5d1f1b702dedaef43fd1ac1f66fe1c767d213d7b0c773a579740600a3cb4",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. DavidLokison shared these in-game screenshots with the community on 2026-10-02.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc0",
+          "key": "2"
+        }
+      ],
+      "pixel_art": {
+        "width": 1200,
+        "height": 200,
+        "source_scale": 1
+      }
+    },
+    {
+      "id": "skill-0-2-two-tile-jump-illustration",
+      "entity": "skill-0-2",
+      "role": "mechanics",
+      "file_title": "File:Jumper-two-tile-jump-costs.png",
+      "caption": "AP cost of a jump two tiles away at Jumper ranks 0 to 10, left to right.",
+      "creator": "DavidLokison (screenshots); game artwork by Edym Pixels",
+      "sha256": "7440981149b7194b59df68e2df4ed151d4b0b423b72f4ffa6df1acc12c0fcbd1",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. DavidLokison shared these in-game screenshots with the community on 2026-10-02.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "SkillsDesc0",
+          "key": "2"
+        }
+      ],
+      "pixel_art": {
+        "width": 930,
+        "height": 80,
+        "source_scale": 1
+      }
     }
   ]
 }

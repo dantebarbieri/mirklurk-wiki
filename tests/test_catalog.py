@@ -198,7 +198,7 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        self.assertEqual(len(self.data["illustrations"]), 364)
+        self.assertEqual(len(self.data["illustrations"]), 366)
         self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 318)
         current = {row["id"]: row for row in self.data["illustrations"]}
         # 0.8.9.9 art and the world-only Finish Raft were reviewed later.

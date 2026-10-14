@@ -6,23 +6,22 @@ its persistent `/var/www/html/images` storage. Curated imports and contributor
 uploads are not exceptions to the repository's asset exclusions.
 
 On 2026-09-25, the wiki operator reported permission to display game artwork
-on the public wiki. This is **not permission to put assets in Git or grant
-a redistribution license**. Each selected image still requires verified
-identity, attribution, bytes, and rights review. Curated artwork still uses
-operator-reviewed imports. Owning or
-inspecting the game would not itself establish that permission.
+on the public wiki. On 2026-10-14 the operator confirmed that the developer
+created all of the game's artwork and approves game artwork and screenshots
+on the wiki without further per-image permission. This does **not** put assets
+in Git or grant a redistribution license. Curated register imports still use
+the operator workflow below so their identity, attribution and bytes are checked.
 
 ## Contributor uploads
 
-Eligible contributors use native `Special:Upload` for relevant, appropriately
-attributed PNG, JPEG and WebP screenshots and diagrams. See
+Eligible contributors use native `Special:Upload` for relevant, attributed
+PNG, JPEG and WebP screenshots, game artwork and diagrams. See
 [eligibility, limits and deployment](DEPLOYMENT.md#native-image-uploads).
-The upload form displays the limits and contribution instructions; it does not
-automatically determine copyright permissions. In each File description, state
-what the image shows, who created the image and underlying artwork, its source,
-the actual permission/license basis and relevant game version. Do not select or
-claim a blanket free license for game material. Keep private permission evidence
-and personal information off the public File page.
+In each File description, state what the image shows, who took or made the
+image, the underlying artwork's creator and the relevant game version. No
+separate permission request is needed for game artwork or screenshots. Do not
+claim a blanket free license for game material, and keep personal information
+off the public File page.
 
 Choose a descriptive title (for example, `Jumper-adjacent-tile-comparison.png`)
 and add it through normal `[[File:...]]` markup. Native upload history retains
@@ -52,7 +51,9 @@ Only station targets may have `variant`. A being-targeted record may additionall
 have `role: "location"`: one supplementary exterior per NPC with a reviewed
 location section, or `role: "sprite"`: one supplementary overworld sprite per
 being that also has an approved primary portrait, or `role: "ability"`: one
-supplementary effect image per being with a reviewed ability section. Other roles, non-being targets,
+supplementary effect image per being with a reviewed ability section. A
+skill-targeted record may have `role: "mechanics"`: any number of figures shown,
+in register order, after the skill's own Effects steps. Other roles, other targets,
 duplicate roles per being and missing location owners are rejected. Records
 without a role retain their primary image behavior; portraits, icons and existing
 contextual guide lookups never select a location or sprite image, regardless of
@@ -126,6 +127,21 @@ database/image backup. Anonymous reads confirmed the attribution, dimensions
 and exact image hash; a second paired backup preserves the imported state.
 The active register is now 338; all 337 previous records are unchanged.
 Synthetic smoke fixtures include the new title automatically.
+
+## Jumper jump-cost strips
+
+The 2026-10-14 selection adds two `role: "mechanics"` figures to the Jumper
+page: in-game screenshots by DavidLokison, shared with the community on
+2026-10-02 (game 0.8.1.5), showing the cursor's AP cost at ranks 0 to 10.
+`File:Jumper-adjacent-jump-costs.png` (1200 x 200, 6,913 bytes) covers a jump to
+an adjacent tile; `File:Jumper-two-tile-jump-costs.png` (930 x 80, 3,041 bytes)
+covers a jump two tiles away. Both are native-scale screenshots with
+`source_scale: 1`. The Effects section gives the cost calculation reviewed in
+the 0.9.0.0 `data.win` as a per-rank table with modifier notes; the table
+reproduces all 22 screenshot values, and a worked example introduces the
+strips. The contributor is credited on the File pages, not in the article.
+Upload both exact files before publishing; hashes are in their records.
+The active register is now 366.
 
 ## Version 0.8.9.9 additions and the finished raft
 
