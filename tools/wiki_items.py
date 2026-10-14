@@ -17,6 +17,14 @@ ITEM_SUMMARY_ROWS = (
     ("craft-ap-cost", "Base crafting cost"), ("craft-yield", "Base recipe yield"),
     ("random-treasure-exclusion", "In general random treasure"),
 )
+# There is no site stylesheet for a media query, so the summary sizes itself from its container: it floats beside
+# the article only when the content column is at least SUMMARY_FLOAT_MIN wide and otherwise spans the full width.
+SUMMARY_FLOAT_MIN = "36em"
+SUMMARY_STYLE = (
+    "float:right;clear:right;max-width:100%;"
+    f"min-width:min(100%, calc((({SUMMARY_FLOAT_MIN}) - 100%) * 1000));"
+    f"margin:0 0 1em clamp(0px, calc((100% - ({SUMMARY_FLOAT_MIN})) * 1000), 1em);"
+)
 ITEM_FIRE_KEYS = ("light-radius", "burn-time", "tinder-bonus", "spark-chance", "stone-spark-chance")
 ITEM_SECTION_KEYS = {
     "Protection": ("item-armor", "insulation", "waterproof"),
@@ -226,7 +234,7 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
             lines.extend(["|-", f'! scope="row" | {VALUE_LINK if heading == "Value" else literal(heading)}', "| " + cell])
         if notes:
             lines.extend(["|-", '| colspan="2" style="font-size:85%;max-width:18em;" | ' + " ".join(notes)])
-        text += ('<div style="float:right;clear:right;margin:0 0 1em 1em;max-width:100%;">\n'
+        text += (f'<div class="mirklurk-summary" style="{SUMMARY_STYLE}">\n'
                  + scroll_open("Item summary") + "\n".join([*lines, "|}"]) + "\n</div>\n</div>\n")
     for heading, marks, body, display in sections:
         text += "\n" + marks + ("\n" if marks else "") + f"== {heading} ==\n"

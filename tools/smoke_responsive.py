@@ -44,6 +44,7 @@ def measure(page):
             visualWidth:window.visualViewport.width, scale:window.visualViewport.scale,
             meta:document.querySelector('meta[name="viewport"]')?.content,
             font:parseFloat(getComputedStyle(root).fontSize), content:rect(root),
+            summary:root.querySelector('.mirklurk-summary') && rect(root.querySelector('.mirklurk-summary')),
             errors:root.querySelectorAll('.error, .mw-broken-media').length,
             regions:regions.map(e => ({
                 box:rect(e), width:e.clientWidth, scroll:e.scrollWidth,
@@ -81,6 +82,11 @@ def check_layout(result, width, assets, coin_sizes):
         raise RuntimeError("Vector did not emit an accessible device-width viewport.")
     if result["font"] < 14:
         raise RuntimeError("Responsive content was made unreadably small.")
+    summary, content = result["summary"], result["content"]["width"]
+    if summary and width <= 390 and summary["width"] < content - 1:
+        raise RuntimeError("The item summary floats beside squeezed article text at phone width.")
+    if summary and width >= 768 and summary["width"] > content / 2:
+        raise RuntimeError("The item summary stopped floating beside the article on a wide screen.")
     for region in result["regions"]:
         if (region["tabindex"] != "0" or region["role"] not in {"region", "group"} or not region["label"]
                 or region["overflow"] != "auto" or region["box"]["right"] > width + 1):
