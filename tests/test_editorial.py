@@ -14,7 +14,7 @@ from wiki_details import load_publication_inputs
 from wiki_display import content_model, dependencies, page_namespace
 from wiki_render import (
     RETIRED_PAGES, acquisition_probability, audit_report, base_value_text, build_pages, count_range,
-    known, validate_reader_pages, validate_reader_text,
+    image_for, known, pixel_image, validate_reader_pages, validate_reader_text,
 )
 
 
@@ -38,6 +38,13 @@ class EditorialTests(unittest.TestCase):
                                 (Decimal("0.005"), "{{Coins|1}} per 2"), (Decimal("0.002"), "{{Coins|1}} per 5"),
                                 (Decimal("0.001"), "{{Coins|1}} per 10"), (Decimal("0.125"), "{{Coins|25}} per 2")):
             self.assertEqual(base_value_text(value), expected)
+
+    def test_construction_action_listing_shows_its_world_sprite(self):
+        # Finish Raft is never an {{Item}}, but the Items list still shows its reviewed world sprite.
+        raft = image_for("item-171", self.data["illustrations"])
+        line = next(line for line in self.pages["Items"].splitlines() if 'id="entity-item-171"' in line)
+        self.assertNotIn("{{Item|", line)
+        self.assertIn(pixel_image(raft, 32, 32, "Finish Raft", "Finish Raft") + " [[Finish Raft|", line)
         for value in ("-1", "NaN"):
             with self.subTest(value=value), self.assertRaises(DataError):
                 base_value_text(Decimal(value))

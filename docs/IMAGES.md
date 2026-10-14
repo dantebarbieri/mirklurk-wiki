@@ -159,6 +159,8 @@ frame of `spr_ui_items64x48`. The finished raft only exists in the world as an
 (frame 0 is the placed Raft Base; frame 2 is shown while steering). The
 association is cited from the crafting completion in `UI` Draw 64 and
 `player_raft_ensure`. Its caption says that it is the world appearance.
+Because it is not an `{{Item}}`, the Items list shows the same sprite as a
+32px icon beside its plain link.
 
 Each full padded canvas was enlarged by `min(8, floor(256 / longest native
 side))` with nearest-neighbor scaling, fully transparent pixels normalized
