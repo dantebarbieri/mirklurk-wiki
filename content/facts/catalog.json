@@ -9189,7 +9189,7 @@
       "Water levels never change, so shallow water stays shallow. You can attack and jump as usual, and your pack stays dry.",
       "Wading costs 1.2 AP a step over soil or stone, and 1.4 AP over sand, mud or thick grass. Each rank of Amphibian takes 8% off the water's share. You cannot build or place anything in shallow water, not even a Raft Base.",
       "Shallow water takes four seeds. Cranberry Seeds need thick grass or moss growing through the water. Willow Seeds take the shore shallows, Cypress Seed Pods take both bands, and Watercress Seeds take all but the top edge of the open shallows.",
-      "Creatures that appear in shallow water come from the water table, day and night, in every area but the Rift-Thorn Mire. Fort Solid Shorehold never gets the tougher forms. Every land creature can wade into shallow water. Mudfin and Razorfin can swim in the open shallows but not the shore shallows. The Mire Serpent stays in medium and deep water."
+      "Creatures that appear in shallow water come from the water table. Every land creature can wade into shallow water. Mudfin and Razorfin can swim in the open shallows but not the shore shallows. The Mire Serpent stays in medium and deep water."
     ],
     "related_entities": ["item-229", "item-232", "item-233", "item-231", "skill-0-1"],
     "related_pages": ["Terrain", "Medium water", "Planting", "Drowned Fen", "Grassy ground"],
