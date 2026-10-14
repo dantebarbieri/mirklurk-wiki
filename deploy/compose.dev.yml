@@ -20,6 +20,7 @@ services:
       MW_LOGO_URL: "${MW_LOGO_URL:-}"
       MW_LOGO_ICON_URL: "${MW_LOGO_ICON_URL:-}"
       MW_FAVICON_URL: "${MW_FAVICON_URL:-}"
+      MW_APPLE_TOUCH_ICON_URL: "${MW_APPLE_TOUCH_ICON_URL:-}"
     secrets:
       - MIRKLURK_DB_PASSWORD
       - MIRKLURK_SECRET_KEY

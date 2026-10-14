@@ -69,6 +69,7 @@
 !/tools/smoke_browser.py
 !/tools/smoke_responsive.py
 !/tools/smoke_navigation.py
+!/tools/smoke_branding.py
 !/tools/smoke_urls.py
 !/tools/wiki_acquisition.py
 !/tools/build_wiki.py

@@ -39,15 +39,17 @@ try {
     putenv('MW_SERVER_URL=https://wiki.example.invalid');
     putenv('MW_TRUSTED_PROXY_CIDRS=192.0.2.10,2001:db8::/64');
     putenv('MW_READ_ONLY=Maintenance unit test');
-    foreach (['MW_LOGO_URL', 'MW_LOGO_ICON_URL', 'MW_FAVICON_URL'] as $variable) {
+    foreach (['MW_LOGO_URL', 'MW_LOGO_ICON_URL', 'MW_FAVICON_URL', 'MW_APPLE_TOUCH_ICON_URL'] as $variable) {
         putenv($variable);
     }
     $wgLogo = '/upstream-logo.png';
     $wgLogos = false;
     $wgFavicon = '/favicon.ico';
+    $wgAppleTouchIcon = false;
     require __DIR__ . '/../deploy/LocalSettings.template.php';
     check($wgLogo === '/upstream-logo.png' && $wgLogos === false, 'Unset branding must preserve upstream logos.');
     check($wgFavicon === '/favicon.ico', 'Unset branding must preserve the upstream favicon.');
+    check($wgAppleTouchIcon === false, 'Unset branding must not add a home-screen icon.');
     check($wgServer === 'https://wiki.example.invalid' && $wgCookieSecure, 'HTTPS configuration mismatch.');
     check($wgEnableCanonicalServerLink === true, 'Native canonical links must be enabled.');
     check($wgSitemapNamespaces === [0, 14], 'Only reader namespaces belong in the sitemap.');
@@ -133,8 +135,15 @@ try {
     require __DIR__ . '/../deploy/LocalSettings.template.php';
     check($wgFavicon === '/images/d/d3/MirkLurk-favicon.png', 'PNG favicon not configured.');
     check($wgLogos === false, 'Favicon-only configuration must not replace logos.');
+    check($wgAppleTouchIcon === false, 'The favicon must not become the home-screen icon implicitly.');
     putenv('MW_FAVICON_URL');
     $wgFavicon = '/favicon.ico';
+    putenv('MW_APPLE_TOUCH_ICON_URL=/branding/2026-10/apple-touch-icon-180.png');
+    require __DIR__ . '/../deploy/LocalSettings.template.php';
+    check($wgAppleTouchIcon === '/branding/2026-10/apple-touch-icon-180.png', 'Home-screen icon not configured.');
+    check($wgFavicon === '/favicon.ico' && $wgLogos === false, 'The home-screen icon must not replace other branding.');
+    putenv('MW_APPLE_TOUCH_ICON_URL');
+    $wgAppleTouchIcon = false;
     putenv('MW_LOGO_URL=/images/a/ab/MirkLurk-logo-128.png');
     putenv('MW_LOGO_ICON_URL=/images/b/bc/MirkLurk-logo-256.png');
     require __DIR__ . '/../deploy/LocalSettings.template.php';
@@ -152,7 +161,7 @@ try {
         });
         putenv($missing . '=' . $saved);
     }
-    foreach (['MW_LOGO_URL', 'MW_LOGO_ICON_URL', 'MW_FAVICON_URL'] as $variable) {
+    foreach (['MW_LOGO_URL', 'MW_LOGO_ICON_URL', 'MW_FAVICON_URL', 'MW_APPLE_TOUCH_ICON_URL'] as $variable) {
         foreach ([
             'https://example.invalid/logo.png', '//example.invalid/logo.png',
             'images/logo.png', '/images/../logo.png', '/images/./logo.png',

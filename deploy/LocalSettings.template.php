@@ -47,6 +47,7 @@ $wgHooks['MediaWikiPerformAction'][] = static function (
 $logo = mirklurkImageUrl('MW_LOGO_URL');
 $logoIcon = mirklurkImageUrl('MW_LOGO_ICON_URL');
 $favicon = mirklurkImageUrl('MW_FAVICON_URL');
+$appleTouchIcon = mirklurkImageUrl('MW_APPLE_TOUCH_ICON_URL');
 if (($logo === '') !== ($logoIcon === '')) {
     throw new RuntimeException('MW_LOGO_URL and MW_LOGO_ICON_URL must be configured together.');
 }
@@ -56,6 +57,9 @@ if ($logo !== '') {
 }
 if ($favicon !== '') {
     $wgFavicon = $favicon;
+}
+if ($appleTouchIcon !== '') {
+    $wgAppleTouchIcon = $appleTouchIcon;
 }
 
 $wgDBtype = 'mysql';
