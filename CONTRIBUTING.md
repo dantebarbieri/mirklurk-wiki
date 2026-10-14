@@ -49,7 +49,10 @@ the wiki is built. Keep actual quest research and in-game evidence: this policy
 targets wiki commentary, not game content. Do not publish evidence ledgers, research status, source paths,
 verification instructions or missing-image notices in articles, categories,
 navigation, captions or tooltips. Provenance stays in the structured inputs and
-the local `wiki_render.audit_report()` output, never in `build_pages()`.
+the local `wiki_render.audit_report()` output, never in `build_pages()`. The audit
+is never published as a page. Contributor credits for screenshots and other
+uploads belong only on their File: pages, never in articles; `test_editorial`
+fails if audit sections or contributor names reach a published page.
 
 Use `{{Unverified}}` immediately after a genuinely unconfirmed claim, not on
 every extracted fact or whole page. Use **Unknown** for an unknown value and

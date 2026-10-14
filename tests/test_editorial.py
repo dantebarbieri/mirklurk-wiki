@@ -57,6 +57,32 @@ class EditorialTests(unittest.TestCase):
             intro = re.split(r"\n(?:== |<div|<span)", self.pages[title], maxsplit=1)[0]
             self.assertLess(len(intro.split()), 180, title)
 
+    def test_audit_and_contributor_credits_never_reach_published_pages(self):
+        audit = audit_report(self.data, self.catalog, self.details)
+        headings = set(re.findall(r"^==+ *(.+?) *==+$", audit, re.M))
+        self.assertIn("Artwork review", headings)
+        intro = audit.split("\n", 1)[0]
+        self.assertFalse([title for title in self.pages if "audit" in title.lower()])
+        game_artists, contributors, notes = set(), set(), set()
+        for record in self.data["illustrations"]:
+            notes.add(record.get("rights_note", ""))
+            for part in record.get("creator", "").split(";"):
+                part = part.strip()
+                if part.lower().startswith("game artwork by "):
+                    game_artists.add(part[16:].strip())
+                elif part:
+                    contributors.add(part.split(" (")[0].strip())
+        contributors -= game_artists
+        self.assertIn("DavidLokison", contributors)
+        for title, text in self.pages.items():
+            page_headings = set(re.findall(r"^==+ *(.+?) *==+$", text, re.M))
+            self.assertFalse(headings & page_headings, title)
+            self.assertNotIn(intro, text, title)
+            for name in contributors:
+                self.assertNotIn(name, text, title)
+            for note in filter(None, notes):
+                self.assertNotIn(note, text, title)
+
     def test_research_retirement_keeps_managed_safe_redirects(self):
         for title, target in RETIRED_PAGES.items():
             self.assertEqual(self.pages[title], f"#REDIRECT [[{target}]]\n")
