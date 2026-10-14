@@ -46,7 +46,7 @@ ALLOWED_FILES = {
     "tools/wiki_data.py": 32 * 1024,
     "tools/wiki_catalog.py": 60 * 1024,
     "tools/wiki_details.py": 32 * 1024,
-    "tools/wiki_render.py": 116 * 1024,
+    "tools/wiki_render.py": 120 * 1024,
     "tools/wiki_views.py": 16 * 1024,
     "tools/wiki_beings.py": 16 * 1024,
     "tools/wiki_items.py": 24 * 1024,

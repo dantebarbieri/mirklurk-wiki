@@ -54,6 +54,8 @@ MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
     "Temperature", "Wellbeing", "Foods", "Resting", "Weather", "Armor points",
     "Tree health and chopping", "Magic weapons", "Survivors' camp", "Placing objects", "Strict move",
+    "Planting", "Terrain", "Biomes", "Fort Solid Shorehold", "Common Bog", "Withered Mire",
+    "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters",
 }
 HEALTH_ARMOR_ICONS = {
     1: ("File:Health-armor-1.png", "Bronze"),

@@ -1340,8 +1340,14 @@ def build_pages(root, data, catalog=None, details=None):
                 "\n" + literal(context) + f' [[{source["title"]}]]\n' if context
                 else f'\n[[{source["title"]}|Related acquisition guide]]\n'
             )
+    indexed = defaultdict(list)
+    for guide in catalog.get("guides", []):
+        if "index_page" in guide:
+            indexed[guide["index_page"]].append(guide["title"])
     for guide in sorted(catalog.get("guides", []), key=lambda row: row["title"]):
-        if guide["title"] not in pages:
+        if guide["title"] not in pages and "index_page" in guide:
+            pages[guide["title"]] = f'[[{guide["index_page"]}]] | [[Main Page]]\n'
+        elif guide["title"] not in pages:
             pages[guide["title"]] = "[[Game mechanics]] | [[Main Page]]\n"
             pages["Game mechanics"] += f'\n[[{guide["title"]}]]\n'
             pages["Main Page"] += f'\n[[{guide["title"]}]]\n'
@@ -1362,6 +1368,9 @@ def build_pages(root, data, catalog=None, details=None):
             pages[guide["title"]] += armor_table(details, catalog, entities, locations)
         if guide["title"] == "Tree health and chopping":
             pages[guide["title"]] += chopping_table(details, entities, locations)
+        if indexed.get(guide["title"]):
+            pages[guide["title"]] += "\n== Individual pages ==\n" + "".join(
+                f"\n* [[{child}]]" for child in sorted(indexed[guide["title"]])) + "\n"
         if guide.get("related_pages"):
             pages[guide["title"]] += "\nRelated guides: " + " | ".join(
                 f"[[{target}]]" for target in guide["related_pages"]) + "\n"
@@ -1706,7 +1715,8 @@ def build_pages(root, data, catalog=None, details=None):
             + entity_link(source["damage_type"], entities, locations) + "\n\n" + literal(source["summary"]) + "\n"
         )
     for effect in catalog.get("item_effects", []):
-        heading = "Consumption effects" if item_categories.get(effect["entity"]) == "Consumables" else "Effects"
+        heading = {"Consumables": "Consumption effects", "Seeds": "Where to plant"}.get(
+            item_categories.get(effect["entity"]), "Effects")
         pages[locations[effect["entity"]]] += f"\n== {heading} ==\n" + "\n\n".join(
             literal(paragraph) for paragraph in effect["paragraphs"]
         ) + "\n"

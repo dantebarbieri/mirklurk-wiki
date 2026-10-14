@@ -91,7 +91,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 355)
-        self.assertEqual(sum(":" not in title for title in self.pages), 421)
+        self.assertEqual(sum(":" not in title for title in self.pages), 433)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 105)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 355)

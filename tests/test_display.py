@@ -241,7 +241,7 @@ class DisplayTests(unittest.TestCase):
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (97, 78))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 79)
-        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2098)
+        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2117)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("|Value]]: ") for text in readers.values()), 58)

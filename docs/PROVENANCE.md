@@ -321,7 +321,7 @@ is embedded; entity and File links are relative MediaWiki links.
 
 ## Encyclopedia identities and ownership
 
-`content/facts/catalog.json` (352 KiB maximum) contains `schema_version: 1`,
+`content/facts/catalog.json` (448 KiB maximum) contains `schema_version: 1`,
 `pages`, `classifications`, and `entry_links`, with reviewed `entry_display`,
 `stations`, `unit_prices`, `currency`, `taxonomy`, `state_history`, `guides`, and `item_effects` additions. It changes presentation
 without rewriting historical evidence:
@@ -524,6 +524,10 @@ icon or duplicate image record.
 Optional `section_titles` matches the paragraph count, with null for a
 continuation paragraph. Explicit related-guide and related-entity names become
 safe links without treating prose as executable wikitext.
+Optional `index_page` names another reviewed guide that is not itself indexed;
+the guide then links back to that index instead of Game mechanics and the Main
+Page, and the index lists its pages. Planting, Terrain and the Biomes index with
+one guide per zone kind follow this pattern.
 
 The meter pages own their contribution thresholds and ordinary losses;
 Wellbeing owns the combination, rounding, active-effect and shared difficulty
@@ -532,7 +536,7 @@ retains the completed-turn clock. Per-rank values remain on skill pages.
 `item_effects` records `{entity,paragraphs,confidence,evidence}` for a unique item
 and one to four original paragraphs. Those consumption effects render only on
 the item, with source references on Source provenance; overview guides link to
-them rather than copying their amounts.
+them rather than copying their amounts. Seeds use a "Where to plant" heading.
 
 Personal temperature is a normalized cold-to-hot meter, not a physical-degree
 scale or the same thing as the ambient-temperature interpolation on Weather.

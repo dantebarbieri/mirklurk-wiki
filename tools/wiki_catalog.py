@@ -15,7 +15,7 @@ from wiki_acquisition import validate_acquisition
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
-MAX_CATALOG_BYTES = 352 * 1024
+MAX_CATALOG_BYTES = 448 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS, "NPCs", "Source provenance", "Loot mechanics"}
 VALUE_LINK = "[[Currency and trading#currency-trade-standard-value|Value]]"
 VALUE_NOTE = ("Merchants sell at this value and pay it for an item in full condition; "
@@ -300,10 +300,14 @@ def validate_catalog(catalog, data):
         row["title"] for row in _records(catalog.get("guides", []), "guides")
         if isinstance(row, dict) and isinstance(row.get("title"), str)
     }
+    indexes = registered_guides - {
+        row["title"] for row in _records(catalog.get("guides", []), "guides")
+        if isinstance(row, dict) and "index_page" in row and isinstance(row.get("title"), str)
+    }
     guides_seen = set()
     for guide in _records(catalog.get("guides", []), "guides"):
         _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"},
-                {"related_pages", "image_entity", "image_caption", "section_titles"}, "guide")
+                {"related_pages", "image_entity", "image_caption", "section_titles", "index_page"}, "guide")
         title = _title(guide["title"])
         if title not in guide_titles or title in guides_seen:
             raise DataError("guide: duplicate or unsupported canonical owner")
@@ -333,6 +337,10 @@ def validate_catalog(catalog, data):
             raise DataError("guide: expected unique related canonical guide titles")
         if not set(related_pages) <= registered_guides:
             raise DataError("guide: related guide has no reviewed content")
+        if "index_page" in guide:
+            index = guide["index_page"]
+            if not isinstance(index, str) or index == title or index not in registered_guides or index not in indexes:
+                raise DataError("guide: index page must be another reviewed guide that is not itself indexed")
         if ("image_entity" in guide) != ("image_caption" in guide):
             raise DataError("guide: contextual pictures require both an entity and an original caption")
         if "image_entity" in guide:

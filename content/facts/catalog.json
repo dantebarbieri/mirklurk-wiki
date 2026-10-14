@@ -8652,6 +8652,901 @@
           "key": "StrictMove"
         }
       ]
+    },
+    {
+      "title": "Planting",
+      "section_titles": [
+        "Planting a seed",
+        null,
+        "What blocks planting",
+        "Shelters and canopies",
+        "Near Fort Solid",
+        "Which seed goes where",
+        null,
+        "Growing while you are away",
+        null,
+        "Shrinking and dying back",
+        "Spreading"
+      ],
+      "paragraphs": [
+        "Seeds are planted the same way you place an object: choose the seed in your inventory, then pick a tile within three tiles of you. Planting costs action points like other placements and uses up one seed. Any grass on the tile is cleared and a seedling appears.",
+        "While you hold a seed, the target tile is framed in a color that shows whether the seed can grow there, and nearby tiles get a faint frame: white where the seed would take, red where it would not. Checking these frames is the quickest way to find a spot.",
+        "A tile refuses every seed if it is under a solid object, covered in goo or cave spikes, or already holds something rooted, such as a boulder, a log, tall grass, a fern, a lilypad or another planted seed. You cannot plant inside other people's homes or other private areas. Each seed also has its own rules about ground height and ground type.",
+        "A Simple Shelter or a Canopy gradually casts deep shade on the tiles beneath it. Deeply shaded tiles refuse seeds, and crops already growing there shrink away, so keep gardens out from under your shelters.",
+        "In Fort Solid Shorehold the ground within about six tiles of the fort is kept clear. Until late in the main story, planting there always fails; after that, attempts there still usually fail.",
+        "Seeds follow ground height, from open water up to the high plateaus. Watercress Seeds go deepest, in open water beyond the shore shallows. Cranberry Seeds need grassy shallow water at the shore fringe. Cypress Seed Pods take shallow and medium water and low ground but no raised ground. Willow Seeds run from the shore's edge up onto the first raised plateau.",
+        "Elderberry Seeds take almost all land, including sand. Turnip Seeds take dry soil from a little back from the shore up to the highest plateaus. Bramble Seeds want ground farther from the water. Trollgnarl Seed Pods only take raised plateaus. Apart from Watercress Seeds and Cranberry Seeds, every seed refuses stone, and only Elderberry Seeds accept sand. No seed takes a slope. The Terrain page explains how to read heights and ground types.",
+        "Planted seeds grow only while you are away from an area. When you return, the area catches up on the time you missed, up to ten days. Each tile gets a few growth chances per day, so results vary from plant to plant.",
+        "Turnip, Cranberry and watercress crops pass through four growth stages and usually need around four to five days away to ripen. Seedlings of Willow, Cypress, Trollgnarl, Elderwort Shrub and Brambles become full-grown plants after about three days away on average, after which they follow the rules in Tree health and chopping.",
+        "Crops shrink and eventually disappear on Rift Grass or in deep shade. In Rift-Thorn Mire after the rift has opened, crops stop partway and never fully ripen.",
+        "Established crops can seed neighboring tiles that suit them. Cranberries spread readily through suitable shallows, while Turnip and watercress plants spread only now and then."
+      ],
+      "related_entities": [
+        "item-227",
+        "item-228",
+        "item-229",
+        "item-230",
+        "item-231",
+        "item-232",
+        "item-233",
+        "item-234",
+        "nature-4",
+        "nature-6",
+        "nature-7",
+        "nature-17",
+        "nature-18",
+        "nature-19",
+        "nature-20",
+        "item-240"
+      ],
+      "related_pages": [
+        "Terrain",
+        "Biomes",
+        "Placing objects",
+        "Tree health and chopping",
+        "Fort Solid Shorehold",
+        "Withered Mire",
+        "Rift-Thorn Mire"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "seed-placement.range48.area_is_private.Hinderance==0.nature_can_grow"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.solid.goo.spikes.Data5.areaType0-fort104.MAINQUESTSTAGE22-chance0.9"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_station_Step_0",
+          "key": "shelter-canopy.Data5.chance0.01"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "passedHours-cap240.growTick960-per-hour"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "mgmt_nature_ticker.random-tile-samples.spread-irandom2"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_grow.crop-stage4.Hinderance-tree-chance0.35.rift-grass-shrink.Data5-shrink"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_get_maxtile.areaType23-stage29-crop-max2-watercress3"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_spread.case18-chance0.15.case19.case21-chance0.2"
+        }
+      ]
+    },
+    {
+      "title": "Terrain",
+      "section_titles": [
+        "Ground height",
+        "Moving across tiles",
+        "Water",
+        "Slopes and plateaus",
+        "Grass",
+        "Tall grass and ferns",
+        "Moss",
+        "Mud and sand",
+        "Stone",
+        "Goo",
+        "Ash",
+        "Rift Grass",
+        "Dock planks",
+        "Boulders and logs",
+        "Thickets and vines",
+        "Indoors and caves"
+      ],
+      "paragraphs": [
+        "Every outdoor tile has a ground height. The lowest ground lies under water, which deepens in three steps. Above the shoreline comes open middle ground, and above that the land rises in two raised plateau levels whose edges are slopes. Height decides where plants grow and which seeds can be planted; see Planting.",
+        "Every step costs action points depending on the tile you step onto. Firm, open ground such as bare earth, short grass, moss, stone, ash and dock planks costs 0.8 AP a step. A diagonal step costs 0.4 AP more, heavy encumbrance raises the cost up to double, and no single step costs more than 8 AP.",
+        "Shallow water along the shore costs about 1.2 AP a step, medium-depth water about 1.6 AP and deep water about 3.4 AP. The Amphibian skill makes wading cheaper. Grass still grows in the shallowest fringe of water, and different water plants favor different depths.",
+        "Slopes are the edges of raised ground and are the slowest common terrain at 5 AP a step; the Firm Grip skill helps. The flat top of a plateau walks like ordinary ground. Nothing can be planted on a slope.",
+        "Short grass is easy going, while thicker grass costs about 1 AP a step. Grass grows on most land and in the shallowest water, but stays short on mud and thins out in the shade of trees. It is cleared from a tile when you plant a seed there.",
+        "Tall Grass and Fern patches add to the cost of a step as they grow larger. The Strider skill reduces the cost of crossing them and other obstacles.",
+        "Moss walks like short grass. In shallow water it counts as the thick growth that cranberries need.",
+        "Mud and sand both cost about 1.2 AP a step. Mud keeps grass short, so muddy shallows never suit cranberries. Sand refuses most seeds; elderberries are the exception.",
+        "Stone is firm and fast at 0.8 AP a step, but most seeds will not take in it.",
+        "Goo costs about 1.2 AP a step and nothing can be planted in it.",
+        "A Campfire slowly burns the ground beneath it to ash. Ash walks like bare ground.",
+        "Rift Grass walks like short grass, but crops growing on it wither away.",
+        "The planks laid at the Fort Solid Shorehold dock cost 0.8 AP a step and count as solid footing even over water.",
+        "A Boulder costs 2.5 AP to clamber over and a Mossy Log 1.8 AP. Strider helps with both. Their tiles cannot be planted.",
+        "Bramble thickets and Rift Vine growth add heavily to the cost of a step, and most walking creatures treat them as impassable.",
+        "Indoor floors cost 0.8 AP a step. Some rough dungeon floor costs 2.5 AP a step, and cave spikes cost 5 AP."
+      ],
+      "related_entities": [
+        "skill-0-0",
+        "skill-0-1",
+        "skill-0-3",
+        "nature-0",
+        "nature-1",
+        "nature-2",
+        "nature-3",
+        "nature-5",
+        "nature-6",
+        "nature-8",
+        "nature-9",
+        "nature-12",
+        "nature-13",
+        "item-38"
+      ],
+      "related_pages": [
+        "Planting",
+        "Biomes",
+        "Action points",
+        "Fort Solid Shorehold"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_moment.slope0.2.boulder0.4.log0.55.stone1.25.sand-mud0.9.goo0.82"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_moment.water-cap1.Water1-0.2.Water2-0.2.Water3-0.3.indoor1.25"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "apcost_step.1/mod.diagonal+0.4.encumbrance.round0.2.max8"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_tiles_finders",
+          "key": "tile_to_enum.Grass.Lower.OnLower.Hinderance.NatureData"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_tiles_autotiling",
+          "key": "height-thresholds.water-0.2-0.3-0.4.slope0.2-0.425"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_get_maxtile.grass-mud-cap4.tree-shade"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "dock-planks.Grass24-31"
+        }
+      ]
+    },
+    {
+      "title": "Biomes",
+      "section_titles": [
+        "Zone kinds",
+        "How many of each",
+        "Beaches and borders",
+        "What every land zone has",
+        "Trees by biome",
+        "Creatures",
+        null,
+        "Weather and time",
+        "Returning to a zone"
+      ],
+      "paragraphs": [
+        "The world map is a five-by-five grid of zones, and every zone has one of nine outdoor biomes. The biome shapes the lay of the land, which trees and plants grow, which creatures roam and what landmarks you might find. Caves, ruins, cellars and buildings are separate interiors entered from these outdoor zones.",
+        "Every world has one Fort Solid Shorehold on its left or right edge, surrounded by Common Bog zones (one neighbor can be Vast Waters instead). Each world also has two or three Rift-Thorn Mire zones, three or four Sunken Ancient Ruins, two or three Savage Mirk zones, two or three Broken Fen zones and between two and six Vast Waters zones. At least one zone is a Drowned Fen. The remaining zones are split roughly evenly between Common Bog, Withered Mire and Drowned Fen, so a world can lack a Withered Mire entirely.",
+        "Any side of a land zone that faces the edge of the world, a Vast Waters zone or a Broken Fen becomes a sandy beach about thirty tiles deep that slopes into deep water. A Broken Fen has beaches on all four sides.",
+        "Apart from Vast Waters, every zone mixes boulders, logs, scattered ruins, tall grass, ferns, lilypads and watercress. Some rocky outcrops are cave mouths. Bird nests sit on slopes and sand, Calmia Root plants grow on mud, and wild turnips and cranberries grow where the ground suits them. Skeletons lie around with loot, and some of them are treasure chests instead.",
+        "Willow is the most common tree almost everywhere, followed by Brambles. Each biome also has its own specialty: Trollgnarl is common in Withered Mire, Cypress in Drowned Fen, Elderwort Shrub in Sunken Ancient Ruins and Rift Vine in Rift-Thorn Mire.",
+        "Which creature appears depends on the biome and on the tile it appears on. Water tiles bring aquatic creatures such as the Mudfin, and sandy tiles favor the Boulder Crab. Outside Fort Solid Shorehold, some creatures can appear as a tougher form, for example a Viper as a Red Fang. In Savage Mirk this always happens. A Mire Serpent can also surge out of deeper water anywhere except the fort zone.",
+        "As the main story advances, rift creatures such as the Sceetler and Scaalmyr Grunt begin turning up in ordinary zones. Rift-Thorn Mire has its own population of them.",
+        "Weather, day and night, and the outdoor temperature are shared across the whole world rather than set per biome. The background sounds differ between biomes.",
+        "When you come back to a zone, it catches up on the time you were gone: plants grow, felled trees are gradually replaced and new Calmia Root plants appear on mud (except in Rift-Thorn Mire). See Planting and Terrain for how the ground and plants behave."
+      ],
+      "related_entities": [
+        "nature-4",
+        "nature-6",
+        "nature-7",
+        "nature-17",
+        "nature-20",
+        "nature-13",
+        "being-17",
+        "being-7",
+        "being-10",
+        "being-23",
+        "being-4",
+        "being-13",
+        "being-14",
+        "item-142"
+      ],
+      "related_pages": [
+        "Fort Solid Shorehold",
+        "Common Bog",
+        "Withered Mire",
+        "Drowned Fen",
+        "Broken Fen",
+        "Savage Mirk",
+        "Sunken Ancient Ruins",
+        "Rift-Thorn Mire",
+        "Vast Waters",
+        "Planting",
+        "Terrain"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "terrain_create_shore.off-grid.areaType100.areaType4"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_try_to_create.per-areaType-mix"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.variant-upgrade.AT!=0.AT==5"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_day_Step_0",
+          "key": "global-light.ambience-per-areaType"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "revisit-regrowth.trees.calmia"
+        }
+      ]
+    },
+    {
+      "title": "Fort Solid Shorehold",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "People",
+        "Creatures",
+        "Rules near the fort",
+        "Loot"
+      ],
+      "paragraphs": [
+        "This is the zone where every game begins, on the left or right edge of the world map, so at least one side is beach. Its neighbors are Common Bog zones, except that one of them can be Vast Waters.",
+        "The land is ordinary mixed swamp with a flattened, open middle. The fort stands in a fenced clearing beside a wooden dock where your boat arrives. Elsewhere in the zone lies an abandoned camp next to a rift, with a Campfire and a few supplies left in containers.",
+        "Captain Eir and the fort's Soldier garrison live here, and the fort building leads inside.",
+        "This is the safest zone. By day you mostly meet the Giant Slug, Giant Gnat, Viper and Dreadfly, with the Mirk Runner becoming common at night. Mudfin live in the water and Boulder Crab on sand. Creatures here never appear as their tougher forms, and the Mire Serpent does not ambush from the water.",
+        "Early in the story you cannot build within about thirty tiles of the fort, and the ground around it counts as private. At night the soldiers walk you back inside if you linger close by, until later in the story. Seeds cannot take within about six tiles of the fort, and at one point in the main story Viend will not let you leave the zone.",
+        "Skeletons here are rarely treasure chests; the odds are the lowest of any zone."
+      ],
+      "related_entities": [
+        "being-6",
+        "being-5",
+        "being-19",
+        "being-0",
+        "being-2",
+        "being-10",
+        "being-1",
+        "being-11",
+        "being-17",
+        "being-7",
+        "being-4",
+        "item-38"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Planting",
+        "Terrain",
+        "Common Bog",
+        "Vast Waters"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.variant-upgrade.AT!=0.AT==5"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "areaType0.TooClose480.MAINQUESTSTAGE13"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "night-escort.MAINQUESTSTAGE15"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "QuestLeaveBlock.MAINQUESTSTAGE12.areaType0"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.areaType0-fort104"
+        }
+      ]
+    },
+    {
+      "title": "Common Bog",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "Plants",
+        "Creatures",
+        "Loot"
+      ],
+      "paragraphs": [
+        "Common Bog zones surround Fort Solid Shorehold, and more are scattered across the rest of the map. One of the bogs next to the fort holds Ranger Bhato's hideout, with a cellar entrance not far away.",
+        "This is the baseline swamp: a balanced mix of water, open ground and low hills, with every ordinary feature at its usual amount.",
+        "Willow dominates the trees, with Brambles second and only a little Cypress. Bogs grow a few more wild Turnip plants than other zones, and Cranberry patches line the grassy shallows.",
+        "By day expect the Giant Slug, Giant Gnat, Viper and Dreadfly. At night the Mirk Runner, Swamp Troll and Mirkfang come out in greater numbers. Some creatures can appear as tougher forms.",
+        "Skeletons are occasionally treasure chests."
+      ],
+      "related_entities": [
+        "being-12",
+        "nature-4",
+        "nature-6",
+        "nature-7",
+        "nature-18",
+        "nature-19",
+        "being-0",
+        "being-2",
+        "being-10",
+        "being-1",
+        "being-11",
+        "being-3",
+        "being-38"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Fort Solid Shorehold",
+        "Planting"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_try_to_create.per-areaType-mix"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "rangerCamp.built_48x32.entrances_64x48"
+        }
+      ]
+    },
+    {
+      "title": "Withered Mire",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "Plants",
+        null,
+        "Creatures",
+        "Loot"
+      ],
+      "paragraphs": [
+        "Withered Mire zones fill some of the map's leftover cells, so a world can have several or none at all.",
+        "This is the highest and driest biome. The ground sits well above the waterline and rises into many hills and plateaus, so there are lots of slopes and little water. Sandy and stony patches are common, and more old ruins survive here than in most zones.",
+        "Grass stays short and thin. Trollgnarl makes up about a third of the trees, alongside Willow and Brambles, and the high plateaus suit Trollgnarl Seed Pods. Trees here die off faster than in most zones. Bird nests are plentiful on the slopes and sand.",
+        "The stunted grass means few tiles qualify for Cranberry Seeds, but the dry ground suits turnips, brambles and trollgnarls.",
+        "The Firelouse and Raving Unwanted are common here day and night, and the sandy ground brings out the Boulder Crab. The usual swamp creatures also roam, and some can appear as tougher forms.",
+        "Treasure chests turn up more often than in Common Bog."
+      ],
+      "related_entities": [
+        "nature-17",
+        "nature-4",
+        "nature-6",
+        "item-234",
+        "item-229",
+        "being-27",
+        "being-31",
+        "being-7"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Planting",
+        "Terrain",
+        "Tree health and chopping",
+        "Common Bog"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_try_to_create.per-areaType-mix"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_get_maxtile.areaType2-grass-3..5.tree-death+0.0025"
+        }
+      ]
+    },
+    {
+      "title": "Drowned Fen",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "Plants",
+        "Creatures",
+        "Landmarks",
+        "Loot"
+      ],
+      "paragraphs": [
+        "Every world has at least one Drowned Fen, and more appear among the map's leftover cells.",
+        "This is the wettest land biome. Low ground and a maze of shallow pools leave most of the zone under shallow water, broken up by small islands and humps of higher ground.",
+        "Cypress is much more common here, at about one tree in seven, alongside plenty of Willow and Brambles. Cranberry patches are abundant, and Calmia Root plants are more numerous than in most zones. The shallow water suits Cypress Seed Pods, Willow Seeds and Watercress Seeds.",
+        "With so much water, the Mudfin and its tougher form, the Razorfin, are everywhere, and a Mire Serpent can burst out of deeper water. On dry land the usual swamp creatures roam.",
+        "Gurb-Gurb's hollow is placed in the first Drowned Fen you enter, and smoke gives away its position.",
+        "Treasure chests are fairly common."
+      ],
+      "related_entities": [
+        "nature-7",
+        "nature-4",
+        "nature-6",
+        "nature-19",
+        "item-142",
+        "item-233",
+        "item-232",
+        "item-231",
+        "being-17",
+        "being-24",
+        "being-4",
+        "being-26"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Planting",
+        "Terrain"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_try_to_create.per-areaType-mix"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "first-visit-landmarks.hut.shipwreck.camp"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "areaType3.cranberries+10.calmia16-24"
+        }
+      ]
+    },
+    {
+      "title": "Broken Fen",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "Creatures",
+        "Loot",
+        "Landmarks"
+      ],
+      "paragraphs": [
+        "Each world has two or three Broken Fens. Neighboring zones treat a Broken Fen like open sea, so their shared edges become beaches.",
+        "A Broken Fen is an archipelago: beaches on all four sides drop into deep water, leaving scattered sandy islands and shallows in between. Only about a third of the usual rocks, logs, trees and plants appear, so the zone looks sparse and open. The world map draws it as water.",
+        "Most of the area is water or sand, so the Mudfin and Boulder Crab are the usual company, with the ordinary swamp creatures on the few patches of firmer land.",
+        "Broken Fens hold the most loot of any zone: more skeletons than usual, and about a quarter of them are treasure chests.",
+        "Ihar's shipwreck can be placed on a shoreline of the first Broken Fen you enter. If it does not fit, the game tries again later; see Ihar for details."
+      ],
+      "related_entities": [
+        "being-17",
+        "being-7",
+        "being-33"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Terrain",
+        "Vast Waters"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "terrain_create_shore.areaType4-all-sides"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "first-visit-landmarks.hut.shipwreck.camp"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_create_treasure.areaType4.skeletons5-8.chest0.25"
+        }
+      ]
+    },
+    {
+      "title": "Savage Mirk",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "Creatures",
+        null,
+        "Landmarks",
+        "Loot"
+      ],
+      "paragraphs": [
+        "Each world has two or three Savage Mirk zones.",
+        "The terrain looks like an ordinary bog, but Calmia Root plants are more plentiful here than anywhere else.",
+        "This is the most dangerous biome. Every creature that has a tougher form always appears as it: the Viper as a Red Fang, the Mudfin as a Razorfin, the Dreadfly as a Deathfly, the Mirk Runner as a Mirk Mauler, the Mirkfang as a Giant Mirkfang and the Boulder Crab as a Titanspine Crab. A few Giant Mirkfang turn out to be a Mirkfang Matriarch.",
+        "While the Survivors' camp request is still open, The Terror can come out at night.",
+        "The Survivors' camp is built in the first Savage Mirk you enter, with torchlight pointing the way. Wilda, the Survivor group and Grand Mother live there. Building close to the camp is not allowed, and the camp clears away rifts near it.",
+        "Skeletons are more numerous than usual, and some are treasure chests."
+      ],
+      "related_entities": [
+        "item-142",
+        "being-23",
+        "being-24",
+        "being-25",
+        "being-29",
+        "being-39",
+        "being-30",
+        "being-37",
+        "being-40",
+        "being-34",
+        "being-35",
+        "being-36"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Survivors' camp"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.variant-upgrade.AT!=0.AT==5"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "first-visit-landmarks.hut.shipwreck.camp"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "TooCloseCamp420"
+        }
+      ]
+    },
+    {
+      "title": "Sunken Ancient Ruins",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "Plants",
+        "Creatures",
+        "Loot"
+      ],
+      "paragraphs": [
+        "Each world has three or four Sunken Ancient Ruins. One of them holds the Library.",
+        "Ruins are everywhere: stone floors with broken walls, paved stone paths and many crumbling structures. Most rocky outcrops are cellar entrances or ruined buildings rather than caves, and there are few boulders.",
+        "There are only about half as many trees as usual. The first tree placed in these zones is always an Elderwort Shrub, so each one usually has at least one, and more appear now and then.",
+        "Toadkin are the most common creatures, often in pairs. The Dreadfly, Giant Gnat, Viper and Mirk Runner also roam, and the Mirkfang appears at night.",
+        "Treasure chests are common, but rubble piles have mostly been picked clean."
+      ],
+      "related_entities": [
+        "nature-20",
+        "being-21",
+        "being-1",
+        "being-2",
+        "being-10",
+        "being-11",
+        "being-38"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Terrain"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_try_to_create.per-areaType-mix"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "create_solid.areaType22.entrances->21.building_128x96->20"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "rubble59-60.areaType22.nothing0.55"
+        }
+      ]
+    },
+    {
+      "title": "Rift-Thorn Mire",
+      "section_titles": [
+        "Where it is",
+        "Landscape",
+        "Plants",
+        null,
+        "Creatures",
+        "After the rift"
+      ],
+      "paragraphs": [
+        "Each world has two or three Rift-Thorn Mires. One always sits directly opposite Fort Solid Shorehold on the world map and holds the way down to Scaal's lair.",
+        "The rift has corrupted the land. Pools of goo spread across the ground and Rift Grass replaces ordinary grass. Rifts dot the zone, and zones near the lair also get some.",
+        "There are far fewer trees, and about a quarter of them are Rift Vine. Trees die off faster here than anywhere else. While the rift is active, no lilypads, watercress, bird nests, Calmia Root plants, wild turnips or cranberries grow, and Calmia Root does not come back on later visits.",
+        "Crops planted on Rift Grass wither, and goo cannot be planted, so this is a poor place for a garden.",
+        "Rift creatures rule here, even in the water: the Scaalmyr Grunt (often joined by a Sceetler), the Scaalmyr Warrior and the occasional Mutated Unwanted.",
+        "Late in the main story, once the rift is dealt with, rift creatures become rare, Rift Grass and Rift Vine stop growing, and the remaining plants stay stunted. Crops still cannot fully ripen here."
+      ],
+      "related_entities": [
+        "being-22",
+        "nature-12",
+        "nature-13",
+        "being-14",
+        "being-13",
+        "being-15",
+        "being-32"
+      ],
+      "related_pages": [
+        "Biomes",
+        "Fort Solid Shorehold",
+        "Planting",
+        "Terrain",
+        "Tree health and chopping"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_try_to_create.per-areaType-mix"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "spawn-tables.per-areaType.water.sand"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_get_maxtile.areaType23.riftDeg.tree-death+0.005"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "obj_rift.dist2.5.areaType23-max5"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "revisit-regrowth.trees.calmia"
+        }
+      ]
+    },
+    {
+      "title": "Vast Waters",
+      "section_titles": [
+        "Where it is",
+        "What it is",
+        "Entering"
+      ],
+      "paragraphs": [
+        "Each world has between two and six Vast Waters zones, and one can sit beside Fort Solid Shorehold. Land zones next to one get a beach along the shared edge.",
+        "A Vast Waters zone is open sea: the whole area is deep water with no islands, trees, plants, loot or skeletons. The world map draws it as water.",
+        "You can travel into it from a neighboring edge, but there is no ground to stand on. You will be swimming in deep water and can drown, so it is effectively a barrier."
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Biomes",
+        "Terrain",
+        "Broken Fen"
+      ],
+      "index_page": "Biomes",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Alarm_8",
+          "key": "worldGrid5x5.areaType-placement"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "outdoor-generation.per-areaType-knobs"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "edge-travel.grid-bounds-only"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_player_Alarm_0",
+          "key": "drownPoints>=4"
+        }
+      ]
     }
   ],
   "item_effects": [
@@ -8849,6 +9744,164 @@
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.being34.item261.player_inventory_lose_amount/local201"}
+      ]
+    },
+    {
+      "entity": "item-230",
+      "paragraphs": [
+        "Plant Turnip Seeds on dry land, starting a little way back from the water's edge and reaching all the way up to the highest plateaus. The tile must be ordinary soil or grass: stone, sand and slopes refuse them, as does any tile under a solid object."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case18.height-0.05..0.925.!stone.!sand.!slope.!solid"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item230.Hinderance150"
+        }
+      ]
+    },
+    {
+      "entity": "item-229",
+      "paragraphs": [
+        "Cranberry Seeds only take in shallow water that has thick grass or moss growing through it. Such tiles mostly sit in the narrow grassy fringe where the shore meets the water. Bare water, muddy shallows (grass on mud never grows thick enough), slopes and tiles under solid objects refuse them.",
+        "Thick grass is scarcer in Withered Mire, and in Rift-Thorn Mire once the rift has opened, so good cranberry tiles are harder to find there."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case19.Water1.Grass6-23.!slope.!solid"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_get_maxtile.mud-cap4.areaType2-3..5.areaType23-stage29-5..8"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item229.Hinderance160"
+        }
+      ]
+    },
+    {
+      "entity": "item-228",
+      "paragraphs": [
+        "Plant Elderberry Seeds anywhere on land except right at the waterline, from the shore up to the highest plateaus. Unlike most seeds they accept sandy ground. Stone, slopes and tiles under solid objects refuse them. They grow into an Elderwort Shrub."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case20.height>=-0.15.!stone.!slope.!solid"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item228.Hinderance165"
+        }
+      ]
+    },
+    {
+      "entity": "item-231",
+      "paragraphs": [
+        "Plant Watercress Seeds out in open water: past the shallow strip along the shore, through medium-depth water, to just beyond where the deepest water begins. The bottom does not matter, only the depth. Shore shallows, dry land and the open deep are too shallow or too deep."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case21.height-0.45..-0.26"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item231.Hinderance170"
+        }
+      ]
+    },
+    {
+      "entity": "item-227",
+      "paragraphs": [
+        "Plant Bramble Seeds on dry soil or grass well back from the water, anywhere up to the highest plateaus. Stone, sand, slopes and tiles under solid objects refuse them."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case6.height0.0667..1.!stone.!sand.!slope.!solid"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item227.Hinderance166"
+        }
+      ]
+    },
+    {
+      "entity": "item-232",
+      "paragraphs": [
+        "Plant Willow Seeds from the shallowest water at the shore's edge up across low and middle ground and onto the first raised plateau, but not the higher plateau above it. Stone, sand, slopes and tiles under solid objects refuse them."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case4.height-0.25..0.425.!stone.!sand.!slope.!solid"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item232.Hinderance167"
+        }
+      ]
+    },
+    {
+      "entity": "item-233",
+      "paragraphs": [
+        "Plant Cypress Seed Pods in shallow and medium-depth water or on low and middle ground. They stop where the land starts to rise, so raised plateaus refuse them, and so do stone, sand, slopes and tiles under solid objects."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case7.height-0.35..0.195.!stone.!sand.!slope.!solid"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item233.Hinderance168"
+        }
+      ]
+    },
+    {
+      "entity": "item-234",
+      "paragraphs": [
+        "Trollgnarl Seed Pods only take on high ground: the flat tops of raised plateaus, away from the slopes at their edges. On the lowest plateaus, the lower parts can still be too low. Stone, sand and tiles under solid objects refuse them."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "nature_can_grow.case17.height>=0.31.!stone.!sand.!slope.!solid"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.item234.Hinderance169"
+        }
       ]
     }
   ],
