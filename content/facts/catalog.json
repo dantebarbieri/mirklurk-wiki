@@ -71,38 +71,38 @@
         "index": "Items",
         "summary": "Clothing, from shirts and socks to outer garments. Different layers use separate equipment slots.",
         "members": [
-          "item-15",
-          "item-16",
-          "item-17",
-          "item-18",
-          "item-20",
-          "item-21",
-          "item-22",
-          "item-23",
-          "item-24",
-          "item-33",
-          "item-42",
-          "item-57",
-          "item-59",
-          "item-137",
-          "item-145",
-          "item-146",
-          "item-164",
-          "item-196",
-          "item-197",
-          "item-198",
-          "item-199",
-          "item-200",
-          "item-201",
-          "item-202",
-          "item-203",
-          "item-204",
-          "item-205",
-          "item-207",
-          "item-208",
-          "item-209",
-          "item-264",
-          "item-265"
+          "Simple Cloth Shoes",
+          "Worn Socks",
+          "Decent Socks",
+          "Fine Wool Socks",
+          "Simple Pants",
+          "Hiker's Pants",
+          "Simple Shirt",
+          "Wool Shirt",
+          "Hiker's Shirt",
+          "Worn Leather Pants",
+          "Simple Hood",
+          "Sturdy Leather Boots",
+          "Leather Gloves",
+          "Shabby Pelt Cloak",
+          "Troll Skin Cloak",
+          "Troll Skin Hood",
+          "Worn Leather Gloves",
+          "Forager's Vest",
+          "Explorer's Vest",
+          "Expedition Vest",
+          "Tattered Gloves",
+          "Sturdy Leather Gloves",
+          "Leather Boots",
+          "Worn Boots",
+          "Wanderer's Shoes",
+          "Wool Hood",
+          "Ranger's Hood",
+          "Decent Cloak",
+          "Traveller's Cloak",
+          "Ranger's Cloak",
+          "Clays' Magus Hood",
+          "Magi's Ropebelt"
         ]
       },
       {
@@ -110,24 +110,24 @@
         "index": "Items",
         "summary": "Protective equipment and shields. Slot categories also include protective clothing.",
         "members": [
-          "item-0",
-          "item-1",
-          "item-43",
-          "item-50",
-          "item-54",
-          "item-55",
-          "item-56",
-          "item-58",
-          "item-116",
-          "item-117",
-          "item-118",
-          "item-119",
-          "item-147",
-          "item-165",
-          "item-192",
-          "item-193",
-          "item-194",
-          "item-195"
+          "Wood Buckler",
+          "Iron Buckler",
+          "Leather Vest",
+          "Large Scaalmyr Husk",
+          "Steel Bascinet",
+          "Steel Chestplate",
+          "Steel Legplates",
+          "Steel Shield",
+          "Iron Skull Cap",
+          "Steel Skull Cap",
+          "Improvised Shield",
+          "Leather Cap",
+          "Troll Skin Vest",
+          "Iron Reinforced Gloves",
+          "Leather Leg Armor",
+          "Iron Legplates",
+          "Shabby Leather Vest",
+          "Shabby Leather Leg Armor"
         ]
       },
       {
@@ -135,51 +135,51 @@
         "index": "Items",
         "summary": "Melee weapons, bows, magic weapons and thrown flasks. Unarmed is a built-in attack, not a carried item. Arrows are under Ammunition.",
         "members": [
-          "item-2",
-          "item-3",
-          "item-4",
-          "item-5",
-          "item-6",
-          "item-7",
-          "item-8",
-          "item-9",
-          "item-10",
-          "item-11",
-          "item-27",
-          "item-28",
-          "item-29",
-          "item-30",
-          "item-31",
-          "item-44",
-          "item-90",
-          "item-93",
-          "item-105",
-          "item-106",
-          "item-157",
-          "item-158",
-          "item-159",
-          "item-160",
-          "item-161",
-          "item-169",
-          "item-179",
-          "item-184",
-          "item-185",
-          "item-186",
-          "item-187",
-          "item-188",
-          "item-189",
-          "item-190",
-          "item-191",
-          "item-206",
-          "item-266",
-          "item-267",
-          "item-268",
-          "item-269",
-          "item-270",
-          "item-271",
-          "item-272",
-          "item-273",
-          "item-274"
+          "Shoddy Dagger",
+          "Iron Dagger",
+          "Steel Dagger",
+          "Decent Hunting Knife",
+          "Great Hunting Knife",
+          "Hunter Master's Knife",
+          "Steel Longsword",
+          "Iron Shortsword",
+          "Steel Shortsword",
+          "Iron Longsword",
+          "Iron Hand Axe",
+          "Steel Hand Axe",
+          "Iron Felling Axe",
+          "Steel Felling Axe",
+          "Unarmed",
+          "Shortbow (Willow)",
+          "Stone Club",
+          "Improvised Bow",
+          "Longbow (Cypress)",
+          "Longbow (Yew)",
+          "Iron Cudgel",
+          "Steel Cudgel",
+          "Serpent Fang",
+          "Iron Morning Star",
+          "Steel Morning Star",
+          "Heavy Branch (Cypress)",
+          "Gurb's Expertimental Bow",
+          "Iron Greatsword",
+          "Steel Greatsword",
+          "Iron Warhammer",
+          "Steel Warhammer",
+          "Iron Battleaxe",
+          "Steel Battleaxe",
+          "Iron Mace",
+          "Steel Mace",
+          "Thorns of Wackah",
+          "Staff of The Fire Eater",
+          "Orb of Poison",
+          "Orb of Greater Poison",
+          "Orb of Fire",
+          "Orb of Greater Fire",
+          "Orb of Iron Essence",
+          "Orb of Steel Essence",
+          "Orb of Wind",
+          "Orb of Storm"
         ]
       },
       {
@@ -187,22 +187,22 @@
         "index": "Items",
         "summary": "Tools for lighting, fire-making, mapping and other tasks. Some are also ingredients or consumables.",
         "members": [
-          "item-40",
-          "item-41",
-          "item-89",
-          "item-94",
-          "item-96",
-          "item-110",
-          "item-111",
-          "item-156",
-          "item-172",
-          "item-182",
-          "item-183",
-          "item-212",
-          "item-248",
-          "item-252",
-          "item-254",
-          "item-255"
+          "Firesteel",
+          "Torch",
+          "Map of area",
+          "Fool's Gold",
+          "Improvised Torch",
+          "Lantern",
+          "Masterwork Lantern",
+          "Map Drawing Kit",
+          "Survivor's Field Kit",
+          "Drake Jasper",
+          "Dragon Flint",
+          "Improvised Enduring Torch",
+          "Jar of Fireflies",
+          "Map Ledger",
+          "Iron Firesteel",
+          "Worn Firesteel"
         ]
       },
       {
@@ -210,66 +210,66 @@
         "index": "Items",
         "summary": "Food, remedies and supplies consumed by use. Some have multiple uses or harmful effects.",
         "members": [
-          "item-25",
-          "item-32",
-          "item-51",
-          "item-60",
-          "item-61",
-          "item-62",
-          "item-63",
-          "item-64",
-          "item-65",
-          "item-66",
-          "item-67",
-          "item-69",
-          "item-70",
-          "item-82",
-          "item-83",
-          "item-84",
-          "item-85",
-          "item-86",
-          "item-87",
-          "item-88",
-          "item-95",
-          "item-103",
-          "item-104",
-          "item-112",
-          "item-113",
-          "item-114",
-          "item-115",
-          "item-127",
-          "item-138",
-          "item-139",
-          "item-140",
-          "item-141",
-          "item-143",
-          "item-144",
-          "item-162",
-          "item-163",
-          "item-176",
-          "item-180",
-          "item-181",
-          "item-217",
-          "item-218",
-          "item-221",
-          "item-222",
-          "item-223",
-          "item-225",
-          "item-226",
-          "item-235",
-          "item-236",
-          "item-237",
-          "item-241",
-          "item-242",
-          "item-243",
-          "item-244",
-          "item-245",
-          "item-246",
-          "item-247",
-          "item-251",
-          "item-253",
-          "item-259",
-          "item-260"
+          "Loaf of Bread",
+          "Lesser Wound Salve",
+          "Honey",
+          "Large Maggot",
+          "Grilled Maggot",
+          "Large Beetle",
+          "Crisp Beetle",
+          "Frog",
+          "Grilled Frog Legs",
+          "Crab Meat",
+          "Grilled Crab Meat",
+          "Bug Meat",
+          "Grilled Bug Meat",
+          "Snake Meat",
+          "Grilled Snake Meat",
+          "Minor Antidote",
+          "Sickness Remedy",
+          "Sickness Cure",
+          "Egg",
+          "Fried Egg",
+          "Strange Glowing Bug",
+          "Vile Meat",
+          "Grilled Vile Meat",
+          "Lamp Oil",
+          "Cloth Repair Kit",
+          "Wood Repair Kit",
+          "Metal Repair Kit",
+          "Summoning Stone",
+          "Wound Salve",
+          "Antidote",
+          "Minor Wound Salve",
+          "Simple Burn Remedy",
+          "Improvised Bandage",
+          "Bandage",
+          "Toadkin Meat",
+          "Grilled Toadkin Meat",
+          "Wayfarer's Vigor",
+          "Cave Creeper",
+          "Grilled Cave Creeper",
+          "Bramble Berries",
+          "Riftvine Berries",
+          "Turnip (item)",
+          "Grilled Turnip",
+          "Elderwort Berries",
+          "Cranberries",
+          "Watercress",
+          "Pleasant Vegetable Soup",
+          "Tasty Crab Soup",
+          "Survivor's Delight",
+          "Wakebug",
+          "Baby Firelouse",
+          "Bursthopper",
+          "Grilled Wakebug",
+          "Grilled Baby Firelouse",
+          "Grilled Bursthopper",
+          "Firefly",
+          "Gurb's Flask of Vileness",
+          "Flask of Fire",
+          "Bat Meat",
+          "Grilled Bat Meat"
         ]
       },
       {
@@ -277,59 +277,59 @@
         "index": "Items",
         "summary": "Recipe materials, including items also used as food, fuel or equipment.",
         "members": [
-          "item-19",
-          "item-34",
-          "item-35",
-          "item-36",
-          "item-37",
-          "item-39",
-          "item-48",
-          "item-49",
-          "item-52",
-          "item-77",
-          "item-78",
-          "item-79",
-          "item-80",
-          "item-81",
-          "item-91",
-          "item-92",
-          "item-102",
-          "item-107",
-          "item-120",
-          "item-121",
-          "item-122",
-          "item-124",
-          "item-129",
-          "item-134",
-          "item-135",
-          "item-136",
-          "item-142",
-          "item-173",
-          "item-175",
-          "item-177",
-          "item-178",
-          "item-210",
-          "item-211",
-          "item-213",
-          "item-214",
-          "item-215",
-          "item-216",
-          "item-224",
-          "item-258"
+          "Twig (Willow)",
+          "Branch (Willow)",
+          "Log (Willow)",
+          "Firewood (Willow)",
+          "Rock",
+          "Flint",
+          "Flax",
+          "Linen",
+          "Beeswax",
+          "Feather",
+          "Twig (Cypress)",
+          "Branch (Cypress)",
+          "Log (Cypress)",
+          "Firewood (Cypress)",
+          "Plant Fiber",
+          "Twine",
+          "Shabby Pelt",
+          "Rift Weave",
+          "Small Venom Gland",
+          "Moldy Wood",
+          "Mold",
+          "Glow Goo",
+          "Scaalmyr Husk",
+          "Troll Fat",
+          "Swamp Troll Hide",
+          "Cave Troll Hide",
+          "Calmia Root",
+          "Vile Bulb (Mushroom)",
+          "Water Lily",
+          "Lump of Coal",
+          "Small Fire Gland",
+          "Bark (Willow)",
+          "Bark (Cypress)",
+          "Branch (Trollgnarl)",
+          "Log Chunk (Trollgnarl)",
+          "Firewood (Trollgnarl)",
+          "Bark (Trollgnarl)",
+          "Branch (Elderwort)",
+          "Bat Hide"
         ]
       },
       {
         "title": "Carrying equipment",
         "index": "Items",
         "members": [
-          "item-12",
-          "item-13",
-          "item-14",
-          "item-26",
-          "item-148",
-          "item-166",
-          "item-167",
-          "item-168"
+          "Small Backpack",
+          "Apprentice Herbalist's Belt",
+          "Medium Backpack",
+          "Large Backpack",
+          "Ranger's Backpack",
+          "Journeyman Herbalist's Belt",
+          "Expert Herbalist's Belt",
+          "Master Herbalist's Belt"
         ],
         "summary": "Backpacks and belts that add inventory space."
       },
@@ -337,23 +337,23 @@
         "title": "Camping and construction",
         "index": "Items",
         "members": [
-          "item-38",
-          "item-47",
-          "item-68",
-          "item-108",
-          "item-153",
-          "item-154",
-          "item-155",
-          "item-170",
-          "item-171",
-          "item-238",
-          "item-239",
-          "item-240",
-          "item-249",
-          "item-250",
-          "item-256",
-          "item-257",
-          "item-275"
+          "Campfire",
+          "Small Linen Tent",
+          "Tattered Bedroll",
+          "Hidden Hollow",
+          "Decent Bedroll",
+          "Great Bedroll",
+          "Waxed Linen Tent",
+          "Raft Base",
+          "Finish Raft",
+          "Chopping Log",
+          "Primitive Farmwork Table",
+          "Simple Shelter",
+          "Canopy (2x2 tiles)",
+          "Canopy (3x3 tiles)",
+          "Furhide Bedroll",
+          "Improvised Bedroll",
+          "Storage Chest"
         ],
         "summary": "Camp equipment, workstations and building supplies."
       },
@@ -362,26 +362,26 @@
         "index": "Items",
         "summary": "Arrows readied in the off hand for use with bows.",
         "members": [
-          "item-45",
-          "item-46",
-          "item-76",
-          "item-174",
-          "item-219",
-          "item-220"
+          "Iron Arrow",
+          "Steel Arrow",
+          "Flinthead Arrow",
+          "Poison Arrow",
+          "Poison Arrow II",
+          "Poison Arrow III"
         ]
       },
       {
         "title": "Seeds",
         "index": "Items",
         "members": [
-          "item-227",
-          "item-228",
-          "item-229",
-          "item-230",
-          "item-231",
-          "item-232",
-          "item-233",
-          "item-234"
+          "Bramble Seeds",
+          "Elderberry Seeds",
+          "Cranberry Seeds",
+          "Turnip Seeds",
+          "Watercress Seeds",
+          "Willow Seeds",
+          "Cypress Seed Pods",
+          "Trollgnarl Seed Pods"
         ],
         "summary": "Seeds for growing plants."
       },
@@ -389,14 +389,14 @@
         "title": "Coins and valuables",
         "index": "Items",
         "members": [
-          "item-72",
-          "item-73",
-          "item-74",
-          "item-97",
-          "item-98",
-          "item-99",
-          "item-100",
-          "item-101"
+          "Copper Coin",
+          "Silver Coin",
+          "Gold Coin",
+          "Emerald",
+          "Ruby",
+          "Amethyst",
+          "Sapphire",
+          "Topaz"
         ],
         "summary": "Money and valuables for trading."
       },
@@ -404,13 +404,13 @@
         "title": "Quest items",
         "index": "Items",
         "members": [
-          "item-75",
-          "item-123",
-          "item-126",
-          "item-130",
-          "item-132",
-          "item-261",
-          "item-262"
+          "Wooden Recorder",
+          "Glowing Rune",
+          "Clay's Strange Potion",
+          "Ancient Strongbox",
+          "Ward Breaker",
+          "Head of The Terror",
+          "Magus' Shard"
         ],
         "summary": "Items used during the main quest and the Survivors' camp request."
       },
@@ -418,9 +418,9 @@
         "title": "Trees",
         "index": "Nature",
         "members": [
-          "nature-4",
-          "nature-7",
-          "nature-17"
+          "Willow",
+          "Cypress",
+          "Trollgnarl"
         ],
         "summary": "Trees and woody shrubs."
       },
@@ -428,8 +428,8 @@
         "title": "Rift growth",
         "index": "Nature",
         "members": [
-          "nature-12",
-          "nature-13"
+          "Rift Grass",
+          "Rift Vine"
         ],
         "summary": "Plants found around the rifts."
       },
@@ -437,10 +437,10 @@
         "title": "Gatherable food plants",
         "index": "Nature",
         "members": [
-          "nature-6",
-          "nature-18",
-          "nature-19",
-          "nature-20"
+          "Brambles",
+          "Turnip (nature)",
+          "Cranberry",
+          "Elderwort Shrub"
         ],
         "summary": "Plants with edible harvests. Some produce can cause sickness."
       },
@@ -448,8 +448,8 @@
         "title": "Non-growing nature",
         "index": "Nature",
         "members": [
-          "nature-2",
-          "nature-3"
+          "Boulder",
+          "Mossy Log"
         ],
         "summary": "Rocks, logs and other terrain features."
       },
@@ -457,11 +457,11 @@
         "title": "Ground cover and water plants",
         "index": "Nature",
         "members": [
-          "nature-0",
-          "nature-1",
-          "nature-5",
-          "nature-8",
-          "nature-9"
+          "Grass",
+          "Tall Grass",
+          "Moss",
+          "Lilypad",
+          "Fern"
         ],
         "summary": "Grasses, ferns, moss and water plants."
       }
@@ -473,24 +473,24 @@
         "parents": ["Tools"],
         "summary": "Cutting and chopping implements, including weapons. Effectiveness varies by tool and task.",
         "members": [
-          "item-2",
-          "item-3",
-          "item-4",
-          "item-5",
-          "item-6",
-          "item-7",
-          "item-8",
-          "item-9",
-          "item-10",
-          "item-11",
-          "item-27",
-          "item-28",
-          "item-29",
-          "item-30",
-          "item-184",
-          "item-185",
-          "item-188",
-          "item-189"
+          "Shoddy Dagger",
+          "Iron Dagger",
+          "Steel Dagger",
+          "Decent Hunting Knife",
+          "Great Hunting Knife",
+          "Hunter Master's Knife",
+          "Steel Longsword",
+          "Iron Shortsword",
+          "Steel Shortsword",
+          "Iron Longsword",
+          "Iron Hand Axe",
+          "Steel Hand Axe",
+          "Iron Felling Axe",
+          "Steel Felling Axe",
+          "Iron Greatsword",
+          "Steel Greatsword",
+          "Iron Battleaxe",
+          "Steel Battleaxe"
         ]
       },
       {
@@ -499,12 +499,12 @@
         "parents": ["Tools"],
         "summary": "Torches fit either hand; lanterns fit the off hand. Jar of Fireflies is placed rather than held.",
         "members": [
-          "item-41",
-          "item-96",
-          "item-110",
-          "item-111",
-          "item-212",
-          "item-248"
+          "Torch",
+          "Improvised Torch",
+          "Lantern",
+          "Masterwork Lantern",
+          "Improvised Enduring Torch",
+          "Jar of Fireflies"
         ]
       },
       {
@@ -513,31 +513,31 @@
         "parents": ["Tools"],
         "summary": "Ignition tools, stones and wood. Not every item here burns as fuel.",
         "members": [
-          "item-19",
-          "item-34",
-          "item-35",
-          "item-36",
-          "item-37",
-          "item-39",
-          "item-40",
-          "item-78",
-          "item-79",
-          "item-80",
-          "item-81",
-          "item-94",
-          "item-121",
-          "item-169",
-          "item-182",
-          "item-183",
-          "item-210",
-          "item-211",
-          "item-213",
-          "item-214",
-          "item-215",
-          "item-216",
-          "item-224",
-          "item-254",
-          "item-255"
+          "Twig (Willow)",
+          "Branch (Willow)",
+          "Log (Willow)",
+          "Firewood (Willow)",
+          "Rock",
+          "Flint",
+          "Firesteel",
+          "Twig (Cypress)",
+          "Branch (Cypress)",
+          "Log (Cypress)",
+          "Firewood (Cypress)",
+          "Fool's Gold",
+          "Moldy Wood",
+          "Heavy Branch (Cypress)",
+          "Drake Jasper",
+          "Dragon Flint",
+          "Bark (Willow)",
+          "Bark (Cypress)",
+          "Branch (Trollgnarl)",
+          "Log Chunk (Trollgnarl)",
+          "Firewood (Trollgnarl)",
+          "Bark (Trollgnarl)",
+          "Branch (Elderwort)",
+          "Iron Firesteel",
+          "Worn Firesteel"
         ]
       },
       {
@@ -546,16 +546,16 @@
         "parents": ["Consumables"],
         "summary": "Treatments for wounds, poison, sickness and burns.",
         "members": [
-          "item-32",
-          "item-84",
-          "item-85",
-          "item-86",
-          "item-138",
-          "item-139",
-          "item-140",
-          "item-141",
-          "item-143",
-          "item-144"
+          "Lesser Wound Salve",
+          "Minor Antidote",
+          "Sickness Remedy",
+          "Sickness Cure",
+          "Wound Salve",
+          "Antidote",
+          "Minor Wound Salve",
+          "Simple Burn Remedy",
+          "Improvised Bandage",
+          "Bandage"
         ]
       },
       {
@@ -564,48 +564,48 @@
         "parents": ["Consumables"],
         "summary": "Raw and prepared foods, including small creatures. Some cause sickness or other harmful effects.",
         "members": [
-          "item-25",
-          "item-51",
-          "item-60",
-          "item-61",
-          "item-62",
-          "item-63",
-          "item-64",
-          "item-65",
-          "item-66",
-          "item-67",
-          "item-69",
-          "item-70",
-          "item-82",
-          "item-83",
-          "item-87",
-          "item-88",
-          "item-95",
-          "item-103",
-          "item-104",
-          "item-162",
-          "item-163",
-          "item-180",
-          "item-181",
-          "item-217",
-          "item-218",
-          "item-221",
-          "item-222",
-          "item-223",
-          "item-225",
-          "item-226",
-          "item-235",
-          "item-236",
-          "item-237",
-          "item-241",
-          "item-242",
-          "item-243",
-          "item-244",
-          "item-245",
-          "item-246",
-          "item-247",
-          "item-259",
-          "item-260"
+          "Loaf of Bread",
+          "Honey",
+          "Large Maggot",
+          "Grilled Maggot",
+          "Large Beetle",
+          "Crisp Beetle",
+          "Frog",
+          "Grilled Frog Legs",
+          "Crab Meat",
+          "Grilled Crab Meat",
+          "Bug Meat",
+          "Grilled Bug Meat",
+          "Snake Meat",
+          "Grilled Snake Meat",
+          "Egg",
+          "Fried Egg",
+          "Strange Glowing Bug",
+          "Vile Meat",
+          "Grilled Vile Meat",
+          "Toadkin Meat",
+          "Grilled Toadkin Meat",
+          "Cave Creeper",
+          "Grilled Cave Creeper",
+          "Bramble Berries",
+          "Riftvine Berries",
+          "Turnip (item)",
+          "Grilled Turnip",
+          "Elderwort Berries",
+          "Cranberries",
+          "Watercress",
+          "Pleasant Vegetable Soup",
+          "Tasty Crab Soup",
+          "Survivor's Delight",
+          "Wakebug",
+          "Baby Firelouse",
+          "Bursthopper",
+          "Grilled Wakebug",
+          "Grilled Baby Firelouse",
+          "Grilled Bursthopper",
+          "Firefly",
+          "Bat Meat",
+          "Grilled Bat Meat"
         ]
       },
       {
@@ -625,7 +625,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "One-handed weapons, two-handed weapons and torches. Two-handed melee weapons occupy both hands; bows use arrows in the off hand.",
-        "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7", "item-8", "item-9", "item-10", "item-11", "item-27", "item-28", "item-29", "item-30", "item-41", "item-44", "item-90", "item-93", "item-96", "item-105", "item-106", "item-157", "item-158", "item-159", "item-160", "item-161", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-190", "item-191", "item-206", "item-212", "item-266", "item-267", "item-268", "item-269", "item-270", "item-271", "item-272", "item-273", "item-274"],
+        "members": ["Shoddy Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Torch", "Shortbow (Willow)", "Stone Club", "Improvised Bow", "Improvised Torch", "Longbow (Cypress)", "Longbow (Yew)", "Iron Cudgel", "Steel Cudgel", "Serpent Fang", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Thorns of Wackah", "Improvised Enduring Torch", "Staff of The Fire Eater", "Orb of Poison", "Orb of Greater Poison", "Orb of Fire", "Orb of Greater Fire", "Orb of Iron Essence", "Orb of Steel Essence", "Orb of Wind", "Orb of Storm"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[16,17,23]"},
@@ -638,7 +638,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Shields, lanterns, torches and arrows. Two-handed melee weapons occupy this hand but cannot be placed here independently.",
-        "members": ["item-0", "item-1", "item-41", "item-45", "item-46", "item-50", "item-58", "item-76", "item-96", "item-110", "item-111", "item-118", "item-174", "item-212", "item-219", "item-220"],
+        "members": ["Wood Buckler", "Iron Buckler", "Torch", "Iron Arrow", "Steel Arrow", "Large Scaalmyr Husk", "Steel Shield", "Flinthead Arrow", "Improvised Torch", "Lantern", "Masterwork Lantern", "Improvised Shield", "Poison Arrow", "Improvised Enduring Torch", "Poison Arrow II", "Poison Arrow III"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[15,21,23,24]"},
@@ -651,7 +651,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Headwear worn separately from hoods.",
-        "members": ["item-54", "item-116", "item-117", "item-119"],
+        "members": ["Steel Bascinet", "Iron Skull Cap", "Steel Skull Cap", "Leather Cap"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[1]"},
@@ -663,7 +663,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Hoods worn separately from helmets.",
-        "members": ["item-42", "item-146", "item-204", "item-205", "item-264"],
+        "members": ["Simple Hood", "Troll Skin Hood", "Wool Hood", "Ranger's Hood", "Clays' Magus Hood"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[2]"},
@@ -675,7 +675,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Shirts worn beneath outer torso equipment.",
-        "members": ["item-22", "item-23", "item-24"],
+        "members": ["Simple Shirt", "Wool Shirt", "Hiker's Shirt"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[3]"},
@@ -687,7 +687,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Vests and chest armor, worn separately from shirts.",
-        "members": ["item-43", "item-55", "item-147", "item-194", "item-196", "item-197", "item-198"],
+        "members": ["Leather Vest", "Steel Chestplate", "Troll Skin Vest", "Shabby Leather Vest", "Forager's Vest", "Explorer's Vest", "Expedition Vest"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[4]"},
@@ -699,7 +699,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Herbalist belts and Magi's Ropebelt. Backpacks use a separate slot.",
-        "members": ["item-13", "item-166", "item-167", "item-168", "item-265"],
+        "members": ["Apprentice Herbalist's Belt", "Journeyman Herbalist's Belt", "Expert Herbalist's Belt", "Master Herbalist's Belt", "Magi's Ropebelt"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[5]"},
@@ -711,7 +711,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Cloaks, worn separately from shirts, chest pieces and backpacks.",
-        "members": ["item-137", "item-145", "item-207", "item-208", "item-209"],
+        "members": ["Shabby Pelt Cloak", "Troll Skin Cloak", "Decent Cloak", "Traveller's Cloak", "Ranger's Cloak"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[6]"},
@@ -723,7 +723,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Backpacks. Belts use a separate slot.",
-        "members": ["item-12", "item-14", "item-26", "item-148"],
+        "members": ["Small Backpack", "Medium Backpack", "Large Backpack", "Ranger's Backpack"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[7]"},
@@ -735,7 +735,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Gloves, including Iron Reinforced Gloves. Held equipment uses separate slots.",
-        "members": ["item-59", "item-164", "item-165", "item-199", "item-200"],
+        "members": ["Leather Gloves", "Worn Leather Gloves", "Iron Reinforced Gloves", "Tattered Gloves", "Sturdy Leather Gloves"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[8]"},
@@ -747,7 +747,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Pants, worn separately from leg armor.",
-        "members": ["item-20", "item-21", "item-33"],
+        "members": ["Simple Pants", "Hiker's Pants", "Worn Leather Pants"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[9]"},
@@ -759,7 +759,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Leg armor, worn separately from pants.",
-        "members": ["item-56", "item-192", "item-193", "item-195"],
+        "members": ["Steel Legplates", "Leather Leg Armor", "Iron Legplates", "Shabby Leather Leg Armor"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[10]"},
@@ -771,7 +771,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Socks, worn separately from shoes and boots.",
-        "members": ["item-16", "item-17", "item-18"],
+        "members": ["Worn Socks", "Decent Socks", "Fine Wool Socks"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[11]"},
@@ -783,7 +783,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Shoes and boots, worn separately from socks.",
-        "members": ["item-15", "item-57", "item-201", "item-202", "item-203"],
+        "members": ["Simple Cloth Shoes", "Sturdy Leather Boots", "Leather Boots", "Worn Boots", "Wanderer's Shoes"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[12]"},
@@ -795,42 +795,42 @@
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Daggers and hunting knives, also used for cutting.",
-        "members": ["item-2", "item-3", "item-4", "item-5", "item-6", "item-7"]
+        "members": ["Shoddy Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife"]
       },
       {
         "title": "Swords",
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Shortswords, longswords and greatswords. Some require both hands.",
-        "members": ["item-8", "item-9", "item-10", "item-11", "item-184", "item-185"]
+        "members": ["Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Greatsword", "Steel Greatsword"]
       },
       {
         "title": "Axes",
         "index": "Items",
         "parents": ["Weapons", "Cutting and chopping tools"],
         "summary": "Hand axes, felling axes and battleaxes, used for combat and chopping.",
-        "members": ["item-27", "item-28", "item-29", "item-30", "item-188", "item-189"]
+        "members": ["Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Iron Battleaxe", "Steel Battleaxe"]
       },
       {
         "title": "Clubs, maces and hammers",
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Clubs, cudgels, morning stars, maces, warhammers and Heavy Branch. Damage types vary.",
-        "members": ["item-90", "item-157", "item-158", "item-160", "item-161", "item-169", "item-186", "item-187", "item-190", "item-191"]
+        "members": ["Stone Club", "Iron Cudgel", "Steel Cudgel", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Iron Warhammer", "Steel Warhammer", "Iron Mace", "Steel Mace"]
       },
       {
         "title": "Bows",
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Bows use the main hand with arrows readied in the off hand.",
-        "members": ["item-44", "item-93", "item-105", "item-106", "item-179"]
+        "members": ["Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Gurb's Expertimental Bow"]
       },
       {
         "title": "Two-handed weapons",
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Melee weapons occupy both hands. Bows instead use off-hand ammunition.",
-        "members": ["item-29", "item-30", "item-44", "item-93", "item-105", "item-106", "item-169", "item-179", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-206", "item-266"],
+        "members": ["Iron Felling Axe", "Steel Felling Axe", "Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Thorns of Wackah", "Staff of The Fire Eater"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[17]"},
@@ -842,7 +842,7 @@
         "index": "Items",
         "parents": ["Weapons", "Consumables"],
         "summary": "Poison and fire flasks with effects on impact.",
-        "members": ["item-251", "item-253"],
+        "members": ["Gurb's Flask of Vileness", "Flask of Fire"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_Object_obj_projectile_Destroy_0", "key": "thrown[251,253].impact-effects"}]
       },
@@ -851,7 +851,7 @@
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Weapons that inflict Poison, including Venom Flask and the poison orbs. Poison arrows are under Ammunition.",
-        "members": ["item-159", "item-206", "item-251", "item-267", "item-268"],
+        "members": ["Serpent Fang", "Thorns of Wackah", "Gurb's Flask of Vileness", "Orb of Poison", "Orb of Greater Poison"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[159,206].damageClass"},
@@ -863,28 +863,28 @@
         "index": "Items",
         "parents": ["Food and drink"],
         "summary": "Raw meat, eggs and edible small creatures, including live insects. Some cause sickness.",
-        "members": ["item-60", "item-62", "item-64", "item-66", "item-69", "item-82", "item-87", "item-95", "item-103", "item-162", "item-180", "item-241", "item-242", "item-243", "item-247", "item-259"]
+        "members": ["Large Maggot", "Large Beetle", "Frog", "Crab Meat", "Bug Meat", "Snake Meat", "Egg", "Strange Glowing Bug", "Vile Meat", "Toadkin Meat", "Cave Creeper", "Wakebug", "Baby Firelouse", "Bursthopper", "Firefly", "Bat Meat"]
       },
       {
         "title": "Prepared foods",
         "index": "Items",
         "parents": ["Food and drink"],
         "summary": "Bread, cooked food and meals. Check each food for sickness risk and other effects.",
-        "members": ["item-25", "item-61", "item-63", "item-65", "item-67", "item-70", "item-83", "item-88", "item-104", "item-163", "item-181", "item-222", "item-235", "item-236", "item-237", "item-244", "item-245", "item-246", "item-260"]
+        "members": ["Loaf of Bread", "Grilled Maggot", "Crisp Beetle", "Grilled Frog Legs", "Grilled Crab Meat", "Grilled Bug Meat", "Grilled Snake Meat", "Fried Egg", "Grilled Vile Meat", "Grilled Toadkin Meat", "Grilled Cave Creeper", "Grilled Turnip", "Pleasant Vegetable Soup", "Tasty Crab Soup", "Survivor's Delight", "Grilled Wakebug", "Grilled Baby Firelouse", "Grilled Bursthopper", "Grilled Bat Meat"]
       },
       {
         "title": "Plant foods",
         "index": "Items",
         "parents": ["Food and drink"],
         "summary": "Berries, Turnip and Watercress. Some are also ingredients; not all are safe to eat.",
-        "members": ["item-217", "item-218", "item-221", "item-223", "item-225", "item-226"]
+        "members": ["Bramble Berries", "Riftvine Berries", "Turnip (item)", "Elderwort Berries", "Cranberries", "Watercress"]
       },
       {
         "title": "Repair and refuelling supplies",
         "index": "Items",
         "parents": ["Consumables"],
         "summary": "Repair kits and Lamp Oil. Lamp Oil refuels lanterns; it is not food.",
-        "members": ["item-112", "item-113", "item-114", "item-115"],
+        "members": ["Lamp Oil", "Cloth Repair Kit", "Wood Repair Kit", "Metal Repair Kit"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "items_bonus_apply.repair-and-fuel/amount-decrement"}]
       },
@@ -893,7 +893,7 @@
         "index": "Items",
         "parents": ["Tools", "Consumables"],
         "summary": "Map Drawing Kit is consumed after a successful outdoor use. It is not used up indoors or when you already carry a map of the current area. Finished maps and Map Ledger are not consumed.",
-        "members": ["item-156"],
+        "members": ["Map Drawing Kit"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[156].doRemove/amount"}]
       },
@@ -902,7 +902,7 @@
         "index": "Items",
         "parents": ["Consumables"],
         "summary": "Summoning Stone is consumed when thrown to create a portal.",
-        "members": ["item-127"],
+        "members": ["Summoning Stone"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state[3].tempWeapon.amount"},
@@ -914,7 +914,7 @@
         "index": "Items",
         "parents": ["Consumables"],
         "summary": "Tonics such as Wayfarer's Vigor that restore survival meters.",
-        "members": ["item-176"],
+        "members": ["Wayfarer's Vigor"],
         "confidence": "inferred",
         "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[176]"}]
       },
@@ -923,52 +923,52 @@
         "index": "Items",
         "parents": ["Crafting materials", "Fire-making supplies"],
         "summary": "Wood and bark for fuel and crafting. Heavy Branch can also serve as a weapon.",
-        "members": ["item-19", "item-34", "item-35", "item-36", "item-78", "item-79", "item-80", "item-81", "item-121", "item-169", "item-210", "item-211", "item-213", "item-214", "item-215", "item-216", "item-224"]
+        "members": ["Twig (Willow)", "Branch (Willow)", "Log (Willow)", "Firewood (Willow)", "Twig (Cypress)", "Branch (Cypress)", "Log (Cypress)", "Firewood (Cypress)", "Moldy Wood", "Heavy Branch (Cypress)", "Bark (Willow)", "Bark (Cypress)", "Branch (Trollgnarl)", "Log Chunk (Trollgnarl)", "Firewood (Trollgnarl)", "Bark (Trollgnarl)", "Branch (Elderwort)"]
       },
       {
         "title": "Fibers and fabrics",
         "index": "Items",
         "parents": ["Crafting materials"],
         "summary": "Fiber, twine and fabrics.",
-        "members": ["item-48", "item-49", "item-91", "item-92", "item-107"]
+        "members": ["Flax", "Linen", "Plant Fiber", "Twine", "Rift Weave"]
       },
       {
         "title": "Animal materials",
         "index": "Items",
         "parents": ["Crafting materials"],
         "summary": "Pelts, hides, husks, feathers, wax, fat, glands and Glow Goo. Large Scaalmyr Husk also serves as a shield.",
-        "members": ["item-50", "item-52", "item-77", "item-102", "item-120", "item-124", "item-129", "item-134", "item-135", "item-136", "item-178", "item-258"]
+        "members": ["Large Scaalmyr Husk", "Beeswax", "Feather", "Shabby Pelt", "Small Venom Gland", "Glow Goo", "Scaalmyr Husk", "Troll Fat", "Swamp Troll Hide", "Cave Troll Hide", "Small Fire Gland", "Bat Hide"]
       },
       {
         "title": "Mineral materials",
         "index": "Items",
         "parents": ["Crafting materials"],
         "summary": "Rock, Flint and Lump of Coal for crafting. Coal cannot be assumed to work as campfire fuel.",
-        "members": ["item-37", "item-39", "item-177"]
+        "members": ["Rock", "Flint", "Lump of Coal"]
       },
       {
         "title": "Plant and fungal reagents",
         "index": "Items",
         "parents": ["Crafting materials"],
         "summary": "Calmia Root, Vile Bulb, Water Lily and Mold for preparation recipes. These are not all edible.",
-        "members": ["item-122", "item-142", "item-173", "item-175"]
+        "members": ["Mold", "Calmia Root", "Vile Bulb (Mushroom)", "Water Lily"]
       },
       {
         "title": "Food ingredients",
         "index": "Items",
         "parents": ["Crafting materials", "Food and drink"],
         "summary": "Foods also used in recipes, including meals, remedies and other crafting.",
-        "members": ["item-51", "item-60", "item-62", "item-64", "item-66", "item-69", "item-70", "item-82", "item-87", "item-103", "item-162", "item-180", "item-217", "item-218", "item-221", "item-223", "item-225", "item-226", "item-241", "item-242", "item-243", "item-247", "item-259"]
+        "members": ["Honey", "Large Maggot", "Large Beetle", "Frog", "Crab Meat", "Bug Meat", "Grilled Bug Meat", "Snake Meat", "Egg", "Vile Meat", "Toadkin Meat", "Cave Creeper", "Bramble Berries", "Riftvine Berries", "Turnip (item)", "Elderwort Berries", "Cranberries", "Watercress", "Wakebug", "Baby Firelouse", "Bursthopper", "Firefly", "Bat Meat"]
       },
       {
         "title": "Bugs",
         "index": "Bestiary",
         "members": [
-          "being-1",
-          "being-2",
-          "being-25",
-          "being-27",
-          "being-28"
+          "Dreadfly",
+          "Giant Gnat",
+          "Deathfly",
+          "Firelouse",
+          "Nightmare"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -976,9 +976,9 @@
         "title": "Snakes",
         "index": "Bestiary",
         "members": [
-          "being-4",
-          "being-10",
-          "being-23"
+          "Mire Serpent",
+          "Viper",
+          "Red Fang"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -986,8 +986,8 @@
         "title": "Trolls",
         "index": "Bestiary",
         "members": [
-          "being-3",
-          "being-18"
+          "Swamp Troll",
+          "Cave Troll"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -995,11 +995,11 @@
         "title": "Scaalmyr",
         "index": "Bestiary",
         "members": [
-          "being-13",
-          "being-14",
-          "being-15",
-          "being-16",
-          "being-22"
+          "Sceetler",
+          "Scaalmyr Grunt",
+          "Scaalmyr Warrior",
+          "Scaalmyr Geomancer",
+          "Scaal"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -1007,8 +1007,8 @@
         "title": "Crabs",
         "index": "Bestiary",
         "members": [
-          "being-7",
-          "being-30"
+          "Boulder Crab",
+          "Titanspine Crab"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -1016,7 +1016,7 @@
         "title": "Mollusks",
         "index": "Bestiary",
         "members": [
-          "being-0"
+          "Giant Slug"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -1024,7 +1024,7 @@
         "title": "Toadkin",
         "index": "Bestiary",
         "members": [
-          "being-21"
+          "Toadkin"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -1032,8 +1032,8 @@
         "title": "Unwanted creatures",
         "index": "Bestiary",
         "members": [
-          "being-31",
-          "being-32"
+          "Raving Unwanted",
+          "Mutated Unwanted"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -1041,8 +1041,8 @@
         "title": "Rodents",
         "index": "Bestiary",
         "members": [
-          "being-11",
-          "being-29"
+          "Mirk Runner",
+          "Mirk Mauler"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -1050,8 +1050,8 @@
         "title": "Aquatic creatures",
         "index": "Bestiary",
         "members": [
-          "being-17",
-          "being-24"
+          "Mudfin",
+          "Razorfin"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -1060,20 +1060,20 @@
         "index": "Items",
         "parents": ["Items"],
         "members": [
-          "item-12",
-          "item-14",
-          "item-148",
-          "item-26",
-          "item-13",
-          "item-166",
-          "item-167",
-          "item-168",
-          "item-196",
-          "item-197",
-          "item-198",
-          "item-24",
-          "item-21",
-          "item-264"
+          "Small Backpack",
+          "Medium Backpack",
+          "Ranger's Backpack",
+          "Large Backpack",
+          "Apprentice Herbalist's Belt",
+          "Journeyman Herbalist's Belt",
+          "Expert Herbalist's Belt",
+          "Master Herbalist's Belt",
+          "Forager's Vest",
+          "Explorer's Vest",
+          "Expedition Vest",
+          "Hiker's Shirt",
+          "Hiker's Pants",
+          "Clays' Magus Hood"
         ],
         "summary": "Backpacks, herbalist belts, pocketed vests, Hiker's Shirt, Hiker's Pants and Clays' Magus Hood add storage cells, not weight allowance.",
         "confidence": "inferred",
@@ -1108,15 +1108,15 @@
         ],
         "summary": "Orbs cast spells at range and drain one of your survival meters per cast. Staff of The Fire Eater is a two-handed fire weapon.",
         "members": [
-          "item-266",
-          "item-267",
-          "item-268",
-          "item-269",
-          "item-270",
-          "item-271",
-          "item-272",
-          "item-273",
-          "item-274"
+          "Staff of The Fire Eater",
+          "Orb of Poison",
+          "Orb of Greater Poison",
+          "Orb of Fire",
+          "Orb of Greater Fire",
+          "Orb of Iron Essence",
+          "Orb of Steel Essence",
+          "Orb of Wind",
+          "Orb of Storm"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -1141,10 +1141,10 @@
         "title": "Mirkfangs",
         "index": "Bestiary",
         "members": [
-          "being-37",
-          "being-38",
-          "being-39",
-          "being-40"
+          "Mirkfang Matriarch",
+          "Mirkfang",
+          "Giant Mirkfang",
+          "The Terror"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       }
@@ -1152,8 +1152,8 @@
   },
   "state_history": [
     {
-      "before": "being-9",
-      "after": "being-19",
+      "before": "Dead Unwanted",
+      "after": "Viend",
       "quest": "journal-11",
       "summary": "Dead Unwanted is Viend before his revival.",
       "attribution": "Wiki operator",
@@ -3503,7 +3503,7 @@
           "Neighboring zones are checked north, south, east for a column A fort, or west, north, south for a column E fort. At most one becomes Vast Waters; the rest become Common Bogs. Bhato takes the last Common Bog in that order, so directions are not equally likely.",
           "Captain Eir gives the direction, which is recorded in your journal. Look for a small foliage-roof hut, placed when you first enter its zone. Enter the hut, not the nearby ancient cellar."
         ],
-        "related_entities": ["being-6"],
+        "related_entities": ["Captain Eir"],
         "confidence": "observed",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_obj_menu_Alarm_8", "key": "fort-orthogonal-neighbors/at-most-one-type100/rangerCamp-last-Common-Bog"},
@@ -3692,7 +3692,7 @@
           "Viend checks for wounds before moving or attacking whenever he can act with all 10 action points available. Ongoing damage or a stun can delay or prevent his action. Healing needs no conversation, payment or supplies, works outside combat, and does not depend on his shop or alchemy workstation.",
           "During his escort or an active summon, Viend receives an action each turn. When nearby but idle, neither fighting nor detecting an enemy, he normally has a 10% chance to act each turn, so healing can be intermittent. While you rest in a bed or sleeping gear, this idle chance falls to 1.5% if at least two conditions are met: satiation above its low threshold, stamina above its low threshold, and temperature inside its comfortable range."
         ],
-        "related_entities": ["item-141"],
+        "related_entities": ["Simple Burn Remedy"],
         "related_pages": ["Resting"],
         "confidence": "observed",
         "evidence": [
@@ -4142,9 +4142,9 @@
           "You may not place or build anything within about 26 tiles of the camp. Mirkfangs and other creatures do not spawn within 16 tiles of it. The Terror gives up a chase when you step inside that range."
         ],
         "related_entities": [
-          "being-35",
-          "being-36",
-          "being-40"
+          "Survivor",
+          "Grand Mother",
+          "The Terror"
         ],
         "confidence": "observed",
         "evidence": [
@@ -4354,7 +4354,7 @@
           "Three Survivors guard the Survivors' camp with Wilda. They stay near the camp rather than roaming the Savage Mirk."
         ],
         "related_entities": [
-          "being-34"
+          "Wilda"
         ],
         "confidence": "observed",
         "evidence": [
@@ -4409,7 +4409,7 @@
           "Grand Mother sits inside the main hut of the Survivors' camp. Its ladder is locked until Wilda trusts you; see Wilda's Trust topic."
         ],
         "related_entities": [
-          "being-34"
+          "Wilda"
         ],
         "confidence": "observed",
         "evidence": [
@@ -4659,10 +4659,10 @@
           "If she is chasing you and you step within 16 tiles of the camp, she screeches and gives up the chase. If she is already next to you, she can still bite. Her corpse always holds the Head of The Terror, plus bat meat and hides."
         ],
         "related_entities": [
-          "being-34",
-          "item-261",
-          "item-259",
-          "item-258"
+          "Wilda",
+          "Head of The Terror",
+          "Bat Meat",
+          "Bat Hide"
         ],
         "related_pages": [
           "Focus"
@@ -4743,11 +4743,11 @@
           "His corpse holds 6 to 10 Gold Coins, Clays' Magus Hood and Magi's Ropebelt."
         ],
         "related_entities": [
-          "being-8",
-          "item-264",
-          "item-265",
-          "item-74",
-          "item-262"
+          "Magus Clay",
+          "Clays' Magus Hood",
+          "Magi's Ropebelt",
+          "Gold Coin",
+          "Magus' Shard"
         ],
         "related_pages": [],
         "confidence": "observed",
@@ -4779,188 +4779,188 @@
   "entry_links": [
     {
       "entry": "world-seed-boundaries",
-      "entities": ["being-12", "being-22", "being-26", "being-33", "being-34", "being-35", "being-36"]
+      "entities": ["Ranger Bhato", "Scaal", "Gurb-Gurb", "Ihar", "Wilda", "Survivor", "Grand Mother"]
     },
     {
       "entry": "journal-1",
-      "entities": ["item-75", "being-9", "being-6"]
+      "entities": ["Wooden Recorder", "Dead Unwanted", "Captain Eir"]
     },
     {
       "entry": "crafting-station-modifiers",
       "entities": [
-        "skill-4-3"
+        "Brewer"
       ]
     },
     {
       "entry": "journal-10",
       "entities": [
-        "being-8"
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-11",
       "entities": [
-        "being-8",
-        "being-9",
-        "being-19",
-        "item-126"
+        "Magus Clay",
+        "Dead Unwanted",
+        "Viend",
+        "Clay's Strange Potion"
       ]
     },
     {
       "entry": "journal-12",
       "entities": [
-        "being-19",
-        "being-9"
+        "Viend",
+        "Dead Unwanted"
       ]
     },
     {
       "entry": "journal-13",
       "entities": [
-        "being-19",
-        "being-6"
+        "Viend",
+        "Captain Eir"
       ]
     },
     {
       "entry": "journal-16",
       "entities": [
-        "being-8"
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-19",
       "entities": [
-        "being-8"
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-2",
       "entities": [
-        "being-6"
+        "Captain Eir"
       ]
     },
     {
       "entry": "journal-20",
       "entities": [
-        "being-8"
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-24",
       "entities": [
-        "being-8"
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-25",
       "entities": [
-        "being-8"
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-29",
       "entities": [
-        "being-6"
+        "Captain Eir"
       ]
     },
     {
       "entry": "journal-3",
       "entities": [
-        "being-6"
+        "Captain Eir"
       ]
     },
     {
       "entry": "journal-4",
       "entities": [
-        "being-6",
-        "being-8"
+        "Captain Eir",
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-5",
       "entities": [
-        "being-8"
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-6",
       "entities": [
-        "being-6",
-        "being-8"
+        "Captain Eir",
+        "Magus Clay"
       ]
     },
     {
       "entry": "journal-7",
       "entities": [
-        "being-12"
+        "Ranger Bhato"
       ]
     },
     {
       "entry": "journal-7-location",
       "entities": [
-        "being-12"
+        "Ranger Bhato"
       ]
     },
     {
       "entry": "journal-8",
       "entities": [
-        "being-12"
+        "Ranger Bhato"
       ]
     },
     {
       "entry": "journal-9",
       "entities": [
-        "being-12"
+        "Ranger Bhato"
       ]
     },
     {
       "entry": "skill-allocation",
       "entities": [
-        "skill-1-2"
+        "Focused Mind"
       ]
     },
     {
       "entry": "journal-30-hidden-realm",
       "entities": [
-        "being-6",
-        "being-41"
+        "Captain Eir",
+        "Magus Clay (boss)"
       ]
     },
     {
       "entry": "journal-30-magus-realm",
       "entities": [
-        "being-36",
-        "item-262",
-        "being-41"
+        "Grand Mother",
+        "Magus' Shard",
+        "Magus Clay (boss)"
       ]
     },
     {
       "entry": "journal-31",
       "entities": [
-        "being-41",
-        "being-6"
+        "Magus Clay (boss)",
+        "Captain Eir"
       ]
     },
     {
       "entry": "journal-32",
       "entities": [
-        "being-6"
+        "Captain Eir"
       ]
     },
     {
       "entry": "camp-1-trust",
       "entities": [
-        "being-34",
-        "being-40",
-        "item-261"
+        "Wilda",
+        "The Terror",
+        "Head of The Terror"
       ]
     },
     {
       "entry": "camp-2-access",
       "entities": [
-        "being-34",
-        "being-36",
-        "item-261",
-        "item-127"
+        "Wilda",
+        "Grand Mother",
+        "Head of The Terror",
+        "Summoning Stone"
       ]
     }
   ],
@@ -5900,8 +5900,8 @@
         "alchemy-workstation"
       ],
       "related_entities": [
-        "item-38",
-        "skill-4-3"
+        "Campfire",
+        "Brewer"
       ]
     },
     {
@@ -6050,9 +6050,9 @@
         }
       ],
       "related_entities": [
-        "being-8",
-        "being-19",
-        "skill-4-3"
+        "Magus Clay",
+        "Viend",
+        "Brewer"
       ]
     },
     {
@@ -6089,7 +6089,7 @@
       ],
       "notes": [],
       "related_entities": [
-        "being-12"
+        "Ranger Bhato"
       ],
       "quest_entries": [
         "journal-9",
@@ -6150,7 +6150,7 @@
       "entity": "being-19",
       "conditions": "Viend is with Clay after his escort, but starts trading only after Clay leaves, you pick up Ward Breaker, and Eir announces that Viend will handle supplies. His presence or nearby alchemy workstation alone does not unlock Trade.",
       "spoiler": true,
-      "compare_with": "being-8",
+      "compare_with": "Magus Clay",
       "confidence": "observed",
       "evidence": [
         {"source": "game-data", "section": "gml_Object_obj_being_Alarm_10", "key": "being8/area30/main>=13.create-being19"},
@@ -7717,7 +7717,7 @@
         ]
       }
     ],
-    "standard_merchants": ["being-8", "being-12", "being-20", "being-19", "being-26", "being-33", "being-34", "being-36"],
+    "standard_merchants": ["Magus Clay", "Ranger Bhato", "Commander Tain", "Viend", "Gurb-Gurb", "Ihar", "Wilda", "Grand Mother"],
     "confidence": "inferred"
   },
   "guides": [
@@ -7730,9 +7730,9 @@
         "Apply an Improvised Bandage or Bandage to bleeding cells. Bandages stop bleeding but do not restore lost hit points."
       ],
       "related_entities": [
-        "item-143",
-        "item-144",
-        "skill-3-3"
+        "Improvised Bandage",
+        "Bandage",
+        "Blade Master"
       ],
       "confidence": "inferred",
       "evidence": [
@@ -7771,9 +7771,9 @@
         "Minor Antidote and Antidote clear poison from the cells they cover without restoring lost hit points. Natural Antidote can reduce poison before it takes effect."
       ],
       "related_entities": [
-        "item-84",
-        "item-139",
-        "skill-4-4"
+        "Minor Antidote",
+        "Antidote",
+        "Natural Antidote"
       ],
       "confidence": "inferred",
       "evidence": [
@@ -7806,7 +7806,7 @@
         "Master Basher raises stun chance with blunt melee weapons and reduces their AP costs at rank milestones. Blunt orbs get only the base chance."
       ],
       "related_entities": [
-        "skill-3-1"
+        "Master Basher"
       ],
       "confidence": "inferred",
       "evidence": [
@@ -7843,7 +7843,7 @@
         "The extra hit can strike diagonally and must remove armor before HP. Force Fighter raises this chance for force melee weapons only and reduces their AP costs at rank milestones."
       ],
       "related_entities": [
-        "skill-3-2"
+        "Force Fighter"
       ],
       "confidence": "inferred",
       "evidence": [
@@ -7860,9 +7860,9 @@
         "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward."
       ],
       "related_entities": [
-        "item-141",
-        "skill-1-0",
-        "item-266"
+        "Simple Burn Remedy",
+        "Fire Bond",
+        "Staff of The Fire Eater"
       ],
       "confidence": "inferred",
       "evidence": [
@@ -7928,9 +7928,9 @@
         "Choosing food"
       ],
       "related_entities": [
-        "skill-1-1",
-        "skill-4-2",
-        "item-25"
+        "Slow Metabolism",
+        "Herbivore",
+        "Loaf of Bread"
       ],
       "related_pages": [
         "Foods",
@@ -7939,7 +7939,7 @@
         "Resting",
         "Magic weapons"
       ],
-      "image_entity": "item-25",
+      "image_entity": "Loaf of Bread",
       "image_caption": "Loaf of Bread is one source of satiation.",
       "confidence": "observed",
       "evidence": [
@@ -7969,10 +7969,10 @@
         "Items that restore stamina"
       ],
       "related_entities": [
-        "item-176",
-        "item-217",
-        "item-243",
-        "item-68"
+        "Wayfarer's Vigor",
+        "Bramble Berries",
+        "Bursthopper",
+        "Tattered Bedroll"
       ],
       "related_pages": [
         "Action points",
@@ -7982,7 +7982,7 @@
         "Resting",
         "Magic weapons"
       ],
-      "image_entity": "item-176",
+      "image_entity": "Wayfarer's Vigor",
       "image_caption": "Wayfarer's Vigor grants temporary stamina recovery.",
       "confidence": "observed",
       "evidence": [
@@ -8012,11 +8012,11 @@
         "Food and sleep"
       ],
       "related_entities": [
-        "skill-1-2",
-        "item-225",
-        "item-68",
-        "item-154",
-        "item-256"
+        "Focused Mind",
+        "Cranberries",
+        "Tattered Bedroll",
+        "Great Bedroll",
+        "Furhide Bedroll"
       ],
       "related_pages": [
         "Resting",
@@ -8025,7 +8025,7 @@
         "Foods",
         "Magic weapons"
       ],
-      "image_entity": "item-68",
+      "image_entity": "Tattered Bedroll",
       "image_caption": "A Tattered Bedroll provides a place to rest or sleep.",
       "confidence": "observed",
       "evidence": [
@@ -8056,14 +8056,14 @@
         "Warm food"
       ],
       "related_entities": [
-        "skill-1-3",
-        "item-38",
-        "item-172",
-        "item-235",
-        "item-236",
-        "item-237",
-        "item-242",
-        "item-256"
+        "Body Warmth",
+        "Campfire",
+        "Survivor's Field Kit",
+        "Pleasant Vegetable Soup",
+        "Tasty Crab Soup",
+        "Survivor's Delight",
+        "Baby Firelouse",
+        "Furhide Bedroll"
       ],
       "related_pages": [
         "Weather",
@@ -8073,7 +8073,7 @@
         "Fire",
         "Magic weapons"
       ],
-      "image_entity": "item-38",
+      "image_entity": "Campfire",
       "image_caption": "An active nearby Campfire can warm and dry you.",
       "confidence": "observed",
       "evidence": [
@@ -8105,10 +8105,10 @@
         "Direct food effects"
       ],
       "related_entities": [
-        "item-51",
-        "item-218",
-        "item-85",
-        "item-86"
+        "Honey",
+        "Riftvine Berries",
+        "Sickness Remedy",
+        "Sickness Cure"
       ],
       "related_pages": [
         "Satiation",
@@ -8120,7 +8120,7 @@
         "Foods",
         "Magic weapons"
       ],
-      "image_entity": "item-51",
+      "image_entity": "Honey",
       "image_caption": "Honey has a direct wellbeing benefit as well as food value.",
       "confidence": "observed",
       "evidence": [
@@ -8153,10 +8153,10 @@
         "Preparing a resting place"
       ],
       "related_entities": [
-        "item-68",
-        "item-154",
-        "item-256",
-        "item-38"
+        "Tattered Bedroll",
+        "Great Bedroll",
+        "Furhide Bedroll",
+        "Campfire"
       ],
       "related_pages": [
         "Focus",
@@ -8168,7 +8168,7 @@
         "Action points",
         "Health and armor"
       ],
-      "image_entity": "item-154",
+      "image_entity": "Great Bedroll",
       "image_caption": "A Great Bedroll provides sleeping comfort and protection.",
       "confidence": "observed",
       "evidence": [
@@ -8191,9 +8191,9 @@
         "Recipes list ingredients, outputs, AP and workstation requirements. Check the resulting food's sickness risk: preparation does not always make food safe."
       ],
       "section_titles": ["Food value and effects", "Plant-based foods", "Sickness and Well fed", "Direct meter effects", "Warm meals and risks", "Cooking and preparation"],
-      "related_entities": ["skill-4-2", "item-51", "item-217", "item-243", "item-225", "item-218", "item-235", "item-236", "item-237", "item-242"],
+      "related_entities": ["Herbivore", "Honey", "Bramble Berries", "Bursthopper", "Cranberries", "Riftvine Berries", "Pleasant Vegetable Soup", "Tasty Crab Soup", "Survivor's Delight", "Baby Firelouse"],
       "related_pages": ["Satiation", "Wellbeing", "Temperature", "Stamina", "Focus"],
-      "image_entity": "item-235",
+      "image_entity": "Pleasant Vegetable Soup",
       "image_caption": "Pleasant Vegetable Soup provides food and temporary warmth.",
       "confidence": "observed",
       "evidence": [
@@ -8213,9 +8213,9 @@
         "Weather and temperature keep changing while you rest. Check your shelter, clothing and wellbeing trend before sleeping."
       ],
       "section_titles": ["Changing weather", "Rain history", "Early-game rain protection", "Wetness and exposure", "Shelter and local conditions", "Resting through weather"],
-      "related_entities": ["item-38", "item-208", "item-154", "item-256"],
+      "related_entities": ["Campfire", "Traveller's Cloak", "Great Bedroll", "Furhide Bedroll"],
       "related_pages": ["Temperature", "Wellbeing", "Resting", "Action points"],
-      "image_entity": "item-208",
+      "image_entity": "Traveller's Cloak",
       "image_caption": "Protective clothing such as a Traveller's Cloak matters when travelling in wet weather.",
       "confidence": "observed",
       "evidence": [
@@ -8237,11 +8237,11 @@
         "Completed turns also update satiation, focus, temperature and wellbeing. Rest and sleep change recovery rates but do not pause these meters."
       ],
       "related_entities": [
-        "skill-2-0",
-        "skill-3-3",
-        "skill-3-1",
-        "skill-3-2",
-        "skill-4-3"
+        "Fast Draw",
+        "Blade Master",
+        "Master Basher",
+        "Force Fighter",
+        "Brewer"
       ],
       "related_pages": [
         "Stamina",
@@ -8349,9 +8349,9 @@
         "Action points are not whole numbers: a chop takes exactly the cost shown, such as 2.4 AP, and costs are shown to one decimal place. A chop is refused if it costs more than your 8 AP maximum, and a falling part cannot be chopped. Outside combat you may chop with less AP than the cost: your AP drops to 0, your turn ends and the shortfall comes out of your next turn. In combat you must have enough AP. Like any action, chopping tires you; see Stamina.",
         "When the cut lands, the part falls with everything growing from it. With low focus or stamina, or under some effects, a swing can go wrong: the AP is spent, the part stays standing and you lose 2 wellbeing."
       ],
-      "related_entities": ["nature-4", "nature-7", "nature-17", "nature-20", "nature-6", "nature-13"],
+      "related_entities": ["Willow", "Cypress", "Trollgnarl", "Elderwort Shrub", "Brambles", "Rift Vine"],
       "related_pages": ["Action points", "Stamina", "Focus", "Wellbeing"],
-      "image_entity": "nature-4",
+      "image_entity": "Willow",
       "image_caption": "A Willow; each trunk, branch and twig keeps its own life value.",
       "confidence": "observed",
       "evidence": [
@@ -8372,10 +8372,10 @@
         "Mirkfangs, Giant Mirkfangs, Mirkfang Matriarchs and The Terror attack with Leeching damage."
       ],
       "related_entities": [
-        "being-38",
-        "being-39",
-        "being-37",
-        "being-40"
+        "Mirkfang",
+        "Giant Mirkfang",
+        "Mirkfang Matriarch",
+        "The Terror"
       ],
       "confidence": "inferred",
       "evidence": [
@@ -8413,16 +8413,16 @@
         "Grand Mother at the Survivors' camp sells every orb and the staff. They are not crafted."
       ],
       "related_entities": [
-        "item-266",
-        "item-267",
-        "item-268",
-        "item-269",
-        "item-270",
-        "item-271",
-        "item-272",
-        "item-273",
-        "item-274",
-        "being-36"
+        "Staff of The Fire Eater",
+        "Orb of Poison",
+        "Orb of Greater Poison",
+        "Orb of Fire",
+        "Orb of Greater Fire",
+        "Orb of Iron Essence",
+        "Orb of Steel Essence",
+        "Orb of Wind",
+        "Orb of Storm",
+        "Grand Mother"
       ],
       "related_pages": [
         "Focus",
@@ -8492,13 +8492,13 @@
         "Wilda can then be summoned with a Summoning Stone, and the Survivors greet you as a friend."
       ],
       "related_entities": [
-        "being-34",
-        "being-35",
-        "being-36",
-        "being-40",
-        "item-261",
-        "item-127",
-        "item-262"
+        "Wilda",
+        "Survivor",
+        "Grand Mother",
+        "The Terror",
+        "Head of The Terror",
+        "Summoning Stone",
+        "Magus' Shard"
       ],
       "related_pages": [
         "Placing objects",
@@ -8563,9 +8563,9 @@
         "Storage Chest is a placeable 7 x 5 container. Items inside lose no durability, stay dry and never go missing, unlike items left in ordinary stashes. Clay and Viend sell it."
       ],
       "related_entities": [
-        "item-275",
-        "being-8",
-        "being-19"
+        "Storage Chest",
+        "Magus Clay",
+        "Viend"
       ],
       "related_pages": [
         "Survivors' camp"
@@ -8681,7 +8681,7 @@
       "Crops shrink and eventually disappear on Rift Grass or in deep shade. In Rift-Thorn Mire after the rift has opened, crops stop partway and never fully ripen.",
       "Established crops can seed neighboring tiles that suit them. Cranberries spread readily through suitable shallows, while Turnip and watercress plants spread only now and then."
     ],
-    "related_entities": ["item-227", "item-228", "item-229", "item-230", "item-231", "item-232", "item-233", "item-234", "nature-4", "nature-6", "nature-7", "nature-17", "nature-18", "nature-19", "nature-20", "item-240"],
+    "related_entities": ["Bramble Seeds", "Elderberry Seeds", "Cranberry Seeds", "Turnip Seeds", "Watercress Seeds", "Willow Seeds", "Cypress Seed Pods", "Trollgnarl Seed Pods", "Willow", "Brambles", "Cypress", "Trollgnarl", "Turnip (nature)", "Cranberry", "Elderwort Shrub", "Simple Shelter"],
     "related_pages": ["Terrain", "Areas", "Placing objects", "Tree health and chopping", "Fort Solid Shorehold", "Withered Mire", "Rift-Thorn Mire"],
     "confidence": "observed",
     "evidence": [
@@ -8701,14 +8701,14 @@
         "after": 5,
         "columns": ["Seed", "Where it grows", "Refused on", "Grows into"],
         "rows": [
-          [{"entity": "item-231"}, "All but the top edge of the open shallows, all medium water, and deep water down to waist depth", "Nothing else: the bottom does not matter", {"entity": "item-226"}],
-          [{"entity": "item-229"}, "Shallow water with thick grass or moss growing through it, in practice the shore shallows", "Slopes; muddy shallows never grow thick enough grass", {"entity": "nature-19"}],
-          [{"entity": "item-233"}, "The upper half of medium water, both shallow bands, the waterline and low ground", "Stone, sand, slopes", {"entity": "nature-7"}],
-          [{"entity": "item-232"}, "The shore shallows, the waterline, low ground and the first plateau", "Stone, sand, slopes", {"entity": "nature-4"}],
-          [{"entity": "item-228"}, "The upper half of the waterline and everything above it", "Stone, slopes (sand is fine)", {"entity": "nature-20"}],
-          [{"entity": "item-230"}, "Low ground a little back from the water, both plateaus, but not the very highest hilltops", "Stone, sand, slopes", {"entity": "nature-18"}],
-          [{"entity": "item-227"}, "The upper half of low ground and both plateaus", "Stone, sand, slopes", {"entity": "nature-6"}],
-          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau", "Stone, sand, slopes", {"entity": "nature-17"}]
+          [{"entity": "Watercress Seeds"}, "All but the top edge of the open shallows, all medium water, and deep water down to waist depth", "Nothing else: the bottom does not matter", {"entity": "Watercress"}],
+          [{"entity": "Cranberry Seeds"}, "Shallow water with thick grass or moss growing through it, in practice the shore shallows", "Slopes; muddy shallows never grow thick enough grass", {"entity": "Cranberry"}],
+          [{"entity": "Cypress Seed Pods"}, "The upper half of medium water, both shallow bands, the waterline and low ground", "Stone, sand, slopes", {"entity": "Cypress"}],
+          [{"entity": "Willow Seeds"}, "The shore shallows, the waterline, low ground and the first plateau", "Stone, sand, slopes", {"entity": "Willow"}],
+          [{"entity": "Elderberry Seeds"}, "The upper half of the waterline and everything above it", "Stone, slopes (sand is fine)", {"entity": "Elderwort Shrub"}],
+          [{"entity": "Turnip Seeds"}, "Low ground a little back from the water, both plateaus, but not the very highest hilltops", "Stone, sand, slopes", {"entity": "Turnip (nature)"}],
+          [{"entity": "Bramble Seeds"}, "The upper half of low ground and both plateaus", "Stone, sand, slopes", {"entity": "Brambles"}],
+          [{"entity": "Trollgnarl Seed Pods"}, "The upper half of the first plateau and the high plateau", "Stone, sand, slopes", {"entity": "Trollgnarl"}]
         ],
         "caption": "Every seed is also refused under solid objects, on goo or spikes, on planted or cluttered tiles, in deep shade and near the fort."
       }
@@ -8736,7 +8736,7 @@
       "Strider removes 8% of the extra cost of obstacles and thick growth per rank, Amphibian removes 8% of the extra cost of water per rank, and Firm Grip makes slopes cheaper with each rank. Balance and Jumper help with jumping across gaps rather than walking.",
       "Every land creature can wade into the shallows, but only some go deeper, as the table shows. The Mudfin and the Razorfin cannot enter the shore shallows. Any creature can stand on a water rock, a log or the dock. Spawning ignores these limits, so a Mudfin can appear stuck in the shore shallows until it is attacked."
     ],
-    "related_entities": ["skill-0-0", "skill-0-1", "skill-0-2", "skill-0-3", "skill-0-4", "nature-1", "nature-2", "nature-3", "nature-6", "nature-9", "nature-13", "item-38"],
+    "related_entities": ["Strider", "Amphibian", "Jumper", "Firm Grip", "Balance", "Tall Grass", "Boulder", "Mossy Log", "Brambles", "Fern", "Rift Vine", "Campfire"],
     "related_pages": ["Planting", "Areas", "Action points", "Placing objects"],
     "confidence": "observed",
     "evidence": [
@@ -8787,11 +8787,11 @@
         "after": 7,
         "columns": ["Where they can go", "Creatures"],
         "rows": [
-          ["Anywhere, including deep water", [{"entity": "being-1"}, {"entity": "being-25"}, {"entity": "being-2"}, {"entity": "being-38"}, {"entity": "being-39"}, {"entity": "being-37"}, {"entity": "being-40"}, {"entity": "being-22"}]],
-          ["Land and water down to medium water", [{"entity": "being-21"}, {"entity": "being-31"}, {"entity": "being-32"}, {"entity": "being-14"}, {"entity": "being-15"}, {"entity": "being-16"}, {"entity": "being-3"}, {"entity": "being-18"}, {"entity": "being-28"}]],
-          ["Land and shallow water", [{"entity": "being-0"}, {"entity": "being-7"}, {"entity": "being-30"}, {"entity": "being-10"}, {"entity": "being-23"}, {"entity": "being-11"}, {"entity": "being-29"}, {"entity": "being-27"}, {"entity": "being-13"}]],
-          ["Open shallows, medium and deep water", [{"entity": "being-17"}, {"entity": "being-24"}]],
-          ["Medium and deep water", [{"entity": "being-4"}]]
+          ["Anywhere, including deep water", [{"entity": "Dreadfly"}, {"entity": "Deathfly"}, {"entity": "Giant Gnat"}, {"entity": "Mirkfang"}, {"entity": "Giant Mirkfang"}, {"entity": "Mirkfang Matriarch"}, {"entity": "The Terror"}, {"entity": "Scaal"}]],
+          ["Land and water down to medium water", [{"entity": "Toadkin"}, {"entity": "Raving Unwanted"}, {"entity": "Mutated Unwanted"}, {"entity": "Scaalmyr Grunt"}, {"entity": "Scaalmyr Warrior"}, {"entity": "Scaalmyr Geomancer"}, {"entity": "Swamp Troll"}, {"entity": "Cave Troll"}, {"entity": "Nightmare"}]],
+          ["Land and shallow water", [{"entity": "Giant Slug"}, {"entity": "Boulder Crab"}, {"entity": "Titanspine Crab"}, {"entity": "Viper"}, {"entity": "Red Fang"}, {"entity": "Mirk Runner"}, {"entity": "Mirk Mauler"}, {"entity": "Firelouse"}, {"entity": "Sceetler"}]],
+          ["Open shallows, medium and deep water", [{"entity": "Mudfin"}, {"entity": "Razorfin"}]],
+          ["Medium and deep water", [{"entity": "Mire Serpent"}]]
         ]
       }
     ],
@@ -8816,7 +8816,7 @@
       "Soil takes every land seed. Which ones depends on its height, as listed below. Cranberry Seeds and Watercress Seeds need water instead.",
       "Creatures appearing on soil come from the area's land table, which depends on the area, the time of day and the main story; see each area page. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
-    "related_entities": ["item-227", "item-228", "item-230", "item-232", "item-233", "item-234", "item-38"],
+    "related_entities": ["Bramble Seeds", "Elderberry Seeds", "Turnip Seeds", "Willow Seeds", "Cypress Seed Pods", "Trollgnarl Seed Pods", "Campfire"],
     "related_pages": ["Terrain", "Planting", "Grassy ground", "Mud", "Areas"],
     "confidence": "observed",
     "evidence": [
@@ -8848,12 +8848,12 @@
         "after": 3,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-227"}, "The upper half of low ground and both plateaus"],
-          [{"entity": "item-228"}, "The upper half of the waterline and everything above it"],
-          [{"entity": "item-230"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
-          [{"entity": "item-232"}, "The waterline, low ground and the first plateau"],
-          [{"entity": "item-233"}, "The waterline and low ground"],
-          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau"]
+          [{"entity": "Bramble Seeds"}, "The upper half of low ground and both plateaus"],
+          [{"entity": "Elderberry Seeds"}, "The upper half of the waterline and everything above it"],
+          [{"entity": "Turnip Seeds"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
+          [{"entity": "Willow Seeds"}, "The waterline, low ground and the first plateau"],
+          [{"entity": "Cypress Seed Pods"}, "The waterline and low ground"],
+          [{"entity": "Trollgnarl Seed Pods"}, "The upper half of the first plateau and the high plateau"]
         ]
       }
     ],
@@ -8878,7 +8878,7 @@
       "Grass does not change which land seeds take. They follow the soil height underneath, and planting clears the grass. Thick grass or moss growing through shallow water is what Cranberry Seeds need. Crops on Rift Grass shrink away instead of growing, and moss on dry stone still counts as stone, which refuses seeds.",
       "Creatures on grassy ground come from the area's land table; see each area page. In the Rift-Thorn Mire, Rift Grass tiles use the rift table like every other tile there. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
-    "related_entities": ["nature-0", "nature-5", "nature-12", "nature-1", "nature-9", "item-229", "item-227", "item-228", "item-230", "item-232", "item-233", "item-234"],
+    "related_entities": ["Grass", "Moss", "Rift Grass", "Tall Grass", "Fern", "Cranberry Seeds", "Bramble Seeds", "Elderberry Seeds", "Turnip Seeds", "Willow Seeds", "Cypress Seed Pods", "Trollgnarl Seed Pods"],
     "related_pages": ["Terrain", "Soil", "Stone ground", "Shallow water", "Planting", "Rift-Thorn Mire", "Withered Mire"],
     "confidence": "observed",
     "evidence": [
@@ -8896,13 +8896,13 @@
         "after": 3,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-227"}, "The upper half of low ground and both plateaus"],
-          [{"entity": "item-228"}, "The upper half of the waterline and everything above it"],
-          [{"entity": "item-230"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
-          [{"entity": "item-232"}, "The waterline, low ground and the first plateau"],
-          [{"entity": "item-233"}, "The waterline and low ground"],
-          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau"],
-          [{"entity": "item-229"}, "Only where thick grass or moss grows through shallow water"]
+          [{"entity": "Bramble Seeds"}, "The upper half of low ground and both plateaus"],
+          [{"entity": "Elderberry Seeds"}, "The upper half of the waterline and everything above it"],
+          [{"entity": "Turnip Seeds"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
+          [{"entity": "Willow Seeds"}, "The waterline, low ground and the first plateau"],
+          [{"entity": "Cypress Seed Pods"}, "The waterline and low ground"],
+          [{"entity": "Trollgnarl Seed Pods"}, "The upper half of the first plateau and the high plateau"],
+          [{"entity": "Cranberry Seeds"}, "Only where thick grass or moss grows through shallow water"]
         ]
       }
     ],
@@ -8928,7 +8928,7 @@
       "Elderberry Seeds are the only land seed that takes on dry sand, from the upper half of the waterline up. Under water, Watercress Seeds ignore the bottom and grow on sand at their usual depth.",
       "Dry sand has its own spawn table in every area except the Rift-Thorn Mire, day and night alike. The Boulder Crab is by far the most common creature on it, and bird nests are often built on sand. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
-    "related_entities": ["being-7", "being-30", "being-2", "being-1", "being-31", "item-228", "item-231"],
+    "related_entities": ["Boulder Crab", "Titanspine Crab", "Giant Gnat", "Dreadfly", "Raving Unwanted", "Elderberry Seeds", "Watercress Seeds"],
     "related_pages": ["Terrain", "Areas", "Broken Fen", "Vast Waters", "Planting"],
     "confidence": "observed",
     "evidence": [
@@ -8961,10 +8961,10 @@
         "after": 4,
         "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
         "rows": [
-          [{"entity": "being-7"}, "89.29%", "15% Titanspine Crab", "Always Titanspine Crab"],
-          [{"entity": "being-2"}, "5.36%", "–", "–"],
-          [{"entity": "being-1"}, "3.57%", "15% Deathfly", "Always Deathfly"],
-          [{"entity": "being-31"}, "1.79%", "–", "–"]
+          [{"entity": "Boulder Crab"}, "89.29%", "15% Titanspine Crab", "Always Titanspine Crab"],
+          [{"entity": "Giant Gnat"}, "5.36%", "–", "–"],
+          [{"entity": "Dreadfly"}, "3.57%", "15% Deathfly", "Always Deathfly"],
+          [{"entity": "Raving Unwanted"}, "1.79%", "–", "–"]
         ],
         "caption": "The sand table. Fort Solid Shorehold never uses tougher forms."
       }
@@ -8986,7 +8986,7 @@
       "Mud takes every land seed at the right height, just like soil. Grass on mud never grows thick, so muddy shallows are no good for Cranberry Seeds.",
       "Creatures on mud come from the area's land table; see each area page. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
-    "related_entities": ["item-142", "item-227", "item-228", "item-230", "item-232", "item-233", "item-234", "item-229"],
+    "related_entities": ["Calmia Root", "Bramble Seeds", "Elderberry Seeds", "Turnip Seeds", "Willow Seeds", "Cypress Seed Pods", "Trollgnarl Seed Pods", "Cranberry Seeds"],
     "related_pages": ["Terrain", "Soil", "Planting", "Areas", "Savage Mirk", "Drowned Fen"],
     "confidence": "observed",
     "evidence": [
@@ -9018,12 +9018,12 @@
         "after": 3,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-227"}, "The upper half of low ground and both plateaus"],
-          [{"entity": "item-228"}, "The upper half of the waterline and everything above it"],
-          [{"entity": "item-230"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
-          [{"entity": "item-232"}, "The waterline, low ground and the first plateau"],
-          [{"entity": "item-233"}, "The waterline and low ground"],
-          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau"]
+          [{"entity": "Bramble Seeds"}, "The upper half of low ground and both plateaus"],
+          [{"entity": "Elderberry Seeds"}, "The upper half of the waterline and everything above it"],
+          [{"entity": "Turnip Seeds"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
+          [{"entity": "Willow Seeds"}, "The waterline, low ground and the first plateau"],
+          [{"entity": "Cypress Seed Pods"}, "The waterline and low ground"],
+          [{"entity": "Trollgnarl Seed Pods"}, "The upper half of the first plateau and the high plateau"]
         ]
       }
     ]
@@ -9044,7 +9044,7 @@
       "Dry stone refuses every land seed, with or without moss, and so does paving. In the water, mossy stone in the shallows suits Cranberry Seeds, and Watercress Seeds grow on any bottom at their usual depth.",
       "Creatures on stone come from the area's land table; see each area page. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
-    "related_entities": ["nature-5", "item-229", "item-231"],
+    "related_entities": ["Moss", "Cranberry Seeds", "Watercress Seeds"],
     "related_pages": ["Terrain", "Planting", "Sunken Ancient Ruins", "Withered Mire", "Interior floors"],
     "confidence": "observed",
     "evidence": [
@@ -9092,7 +9092,7 @@
       "No seed takes on goo.",
       "Every creature in the Rift-Thorn Mire, on goo or anywhere else, comes from the rift table; see Rift-Thorn Mire. Any creature can wade into goo."
     ],
-    "related_entities": ["being-14", "being-13", "being-15", "being-32"],
+    "related_entities": ["Scaalmyr Grunt", "Sceetler", "Scaalmyr Warrior", "Mutated Unwanted"],
     "related_pages": ["Terrain", "Rift-Thorn Mire", "Interior floors"],
     "confidence": "observed",
     "evidence": [
@@ -9119,7 +9119,7 @@
       "The dock costs 0.8 AP a step and never adds a water penalty, even though water lies beneath. You cannot build or plant on it, because the game treats it as water.",
       "The dock counts as dry footing, so any creature can walk onto it, including the walkers that cannot enter deep water. Creatures that appear on the dock come from the water table, because there is water under the planks."
     ],
-    "related_entities": ["being-17", "being-2", "being-1"],
+    "related_entities": ["Mudfin", "Giant Gnat", "Dreadfly"],
     "related_pages": ["Terrain", "Fort Solid Shorehold", "Deep water"],
     "confidence": "observed",
     "evidence": [
@@ -9135,9 +9135,9 @@
         "after": 3,
         "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
         "rows": [
-          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
-          [{"entity": "being-2"}, "31.91%", "–", "–"],
-          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+          [{"entity": "Mudfin"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "Giant Gnat"}, "31.91%", "–", "–"],
+          [{"entity": "Dreadfly"}, "4.26%", "15% Deathfly", "Always Deathfly"]
         ],
         "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
       }
@@ -9159,7 +9159,7 @@
       "No seed takes on a slope. Trollgnarl Seed Pods do well on the plateau tops.",
       "Creatures appearing on a slope come from the area's land table. Creatures can climb slopes but never choose one as a place to wander to, so they mostly stay on level ground. Bird nests are often built on slopes. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
-    "related_entities": ["skill-0-3", "item-234"],
+    "related_entities": ["Firm Grip", "Trollgnarl Seed Pods"],
     "related_pages": ["Terrain", "Withered Mire", "Planting"],
     "confidence": "observed",
     "evidence": [
@@ -9191,7 +9191,7 @@
       "Shallow water takes four seeds. Cranberry Seeds need thick grass or moss growing through the water. Willow Seeds take the shore shallows, Cypress Seed Pods take both bands, and Watercress Seeds take all but the top edge of the open shallows.",
       "Creatures that appear in shallow water come from the water table. Every land creature can wade into shallow water. Mudfin and Razorfin can swim in the open shallows but not the shore shallows. The Mire Serpent stays in medium and deep water."
     ],
-    "related_entities": ["item-229", "item-232", "item-233", "item-231", "skill-0-1"],
+    "related_entities": ["Cranberry Seeds", "Willow Seeds", "Cypress Seed Pods", "Watercress Seeds", "Amphibian"],
     "related_pages": ["Terrain", "Medium water", "Planting", "Drowned Fen", "Grassy ground"],
     "confidence": "observed",
     "evidence": [
@@ -9212,19 +9212,19 @@
         "after": 4,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-229"}, "Thick grass or moss grows through the water, in practice the shore shallows"],
-          [{"entity": "item-232"}, "The shore shallows only"],
-          [{"entity": "item-233"}, "Both bands"],
-          [{"entity": "item-231"}, "All but the top edge of the open shallows"]
+          [{"entity": "Cranberry Seeds"}, "Thick grass or moss grows through the water, in practice the shore shallows"],
+          [{"entity": "Willow Seeds"}, "The shore shallows only"],
+          [{"entity": "Cypress Seed Pods"}, "Both bands"],
+          [{"entity": "Watercress Seeds"}, "All but the top edge of the open shallows"]
         ]
       },
       {
         "after": 5,
         "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
         "rows": [
-          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
-          [{"entity": "being-2"}, "31.91%", "–", "–"],
-          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+          [{"entity": "Mudfin"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "Giant Gnat"}, "31.91%", "–", "–"],
+          [{"entity": "Dreadfly"}, "4.26%", "15% Deathfly", "Always Deathfly"]
         ],
         "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
       }
@@ -9248,7 +9248,7 @@
       "Watercress Seeds take all medium water. Cypress Seed Pods take its upper half.",
       "Creatures that appear here come from the water table. Whenever you end a move here outside Fort Solid Shorehold, there is a 2% chance a Mire Serpent bursts out of the water beside you. Small walkers such as the Giant Slug, the Viper, the Mirk Runner and the Boulder Crab cannot enter medium water. Larger walkers such as the Swamp Troll, the Toadkin and the Scaalmyr can. Swimmers and the Mire Serpent move freely here."
     ],
-    "related_entities": ["item-231", "item-233", "item-170", "being-4", "nature-8", "skill-0-1"],
+    "related_entities": ["Watercress Seeds", "Cypress Seed Pods", "Raft Base", "Mire Serpent", "Lilypad", "Amphibian"],
     "related_pages": ["Terrain", "Shallow water", "Deep water", "Planting", "Drowned Fen", "Broken Fen"],
     "confidence": "observed",
     "evidence": [
@@ -9269,17 +9269,17 @@
         "after": 4,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-231"}, "Anywhere in medium water"],
-          [{"entity": "item-233"}, "The upper half"]
+          [{"entity": "Watercress Seeds"}, "Anywhere in medium water"],
+          [{"entity": "Cypress Seed Pods"}, "The upper half"]
         ]
       },
       {
         "after": 5,
         "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
         "rows": [
-          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
-          [{"entity": "being-2"}, "31.91%", "–", "–"],
-          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+          [{"entity": "Mudfin"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "Giant Gnat"}, "31.91%", "–", "–"],
+          [{"entity": "Dreadfly"}, "4.26%", "15% Deathfly", "Always Deathfly"]
         ],
         "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
       }
@@ -9305,7 +9305,7 @@
       "Watercress Seeds take the top of deep water, down to about waist depth. Nothing else grows here.",
       "Creatures that appear here come from the water table. Ending a move here outside the fort's area has a 2% chance of a Mire Serpent surging up beside you. Only flyers, swimmers and the Mire Serpent can enter deep water. Every walker stops at its edge, which makes it a refuge from them."
     ],
-    "related_entities": ["item-231", "item-170", "being-4", "being-17", "being-24", "skill-0-1"],
+    "related_entities": ["Watercress Seeds", "Raft Base", "Mire Serpent", "Mudfin", "Razorfin", "Amphibian"],
     "related_pages": ["Terrain", "Medium water", "Vast Waters", "Broken Fen", "Planting", "Stamina"],
     "confidence": "observed",
     "evidence": [
@@ -9329,16 +9329,16 @@
         "after": 5,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-231"}, "Down to about waist depth"]
+          [{"entity": "Watercress Seeds"}, "Down to about waist depth"]
         ]
       },
       {
         "after": 6,
         "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
         "rows": [
-          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
-          [{"entity": "being-2"}, "31.91%", "–", "–"],
-          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+          [{"entity": "Mudfin"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "Giant Gnat"}, "31.91%", "–", "–"],
+          [{"entity": "Dreadfly"}, "4.26%", "15% Deathfly", "Always Deathfly"]
         ],
         "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
       }
@@ -9360,7 +9360,7 @@
       "Cave and ruin floors count as stone, so seeds refuse them. Planting on rift-depth floors has not been tested.",
       "Caves and ruin interiors do not spawn creatures turn by turn. Each time you return after at least a day, a cave may restock with up to four creatures, about one for every two days away, and grows new Vile Bulb mushrooms. Ruin buildings and cellars restock the same way from a different list. The two outer rift chambers spawn every turn, up to 8 or 12 creatures. Homes never spawn creatures."
     ],
-    "related_entities": ["being-11", "being-29", "being-18", "being-27", "being-28", "being-14", "being-13", "being-15", "being-16"],
+    "related_entities": ["Mirk Runner", "Mirk Mauler", "Cave Troll", "Firelouse", "Nightmare", "Scaalmyr Grunt", "Sceetler", "Scaalmyr Warrior", "Scaalmyr Geomancer"],
     "related_pages": ["Terrain", "Stone ground", "Goo", "Sunken Ancient Ruins", "Rift-Thorn Mire"],
     "confidence": "observed",
     "evidence": [
@@ -9376,15 +9376,15 @@
         "after": 4,
         "columns": ["Creature", "Caves", "Ruin buildings and cellars", "Outer rift chambers"],
         "rows": [
-          [{"entity": "being-11"}, "50.00%", "–", "–"],
-          [{"entity": "being-29"}, "16.67%", "20.00%", "–"],
-          [{"entity": "being-18"}, "16.67%", "–", "–"],
-          [{"entity": "being-27"}, "16.67%", "–", "–"],
-          [{"entity": "being-28"}, "–", "80.00%", "–"],
-          [{"entity": "being-14"}, "–", "–", "26.32%"],
-          [{"entity": "being-13"}, "–", "–", "13.16%"],
-          [{"entity": "being-15"}, "–", "–", "39.47%"],
-          [{"entity": "being-16"}, "–", "–", "21.05%"]
+          [{"entity": "Mirk Runner"}, "50.00%", "–", "–"],
+          [{"entity": "Mirk Mauler"}, "16.67%", "20.00%", "–"],
+          [{"entity": "Cave Troll"}, "16.67%", "–", "–"],
+          [{"entity": "Firelouse"}, "16.67%", "–", "–"],
+          [{"entity": "Nightmare"}, "–", "80.00%", "–"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "26.32%"],
+          [{"entity": "Sceetler"}, "–", "–", "13.16%"],
+          [{"entity": "Scaalmyr Warrior"}, "–", "–", "39.47%"],
+          [{"entity": "Scaalmyr Geomancer"}, "–", "–", "21.05%"]
         ],
         "caption": "Chance that a restocked or spawned creature is each kind."
       }
@@ -9424,7 +9424,7 @@
       "A bird nest gives 1 to 7 Feathers (2.5 on average), an Egg or more 40% of the time, and a small trinket 5% of the time. Ground litter gives a Rock, Twigs or both, plus independent chances of extra finds.",
       "Weather, the time of day and the outdoor temperature are shared by the whole world. When you return to an area it catches up on up to ten days. Plants grow, new Calmia Root plants appear on mud (two per day away, except in the Rift-Thorn Mire), nests and rubble refill, and after a day or more felled trees are gradually replaced toward about 120."
     ],
-    "related_entities": ["being-17", "being-7", "being-4", "being-10", "being-23", "being-14", "being-13", "item-247", "item-77", "item-87", "nature-4", "nature-6", "nature-7", "nature-17", "nature-20", "nature-13"],
+    "related_entities": ["Mudfin", "Boulder Crab", "Mire Serpent", "Viper", "Red Fang", "Scaalmyr Grunt", "Sceetler", "Firefly", "Feather", "Egg", "Willow", "Brambles", "Cypress", "Trollgnarl", "Elderwort Shrub", "Rift Vine"],
     "related_pages": ["Fort Solid Shorehold", "Common Bog", "Withered Mire", "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters", "Terrain", "Planting"],
     "confidence": "observed",
     "evidence": [
@@ -9465,36 +9465,36 @@
         "after": 4,
         "columns": ["Creature", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "63.83%", "–"],
-          [{"entity": "being-7"}, "–", "89.29%"],
-          [{"entity": "being-2"}, "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "1.79%"]
+          [{"entity": "Mudfin"}, "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.79%"]
         ]
       },
       {
         "after": 5,
         "columns": ["Creature", "Tougher form", "Chance", "In the Savage Mirk"],
         "rows": [
-          [{"entity": "being-10"}, {"entity": "being-23"}, "33%", "Always"],
-          [{"entity": "being-17"}, {"entity": "being-24"}, "33%", "Always"],
-          [{"entity": "being-1"}, {"entity": "being-25"}, "15%", "Always"],
-          [{"entity": "being-11"}, {"entity": "being-29"}, "15%", "Always"],
-          [{"entity": "being-38"}, {"entity": "being-39"}, "20%", "Always"],
-          [{"entity": "being-7"}, {"entity": "being-30"}, "15%", "Always"],
-          [{"entity": "being-39"}, {"entity": "being-37"}, "4%", "4%"]
+          [{"entity": "Viper"}, {"entity": "Red Fang"}, "33%", "Always"],
+          [{"entity": "Mudfin"}, {"entity": "Razorfin"}, "33%", "Always"],
+          [{"entity": "Dreadfly"}, {"entity": "Deathfly"}, "15%", "Always"],
+          [{"entity": "Mirk Runner"}, {"entity": "Mirk Mauler"}, "15%", "Always"],
+          [{"entity": "Mirkfang"}, {"entity": "Giant Mirkfang"}, "20%", "Always"],
+          [{"entity": "Boulder Crab"}, {"entity": "Titanspine Crab"}, "15%", "Always"],
+          [{"entity": "Giant Mirkfang"}, {"entity": "Mirkfang Matriarch"}, "4%", "4%"]
         ]
       },
       {
         "after": 8,
         "columns": ["Tree", "Fort, Common Bog, Broken Fen, Savage Mirk", "Withered Mire", "Drowned Fen", "Sunken Ancient Ruins", "Rift-Thorn Mire"],
         "rows": [
-          [{"entity": "nature-4"}, "65.18%", "43.67%", "58.01%", "63.53%", "65.18%"],
-          [{"entity": "nature-6"}, "27.93%", "18.72%", "24.86%", "27.23%", "4.19%"],
-          [{"entity": "nature-7"}, "4.90%", "3.28%", "15.25%", "4.78%", "4.90%"],
-          [{"entity": "nature-17"}, "0.99%", "33.33%", "0.88%", "0.97%", "0.99%"],
-          [{"entity": "nature-20"}, "1.00%", "1.00%", "1.00%", "3.50%", "1.00%"],
-          [{"entity": "nature-13"}, "–", "–", "–", "–", "23.74%"]
+          [{"entity": "Willow"}, "65.18%", "43.67%", "58.01%", "63.53%", "65.18%"],
+          [{"entity": "Brambles"}, "27.93%", "18.72%", "24.86%", "27.23%", "4.19%"],
+          [{"entity": "Cypress"}, "4.90%", "3.28%", "15.25%", "4.78%", "4.90%"],
+          [{"entity": "Trollgnarl"}, "0.99%", "33.33%", "0.88%", "0.97%", "0.99%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%", "1.00%", "1.00%", "3.50%", "1.00%"],
+          [{"entity": "Rift Vine"}, "–", "–", "–", "–", "23.74%"]
         ],
         "caption": "The first tree in a Sunken Ancient Ruins area is always an Elderwort Shrub. Vast Waters has no trees."
       },
@@ -9554,7 +9554,7 @@
       "Skeletons here are the least likely of any area to be treasure chests, and none lie close to the fort.",
       "Early in the story you cannot build within about thirty tiles of the fort, and the ground around it counts as private. At night the soldiers walk you back inside if you linger nearby, until later in the story. Seeds cannot take within about six tiles of the fort. At one point in the main story Viend will not let you leave the area."
     ],
-    "related_entities": ["being-6", "being-5", "being-19", "being-0", "being-2", "being-10", "being-1", "being-11", "being-31", "being-39", "being-17", "being-7", "item-38"],
+    "related_entities": ["Captain Eir", "Soldier", "Viend", "Giant Slug", "Giant Gnat", "Viper", "Dreadfly", "Mirk Runner", "Raving Unwanted", "Giant Mirkfang", "Mudfin", "Boulder Crab", "Campfire"],
     "related_pages": ["Areas", "Planting", "Terrain", "Common Bog", "Vast Waters"],
     "confidence": "observed",
     "evidence": [
@@ -9591,13 +9591,13 @@
         "after": 3,
         "columns": ["Creature", "Tougher form", "Day", "Night"],
         "rows": [
-          [{"entity": "being-0"}, "–", "27.78%", "22.61%"],
-          [{"entity": "being-2"}, "–", "24.69%", "20.10%"],
-          [{"entity": "being-1"}, "Never in this area", "18.52%", "15.08%"],
-          [{"entity": "being-10"}, "Never in this area", "24.69%", "20.10%"],
-          [{"entity": "being-31"}, "–", "1.23%", "1.01%"],
-          [{"entity": "being-11"}, "Never in this area", "3.09%", "20.10%"],
-          [{"entity": "being-39"}, "Never in this area", "–", "1.01%"]
+          [{"entity": "Giant Slug"}, "–", "27.78%", "22.61%"],
+          [{"entity": "Giant Gnat"}, "–", "24.69%", "20.10%"],
+          [{"entity": "Dreadfly"}, "Never in this area", "18.52%", "15.08%"],
+          [{"entity": "Viper"}, "Never in this area", "24.69%", "20.10%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.23%", "1.01%"],
+          [{"entity": "Mirk Runner"}, "Never in this area", "3.09%", "20.10%"],
+          [{"entity": "Giant Mirkfang"}, "Never in this area", "–", "1.01%"]
         ],
         "caption": "Land tiles. The table never changes with the story."
       },
@@ -9605,11 +9605,11 @@
         "after": 4,
         "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "Never in this area", "63.83%", "–"],
-          [{"entity": "being-7"}, "Never in this area", "–", "89.29%"],
-          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "Never in this area", "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "–", "1.79%"]
+          [{"entity": "Mudfin"}, "Never in this area", "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "Never in this area", "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "–", "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "Never in this area", "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "–", "1.79%"]
         ],
         "caption": "Water and sand tiles use the same tables day and night, at every story stage."
       },
@@ -9617,11 +9617,11 @@
         "after": 5,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "65.18%"],
-          [{"entity": "nature-6"}, "27.93%"],
-          [{"entity": "nature-7"}, "4.90%"],
-          [{"entity": "nature-20"}, "1.00%"],
-          [{"entity": "nature-17"}, "0.99%"]
+          [{"entity": "Willow"}, "65.18%"],
+          [{"entity": "Brambles"}, "27.93%"],
+          [{"entity": "Cypress"}, "4.90%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%"],
+          [{"entity": "Trollgnarl"}, "0.99%"]
         ],
         "caption": "160 to 240 tree attempts when the area is made."
       },
@@ -9665,7 +9665,7 @@
       "Bogs grow three more wild Turnip patches than other areas. Cranberry patches line the grassy shallows.",
       "One of the bogs next to the fort holds Ranger Bhato's hideout, with a cellar entrance not far away."
     ],
-    "related_entities": ["being-12", "being-0", "being-2", "being-10", "being-1", "being-11", "being-3", "being-38", "being-27", "being-13", "being-14", "being-32", "nature-18", "nature-19"],
+    "related_entities": ["Ranger Bhato", "Giant Slug", "Giant Gnat", "Viper", "Dreadfly", "Mirk Runner", "Swamp Troll", "Mirkfang", "Firelouse", "Sceetler", "Scaalmyr Grunt", "Mutated Unwanted", "Turnip (nature)", "Cranberry"],
     "related_pages": ["Areas", "Fort Solid Shorehold", "Planting", "Terrain"],
     "confidence": "observed",
     "evidence": [
@@ -9700,18 +9700,18 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "being-1"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "being-10"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
-          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "being-11"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
-          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
         ],
         "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
       },
@@ -9719,11 +9719,11 @@
         "after": 3,
         "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
-          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
-          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "–", "1.79%"]
+          [{"entity": "Mudfin"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "–", "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "–", "1.79%"]
         ],
         "caption": "Water and sand tiles use the same tables day and night, at every story stage."
       },
@@ -9731,11 +9731,11 @@
         "after": 4,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "65.18%"],
-          [{"entity": "nature-6"}, "27.93%"],
-          [{"entity": "nature-7"}, "4.90%"],
-          [{"entity": "nature-20"}, "1.00%"],
-          [{"entity": "nature-17"}, "0.99%"]
+          [{"entity": "Willow"}, "65.18%"],
+          [{"entity": "Brambles"}, "27.93%"],
+          [{"entity": "Cypress"}, "4.90%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%"],
+          [{"entity": "Trollgnarl"}, "0.99%"]
         ],
         "caption": "160 to 240 tree attempts when the area is made."
       },
@@ -9777,7 +9777,7 @@
       "Grass stays short and thin. Trollgnarl makes up a third of new trees, and trees here die off faster than in most areas.",
       "Bird nests are twice as plentiful, on the slopes and sand. The stunted grass leaves few tiles for Cranberry Seeds, but the high, dry ground suits turnips, brambles and trollgnarls."
     ],
-    "related_entities": ["nature-17", "item-234", "being-27", "being-31", "being-7", "being-0", "being-2", "being-10", "being-1", "being-11", "being-3", "being-38", "being-13", "being-14"],
+    "related_entities": ["Trollgnarl", "Trollgnarl Seed Pods", "Firelouse", "Raving Unwanted", "Boulder Crab", "Giant Slug", "Giant Gnat", "Viper", "Dreadfly", "Mirk Runner", "Swamp Troll", "Mirkfang", "Sceetler", "Scaalmyr Grunt"],
     "related_pages": ["Areas", "Planting", "Terrain", "Tree health and chopping", "Slopes"],
     "confidence": "observed",
     "evidence": [
@@ -9811,18 +9811,18 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "being-0"}, "–", "16.85%", "7.94%", "16.25%", "7.69%", "14.95%", "7.16%"],
-          [{"entity": "being-2"}, "–", "14.98%", "9.52%", "14.44%", "9.23%", "13.29%", "8.60%"],
-          [{"entity": "being-1"}, "15% Deathfly", "11.24%", "9.52%", "10.83%", "9.23%", "9.97%", "8.60%"],
-          [{"entity": "being-10"}, "33% Red Fang", "14.98%", "12.70%", "14.44%", "12.31%", "13.29%", "11.46%"],
-          [{"entity": "being-31"}, "–", "15.73%", "14.60%", "15.16%", "14.15%", "13.95%", "13.18%"],
-          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "2.66%", "2.29%"],
-          [{"entity": "being-11"}, "15% Mirk Mauler", "7.49%", "12.70%", "7.22%", "12.31%", "6.64%", "11.46%"],
-          [{"entity": "being-3"}, "–", "3.75%", "9.52%", "3.61%", "9.23%", "3.32%", "8.60%"],
-          [{"entity": "being-13"}, "–", "–", "–", "3.61%", "3.08%", "3.32%", "2.87%"],
-          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "5.32%", "4.58%"],
-          [{"entity": "being-27"}, "–", "14.98%", "13.97%", "14.44%", "13.54%", "13.29%", "12.61%"],
-          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "9.52%", "–", "9.23%", "–", "8.60%"]
+          [{"entity": "Giant Slug"}, "–", "16.85%", "7.94%", "16.25%", "7.69%", "14.95%", "7.16%"],
+          [{"entity": "Giant Gnat"}, "–", "14.98%", "9.52%", "14.44%", "9.23%", "13.29%", "8.60%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "11.24%", "9.52%", "10.83%", "9.23%", "9.97%", "8.60%"],
+          [{"entity": "Viper"}, "33% Red Fang", "14.98%", "12.70%", "14.44%", "12.31%", "13.29%", "11.46%"],
+          [{"entity": "Raving Unwanted"}, "–", "15.73%", "14.60%", "15.16%", "14.15%", "13.95%", "13.18%"],
+          [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "2.66%", "2.29%"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "7.49%", "12.70%", "7.22%", "12.31%", "6.64%", "11.46%"],
+          [{"entity": "Swamp Troll"}, "–", "3.75%", "9.52%", "3.61%", "9.23%", "3.32%", "8.60%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "3.61%", "3.08%", "3.32%", "2.87%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "5.32%", "4.58%"],
+          [{"entity": "Firelouse"}, "–", "14.98%", "13.97%", "14.44%", "13.54%", "13.29%", "12.61%"],
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "9.52%", "–", "9.23%", "–", "8.60%"]
         ],
         "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
       },
@@ -9830,11 +9830,11 @@
         "after": 3,
         "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
-          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
-          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "–", "1.79%"]
+          [{"entity": "Mudfin"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "–", "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "–", "1.79%"]
         ],
         "caption": "Water and sand tiles use the same tables day and night, at every story stage."
       },
@@ -9842,11 +9842,11 @@
         "after": 4,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "43.67%"],
-          [{"entity": "nature-17"}, "33.33%"],
-          [{"entity": "nature-6"}, "18.72%"],
-          [{"entity": "nature-7"}, "3.28%"],
-          [{"entity": "nature-20"}, "1.00%"]
+          [{"entity": "Willow"}, "43.67%"],
+          [{"entity": "Trollgnarl"}, "33.33%"],
+          [{"entity": "Brambles"}, "18.72%"],
+          [{"entity": "Cypress"}, "3.28%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%"]
         ],
         "caption": "160 to 240 tree attempts when the area is made."
       },
@@ -9890,7 +9890,7 @@
       "Cranberry patches are abundant, and there are twice the usual Calmia Root plants. The shallows suit Cypress Seed Pods, Willow Seeds, Cranberry Seeds and Watercress Seeds.",
       "Gurb-Gurb's hollow is placed in the first Drowned Fen you enter, decided as you arrive. Smoke gives away its position."
     ],
-    "related_entities": ["being-26", "being-17", "being-24", "being-4", "nature-7", "nature-19", "item-142", "item-233", "item-232", "item-229", "item-231"],
+    "related_entities": ["Gurb-Gurb", "Mudfin", "Razorfin", "Mire Serpent", "Cypress", "Cranberry", "Calmia Root", "Cypress Seed Pods", "Willow Seeds", "Cranberry Seeds", "Watercress Seeds"],
     "related_pages": ["Areas", "Planting", "Terrain", "Shallow water", "Common Bog"],
     "confidence": "observed",
     "evidence": [
@@ -9926,18 +9926,18 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "being-1"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "being-10"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
-          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "being-11"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
-          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
         ],
         "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
       },
@@ -9945,11 +9945,11 @@
         "after": 3,
         "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
-          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
-          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "–", "1.79%"]
+          [{"entity": "Mudfin"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "–", "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "–", "1.79%"]
         ],
         "caption": "Water and sand tiles use the same tables day and night, at every story stage."
       },
@@ -9957,11 +9957,11 @@
         "after": 4,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "58.01%"],
-          [{"entity": "nature-6"}, "24.86%"],
-          [{"entity": "nature-7"}, "15.25%"],
-          [{"entity": "nature-20"}, "1.00%"],
-          [{"entity": "nature-17"}, "0.88%"]
+          [{"entity": "Willow"}, "58.01%"],
+          [{"entity": "Brambles"}, "24.86%"],
+          [{"entity": "Cypress"}, "15.25%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%"],
+          [{"entity": "Trollgnarl"}, "0.88%"]
         ],
         "caption": "160 to 240 tree attempts when the area is made."
       },
@@ -10005,7 +10005,7 @@
       "Broken Fens hold the most loot of any area: more skeletons than usual, and a quarter of them are treasure chests.",
       "Ihar's shipwreck is placed on a shoreline of the first Broken Fen you enter. If it does not fit there, the game tries again in the next Broken Fen you enter."
     ],
-    "related_entities": ["being-33", "being-17", "being-7", "being-4"],
+    "related_entities": ["Ihar", "Mudfin", "Boulder Crab", "Mire Serpent"],
     "related_pages": ["Areas", "Terrain", "Sand", "Deep water", "Vast Waters"],
     "confidence": "observed",
     "evidence": [
@@ -10041,18 +10041,18 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "being-1"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "being-10"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
-          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "being-11"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
-          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
         ],
         "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
       },
@@ -10060,11 +10060,11 @@
         "after": 3,
         "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
-          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
-          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "–", "1.79%"]
+          [{"entity": "Mudfin"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "–", "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "–", "1.79%"]
         ],
         "caption": "Water and sand tiles use the same tables day and night, at every story stage."
       },
@@ -10072,11 +10072,11 @@
         "after": 4,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "65.18%"],
-          [{"entity": "nature-6"}, "27.93%"],
-          [{"entity": "nature-7"}, "4.90%"],
-          [{"entity": "nature-20"}, "1.00%"],
-          [{"entity": "nature-17"}, "0.99%"]
+          [{"entity": "Willow"}, "65.18%"],
+          [{"entity": "Brambles"}, "27.93%"],
+          [{"entity": "Cypress"}, "4.90%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%"],
+          [{"entity": "Trollgnarl"}, "0.99%"]
         ],
         "caption": "48 to 72 tree attempts when the area is made."
       },
@@ -10122,7 +10122,7 @@
       "Skeletons are more numerous than usual, and one in ten is a treasure chest.",
       "The Survivors' camp is built in the first Savage Mirk you enter, with torchlight pointing the way. Wilda, the Survivor group and Grand Mother live there. Building close to the camp is not allowed. Rifts near the camp go dead, and vines, skeletons and chests right beside it are cleared."
     ],
-    "related_entities": ["being-23", "being-24", "being-25", "being-29", "being-39", "being-30", "being-37", "being-40", "being-34", "being-35", "being-36", "item-142"],
+    "related_entities": ["Red Fang", "Razorfin", "Deathfly", "Mirk Mauler", "Giant Mirkfang", "Titanspine Crab", "Mirkfang Matriarch", "The Terror", "Wilda", "Survivor", "Grand Mother", "Calmia Root"],
     "related_pages": ["Areas", "Survivors' camp", "Terrain"],
     "confidence": "observed",
     "evidence": [
@@ -10157,18 +10157,18 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "being-1"}, "Always Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "being-10"}, "Always Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
-          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "being-11"}, "Always Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
-          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "being-38"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "Dreadfly"}, "Always Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "Viper"}, "Always Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "Mirk Runner"}, "Always Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "Mirkfang"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
         ],
         "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
       },
@@ -10176,19 +10176,19 @@
         "after": 3,
         "columns": ["Creature", "Appears as", "Night, early", "Night, from Bring the rune back", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "being-0"}, "–", "8.77%", "8.47%", "7.84%"],
-          [{"entity": "being-2"}, "–", "10.53%", "10.17%", "9.40%"],
-          [{"entity": "being-1"}, "Always Deathfly", "10.53%", "10.17%", "9.40%"],
-          [{"entity": "being-10"}, "Always Red Fang", "14.04%", "13.56%", "12.54%"],
-          [{"entity": "being-31"}, "–", "2.11%", "2.03%", "1.88%"],
-          [{"entity": "being-32"}, "–", "–", "–", "2.51%"],
-          [{"entity": "being-11"}, "Always Mirk Mauler", "14.04%", "13.56%", "12.54%"],
-          [{"entity": "being-3"}, "–", "10.53%", "10.17%", "9.40%"],
-          [{"entity": "being-13"}, "–", "–", "3.39%", "3.13%"],
-          [{"entity": "being-14"}, "–", "–", "–", "5.02%"],
-          [{"entity": "being-27"}, "–", "1.40%", "1.36%", "1.25%"],
-          [{"entity": "being-38"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "10.53%", "10.17%", "9.40%"],
-          [{"entity": "being-40"}, "–", "17.54%", "16.95%", "15.67%"]
+          [{"entity": "Giant Slug"}, "–", "8.77%", "8.47%", "7.84%"],
+          [{"entity": "Giant Gnat"}, "–", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "Dreadfly"}, "Always Deathfly", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "Viper"}, "Always Red Fang", "14.04%", "13.56%", "12.54%"],
+          [{"entity": "Raving Unwanted"}, "–", "2.11%", "2.03%", "1.88%"],
+          [{"entity": "Mutated Unwanted"}, "–", "–", "–", "2.51%"],
+          [{"entity": "Mirk Runner"}, "Always Mirk Mauler", "14.04%", "13.56%", "12.54%"],
+          [{"entity": "Swamp Troll"}, "–", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "Sceetler"}, "–", "–", "3.39%", "3.13%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "5.02%"],
+          [{"entity": "Firelouse"}, "–", "1.40%", "1.36%", "1.25%"],
+          [{"entity": "Mirkfang"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "The Terror"}, "–", "17.54%", "16.95%", "15.67%"]
         ],
         "caption": "Land tiles at night in the Savage Mirk that holds the Survivors' camp, while Wilda's request to kill The Terror is open and The Terror is not already in the area."
       },
@@ -10196,11 +10196,11 @@
         "after": 4,
         "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "Always Razorfin", "63.83%", "–"],
-          [{"entity": "being-7"}, "Always Titanspine Crab", "–", "89.29%"],
-          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "Always Deathfly", "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "–", "1.79%"]
+          [{"entity": "Mudfin"}, "Always Razorfin", "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "Always Titanspine Crab", "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "–", "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "Always Deathfly", "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "–", "1.79%"]
         ],
         "caption": "Water and sand tiles use the same tables day and night, at every story stage."
       },
@@ -10208,11 +10208,11 @@
         "after": 5,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "65.18%"],
-          [{"entity": "nature-6"}, "27.93%"],
-          [{"entity": "nature-7"}, "4.90%"],
-          [{"entity": "nature-20"}, "1.00%"],
-          [{"entity": "nature-17"}, "0.99%"]
+          [{"entity": "Willow"}, "65.18%"],
+          [{"entity": "Brambles"}, "27.93%"],
+          [{"entity": "Cypress"}, "4.90%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%"],
+          [{"entity": "Trollgnarl"}, "0.99%"]
         ],
         "caption": "160 to 240 tree attempts when the area is made."
       },
@@ -10254,7 +10254,7 @@
       "Only about half as many trees as usual. The first tree placed is always an Elderwort Shrub, so each of these areas has at least one.",
       "Treasure chests are common, but more than half of the rubble piles have been picked clean."
     ],
-    "related_entities": ["being-21", "being-1", "being-2", "being-10", "being-11", "being-38", "being-0", "nature-20"],
+    "related_entities": ["Toadkin", "Dreadfly", "Giant Gnat", "Viper", "Mirk Runner", "Mirkfang", "Giant Slug", "Elderwort Shrub"],
     "related_pages": ["Areas", "Terrain", "Stone ground", "Interior floors"],
     "confidence": "observed",
     "evidence": [
@@ -10289,13 +10289,13 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day", "Night", "Notes"],
         "rows": [
-          [{"entity": "being-0"}, "–", "3.68%", "2.94%", "–"],
-          [{"entity": "being-2"}, "–", "14.71%", "11.76%", "–"],
-          [{"entity": "being-1"}, "15% Deathfly", "22.06%", "17.65%", "–"],
-          [{"entity": "being-10"}, "33% Red Fang", "14.71%", "11.76%", "–"],
-          [{"entity": "being-11"}, "15% Mirk Mauler", "11.76%", "23.53%", "–"],
-          [{"entity": "being-21"}, "–", "33.09%", "26.47%", "75% come as a pair"],
-          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "5.88%", "–"]
+          [{"entity": "Giant Slug"}, "–", "3.68%", "2.94%", "–"],
+          [{"entity": "Giant Gnat"}, "–", "14.71%", "11.76%", "–"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "22.06%", "17.65%", "–"],
+          [{"entity": "Viper"}, "33% Red Fang", "14.71%", "11.76%", "–"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "11.76%", "23.53%", "–"],
+          [{"entity": "Toadkin"}, "–", "33.09%", "26.47%", "75% come as a pair"],
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "5.88%", "–"]
         ],
         "caption": "Land tiles. The table never changes with the story."
       },
@@ -10303,11 +10303,11 @@
         "after": 3,
         "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
         "rows": [
-          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
-          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
-          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
-          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
-          [{"entity": "being-31"}, "–", "–", "1.79%"]
+          [{"entity": "Mudfin"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "Boulder Crab"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "Giant Gnat"}, "–", "31.91%", "5.36%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "Raving Unwanted"}, "–", "–", "1.79%"]
         ],
         "caption": "Water and sand tiles use the same tables day and night, at every story stage."
       },
@@ -10315,11 +10315,11 @@
         "after": 4,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "63.53%"],
-          [{"entity": "nature-6"}, "27.23%"],
-          [{"entity": "nature-7"}, "4.78%"],
-          [{"entity": "nature-20"}, "3.50%"],
-          [{"entity": "nature-17"}, "0.97%"]
+          [{"entity": "Willow"}, "63.53%"],
+          [{"entity": "Brambles"}, "27.23%"],
+          [{"entity": "Cypress"}, "4.78%"],
+          [{"entity": "Elderwort Shrub"}, "3.50%"],
+          [{"entity": "Trollgnarl"}, "0.97%"]
         ],
         "caption": "80 to 112 tree attempts when the area is made."
       },
@@ -10361,7 +10361,7 @@
       "While the rift is active, no lilypads, watercress, bird nests, Calmia Root plants, wild turnips or cranberries are placed, and Calmia Root does not come back on later visits. Crops on Rift Grass wither and goo cannot be planted, so this is a poor place for a garden.",
       "After \"Scaal defeated\", 95% of rift creature spawns are cancelled, leaving about a 46% chance of any spawn each turn. Rift Grass and Rift Vine stop growing, and crops still cannot fully ripen."
     ],
-    "related_entities": ["being-22", "being-14", "being-13", "being-15", "being-32", "being-4", "nature-12", "nature-13"],
+    "related_entities": ["Scaal", "Scaalmyr Grunt", "Sceetler", "Scaalmyr Warrior", "Mutated Unwanted", "Mire Serpent", "Rift Grass", "Rift Vine"],
     "related_pages": ["Areas", "Fort Solid Shorehold", "Goo", "Grassy ground", "Planting", "Interior floors", "Tree health and chopping"],
     "confidence": "observed",
     "evidence": [
@@ -10398,10 +10398,10 @@
         "after": 2,
         "columns": ["Creature", "Share, day and night", "Notes"],
         "rows": [
-          [{"entity": "being-14"}, "52.63%", "52.5% bring a Sceetler"],
-          [{"entity": "being-13"}, "26.32%", "–"],
-          [{"entity": "being-15"}, "17.54%", "–"],
-          [{"entity": "being-32"}, "3.51%", "–"]
+          [{"entity": "Scaalmyr Grunt"}, "52.63%", "52.5% bring a Sceetler"],
+          [{"entity": "Sceetler"}, "26.32%", "–"],
+          [{"entity": "Scaalmyr Warrior"}, "17.54%", "–"],
+          [{"entity": "Mutated Unwanted"}, "3.51%", "–"]
         ],
         "caption": "Every tile, land, water or sand. Rift creatures have no tougher forms."
       },
@@ -10409,12 +10409,12 @@
         "after": 3,
         "columns": ["Tree", "Share of new trees"],
         "rows": [
-          [{"entity": "nature-4"}, "65.18%"],
-          [{"entity": "nature-13"}, "23.74%"],
-          [{"entity": "nature-7"}, "4.90%"],
-          [{"entity": "nature-6"}, "4.19%"],
-          [{"entity": "nature-20"}, "1.00%"],
-          [{"entity": "nature-17"}, "0.99%"]
+          [{"entity": "Willow"}, "65.18%"],
+          [{"entity": "Rift Vine"}, "23.74%"],
+          [{"entity": "Cypress"}, "4.90%"],
+          [{"entity": "Brambles"}, "4.19%"],
+          [{"entity": "Elderwort Shrub"}, "1.00%"],
+          [{"entity": "Trollgnarl"}, "0.99%"]
         ],
         "caption": "64 to 96 tree attempts when the area is made; half that in the rift's own area."
       },
@@ -10454,7 +10454,7 @@
       "Swimming costs 0.15 stamina a turn, more when overburdened, so a full bar lasts about six or seven turns. When stamina runs out you start drowning, and four turns later you die. You cannot attack while swimming. A raft never swims or drowns and moves at 1.8 AP a step, so it is the safe way across.",
       "Every tile is water, so every creature comes from the water table. Normal tougher-form odds apply. Ending a move here, swimming or rafting, has a 2% chance of a Mire Serpent."
     ],
-    "related_entities": ["being-17", "being-24", "being-2", "being-1", "being-25", "being-4", "item-170"],
+    "related_entities": ["Mudfin", "Razorfin", "Giant Gnat", "Dreadfly", "Deathfly", "Mire Serpent", "Raft Base"],
     "related_pages": ["Areas", "Deep water", "Broken Fen", "Stamina"],
     "confidence": "observed",
     "evidence": [
@@ -10481,9 +10481,9 @@
         "after": 4,
         "columns": ["Creature", "Share", "Tougher form"],
         "rows": [
-          [{"entity": "being-17"}, "63.83%", "33% Razorfin"],
-          [{"entity": "being-2"}, "31.91%", "–"],
-          [{"entity": "being-1"}, "4.26%", "15% Deathfly"]
+          [{"entity": "Mudfin"}, "63.83%", "33% Razorfin"],
+          [{"entity": "Giant Gnat"}, "31.91%", "–"],
+          [{"entity": "Dreadfly"}, "4.26%", "15% Deathfly"]
         ]
       }
     ],
@@ -10851,21 +10851,21 @@
   "construction_recipes": [
     {
       "id": "construction-raft-completion",
-      "owner_item": "item-171",
+      "owner_item": "Finish Raft",
       "station_id": "raft-base",
       "station_title": "Raft Base",
-      "station_item": "item-170",
+      "station_item": "Raft Base",
       "inputs": [
         {
-          "item": "item-92",
+          "item": "Twine",
           "quantity": 8
         },
         {
-          "item": "item-35",
+          "item": "Log (Willow)",
           "quantity": 6
         },
         {
-          "item": "item-169",
+          "item": "Heavy Branch (Cypress)",
           "quantity": 1
         }
       ],
@@ -10903,15 +10903,15 @@
         "title": "Friendly NPC faction",
         "summary": "Friendly NPCs skip the player and faction-mates during normal target acquisition. Retaliation can still target an attacker.",
         "members": [
-          "being-5",
-          "being-6",
-          "being-8",
-          "being-9",
-          "being-12",
-          "being-19",
-          "being-20",
-          "being-26",
-          "being-33"
+          "Soldier",
+          "Captain Eir",
+          "Magus Clay",
+          "Dead Unwanted",
+          "Ranger Bhato",
+          "Viend",
+          "Commander Tain",
+          "Gurb-Gurb",
+          "Ihar"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -10924,17 +10924,17 @@
         "title": "Wildlife faction",
         "summary": "This shared wildlife faction crosses appearance groups: flies, gnats, crabs, Mirk rodents, Mudfin, Razorfin and Mire Serpent normally exclude one another as targets.",
         "members": [
-          "being-1",
-          "being-2",
-          "being-4",
-          "being-7",
-          "being-11",
-          "being-17",
-          "being-24",
-          "being-25",
-          "being-27",
-          "being-29",
-          "being-30"
+          "Dreadfly",
+          "Giant Gnat",
+          "Mire Serpent",
+          "Boulder Crab",
+          "Mirk Runner",
+          "Mudfin",
+          "Razorfin",
+          "Deathfly",
+          "Firelouse",
+          "Mirk Mauler",
+          "Titanspine Crab"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -10947,7 +10947,7 @@
         "title": "Giant Slug faction",
         "summary": "Giant Slugs form a separate faction, not part of the mixed wildlife faction.",
         "members": [
-          "being-0"
+          "Giant Slug"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -10960,12 +10960,12 @@
         "title": "Scaalmyr faction",
         "summary": "Sceetler, Scaal, Scaalmyr fighters and Mutated Unwanted share this targeting faction despite their different names and appearance.",
         "members": [
-          "being-13",
-          "being-14",
-          "being-15",
-          "being-16",
-          "being-22",
-          "being-32"
+          "Sceetler",
+          "Scaalmyr Grunt",
+          "Scaalmyr Warrior",
+          "Scaalmyr Geomancer",
+          "Scaal",
+          "Mutated Unwanted"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -10978,7 +10978,7 @@
         "title": "Toadkin faction",
         "summary": "Toadkin form their own targeting faction.",
         "members": [
-          "being-21"
+          "Toadkin"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -10991,8 +10991,8 @@
         "title": "Viper faction",
         "summary": "Viper and Red Fang share a faction. Mire Serpent instead belongs to the mixed wildlife faction.",
         "members": [
-          "being-10",
-          "being-23"
+          "Viper",
+          "Red Fang"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -11005,9 +11005,9 @@
         "title": "Nightmare faction",
         "summary": "Nightmare, Raving Unwanted and Clay's boss form can select other members of this same faction as targets. None selects itself.",
         "members": [
-          "being-28",
-          "being-31",
-          "being-41"
+          "Nightmare",
+          "Raving Unwanted",
+          "Magus Clay (boss)"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -11020,8 +11020,8 @@
         "title": "Troll faction",
         "summary": "Swamp Troll and Cave Troll share this faction.",
         "members": [
-          "being-3",
-          "being-18"
+          "Swamp Troll",
+          "Cave Troll"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -11034,9 +11034,9 @@
         "title": "Survivor camp faction",
         "summary": "Wilda, Grand Mother and the Survivors share this faction. Like friendly NPCs, they skip the player and each other during normal target acquisition, but can retaliate when attacked.",
         "members": [
-          "being-34",
-          "being-35",
-          "being-36"
+          "Wilda",
+          "Survivor",
+          "Grand Mother"
         ],
         "confidence": "inferred",
         "evidence": [
@@ -11049,10 +11049,10 @@
         "title": "Mirkfang faction",
         "summary": "Mirkfangs, Giant Mirkfangs, Mirkfang Matriarchs and The Terror share a faction and normally avoid targeting one another.",
         "members": [
-          "being-37",
-          "being-38",
-          "being-39",
-          "being-40"
+          "Mirkfang Matriarch",
+          "Mirkfang",
+          "Giant Mirkfang",
+          "The Terror"
         ],
         "confidence": "inferred",
         "evidence": [

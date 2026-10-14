@@ -9,6 +9,7 @@ from pathlib import Path, PurePosixPath
 
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
 from wiki_catalog import MAX_CATALOG_BYTES, parse_catalog, validate_catalog
+from wiki_references import resolve_acquisition_references
 from wiki_acquisition import MAX_ACQUISITION_BYTES
 from wiki_details import MAX_DETAILS_BYTES, MAX_ILLUSTRATIONS_BYTES, parse_details, parse_document, parse_illustrations, validate_capacity_profiles, validate_coin_profiles
 
@@ -59,6 +60,7 @@ ALLOWED_FILES = {
     "tools/smoke_branding.py": 8 * 1024,
     "tools/smoke_urls.py": 24 * 1024,
     "tools/wiki_acquisition.py": 16 * 1024,
+    "tools/wiki_references.py": 8 * 1024,
     "tools/build_wiki.py": 32 * 1024,
     "tools/sync_wiki.py": 32 * 1024,
     "tools/smoke_deploy.py": 96 * 1024,
@@ -77,6 +79,7 @@ ALLOWED_FILES = {
     "tests/test_editorial.py": 24 * 1024,
     "tests/test_navigation.py": 8 * 1024,
     "tests/test_terrain.py": 8 * 1024,
+    "tests/test_references.py": 8 * 1024,
     "tests/test_runtime.php": 32 * 1024,
     "deploy/Dockerfile": 8 * 1024,
     "deploy/apache-short-urls.conf": 4 * 1024,
@@ -317,7 +320,8 @@ def audit_index(root):
                 raise DataError("valid staged game.json and catalog.json are required")
             data = parse_data(staged_metadata["content/facts/game.json"])
             catalog = parse_catalog(staged_metadata["content/facts/catalog.json"], data)
-            acquisition = parse_document(staged_metadata[acquisition_path], MAX_ACQUISITION_BYTES)
+            acquisition = resolve_acquisition_references(
+                parse_document(staged_metadata[acquisition_path], MAX_ACQUISITION_BYTES), catalog)
             validate_catalog(dict(catalog, acquisition=acquisition), data)
         except DataError as error:
             problems.append(f"{acquisition_path}: invalid staged references: {error}")

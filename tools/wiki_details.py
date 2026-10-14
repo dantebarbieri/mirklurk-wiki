@@ -9,6 +9,7 @@ from wiki_data import (
     _object, _records, _text, _validate_illustrations, load_data,
 )
 from wiki_catalog import DEDICATED_CATEGORIES, load_catalog, validate_catalog
+from wiki_references import resolve_acquisition_references
 from wiki_acquisition import MAX_ACQUISITION_BYTES
 
 
@@ -216,8 +217,8 @@ def load_publication_inputs(root):
     folder = Path(root) / "content" / "facts"
     data = load_data(folder / "game.json")
     catalog = load_catalog(folder / "catalog.json", data)
-    catalog = dict(catalog, acquisition=parse_document(
-        read_metadata(folder / "acquisition.json", MAX_ACQUISITION_BYTES), MAX_ACQUISITION_BYTES))
+    catalog = dict(catalog, acquisition=resolve_acquisition_references(parse_document(
+        read_metadata(folder / "acquisition.json", MAX_ACQUISITION_BYTES), MAX_ACQUISITION_BYTES), catalog))
     validate_catalog(catalog, data)
     images = parse_illustrations(read_metadata(folder / "illustrations.json", MAX_ILLUSTRATIONS_BYTES), data, catalog)
     data = dict(data, illustrations=[*data.get("illustrations", []), *images])

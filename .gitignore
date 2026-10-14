@@ -73,6 +73,7 @@
 !/tools/smoke_branding.py
 !/tools/smoke_urls.py
 !/tools/wiki_acquisition.py
+!/tools/wiki_references.py
 !/tools/build_wiki.py
 !/tools/sync_wiki.py
 !/tools/smoke_deploy.py
@@ -92,6 +93,7 @@
 !/tests/test_editorial.py
 !/tests/test_navigation.py
 !/tests/test_terrain.py
+!/tests/test_references.py
 !/tests/test_runtime.php
 !/deploy/
 !/deploy/Dockerfile

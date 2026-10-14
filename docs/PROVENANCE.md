@@ -333,6 +333,14 @@ without rewriting historical evidence:
   titles, emitted as redirects; none may collide with a canonical title,
   another alias, or an authored index. Namespace syntax, fragments, markup,
   noncanonical spaces/underscores, and duplicate titles are rejected.
+  Every other authored cross-reference in the catalog and acquisition files
+  (guide `related_entities`, `image_entity` and table cells; ability and
+  location `related_entities`; station, taxonomy, faction, entry-link,
+  state-history, currency, merchant-comparison and construction references;
+  acquisition sources, rows and item notes) names an entity by this canonical
+  title, never its source ID or an alias. Unknown titles and IDs are rejected at
+  load. Only a record's own subject key (`entity`/`item` of the record being
+  described) and extracted loot-pool memberships keep source IDs.
 - `classifications`: `{entity, kind, confidence, evidence, note}`, where
   `kind` is `npc`, `creature`, or `unclassified`. Name/dialogue/database
   evidence supports this navigation grouping, not universal hostility,
@@ -512,7 +520,7 @@ Category titles are generated in namespace 14; arbitrary namespace titles
 remain forbidden in the entity registry. Groupings of creatures remain
 editorial navigation, not biological claims.
 
-`guides` contains bounded original paragraphs, existing related-entity IDs,
+`guides` contains bounded original paragraphs, existing related-entity page titles,
 confidence and evidence for the seven damage owners and the finite mechanics
 owners: Health and armor, Action points, Satiation, Stamina, Focus, Temperature,
 Wellbeing, Foods, Resting, Weather, Armor points and Tree health and chopping. Optional `related_pages`
@@ -531,7 +539,8 @@ Areas one guide per area kind (the game's own word; it never says biome or zone)
 Optional `tables` (at most 12) and `images` (at most 12) follow a section index
 given by `after`. A table has 1 to 10 column headings, 1 to 64 rows and an
 optional caption; each cell is literal text, one `entity`, `page` or `tile`
-reference, or a list of 1 to 12 such references joined with commas. Entity cells reuse the Item and Creature templates or the
+reference, or a list of 1 to 12 such references joined with commas. An entity cell
+names the canonical page title, such as `{"entity": "Titanspine Crab"}`. Entity cells reuse the Item and Creature templates or the
 ordinary icon link, page cells must be reviewed guides, and tile cells must be
 Terrain-indexed pages, rendered with `{{Tile}}`. Placed images name an approved
 illustration whose `guide` target is that page (or that has no guide target);
