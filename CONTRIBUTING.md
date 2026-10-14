@@ -9,16 +9,16 @@ Allowed contributions include short entity names, numeric or boolean mechanics
 facts, precise evidence identifiers, source hashes, and original explanations
 of what those facts do and do not establish.
 
-Never submit game binaries, assets, media, fonts, maps, save data, configuration
+Never commit game binaries, assets, media, fonts, maps, save data, configuration
 files from the game, localization descriptions, dialogue, decompiled code,
 UTMT binaries, dumps, or bulk tool exports. This also applies to issue attachments,
 pull-request text, screenshots, generated XML, and Git history. Do not put secrets,
 personal paths, database dumps, uploads, backups, or runtime configuration here.
 
 Keep source files and raw analysis in a private location outside the checkout.
-Separately approved server-only illustrations use [the operator workflow](docs/IMAGES.md);
-this never permits image bytes in Git or enables public web uploads. Artwork
-publication remains pending until redistribution rights are confirmed.
+The developer, who created the game's artwork, has approved game artwork and
+screenshots on the wiki; no per-image permission request is needed. Upload
+images to the wiki (see [IMAGES.md](docs/IMAGES.md)), never to Git.
 Do not copy a paragraph to demonstrate a numeric value: reference its section and
 key, then summarize the narrow fact in your own words. If a contribution needs
 more than this policy permits, seek permission rather than broadening the policy

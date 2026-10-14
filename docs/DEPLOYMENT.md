@@ -364,9 +364,9 @@ rejection policy (ImageMagick JPEGs bypass it). Native content checking remains
 authoritative; dimension checks are additional, not a substitute.
 
 Prefer PNG for pixel art and annotated comparison strips. Contributors should
-identify source, creator/rightsholder, permission or license basis, and game
-version in the File description. This is an editorial requirement, not automated
-rights verification. Use descriptive filenames and `[[File:Name.png|thumb|Caption]]`
+identify source, creator and game version in the File description; the
+developer approves game artwork and screenshots, so no permission request is
+needed. Use descriptive filenames and `[[File:Name.png|thumb|Caption]]`
 to place an image in an article; uploaded bytes stay outside Git. See
 [contributor attribution and curated imports](IMAGES.md#contributor-uploads).
 

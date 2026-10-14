@@ -9,9 +9,9 @@ final class MirklurkUploads {
     public const MAX_DIMENSION = 8192;
     public const NOTICE = "Upload PNG, JPEG or WebP images relevant to the wiki: at most 10 MiB, "
         . "12 megapixels and 8,192 pixels on either side. Prefer PNG for pixel art and diagrams. "
-        . "In the summary, describe the image and identify its source, creator, permission or "
-        . "license basis, and game version where relevant. Owning the game does not grant a "
-        . "license to its artwork. Do not upload save files, archives or private information. "
+        . "In the summary, describe the image and identify its source, creator and game "
+        . "version where relevant. The developer welcomes game artwork and screenshots on this "
+        . "wiki, so no separate permission is needed for them. Do not upload save files, archives or private information. "
         . "Use a descriptive filename; you can replace your own files, but an administrator "
         . "must replace someone else's. Ordinary uploaders are limited to 20 upload attempts per hour.";
 

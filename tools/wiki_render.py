@@ -1212,6 +1212,9 @@ def build_pages(root, data, catalog=None, details=None):
         raise DataError("location illustration: requires a reviewed NPC location owner")
     if any(image.get("role") == "ability" and image["entity"] not in abilities for image in images):
         raise DataError("ability illustration: requires a reviewed being ability owner")
+    if any(image.get("role") == "mechanics" and owners.get(image["entity"] + "-mechanics") != locations[image["entity"]]
+           for image in images):
+        raise DataError("mechanics illustration: requires the skill's own Effects section")
     stations = {method: row for row in catalog.get("stations", []) for method in row["methods"]}
     if "Loot mechanics" in owners.values():
         pages["Loot mechanics"] = "[[Loot tables]] | [[Main Page]]\n\nHow quantities, treasure budgets, and corpse contents are selected.\n"
@@ -1556,6 +1559,9 @@ def build_pages(root, data, catalog=None, details=None):
                 pages[title] += "\n" + literal(entry["conditions"]) + "\n"
             if entry["kind"] == "algorithm":
                 pages[title] += "\n".join("# " + literal(step) for step in entry["details"]["steps"]) + "\n"
+                for image in images:
+                    if image.get("role") == "mechanics" and entry["id"] == image["entity"] + "-mechanics":
+                        pages[title] += illustration_markup(image, page_image=False)
                 targets = sorted({facts[identity] for identity in entry["details"]["fact_ids"] if facts[identity] != title})
                 if targets:
                     pages[title] += "\nRelated details: " + " | ".join(f"[[{target}]]" for target in targets) + "\n"

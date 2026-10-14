@@ -192,5 +192,38 @@ class HealingAbilityTests(unittest.TestCase):
         self.assertIn(image_for("being-19", data["illustrations"])["file_title"], page)
 
 
+class JumperMechanicsTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
+        cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
+
+    def test_jump_costs_and_strips_follow_effects(self):
+        page = self.pages["Jumper"]
+        section = page.split("== <nowiki>Effects</nowiki> ==", 1)[1]
+        self.assertIn("4.0, 3.6, 3.2, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.8 and 1.6 AP", section)
+        self.assertIn("8.0, 7.2, 6.4, 5.4, 5.0, 4.6, 4.2, 4.0, 3.8, 3.6 and 3.4 AP", section)
+        adjacent = section.index("[[File:Jumper-adjacent-jump-costs.png|1200px|")
+        self.assertLess(section.index("# <nowiki>Jump two tiles"), adjacent)
+        self.assertLess(adjacent, section.index("[[File:Jumper-two-tile-jump-costs.png|930px|"))
+        self.assertEqual(section.count("|class=notpageimage|"), 2)
+        self.assertEqual(page.count("[[File:Skill-0-2.png|"), 1)
+        self.assertEqual(image_for("skill-0-2", self.data["illustrations"])["file_title"], "File:Skill-0-2.png")
+
+    def test_mechanics_role_requires_a_skill_with_effects(self):
+        image = next(row for row in self.data["illustrations"] if row.get("role") == "mechanics")
+        base = {key: value for key, value in self.data.items() if key != "illustrations"}
+        moved = dict(image, entity="being-19", id="moved", file_title="File:Moved.png")
+        with self.assertRaisesRegex(DataError, "mechanics illustrations belong to a skill"):
+            parse_illustrations(json.dumps({"schema_version": 1, "illustrations": [moved]}).encode(), base, self.catalog)
+        data = copy.deepcopy(self.data)
+        data["illustrations"].append(dict(image, entity="skill-0-3", id="climber", file_title="File:Climber.png"))
+        data["entries"] = [row for row in data["entries"] if row["id"] != "skill-0-3-mechanics"]
+        catalog = copy.deepcopy(self.catalog)
+        catalog["entry_display"] = [row for row in catalog["entry_display"] if row["entry"] != "skill-0-3-mechanics"]
+        with self.assertRaisesRegex(DataError, "skill's own Effects section"):
+            build_pages(ROOT, data, catalog, self.details)
+
+
 if __name__ == "__main__":
     unittest.main()
