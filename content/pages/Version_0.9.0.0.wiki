@@ -11,7 +11,7 @@ The same content was tested a day earlier as '''version 0.8.9.9''' on the Steam 
 
 == New content ==
 === Story ===
-* The main quest continues after Scaal: Eir points you toward [[Quests and journal#entry-journal-30-hidden-realm|Clay's hidden realm]], where you face [[Magus Clay (boss)]]. Two new journal entries follow.
+* The main quest continues after Scaal: Eir [[Quests and journal#entry-journal-30-hidden-realm|hints at a magical key]], and after the [[Quests and journal#entry-camp-1-trust|Survivors' camp quest]] Grand Mother sells the shard that opens [[Quests and journal#entry-journal-30-magus-realm|Clay's hidden realm]], where you face [[Magus Clay (boss)]]. Two new journal entries follow.
 
 === Survivors' camp ===
 * The [[Survivors' camp]] appears in the first Savage Mirk area you enter. In older saves it appears the next time you enter one.

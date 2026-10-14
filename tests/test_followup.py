@@ -85,11 +85,11 @@ class FollowupTests(unittest.TestCase):
     def test_reconciled_pages_preserve_reviewed_human_text_and_add_mobile_wrappers(self):
         # Live Items r2996 (minus its empty Misc section) and Wooden Recorder r2995.
         # Items is re-pinned for 0.8.9.9: its only changes are additive rows for new items and sellers.
-        # Wooden Recorder is re-pinned for its item summary box and {{Coins}} base value.
+        # Wooden Recorder is re-pinned for its item summary box and linked {{Coins}} value.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
             "Items": "45c699b3360c3350f5328581fcc0a7c52b9c6f53481e7eac503798c17f826eb4",
-            "Wooden Recorder": "58617ff46311e954ed6f56bf622b994d15133161a8be31eaade6c8b43f26ca10",
+            "Wooden Recorder": "a1f29fcb8f2779e5d33ac35263adcde4e3aff23979322b71d4199485debf065a",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):

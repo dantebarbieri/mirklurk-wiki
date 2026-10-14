@@ -296,6 +296,16 @@ whose "Public test build" section lists the fixes above; the builder emits
 name 0.9.0.0. The patch notes' other claims were checked against the
 0.8.1.5 and 0.9.0.0 decompiles before being added to the changelog.
 
+Two reader corrections were made at the same time. On **Quests and journal**,
+the Survivors' camp steps now sit between journal entries 30 and 31, because
+Grand Mother sells Magus' Shard only after Wilda's quest opens her hut. Eir's
+"Clay?" topic is marked as dialogue, not a journal entry. Item summaries now
+label the value **Value** and link to **Currency and trading**. Merchants
+charge that value and pay it for an item in full condition (`UI_Draw_64`
+purchase total; `item_get_price` for selling). Thirteen crafted items whose
+initializer value is replaced by the `databank_Alarm_1` recipe-value pass now
+show the final value in `item-N-value` profiles (`value` property).
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

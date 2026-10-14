@@ -244,7 +244,7 @@ class DisplayTests(unittest.TestCase):
         self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2098)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
-        self.assertEqual(sum(text.count("Standard unit price: ") for text in readers.values()), 58)
+        self.assertEqual(sum(text.count("|Value]]: ") for text in readers.values()), 58)
         self.assertEqual(dependencies(self.pages["Template:Ware row"]), {"Template:Item"})
         self.assertEqual(dependencies(self.pages["Template:Item"]), {"Module:Display"})
         self.assertIn("Template:Recipe row", dependencies(self.pages["Simple Burn Remedy"]))

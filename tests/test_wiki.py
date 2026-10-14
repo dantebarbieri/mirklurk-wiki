@@ -280,11 +280,11 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 10, "entities": 360, "facts": 107, "entries": 336},
+            {"sources": 10, "entities": 360, "facts": 107, "entries": 337},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
-            {"quest": 36, "merchant": 88, "recipe": 97, "loot": 82, "algorithm": 33},
+            {"quest": 37, "merchant": 88, "recipe": 97, "loot": 82, "algorithm": 33},
         )
         # 0.8.9.9 deliberately amended these original entries; the rest of the handoff stays pinned.
         amended = {"skill-1-0-mechanics", "loot-amount-distribution", "crafting-station-modifiers",
@@ -300,9 +300,9 @@ class DataTests(unittest.TestCase):
         raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "d6aa4b58cbb7179362901457682a3e5270931d4fa9fb1846beaa2e26520686cc")
         update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
-        self.assertEqual(len(update), 63)
+        self.assertEqual(len(update), 64)
         raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "8f2fc9bf05236fcdd809dc3f2fe48a0fcae9d2d302c3a0ae92902ac5e44ca469")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "84542b6e41e7e0fc70cfee48389c36cec78394177d7ab4d40d56c9a2c5d1d718")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
         self.assertEqual(len(pages), 405)

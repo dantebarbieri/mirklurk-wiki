@@ -79,7 +79,7 @@ def smoke_browser(api, base, token, data, artifact_dir):
         '<div id="layout-fixture">\n'
         '== Buying ==\n'
         '<p id="old-coins">Previous layout: ' + old + ' <span class="old-text">2 silver</span></p>\n'
-        '<p id="new-coins">Standard unit price: {{Coins|250}}. Purchase price per item; not resale value.</p>\n'
+        '<p id="new-coins">Value: {{Coins|250}} per item.</p>\n'
         '<table class="wikitable"><tr><th>Seller</th><th>Item</th><th>Price</th></tr>\n'
         '{{Ware row|seller=[[Magus Clay]]|item=Iron Hand Axe|price={{:Iron Hand Axe}}}}\n</table>\n'
         '<p>{{Item|Plant Fiber|quantity=4}} and {{Item|Turnip (item)}}</p>\n'

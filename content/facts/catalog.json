@@ -4909,6 +4909,12 @@
       "entry": "journal-30-hidden-realm",
       "entities": [
         "being-6",
+        "being-41"
+      ]
+    },
+    {
+      "entry": "journal-30-magus-realm",
+      "entities": [
         "being-36",
         "item-262",
         "being-41"
@@ -5749,7 +5755,7 @@
     },
     {
       "entry": "journal-30",
-      "summary": "After Scaal's defeat, the protagonist wonders about one day returning home."
+      "summary": "Added when you report Scaal's defeat to Eir: the protagonist wonders whether going home one day is now possible. It was the last journal entry in 0.8.1.5; since 0.9.0.0 the story continues to Clay defeated and Peace at Fort Solid."
     }
   ],
   "stations": [

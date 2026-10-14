@@ -128,6 +128,12 @@
       "description": "Literal database value before recipe postprocessing, durability and trade adjustments; not a guaranteed merchant price."
     },
     {
+      "id": "value",
+      "label": "Value",
+      "unit": "silver coin equivalents",
+      "description": "Item value after the recipe-value pass, where it differs from the initializer: the price merchants charge and pay for one item in full condition."
+    },
+    {
       "id": "initial-weight",
       "label": "Initializer weight",
       "unit": "internal weight units",
@@ -15516,6 +15522,214 @@
         "melee-pattern-max": 8,
         "ranged-pattern-min": 15,
         "ranged-pattern-max": 15
+      }
+    },
+    {
+      "id": "item-38-value",
+      "entity": "item-38",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[38].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.008
+      }
+    },
+    {
+      "id": "item-61-value",
+      "entity": "item-61",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[61].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.008
+      }
+    },
+    {
+      "id": "item-63-value",
+      "entity": "item-63",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[63].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.008
+      }
+    },
+    {
+      "id": "item-96-value",
+      "entity": "item-96",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[96].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.048
+      }
+    },
+    {
+      "id": "item-108-value",
+      "entity": "item-108",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[108].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.048
+      }
+    },
+    {
+      "id": "item-170-value",
+      "entity": "item-170",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[170].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.072
+      }
+    },
+    {
+      "id": "item-171-value",
+      "entity": "item-171",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[171].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.12
+      }
+    },
+    {
+      "id": "item-238-value",
+      "entity": "item-238",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[238].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.048
+      }
+    },
+    {
+      "id": "item-239-value",
+      "entity": "item-239",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[239].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.144
+      }
+    },
+    {
+      "id": "item-240-value",
+      "entity": "item-240",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[240].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.088
+      }
+    },
+    {
+      "id": "item-244-value",
+      "entity": "item-244",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[244].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.096
+      }
+    },
+    {
+      "id": "item-245-value",
+      "entity": "item-245",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[245].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.152
+      }
+    },
+    {
+      "id": "item-246-value",
+      "entity": "item-246",
+      "context": "Value after the game's recipe-value pass, which can replace the initializer value of a crafted item.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[246].components/craftReturn/price;recipe-value-pass"
+        }
+      ],
+      "values": {
+        "value": 0.152
       }
     }
   ],

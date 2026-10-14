@@ -158,7 +158,7 @@ class SelectiveViewTests(unittest.TestCase):
             page = self.pages[locations[item]]
             self.assertEqual(page.count('id="price-' + item + '"'), 1)
             self.assertIn("== How to acquire ==", page)
-            self.assertNotIn("Standard unit price", page.split("== How to acquire ==", 1)[0])
+            self.assertNotIn("|Value]]: ", page.split("== How to acquire ==", 1)[0])
 
     def test_verified_loot_sources_are_selected_by_exact_outcome(self):
         locations = page_locations(self.data, self.catalog)
