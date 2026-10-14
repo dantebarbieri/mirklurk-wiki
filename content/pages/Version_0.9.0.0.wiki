@@ -11,7 +11,7 @@ The same content was tested a day earlier as '''version 0.8.9.9''' on the Steam 
 
 == New content ==
 === Story ===
-* The main quest continues after Scaal: Eir [[Quests and journal#entry-journal-30-hidden-realm|hints at a magical key]], and after the [[Quests and journal#entry-camp-1-trust|Survivors' camp quest]] Grand Mother sells the shard that opens [[Quests and journal#entry-journal-30-magus-realm|Clay's hidden realm]], where you face [[Magus Clay (boss)]]. Two new journal entries follow.
+* The main quest continues after Scaal: Eir [[Quests and journal#quest-Eir's_Clay?_topic_(dialogue)|hints at a magical key]], and after the [[Quests and journal#quest-Survivors'_camp:_earning_Wilda's_trust|Survivors' camp quest]] Grand Mother sells the shard that opens [[Quests and journal#quest-Into_Clay's_realm|Clay's hidden realm]], where you face [[Magus Clay (boss)]]. Two new journal entries follow.
 
 === Survivors' camp ===
 * The [[Survivors' camp]] appears in the first Savage Mirk area you enter. In older saves it appears the next time you enter one.
@@ -289,7 +289,7 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 </div>
 
 === Story ===
-* [[Quests and journal#entry-journal-30|A possible homecoming]] is no longer the last journal entry: [[Quests and journal#entry-journal-31|Clay defeated]] and [[Quests and journal#entry-journal-32|Peace at Fort Solid]] follow.
+* [[Quests and journal#quest-A_possible_homecoming|A possible homecoming]] is no longer the last journal entry: [[Quests and journal#quest-Clay_defeated|Clay defeated]] and [[Quests and journal#quest-Peace_at_Fort_Solid|Peace at Fort Solid]] follow.
 
 === Music ===
 The patch notes announce a new song. Its track ships with the game, but no code plays it yet.

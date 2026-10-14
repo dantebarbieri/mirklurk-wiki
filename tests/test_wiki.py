@@ -18,7 +18,8 @@ from build_wiki import EXPORT_NS, build_pages, build_xml, existing_titles, liter
 from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, load_data, parse_data, validate_data
 from check_publication import blob_errors
 from wiki_catalog import entry_owners, entry_relations, default_catalog, page_locations
-from wiki_render import audit_report, recipe_groups
+from wiki_anchors import entry_fragments
+from wiki_render import audit_report, display_entry, recipe_groups
 from smoke_deploy import smoke_category_memberships, smoke_reader_release, wait_for_server_tick
 
 # Original 0.8.1.5 fields of the records that the reviewed 0.8.9.9 update deliberately renamed or re-evidenced.
@@ -413,13 +414,13 @@ class ResearchTests(unittest.TestCase):
         data["entries"] = []
         for identity, quest_id in reversed(expected):
             entry = copy.deepcopy(quest)
-            entry["id"] = identity
+            entry["id"] = entry["title"] = identity
             entry["details"]["quest_id"] = quest_id
             data["entries"].append(entry)
         original = copy.deepcopy(data)
         page = build_pages(ROOT, data)["Quests and journal"]
         self.assertEqual(
-            re.findall(r'<span id="entry-([^"]+)"></span>', page),
+            re.findall(r'<span id="quest-([^"]+)"></span>', page),
             [identity for identity, _ in expected],
         )
         self.assertEqual(data, original)
@@ -429,14 +430,17 @@ class ResearchTests(unittest.TestCase):
     def test_entry_groups_retain_deterministic_record_order(self):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         catalog = default_catalog(data)
-        owners = entry_owners(data, page_locations(data, catalog), entry_relations(data, catalog))
+        locations = page_locations(data, catalog)
+        owners = entry_owners(data, locations, entry_relations(data, catalog), catalog)
+        shown = entry_fragments([display_entry(row, catalog) for row in data["entries"]], owners, locations)
+        anchors = {(owners[identity], anchor): identity for identity, anchor in shown.items()}
         pages = build_pages(ROOT, data)
         kinds = {entry["id"]: entry["kind"] for entry in data["entries"]}
         for title, page in pages.items():
             if title == "Quests and journal":
                 continue
             with self.subTest(page=title):
-                identities = [identity for identity in re.findall(r'<span id="entry-([^"]+)"></span>', page) if owners[identity] == title]
+                identities = [anchors[title, anchor] for anchor in re.findall(r'<span id="([^"]+)"></span>', page) if (title, anchor) in anchors]
                 for kind in ("merchant", "loot", "algorithm"):
                     matching = [identity for identity in identities if kinds[identity] == kind]
                     self.assertEqual(matching, sorted(matching))
@@ -482,7 +486,7 @@ class ResearchTests(unittest.TestCase):
             self.assertEqual(pages["World seed logic"], "#REDIRECT [[World generation]]\n")
             self.assertEqual(set(pages) & RESEARCH_PAGE_FILES.keys(), {"World generation"})
             self.assertIn("[[World generation]]", pages["Main Page"])
-            self.assertIn('id="fact-synthetic-fact"', pages["World generation"])
+            self.assertIn('id="synthetic-fact"', pages["World generation"])
 
     def test_all_algorithm_destinations_are_supported(self):
         for title in ("Weather", "Level progression", "World seed logic", "World generation", "Skills", "Crafting", "Loot tables"):

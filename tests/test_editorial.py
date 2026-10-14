@@ -47,7 +47,7 @@ class EditorialTests(unittest.TestCase):
     def test_construction_action_listing_shows_its_world_sprite(self):
         # Finish Raft is never an {{Item}}, but the Items list still shows its reviewed world sprite.
         raft = image_for("item-171", self.data["illustrations"])
-        line = next(line for line in self.pages["Items"].splitlines() if 'id="entity-item-171"' in line)
+        line = next(line for line in self.pages["Items"].splitlines() if 'id="item-Finish_Raft"' in line)
         self.assertNotIn("{{Item|", line)
         self.assertIn(pixel_image(raft, 32, 32, "Finish Raft", "Finish Raft") + " [[Finish Raft|", line)
 
@@ -58,7 +58,7 @@ class EditorialTests(unittest.TestCase):
             self.assertIn(source["sha256"], audit)
             self.assertFalse(any(source["sha256"] in text for text in self.pages.values()))
         self.assertNotIn("25000", self.pages["World generation"])
-        self.assertIn('id="fact-area-seed-ceiling"', self.pages["World generation"])
+        self.assertIn('id="area-seed-ceiling"', self.pages["World generation"])
         for title in ("Main Page", "Items", "Bestiary", "NPCs", "Nature", "Skills",
                       "Crafting", "Weather", "Quests and journal", "World generation"):
             intro = re.split(r"\n(?:== |<div|<span)", self.pages[title], maxsplit=1)[0]
@@ -138,7 +138,7 @@ class EditorialTests(unittest.TestCase):
         ):
             with self.subTest(bad=bad), self.assertRaises(DataError):
                 validate_reader_pages({"Example": bad})
-        validate_reader_text("Example", '<span id="profile-item-1-initializer"></span>Base weight: Unknown.')
+        validate_reader_text("Example", '<span id="stats-base"></span>Base weight: Unknown.')
         validate_reader_text("Quest", "Collect evidence for Clay's research.")
         self.assertIn("Research in progress", self.pages["Quests and journal"])
         self.assertIn("Search the target ruins for surviving evidence.", self.pages["Quests and journal"])

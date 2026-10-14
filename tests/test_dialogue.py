@@ -97,9 +97,9 @@ class DialogueTests(unittest.TestCase):
         self.assertTrue(topic["spoiler"])
         self.assertTrue(any("main<15/area30/main<6" in ref["key"] for ref in topic["evidence"]))
         self.assertEqual({link["target"] for link in topic["links"]}, {
-            "Quests and journal#entry-journal-5",
-            "Quests and journal#entry-journal-13",
-            "Quests and journal#entry-journal-15",
+            "Quests and journal#quest-Rift_samples",
+            "Quests and journal#quest-A_successful_return",
+            "Quests and journal#quest-Meet_the_commander",
         })
         advice = " ".join(self.topic("Captain Eir", "advice")["paragraphs"])
         self.assertIn("goes straight to her survival tips", advice)

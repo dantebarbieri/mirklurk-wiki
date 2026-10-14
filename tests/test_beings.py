@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from wiki_anchors import fragment
 from wiki_beings import being_article
 from wiki_catalog import page_locations
 from wiki_data import DataError
@@ -56,7 +57,7 @@ class BeingArticleTests(unittest.TestCase):
             parts.append("costs " + profile_value(grid["kind"] + "-ap-cost", values[grid["kind"] + "-ap-cost"], {}, {}))
             parts.append("reach " + profile_value(grid["kind"] + "-distance", values[grid["kind"] + "-distance"], {}, {}))
             sentence = ", ".join(parts)
-            expected = (f'<span id="grid-{grid["id"]}"></span>\n=== {label} ===\n{sentence[:1].upper()}{sentence[1:]}.\n'
+            expected = (f'<span id="{fragment('grid', grid['id'])}"></span>\n=== {label} ===\n{sentence[:1].upper()}{sentence[1:]}.\n'
                         "{{Attack grid|" + grid_argument(grid) + "|label=" + label + "}}")
             with self.subTest(grid=grid["id"]):
                 self.assertIn(expected, self.pages[self.locations[grid["entity"]]])
@@ -75,7 +76,7 @@ class BeingArticleTests(unittest.TestCase):
         self.assertIn("'''Ranged attack:''' none (ranged reach <nowiki>0</nowiki>).", grand_mother)
         slug = self.pages["Giant Slug"]
         for field in ("apmax", "armor", "attackcost"):
-            self.assertEqual(slug.count(f'id="fact-being-0-base-{field}"'), 1)
+            self.assertEqual(slug.count(f'id="base-{field}"'), 1)
         boss = self.pages["Magus Clay (boss)"]
         self.assertLess(boss.index("== <nowiki>Blink and rewards</nowiki> =="), boss.index("== Combat =="))
         self.assertIn("[[Clays' Magus Hood|", boss)
@@ -88,7 +89,7 @@ class BeingArticleTests(unittest.TestCase):
         text = being_article([fact], [profile], self.properties, self.entities, self.locations)
         self.assertIn("=== Melee attack ===\nHas no melee attack pattern.", text)
         self.assertIn("Potential damage: <nowiki>1</nowiki> to <nowiki>3</nowiki>", text)
-        self.assertIn('<span id="fact-being-13-base-armor"></span>', text)
+        self.assertIn('<span id="base-armor"></span>', text)
         self.assertIn("<nowiki>2</nowiki>", text)
         conflicting = {"id": "y-profile", "entity": "being-13", "values": {"base-xp": 6}}
         with self.assertRaises(DataError):

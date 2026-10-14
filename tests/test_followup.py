@@ -50,7 +50,7 @@ class FollowupTests(unittest.TestCase):
         self.assertIn("{{Item|Wooden Recorder}}", self.pages["Category:Quest items"])
         self.assertIn("[[Category:Quest items]]", self.pages["Wooden Recorder"])
         self.assertNotIn("[[Category:Miscellaneous items]]", self.pages["Wooden Recorder"])
-        self.assertEqual(self.pages["Items"].count('<span id="entity-item-75"></span>'), 1)
+        self.assertEqual(self.pages["Items"].count('<span id="item-Wooden_Recorder"></span>'), 1)
 
         # A populated group must remain visible; retirement cannot hide its members.
         catalog = copy.deepcopy(self.catalog)
@@ -80,17 +80,19 @@ class FollowupTests(unittest.TestCase):
         items = [row["title"] for row in self.catalog["pages"] if row["entity"].startswith("item-")]
         self.assertTrue(items)
         for title in items:
-            self.assertRegex(self.pages[title], r"\n<span id=\"entity-item-\d+\"></span>'''[^\n]+''': [^\n]+\.\n")
+            self.assertRegex(self.pages[title], r"\n\n'''[^\n]+''': [^\n]+\.\n")
+            self.assertNotIn('id="item-', self.pages[title])
 
     def test_reconciled_pages_preserve_reviewed_human_text_and_add_mobile_wrappers(self):
         # Live Items r2996 (minus its empty Misc section) and Wooden Recorder r2995.
         # Items is re-pinned for 0.8.9.9: its only changes are additive rows for new items and sellers,
         # plus the Finish Raft world sprite beside its plain link.
         # Wooden Recorder is re-pinned for its item summary box, phone-width summary sizing and linked {{Coins}} value.
+        # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
-            "Items": "e5ad2fcd6076679f02ba6a0c91248e5aeb7338bfe4dd7b18cc8b6db93a8243d1",
-            "Wooden Recorder": "12058d4c344d6584907a5791e9ed7c15490ca761a31488651231813bd627cade",
+            "Items": "21b884e858d38abdf2003c6d84d2283884807f29ea6dd4ad871f40310393aa36",
+            "Wooden Recorder": "33dfefaf8d46c42e1b36fb1f6991e7aea278e97d835fb2e8ab6621d2c432f5b5",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):
@@ -183,7 +185,7 @@ class FollowupTests(unittest.TestCase):
         self.assertIn("Replacing an item replaces its capacity bonus", self.pages["Forager's Vest"])
         carrying = self.pages["Items"].split("== Carrying equipment ==", 1)[1].split("\n== ", 1)[0]
         for identity in self.categories["Carrying equipment"]["members"]:
-            self.assertIn(f'id="entity-{identity}"', carrying)
+            self.assertIn('id="item-' + self.locations[identity].replace(" ", "_") + '"', carrying)
             self.assertIn("{{Item|" + self.locations[identity] + "}}", self.pages["Category:Carrying equipment"])
 
     def test_capacity_validation_rejects_ambiguous_or_incomplete_bonus_data(self):

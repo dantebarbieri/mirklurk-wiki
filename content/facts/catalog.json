@@ -3137,7 +3137,7 @@
             "After you hand over the Wooden Recorder, choosing Advice goes straight to her survival tips instead. Before that, More Advice follows the camp suggestion."
           ],
           "links": [
-            {"label": "camp investigation", "target": "Quests and journal#entry-journal-1"},
+            {"label": "camp investigation", "target": "Quests and journal#quest-The_ruined_camp"},
             {"label": "Wooden Recorder", "target": "Wooden Recorder"}
           ],
           "spoiler": false,
@@ -3196,9 +3196,9 @@
             "The remaining curfew ends after you bring Viend back and speak with Eir. Her invitation to meet Commander Tain grants fort access and removes the outdoor escort restriction. Simply delivering the Wooden Recorder or reaching the next midnight does not lift it."
           ],
           "links": [
-            {"label": "three rift samples", "target": "Quests and journal#entry-journal-5"},
-            {"label": "bring Viend back", "target": "Quests and journal#entry-journal-13"},
-            {"label": "meet Commander Tain", "target": "Quests and journal#entry-journal-15"}
+            {"label": "three rift samples", "target": "Quests and journal#quest-Rift_samples"},
+            {"label": "bring Viend back", "target": "Quests and journal#quest-A_successful_return"},
+            {"label": "meet Commander Tain", "target": "Quests and journal#quest-Meet_the_commander"}
           ],
           "spoiler": true,
           "confidence": "observed",
@@ -3217,10 +3217,10 @@
             "Once Clay has the rift samples, Eir supplies the direction to Ranger Bhato. Follow the journal's direction for your world and Bhato's location instructions."
           ],
           "links": [
-            {"label": "taking the Wooden Recorder to Eir", "target": "Quests and journal#entry-journal-1"},
-            {"label": "next midnight", "target": "Quests and journal#entry-journal-2"},
-            {"label": "sent to Clay", "target": "Quests and journal#entry-journal-4"},
-            {"label": "journal's direction", "target": "Quests and journal#entry-journal-7"},
+            {"label": "taking the Wooden Recorder to Eir", "target": "Quests and journal#quest-The_ruined_camp"},
+            {"label": "next midnight", "target": "Quests and journal#quest-Report_to_Eir"},
+            {"label": "sent to Clay", "target": "Quests and journal#quest-Meet_the_magus"},
+            {"label": "journal's direction", "target": "Quests and journal#quest-Find_Bhato"},
             {"label": "Bhato's location instructions", "target": "Ranger Bhato"}
           ],
           "spoiler": true,
@@ -3340,12 +3340,12 @@
             "Later, bring Bhato's rune to Clay. He provides Clay's Strange Potion for the return to the dead camp. His subsequent instructions send you to investigate ruins and warn about the toadkin around them. Follow the journal's old-records objective rather than treating his ordinary Advice option as another quest."
           ],
           "links": [
-            {"label": "three rift samples", "target": "Quests and journal#entry-journal-5"},
+            {"label": "three rift samples", "target": "Quests and journal#quest-Rift_samples"},
             {"label": "Alchemy workstation", "target": "Alchemy workstation"},
-            {"label": "Bhato's rune", "target": "Quests and journal#entry-journal-10"},
+            {"label": "Bhato's rune", "target": "Quests and journal#quest-Bring_the_rune_back"},
             {"label": "Clay's Strange Potion", "target": "Clay's Strange Potion"},
-            {"label": "return to the dead camp", "target": "Quests and journal#entry-journal-11"},
-            {"label": "old-records objective", "target": "Quests and journal#entry-journal-17"}
+            {"label": "return to the dead camp", "target": "Quests and journal#quest-Return_to_the_dead_camp"},
+            {"label": "old-records objective", "target": "Quests and journal#quest-Search_for_old_records"}
           ],
           "spoiler": true,
           "confidence": "observed",
@@ -3483,11 +3483,11 @@
           "links": [
             {"label": "Sceetler", "target": "Sceetler"},
             {"label": "Minor Antidotes", "target": "Minor Antidote"},
-            {"label": "cellar objective", "target": "Quests and journal#entry-journal-8"},
+            {"label": "cellar objective", "target": "Quests and journal#quest-Explore_the_cellar"},
             {"label": "Poison", "target": "Poison"},
-            {"label": "report back to Bhato", "target": "Quests and journal#entry-journal-9"},
+            {"label": "report back to Bhato", "target": "Quests and journal#quest-The_beast's_drop"},
             {"label": "Workstation", "target": "Armor workstation"},
-            {"label": "Clay with the rune", "target": "Quests and journal#entry-journal-10"}
+            {"label": "Clay with the rune", "target": "Quests and journal#quest-Bring_the_rune_back"}
           ],
           "spoiler": true,
           "confidence": "observed",
@@ -3670,8 +3670,8 @@
             "After his revival, Viend asks you to escort him to Fort Solid because Eir still believes him dead. Follow Escort Viend and then A successful return. Talking to Eir afterward is also the step that earns full nighttime access."
           ],
           "links": [
-            {"label": "Escort Viend", "target": "Quests and journal#entry-journal-12"},
-            {"label": "A successful return", "target": "Quests and journal#entry-journal-13"},
+            {"label": "Escort Viend", "target": "Quests and journal#quest-Escort_Viend"},
+            {"label": "A successful return", "target": "Quests and journal#quest-A_successful_return"},
             {"label": "nighttime access", "target": "Captain Eir#dialogue-curfew-permissions"}
           ],
           "spoiler": true,
@@ -3751,9 +3751,9 @@
             "Continuing his briefing grants one Summoning Stone for calling an ally. This is a story reward, not a purchase from his map stock."
           ],
           "links": [
-            {"label": "Prepare for the journey", "target": "Quests and journal#entry-journal-16"},
-            {"label": "old-records search", "target": "Quests and journal#entry-journal-17"},
-            {"label": "Library coordinates", "target": "Quests and journal#entry-journal-17-location"},
+            {"label": "Prepare for the journey", "target": "Quests and journal#quest-Prepare_for_the_journey"},
+            {"label": "old-records search", "target": "Quests and journal#quest-Search_for_old_records"},
+            {"label": "Library coordinates", "target": "Quests and journal#quest-Finding_the_old_library"},
             {"label": "Summoning Stone", "target": "Summoning Stone"}
           ],
           "spoiler": true,

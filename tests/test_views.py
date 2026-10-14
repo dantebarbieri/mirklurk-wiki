@@ -10,6 +10,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from wiki_anchors import entry_fragments, titled
 from wiki_catalog import entry_owners, entry_relations, page_locations, validate_catalog
 from wiki_data import DataError, MECHANIC_GUIDE_TITLES
 from wiki_details import load_publication_inputs
@@ -100,6 +101,7 @@ class SelectiveViewTests(unittest.TestCase):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
         cls.audit = audit_report(cls.data, cls.catalog, cls.details)
+        cls.locations = page_locations(cls.data, cls.catalog)
 
     def test_default_contracts_and_named_views_are_distinct(self):
         price = selective_view("2 silver", "price", default=True)
@@ -120,9 +122,10 @@ class SelectiveViewTests(unittest.TestCase):
                 validate_transclusions(pages)
 
     def test_every_station_selects_all_and_only_its_recipe_owners(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         owners = entry_owners(self.data, locations, entry_relations(self.data, self.catalog), self.catalog)
         recipes = [display_entry(entry, self.catalog) for entry in self.data["entries"] if entry["kind"] == "recipe"]
+        shown = entry_fragments(recipes, owners, locations, self.catalog["construction_recipes"])
         for station in self.catalog["stations"]:
             refs = {
                 owner for owner, arguments in transclusions(self.pages[station["title"]])
@@ -137,32 +140,33 @@ class SelectiveViewTests(unittest.TestCase):
         for group in recipe_groups(recipes):
             owner = owners[group[0]["id"]]
             for entry in group:
-                self.assertEqual(self.pages[owner].count(f'id="entry-{entry["id"]}"'), 1)
+                self.assertEqual(self.pages[owner].count(f'id="{shown[entry["id"]]}"'), 1)
         self.assertIn('class="wikitable"', self.pages["Alchemy workstation"])
         self.assertIn("Ingredients", self.pages["Alchemy workstation"])
         self.assertIn("Base cost", self.pages["Alchemy workstation"])
 
     def test_offer_views_never_nest_item_price_inclusions(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         for entry in self.data["entries"]:
             if entry["kind"] != "merchant":
                 continue
             item = entry["details"]["item"]
             merchant = locations[entry["details"]["merchant"]]
             self.assertIn(
-                (merchant, (("item", item), ("view", "offers"))),
+                (merchant, (("item", locations[item]), ("view", "offers"))),
                 transclusions(self.pages[locations[item]]),
             )
             self.assertIn("offers", available_views(self.pages[merchant]))
             self.assertIn("|price=<noinclude>{{:" + locations[item] + "}}</noinclude>", self.pages[merchant])
             page = self.pages[locations[item]]
-            self.assertEqual(page.count('id="price-' + item + '"'), 1)
+            self.assertEqual(page.count('id="price"'), 1)
             self.assertIn("== How to acquire ==", page)
             self.assertNotIn("|Value]]: ", page.split("== How to acquire ==", 1)[0])
 
     def test_verified_loot_sources_are_selected_by_exact_outcome(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         owners = entry_owners(self.data, locations, entry_relations(self.data, self.catalog), self.catalog)
+        shown = entry_fragments(self.data["entries"], owners, locations)
         for entry in self.data["entries"]:
             if entry["kind"] != "loot" or entry["details"]["outcome"] is None:
                 continue
@@ -170,11 +174,11 @@ class SelectiveViewTests(unittest.TestCase):
             owner = owners[entry["id"]]
             self.assertIn("loot", available_views(self.pages[owner]))
             if owner != locations[item]:
-                self.assertIn((owner, (("item", item), ("view", "loot"))), transclusions(self.pages[locations[item]]))
-            self.assertEqual(self.pages[owner].count('id="entry-' + entry["id"] + '"'), 1)
+                self.assertIn((owner, (("item", locations[item]), ("view", "loot"))), transclusions(self.pages[locations[item]]))
+            self.assertEqual(self.pages[owner].count('id="' + shown[entry["id"]] + '"'), 1)
 
     def test_compact_pools_keep_every_candidate_and_exact_filtered_reference(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
         self.assertEqual(owner.count('id="pool-item-'), 610)
@@ -186,13 +190,13 @@ class SelectiveViewTests(unittest.TestCase):
             parsed = check_pool_projection(listing, pool, "Random treasure", locations, self.catalog)
             expected = sorted(pool["eligible_item_ids"], key=lambda identity: (names[identity], identity))
             self.assertEqual([row["ids"] for row in parsed.rows],
-                             [["pool-item-" + pool["id"] + "-" + item] for item in expected])
+                             [[titled("pool-item-" + pool["id"], locations[item])] for item in expected])
             for item in [*expected, "item-48"]:
                 with self.subTest(pool=pool["id"], item=item):
-                    rendered = expand_selective_view(owner, {**params, "item": item})
+                    rendered = expand_selective_view(owner, {**params, "item": locations[item]})
                     check_pool_projection(rendered, pool, "Random treasure", locations, self.catalog, item)
                     self.assertNotIn("<table", rendered)
-        self.assertEqual(expand_selective_view(owner, {"view": "pool", "pool": "missing", "item": "item-127"}), "")
+        self.assertEqual(expand_selective_view(owner, {"view": "pool", "pool": "missing", "item": "Amethyst"}), "")
         self.assertEqual(expand_selective_view(owner, {"view": "price"}), "")
         self.assertIn("== How random selection works ==", owner)
         self.assertIn("500 counted candidates", owner)
@@ -205,7 +209,7 @@ class SelectiveViewTests(unittest.TestCase):
     def test_compact_pool_projection_rejects_missing_members_and_invented_odds(self):
         # 0.8.9.9 dropped the Summoning Stone condition from common chests; middle chests keep it.
         pool = next(row for row in self.catalog["acquisition"]["pools"] if row["id"] == "chest-middle")
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         item = "item-127"
         rendered = expand_selective_view(self.pages["Random treasure"], {"view": "pool", "pool": pool["id"], "item": item})
         for changed in (
@@ -242,7 +246,7 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertIn("Treasure chests|view=pool-source", self.pages["Summoning Stone"])
 
     def test_shared_stock_rule_has_one_owner_and_one_browse_level_display(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         rule = next(row for row in self.catalog["currency"]["rules"] if row["id"] == "trade-stock-and-funds")
         self.assertIn(selective_view("<nowiki>" + rule["text"] + "</nowiki>", "stock"),
                       self.pages["Currency and trading"])
@@ -286,7 +290,7 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertNotIn("Wares", self.pages["Survivor"])
 
     def test_merchant_story_availability_is_owned_inside_offer_views(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         profiles = {row["entity"]: row for row in self.catalog["merchant_profiles"]}
         self.assertEqual(set(profiles), set(self.catalog["currency"]["standard_merchants"]))
         for identity, profile in profiles.items():
@@ -321,9 +325,10 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertEqual(clay.keys() - viend.keys(), {"item-14", "item-27", "item-44", "item-57"})
         self.assertEqual(set(offers["being-20"]), {"item-252"})
         comparison = self.pages["Viend"].split("== Comparing stock ==", 1)[1].split("\n== ", 1)[0]
+        locations = self.locations
         for merchant, rows, other in (("Magus Clay", clay, viend), ("Viend", viend, clay)):
             for item in rows.keys() - other.keys():
-                self.assertIn("[[" + merchant + "#entry-" + rows[item] + "|", comparison)
+                self.assertIn("[[" + merchant + "#" + titled("offer", locations[item]) + "|", comparison)
         self.assertNotIn("<table", comparison)
         self.assertNotIn("{{:", comparison)
 
@@ -331,7 +336,7 @@ class SelectiveViewTests(unittest.TestCase):
         offers = copy.deepcopy([entry for entry in self.data["entries"] if entry["kind"] == "merchant"][:2])
         offers[0]["details"].update(price=19, currency="silver")
         entities = {row["id"]: row for row in self.data["entities"]}
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         rendered = merchant_table(offers, [], entities, locations, True)
         self.assertIn("|price={{Coins|1900}}", rendered)
         self.assertNotIn("<noinclude>{{Coins|1900}}", rendered)
@@ -408,7 +413,7 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertIn('id="Combat_and_action_guide_evidence"', self.audit)
 
     def test_food_effect_amounts_have_one_item_owner_not_copied_guide_values(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         consumables = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Consumables")["members"]
         seeds = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Seeds")["members"]
         headings = {"Consumption effects": 0, "Effects": 0, "Where to plant": 0}
@@ -467,7 +472,7 @@ class SelectiveViewTests(unittest.TestCase):
         from wiki_display import DISPLAY_TITLES
         # 0.8.9.9 added entity pages and release notes and renamed two titles; the old titles stay as redirects.
         # 0.9.0.0 moved those release notes to its own title; "Version 0.8.9.9" now redirects there.
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
             "Version 0.8.9.9", "Version 0.9.0.0", "Survivor", "Fire Bond"}
         self.assertEqual(len(added), 28)
@@ -480,7 +485,7 @@ class SelectiveViewTests(unittest.TestCase):
                          "b32b5d0645406b2b6e8073d4c355ebca0eacf1fbd554ba1b6dfdc1bbffc78b75")
 
     def test_four_tree_references_use_distinct_reviewed_mature_compositions(self):
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         hashes = {
             "nature-4": "f73b3ed66aacdf320cdd9e892ce251e767024639c7a0114c0d169554564b17ad",
             "nature-7": "088b42c512242db358a0c34cb9da78208d7522470161e8db3283a5519d866176",

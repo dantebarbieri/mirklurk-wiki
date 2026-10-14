@@ -12,6 +12,7 @@ from wiki_catalog import (
     CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
+from wiki_anchors import acquisition_fragments, entity_fragment, entry_fragments, fragment, illustration_fragment, span, titled, validate_anchors
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, prose_link_parts, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
@@ -35,7 +36,7 @@ READER_META = re.compile(
 
 
 def validate_reader_text(title, text):
-    """Check visible text and tooltip labels; compatibility IDs are not prose."""
+    """Check visible text and tooltip labels; anchor IDs are not prose."""
     labels = ["".join(match) for match in re.findall(
         r"""\b(?:title|alt|aria-label)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))""", text, re.I,
     )]
@@ -84,7 +85,7 @@ def linked_prose(text, links):
 
 
 def anchor(kind, identity):
-    return f'<span id="{kind}-{identity}"></span>'
+    return span(fragment(kind, identity))
 
 
 def table(headers, rows):
@@ -192,7 +193,7 @@ def image_caption(image):
 
 
 def illustration_markup(image, width=224, caption=None, marker=True, page_image=True):
-    text = anchor("illustration", image["id"]) if marker else ""
+    text = span(illustration_fragment(image)) if marker else ""
     if image["rights_status"] == "approved":
         label = image_caption(image) if caption is None else caption
         return (text + "\n" + scroll_open(label, "pixel-art-figure")
@@ -564,11 +565,13 @@ def merchant_table(entries, images, entities, locations, standard_prices=False, 
         getters.append(lambda entry: known(entry["conditions"]))
     rows = []
     for entry in entries:
-        merchant = entry["details"]["merchant"]
+        merchant, item = entry["details"]["merchant"], locations[entry["details"]["item"]]
+        anchor = entry.get("anchor") or titled("offer", item)
+        # Rows are transcluded onto item pages, so only the owner page keeps the anchor.
         arguments = {
-            "anchors": anchor("entry", entry["id"]),
-            "seller": f'[[{locations[merchant]}#entry-{entry["id"]}|{literal(entities[merchant]["name"])}]]',
-            "item": locations[entry["details"]["item"]],
+            "anchors": "<noinclude>" + span(anchor) + "</noinclude>",
+            "seller": f'[[{locations[merchant]}#{anchor}|{literal(entities[merchant]["name"])}]]',
+            "item": item,
         }
         fields = {"Quantity": "quantity", "Unit price": "price", "Currency": "currency",
                   "Location": "location", "Conditions": "conditions"}
@@ -578,11 +581,11 @@ def merchant_table(entries, images, entities, locations, standard_prices=False, 
         if standard_prices and has_vendor_prices and entry["details"]["price"] is None:
             arguments["price"] = (
                 "<noinclude>" + arguments["price"] + "</noinclude><includeonly>"
-                + f'[[{locations[entry["details"]["item"]]}#price-{entry["details"]["item"]}|Standard item price]]'
+                + f'[[{item}#price|Standard item price]]'
                 + "</includeonly>"
             )
         row = row_template("Ware row", arguments)
-        rows.append(filtered_row(row, "item", [entry["details"]["item"]]))
+        rows.append(filtered_row(row, "item", [item]))
     rendered = html_table(headers, rows, normal_only)
     return "\n== Wares ==\n" + selective_view(
         "\n\n".join(notes) + "\n\n" + rendered, "offers",
@@ -602,7 +605,7 @@ def recipe_table(entries, stations, images, entities, locations):
             station = stations.get(method)
             links.add(f'[[{station["title"]}]]' if station else literal(method))
         arguments = {
-            "anchors": "".join(anchor("entry", entry["id"]) for entry in group),
+            "anchors": "".join(span(entry["anchor"]) for entry in group),
             "ingredients": quantities(details["inputs"], images, entities, locations),
             "output": quantities(details["outputs"], images, entities, locations),
             "methods": " &middot; ".join(sorted(links)),
@@ -617,9 +620,9 @@ def recipe_table(entries, stations, images, entities, locations):
     return "\n=== Recipes ===\nSkills and stations can reduce AP or ingredient costs.\n\n" + html_table(headers, rows)
 
 
-def construction_table(recipe, images, entities, locations):
+def construction_table(recipe, images, entities, locations, anchor_id):
     arguments = {
-        "anchors": anchor("entry", recipe["id"]),
+        "anchors": span(anchor_id),
         "ingredients": quantities(recipe["inputs"], images, entities, locations),
         "output": known(recipe["result"]["quantity"]) + " in-place completion<br />" + literal(recipe["result"]["description"]),
         "methods": f'[[{recipe["station_title"]}]]',
@@ -652,7 +655,7 @@ def loot_table(entries, images, entities, locations, owner):
         result = "No items" if details["outcome"] is None else item_reference(details["outcome"], locations)
         probability = details["probability"]
         row = [
-            anchor("entry", entry["id"]) + f'[[{owner}#entry-{entry["id"]}|{literal(owner)}]]',
+            f'<noinclude>{span(entry["anchor"])}</noinclude>[[{owner}#{entry["anchor"]}|{literal(owner)}]]',
             result, count_range(details["quantity"]),
             known(Decimal(str(probability)) * 100) + "%" if probability is not None else "Unknown",
             *(getter(entry) for getter in getters),
@@ -661,7 +664,7 @@ def loot_table(entries, images, entities, locations, owner):
             row.append(known(entry["conditions"]))
         if not same_summary:
             row.append(literal(entry["summary"]))
-        rows.append(filtered_row(html_row(row), "item", [details["outcome"] or "empty"]))
+        rows.append(filtered_row(html_row(row), "item", [locations[details["outcome"]] if details["outcome"] else "empty"]))
     notes = ["Quantities within a range are not necessarily equally likely."]
     if any(entry["details"]["weight"] is not None for entry in entries):
         notes.append("Selection weights are not percentages.")
@@ -694,14 +697,14 @@ def acquisition_probability(row):
 
 
 def acquisition_table(source, images, entities, locations):
-    rows = []
+    rows, anchors = [], acquisition_fragments(source, locations)
     for row in source["rows"]:
         cells = [
-            anchor("acquisition", row["id"]) + f'[[{source["title"]}#acquisition-{row["id"]}|{literal(source["title"])}]]',
+            f'<noinclude>{span(anchors[row["id"]])}</noinclude>[[{source["title"]}#{anchors[row["id"]]}|{literal(source["title"])}]]',
             item_reference(row["item"], locations), count_range(row["quantity"]),
             acquisition_probability(row), literal(row["condition"]),
         ]
-        rows.append(filtered_row(html_row(cells), "item", [row["item"]]))
+        rows.append(filtered_row(html_row(cells), "item", [locations[row["item"]]]))
     return "\n== Contents and acquisition ==\n" + selective_view(html_table(
         ["Source", "Item", "Quantity", "Conditional probability", "Condition"], rows,
     ), "loot") + "\n"
@@ -716,17 +719,17 @@ def acquisition_pool_table(pool, owner, entities, locations, categories):
     for identity in sorted(pool["eligible_item_ids"], key=lambda identity: (entities[identity]["name"], identity)):
         item = entity_link(identity, entities, locations)
         if identity in pool["item_conditions"]:
-            item += f' [[{owner}#treasure-condition-{identity}|Story condition]].'
+            item += f' [[{owner}#{titled("treasure-condition", locations[identity])}|Story condition]].'
         category = categories.get(identity)
         listing = item + "</td><td>" + (f'[[:Category:{category}|{category}]]' if category else "Item")
         row = item_view('<span class="treasure-pool-reference">', "<tr><td>")
-        row += anchor("pool-item", pool["id"] + "-" + identity) + item_view(reference, listing)
+        row += span(titled("pool-item-" + pool["id"], locations[identity])) + item_view(reference, listing)
         row += item_view("</span>", "</td></tr>") + "\n"
-        rows.append(filtered_row(row, "item", [identity]))
+        rows.append(filtered_row(row, "item", [locations[identity]]))
     heading = f'<includeonly>[[{owner}#pool-{pool["id"]}|{literal(pool["title"])}]] &mdash; rules and value budget.</includeonly>\n'
     heading += scroll_open() + '<table class="wikitable">\n<tr><th scope="col">Item</th><th scope="col">Category</th></tr>\n'
     content = item_view("", heading) + "".join(rows) + item_view("", "</table>\n</div>\n")
-    return selective_view(filtered_row(filtered_row(content, "item", pool["eligible_item_ids"]),
+    return selective_view(filtered_row(filtered_row(content, "item", [locations[identity] for identity in pool["eligible_item_ids"]]),
                                        "pool", [pool["id"]]), "pool")
 
 
@@ -763,7 +766,7 @@ def capacity_table(members, details, catalog, entities, locations, markers=None)
              if "Equipment by slot" in row.get("parents", []) for identity in row["members"]}
     return table(["Equipment", "Equipped slot", "Inventory slots added", "Storage grid (columns x rows)"], [
         [
-            ("".join(anchor(kind, value) for kind, value in sorted(markers.get(locations[identity], []))) if markers else "")
+            ("".join(map(span, sorted(markers.get(locations[identity], [])))) if markers else "")
             + item_reference(identity, locations),
             f'[[:Category:{slots[identity]}|{slots[identity]}]]',
             profile_value("inventory-slots-added", profiles[identity]["inventory-slots-added"], entities, locations),
@@ -876,11 +879,13 @@ def source_page(data, catalog, details, locations, facts, entries):
         ]),
         "", "Confidence labels describe the evidence, not a guarantee of current gameplay: observed means seen in the cited source; inferred means an interpretation needing confirmation; localization-described means described rather than runtime-tested.",
     ]
+    shown = entry_fragments([display_entry(row, catalog) for row in data.get("entries", [])], entries, locations,
+                            catalog.get("construction_recipes", []))
     groups = [
         ("Entity identities", data["entities"], lambda row: locations[row["id"]]),
-        ("Numeric facts", data["facts"], lambda row: facts[row["id"]] + "#fact-" + row["id"]),
-        ("Research records", data.get("entries", []), lambda row: entries[row["id"]] + "#entry-" + row["id"]),
-        ("Profiles", details["profiles"], lambda row: locations[row["entity"]] + "#profile-" + row["id"]),
+        ("Numeric facts", data["facts"], lambda row: facts[row["id"]] + "#" + fragment("fact", row["id"])),
+        ("Research records", data.get("entries", []), lambda row: entries[row["id"]] + "#" + shown[row["id"]]),
+        ("Profiles", details["profiles"], lambda row: locations[row["entity"]] + "#" + fragment("profile", row["id"])),
     ]
     for heading, records, target in groups:
         lines.extend(["", f"== {heading} ==", table(["Record", "Editable owner", "Confidence", "Evidence"], [
@@ -893,7 +898,7 @@ def source_page(data, catalog, details, locations, facts, entries):
         lines.extend(["", "== Editorial entry evidence ==",
                       "These reviewed additions support the current reader wording without replacing the historical research references.",
                       table(["Record", "Editable owner", "Confidence", "Evidence"], [
-                          [literal(row["entry"]), f'[[{entries[row["entry"]]}#entry-{row["entry"]}|{literal(entries[row["entry"]])}]]',
+                          [literal(row["entry"]), f'[[{entries[row["entry"]]}#{shown[row["entry"]]}|{literal(entries[row["entry"]])}]]',
                            literal(row["confidence"]), evidence_text(row["evidence"])]
                           for row in sorted(supplements, key=lambda row: row["entry"])
                       ])])
@@ -933,7 +938,7 @@ def source_page(data, catalog, details, locations, facts, entries):
     ])])
     if details.get("grids"):
         lines.extend(["", "== Grid evidence ==", table(["Grid owner", "Confidence", "Evidence", "Scope"], [
-            [f'[[{locations[grid["entity"]]}#grid-{grid["id"]}|{literal(locations[grid["entity"]])}]]',
+            [f'[[{locations[grid["entity"]]}#{fragment("grid", grid["id"])}|{literal(locations[grid["entity"]])}]]',
              literal(grid["confidence"]), evidence_text(grid["evidence"]), literal(grid["context"])]
             for grid in sorted(details["grids"], key=lambda row: row["id"])
         ])])
@@ -977,8 +982,9 @@ def source_page(data, catalog, details, locations, facts, entries):
         rows = []
         for source in acquisition_sources:
             rows.append([literal(source["id"]), f'[[{source["title"]}]]', literal(source["confidence"]), evidence_text(source["evidence"])])
+            anchors = acquisition_fragments(source, locations)
             rows.extend([
-                [literal(row["id"]), f'[[{source["title"]}#acquisition-{row["id"]}|{literal(source["title"])}]]',
+                [literal(row["id"]), f'[[{source["title"]}#{anchors[row["id"]]}|{literal(source["title"])}]]',
                  literal(row.get("confidence", source["confidence"])) + "; " + literal(row["coverage"]), evidence_text(row["evidence"])]
                 for row in source["rows"]
             ])
@@ -1004,7 +1010,7 @@ def source_page(data, catalog, details, locations, facts, entries):
             ])])
     if catalog.get("construction_recipes"):
         lines.extend(["", "== In-place construction evidence ==", table(["Record", "Editable owner", "Confidence", "Evidence"], [
-            [literal(recipe["id"]), f'[[{locations[recipe["owner_item"]]}#entry-{recipe["id"]}|{literal(locations[recipe["owner_item"]])}]]',
+            [literal(recipe["id"]), f'[[{locations[recipe["owner_item"]]}#{shown[recipe["id"]]}|{literal(locations[recipe["owner_item"]])}]]',
              literal(recipe["confidence"]), evidence_text(recipe["evidence"])]
             for recipe in catalog["construction_recipes"]
         ])])
@@ -1055,7 +1061,7 @@ def source_page(data, catalog, details, locations, facts, entries):
             "", "== Standard unit prices ==", literal(prices["context"]),
             "The price itself is maintained only on the linked item page. Merchant pages selectively transclude it.",
             table(["Item / editable price", "Confidence", "Evidence"], [
-                [f'[[{locations[row["entity"]]}#price-{row["entity"]}|{literal(entities_name(data, row["entity"]))}]]',
+                [f'[[{locations[row["entity"]]}#price|{literal(entities_name(data, row["entity"]))}]]',
                  literal(row["confidence"]), evidence_text(row["evidence"])]
                 for row in sorted(prices["prices"], key=lambda row: row["entity"])
             ]),
@@ -1100,7 +1106,7 @@ def coin_summary(coin, entities, locations):
     return (
         "\n== Coin value and weight ==\n<onlyinclude>\n"
         + table(["Coin", "Value", "Weight", "Maximum stack"], [[
-            anchor("coin", coin["entity"]) + entity_link(coin["entity"], entities, locations),
+            span(titled("coin", locations[coin["entity"]])) + entity_link(coin["entity"], entities, locations),
             price_text({"value": coin["value_in_silver"]}), known(coin["weight_grams"]) + " g", known(coin["stack_limit"]),
         ]]) + "</onlyinclude>\n\n[[Currency and trading|Barter, change, and coin consolidation]]\n"
     )
@@ -1160,6 +1166,8 @@ def build_pages(root, data, catalog=None, details=None):
     relations = entry_relations(data, catalog)
     owners = entry_owners(data, locations, relations, catalog)
     entries = sorted((display_entry(row, catalog) for row in data.get("entries", [])), key=lambda row: row["id"])
+    shown = entry_fragments(entries, owners, locations, catalog.get("construction_recipes", []))
+    entries = [{**row, "anchor": shown[row["id"]]} for row in entries]
     images = sorted(data.get("illustrations", []), key=lambda row: row["id"])
     prices = {row["entity"]: row for row in catalog.get("unit_prices", {}).get("prices", [])}
     merchant_profiles = {row["entity"]: row for row in catalog.get("merchant_profiles", [])}
@@ -1230,7 +1238,7 @@ def build_pages(root, data, catalog=None, details=None):
     for row in catalog["pages"]:
         entity = entities[row["entity"]]
         index = "NPCs" if classified.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
-        text = f'[[Main Page]] | [[{index}]]\n\n' + anchor("entity", entity["id"]) + f"'''{literal(entity['name'])}'''\n"
+        text = f'[[Main Page]] | [[{index}]]\n\n' + f"'''{literal(entity['name'])}'''\n"
         if entity["id"] in classification_summaries:
             text += "\n" + literal(classification_summaries[entity["id"]]) + "\n"
         if entity["id"] in factions:
@@ -1306,10 +1314,10 @@ def build_pages(root, data, catalog=None, details=None):
         if conditions:
             text += "\n== Item-specific treasure conditions ==\n"
             for identity, condition in sorted(conditions.items()):
-                gate = "<noinclude>" + anchor("treasure-condition", identity) + "</noinclude>"
+                gate = "<noinclude>" + span(titled("treasure-condition", locations[identity])) + "</noinclude>"
                 gate += entity_link(identity, entities, locations) + ": " + literal(condition) + "<br />"
                 pool_ids = [pool["id"] for pool in owned_pools if identity in pool["item_conditions"]]
-                text += selective_view(filtered_row(filtered_row(gate, "item", [identity]), "pool", pool_ids), "pool") + "\n"
+                text += selective_view(filtered_row(filtered_row(gate, "item", [locations[identity]]), "pool", pool_ids), "pool") + "\n"
         if owned_pools:
             text += "\n== Eligibility and odds ==\n"
             text += "\n\n".join(literal(note) for note in sorted({pool["odds_note"] for pool in owned_pools})) + "\n"
@@ -1426,27 +1434,17 @@ def build_pages(root, data, catalog=None, details=None):
                                            for group in catalog.get("taxonomy", {}).get(field, [])):
             pages[guide["title"]] += "\n[[:Category:Food and drink|Browse foods and drinks]] | [[Crafting|Find a preparation recipe]]\n"
 
-    # Each overview groups historical anchors with its canonical destination.
+    # Each overview lists its canonical destinations with readable entity anchors.
     navigation = defaultdict(lambda: defaultdict(set))
-    legacy = defaultdict(lambda: defaultdict(set))
     for entity in data["entities"]:
-        original = CATEGORY_PAGES[entity["category"]]
-        index = "NPCs" if classified.get(entity["id"]) == "npc" else original
+        npc = classified.get(entity["id"]) == "npc"
+        index = "NPCs" if npc else CATEGORY_PAGES[entity["category"]]
         target = locations[entity["id"]]
-        navigation[index][target].add(("entity", entity["id"]))
-        if original != index:
-            legacy[original][target].add(("entity", entity["id"]))
-    for fact in data["facts"]:
-        if facts[fact["id"]] != fact["page"] and fact["page"] not in RESEARCH_PAGE_REDIRECTS:
-            legacy[fact["page"]][facts[fact["id"]]].add(("fact", fact["id"]))
+        if entity["category"] != "skill_group":
+            navigation[index][target].add(target.partition("#")[2] or entity_fragment(entity, target, npc))
     for entry in entries:
-        if owners[entry["id"]] != entry_page(entry):
-            target_group = navigation if entry["kind"] == "merchant" else legacy
-            target_group[entry_page(entry)][owners[entry["id"]]].add(("entry", entry["id"]))
-    for title, targets in legacy.items():
-        for target in list(targets):
-            if target in navigation[title]:
-                navigation[title][target].update(targets.pop(target))
+        if entry["kind"] == "merchant" and owners[entry["id"]] != entry_page(entry):
+            navigation[entry_page(entry)][owners[entry["id"]]]
 
     def navigation_lines(targets):
         lines = []
@@ -1456,7 +1454,7 @@ def build_pages(root, data, catalog=None, details=None):
             if source_entity:
                 label = source_entity["name"]
             link = listed_entity(source_entity["id"]) if source_entity else f"[[{target}|{literal(label)}]]"
-            lines.append("* " + "".join(anchor(kind, identity) for kind, identity in sorted(markers)) + link)
+            lines.append("* " + "".join(map(span, sorted(markers))) + link)
         return lines
 
     for title, targets in navigation.items():
@@ -1464,7 +1462,7 @@ def build_pages(root, data, catalog=None, details=None):
             continue
         if title == "Skills":
             for group in sorted((row for row in data["entities"] if row["category"] == "skill_group"), key=lambda row: (row["name"], row["id"])):
-                pages[title] += "\n" + anchor("entity", group["id"]) + f'\n== {literal(group["name"])} ==\n'
+                pages[title] += "\n" + span(titled("skill-group", group["name"])) + f'\n== {literal(group["name"])} ==\n'
                 pages[title] += f'[[:Category:{skill_category_title(group)}|Browse group category]]\n'
                 matching = {}
                 for entity in data["entities"]:
@@ -1522,20 +1520,6 @@ def build_pages(root, data, catalog=None, details=None):
             if any(method in routes for routes in ingredients.values()):
                 pages["Items"] += f"\n=== {method} ===\n[[:Category:{method}|Browse category]]\n"
                 pages["Items"] += literal(summary) + "\n" + ingredient_table(method, ingredients, entities, locations)
-    for title, targets in legacy.items():
-        if not targets:
-            continue
-        label = "Characters now listed under NPCs" if title == "Bestiary" else "Related pages"
-        pages[title] += (
-            f'\n<div class="mw-collapsible mw-collapsed">\n{label}\n<div class="mw-collapsible-content">\n'
-            + "\n".join(navigation_lines(targets)) + "\n</div></div>\n"
-        )
-    previous_owners = entry_owners(data, locations, relations, {key: value for key, value in catalog.items() if key != "acquisition"})
-    for entry in entries:
-        previous = previous_owners[entry["id"]]
-        target = owners[entry["id"]]
-        if previous != target:
-            pages[previous] += "\n" + anchor("entry", entry["id"]) + f"[[{target}#entry-{entry['id']}|Loot source]]\n"
 
     fact_display = {row["fact"]: row for row in catalog.get("fact_display", [])}
     for title in list(pages):
@@ -1600,14 +1584,14 @@ def build_pages(root, data, catalog=None, details=None):
                                             (compared, other_offers, own_offers)):
                 pages[title] += "\n=== Only in " + literal(entities[merchant]["name"]) + "'s list ===\n"
                 pages[title] += "\n".join(
-                    f'* [[{locations[merchant]}#entry-{offers[item]["id"]}|{literal(entities[item]["name"])}]]'
+                    f'* [[{locations[merchant]}#{offers[item]["anchor"]}|{literal(entities[item]["name"])}]]'
                     for item in sorted(offers.keys() - other.keys(), key=lambda identity: entities[identity]["name"])
                 ) + "\n"
         prose = [row for row in matching_entries if row["kind"] in {"quest", "algorithm"}]
         if title == "Quests and journal":
             prose.sort(key=quest_order)
         for entry in prose:
-            pages[title] += "\n" + anchor("entry", entry["id"]) + f'\n== {literal(entry["title"])} ==\n{literal(entry["summary"])}\n'
+            pages[title] += "\n" + span(entry["anchor"]) + f'\n== {literal(entry["title"])} ==\n{literal(entry["summary"])}\n'
             if entry["conditions"] is not None and (entry["kind"] != "quest" or entry["details"]["stage"] == "Dynamic location"):
                 pages[title] += "\n" + literal(entry["conditions"]) + "\n"
             if entry["kind"] == "algorithm":
@@ -1634,7 +1618,7 @@ def build_pages(root, data, catalog=None, details=None):
         related = [entry for entry in entries if identity in relations[entry["id"]] and owners[entry["id"]] != title]
         acquisition, recipes, quests, other = [], [], [], []
         for entry in related:
-            target = owners[entry["id"]] + "#entry-" + entry["id"]
+            target = owners[entry["id"]] + "#" + entry["anchor"]
             if entry["kind"] in {"merchant", "loot"}:
                 acquisition.append(f"* [[{target}|{literal(owners[entry['id']])}]]")
             elif entry["kind"] == "recipe":
@@ -1659,17 +1643,17 @@ def build_pages(root, data, catalog=None, details=None):
                 pages[title] += recipe_table(own_recipes, stations, images, entities, locations)
             for recipe in catalog.get("construction_recipes", []):
                 if recipe["owner_item"] == identity:
-                    pages[title] += construction_table(recipe, images, entities, locations)
+                    pages[title] += construction_table(recipe, images, entities, locations, shown[recipe["id"]])
             offers = [entry for entry in entries if entry["kind"] == "merchant" and entry["details"]["item"] == identity]
             if identity in price_items:
                 pages[title] += (
-                    "\n=== Buying ===\n" + anchor("price", identity) + VALUE_LINK + ": "
+                    "\n=== Buying ===\n" + span("price") + VALUE_LINK + ": "
                     + selective_view(price_text(prices.get(identity), images), "price", default=True)
                     + " per item. " + VALUE_NOTE + "\n"
                 )
             if offers:
                 pages[title] += "\n".join(
-                    "{{:" + owner + "|view=offers|item=" + identity + "}}"
+                    "{{:" + owner + "|view=offers|item=" + title + "}}"
                     for owner in sorted({owners[entry["id"]] for entry in offers})
                 ) + "\n"
             loot = [entry for entry in entries if entry["kind"] == "loot" and entry["details"]["outcome"] == identity]
@@ -1682,7 +1666,7 @@ def build_pages(root, data, catalog=None, details=None):
             loot_owners.update(documented_sources)
             if loot_owners:
                 pages[title] += "\n=== Loot sources ===\n" + "\n".join(
-                    "{{:" + owner + "|view=loot|item=" + identity + "}}"
+                    "{{:" + owner + "|view=loot|item=" + title + "}}"
                     for owner in sorted(loot_owners, key=lambda owner: (
                         not any(source["title"] == owner and source["kind"] in {"starting", "fixed-location"}
                                 for source in acquisition_sources), owner))
@@ -1694,7 +1678,7 @@ def build_pages(root, data, catalog=None, details=None):
                 pages[title] += "\n=== Random treasure sources ===\nPossible random finds, not guaranteed drops. Pool links list candidates and value-budget rules.\n"
                 for source, reference, pool in sorted(eligible_sources, key=lambda row: (row[0]["title"], row[2]["id"])):
                     pages[title] += '\n<div class="treasure-source">{{:' + source["title"] + "|view=pool-source|pool=" + pool["id"] + "}} "
-                    pages[title] += "{{:" + acquisition_by_id[pool["owner_source"]]["title"] + "|view=pool|pool=" + pool["id"] + "|item=" + identity + "}}</div>\n"
+                    pages[title] += "{{:" + acquisition_by_id[pool["owner_source"]]["title"] + "|view=pool|pool=" + pool["id"] + "|item=" + title + "}}</div>\n"
             if identity in coins:
                 pages[title] += "[[Currency and trading#currency-coin-consolidation|Merchant change and coin consolidation]]\n"
             elif not own_recipes and not offers and not loot and not documented_sources and not eligible_sources and identity not in acquisition_notes:
@@ -1714,7 +1698,7 @@ def build_pages(root, data, catalog=None, details=None):
                 lead += " used to make " + (prose_list([literal(use) for use in uses], "and") if len(uses) <= 3
                                             else f"{len(uses)} different things")
             lead += "."
-            label = anchor("entity", identity) + f"'''{literal(entities[identity]['name'])}'''"
+            label = f"'''{literal(entities[identity]['name'])}'''"
             pages[title] = pages[title].replace(label + "\n", label + lead + "\n", 1)
         for recipe in catalog.get("construction_recipes", []):
             if any(component["item"] == identity for component in recipe["inputs"]):
@@ -1722,7 +1706,7 @@ def build_pages(root, data, catalog=None, details=None):
         if recipes:
             pages[title] += "\n== Used in ==\n" + "\n".join(sorted(set(recipes))) + "\n"
         if quests:
-            main = all(text.startswith("* [[Quests and journal#entry-journal") for _, text in quests)
+            main = all(text.startswith("* [[Quests and journal#quest-") for _, text in quests)
             pages[title] += f'\n== {"Main quest" if main else "Quests"} ==\n' + "\n".join(text for _, text in sorted(quests)) + "\n"
         if other:
             pages[title] += "\n== Related pages ==\n" + "\n".join(sorted(set(other))) + "\n"
@@ -1765,7 +1749,7 @@ def build_pages(root, data, catalog=None, details=None):
     for history in catalog.get("state_history", []):
         before, after = locations[history["before"]], locations[history["after"]]
         pages[before] += "\n== State history ==\n" + literal(history["summary"]) + "\n"
-        pages[before] += f'[[{after}|Revived character]] | [[Quests and journal#entry-{history["quest"]}|Return to the dead camp]]\n'
+        pages[before] += f'[[{after}|Revived character]] | [[Quests and journal#{shown[history["quest"]]}|Return to the dead camp]]\n'
         pages[after] += f"\n== State history ==\n[[{before}#State_history|Earlier identity and revival]]\n"
 
     if "Crafting" in pages and stations:
@@ -1807,7 +1791,7 @@ def build_pages(root, data, catalog=None, details=None):
             ) + "\n"
         if station.get("quest_entries"):
             pages[title] += "\nRelated journal: " + " | ".join(
-                f'[[Quests and journal#entry-{identity}|{literal(next(entry["title"] for entry in entries if entry["id"] == identity))}]]'
+                f'[[Quests and journal#{shown[identity]}|{literal(next(entry["title"] for entry in entries if entry["id"] == identity))}]]'
                 for identity in station["quest_entries"]
             ) + "\n"
         targets = set()
@@ -1951,9 +1935,10 @@ def build_pages(root, data, catalog=None, details=None):
     for topics in npc_dialogue.values():
         for topic in topics:
             for link in topic["links"]:
-                title, separator, fragment = link["target"].partition("#")
-                if title not in pages or (separator and f'id="{fragment}"' not in pages[title]):
+                title, separator, part = link["target"].partition("#")
+                if title not in pages or (separator and f'id="{part}"' not in pages[title]):
                     raise DataError(f'NPC dialogue: missing linked page or explicit anchor: {link["target"]}')
     validate_transclusions(pages)
+    validate_anchors(pages, lenient={*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs"})
     validate_display_dependencies(pages)
     return pages
