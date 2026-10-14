@@ -203,8 +203,9 @@ class JumperMechanicsTests(unittest.TestCase):
         section = page.split("== <nowiki>Effects</nowiki> ==", 1)[1]
         self.assertIn("4.0, 3.6, 3.2, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.8 and 1.6 AP", section)
         self.assertIn("8.0, 7.2, 6.4, 5.4, 5.0, 4.6, 4.2, 4.0, 3.8, 3.6 and 3.4 AP", section)
+        self.assertLess(section.index("# <nowiki>Find your maximum range."), section.index("# <nowiki>For example,"))
         adjacent = section.index("[[File:Jumper-adjacent-jump-costs.png|1200px|")
-        self.assertLess(section.index("# <nowiki>Jump two tiles"), adjacent)
+        self.assertLess(section.index("# <nowiki>For example,"), adjacent)
         self.assertLess(adjacent, section.index("[[File:Jumper-two-tile-jump-costs.png|930px|"))
         self.assertEqual(section.count("|class=notpageimage|"), 2)
         self.assertEqual(page.count("[[File:Skill-0-2.png|"), 1)

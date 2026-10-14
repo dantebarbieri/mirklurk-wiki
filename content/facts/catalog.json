@@ -5023,11 +5023,23 @@
     {
       "entry": "skill-0-2-mechanics",
       "title": "Effects",
-      "summary": "Jump farther and spend fewer action points on each jump as you raise this skill. Costs fall from 4.0 to 1.6 AP for a jump to an adjacent tile, and from 8.0 to 3.4 AP for a jump two tiles away.",
+      "summary": "Each rank raises your maximum jump range. A jump costs 8 AP scaled by how much of that range it uses, so the same jump gets cheaper as the skill improves. Water, climbing to higher ground and encumbrance make jumps more expensive.",
       "conditions": null,
       "steps": [
-        "Jump to an adjacent tile, ranks 0 to 10: 4.0, 3.6, 3.2, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.8 and 1.6 AP.",
-        "Jump two tiles away, ranks 0 to 10: 8.0, 7.2, 6.4, 5.4, 5.0, 4.6, 4.2, 4.0, 3.8, 3.6 and 3.4 AP."
+        "Find your maximum range. It is 2 tiles at rank 0, then 2.25, 2.5, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5 and 4.75 tiles at ranks 1 to 10. Distance is measured in a straight line between tile centers, so a diagonal neighbor is about 1.41 tiles away. A target beyond your range is pulled back toward you.",
+        "Start from 8 AP. Jumping out of medium-depth water adds 3, and out of deep water adds 7; in the deepest spots you cannot jump at all. Jumping from lower ground up onto a higher terrain level adds 8.",
+        "If a penalty applies while you stand on raised footing, such as an obstacle, it is reduced by 3 AP, or by 6 AP on higher footing.",
+        "Multiply by jump distance / maximum range. A jump at full range costs the whole amount.",
+        "Multiply by your encumbrance: 1.2 when overburdened, 1.6 when very overburdened (10 or more over your carry limit) and 2.0 when extremely overburdened (20 or more over).",
+        "Round to the nearest 0.2 AP. You cannot make a jump that costs more than your maximum AP, even with a full bar.",
+        "For example, a jump to an adjacent tile on flat, dry ground costs 8 x 1 / 2 = 4.0 AP at rank 0. At rank 10 the range is 4.75 tiles, so it costs 8 x 1 / 4.75 = 1.68, shown as 1.6 AP. DavidLokison's screenshots below show every rank from 0 to 10: an adjacent jump costs 4.0, 3.6, 3.2, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.8 and 1.6 AP; a jump two tiles away costs 8.0, 7.2, 6.4, 5.4, 5.0, 4.6, 4.2, 4.0, 3.8, 3.6 and 3.4 AP."
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "jump state[3].maxDistance/skillDist/jumpPenalty/jumpCost"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_moment_aps"},
+        {"source": "game-data-0900", "section": "gml_Object_obj_player_Step_0", "key": "carry/player_get_carrymax.aeList[24-26]"},
+        {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "mountainTresh/dryestTresh"}
       ]
     },
     {
