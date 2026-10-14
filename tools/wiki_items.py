@@ -25,6 +25,10 @@ SUMMARY_STYLE = (
     f"min-width:min(100%, calc((({SUMMARY_FLOAT_MIN}) - 100%) * 1000));"
     f"margin:0 0 1em clamp(0px, calc((100% - ({SUMMARY_FLOAT_MIN})) * 1000), 1em);"
 )
+# Vector headings are flow-root, and WebKit squeezes a flow-root box beside a full-width float to zero width
+# instead of moving it below. This empty flow-root spacer is full width (so it drops below the summary) only when
+# the summary is full width; on wider columns its width resolves to zero and it fits beside the float harmlessly.
+SUMMARY_CLEAR_STYLE = f"display:flow-root;height:0;width:min(100%, calc((({SUMMARY_FLOAT_MIN}) - 100%) * 1000));"
 ITEM_FIRE_KEYS = ("light-radius", "burn-time", "tinder-bonus", "spark-chance", "stone-spark-chance")
 ITEM_SECTION_KEYS = {
     "Protection": ("item-armor", "insulation", "waterproof"),
@@ -235,7 +239,8 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         if notes:
             lines.extend(["|-", '| colspan="2" style="font-size:85%;max-width:18em;" | ' + " ".join(notes)])
         text += (f'<div class="mirklurk-summary" style="{SUMMARY_STYLE}">\n'
-                 + scroll_open("Item summary") + "\n".join([*lines, "|}"]) + "\n</div>\n</div>\n")
+                 + scroll_open("Item summary") + "\n".join([*lines, "|}"]) + "\n</div>\n</div>\n"
+                 f'<div class="mirklurk-summary-clear" style="{SUMMARY_CLEAR_STYLE}"></div>\n')
     for heading, marks, body, display in sections:
         text += "\n" + marks + ("\n" if marks else "") + f"== {heading} ==\n"
         text += body + "\n" if body else ""

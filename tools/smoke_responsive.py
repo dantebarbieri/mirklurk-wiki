@@ -45,6 +45,7 @@ def measure(page):
             meta:document.querySelector('meta[name="viewport"]')?.content,
             font:parseFloat(getComputedStyle(root).fontSize), content:rect(root),
             summary:root.querySelector('.mirklurk-summary') && rect(root.querySelector('.mirklurk-summary')),
+            summaryClear:root.querySelector('.mirklurk-summary-clear') && rect(root.querySelector('.mirklurk-summary-clear')),
             errors:root.querySelectorAll('.error, .mw-broken-media').length,
             regions:regions.map(e => ({
                 box:rect(e), width:e.clientWidth, scroll:e.scrollWidth,
@@ -87,6 +88,11 @@ def check_layout(result, width, assets, coin_sizes):
         raise RuntimeError("The item summary floats beside squeezed article text at phone width.")
     if summary and width >= 768 and summary["width"] > content / 2:
         raise RuntimeError("The item summary stopped floating beside the article on a wide screen.")
+    clear = result["summaryClear"]
+    if summary and (not clear or (width <= 390 and (clear["width"] < content - 1
+                                                    or clear["y"] < summary["y"] + summary["height"] - 1))
+                    or (width >= 768 and clear["width"] > 1)):
+        raise RuntimeError("The item summary spacer no longer keeps WebKit headings below a full-width summary.")
     for region in result["regions"]:
         if (region["tabindex"] != "0" or region["role"] not in {"region", "group"} or not region["label"]
                 or region["overflow"] != "auto" or region["box"]["right"] > width + 1):
