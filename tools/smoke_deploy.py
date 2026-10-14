@@ -1486,7 +1486,7 @@ def smoke(uploads_only=False):
             for seller in sellers:
                 refreshed_transclusion(run, api, seller, "111.23 silver", 'id="entity-item-105"', price_title)
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
-            if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Stats"' not in item_html:
+            if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Obtaining"' not in item_html:
                 raise RuntimeError("Selective price transclusion removed the item's normal full article.")
             coin_title = "Copper Coin"
             coin_text = pages[coin_title].replace("<nowiki>25</nowiki> g", "<nowiki>26</nowiki> g")

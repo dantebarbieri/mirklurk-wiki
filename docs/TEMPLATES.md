@@ -197,7 +197,9 @@ caveat and links to the mechanics explanation.
 
 The optional `label` is exactly `Attack pattern` (default), `Melee attack` or
 `Ranged attack`. Article section headings and stable `grid-...` anchors remain
-outside the template so melee/ranged navigation is unchanged.
+outside the template so melee/ranged navigation is unchanged. Item pages put
+the damage type and range in a sentence directly above the grid; their core
+facts sit in a small "Item summary" box and other stats in prose sections.
 
 ## Geometry, accessibility and errors
 

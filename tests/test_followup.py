@@ -85,17 +85,19 @@ class FollowupTests(unittest.TestCase):
     def test_reconciled_pages_preserve_reviewed_human_text_and_add_mobile_wrappers(self):
         # Live Items r2996 (minus its empty Misc section) and Wooden Recorder r2995.
         # Items is re-pinned for 0.8.9.9: its only changes are additive rows for new items and sellers.
+        # Wooden Recorder is re-pinned for its item summary box and {{Coins}} base value.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
             "Items": "45c699b3360c3350f5328581fcc0a7c52b9c6f53481e7eac503798c17f826eb4",
-            "Wooden Recorder": "eadd66853c40f7f856eae6529e53fb8b628eea0cad2609b3afca8664efd51090",
+            "Wooden Recorder": "58617ff46311e954ed6f56bf622b994d15133161a8be31eaade6c8b43f26ca10",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):
                 text = self.pages[title]
                 table_count = 7 if title == "Items" else 1
-                self.assertEqual(text.count(scroll_open()), table_count)
-                text, count = re.subn(re.escape(scroll_open()) + r"(.*?)\n</div>\n",
+                wrapper = scroll_open() if title == "Items" else scroll_open("Item summary")
+                self.assertEqual(text.count(wrapper), table_count)
+                text, count = re.subn(re.escape(wrapper) + r"(.*?)\n</div>\n",
                                      r"\1\n", text, flags=re.DOTALL)
                 self.assertEqual(count, table_count)
                 if title == "Wooden Recorder":
@@ -111,10 +113,6 @@ class FollowupTests(unittest.TestCase):
                     markup = pixel_image(recorder, alt="Wooden Recorder inventory icon.", page_image=True)
                     self.assertEqual(text.count(markup), 1)
                     text = text.replace(markup, pixel_image(uncropped(recorder), alt="Wooden Recorder inventory icon.", page_image=True))
-                    # Base values now display as coins rather than silver equivalents.
-                    value = "|| {{Coins|0}} ||"
-                    self.assertEqual(text.count(value), 1)
-                    text = text.replace(value, "|| <nowiki>0</nowiki> silver equivalents ||")
                 self.assertEqual(hashlib.sha256(text.rstrip().encode()).hexdigest(), digest)
 
     def test_exact_factions_cover_all_beings_and_replace_primary_taxonomy(self):
