@@ -12,6 +12,7 @@ from wiki_data import (
     _object, _records, _text, _title, entry_page, prose_link_parts, title_key,
 )
 from wiki_acquisition import validate_acquisition
+from wiki_anchors import acquisition_fragments, entity_fragment, entry_fragments, titled, valid_fragment
 from wiki_references import resolve_catalog_references
 
 
@@ -59,6 +60,7 @@ def ingredient_acquisition(data, catalog):
     locations = page_locations(data, catalog)
     relations = entry_relations(data, catalog)
     owners = entry_owners(data, locations, relations, catalog)
+    shown = entry_fragments([row for row in entries if row["kind"] in {"merchant", "loot"}], owners, locations)
     creatures = {row["entity"] for row in catalog["classifications"] if row["kind"] == "creature"}
     sources = catalog.get("acquisition", {}).get("sources", [])
     inherited = {identity: source for source in sources for identity in source.get("existing_entry_ids", [])}
@@ -73,24 +75,25 @@ def ingredient_acquisition(data, catalog):
         return "Creature drops" if source["kind"] == "enemy" else "Other ingredient sources"
 
     for source in sources:
+        anchors = acquisition_fragments(source, locations)
         for row in source["rows"]:
             if row["coverage"] != "eligible-pool":
                 add(row["item"], source_method(source),
-                    source["title"] + "#acquisition-" + row["id"], source["title"])
+                    source["title"] + "#" + anchors[row["id"]], source["title"])
     for entry in entries:
         details, owner = entry["details"], owners[entry["id"]]
         if entry["kind"] == "recipe":
             for row in details["outputs"]:
                 add(row["item"], "Crafted ingredients", owner + "#Recipes", owner)
         elif entry["kind"] == "merchant":
-            add(details["item"], "Purchased ingredients", owner + "#entry-" + entry["id"], owner)
+            add(details["item"], "Purchased ingredients", owner + "#" + shown[entry["id"]], owner)
         elif entry["kind"] == "loot" and details["outcome"] is not None:
             if entry["id"] in inherited:
                 method = source_method(inherited[entry["id"]])
             else:
                 named = relations[entry["id"]] & creatures
                 method = "Creature drops" if len(named) == 1 and owner == locations[next(iter(named))] else "Other ingredient sources"
-            add(details["outcome"], method, owner + "#entry-" + entry["id"], owner)
+            add(details["outcome"], method, owner + "#" + shown[entry["id"]], owner)
     source_titles = {source["id"]: source["title"] for source in sources}
     for identity, methods in routes.items():
         if methods:
@@ -459,10 +462,10 @@ def validate_catalog(catalog, data):
                     _object(link, {"label", "target"}, set(), "NPC dialogue link")
                     _text(link["label"], "NPC dialogue link.label", 160)
                     _text(link["target"], "NPC dialogue link.target", 255)
-                    page, separator, fragment = link["target"].partition("#")
+                    page, separator, part = link["target"].partition("#")
                     _title(page)
                     if separator:
-                        _identifier(fragment, "NPC dialogue link.anchor")
+                        valid_fragment(part, "NPC dialogue link.anchor")
                     if link["label"] in labels:
                         raise DataError("NPC dialogue link: expected unique label used in its paragraphs")
                     labels.add(link["label"])
@@ -947,8 +950,10 @@ def load_catalog(path, data):
 
 
 def page_locations(data, catalog):
+    npcs = {row["entity"] for row in catalog.get("classifications", []) if row.get("kind") == "npc"}
     locations = {
-        entity["id"]: f'{CATEGORY_PAGES[entity["category"]]}#entity-{entity["id"]}'
+        entity["id"]: ("NPCs#" + titled("npc", entity["name"]) if entity["id"] in npcs else
+                       CATEGORY_PAGES[entity["category"]] + "#" + entity_fragment(entity, entity["name"]))
         for entity in data["entities"]
     }
     locations.update({row["entity"]: row["title"] for row in catalog["pages"]})

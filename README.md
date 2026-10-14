@@ -159,14 +159,12 @@ generators do not use the internal seed draw or the unused reseeding helpers,
 so the guide does not imply a reusable world seed. The main page and mechanics,
 NPC and merchant indexes link to the guide; its finding-NPCs section leads to
 the character-owned search instructions and exterior images. **World seed logic**
-redirects to the new title, retaining historical fact and entry anchors at the
-destination. Supplemental citations retain the original research records unchanged.
+redirects to the new title. Supplemental citations retain the original research records unchanged.
 
 Twenty-two source pages own 130 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree
 harvesting, insects, story rewards, Survivor corpses and mapmaking. All 27 historical world-loot
-records move to named owners without changing their evidence or losing old
-anchors. Random treasure owns eleven source-specific pools with 610 verified
+records move to named owners without changing their evidence. Random treasure owns eleven source-specific pools with 610 verified
 eligibility memberships, not invented per-item probabilities. Shared interruption
 and story gates remain visible in filtered item views. Pools show alphabetical
 item/category lists beneath their budget rules, not repeated unknown quantity
@@ -248,8 +246,15 @@ Existing wikis are updated by [publishing](docs/PUBLISHING.md) instead.
 Entity pages use ordinary names; only collisions are qualified, such as
 **Turnip (item)** and **Turnip (nature)**. NPCs are indexed separately from
 creatures, without assuming either grouping guarantees peacefulness or
-hostility. Skill-specific facts and summaries live on individual skill pages;
-old aggregate anchors remain as links. Initial research records are unchanged.
+hostility. Skill-specific facts and summaries live on individual skill pages.
+Initial research records are unchanged.
+
+Section anchors are readable: a kind prefix plus the canonical title, such as
+`Bestiary#creature-Sceetler`, `Magus Clay#offer-Iron_Hand_Axe` or
+`Sceetler#loot-Plant_Fiber`. Anchors on an entity's own page omit the entity
+(`Giant Slug#base-armor`, `Sceetler#health-grid`, `Iron Hand Axe#price`).
+Repeated names get `-2`, `-3`. No identifier-based or retired anchors are kept;
+the builder rejects repeated anchors and links to missing ones.
 
 Items can also be browsed by 14 actual equipment slots, weapon families,
 consumable subcategories and crafting-material families. Categories form a

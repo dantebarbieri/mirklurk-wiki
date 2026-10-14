@@ -6,6 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from wiki_anchors import validate_anchors
 from wiki_catalog import title_key
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
@@ -104,6 +105,7 @@ def main(argv=None):
         data, catalog, details = load_publication_inputs(root)
         pages = build_pages(root, data, catalog, details)
         validate_reader_pages(pages)
+        validate_anchors(pages)
         total = len(pages)
         excluded = existing_titles(args.existing_export) if args.existing_export else set()
         pages = {title: text for title, text in pages.items() if title_key(title) not in excluded}

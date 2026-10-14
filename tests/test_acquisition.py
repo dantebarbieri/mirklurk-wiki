@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "tests"))
 
+from wiki_anchors import acquisition_fragments, entry_fragments, titled
 from wiki_catalog import category_definitions, entry_owners, entry_relations, ingredient_acquisition, page_locations, validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
@@ -24,6 +25,9 @@ class AcquisitionTests(unittest.TestCase):
         cls.data, cls.catalog, cls.details = load_publication_inputs(ROOT)
         cls.pages = build_pages(ROOT, cls.data, cls.catalog, cls.details)
         cls.audit = audit_report(cls.data, cls.catalog, cls.details)
+        cls.locations = page_locations(cls.data, cls.catalog)
+        owners = entry_owners(cls.data, cls.locations, entry_relations(cls.data, cls.catalog), cls.catalog)
+        cls.shown = entry_fragments(cls.data["entries"], owners, cls.locations)
 
     def test_every_item_has_a_verified_method_or_an_explicit_scoped_note(self):
         document = self.catalog["acquisition"]
@@ -49,7 +53,7 @@ class AcquisitionTests(unittest.TestCase):
         self.assertFalse(any("No documented acquisition source is available yet." in text for text in self.pages.values()))
         self.assertIn("built-in", self.pages["Unarmed"])
         self.assertIn("not a collectible item", self.pages["Finish Raft"])
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         for identity in ("item-170",):
             self.assertIn("[[" + locations[identity] + "#Recipes|", self.pages["Finish Raft"])
         for identity in unverified:
@@ -63,7 +67,7 @@ class AcquisitionTests(unittest.TestCase):
         groups = clothing_subgroups(self.catalog, clothes["members"])
         self.assertEqual({label: len(members) for label, members, _ in groups}, expected)
         self.assertEqual(set().union(*(members for _, members, _ in groups)), set(clothes["members"]))
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         for page in ("Items", "Category:Clothes"):
             for label, members, slots in groups:
                 section = self.pages[page].split("=== " + label + " ===\n", 1)[1].split("\n==", 1)[0]
@@ -71,16 +75,16 @@ class AcquisitionTests(unittest.TestCase):
                     self.assertIn("{{Item|" + locations[identity] + "}}", section)
                 for slot in slots:
                     self.assertIn("[[:Category:" + slot + "|", section)
-        anchors = re.findall(r'id="entity-(item-\d+)"', self.pages["Items"])
+        anchors = re.findall(r'id="item-([^"]+)"', self.pages["Items"])
         self.assertEqual(len(anchors), 264)
-        self.assertEqual(set(anchors), {row["id"] for row in self.data["entities"] if row["category"] == "item"})
+        self.assertEqual(set(anchors), {locations[row["id"]].replace(" ", "_") for row in self.data["entities"] if row["category"] == "item"})
 
     def test_overlapping_clothing_tags_never_duplicate_primary_index_anchors(self):
         catalog = copy.deepcopy(self.catalog)
         gloves = next(row for row in catalog["taxonomy"]["tags"] if row["title"] == "Glove-slot equipment")
         gloves["members"].append("item-42")
         pages = build_pages(ROOT, self.data, catalog, self.details)
-        self.assertEqual(pages["Items"].count('id="entity-item-42"'), 1)
+        self.assertEqual(pages["Items"].count('id="item-Simple_Hood"'), 1)
         self.assertIn("[[Category:Glove-slot equipment]]", pages["Simple Hood"])
         self.assertIn("[[Category:Hood-slot equipment]]", pages["Simple Hood"])
         clothes = next(row for row in catalog["taxonomy"]["groups"] if row["title"] == "Clothes")
@@ -101,7 +105,7 @@ class AcquisitionTests(unittest.TestCase):
                     "Crafted ingredients": 4, "Other ingredient sources": 1}
         categories = category_definitions(self.data, self.catalog)
         self.assertEqual(set(categories["Recipe ingredients"]["members"]), inputs)
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         for method, count in expected.items():
             members = {identity for identity, methods in routes.items() if method in methods}
             self.assertEqual(len(members), count, method)
@@ -117,8 +121,8 @@ class AcquisitionTests(unittest.TestCase):
         self.assertEqual(set(categories["Purchased ingredients"]["members"]), inputs & offers)
         self.assertEqual(inputs & offers, {"item-45"})
         self.assertNotIn("Creature drops", routes["item-142"])
-        self.assertIn(("Plant harvesting#acquisition-harvest-calmia-root", "Plant harvesting"), routes["item-142"]["Gatherables"])
-        self.assertIn(("Starting equipment#acquisition-starting-equipment-item-39", "Starting equipment"),
+        self.assertIn(("Plant harvesting#acquisition-Calmia_Root", "Plant harvesting"), routes["item-142"]["Gatherables"])
+        self.assertIn(("Starting equipment#" + titled("acquisition", locations["item-39"]), "Starting equipment"),
                       routes["item-39"]["Other ingredient sources"])
         self.assertIn("[[:Category:Crafting materials|Material families]]", self.pages["Items"])
         material_section = self.pages["Items"].split("== Crafting materials ==\n", 1)[1].split("\n== ", 1)[0]
@@ -204,7 +208,7 @@ class AcquisitionTests(unittest.TestCase):
         self.assertEqual({reference["section"] for reference in row["evidence"]},
                          {"gml_GlobalScript_scr_items", "gml_Object_manager_area_Alarm_2", "spr_ts_hinderance"})
         self.assertIn(literal(row["condition"]), self.pages["Plant harvesting"])
-        self.assertIn(("Plant harvesting", (("item", "item-142"), ("view", "loot"))),
+        self.assertIn(("Plant harvesting", (("item", "Calmia Root"), ("view", "loot"))),
                       transclusions(self.pages["Calmia Root"]))
         self.assertNotIn("clumps of", self.pages["Calmia Root"])
         self.assertNotIn("clumps of", self.pages["Plant harvesting"])
@@ -229,14 +233,14 @@ class AcquisitionTests(unittest.TestCase):
         self.assertIn("Dead Unwanted", row["condition"])
         self.assertIn("scripted quest pickup, not ordinary corpse loot", row["condition"])
         self.assertIn(literal(row["condition"]), self.pages["Story rewards and finds"])
-        self.assertIn(("Story rewards and finds", (("item", "item-75"), ("view", "loot"))),
+        self.assertIn(("Story rewards and finds", (("item", "Wooden Recorder"), ("view", "loot"))),
                       transclusions(self.pages["Wooden Recorder"]))
         self.assertIn("[[Story rewards and finds]]", self.pages["Dead camp"])
         self.assertIn("automatically hands over one recorder", self.pages["Quests and journal"])
         self.assertIn("next midnight", self.pages["Quests and journal"])
         self.assertNotIn("recovered flute", self.pages["Quests and journal"])
         for title in ("Wooden Recorder", "Dead Unwanted", "Captain Eir"):
-            self.assertIn("[[Quests and journal#entry-journal-1|", self.pages[title])
+            self.assertIn("[[Quests and journal#quest-The_ruined_camp|", self.pages[title])
             self.assertNotIn("automatically hands over one recorder", self.pages[title])
         self.assertIn("Editorial entry evidence", self.audit)
         self.assertIn("menu_psynch[being6/item75]", self.audit)
@@ -245,16 +249,16 @@ class AcquisitionTests(unittest.TestCase):
         sources = {row["id"]: row for row in self.catalog["acquisition"]["sources"]}
         self.assertEqual(len(sources["starting-equipment"]["rows"]), 12)
         self.assertEqual(len(sources["dead-camp"]["rows"]), 5)
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         for source in (sources["starting-equipment"], sources["dead-camp"]):
             self.assertEqual(available_views(self.pages[source["title"]]), {"loot"})
             for row in source["rows"]:
-                owner = self.pages[source["title"]]
-                self.assertEqual(owner.count('id="acquisition-' + row["id"] + '"'), 1)
+                owner, anchor = self.pages[source["title"]], 'id="' + acquisition_fragments(source, locations)[row["id"]] + '"'
+                self.assertEqual(owner.count(anchor), 1)
                 self.assertEqual(row["probability"]["numerator"], row["probability"]["denominator"])
-                self.assertIn((source["title"], (("item", row["item"]), ("view", "loot"))),
+                self.assertIn((source["title"], (("item", locations[row["item"]]), ("view", "loot"))),
                               transclusions(self.pages[locations[row["item"]]]))
-                self.assertNotIn('id="acquisition-' + row["id"] + '"', self.pages[locations[row["item"]]])
+                self.assertNotIn(anchor, self.pages[locations[row["item"]]])
                 self.assertNotIn("No documented acquisition source", self.pages[locations[row["item"]]])
         starting = {row["item"]: row for row in sources["starting-equipment"]["rows"]}
         self.assertEqual(starting["item-36"]["quantity"], {"min": 3, "max": 3})
@@ -286,10 +290,10 @@ class AcquisitionTests(unittest.TestCase):
         self.assertNotIn("Survivor's Field Kit", owner)
         self.assertNotIn("Crafting AP cost", owner)
         self.assertNotIn("Crafting yield", owner)
-        self.assertEqual(owner.count('id="entry-construction-raft-completion"'), 1)
+        self.assertEqual(owner.count('id="recipe-Finish_Raft"'), 1)
         self.assertIn(("Finish Raft", (("station", "raft-base"), ("view", "recipes"))),
                       transclusions(self.pages["Raft Base"]))
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         for ingredient in recipe["inputs"]:
             self.assertIn("[[Finish Raft#Recipes|", self.pages[locations[ingredient["item"]]])
         for change in (
@@ -349,7 +353,7 @@ class AcquisitionTests(unittest.TestCase):
         self.assertIn("item-254", pools["survivor-remains"]["eligible_item_ids"])
         self.assertNotIn("item-254", pools["unwanted-remains"]["eligible_item_ids"])
         self.assertFalse(set(pools["skeleton-outdoors"]["eligible_item_ids"]) <= set(pools["skeleton-indoors"]["eligible_item_ids"]))
-        locations = page_locations(self.data, self.catalog)
+        locations = self.locations
         for source in sources.values():
             for reference in source.get("pool_refs", []):
                 pool = pools[reference["pool"]]
@@ -362,9 +366,9 @@ class AcquisitionTests(unittest.TestCase):
                     with self.subTest(source=source["id"], pool=pool["id"], item=item):
                         readers = transclusions(self.pages[locations[item]])
                         self.assertIn((source["title"], (("pool", pool["id"]), ("view", "pool-source"))), readers)
-                        self.assertIn((owner, (("item", item), ("pool", pool["id"]), ("view", "pool"))), readers)
+                        self.assertIn((owner, (("item", locations[item]), ("pool", pool["id"]), ("view", "pool"))), readers)
                         self.assertNotIn("No documented acquisition source", self.pages[locations[item]])
-                        self.assertEqual(self.pages[owner].count('id="pool-item-' + pool["id"] + "-" + item + '"'), 1)
+                        self.assertEqual(self.pages[owner].count('id="' + titled("pool-item-" + pool["id"], locations[item]) + '"'), 1)
         for title in ("Raving Unwanted", "Mutated Unwanted"):
             self.assertIn("[[Raving and Mutated Unwanted loot", self.pages[title])
         self.assertIn("[[Survivor loot", self.pages["Survivor"])
@@ -384,18 +388,16 @@ class AcquisitionTests(unittest.TestCase):
         for row in source["rows"]:
             self.assertNotIn("10%", row["probability"]["scope"])
         for identity in source["existing_entry_ids"]:
-            self.assertIn('id="entry-' + identity + '"', self.pages[source["title"]])
+            self.assertEqual(self.pages[source["title"]].count('id="' + self.shown[identity] + '"'), 1)
 
-    def test_world_rehoming_preserves_all_historical_owner_anchors(self):
+    def test_world_rehoming_moves_records_to_one_readable_anchor_on_their_new_owner(self):
         sources = self.catalog["acquisition"]["sources"]
         inherited = {identity: source["title"] for source in sources for identity in source.get("existing_entry_ids", [])}
         self.assertEqual(len(inherited), 27)
-        locations = page_locations(self.data, self.catalog)
-        original = {key: value for key, value in self.catalog.items() if key != "acquisition"}
-        previous = entry_owners(self.data, locations, entry_relations(self.data, original), original)
+        text = "\n".join(self.pages.values())
         for identity, target in inherited.items():
-            self.assertIn('id="entry-' + identity + '"', self.pages[previous[identity]])
-            self.assertIn("[[" + target + "#entry-" + identity + "|", self.pages[previous[identity]])
+            self.assertEqual(self.pages[target].count('id="' + self.shown[identity] + '"'), 1)
+            self.assertNotIn("entry-" + identity, text)
         rows = {row["id"]: row for source in sources for row in source["rows"]}
         for identity, numerator, denominator in (("boulders-base-maggot", 71, 120),
                                                 ("boulders-base-beetle", 71, 120),
@@ -457,9 +459,9 @@ class AcquisitionTests(unittest.TestCase):
                                 {key: value for key, value in catalog.items() if key != "acquisition"})[entry["id"]]
         self.assertEqual(owners[entry["id"]], source["title"])
         pages = build_pages(ROOT, self.data, catalog, self.details)
-        self.assertEqual(pages[source["title"]].count('id="entry-' + entry["id"] + '"'), 1)
-        self.assertIn('id="entry-' + entry["id"] + '"', pages[previous])
-        self.assertIn("[[" + source["title"] + "#entry-" + entry["id"] + "|", pages[previous])
+        anchor = 'id="' + entry_fragments(self.data["entries"], owners, locations)[entry["id"]] + '"'
+        self.assertEqual(pages[source["title"]].count(anchor), 1)
+        self.assertNotIn(anchor, pages[previous])
         catalog["acquisition"]["sources"][1]["existing_entry_ids"] = [entry["id"]]
         with self.assertRaises(DataError):
             validate_catalog(catalog, self.data)

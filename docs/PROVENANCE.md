@@ -82,7 +82,7 @@ independent rolls or completeness from a partial table.
 
 Algorithm steps describe only the supported trace, not executable code.
 Function symbols and field identifiers belong in evidence references; numeric
-facts retain their own citations and are linked through stable anchors.
+facts retain their own citations and are linked through readable anchors.
 
 In all these fields, null means **not established**, not zero or no cost.
 The exception is the expressly defined null loot outcome, which means a
@@ -163,8 +163,8 @@ own detailed location/access prose.
 
 Historical `World seed logic` fact and algorithm destinations resolve to
 **World generation** without rewriting `game.json`. The old title is emitted as
-a redirect only when the researched topic is present. Historical fact and entry
-anchors stay on the new page, and generated navigation/provenance links target
+a redirect only when the researched topic is present. Its facts and entries
+render on the new page with readable anchors, and generated navigation/provenance links target
 the new owner. Both titles are reserved against entity-page/alias collisions.
 
 NPC location evidence supplements distinguish Bhato's ordered orthogonal-neighbor
@@ -181,8 +181,8 @@ An NPC classification may include `dialogue`, an ordered list of one to eight
 reviewed topics. Each topic requires a unique `id` and `title`, one to four
 original `paragraphs` (at most 1200 characters each), `links`, a boolean `spoiler`,
 `confidence`, and `evidence`. Links contain a unique `label` used in the prose and
-a `target`: a canonical page title, optionally followed by an explicit stable
-anchor. The builder rejects missing destinations and anchors. At most twelve
+a `target`: a canonical page title, optionally followed by an explicit readable
+anchor such as `Quests and journal#quest-Find_Bhato`. The builder rejects missing destinations and anchors. At most twelve
 links are allowed per topic. Each label must match at non-word boundaries in
 the prose; longer overlapping labels take precedence, as in the renderer.
 These are original summaries, never dialogue
@@ -396,13 +396,12 @@ without rewriting historical evidence:
 
 Five localized skill groups remain sections of Skills and have linked category
 pages; seven damage types now have their
-own pages, with Damage types retained as a directory and legacy-anchor owner.
+own pages, with Damage types retained as a directory.
 Facts with an exact,
 unambiguous entity-name/category match move to that entity's page; ambiguous
 matches fail. In particular, legacy skill facts retain `page: Game mechanics`
 in the immutable data but are rendered only on their skill owners.
-The completed-turn clock fact is owned by Action points, with its old Weather
-anchor retained as a link.
+The completed-turn clock fact is owned by Action points.
 
 `taxonomy` contains `groups` and `tags`, each with `{title,index,members}` and
 optional `{parents,summary,confidence,evidence}`.
@@ -434,7 +433,7 @@ that the parser and category indexes agree.
 skill-group entity. Category titles and all skill memberships are derived from
 the localized group names and `game.json` group references, never a second
 editable membership list. Wanderer, Survivor, Hunter, Warrior and Forager each
-retain five skills, with the original Skills anchors preserved. These are the
+retain five skills, each with a `Skills#skill-group-<Group>` anchor. These are the
 game's recorded groups, not a new prerequisite tree.
 
 Equipment categories use the native `item_fits_slot` acceptance rules and
@@ -601,21 +600,37 @@ primary editable wiki owner. Acquisition and workstation tables transclude
 named views of those owners instead of creating editable copies of prices,
 ingredient quantities, AP costs, or stock conditions. Ingredient and NPC links
 do not copy quest prose. Identical recipes may share one row with all applicable stations, but
-different inputs, outputs, costs, or conditions remain distinct. Legacy
-`entity-`, `fact-`, and `entry-` anchors remain
-on old indexes as links, so old bookmarks are not silently broken.
+different inputs, outputs, costs, or conditions remain distinct. Retired
+identifier-based anchors (`entity-`, `fact-`, `entry-`, `profile-`, …) are not
+kept; see [Readable anchors](#readable-anchors).
 
 Source provenance keeps IDs, hashes, confidence, evidence references, and
 methodology. It points to the editable gameplay owner rather than duplicating
-its values or prose. Reader pages contain invisible stable anchors, not
+its values or prose. Reader pages contain invisible readable anchors, not
 visible machine labels or repeated citation columns. Exact duplicate legacy
 initializer facts and profile fields can share the same value row and retain
 both anchors. Initializer crafting cost and yield share the canonical recipe
 cells only when all relevant recipes agree on value, units, confidence, and
 source-field scope; mismatches remain explicit stat rows. Ingredient "Used in"
-links point once to each output's Recipes section, while all source-entry
-anchors remain on that output. Base, conditional, and potential values are not summed or
+links point once to each output's Recipes section, while each recipe keeps its
+own anchor on that output. Base, conditional, and potential values are not summed or
 converted into invented final stats.
+
+### Readable anchors
+
+`tools/wiki_anchors.py` builds each anchor from a kind prefix and the canonical
+title (spaces become underscores), omitting the entity on its own page:
+`Items#item-Iron_Hand_Axe`, `Bestiary#creature-Sceetler`, `NPCs#npc-Captain_Eir`,
+`Giant Slug#base-armor` (fact), `#stats-base` (profile), `#health-grid`,
+`#attack-grid-melee`, `#image`, `Iron Hand Axe#price`,
+`Magus Clay#offer-Iron_Hand_Axe`, `Sceetler#loot-Plant_Fiber`,
+`#recipe-<Output>`, `Quests and journal#quest-Find_Bhato`, `#rules-<Entry>`,
+`Beehives#acquisition-Honey` and `Random treasure#pool-item-chest-common-Amethyst`.
+Repeats on one page are numbered `-2`, `-3`; recipe anchors are numbered
+wiki-wide because workstations transclude them. Offer, loot and acquisition
+anchors are `noinclude`, since item pages transclude several owners' rows.
+The builder rejects repeated anchors and generated links to missing lowercase
+anchors. No identifier-based or compatibility anchors are kept.
 
 The CLI and Docker smoke load the checked-in registry and supplemental files
 explicitly. `build_pages` also supports small caller-supplied datasets: omitted
@@ -680,10 +695,10 @@ no longer a valid readiness check.
 | --- | --- | --- |
 | Merchant wares | `{{:Item}}` | Item's single Buying price |
 | Workstation recipe table | `{{:Item|view=recipes|station=station-id}}` | Output item's recipe rows |
-| Item seller table | `{{:Merchant|view=offers|item=item-id}}` | Merchant's stock and conditions |
-| Item loot table | `{{:Source|view=loot|item=item-id}}` | Creature or other documented loot owner |
+| Item seller table | `{{:Merchant|view=offers|item=Item title}}` | Merchant's stock and conditions |
+| Item loot table | `{{:Source|view=loot|item=Item title}}` (`item=empty` for nothing) | Creature or other documented loot owner |
 | Item random-source context | `{{:Source|view=pool-source|pool=pool-id}}` | Source's condition, including tier/attempt qualifications |
-| Item pool reference | `{{:Random treasure|view=pool|pool=pool-id|item=item-id}}` | Compact eligibility reference and shared story gates |
+| Item pool reference | `{{:Random treasure|view=pool|pool=pool-id|item=Item title}}` | Compact eligibility reference and shared story gates |
 | Currency guide | `{{:Coin}}` | Coin's value/weight/stack summary |
 
 `acquisition.json` is a separately bounded, build-matched source register
@@ -699,14 +714,14 @@ probabilities retain their exact fraction and selection scope.
 Items select these source rows with the existing `view=loot` contract.
 Historical loot records can be assigned to a named source through
 `existing_entry_ids` without modifying or copying the original research entry;
-their previous owner retains a compatibility anchor and link. Source titles,
+the record then renders only on its source page. Source titles,
 item references, inherited entry ownership, related pages, evidence, and
 contextual approved image references are validated before publication.
 
 The complete acquisition register has 21 source pages, 130 new rows, and ten
 pools with 538 memberships. The original 43 enemy-loot rows remain in place;
-all 27 historical world-loot entries acquire explicit source owners and retain
-compatibility anchors. Source `loot_context` is a single editable shared block:
+all 27 historical world-loot entries acquire explicit source owners.
+Source `loot_context` is a single editable shared block:
 the boulder's pre-loot Viper interruption and conditional insect-distribution
 scope therefore survive item filtering, including inherited historical rows.
 Being/nature illustrations reuse existing approved entity records just as item
@@ -753,7 +768,7 @@ Survivor's Field Kit and no fictitious completed-raft item is introduced.
 
 Recipe inclusions return HTML table rows, not a second table or owner article.
 Each row filters the requested station; its ingredients, output, AP, conditions,
-and legacy anchors occur once in the editable owner. Shared table markup is
+and anchors occur once in the editable owner. Shared table markup is
 ordinary MediaWiki-supported HTML, avoiding table-pipe escaping in parser
 functions. Merchant offer inclusions return a filtered table. Standard price
 cells are enclosed in `noinclude`, so an item selecting its sellers does not
@@ -852,7 +867,7 @@ contains 118 grids: 36 base health and 82 attack patterns.
 
 Original accessible HTML tables preserve shape and orientation without
 image bytes or a runtime extension. Grid-owned dimensions/totals replace
-duplicate profile rows while retaining profile anchors. Item attack patterns
+duplicate profile rows while retaining their `stats-…` anchors. Item attack patterns
 are not labeled melee-only, particularly bows. Damaged/story-specific health
 instances are never substituted for base shapes.
 

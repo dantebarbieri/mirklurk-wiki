@@ -6,6 +6,7 @@ import re
 import urllib.parse
 
 from sync_wiki import SyncError, fetch_live, sync
+from wiki_anchors import fragment
 from wiki_catalog import page_locations, primary_groups, title_key
 from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, lua_string, page_namespace
 from wiki_render import image_for, merchant_table, pixel_geometry
@@ -246,7 +247,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
         for expected, rows in zip(expected_grids, parsed.grids):
             if [len(row) for row in rows] != [len(row) for row in expected["rows"]]:
                 raise RuntimeError(f"{expected['id']}: dimensions or orientation changed.")
-            if f'id="grid-{expected["id"]}"' not in rendered:
+            if f'id="{fragment("grid", expected["id"])}"' not in rendered:
                 raise RuntimeError(f"{expected['id']}: anchor missing.")
             count, low, high = 0, 0, 0
             for y, (wanted_row, row) in enumerate(zip(expected["rows"], rows), 1):
@@ -401,7 +402,7 @@ def smoke_vendor_rows(api, pages, data, catalog, token, dom, check_errors):
     for index in (None, 0, 1):
         result = full if index is None else api({
             "action": "parse", "title": locations[offers[index]["details"]["item"]],
-            "text": "{{:" + title + "|view=offers|item=" + offers[index]["details"]["item"] + "}}",
+            "text": "{{:" + title + "|view=offers|item=" + locations[offers[index]["details"]["item"]] + "}}",
             "prop": "text|templates"}, post=True)["parse"]
         rendered = result["text"]["*"]
         check_errors(rendered)
@@ -423,16 +424,16 @@ def smoke_vendor_rows(api, pages, data, catalog, token, dom, check_errors):
 
 def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
     # Ordinary edits, no imports or reseeding; each dependency layer must invalidate readers.
-    owner_anchor = re.search(r'id="entity-[^"]+"', pages["Survivor's Field Kit"]).group()
+    owner_anchor = 'id="price"'  # Only the item article itself defines its price anchor.
     examples = (
         ("Template:Item", pages["Template:Item"].replace("<includeonly>", "<includeonly>native-item-marker ", 1),
-         "native-item-marker", "Items", 'aria-label="Iron Hand Axe"', 'id="price-item-14"'),
+         "native-item-marker", "Items", 'aria-label="Iron Hand Axe"', 'id="price"'),
         ("Template:Item", pages["Template:Item"].replace("<includeonly>", "<includeonly>native-item-row-marker ", 1),
-         "native-item-row-marker", "Gurb-Gurb", "mirklurk-item", 'id="price-item-14"'),
+         "native-item-row-marker", "Gurb-Gurb", "mirklurk-item", 'id="price"'),
         ("Template:Recipe row", pages["Template:Recipe row"].replace("<td>", "<td>native-recipe-marker ", 1),
-         "native-recipe-marker", "Campfire", "base", 'id="entity-item-141"'),
+         "native-recipe-marker", "Campfire", "base", "<b>Simple Burn Remedy</b>:"),
         ("Template:Ware row", pages["Template:Ware row"].replace("<td>", "<td>native-ware-marker ", 1),
-         "native-ware-marker", "Iron Hand Axe", "Magus Clay", 'id="entity-being-8"'),
+         "native-ware-marker", "Iron Hand Axe", "Magus Clay", 'id="health-grid"'),
         ("Template:Coins", pages["Template:Coins"].replace("<includeonly>", "<includeonly>native-template-marker ", 1),
          "native-template-marker", "Gurb-Gurb", "2 gold", owner_anchor),
         ("Module:Display", pages["Module:Display"].replace("return table.concat(parts, ' ')", "return 'native-module-marker ' .. table.concat(parts, ' ')"),
@@ -440,12 +441,12 @@ def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
         (ASSETS_TITLE, pages[ASSETS_TITLE].replace("gold = [=[", "gold = [=[native-assets-marker ", 1),
          "native-assets-marker", "Gurb-Gurb", "2 gold", owner_anchor),
         ("Template:Creature", pages["Template:Creature"].replace("<includeonly>", "<includeonly>native-creature-template-marker ", 1),
-         "native-creature-template-marker", "Bestiary", 'aria-label="Sceetler"', 'id="grid-being-13-health"'),
+         "native-creature-template-marker", "Bestiary", 'aria-label="Sceetler"', 'id="health-grid"'),
         ("Module:Display", pages["Module:Display"].replace("return tostring(mw.html.create('span')",
                                                         "return 'native-creature-module-marker ' .. tostring(mw.html.create('span')"),
-         "native-creature-module-marker", "Bestiary", 'aria-label="Sceetler"', 'id="grid-being-13-health"'),
+         "native-creature-module-marker", "Bestiary", 'aria-label="Sceetler"', 'id="health-grid"'),
         (ASSETS_TITLE, pages[ASSETS_TITLE].replace("Sceetler portrait", "native-creature-assets-marker"),
-         "native-creature-assets-marker", "Bestiary", 'aria-label="Sceetler"', 'id="grid-being-13-health"'),
+         "native-creature-assets-marker", "Bestiary", 'aria-label="Sceetler"', 'id="health-grid"'),
     )
     for owner, edited, marker, reader, restored_marker, forbidden_anchor in examples:
         if edited == pages[owner]:

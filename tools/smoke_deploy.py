@@ -25,6 +25,7 @@ from pathlib import Path
 
 from build_wiki import build_pages, build_xml, title_key
 from sync_wiki import Api, fetch_live, normalize, sync
+from wiki_anchors import acquisition_fragments, entry_fragments, titled
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
 from wiki_display import page_namespace
@@ -524,9 +525,9 @@ def dom(html, title):
 def check_pool_projection(html, pool, owner, locations, catalog, item=None, parse_title="Pool projection"):
     parsed = dom(html, parse_title)
     members = set(pool["eligible_item_ids"]) if item is None else {item} & set(pool["eligible_item_ids"])
-    wanted = {"pool-item-" + pool["id"] + "-" + identity for identity in members}
+    wanted = {titled("pool-item-" + pool["id"], locations[identity]): identity for identity in members}
     actual = [identity for identity in parsed.anchors if identity.startswith("pool-item-")]
-    if set(actual) != wanted or len(actual) != len(wanted):
+    if set(actual) != wanted.keys() or len(actual) != len(wanted):
         raise RuntimeError("A pool view changed its exact membership.")
     for identity, condition in pool["item_conditions"].items():
         if (" ".join(condition.split()) in parsed.text) != (identity in members):
@@ -546,11 +547,11 @@ def check_pool_projection(html, pool, owner, locations, catalog, item=None, pars
         for row in parsed.rows:
             if len(row["ids"]) != 1 or row["ids"][0] not in wanted or len(row["cells"]) != 2:
                 raise RuntimeError("A pool candidate table changed its two-column shape.")
-            identity = row["ids"][0].removeprefix("pool-item-" + pool["id"] + "-")
+            identity = wanted[row["ids"][0]]
             category = categories.get(identity)
             links = [locations[identity]]
             if identity in pool["item_conditions"]:
-                links.append(owner + "#treasure-condition-" + identity)
+                links.append(owner + "#" + titled("treasure-condition", locations[identity]))
             if ([link["target"] for link in row["cells"][0]["links"]] != links
                     or row["headers"] != ["Item", "Category"]
                     or row["cells"][1]["text"] != (category or "Item")
@@ -560,10 +561,11 @@ def check_pool_projection(html, pool, owner, locations, catalog, item=None, pars
 
 
 class RenderedRows(HTMLParser):
-    def __init__(self, prefix="entry-recipe-", strip_prefix="entry-", page_title=None):
+    """Table rows keyed by the readable anchors they define or link to (transcluded rows only link)."""
+
+    def __init__(self, prefix="recipe-", page_title=None):
         super().__init__()
         self.prefix = prefix
-        self.strip_prefix = strip_prefix
         self.rows = []
         self.text = ""
         self.current = None
@@ -577,9 +579,10 @@ class RenderedRows(HTMLParser):
         if tag == "tr":
             self.current = {"entries": set(), "text": "", "cells": []}
         elif self.current is not None:
-            identity = attrs.get("id", "")
+            identity = attrs.get("id") or (tag == "a" and urllib.parse.unquote(
+                urllib.parse.urlsplit(attrs.get("href", "")).fragment)) or ""
             if identity.startswith(self.prefix):
-                self.current["entries"].add(identity.removeprefix(self.strip_prefix))
+                self.current["entries"].add(identity)
             if tag in {"td", "th"}:
                 self.cell = {"text": "", "links": []}
                 self.current["cells"].append(self.cell)
@@ -617,6 +620,11 @@ class RenderedRows(HTMLParser):
 
 def plain(value):
     return " ".join(value.split())
+
+
+def lead(title):
+    """The bold lead name that only the full article renders, never its transcluded views."""
+    return f"<b>{title}</b>:"
 
 
 def scalar(value):
@@ -729,6 +737,9 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     owners = entry_owners(data, locations, entry_relations(data, catalog), catalog)
     recipes = [display_entry(entry, catalog) for entry in data["entries"] if entry["kind"] == "recipe"]
     groups = recipe_groups(recipes)
+    shown = entry_fragments([display_entry(entry, catalog) for entry in data["entries"]], owners, locations,
+                            catalog.get("construction_recipes", []))
+    built = {shown[recipe["id"]] for recipe in catalog.get("construction_recipes", [])}
     stations = {method: station for station in catalog["stations"] for method in station["methods"]}
     entities = {entity["id"]: entity for entity in data["entities"]}
     prices = {row["entity"]: row["value"] for row in catalog["unit_prices"]["prices"]}
@@ -738,37 +749,37 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         check_parser_errors(rendered)
         parsed = RenderedRows(page_title=station["title"])
         parsed.feed(rendered)
+        construction = [row for row in parsed.rows if row["entries"] & built]
+        parsed.rows = [row for row in parsed.rows if not row["entries"] & built]
         expected = [group for group in groups if any(entry["details"]["station"] in station["methods"] for entry in group)]
         # Item workstations also retain the recipe used to make the workstation itself.
         expected += [group for group in groups if owners[group[0]["id"]] == station["title"]
                      and not any(entry["details"]["station"] in station["methods"] for entry in group)]
         if {frozenset(row["entries"]) for row in parsed.rows} != {
-            frozenset(entry["id"] for entry in group) for group in expected
+            frozenset(shown[entry["id"]] for entry in group) for group in expected
         } or len(parsed.rows) != len(expected):
             raise RuntimeError(f"{station['title']} lost a recipe variant, added a foreign row, or duplicated a row.")
         for row in parsed.rows:
-            group = next(group for group in groups if group[0]["id"] in row["entries"])
+            group = next(group for group in groups if shown[group[0]["id"]] in row["entries"])
             check_recipe_cells(row, group, locations, stations)
-        construction = RenderedRows("entry-construction-", "entry-", page_title=station["title"])
-        construction.feed(rendered)
-        wanted = {recipe["id"]: recipe for recipe in catalog.get("construction_recipes", [])
+        wanted = {shown[recipe["id"]]: recipe for recipe in catalog.get("construction_recipes", [])
                   if recipe["station_id"] == station["id"]}
-        if {identity for row in construction.rows for identity in row["entries"]} != wanted.keys() or len(construction.rows) != len(wanted):
+        if {identity for row in construction for identity in row["entries"]} != wanted.keys() or len(construction) != len(wanted):
             raise RuntimeError("A workstation lost or duplicated an in-place construction action.")
-        for row in construction.rows:
+        for row in construction:
             check_construction_cells(row, wanted[next(iter(row["entries"]))], locations)
     price_owners = {locations[entry["details"]["item"]] for entry in data["entries"] if entry["kind"] == "merchant"}
     default_text = "\n".join("<div>{{:" + title + "}}</div>" for title in sorted(price_owners))
     rendered = api({"action": "parse", "title": "Synthetic default views", "text": default_text, "prop": "text"}, post=True)["parse"]["text"]["*"]
     check_parser_errors(rendered)
-    if re.search(r'id="(?:entity-|entry-|profile-|Recipes|How_to_acquire)', rendered) or "Ingredients" in rendered:
+    if re.search(r'id="(?:item-|recipe-|offer-|stats-|image|Recipes|How_to_acquire)', rendered) or "Ingredients" in rendered:
         raise RuntimeError("A default price view leaked owner content, a recipe, or merchant availability.")
     if not catalog["unit_prices"]["unresolved_offers"] and "Unknown" in rendered:
         raise RuntimeError("A fully documented merchant price still renders as unresolved.")
     for title in price_owners:
         rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
-        if 'id="How_to_acquire"' not in rendered or 'id="entity-' not in rendered:
+        if 'id="How_to_acquire"' not in rendered or 'id="price"' not in rendered:
             raise RuntimeError("A normal item article lost its acquisition section or identity.")
     for merchant in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "merchant"}:
         offered = [display_entry(entry, catalog) for entry in data["entries"]
@@ -779,13 +790,13 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         for item in [None, *sorted({entry["details"]["item"] for entry in offered})]:
             query = {"action": "parse", "page": merchant, "prop": "text|templates"} if item is None else {
                 "action": "parse", "title": "Synthetic seller view",
-                "text": "{{:" + merchant + "|view=offers|item=" + item + "}}", "prop": "text|templates"}
+                "text": "{{:" + merchant + "|view=offers|item=" + locations[item] + "}}", "prop": "text|templates"}
             result = api(query, post=item is not None)["parse"]
             rendered = result["text"]["*"]
             check_parser_errors(rendered)
-            parsed = RenderedRows("entry-merchant-", "entry-", page_title=merchant if item is None else None)
+            parsed = RenderedRows("offer-", page_title=merchant if item is None else None)
             parsed.feed(rendered)
-            wanted = {entry["id"]: entry for entry in offered if item is None or entry["details"]["item"] == item}
+            wanted = {shown[entry["id"]]: entry for entry in offered if item is None or entry["details"]["item"] == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != wanted.keys() or len(parsed.rows) != len(wanted):
                 raise RuntimeError("A seller view lost or duplicated an exact offer.")
             check_seller_context(result, merchant, item, parsed.text, stock_text,
@@ -822,12 +833,12 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         loot = [display_entry(entry, catalog) for entry in data["entries"]
                 if entry["kind"] == "loot" and owners[entry["id"]] == owner]
         for item in sorted({entry["details"]["outcome"] or "empty" for entry in loot}):
-            text = "{{:" + owner + "|view=loot|item=" + item + "}}"
+            text = "{{:" + owner + "|view=loot|item=" + locations.get(item, item) + "}}"
             rendered = api({"action": "parse", "title": "Synthetic loot view", "text": text, "prop": "text"}, post=True)["parse"]["text"]["*"]
             check_parser_errors(rendered)
-            parsed = RenderedRows(("entry-loot-", "entry-corpse-"), "entry-")
+            parsed = RenderedRows("loot-")
             parsed.feed(rendered)
-            expected = {entry["id"]: entry for entry in loot if (entry["details"]["outcome"] or "empty") == item}
+            expected = {shown[entry["id"]]: entry for entry in loot if (entry["details"]["outcome"] or "empty") == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys() or len(parsed.rows) != len(expected):
                 raise RuntimeError("A loot view lost, duplicated or leaked an outcome row.")
             for row in parsed.rows:
@@ -860,17 +871,18 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             if source and source.get("loot_context") and plain(source["loot_context"]) not in plain(parsed.text):
                 raise RuntimeError("A historical loot outcome lost its shared interruption qualifier.")
     for source in catalog.get("acquisition", {}).get("sources", []):
+        anchors = acquisition_fragments(source, locations)
         for item in sorted({row["item"] for row in source["rows"]}):
-            text = "{{:" + source["title"] + "|view=loot|item=" + item + "}}"
+            text = "{{:" + source["title"] + "|view=loot|item=" + locations[item] + "}}"
             result = api({"action": "parse", "title": "Synthetic acquisition view", "text": text,
                           "prop": "text|templates"}, post=True)["parse"]
             rendered = result["text"]["*"]
             check_parser_errors(rendered)
-            parsed = RenderedRows("acquisition-", "acquisition-")
+            parsed = RenderedRows("acquisition-")
             parsed.feed(rendered)
             if source.get("loot_context") and source["loot_context"] not in parsed.text:
                 raise RuntimeError("A filtered acquisition view omitted its shared interruption/eligibility qualifier.")
-            expected = {row["id"]: row for row in source["rows"] if row["item"] == item}
+            expected = {anchors[row["id"]]: row for row in source["rows"] if row["item"] == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys():
                 raise RuntimeError("A fixed acquisition view leaked another item or omitted a documented condition.")
             if len(parsed.rows) != len(expected) or {row["*"] for row in result.get("templates", [])} != {
@@ -892,8 +904,9 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                 if row["coverage"] == "fixed" and "100%" not in rendered_row["text"]:
                     raise RuntimeError("A fixed acquisition view lost its explicitly conditional certainty.")
     original = pages["Dead camp"]
+    fixture = titled("acquisition", locations["item-41"])
     row = next(row for row in re.findall(r"<tr>.*?</tr>", original, re.DOTALL)
-               if 'id="acquisition-dead-camp-item-41"' in row)
+               if f'id="{fixture}"' in row)
     changed = row.replace("<nowiki>1</nowiki>", "<nowiki>703</nowiki>", 1)
     if changed == row:
         raise RuntimeError("The synthetic acquisition edit missed the canonical quantity.")
@@ -903,9 +916,9 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     if edit.get("edit", {}).get("result") != "Success":
         raise RuntimeError("The canonical acquisition quantity edit failed.")
     rendered = refreshed_transclusion(run, api, locations["item-41"], "703", 'id="source-dead-camp"', "Dead camp")
-    parsed = RenderedRows("acquisition-", "acquisition-")
+    parsed = RenderedRows("acquisition-")
     parsed.feed(rendered)
-    if not any("dead-camp-item-41" in row["entries"] and plain(row["cells"][2]["text"]) == "703" for row in parsed.rows):
+    if not any(fixture in row["entries"] and plain(row["cells"][2]["text"]) == "703" for row in parsed.rows):
         raise RuntimeError("The changed quantity did not reach the item's exact acquisition row.")
     restored = api({"action": "edit", "title": "Dead camp", "text": original, "token": token}, post=True)
     if restored.get("edit", {}).get("result") != "Success":
@@ -915,7 +928,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         owner = locations[recipe["owner_item"]]
         original = pages[owner]
         row = next(row for row in re.findall(r"\{\{Recipe row\n.*?\n\}\}", original, re.DOTALL)
-                   if 'id="entry-' + recipe["id"] + '"' in row)
+                   if f'id="{shown[recipe["id"]]}"' in row)
         before = "|ap=<nowiki>" + scalar(recipe["base_ap_cost"]) + "</nowiki>"
         changed = row.replace(before, "|ap=<nowiki>991</nowiki>", 1)
         if changed == row:
@@ -925,9 +938,10 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         edit = api({"action": "edit", "title": owner, "text": original.replace(row, changed, 1), "token": token}, post=True)
         if edit.get("edit", {}).get("result") != "Success":
             raise RuntimeError("The ordinary-editor construction edit failed.")
-        rendered = refreshed_transclusion(run, api, recipe["station_title"], "991", 'id="entity-item-171"', owner)
-        parsed = RenderedRows("entry-construction-", "entry-", page_title=recipe["station_title"])
+        rendered = refreshed_transclusion(run, api, recipe["station_title"], "991", lead(owner), owner)
+        parsed = RenderedRows(page_title=recipe["station_title"])
         parsed.feed(rendered)
+        parsed.rows = [row for row in parsed.rows if shown[recipe["id"]] in row["entries"]]
         if len(parsed.rows) != 1:
             raise RuntimeError("The changed construction row was not retained exactly once.")
         check_construction_cells(parsed.rows[0], recipe, locations, 991)
@@ -936,11 +950,12 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             raise RuntimeError("The construction fixture could not be restored.")
     fixture = next(group for group in groups if locations[group[0]["details"]["outputs"][0]["item"]] == "Simple Burn Remedy" and len(group) > 1)
     owner = owners[fixture[0]["id"]]
+    anchor = shown[fixture[0]["id"]]
     targets = {station["title"] for station in catalog["stations"] if any(
         entry["details"]["station"] in station["methods"] for entry in fixture)}
     original = pages[owner]
     block = next(block for block in re.findall(r"<onlyinclude>.*?</onlyinclude>", original, re.DOTALL)
-                 if f'id="entry-{fixture[0]["id"]}"' in block)
+                 if f'id="{anchor}"' in block)
     changed = original
     for before, after, expected in (
         ("|quantity=1}}", "|quantity=701}}", "701"),
@@ -957,17 +972,17 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         if edit.get("edit", {}).get("result") != "Success":
             raise RuntimeError("The canonical recipe edit failed.")
         for target in targets:
-            rendered = refreshed_transclusion(run, api, target, expected, 'id="entity-item-141"', owner)
+            rendered = refreshed_transclusion(run, api, target, expected, lead(owner), owner)
             check_parser_errors(rendered)
             parsed = RenderedRows(page_title=target)
             parsed.feed(rendered)
-            if not any(fixture[0]["id"] in row["entries"] and expected in row["text"] for row in parsed.rows):
+            if not any(anchor in row["entries"] and expected in row["text"] for row in parsed.rows):
                 raise RuntimeError("The changed recipe value did not reach its exact station row.")
-            changed_row = next(row for row in parsed.rows if fixture[0]["id"] in row["entries"])
+            changed_row = next(row for row in parsed.rows if anchor in row["entries"])
             check_recipe_cells(changed_row, fixture, locations, stations, 701, 997 if expected == "997" else None)
         rendered = api({"action": "parse", "page": owner, "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
-        if expected not in rendered or 'id="entity-item-141"' not in rendered:
+        if expected not in rendered or lead(owner) not in rendered:
             raise RuntimeError("A selective recipe edit broke the normal owner article.")
         block = replacement
     print("Named views passed: every workstation variant, default prices, filtered sellers/loot, separate quantity/AP edits.")
@@ -984,7 +999,7 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
     if include_size["0"] >= include_size["1"]:
         raise RuntimeError("The complete candidate lists exceed the deployed template expansion budget.")
     parsed = dom(complete["text"]["*"], "Random treasure")
-    expected = ["pool-item-" + pool["id"] + "-" + identity for pool in sorted(pools.values(), key=lambda row: row["id"])
+    expected = [titled("pool-item-" + pool["id"], locations[identity]) for pool in sorted(pools.values(), key=lambda row: row["id"])
                 for identity in sorted(pool["eligible_item_ids"], key=lambda identity: (
                     next(row["name"] for row in data["entities"] if row["id"] == identity), identity))]
     if [identity for identity in parsed.anchors if identity.startswith("pool-item-")] != expected:
@@ -999,7 +1014,7 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
         if {row["*"] for row in result.get("templates", [])} != {owner}:
             raise RuntimeError("A pool candidate list introduced a nested dependency.")
         for item in sorted({*pool["eligible_item_ids"], "item-48"}):
-            text = "{{:" + owner + "|view=pool|pool=" + pool["id"] + "|item=" + item + "}}"
+            text = "{{:" + owner + "|view=pool|pool=" + pool["id"] + "|item=" + locations[item] + "}}"
             result = api({"action": "parse", "title": "Synthetic pool view", "text": text,
                           "prop": "text|templates"}, post=True)["parse"]
             rendered = result["text"]["*"]
@@ -1013,7 +1028,7 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
             result = api({"action": "parse", "title": "Synthetic pool source", "text": text,
                           "prop": "text|templates"}, post=True)["parse"]
             check_parser_errors(result["text"]["*"])
-            parsed = RenderedRows("pool-item-", "pool-item-")
+            parsed = RenderedRows("pool-item-")
             parsed.feed(result["text"]["*"])
             if reference["condition"] not in parsed.text or parsed.rows:
                 raise RuntimeError("A source-context view lost its condition or included pool member tables.")
@@ -1028,7 +1043,7 @@ def smoke_acquisition_pools(run, api, pages, data, catalog, token):
         rendered = api({"action": "parse", "page": locations[item], "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
         parsed = dom(rendered, locations[item])
-        expected = {"pool-item-" + reference["pool"] + "-" + item for source in sources.values()
+        expected = {titled("pool-item-" + reference["pool"], locations[item]) for source in sources.values()
                     for reference in source.get("pool_refs", []) if item in pools[reference["pool"]]["eligible_item_ids"]}
         actual = [identity for identity in parsed.anchors if identity.startswith("pool-item-")]
         if set(actual) != expected or len(actual) != len(expected):
@@ -1377,7 +1392,7 @@ def smoke(uploads_only=False):
             redirect = api({"action": "query", "titles": "Getting started", "redirects": "1"})["query"].get("redirects", [])
             if not any(row["from"] == "Getting started" and row["to"] == "Starting equipment" for row in redirect):
                 raise RuntimeError("The reviewed guidance compatibility redirect was not published correctly.")
-            for title, anchor in {"Strider": "entry-skill-0-0-mechanics", "Ranger Bhato": "entity-being-12"}.items():
+            for title, anchor in {"Strider": "rules-Effects", "Ranger Bhato": "health-grid"}.items():
                 rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
                 if f'id="{anchor}"' not in rendered:
                     raise RuntimeError("MediaWiki did not render the entity page's primary record anchor.")
@@ -1407,7 +1422,7 @@ def smoke(uploads_only=False):
             for seller in sellers:
                 rendered = api({"action": "parse", "page": seller, "prop": "text"})["parse"]["text"]["*"]
                 check_parser_errors(rendered)
-                if "222.22 silver" not in rendered or 'id="entity-item-105"' in rendered:
+                if "222.22 silver" not in rendered or lead(price_title) in rendered:
                     raise RuntimeError("A merchant did not show the synced price without waiting for jobs.")
             weather = dom(api({"action": "parse", "page": "Weather", "prop": "text"})["parse"]["text"]["*"], "Weather")
             if [row["redlink"] for row in weather.wiki_links if row["target"] == target] != [False]:
@@ -1432,7 +1447,7 @@ def smoke(uploads_only=False):
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
             smoke_canonical_views(run, api, pages, data, catalog, csrf)
             cached_merchant = api({"action": "parse", "page": "Ranger Bhato", "prop": "text"})["parse"]["text"]["*"]
-            if "111.23 silver" in cached_merchant or 'id="entity-item-105"' in cached_merchant:
+            if "111.23 silver" in cached_merchant or lead(price_title) in cached_merchant:
                 raise RuntimeError("The merchant price-edit precondition is invalid.")
             cache_diagnostics(api, "Ranger Bhato", price_title, cached_merchant)
             updated_item = original_item.replace(price_blocks[0], selective_view("111.23 silver", "price", True), 1)
@@ -1442,16 +1457,16 @@ def smoke(uploads_only=False):
                 raise RuntimeError("A registered editor cannot update the canonical item price.")
             print("Owner edit timestamp:", price_edit["edit"]["newtimestamp"], flush=True)
             for seller in sellers:
-                refreshed_transclusion(run, api, seller, "111.23 silver", 'id="entity-item-105"', price_title)
+                refreshed_transclusion(run, api, seller, "111.23 silver", lead(price_title), price_title)
             item_html = api({"action": "parse", "page": price_title, "prop": "text"})["parse"]["text"]["*"]
-            if "111.23 silver" not in item_html or 'id="entity-item-105"' not in item_html or 'id="Obtaining"' not in item_html:
+            if "111.23 silver" not in item_html or lead(price_title) not in item_html or 'id="Obtaining"' not in item_html:
                 raise RuntimeError("Selective price transclusion removed the item's normal full article.")
             coin_title = "Copper Coin"
             coin_text = pages[coin_title].replace("<nowiki>25</nowiki> g", "<nowiki>26</nowiki> g")
             if coin_text == pages[coin_title]:
                 raise RuntimeError("The synthetic coin-weight edit did not target its canonical value.")
             cached_currency = api({"action": "parse", "page": "Currency and trading", "prop": "text"})["parse"]["text"]["*"]
-            if "25 g" not in cached_currency or 'id="entity-item-72"' in cached_currency:
+            if "25 g" not in cached_currency or lead(coin_title) in cached_currency:
                 raise RuntimeError("The coin-weight edit precondition is invalid.")
             cache_diagnostics(api, "Currency and trading", coin_title, cached_currency)
             wait_for_server_tick(api)
@@ -1459,7 +1474,7 @@ def smoke(uploads_only=False):
             if coin_edit.get("edit", {}).get("result") != "Success":
                 raise RuntimeError("A registered editor cannot update a coin-owned weight.")
             print("Owner edit timestamp:", coin_edit["edit"]["newtimestamp"], flush=True)
-            refreshed_transclusion(run, api, "Currency and trading", "26 g", 'id="entity-item-72"', coin_title)
+            refreshed_transclusion(run, api, "Currency and trading", "26 g", lead(coin_title), coin_title)
             preserved = "Original live edit for the disposable integration test."
             edit = api({"action": "edit", "title": "Game mechanics", "text": preserved, "token": csrf}, post=True)
             if edit.get("edit", {}).get("result") != "Success":

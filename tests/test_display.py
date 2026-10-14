@@ -161,7 +161,7 @@ class DisplayTests(unittest.TestCase):
             if image or int(identity[6:]) < 37:  # 0.8.9.9 additions lack art
                 self.assertIn(pixel_image(image, 32, 32, title, title + " portrait"), assets)
             self.assertIn("[[" + title + "|<nowiki>" + title + "</nowiki>]]", assets)
-            line = next(line for line in self.pages["Bestiary"].splitlines() if 'id="entity-' + identity + '"' in line)
+            line = next(line for line in self.pages["Bestiary"].splitlines() if 'id="creature-' + title.replace(" ", "_") + '"' in line)
             self.assertTrue(line.endswith("{{Creature|" + title + "}}"))
         for row in self.catalog["classifications"]:
             if row["kind"] == "npc":
@@ -233,7 +233,7 @@ class DisplayTests(unittest.TestCase):
             self.assertNotIn("Item-14-cropped", registry)
             self.assertIn("[[Iron Hand Axe|<nowiki>Iron Hand Axe</nowiki>]]", registry)
         self.assertIn("{{Item|Iron Hand Axe}}", self.pages["Items"])
-        self.assertEqual(self.pages["Items"].count('id="entity-item-'), 264)
+        self.assertEqual(self.pages["Items"].count('id="item-'), 264)
 
     def test_actual_sources_compose_rows_and_keep_exact_owner_filters(self):
         readers = {title: text for title, text in self.pages.items() if title not in DISPLAY_TITLES}
@@ -241,7 +241,7 @@ class DisplayTests(unittest.TestCase):
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (97, 78))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 79)
-        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2191)
+        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2128)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("|Value]]: ") for text in readers.values()), 58)

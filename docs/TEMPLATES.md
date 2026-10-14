@@ -56,8 +56,11 @@ in the real parser without raising runtime limits or omitting any candidates.
 These are **presentation**, not new factual owners. Keep the literal
 `onlyinclude` / `#switch` selectors and `station` or `item` filters on the
 owning article, with the row invocation **inside** them. Template arguments do
-not inherit the caller's view/filter parameters. Stable variant anchors are
-passed with `anchors`; merged variants retain all original anchors.
+not inherit the caller's view/filter parameters. Readable row anchors such as
+`recipe-Bandage` or `offer-Iron_Hand_Axe` are passed with `anchors`; merged
+identical variants keep every record's anchor (`recipe-Bandage`, `recipe-Bandage-2`).
+Offer, loot and acquisition anchors are wrapped in `noinclude`; recipe anchors
+are unique wiki-wide, so workstations transclude them.
 
 Syntax example (illustrative, not a verified recipe):
 
@@ -97,7 +100,7 @@ merchant's full page the item transclusion supplies its price, ultimately
 `{{Coins|...}}`. An item's filtered sellers view must omit that column and
 must not transclude the item again. The header uses the matching `noinclude`
 gate. For a genuinely mixed-price table, keep the column and use the existing
-owner-level `includeonly` link to `Item title#price-item-id` for standard rows;
+owner-level `includeonly` link to `Item title#price` for standard rows;
 a vendor-specific exception may supply `{{Coins|1900}}` on its merchant row.
 All 63 offers keep their six merchant owners; all 42 standard price blocks
 stay on items. Shared stock/funds remain on Currency and trading.
@@ -206,7 +209,7 @@ overlap, armor and modifiers affect the result. The template retains this
 caveat and links to the mechanics explanation.
 
 The optional `label` is exactly `Attack pattern` (default), `Melee attack` or
-`Ranged attack`. Article section headings and stable `grid-...` anchors remain
+`Ranged attack`. Article section headings and the `health-grid` / `attack-grid-...` anchors remain
 outside the template so melee/ranged navigation is unchanged. Item pages put
 the damage type and range in a sentence directly above the grid; their core
 facts sit in a small "Item summary" box and other stats in prose sections.

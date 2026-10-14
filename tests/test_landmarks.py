@@ -90,7 +90,7 @@ class LandmarkTests(unittest.TestCase):
         self.assertIn("[[Captain Eir|<nowiki>Captain Eir</nowiki>]]", bhato)
         self.assertIn("Common Bog directly north, south, east or west", bhato)
         self.assertIn("not the nearby ancient cellar", bhato)
-        self.assertIn("[[Quests and journal#entry-journal-7|", bhato)
+        self.assertIn("[[Quests and journal#quest-Find_Bhato|", bhato)
         self.assertIn("only in a world with no Drowned Fen", self.pages["Gurb-Gurb"])
         self.assertIn("five white dots", self.pages["Gurb-Gurb"])
         self.assertIn("When the hollow appears, a smoke-discovery message", self.pages["Gurb-Gurb"])
@@ -148,9 +148,9 @@ class LandmarkTests(unittest.TestCase):
             self.assertNotIn(phrase, page)
         for title in ("Ranger Bhato", "Gurb-Gurb", "Ihar"):
             self.assertIn(f"[[{title}#Location_and_access|", page)
-            self.assertIn("[[World generation#entry-world-seed-boundaries|", self.pages[title])
+            self.assertIn("[[World generation#rules-Exploration_order|", self.pages[title])
         for identity in ("world-grid-width", "area-seed-ceiling", "area-cell-size"):
-            self.assertIn(f'id="fact-{identity}"', page)
+            self.assertIn(f'id="{identity}"', page)
         original = next(row for row in self.data["entries"] if row["id"] == "world-seed-boundaries")
         self.assertEqual(original["confidence"], "inferred")
         shown = display_entry(original, self.catalog)
@@ -175,8 +175,8 @@ class LandmarkTests(unittest.TestCase):
         self.assertIn("[[Scaal]]", page)
         self.assertNotIn("{{Creature|Ranger Bhato", page)
         for identity in ("world-grid-width", "area-seed-ceiling", "area-cell-size"):
-            self.assertEqual(page.count(f'id="fact-{identity}"'), 1)
-            self.assertIn(f"[[World generation#fact-{identity}|", self.audit)
+            self.assertEqual(page.count(f'id="{identity}"'), 1)
+            self.assertIn(f"[[World generation#{identity}|", self.audit)
         for identity in LANDMARKS:
             location = next(row["location"] for row in self.catalog["classifications"] if row["entity"] == identity)
             for paragraph in location["paragraphs"]:
