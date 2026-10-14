@@ -97,7 +97,7 @@ class PublicationTests(unittest.TestCase):
         self.assertIn("python3 -m unittest discover -s tests -v", publication)
         self.assertIn("php tests/test_runtime.php", publication)
         self.assertIn("needs: publication", smoke)
-        self.assertIn("    timeout-minutes: 30\n", smoke)
+        self.assertIn("    timeout-minutes: 45\n", smoke)
         self.assertIn("run: python3 tools/smoke_deploy.py --run\n", smoke)
         self.assertIn("github.event.pull_request.head.sha || github.sha", smoke)
         self.assertIn("if: github.event_name == 'pull_request'", preview)

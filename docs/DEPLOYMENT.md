@@ -648,4 +648,4 @@ randomly named Compose project with temporary generated credentials, then:
 
 The live wiki is never contacted; the disposable containers and volumes are
 removed afterwards. CI runs the smoke on every pull request and before every
-publish, with a 30-minute budget.
+publish, with a 45-minute budget.
