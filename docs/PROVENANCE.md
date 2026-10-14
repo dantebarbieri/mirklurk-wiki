@@ -695,7 +695,7 @@ ordinary MediaWiki-supported HTML, avoiding table-pipe escaping in parser
 functions. Merchant offer inclusions return a filtered table. Standard price
 cells are enclosed in `noinclude`, so an item selecting its sellers does not
 recursively transclude itself for a price. The item's own single price is shown
-beside seller availability, not copied into Stats.
+beside seller availability, not copied into the item summary.
 
 The builder validates every generated transclusion owner and declared view.
 The migration planner records all parameterized dependencies rather than
