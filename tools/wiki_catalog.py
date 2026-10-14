@@ -12,6 +12,7 @@ from wiki_data import (
     _object, _records, _text, _title, entry_page, prose_link_parts, title_key,
 )
 from wiki_acquisition import validate_acquisition
+from wiki_references import resolve_catalog_references
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
@@ -934,7 +935,7 @@ def parse_catalog(raw, data):
         raise DataError("catalog must be valid UTF-8 JSON without duplicate keys") from error
     if isinstance(value, dict) and "acquisition" in value:
         raise DataError("acquisition records must be stored only in acquisition.json")
-    return validate_catalog(value, data)
+    return validate_catalog(resolve_catalog_references(value), data)
 
 
 def load_catalog(path, data):
