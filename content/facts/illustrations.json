@@ -13372,6 +13372,31 @@
       "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
     },
     {
+      "id": "area-withered-mire-illustration",
+      "guide": "Withered Mire",
+      "file_title": "File:Area-Withered-Mire.png",
+      "caption": "The game's own map of one Withered Mire area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "9ebfc53fc44f0120d28382e72048f745780a71d9be9750899285e84de5cd2172",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "2"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
       "id": "area-drowned-fen-illustration",
       "guide": "Drowned Fen",
       "file_title": "File:Area-Drowned-Fen.png",

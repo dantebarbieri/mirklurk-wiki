@@ -9790,8 +9790,6 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType2-grass-3..5.tree-death+0.0025"}
     ],
     "index_page": "Areas",
-    "image_entity": "nature-17",
-    "image_caption": "Trollgnarl trees make up a third of the Withered Mire's trees.",
     "tables": [
       {
         "after": 1,
@@ -9867,6 +9865,9 @@
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
       }
+    ],
+    "images": [
+      {"illustration": "area-withered-mire-illustration", "after": 0}
     ]
     },
     {
