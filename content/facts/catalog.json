@@ -3,7 +3,7 @@
   "damage_sources": [
     {
       "entity": "item-174",
-      "damage_type": "damage-class-2",
+      "damage_type": "Poison",
       "delivery": "ammunition",
       "summary": "Changes the bow attack to Poison.",
       "confidence": "inferred",
@@ -14,7 +14,7 @@
     },
     {
       "entity": "item-219",
-      "damage_type": "damage-class-2",
+      "damage_type": "Poison",
       "delivery": "ammunition",
       "summary": "Changes the bow attack to Poison.",
       "confidence": "inferred",
@@ -25,7 +25,7 @@
     },
     {
       "entity": "item-220",
-      "damage_type": "damage-class-2",
+      "damage_type": "Poison",
       "delivery": "ammunition",
       "summary": "Changes the bow attack to Poison.",
       "confidence": "inferred",
@@ -36,7 +36,7 @@
     },
     {
       "entity": "item-251",
-      "damage_type": "damage-class-2",
+      "damage_type": "Poison",
       "delivery": "thrown",
       "summary": "The flask's impact delivers 8 poison to beings within a 2-tile radius. This thrown effect bypasses armor on its selected healthy cell, unlike an ordinary direct poison weapon hit.",
       "confidence": "inferred",
@@ -47,7 +47,7 @@
     },
     {
       "entity": "item-253",
-      "damage_type": "damage-class-18",
+      "damage_type": "Fire",
       "delivery": "thrown",
       "summary": "The flask's impact delivers 5 fire damage to beings within a 2-tile radius. This thrown effect bypasses armor on its selected healthy cell, unlike an ordinary direct fire weapon hit.",
       "confidence": "inferred",

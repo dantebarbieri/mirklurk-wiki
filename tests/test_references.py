@@ -14,7 +14,29 @@ from wiki_data import DataError, load_data
 from wiki_references import ACQUISITION_REFERENCES, CATALOG_REFERENCES, resolve_acquisition_references
 
 
-SOURCE_ID = re.compile(r"\b(?:being|item|nature|skill)-\d")
+SOURCE_ID = re.compile(r"\b(?:being|item|nature|skill(?:-group)?|damage-class)-\d")
+# Paths where a record's own subject key or an extracted source entry/row identifier legitimately holds a source ID.
+SUBJECT_KEYS = {
+    "catalog": {
+        ("pages", "*", "entity"), ("classifications", "*", "entity"), ("currency", "coins", "*", "entity"),
+        ("damage_sources", "*", "entity"), ("item_effects", "*", "entity"), ("merchant_profiles", "*", "entity"),
+        ("stations", "*", "entity"), ("taxonomy", "skill_groups", "*", "entity"),
+        ("unit_prices", "prices", "*", "entity"), ("unit_prices", "covered_offers", "*"), ("entry_display", "*", "entry"),
+    },
+    "acquisition": {("item_notes", "*", "item"), ("pools", "*", "eligible_item_ids", "*"), ("sources", "*", "rows", "*", "id")},
+}
+
+
+def strings(node, path=()):
+    """Yield (path, value) for every string in a document, with "*" for list positions."""
+    if isinstance(node, dict):
+        for key, child in node.items():
+            yield from strings(child, path + (key,))
+    elif isinstance(node, list):
+        for child in node:
+            yield from strings(child, path + ("*",))
+    elif isinstance(node, str):
+        yield path, node
 
 
 def walk(node, path):
@@ -53,6 +75,18 @@ class AuthoredReferenceTests(unittest.TestCase):
         self.assertGreater(len(values), 1000)
         self.assertEqual([value for value in values if value not in self.titles], [])
         self.assertEqual([value for value in values if SOURCE_ID.fullmatch(value)], [])
+
+    def test_source_ids_appear_only_in_subject_keys(self):
+        game = json.loads((ROOT / "content/facts/game.json").read_text(encoding="utf-8"))
+        self.assertEqual([row["id"] for row in game["entities"] if not SOURCE_ID.match(row["id"])], [])
+        for name, document in (("catalog", self.catalog), ("acquisition", self.acquisition)):
+            leaks = sorted({(path, value) for path, value in strings(document)
+                            if SOURCE_ID.search(value) and path not in SUBJECT_KEYS[name]})
+            with self.subTest(document=name):
+                self.assertEqual(leaks, [], "name entities by canonical page title (see wiki_references.py)")
+        planted = copy.deepcopy(self.catalog)
+        planted["guides"][0]["future_field"] = ["being-7"]
+        self.assertTrue(any(SOURCE_ID.search(v) and p not in SUBJECT_KEYS["catalog"] for p, v in strings(planted)))
 
     def test_titles_resolve_to_entities_at_load(self):
         guide, ref = next(guide_cells(self.catalog))

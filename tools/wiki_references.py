@@ -23,6 +23,7 @@ CATALOG_REFERENCES = (
     ("construction_recipes", "*", "owner_item"),
     ("construction_recipes", "*", "station_item"),
     ("construction_recipes", "*", "inputs", "*", "item"),
+    ("damage_sources", "*", "damage_type"),
 )
 ACQUISITION_REFERENCES = (
     ("sources", "*", "related_entities", "*"),

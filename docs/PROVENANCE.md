@@ -336,11 +336,12 @@ without rewriting historical evidence:
   Every other authored cross-reference in the catalog and acquisition files
   (guide `related_entities`, `image_entity` and table cells; ability and
   location `related_entities`; station, taxonomy, faction, entry-link,
-  state-history, currency, merchant-comparison and construction references;
+  state-history, currency, merchant-comparison, damage-source type and construction references;
   acquisition sources, rows and item notes) names an entity by this canonical
   title, never its source ID or an alias. Unknown titles and IDs are rejected at
   load. Only a record's own subject key (`entity`/`item` of the record being
-  described) and extracted loot-pool memberships keep source IDs.
+  described), source entry/row identifiers and extracted loot-pool memberships
+  keep source IDs; `tests/test_references.py` fails on an ID anywhere else.
 - `classifications`: `{entity, kind, confidence, evidence, note}`, where
   `kind` is `npc`, `creature`, or `unclassified`. Name/dialogue/database
   evidence supports this navigation grouping, not universal hostility,
