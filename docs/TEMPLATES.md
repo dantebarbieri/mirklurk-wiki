@@ -200,7 +200,8 @@ The optional `label` is exactly `Attack pattern` (default), `Melee attack` or
 outside the template so melee/ranged navigation is unchanged. Item pages put
 the damage type and range in a sentence directly above the grid; their core
 facts sit in a small "Item summary" box and other stats in prose sections.
-Below a 36em column it spans the width instead of floating.
+Below a 36em column it spans the width instead of floating, and an empty
+spacer keeps WebKit from squeezing the next heading beside it.
 
 ## Geometry, accessibility and errors
 
