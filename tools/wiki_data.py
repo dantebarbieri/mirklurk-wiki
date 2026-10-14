@@ -20,7 +20,7 @@ PAGE_FILES = {
     "Damage types": "Damage_types.wiki",
     "Action points": "Action_points.wiki",
     "Health and armor": "Health_and_armor.wiki",
-    "Version 0.8.9.9": "Version_0.8.9.9.wiki",
+    "Version 0.9.0.0": "Version_0.9.0.0.wiki",
 }
 RESEARCH_PAGE_FILES = {
     "Quests and journal": "Quests_and_journal.wiki",

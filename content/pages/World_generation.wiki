@@ -1,6 +1,6 @@
 '''World generation''' happens in two stages: the game chooses the world-map biomes and several landmark zones upfront, then generates each area's terrain when you enter it. There is '''no reusable world seed'''. The route you explore affects both terrain borders and where some NPC locations, including the Survivors' camp, appear.
 
-This guide covers '''0.8.9.9''', a test build, and contains '''location and story spoilers'''. A '''zone''' is one cell of the five-by-five world map, labeled A through E and 1 through 5.
+This guide covers '''0.9.0.0''' and contains '''location and story spoilers'''. A '''zone''' is one cell of the five-by-five world map, labeled A through E and 1 through 5.
 
 == What is decided upfront? ==
 Creating a world chooses its biome grid and the zones for Fort Solid, [[Ranger Bhato]]'s hideout, [[Scaal]]'s lair and the Library. Those assignments exist before all the zones are explored; their exact exterior positions are created when the relevant areas are generated.

@@ -14184,7 +14184,7 @@
     {
       "id": "item-2-range",
       "entity": "item-2",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14205,7 +14205,7 @@
     {
       "id": "item-3-range",
       "entity": "item-3",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14226,7 +14226,7 @@
     {
       "id": "item-4-range",
       "entity": "item-4",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14247,7 +14247,7 @@
     {
       "id": "item-5-range",
       "entity": "item-5",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14268,7 +14268,7 @@
     {
       "id": "item-6-range",
       "entity": "item-6",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14289,7 +14289,7 @@
     {
       "id": "item-7-range",
       "entity": "item-7",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14310,7 +14310,7 @@
     {
       "id": "item-8-range",
       "entity": "item-8",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14331,7 +14331,7 @@
     {
       "id": "item-9-range",
       "entity": "item-9",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14352,7 +14352,7 @@
     {
       "id": "item-10-range",
       "entity": "item-10",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14373,7 +14373,7 @@
     {
       "id": "item-11-range",
       "entity": "item-11",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14394,7 +14394,7 @@
     {
       "id": "item-27-range",
       "entity": "item-27",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14415,7 +14415,7 @@
     {
       "id": "item-28-range",
       "entity": "item-28",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14436,7 +14436,7 @@
     {
       "id": "item-29-range",
       "entity": "item-29",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14457,7 +14457,7 @@
     {
       "id": "item-30-range",
       "entity": "item-30",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14478,7 +14478,7 @@
     {
       "id": "item-31-range",
       "entity": "item-31",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14499,7 +14499,7 @@
     {
       "id": "item-41-range",
       "entity": "item-41",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14520,7 +14520,7 @@
     {
       "id": "item-44-range",
       "entity": "item-44",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14541,7 +14541,7 @@
     {
       "id": "item-90-range",
       "entity": "item-90",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14562,7 +14562,7 @@
     {
       "id": "item-93-range",
       "entity": "item-93",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14583,7 +14583,7 @@
     {
       "id": "item-96-range",
       "entity": "item-96",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14604,7 +14604,7 @@
     {
       "id": "item-105-range",
       "entity": "item-105",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14625,7 +14625,7 @@
     {
       "id": "item-106-range",
       "entity": "item-106",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14646,7 +14646,7 @@
     {
       "id": "item-157-range",
       "entity": "item-157",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14667,7 +14667,7 @@
     {
       "id": "item-158-range",
       "entity": "item-158",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14688,7 +14688,7 @@
     {
       "id": "item-159-range",
       "entity": "item-159",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14709,7 +14709,7 @@
     {
       "id": "item-160-range",
       "entity": "item-160",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14730,7 +14730,7 @@
     {
       "id": "item-161-range",
       "entity": "item-161",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14751,7 +14751,7 @@
     {
       "id": "item-169-range",
       "entity": "item-169",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14772,7 +14772,7 @@
     {
       "id": "item-179-range",
       "entity": "item-179",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14793,7 +14793,7 @@
     {
       "id": "item-184-range",
       "entity": "item-184",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14814,7 +14814,7 @@
     {
       "id": "item-185-range",
       "entity": "item-185",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14835,7 +14835,7 @@
     {
       "id": "item-186-range",
       "entity": "item-186",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14856,7 +14856,7 @@
     {
       "id": "item-187-range",
       "entity": "item-187",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14877,7 +14877,7 @@
     {
       "id": "item-188-range",
       "entity": "item-188",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14898,7 +14898,7 @@
     {
       "id": "item-189-range",
       "entity": "item-189",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14919,7 +14919,7 @@
     {
       "id": "item-190-range",
       "entity": "item-190",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14940,7 +14940,7 @@
     {
       "id": "item-191-range",
       "entity": "item-191",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14961,7 +14961,7 @@
     {
       "id": "item-206-range",
       "entity": "item-206",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -14982,7 +14982,7 @@
     {
       "id": "item-212-range",
       "entity": "item-212",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15003,7 +15003,7 @@
     {
       "id": "item-266-range",
       "entity": "item-266",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15024,7 +15024,7 @@
     {
       "id": "item-267-range",
       "entity": "item-267",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15045,7 +15045,7 @@
     {
       "id": "item-268-range",
       "entity": "item-268",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15066,7 +15066,7 @@
     {
       "id": "item-269-range",
       "entity": "item-269",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15087,7 +15087,7 @@
     {
       "id": "item-270-range",
       "entity": "item-270",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15108,7 +15108,7 @@
     {
       "id": "item-271-range",
       "entity": "item-271",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15129,7 +15129,7 @@
     {
       "id": "item-272-range",
       "entity": "item-272",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15150,7 +15150,7 @@
     {
       "id": "item-273-range",
       "entity": "item-273",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -15171,7 +15171,7 @@
     {
       "id": "item-274-range",
       "entity": "item-274",
-      "context": "Literal tileRange from the item definition. In 0.8.9.9 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
       "confidence": "inferred",
       "evidence": [
         {

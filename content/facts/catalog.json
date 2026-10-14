@@ -4347,7 +4347,7 @@
           "key": "death.corpse[35].treasure_get_lootarray[1,1.5,0.2]"
         }
       ],
-      "note": "Renamed from Unwanted Guard in 0.8.9.9 and moved to the camp faction. NPC grouping follows its friendly faction and camp role.",
+      "note": "Renamed from Unwanted Guard in 0.9.0.0 and moved to the camp faction. NPC grouping follows its friendly faction and camp role.",
       "summary": "Survivors guard the Survivors' camp. They do not hold conversations: talking to one gets a short greeting, friendlier once Wilda trusts you. They warn you off if you try to build near the camp. A Survivor's corpse holds random treasure.",
       "location": {
         "paragraphs": [
@@ -7461,16 +7461,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.8.9.9",
-      "confirmation": "The wiki operator installed version 0.8.9.9 on 2026-10-13. It is a test build from the Steam beta branch next_version_tester, published before the official patch. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
+      "version": "0.9.0.0",
+      "confirmation": "The wiki operator installed version 0.9.0.0, the official release, on 2026-10-14. Its content was first published on 2026-10-13 as test build 0.8.9.9 on the Steam beta branch next_version_tester. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0900",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0899",
+          "source": "game-data-0900",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }

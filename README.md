@@ -12,24 +12,28 @@ not been runtime-verified; the other 51 facts are qualified initializer
 observations. The operator first confirmed build **0.8.1.5**, corroborating
 the inspected menu label.
 
-The wiki now documents **0.8.9.9**, a test build the operator installed from
-the Steam beta branch `next_version_tester` on 2026-10-13, before its official
-release. Its menu label matches. Four changed files (`data.win`, `Items.ini`,
+The wiki now documents **0.9.0.0**, the official patch the operator installed
+on 2026-10-14. Its content was first tested as **0.8.9.9** on the Steam beta
+branch `next_version_tester` (2026-10-13). Against that test build only
+`data.win` changed, with fixes and no documented value changes; it has a new
+`game-data-0900` fingerprint, and the localization files still match the
+0.8.9.9 fingerprints. Its menu label matches. Against 0.8.1.5, four changed files (`data.win`, `Items.ini`,
 `Bestiary.ini` and `UI.ini`) have new source fingerprints alongside the
 0.8.1.5 ones; `Nature.ini` is unchanged. The update adds 24 entities
 (17 items, six beings and the Leeching damage type), renames Unwanted Guard
 to Survivor and Fire Striker to Fire Bond, and adds 43 entries: 25 merchant
 offers, one recipe, 12 corpse-loot entries and five quest notes. Changed
 values cite the 0.8.9.9 fingerprints; unchanged records keep their 0.8.1.5
-citations. Pages show 0.8.9.9 values. The public **Version 0.8.9.9** changelog
+citations. Pages show 0.9.0.0 values. The public **Version 0.9.0.0** changelog
 lists the new content and every documented value that changed, with its 0.8.1.5
-and 0.8.9.9 values; each page it links gets a "New in" or "Changed in" link
-back. [Provenance](docs/PROVENANCE.md#version-0899-update) records the amendments.
+and 0.9.0.0 values, plus the fixes since the test build; each page it links gets
+a "New in" or "Changed in" link back. The old **Version 0.8.9.9** title redirects
+there. [Provenance](docs/PROVENANCE.md#version-0900-release) records the amendments.
 
 The reference now contains **107 numeric facts and 336 structured entries**:
 36 quest/journal notes, 88 merchant offers, 97 station-specific recipe
 variants, 82 conditional loot entries, and 33 original algorithm/skill
-summaries. The encyclopedia presentation generates 420 main-namespace pages:
+summaries. The encyclopedia presentation generates 421 main-namespace pages:
 355 individual item, being, nature, skill, and damage-type pages, plus
 workstation articles, topic guides/indexes, the version page and compatibility
 redirects. Another 104 ordinary MediaWiki category pages support hierarchical

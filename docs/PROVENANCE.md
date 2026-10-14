@@ -142,8 +142,8 @@ presentation, profiles, and server-only image metadata.
 
 For that snapshot the wiki operator confirmed installed build `0.8.1.5`,
 matching the menu label; its latest-patch assertion was a user report, not an
-independent global release check. The 0.8.9.9 update below replaces the
-documented build and records each deliberate amendment to earlier records.
+independent global release check. The 0.8.9.9 update and 0.9.0.0 release
+below replace the documented build and records each deliberate amendment to earlier records.
 Coverage gaps are stated on the relevant pages. Reviewed creature death handlers
 are documented, but base generation is not a guaranteed harvested yield;
 runtime harvesting/recovery modifiers and some merchant locations/prices remain
@@ -206,7 +206,7 @@ before stage 6. Clay's sample handover reaches stage 6; Eir's conversation after
 Viend's return reaches stage 15. Neither midnight nor the recorder handover grants
 those permissions. The escort branch does not assign hostile NPC targets; normal
 friendly targeting and damage-triggered retaliation remain separate. These are
-source observations for build 0.8.1.5, re-checked against 0.8.9.9, not a live playtest.
+source observations for build 0.8.1.5, re-checked against 0.8.9.9 and 0.9.0.0, not a live playtest.
 
 The bounded publication allowance for `wiki_render.py` is 108 KiB to cover the
 dialogue rendering and destination checks; `tests/test_dialogue.py` is an exact
@@ -270,6 +270,31 @@ hollow and Ihar's wreck: the first outdoor entry into any Savage Mirk while it
 does not exist, including revisits and older saves. The Terror spawns only at
 night in that area while Wilda's request is active, and never within 16 tiles
 of the camp. These are source observations, not live playtests.
+
+## Version 0.9.0.0 release
+
+On 2026-10-14 the operator installed the official 0.9.0.0 patch. The Steam
+beta branch was removed, and the 0.8.9.9 `data.win` was not kept. The new
+`data.win` (`game-data-0900`, build `0.9.0.0`) was decompiled privately and
+compared with the earlier private 0.8.9.9 decompile; no dump is stored here.
+The four localization files still match `items-en-0899`, `beings-en-0899`,
+`ui-en-0899` and `nature-en`.
+
+Only nine code entries changed and one was added: the version label and save
+version, an item-rotation sound, filename-safe new character names, raft
+save handling, flying-creature height after a position snap, a container
+local-menu condition, a tutorial countdown format, a debug overlay, and a
+deferred tile refresh after changing area. No item, being, merchant, recipe,
+loot, quest or skill definition changed, so every 0.8.9.9 record and its
+citation stands. `game.build`, `acquisition.json` and the currency build
+confirmation (now citing `game-data-0900`) record 0.9.0.0.
+
+Reader text now names 0.9.0.0, the official release, as the version that
+introduced the 0.8.9.9 content. The changelog moved to **Version 0.9.0.0**,
+whose "Public test build" section lists the fixes above; the builder emits
+**Version 0.8.9.9** as a redirect to it, and "New in"/"Changed in" links now
+name 0.9.0.0. The patch notes' other claims were checked against the
+0.8.1.5 and 0.9.0.0 decompiles before being added to the changelog.
 
 ## Build output
 

@@ -1745,6 +1745,9 @@ def build_pages(root, data, catalog=None, details=None):
             ["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], rows,
         )
     pages["Source provenance"] = "#REDIRECT [[Game mechanics]]\n"
+    if "Version 0.9.0.0" in pages:
+        # 0.8.9.9 was the public test build of 0.9.0.0; its old changelog title points to the release notes.
+        pages["Version 0.8.9.9"] = "#REDIRECT [[Version 0.9.0.0#Public_test_build]]\n"
     if "Starting equipment" not in pages:
         pages["Getting started"] = "#REDIRECT [[Main Page]]\n"
     if "currency" in catalog:

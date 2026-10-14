@@ -1,8 +1,13 @@
-'''Version 0.8.9.9''' is a test build released on 13 October 2026 through the Steam beta branch ''next_version_tester'', ahead of the official patch. This wiki shows 0.8.9.9 values. This page lists what is new and every documented value that changed from 0.8.1.5.
-
-To try it, right-click MirkLurk in your Steam Library, open '''Properties''', then '''Game Versions & Betas''', and choose ''next_version_tester''.
+'''Version 0.9.0.0''' is the official patch released on 14 October 2026. This wiki shows 0.9.0.0 values. This page lists what is new and every documented value that changed from 0.8.1.5, the previous official version.
 
 '''Spoilers:''' this page names late-story content.
+
+== Public test build ==
+The same content was tested a day earlier as '''version 0.8.9.9''' on the Steam beta branch ''next_version_tester'', which has since been removed. Every item, creature, price, drop and rule on this page is the same in 0.8.9.9 and 0.9.0.0. The official release adds only fixes and polish:
+* Rotating an item you are moving in your inventory plays a sound.
+* New character names are cleaned of characters that cannot be used in file names before the game checks for an existing character with the same name.
+* More fixes for rafts that were duplicated or went missing after saving or changing area.
+* Flying creatures keep their flying height when the game snaps them back onto their tile.
 
 == New content ==
 === Story ===
@@ -33,7 +38,7 @@ To try it, right-click MirkLurk in your Steam Library, open '''Properties''', th
 === Renamed ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Renamed (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! 0.8.1.5 name !! 0.8.9.9 name
+! 0.8.1.5 name !! 0.9.0.0 name
 |-
 | Unwanted Guard || [[Survivor]]
 |-
@@ -44,7 +49,7 @@ To try it, right-click MirkLurk in your Steam Library, open '''Properties''', th
 === Skills and damage ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Skills and damage (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Change !! 0.8.1.5 !! 0.8.9.9
+! Change !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Blunt]] base stun chance || 12% || 10%
 |-
@@ -61,7 +66,7 @@ To try it, right-click MirkLurk in your Steam Library, open '''Properties''', th
 === Food AP costs ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Food AP costs (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Food !! 0.8.1.5 !! 0.8.9.9
+! Food !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Crab Meat]] || 2 AP || 2.2 AP
 |-
@@ -80,7 +85,7 @@ To try it, right-click MirkLurk in your Steam Library, open '''Properties''', th
 === Weapons and equipment ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Weapons and equipment (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Item !! 0.8.1.5 !! 0.8.9.9
+! Item !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Iron Battleaxe]] || Potential damage 16 to 23; two inner cells deal 1-2 || Potential damage 14 to 21; those cells deal 0-1
 |-
@@ -93,7 +98,7 @@ To try it, right-click MirkLurk in your Steam Library, open '''Properties''', th
 === Characters ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Characters (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Character !! 0.8.1.5 !! 0.8.9.9
+! Character !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Wilda]] || Friendly NPC faction; idle movement 8%; Trade had no wares || Survivor camp faction; idle movement 6%; sells 11 wares; gives the camp request
 |-
@@ -114,7 +119,7 @@ Ranges are inclusive; lower amounts are more likely.
 
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Creature drops (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Creature !! Drop !! 0.8.1.5 !! 0.8.9.9
+! Creature !! Drop !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Titanspine Crab]] || [[Crab Meat]] || 2-4 || 2-3
 |-
@@ -153,7 +158,7 @@ Ranges are inclusive; lower amounts are more likely.
 === Gathering and searching ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Gathering and searching (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Where !! Item !! 0.8.1.5 !! 0.8.9.9
+! Where !! Item !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Searching boulders]] || [[Large Maggot]] || 1-4, 54.3% chance || 1-5, 59.2% chance
 |-
@@ -174,7 +179,7 @@ Ranges are inclusive; lower amounts are more likely.
 === Random treasure budgets ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Random treasure budgets (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Pool !! 0.8.1.5 !! 0.8.9.9
+! Pool !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Random treasure#pool-skeleton-outdoors|Outdoor skeletons and remains]] || 30 copper to 5 silver 20 copper || 30 copper to 4 silver 90 copper
 |-
@@ -201,7 +206,7 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Random treasure pools (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Pool !! Items 0.8.1.5 / 0.8.9.9 !! No longer possible !! Newly possible
+! Pool !! Items 0.8.1.5 / 0.9.0.0 !! No longer possible !! Newly possible
 |-
 | [[Random treasure#pool-skeleton-outdoors|Outdoor skeletons and remains]] || 95 / 91 || [[Steel Shortsword]], [[Iron Felling Axe]], [[Troll Skin Vest]], [[Map Drawing Kit]] || None
 |-
@@ -226,7 +231,7 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 === Merchants ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Merchants (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Merchant !! 0.8.1.5 !! 0.8.9.9
+! Merchant !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Magus Clay]] || 16 wares || Adds [[Storage Chest]] (1 gold 5 silver)
 |-
@@ -241,13 +246,27 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 === Other rules ===
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Other rules (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
-! Rule !! 0.8.1.5 !! 0.8.9.9
+! Rule !! 0.8.1.5 !! 0.9.0.0
 |-
 | [[Crafting]] ingredients || Inventory only || Inventory first, then containers within 4 tiles
 |-
-| [[Placing objects]] || From your inventory || Also from a nearby container; can be flipped
+| [[Placing objects]] || From your inventory || Also from a nearby container; can be flipped; not onto toxic goo
+|-
+| Empty dropped, harvest and creature loot piles || Stayed || Removed once crafting or placing empties them
 |-
 | No-build zone around Fort Solid, until Viend returns || 14 tiles || 30 tiles
+|-
+| Rubble around Fort Solid after the attack || Stayed || On arrival, 4 random nearby tiles per hour you were away (up to 960) are cleared of rubble; plants can regrow there
+|-
+| [[Viend]] at his fort stall || Wandered freely || Drawn back to his stall
+|-
+| The Terror near Fort Solid and the [[Survivors' camp]] || Could approach || Keeps away
+|-
+| [[Loot tables|Loot amount]] ranges || From the low value to low + high - 1 || From the low value to the high value, so ranges starting at 2 or more shrank and ranges starting at 0 grew by one
+|-
+| Tooltip on/off setting || Reset on every load || Saved per character
+|-
+| Entering an area || No save || Saves the game
 |-
 | No-build zone around the [[Survivors' camp]] || None || About 26 tiles
 |-
@@ -261,7 +280,7 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 |-
 | Raving Unwanted share of cave spawns || 2% || 2.5%
 |-
-| Creatures chasing you || Kept chasing within range || May give up once you are more than 1.5 times their targeting distance away
+| Creatures chasing you || Kept chasing within range || Each turn, keep chasing 82.5% of the time beyond 1.5 times their targeting distance, 65% beyond 2 times and 50% beyond 2.5 times
 |-
 | Idle creatures and other creatures || Targeted normally || Wildlife, Giant Slugs, Toadkin, the Nightmare faction, trolls and Mirkfangs ignore non-player targets 60% of the time
 |-
@@ -271,5 +290,8 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 
 === Story ===
 * [[Quests and journal#entry-journal-30|A possible homecoming]] is no longer the last journal entry: [[Quests and journal#entry-journal-31|Clay defeated]] and [[Quests and journal#entry-journal-32|Peace at Fort Solid]] follow.
+
+=== Music ===
+The patch notes announce a new song. Its track ships with the game, but no code plays it yet.
 
 [[Game mechanics]] | [[Main Page]]
