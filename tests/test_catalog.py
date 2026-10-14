@@ -91,7 +91,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 355)
-        self.assertEqual(sum(":" not in title for title in self.pages), 420)
+        self.assertEqual(sum(":" not in title for title in self.pages), 421)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 105)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 355)
@@ -146,15 +146,16 @@ class CatalogTests(unittest.TestCase):
                     "equip-ap-cost", "inventory-slots-added", "storage-grid-width", "storage-grid-height"}],
                 "profiles": [r for r in self.details["profiles"] if not r["id"].endswith(("-equip-cost", "-capacity"))],
             }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "f24eea929a221d7f6740eea4d492c920918baf9ec45a00b7b7501c98e76a91aa",  # 0.8.9.9 profiles
+            "4b0d7ff225f119e5a445292a2e16a974a1df072bc984fefac60eb92d4c06946e",
         )
-        self.assertEqual(len(self.details["properties"]), 53)
-        self.assertEqual(len(self.details["profiles"]), 585)
+        self.assertEqual(len(self.details["properties"]), 54)
+        self.assertEqual(len(self.details["profiles"]), 598)
         self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 320)
-        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2887)
+        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2900)
         locations = page_locations(self.data, self.catalog)
         entities = {row["id"]: row for row in self.data["entities"]}
         prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
+        finals = {r["entity"] for r in self.details["profiles"] if "value" in r["values"]}
         coins = {row["entity"]: row for row in self.catalog["currency"]["coins"]}
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         for profile in self.details["profiles"]:
@@ -186,6 +187,8 @@ class CatalogTests(unittest.TestCase):
                         field = {"initial-price": "value_in_silver", "initial-weight": "weight_grams", "stack-limit": "stack_limit"}[key]
                         expected = coins[profile["entity"]][field]
                         self.assertIn(price_text({"value": expected}) if key == "initial-price" else known(expected), page)
+                    elif key == "initial-price" and profile["entity"] in finals:
+                        continue
                     elif key == "initial-price" and profile["entity"] in prices:
                         self.assertIn(selective_view(price_text(prices[profile["entity"]], self.data["illustrations"]), "price", True), page)
                     else:
@@ -198,7 +201,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(len(self.data["illustrations"]), 364)
         self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 318)
         current = {row["id"]: row for row in self.data["illustrations"]}
-        # Art for the 0.8.9.9 additions and the world-only Finish Raft was reviewed in a later batch.
+        # 0.8.9.9 art and the world-only Finish Raft were reviewed later.
         added = {f"item-{n}" for n in (*range(258, 263), *range(264, 276))} | {f"being-{n}" for n in range(36, 42)}
         later = added | {"item-171"}
         every = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
@@ -210,7 +213,7 @@ class CatalogTests(unittest.TestCase):
             "b423fc3efd7daa2e754845f5ad83180ac7dd3803216c27b408638185a031e7e0",
         )
         replaced_trees = {"nature-4", "nature-7", "nature-17", "nature-20"}
-        # 0.8.9.9 renamed these two subjects; restoring their old captions must reproduce the original pins.
+        # 0.8.9.9 renamed these two; old captions reproduce the original pins.
         renamed = {"skill-1-0-illustration": "Fire Striker skill icon.",
                    "being-35-illustration": "Unwanted Guard in-game sprite, shown in a representative frame."}
         self.assertTrue(all(current[key]["caption"] != old for key, old in renamed.items()))
@@ -342,13 +345,13 @@ class CatalogTests(unittest.TestCase):
         bestiary = self.pages["Bestiary"].split("Characters now listed")[0]
         for name in ("Ranger Bhato", "Magus Clay", "Captain Eir", "Wilda", "Grand Mother"):
             self.assertIn(f"[[{name}|", self.pages["NPCs"])
-            # 0.8.9.9 rules prose names Eir and Clay's separate boss form; check listings, not mentions.
+            # Prose names Eir and Clay's boss form; check listings.
             self.assertNotIn("{{Creature|" + name + "}}", bestiary)
         for identity in npcs:
             self.assertNotIn(f'id="entity-{identity}"', bestiary)
 
     def test_survivor_grouping_does_not_invent_hostility_or_encounters(self):
-        # 0.8.9.9 renamed Unwanted Guard to Survivor and documented its camp; the old title redirects.
+        # 0.8.9.9 renamed Unwanted Guard to Survivor; the old title redirects.
         guard = next(row for row in self.catalog["classifications"] if row["entity"] == "being-35")
         page = self.pages["Survivor"]
         self.assertEqual(guard["kind"], "npc")
@@ -512,14 +515,14 @@ class CatalogTests(unittest.TestCase):
 
     def test_initializer_weight_and_value_are_explicitly_not_final_stats(self):
         for title in ("Campfire", "Wood Buckler"):
-            self.assertIn("Base weight and value are before crafting adjustments", self.pages[title])
-            self.assertIn("final weight and price may differ", self.pages[title])
+            self.assertIn("Base weight is before crafting adjustments", self.pages[title])
+            self.assertIn("in full condition", self.pages[title])
 
     def test_global_prices_are_item_owned_selective_transclusions(self):
         prices = self.catalog["unit_prices"]
         raw_prices = json.loads((ROOT / "content" / "facts" / "catalog.json").read_text())["unit_prices"]
         resolved = {"item-32", "item-84", "item-138", "item-139", "item-140", "item-248"}
-        # The first 42 rows are the original prices; 0.8.9.9 appended 16 more for its new offers.
+        # 42 original prices plus 16 added in 0.8.9.9.
         original_prices = [row for row in raw_prices["prices"][:42] if row["entity"] not in resolved]
         self.assertEqual(hashlib.sha256((json.dumps(original_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
                          "cacc81734f11f214e0bf28c0115050d129fe497112d0e415ba70e8aff4e1dc4e")
@@ -544,7 +547,8 @@ class CatalogTests(unittest.TestCase):
             page = self.pages[locations[identity]]
             self.assertIn(selective_view(price_text(known_prices.get(identity), self.data["illustrations"]), "price", True), page)
             if identity in known_prices:
-                self.assertNotIn("Base value (not a shop price)", page)
+                self.assertNotIn("Base value", page)
+                self.assertNotIn("|Value]]\n", page)
         for entry in self.data["entries"]:
             if entry["kind"] != "merchant":
                 continue
@@ -601,7 +605,8 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(page.count("<onlyinclude>"), 1)
             self.assertIn(known(coin["weight_grams"]) + " g", page)
             self.assertNotIn("Base weight", page)
-            self.assertNotIn("Base value (not a shop price)", page)
+            self.assertNotIn("Base value", page)
+            self.assertNotIn("|Value]]\n", page)
             self.assertNotIn("initial-weight", guide)
             self.assertNotIn("Acquisition is not established", page)
             self.assertIn("[[Currency and trading#currency-coin-consolidation|", page)
@@ -611,7 +616,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.8.9.9")
+        self.assertEqual(self.data["game"]["build"], "0.9.0.0")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -978,7 +983,7 @@ class CatalogTests(unittest.TestCase):
             if title.startswith("Category:") or title in {"Source provenance", "Research policy", "Evidence and spoilers"}:
                 continue
             self.assertNotRegex(page, r"\((?:internal [^)]*|0-1 fraction|fraction|unitless|durability units)\)")
-        self.assertIn("final weight and price may differ", self.pages["Twine"])
+        self.assertIn("final weight may differ", self.pages["Twine"])
 
     def test_character_state_and_damage_reverse_links_have_canonical_owners(self):
         self.assertIn("[[Dead Unwanted#State_history|", self.pages["Viend"])
@@ -1140,12 +1145,12 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # Whole-file pin of the 0.8.9.9 snapshot with only the game build blanked.
+        # Whole-file 0.9.0.0 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.8.9.9"', b'"build": null', 1,
+                b'"build": "0.9.0.0"', b'"build": null', 1,
             )).hexdigest(),
-            "4bf6cdd1c0beb2e348a29d5077ffdef4783ac91a1c91a1c58aeb520bff76ec1c",
+            "51ecb20d5d8522cb30e47b6f8e6e1c51dc91dc9a2f87f9c28f81e277ac56493f",
         )
 
 

@@ -158,7 +158,7 @@ class SelectiveViewTests(unittest.TestCase):
             page = self.pages[locations[item]]
             self.assertEqual(page.count('id="price-' + item + '"'), 1)
             self.assertIn("== How to acquire ==", page)
-            self.assertNotIn("Standard unit price", page.split("== How to acquire ==", 1)[0])
+            self.assertNotIn("|Value]]: ", page.split("== How to acquire ==", 1)[0])
 
     def test_verified_loot_sources_are_selected_by_exact_outcome(self):
         locations = page_locations(self.data, self.catalog)
@@ -464,9 +464,11 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertTrue({"Category:" + title for title in historical_categories} <= set(self.pages))
         from wiki_display import DISPLAY_TITLES
         # 0.8.9.9 added entity pages and release notes and renamed two titles; the old titles stay as redirects.
+        # 0.9.0.0 moved those release notes to its own title; "Version 0.8.9.9" now redirects there.
         locations = page_locations(self.data, self.catalog)
-        added = {locations[row["id"]] for row in self.data["entities"][336:]} | {"Version 0.8.9.9", "Survivor", "Fire Bond"}
-        self.assertEqual(len(added), 27)
+        added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
+            "Version 0.8.9.9", "Version 0.9.0.0", "Survivor", "Fire Bond"}
+        self.assertEqual(len(added), 28)
         old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
         self.assertEqual(len(old_titles), 401)

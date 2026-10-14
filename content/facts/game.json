@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.8.9.9",
+    "build": "0.9.0.0",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -60,6 +60,12 @@
       "path": "data.win",
       "sha256": "18d2c332a34fac0379d183c4e887e9eb3b67dc86023b3f988b330e65244e6142",
       "build": "0.8.9.9"
+    },
+    {
+      "id": "game-data-0900",
+      "path": "data.win",
+      "sha256": "1e348276f3f95e61465c303fcf1a3944984513d09f4f24926c4dd6d9d0b0e6a5",
+      "build": "0.9.0.0"
     }
   ],
   "entities": [
@@ -20740,13 +20746,13 @@
     {
       "id": "journal-30-hidden-realm",
       "kind": "quest",
-      "title": "Clay's hidden realm",
-      "summary": "After you report Scaal's defeat, Eir has an extra Clay? topic. She explains that magi keep hidden realms reached with a magical key. From then on Grand Mother also sells Magus' Shard; throwing the shard opens a portal into Clay's realm.",
+      "title": "Eir's Clay? topic (dialogue)",
+      "summary": "This is a conversation topic, not a journal entry. After A possible homecoming, Eir has a new Clay? topic. She says: \"I've heard of magi having their own hidden realms, only accessible through magic. I think they use some form of magical key... Unless you've met someone who sells magical items, that bastard Clay will probably remain hidden forever...\" In other words, Clay hides in a realm that only a magic item can open, and you need a magic-item seller to get one. That seller is Grand Mother at the Survivors' camp, so finish the camp steps below if you have not already.",
       "conditions": null,
       "confidence": "observed",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0900",
           "section": "gml_Object_UI_Draw_64",
           "key": "dialogue.being6.MAINQUESTSTAGE30.option116"
         },
@@ -20754,9 +20760,23 @@
           "source": "beings-en-0899",
           "section": "Eir",
           "key": "116"
-        },
+        }
+      ],
+      "details": {
+        "quest_id": "30",
+        "stage": "Dialogue"
+      }
+    },
+    {
+      "id": "journal-30-magus-realm",
+      "kind": "quest",
+      "title": "Into Clay's realm",
+      "summary": "Once you have reached A possible homecoming and Wilda has let you up to Grand Mother's hut, Grand Mother also sells Magus' Shard. Throw the shard to open a portal into Clay's hidden realm, where you fight Magus Clay.",
+      "conditions": null,
+      "confidence": "observed",
+      "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0900",
           "section": "gml_GlobalScript_scr_menu_related",
           "key": "menu_add.trade.vendor[36].MAINQUESTSTAGE>=30.item[262]"
         },
@@ -20834,7 +20854,7 @@
       "kind": "quest",
       "title": "Survivors' camp: earning Wilda's trust",
       "summary": "Choose Trust when talking to Wilda at the Survivors' camp. She asks you to kill The Terror, an unusually dangerous Mirkfang Matriarch that hunts the camp's Savage Mirk area at night, and bring back its head.",
-      "conditions": "Side quest without journal entries. The Terror can only appear after Wilda has made this request.",
+      "conditions": "Side quest without journal entries. The Terror can only appear after Wilda has made this request. You can do it at any point in the main quest, but you must finish it before you can reach Clay.",
       "confidence": "observed",
       "evidence": [
         {
@@ -20867,7 +20887,7 @@
       "id": "camp-2-access",
       "kind": "quest",
       "title": "Survivors' camp: Grand Mother's blessing",
-      "summary": "Talk to Wilda while carrying the Head of The Terror. She takes it, unlocks the ladder to Grand Mother's hut and agrees to answer a Summoning Stone. Grand Mother's first greeting grants one skill point, and she then trades magic items.",
+      "summary": "Talk to Wilda while carrying the Head of The Terror. She takes it, unlocks the ladder to Grand Mother's hut and agrees to answer a Summoning Stone. Grand Mother's first greeting grants one skill point, and she then trades magic items, including the Magus' Shard needed to reach Clay.",
       "conditions": "Side quest without journal entries.",
       "confidence": "observed",
       "evidence": [

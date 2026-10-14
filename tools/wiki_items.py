@@ -3,6 +3,7 @@
 from collections import defaultdict
 from decimal import Decimal
 
+from wiki_catalog import VALUE_LINK, VALUE_NOTE
 from wiki_display import grid_argument
 from wiki_render import (
     CAPACITY_NOTE, LEGACY_PROPERTIES, PAIRED_PROPERTIES, PROPERTY_LABELS, anchor, fact_value, known, literal,
@@ -12,7 +13,7 @@ from wiki_views import scroll_open
 
 ITEM_SUMMARY_ROWS = (
     ("initial-weight", "Weight"), ("stack-limit", "Stack limit"), ("equip-ap-cost", "Equip cost"),
-    ("item-ap-cost", "Action cost"), ("initial-price", "Base value (not a shop price)"),
+    ("item-ap-cost", "Action cost"), ("initial-price", "Value"), ("value", "Value"),
     ("craft-ap-cost", "Base crafting cost"), ("craft-yield", "Base recipe yield"),
     ("random-treasure-exclusion", "In general random treasure"),
 )
@@ -43,7 +44,7 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
     skipped = set(folded)
     if coin is not None:
         skipped.update({"initial-price", "initial-weight", "stack-limit"})
-    if "initial-price" in values and price is not None and Decimal(str(values["initial-price"])) == Decimal(str(price["value"])):
+    if "initial-price" in values and ("value" in values or price is not None):
         skipped.add("initial-price")
     coalesced = set()
     for fact in facts:
@@ -216,11 +217,13 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
     text = "\n" + top + "\n"
     if rows:
         notes = ["Base stats can change with equipment, condition and other effects."] if coin is None else []
-        if coin is None and {"initial-weight", "initial-price"} & set(values):
-            notes.append("Base weight and value are before crafting adjustments; final weight and price may differ.")
+        if coin is None and "initial-weight" in values:
+            notes.append("Base weight is before crafting adjustments; final weight may differ.")
+        if any(key in used and used[key] == "summary" for key in ("initial-price", "value")):
+            notes.append(VALUE_NOTE)
         lines = ['{| class="wikitable"', "|+ " + literal(name)]
         for heading, cell in rows:
-            lines.extend(["|-", f'! scope="row" | {literal(heading)}', "| " + cell])
+            lines.extend(["|-", f'! scope="row" | {VALUE_LINK if heading == "Value" else literal(heading)}', "| " + cell])
         if notes:
             lines.extend(["|-", '| colspan="2" style="font-size:85%;max-width:18em;" | ' + " ".join(notes)])
         text += ('<div style="float:right;clear:right;margin:0 0 1em 1em;max-width:100%;">\n'

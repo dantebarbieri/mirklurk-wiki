@@ -17,6 +17,14 @@ from wiki_acquisition import validate_acquisition
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
 MAX_CATALOG_BYTES = 352 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS, "NPCs", "Source provenance", "Loot mechanics"}
+VALUE_LINK = "[[Currency and trading#currency-trade-standard-value|Value]]"
+VALUE_NOTE = ("Merchants sell at this value and pay it for an item in full condition; "
+              "[[Currency and trading#currency-trade-durability|wear and fuel lower the selling price]].")
+
+TRADE_DURABILITY_EXAMPLE = (
+    "\nExample: an [[Iron Hand Axe]] has a value of {{Coins|250}} and 100 durability. A merchant sells a new one for "
+    "{{Coins|250}} and pays {{Coins|250}} for one at full durability, {{Coins|100}} at 40 durability, and "
+    "{{Coins|25}} (the 10% floor) at 10 durability or less.\n")
 CURRENCY_RULE_TITLES = {
     "coin-denominations": "Denominations",
     "coin-consolidation": "Converting and consolidating coins",

@@ -8,6 +8,7 @@ from decimal import ROUND_HALF_UP, Decimal, localcontext
 from fractions import Fraction
 
 from wiki_catalog import (
+    TRADE_DURABILITY_EXAMPLE, VALUE_LINK, VALUE_NOTE,
     CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
@@ -115,13 +116,18 @@ def entity_link(identity, entities, locations):
     return f'[[{locations[identity]}|{literal(entities[identity]["name"])}]]'
 
 
+QUEST_STEPS_AFTER_JOURNAL_30 = {"journal-30-hidden-realm": 1, "Camp": 2, "journal-30-magus-realm": 3}
+
+
 def quest_order(entry):
     quest_id = entry["details"]["quest_id"]
     if quest_id == "First":
-        return (0, 0, entry["id"])
+        return (0, 0, 0, entry["id"])
+    if quest_id == "Camp":
+        return (1, 30, QUEST_STEPS_AFTER_JOURNAL_30["Camp"], entry["id"])
     if quest_id.isdecimal():
-        return (1, int(quest_id), entry["id"])
-    return (2, quest_id, entry["id"])
+        return (1, int(quest_id), QUEST_STEPS_AFTER_JOURNAL_30.get(entry["id"], 0), entry["id"])
+    return (2, 0, 0, quest_id, entry["id"])
 
 
 def display_entry(entry, catalog):
@@ -230,7 +236,7 @@ def profile_value(key, value, entities, locations):
         if 0 < abs(amount) < 1:
             return literal(decimal_text(amount * 1000)) + " g"
         return literal(decimal_text(amount)) + " kg"
-    if key == "initial-price":
+    if key in {"initial-price", "value"}:
         return base_value_text(value)
     if key == "inventory-slots-added":
         return "+" + known(value) + " inventory slots"
@@ -270,7 +276,7 @@ AP_PROPERTIES = {"craft-ap-cost", "item-ap-cost", "maximum-ap", "melee-ap-cost",
 
 PROPERTY_LABELS = {
     "damage-class-id": "Damage type", "ranged-damage-class-id": "Ranged damage type",
-    "initial-price": "Base value (not a shop price)", "initial-weight": "Base weight",
+    "initial-price": "Value", "value": "Value", "initial-weight": "Base weight",
     "awareness-chance": "Targeting chance", "awareness-distance": "Targeting distance",
     "durability-max": "Durability", "being-armor": "Armor", "item-armor": "Armor",
     "insulation": "Insulation", "waterproof": "Waterproofing", "satiation-gain": "Satiation gain",
@@ -367,6 +373,7 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
     coalesced = set()
     markers = "".join(anchor("profile", profile["id"]) for profile in profiles)
     show_base_value = False
+    has_final_value = any("value" in profile["values"] for profile in profiles)
     grid_properties = set()
     for grid in grids:
         if grid["kind"] == "health":
@@ -392,9 +399,9 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
                 continue
             if coin is not None and key in {"initial-price", "initial-weight", "stack-limit"}:
                 continue
-            if key == "initial-price":
-                if price is not None and Decimal(str(value)) == Decimal(str(price["value"])):
-                    continue
+            if key == "initial-price" and (has_final_value or price is not None):
+                continue
+            if key in {"initial-price", "value"}:
                 show_base_value = True
             extra = ""
             for fact in facts:
@@ -433,12 +440,10 @@ def stat_table(facts, profiles, properties, entities, locations, price_item=None
     if profiles and coin is None:
         notes.append("Base stats can change with equipment, condition and other effects.")
     keys = {key for profile in profiles for key in profile["values"]}
-    if coin is None and keys & {"initial-weight", "initial-price"}:
-        notes.append(
-            "Base weight and value are before crafting adjustments; final weight and price may differ."
-        )
+    if coin is None and "initial-weight" in keys:
+        notes.append("Base weight is before crafting adjustments; final weight may differ.")
     if show_base_value:
-        notes.append("Base value is not the price charged by a merchant.")
+        notes.append(VALUE_NOTE)
     if "hp-grid-width" in keys and "hp-grid-width" not in grid_properties:
         notes.append("Grid dimensions are not a stated maximum HP total.")
     if "awareness-chance" in keys:
@@ -1115,7 +1120,9 @@ CURRENCY_QUALIFICATIONS = {
 
 def currency_page(currency, entities, locations):
     coins = currency["coins"]
-    text = "[[Merchants]] | [[Items]] | [[Main Page]]\n\nTrade items or coins with merchants. Prices below use gold, silver and copper; resale value depends on condition.\n"
+    text = ("[[Merchants]] | [[Items]] | [[Main Page]]\n\nTrade items or coins with merchants. An item's value is the price "
+            "merchants charge for it and the price they pay for one in full condition. Prices on this wiki use the "
+            "[[Template:Coins|Coins]] template, which shows gold, silver and copper.\n")
     for rule in currency["rules"]:
         text += "\n" + anchor("currency", rule["id"]) + f'\n== {CURRENCY_RULE_TITLES[rule["id"]]} ==\n'
         if rule["id"] == "coin-denominations":
@@ -1127,6 +1134,8 @@ def currency_page(currency, entities, locations):
             text += selective_view(literal(rule["text"]), "stock") + "\n"
         else:
             text += literal(rule["text"]) + "\n"
+        if rule["id"] == "trade-durability":
+            text += TRADE_DURABILITY_EXAMPLE
         qualification = CURRENCY_QUALIFICATIONS.get(rule["id"], rule.get("qualification"))
         if qualification and rule["id"] != "coin-weight-units":
             text += "\n" + literal(qualification) + "\n"
@@ -1588,9 +1597,9 @@ def build_pages(root, data, catalog=None, details=None):
             offers = [entry for entry in entries if entry["kind"] == "merchant" and entry["details"]["item"] == identity]
             if identity in price_items:
                 pages[title] += (
-                    "\n=== Buying ===\n" + anchor("price", identity) + "Standard unit price: "
+                    "\n=== Buying ===\n" + anchor("price", identity) + VALUE_LINK + ": "
                     + selective_view(price_text(prices.get(identity), images), "price", default=True)
-                    + ". Purchase price per item; not resale value.\n"
+                    + " per item. " + VALUE_NOTE + "\n"
                 )
             if offers:
                 pages[title] += "\n".join(
@@ -1745,6 +1754,9 @@ def build_pages(root, data, catalog=None, details=None):
             ["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], rows,
         )
     pages["Source provenance"] = "#REDIRECT [[Game mechanics]]\n"
+    if "Version 0.9.0.0" in pages:
+        # 0.8.9.9 was the public test build of 0.9.0.0; its old changelog title points to the release notes.
+        pages["Version 0.8.9.9"] = "#REDIRECT [[Version 0.9.0.0#Public_test_build]]\n"
     if "Starting equipment" not in pages:
         pages["Getting started"] = "#REDIRECT [[Main Page]]\n"
     if "currency" in catalog:
