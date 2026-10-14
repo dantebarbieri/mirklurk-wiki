@@ -33,7 +33,7 @@ class DialogueTests(unittest.TestCase):
     def rendered_topic(self, owner, identity):
         return self.pages[owner].split(f'<span id="dialogue-{identity}"></span>', 1)[1].split(
             '<span id="dialogue-', 1
-        )[0].split("== Stats ==", 1)[0]
+        )[0].split("== Combat ==", 1)[0]
 
     def test_magus_clay_npc_and_boss_pages_link_to_each_other(self):
         self.assertIn("[[Magus Clay (boss)|", self.pages["Magus Clay"])
@@ -180,8 +180,8 @@ class DialogueTests(unittest.TestCase):
         self.assertEqual(changed, set(self.topics))
         for owner in self.topics:
             self.assertEqual(
-                self.pages[owner].split("== Stats ==", 1)[1],
-                baseline[owner].split("== Stats ==", 1)[1],
+                self.pages[owner].split("== Combat ==", 1)[1],
+                baseline[owner].split("== Combat ==", 1)[1],
             )
         self.assertEqual(self.pages["Quests and journal"], baseline["Quests and journal"])
 
@@ -189,7 +189,7 @@ class DialogueTests(unittest.TestCase):
         page = self.pages["Viend"]
         healing = page.index("== <nowiki>Healing</nowiki> ==")
         dialogue = page.index("== Dialogue and guidance ==")
-        stats = page.index("== Stats ==")
+        stats = page.index("== Combat ==")
         self.assertLess(healing, dialogue)
         self.assertLess(dialogue, stats)
         self.assertEqual(page.count("Viend automatically heals"), 1)
@@ -214,7 +214,7 @@ class DialogueTests(unittest.TestCase):
         validate_catalog(catalog, self.data)
         page = build_pages(ROOT, self.data, catalog, self.details)["Viend"]
         headings = ("== Location and access ==", "== <nowiki>Healing</nowiki> ==",
-                    "== Dialogue and guidance ==", "== Stats ==")
+                    "== Dialogue and guidance ==", "== Combat ==")
         self.assertEqual([page.index(heading) for heading in headings],
                          sorted(page.index(heading) for heading in headings))
 
