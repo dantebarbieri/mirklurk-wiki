@@ -1,3 +1,4 @@
+import copy
 import sys
 import unittest
 from pathlib import Path
@@ -10,6 +11,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from check_publication import ALLOWED_FILES, blob_errors, path_errors
 from smoke_navigation import SIDEBAR_LINKS, SIDEBAR_TITLE, article_url, install_sidebar_fixture, sidebar_text
 from sync_wiki import markdown, sync
+from wiki_catalog import validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs
 from wiki_display import page_namespace
@@ -90,6 +92,31 @@ class NavigationTests(unittest.TestCase):
             text = markdown(report, "https://wiki.example.invalid/api.php")
             self.assertIn("MediaWiki:Sidebar is not published by this sync", text)
             self.assertIn("content/interface/Sidebar.wiki", text)
+
+    def test_indexed_guides_link_back_to_their_index_only(self):
+        data, catalog, _ = load_publication_inputs(ROOT)
+        indexed = {index: [row["title"] for row in catalog["guides"] if row.get("index_page") == index]
+                   for index in ("Areas", "Terrain")}
+        self.assertEqual({index: len(rows) for index, rows in indexed.items()}, {"Areas": 9, "Terrain": 12})
+        for index, children in indexed.items():
+            entry = "\n* {{Tile|%s}}" if index == "Terrain" else "\n* [[%s]]"
+            for title in children:
+                self.assertTrue(self.pages[title].startswith(f"[[{index}]] | [[Main Page]]\n"))
+                self.assertIn(entry % title, self.pages[index])
+                self.assertNotIn(f"[[{title}]]", self.pages["Game mechanics"] + self.pages["Main Page"])
+        for title in ("Areas", "Planting", "Terrain"):
+            self.assertIn(f"[[{title}]]", self.pages["Game mechanics"])
+        self.assertNotIn("Biomes", "".join(self.pages.values()))
+        self.assertIn("== Where to plant ==", self.pages["Cranberry Seeds"])
+        self.assertIn("[[Planting]]", self.pages["Cranberry Seeds"])
+        # Self, nested, unknown and indexed-index references are refused.
+        areas, tiles = indexed["Areas"], indexed["Terrain"]
+        for owner, index in ((areas[0], areas[0]), (areas[0], areas[1]), (areas[0], tiles[0]),
+                             (areas[0], "Not a guide"), ("Areas", "Terrain"), ("Planting", "Soil")):
+            changed = copy.deepcopy(catalog)
+            next(row for row in changed["guides"] if row["title"] == owner)["index_page"] = index
+            with self.subTest(owner=owner, index=index), self.assertRaises(DataError):
+                validate_catalog(changed, data)
 
     def test_fixture_refuses_live_wiki_or_existing_sidebar(self):
         api = mock.Mock()

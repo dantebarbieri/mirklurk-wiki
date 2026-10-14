@@ -346,6 +346,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                  "Turnip", "Turnip (nature)", "Iron Hand Axe#Stats", "IRON HAND AXE", "x" * 161,
                  "Plant Fiber|quantity=0", "Plant Fiber|quantity=-1", "Plant Fiber|quantity=1.2",
                  "Plant Fiber|quantity=1e3", "Plant Fiber|quantity=" + "9" * 19],
+        "Tile": ["", "Areas", "Drowned Fen", "Mud#Seeds", "File:Tile-Mud.png", "Iron Hand Axe", "MUD", "x" * 161],
     }
     for template, values in invalid.items():
         for value in values:
@@ -356,7 +357,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             if 'class="mirklurk-cell-grid"' in rendered or '<img ' in rendered:
                 raise RuntimeError("Invalid input produced a success-shaped grid or coin display.")
     injected = '<nowiki>"><script>alert(1)</script>&</nowiki>'
-    for template in ("Coins", "Health grid", "Attack grid", "Creature", "Item"):
+    for template in ("Coins", "Health grid", "Attack grid", "Creature", "Item", "Tile"):
         rendered = api({"action": "parse", "title": "Display escape smoke",
                         "text": "{{" + template + "|" + injected + "}}", "prop": "text"}, post=True)["parse"]["text"]["*"]
         if "Display error:" not in rendered or "<script>" in rendered or "alert(1)" in rendered:

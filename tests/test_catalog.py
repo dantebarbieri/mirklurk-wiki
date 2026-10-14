@@ -91,7 +91,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 355)
-        self.assertEqual(sum(":" not in title for title in self.pages), 421)
+        self.assertEqual(sum(":" not in title for title in self.pages), 445)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 105)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 355)
@@ -198,14 +198,14 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        self.assertEqual(len(self.data["illustrations"]), 366)
+        self.assertEqual(len(self.data["illustrations"]), 397)
         self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 318)
         current = {row["id"]: row for row in self.data["illustrations"]}
         # 0.8.9.9 art and the world-only Finish Raft were reviewed later.
         added = {f"item-{n}" for n in (*range(258, 263), *range(264, 276))} | {f"being-{n}" for n in range(36, 42)}
         later = added | {"item-171"}
         every = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
-                 for row in self.data["illustrations"] if "role" not in row]
+                 for row in self.data["illustrations"] if not {"role", "guide"} & row.keys()]
         self.assertEqual({row.get("entity") for row in every[-len(later):]}, later)
         images = [row for row in every if row.get("entity") not in later]
         self.assertEqual(

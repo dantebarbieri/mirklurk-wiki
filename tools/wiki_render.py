@@ -1340,8 +1340,52 @@ def build_pages(root, data, catalog=None, details=None):
                 "\n" + literal(context) + f' [[{source["title"]}]]\n' if context
                 else f'\n[[{source["title"]}|Related acquisition guide]]\n'
             )
+    indexed = defaultdict(list)
+    for guide in catalog.get("guides", []):
+        if "index_page" in guide:
+            indexed[guide["index_page"]].append(guide["title"])
+    approved = {image["id"]: image for image in images if image["rights_status"] == "approved"}
+    tile_images = {image["guide"]: image for image in approved.values() if image.get("role") == "tile"}
+    tile_titles = set(indexed.get("Terrain", [])) | tile_images.keys()
+
+    def guide_cell(cell):
+        if isinstance(cell, str):
+            return literal(cell)
+        if isinstance(cell, list):
+            return ", ".join(map(guide_cell, cell))
+        (kind, target), = cell.items()
+        if kind == "tile":
+            if target not in tile_titles:
+                raise DataError(f"guide table: {target} is not a terrain page")
+            return "{{Tile|" + target + "}}"
+        if kind == "page":
+            return f"[[{target}]]"
+        if target in creatures or target in items:
+            return listed_entity(target)
+        picture = icon(target, images, entities, locations)
+        return (picture + " " if picture else "") + entity_link(target, entities, locations)
+
+    def guide_blocks(guide, index):
+        text = ""
+        for placed in guide.get("images", []):
+            if placed["after"] == index:
+                image = approved.get(placed["illustration"])
+                shared = image and image.get("role") == "tile" and guide.get("index_page") == "Areas"
+                if image is None or image.get("guide") not in (None, guide["title"]) and not shared:
+                    raise DataError(f'guide {guide["title"]}: placed picture has no approved image metadata for this page')
+                text += illustration_markup(image, marker=False, page_image=False)
+        for block in guide.get("tables", []):
+            if block["after"] == index:
+                if "caption" in block:
+                    text += "\n" + literal(block["caption"]) + "\n"
+                text += table([literal(heading) for heading in block["columns"]],
+                              [[guide_cell(cell) for cell in row] for row in block["rows"]])
+        return text
+
     for guide in sorted(catalog.get("guides", []), key=lambda row: row["title"]):
-        if guide["title"] not in pages:
+        if guide["title"] not in pages and "index_page" in guide:
+            pages[guide["title"]] = f'[[{guide["index_page"]}]] | [[Main Page]]\n'
+        elif guide["title"] not in pages:
             pages[guide["title"]] = "[[Game mechanics]] | [[Main Page]]\n"
             pages["Game mechanics"] += f'\n[[{guide["title"]}]]\n'
             pages["Main Page"] += f'\n[[{guide["title"]}]]\n'
@@ -1350,18 +1394,24 @@ def build_pages(root, data, catalog=None, details=None):
             if image is None:
                 raise DataError("guide: contextual picture has no approved image metadata")
             pages[guide["title"]] += illustration_markup(image, caption=guide["image_caption"], marker=False)
+        elif guide["title"] in tile_images:
+            pages[guide["title"]] += illustration_markup(tile_images[guide["title"]], marker=False)
         pages[guide["title"]] += "\n== How it works ==\n"
         links = {target: target for target in guide.get("related_pages", [])}
         if "section_titles" in guide:
             links.update({entities[identity]["name"]: locations[identity] for identity in guide["related_entities"]})
-        for heading, paragraph in zip(guide.get("section_titles", [None] * len(guide["paragraphs"])), guide["paragraphs"]):
+        for index, (heading, paragraph) in enumerate(zip(guide.get("section_titles", [None] * len(guide["paragraphs"])), guide["paragraphs"])):
             if heading:
                 pages[guide["title"]] += "\n=== " + literal(heading) + " ===\n"
-            pages[guide["title"]] += "\n" + linked_prose(paragraph, links) + "\n"
+            pages[guide["title"]] += "\n" + linked_prose(paragraph, links) + "\n" + guide_blocks(guide, index)
         if guide["title"] == "Armor points":
             pages[guide["title"]] += armor_table(details, catalog, entities, locations)
         if guide["title"] == "Tree health and chopping":
             pages[guide["title"]] += chopping_table(details, entities, locations)
+        if indexed.get(guide["title"]):
+            pages[guide["title"]] += "\n== Individual pages ==\n" + "".join(
+                "\n* " + ("{{Tile|" + child + "}}" if child in tile_titles else f"[[{child}]]")
+                for child in sorted(indexed[guide["title"]])) + "\n"
         if guide.get("related_pages"):
             pages[guide["title"]] += "\nRelated guides: " + " | ".join(
                 f"[[{target}]]" for target in guide["related_pages"]) + "\n"
@@ -1706,7 +1756,8 @@ def build_pages(root, data, catalog=None, details=None):
             + entity_link(source["damage_type"], entities, locations) + "\n\n" + literal(source["summary"]) + "\n"
         )
     for effect in catalog.get("item_effects", []):
-        heading = "Consumption effects" if item_categories.get(effect["entity"]) == "Consumables" else "Effects"
+        heading = {"Consumables": "Consumption effects", "Seeds": "Where to plant"}.get(
+            item_categories.get(effect["entity"]), "Effects")
         pages[locations[effect["entity"]]] += f"\n== {heading} ==\n" + "\n\n".join(
             literal(paragraph) for paragraph in effect["paragraphs"]
         ) + "\n"
@@ -1856,7 +1907,7 @@ def build_pages(root, data, catalog=None, details=None):
             pages[row["index"]] += f'\n[[:Category:{category}|Browse the category hierarchy]]\n'
     if catalog.get("taxonomy") and "Items" in categories and "Miscellaneous items" not in categories:
         pages["Category:Miscellaneous items"] = "#REDIRECT [[Items]]\n"
-    if any(any("{{" + name + "|" in text for name in ("Coins", "Health grid", "Attack grid", "Creature", "Item")) for text in pages.values()):
+    if any(any("{{" + name + "|" in text for name in ("Coins", "Health grid", "Attack grid", "Creature", "Item", "Tile")) for text in pages.values()):
         coin_icons = {}
         needs_coins = any("{{Coins|" in text for text in pages.values())
         for name, identity in (("copper", "item-72"), ("silver", "item-73"), ("gold", "item-74")):
@@ -1888,8 +1939,15 @@ def build_pages(root, data, catalog=None, details=None):
                    if any(image.get("health_armor") == armor for image in images)
                    or any(grid["kind"] == "health" and any(cell and cell["armor"] == armor for row in grid["rows"] for cell in row)
                           for grid in details.get("grids", []))}
+        tile_markup = {}
+        for title in sorted(tile_titles):
+            link = f"[[{title}|{literal(title)}]]"
+            tile_markup[title] = (
+                pixel_image(tile_images[title], 32, 32, title, title + " tile") + " " + link
+                if title in tile_images else link
+            )
         pages.update(display_pages(root, coin_icons, shields,
-                                   creature_markup, item_markup))
+                                   creature_markup, item_markup, tile_markup))
     for topics in npc_dialogue.values():
         for topic in topics:
             for link in topic["links"]:

@@ -410,19 +410,21 @@ class SelectiveViewTests(unittest.TestCase):
     def test_food_effect_amounts_have_one_item_owner_not_copied_guide_values(self):
         locations = page_locations(self.data, self.catalog)
         consumables = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Consumables")["members"]
-        headings = {"Consumption effects": 0, "Effects": 0}
+        seeds = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Seeds")["members"]
+        headings = {"Consumption effects": 0, "Effects": 0, "Where to plant": 0}
         for effect in self.catalog["item_effects"]:
-            text = "\n\n".join(effect["paragraphs"])
             page = self.pages[locations[effect["entity"]]]
-            # Since 0.8.9.9 only consumables use "Consumption effects"; equipment and other items use "Effects".
-            heading = "Consumption effects" if effect["entity"] in consumables else "Effects"
+            # Only consumables use "Consumption effects"; seeds use "Where to plant".
+            heading = ("Consumption effects" if effect["entity"] in consumables
+                       else "Where to plant" if effect["entity"] in seeds else "Effects")
             headings[heading] += 1
             self.assertIn(f"== {heading} ==\n" + literal(effect["paragraphs"][0]), page)
-            self.assertNotIn("== Consumption effects ==" if heading == "Effects" else "== Effects ==", page)
-            self.assertIn(text, page)
-            for guide in self.catalog["guides"]:
-                self.assertNotIn(text, self.pages[guide["title"]])
-        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 14})
+            for other in set(headings) - {heading}:
+                self.assertNotIn(f"== {other} ==", page)
+            self.assertIn("\n\n".join(literal(paragraph) for paragraph in effect["paragraphs"]), page)
+            for paragraph in effect["paragraphs"]:
+                self.assertFalse(any(paragraph in self.pages[guide["title"]] for guide in self.catalog["guides"]))
+        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 14, "Where to plant": 8})
         bursthopper = next(row for row in self.catalog["item_effects"] if row["entity"] == "item-243")
         self.assertIn("15 percentage points of stamina", bursthopper["paragraphs"][0])
         self.assertNotIn("focus", bursthopper["paragraphs"][0].lower())
@@ -485,8 +487,8 @@ class SelectiveViewTests(unittest.TestCase):
             "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
             "nature-20": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
         }
-        self.assertEqual(len(self.data["illustrations"]), 366)
-        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 350)
+        self.assertEqual(len(self.data["illustrations"]), 397)
+        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 369)
         for identity, digest in hashes.items():
             images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
             self.assertEqual(len(images), 1)

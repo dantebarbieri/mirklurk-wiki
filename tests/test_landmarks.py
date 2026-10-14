@@ -47,7 +47,7 @@ class LandmarkTests(unittest.TestCase):
 
     def test_exact_native_landmarks_are_supplementary_not_portraits(self):
         self.assertEqual(set(self.images), set(LANDMARKS))
-        self.assertEqual(len(self.data["illustrations"]), 366)
+        self.assertEqual(len(self.data["illustrations"]), 397)
         for identity, (filename, digest) in LANDMARKS.items():
             image = self.images[identity]
             self.assertEqual(image["id"], identity + "-location-illustration")
@@ -169,7 +169,7 @@ class LandmarkTests(unittest.TestCase):
             self.assertNotIn("[[World seed logic", self.pages[title])
         for title in ("NPCs", "Merchants"):
             self.assertIn("[[World generation#Finding_NPCs|", self.pages[title])
-        for heading in ("Fort Solid", "Scaal's lair", "The Library", "Guaranteed fen biomes",
+        for heading in ("Fort Solid", "Scaal's lair", "The Library", "Guaranteed fen areas",
                         "Finding NPCs", "Exploration, revisits and saves", "World seeds"):
             self.assertIn(f" {heading} ==", page)
         self.assertIn("[[Scaal]]", page)
@@ -209,7 +209,7 @@ class LandmarkTests(unittest.TestCase):
             "even when a valid spot exists",
             "After a failed search",
             "enter the same or another Broken Fen to retry",
-            "There is no alternative-biome fallback",
+            "There is no fallback to another area type",
             "a world without them cannot place this wreck",
         ):
             self.assertIn(phrase, ihar)

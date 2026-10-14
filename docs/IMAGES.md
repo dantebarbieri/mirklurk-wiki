@@ -46,7 +46,14 @@ uploads in these records.
 
 Every record contains `id`, `file_title`, `caption`, `creator`,
 `sha256`, `rights_status`, `rights_basis`, `rights_note`, `confidence`, and
-`evidence`, plus exactly one target: `entity`, `station`, or `health_armor`.
+`evidence`, plus exactly one target: `entity`, `station`, `health_armor`, or
+`guide`. A `guide` target names a mechanics guide (a ground or area page, or
+Terrain); the record can only be placed on that page. A guide record may have
+`role: "tile"`, at most one per guide: that tile sprite becomes the page's lead
+image and the `{{Tile}}` icon for the page. Ground tiles are frames of the
+0.9.0.0 tilesets, and area images are the game's own explored-area maps that
+it saves as `Maps/x_y.png`. Both were uploaded as File pages crediting game
+artwork by Edym Pixels; the bytes stay off Git like every other image.
 Only station targets may have `variant`. A being-targeted record may additionally
 have `role: "location"`: one supplementary exterior per NPC with a reviewed
 location section, or `role: "sprite"`: one supplementary overworld sprite per

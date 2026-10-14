@@ -197,7 +197,7 @@ class DisplayTests(unittest.TestCase):
         locations = page_locations(self.data, self.catalog)
         items = {row["id"]: row for row in self.data["entities"] if row["category"] == "item"
                  and row["id"] not in {recipe["owner_item"] for recipe in self.catalog["construction_recipes"]}}
-        registry = self.pages[ASSETS_TITLE].split("    items = {\n", 1)[1]
+        registry = self.pages[ASSETS_TITLE].split("    items = {\n", 1)[1].split("\n    },")[0]
         self.assertEqual(len(items), 263)
         self.assertEqual(registry.count("        [ "), len(items))
         for identity, item in items.items():
@@ -241,7 +241,7 @@ class DisplayTests(unittest.TestCase):
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (97, 78))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 79)
-        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2098)
+        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2191)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("|Value]]: ") for text in readers.values()), 58)

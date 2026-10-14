@@ -54,6 +54,9 @@ MECHANIC_GUIDE_TITLES = {
     "Action points", "Health and armor", "Satiation", "Stamina", "Focus",
     "Temperature", "Wellbeing", "Foods", "Resting", "Weather", "Armor points",
     "Tree health and chopping", "Magic weapons", "Survivors' camp", "Placing objects", "Strict move",
+    "Planting", "Terrain", "Soil", "Grassy ground", "Sand", "Mud", "Stone ground", "Goo", "Dock planks",
+    "Slopes", "Shallow water", "Medium water", "Deep water", "Interior floors", "Areas", "Fort Solid Shorehold", "Common Bog", "Withered Mire",
+    "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters",
 }
 HEALTH_ARMOR_ICONS = {
     1: ("File:Health-armor-1.png", "Bronze"),
@@ -152,9 +155,9 @@ def _records(value, location):
     return value
 
 
-def _evidence(value, sources, location):
-    if not isinstance(value, list) or not 1 <= len(value) <= 8:
-        raise DataError(f"{location}: expected one to eight evidence references")
+def _evidence(value, sources, location, limit=8):
+    if not isinstance(value, list) or not 1 <= len(value) <= limit:
+        raise DataError(f"{location}: expected one to {limit} evidence references")
     seen = set()
     for index, reference in enumerate(value):
         where = f"{location}[{index}]"
@@ -301,19 +304,30 @@ def _validate_illustrations(records, sources, entities, stations=None):
             illustration,
             {"id", "file_title", "caption", "creator", "sha256", "rights_status",
              "rights_basis", "rights_note", "confidence", "evidence"},
-            {"entity", "station", "variant", "health_armor", "role", "pixel_art", "cropped_from"}, where,
+            {"entity", "station", "variant", "health_armor", "guide", "role", "pixel_art", "cropped_from"}, where,
         )
         identity = _identifier(illustration["id"], f"{where}.id")
         if identity in seen:
             raise DataError(f"{where}: duplicate illustration ID")
         seen.add(identity)
-        if sum(key in illustration for key in ("entity", "station", "health_armor")) != 1:
-            raise DataError(f"{where}: provide exactly one entity, station, or health_armor target")
+        if sum(key in illustration for key in ("entity", "station", "health_armor", "guide")) != 1:
+            raise DataError(f"{where}: provide exactly one entity, station, health_armor, or guide target")
         if "variant" in illustration and "station" not in illustration:
             raise DataError(f"{where}: a variant belongs only to a station")
-        if "role" in illustration and ("entity" not in illustration or illustration["role"] not in ILLUSTRATION_ROLES):
-            raise DataError(f"{where}.role: only entity location, sprite, ability, or mechanics illustrations have a role")
-        if "entity" in illustration:
+        if "role" in illustration and not (
+            ("entity" in illustration and illustration["role"] in ILLUSTRATION_ROLES)
+            or ("guide" in illustration and illustration["role"] == "tile")
+        ):
+            raise DataError(f"{where}.role: only entity location, sprite, ability, or mechanics and guide tile illustrations have a role")
+        if "guide" in illustration:
+            if illustration["guide"] not in MECHANIC_GUIDE_TITLES:
+                raise DataError(f"{where}.guide: must reference a mechanics guide title")
+            if "role" in illustration:
+                key = ("tile", illustration["guide"])
+                if key in role_entities:
+                    raise DataError(f"{where}.role: expected one tile illustration per guide")
+                role_entities.add(key)
+        elif "entity" in illustration:
             entity_id = _identifier(illustration["entity"], f"{where}.entity")
             if entity_id not in entities or entities[entity_id]["category"] not in {"item", "being", "nature", "skill"}:
                 raise DataError(f"{where}.entity: must reference an item, being, nature record, or skill")
