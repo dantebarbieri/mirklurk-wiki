@@ -136,9 +136,10 @@ page: in-game screenshots by DavidLokison, shared with the community on
 `File:Jumper-adjacent-jump-costs.png` (1200 x 200, 6,913 bytes) covers a jump to
 an adjacent tile; `File:Jumper-two-tile-jump-costs.png` (930 x 80, 3,041 bytes)
 covers a jump two tiles away. Both are native-scale screenshots with
-`source_scale: 1`. The Effects section explains the cost calculation reviewed in
-the 0.9.0.0 `data.win`, which reproduces all 22 screenshot values, then
-introduces the strips as a worked example and states their costs as text.
+`source_scale: 1`. The Effects section gives the cost calculation reviewed in
+the 0.9.0.0 `data.win` as a per-rank table with modifier notes; the table
+reproduces all 22 screenshot values, and a worked example introduces the
+strips. The contributor is credited on the File pages, not in the article.
 Upload both exact files before publishing; hashes are in their records.
 The active register is now 366.
 

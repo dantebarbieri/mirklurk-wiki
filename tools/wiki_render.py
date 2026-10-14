@@ -1558,7 +1558,14 @@ def build_pages(root, data, catalog=None, details=None):
             if entry["conditions"] is not None and (entry["kind"] != "quest" or entry["details"]["stage"] == "Dynamic location"):
                 pages[title] += "\n" + literal(entry["conditions"]) + "\n"
             if entry["kind"] == "algorithm":
+                if "table" in entry:
+                    pages[title] += "\n" + table([literal(cell) for cell in entry["table"]["headers"]],
+                                                 [[literal(cell) for cell in cells] for cells in entry["table"]["rows"]])
                 pages[title] += "\n".join("# " + literal(step) for step in entry["details"]["steps"]) + "\n"
+                if "notes" in entry:
+                    pages[title] += "\n".join("* " + literal(note) for note in entry["notes"]) + "\n"
+                if "example" in entry:
+                    pages[title] += "\n" + literal(entry["example"]) + "\n"
                 for image in images:
                     if image.get("role") == "mechanics" and entry["id"] == image["entity"] + "-mechanics":
                         pages[title] += illustration_markup(image, page_image=False)

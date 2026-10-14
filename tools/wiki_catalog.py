@@ -532,7 +532,8 @@ def validate_catalog(catalog, data):
                 _text(row[field], f"fact display.{field}", 500)
     displayed = set()
     for row in _records(catalog.get("entry_display", []), "catalog.entry_display"):
-        _object(row, {"entry"}, {"title", "summary", "conditions", "steps", "confidence", "evidence"}, "entry display")
+        _object(row, {"entry"}, {"title", "summary", "conditions", "steps", "confidence", "evidence",
+                                 "table", "notes", "example"}, "entry display")
         if not isinstance(row["entry"], str) or row["entry"] not in entry_ids or row["entry"] in displayed or len(row) == 1:
             raise DataError("entry display: expected one nonempty override per known entry")
         displayed.add(row["entry"])
@@ -555,6 +556,23 @@ def validate_catalog(catalog, data):
                 raise DataError("entry display: steps require at most twenty algorithm steps")
             for step in row["steps"]:
                 _text(step, "entry display step", 500)
+        if {"table", "notes", "example"} & row.keys() and entry["kind"] != "algorithm":
+            raise DataError("entry display: tables, notes and examples require an algorithm entry")
+        if "table" in row:
+            _object(row["table"], {"headers", "rows"}, set(), "entry display table")
+            headers, rows = row["table"]["headers"], row["table"]["rows"]
+            if (not isinstance(headers, list) or not 2 <= len(headers) <= 6 or not isinstance(rows, list)
+                    or not 1 <= len(rows) <= 30 or any(not isinstance(cells, list) or len(cells) != len(headers) for cells in rows)):
+                raise DataError("entry display: table needs two to six headers and one to thirty matching rows")
+            for cell in [*headers, *(cell for cells in rows for cell in cells)]:
+                _text(cell, "entry display table cell", 120)
+        if "notes" in row:
+            if not isinstance(row["notes"], list) or not 1 <= len(row["notes"]) <= 12:
+                raise DataError("entry display: expected one to twelve notes")
+            for note in row["notes"]:
+                _text(note, "entry display note", 500)
+        if "example" in row:
+            _text(row["example"], "entry display example", 1200)
     if "taxonomy" in catalog:
         taxonomy = catalog["taxonomy"]
         _object(taxonomy, {"groups", "tags"}, {"skill_groups"}, "taxonomy")

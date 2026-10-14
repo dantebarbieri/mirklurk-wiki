@@ -201,11 +201,16 @@ class JumperMechanicsTests(unittest.TestCase):
     def test_jump_costs_and_strips_follow_effects(self):
         page = self.pages["Jumper"]
         section = page.split("== <nowiki>Effects</nowiki> ==", 1)[1]
-        self.assertIn("4.0, 3.6, 3.2, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.8 and 1.6 AP", section)
-        self.assertIn("8.0, 7.2, 6.4, 5.4, 5.0, 4.6, 4.2, 4.0, 3.8, 3.6 and 3.4 AP", section)
-        self.assertLess(section.index("# <nowiki>Find your maximum range."), section.index("# <nowiki>For example,"))
+        self.assertIn("! <nowiki>Rank</nowiki> !! <nowiki>Maximum range (tiles)</nowiki>", section)
+        self.assertIn("| <nowiki>10</nowiki> || <nowiki>4.75</nowiki> || <nowiki>1.6</nowiki> || <nowiki>3.4</nowiki>", section)
+        self.assertNotIn("\n# ", section)
+        self.assertNotIn("DavidLokison", page)
+        table_end, notes = section.index("|}"), section.index("* <nowiki>Water:")
+        example = section.index("<nowiki>For example,")
         adjacent = section.index("[[File:Jumper-adjacent-jump-costs.png|1200px|")
-        self.assertLess(section.index("# <nowiki>For example,"), adjacent)
+        self.assertLess(table_end, notes)
+        self.assertLess(notes, example)
+        self.assertLess(example, adjacent)
         self.assertLess(adjacent, section.index("[[File:Jumper-two-tile-jump-costs.png|930px|"))
         self.assertEqual(section.count("|class=notpageimage|"), 2)
         self.assertEqual(page.count("[[File:Skill-0-2.png|"), 1)
@@ -224,6 +229,19 @@ class JumperMechanicsTests(unittest.TestCase):
         catalog["entry_display"] = [row for row in catalog["entry_display"] if row["entry"] != "skill-0-3-mechanics"]
         with self.assertRaisesRegex(DataError, "skill's own Effects section"):
             build_pages(ROOT, data, catalog, self.details)
+
+    def test_effects_table_rows_must_match_headers(self):
+        catalog = copy.deepcopy(self.catalog)
+        row = next(row for row in catalog["entry_display"] if row["entry"] == "skill-0-2-mechanics")
+        row["table"]["rows"][0].append("extra")
+        with self.assertRaisesRegex(DataError, "matching rows"):
+            validate_catalog(catalog, self.data)
+        del row["table"]
+        kinds = {entry["id"]: entry["kind"] for entry in self.data["entries"]}
+        other = next(row for row in catalog["entry_display"] if kinds[row["entry"]] != "algorithm")
+        other["notes"] = ["Not an algorithm."]
+        with self.assertRaisesRegex(DataError, "require an algorithm entry"):
+            validate_catalog(catalog, self.data)
 
 
 if __name__ == "__main__":
