@@ -4139,7 +4139,7 @@
         "paragraphs": [
           "Wilda leads the Survivors' camp, which is built the first time you enter a Savage Mirk area in a world. A message about torchlight and five white dots point toward it when it appears. There is only one camp per world.",
           "The camp has three huts, two permanent torches and a cleared yard. Wilda and three Survivor guards stay nearby. Grand Mother lives inside the main hut, whose ladder stays locked until Wilda trusts you.",
-          "You may not place or build anything within about 26 tiles of the camp. Mirkfangs and other creatures do not spawn within 16 tiles of it, and The Terror retreats rather than attack you there."
+          "You may not place or build anything within about 26 tiles of the camp. Mirkfangs and other creatures do not spawn within 16 tiles of it. The Terror gives up a chase when you step inside that range."
         ],
         "related_entities": [
           "being-35",
@@ -4649,11 +4649,14 @@
       "note": "Creature or enemy presentation grouping; this does not assert universal hostility.",
       "summary": "The Terror is the boss of the Survivors' camp request: an unusually tough Mirkfang Matriarch with armored body cells. She can attack twice in a turn when she does not move, and her bites deal Leeching damage.",
       "ability": {
-        "title": "Screech and hunting",
+        "title": "Where to find her",
         "paragraphs": [
-          "Every third turn while she has a target, The Terror screeches instead of attacking. The screech removes 25% focus directly; difficulty and Focused Mind do not reduce it.",
-          "She appears only at night, only in the Savage Mirk area with the Survivors' camp, and only after Wilda asks you to hunt her. Only one exists at a time, and she never spawns within 16 tiles of the camp.",
-          "If you stand within 16 tiles of the camp, she screeches and breaks off instead of attacking. Her corpse always holds the Head of The Terror, plus bat meat and hides."
+          "Wilda describes her this way: \"She stalks this area at night... She is a clever one, she never goes near our camp.\"",
+          "The Terror does not exist until you choose Trust in Wilda's conversation. After that she can appear only at night, only outdoors, and only in the Savage Mirk area that holds the Survivors' camp. She never appears in any other area. Only one exists at a time, and none appear again once she is dead.",
+          "She is never placed within 16 tiles (256 px) of the camp's main hut. Anywhere else in that area is possible. An area is 160 x 160 tiles, so she can be anywhere from 16 tiles to roughly 105-170 tiles from the camp, depending on where the camp sits. She is never placed on water or sand, within about 5 tiles of the area's edge, or on screen.",
+          "Each night turn, a new creature may appear somewhere off screen in that area. When one does, it is The Terror about 1 time in 6. Creatures off screen do not move, so she waits where she appeared until you come close. Dawn does not remove her, but while she is off screen and not hunting you, she has a 2% chance each turn to vanish. A new one can then appear on a later night.",
+          "To find her, walk the area at night away from the camp, ideally beyond 16 tiles. Every third turn while she has a target, The Terror screeches instead of attacking. The screech removes 25% focus directly; difficulty and Focused Mind do not reduce it.",
+          "If she is chasing you and you step within 16 tiles of the camp, she screeches and gives up the chase. If she is already next to you, she can still bite. Her corpse always holds the Head of The Terror, plus bat meat and hides."
         ],
         "related_entities": [
           "being-34",
@@ -4667,34 +4670,44 @@
         "confidence": "observed",
         "evidence": [
           {
-            "source": "game-data-0899",
+            "source": "game-data-0900",
             "section": "gml_Object_manager_area_Step_0",
             "key": "being40.turnCounter>=3.doSpecial/spot_is_private.retreat"
           },
           {
-            "source": "game-data-0899",
+            "source": "game-data-0900",
             "section": "gml_Object_obj_being_Step_0",
             "key": "being40.special.player_focus_lose[0.25,true]/AP=0"
           },
           {
-            "source": "game-data-0899",
-            "section": "gml_GlobalScript_scr_basic_useful",
-            "key": "player_focus_lose.arg1-bypasses-difficulty-and-skill"
-          },
-          {
-            "source": "game-data-0899",
+            "source": "game-data-0900",
             "section": "gml_Object_manager_area_Alarm_4",
-            "key": "areaType5.dark.campQUESTstage0.alreadyGotBat/spot_is_private/terrorWeight25"
+            "key": "areaType5.dark.campQUESTstage0.alreadyGotBat/spr_building_48x48_tall/spot_is_private/terrorWeight25-of-142.5+/12tries.edge88.notInView"
           },
           {
-            "source": "game-data-0899",
+            "source": "game-data-0900",
+            "section": "gml_GlobalScript_scr_ai_related",
+            "key": "spot_is_private.areaType5.solid-2987.256"
+          },
+          {
+            "source": "game-data-0900",
+            "section": "gml_GlobalScript_scr_basic_useful",
+            "key": "player_endturn.alarm4/offscreen-noTurn/despawn2pct-outdoors-notEssential/player_focus_lose.arg1-bypasses-difficulty-and-skill"
+          },
+          {
+            "source": "game-data-0900",
+            "section": "gml_Object_manager_area_Alarm_6",
+            "key": "camp.HF512/roomWidth2560"
+          },
+          {
+            "source": "game-data-0900",
             "section": "gml_Object_obj_being_Alarm_0",
-            "key": "death.corpse[40]"
+            "key": "death.corpse[40]/campQUESTstage=1"
           },
           {
             "source": "beings-en-0899",
-            "section": "Desc",
-            "key": "40"
+            "section": "Wilda",
+            "key": "200"
           }
         ]
       }
@@ -8444,7 +8457,7 @@
       "paragraphs": [
         "The camp is built the first time you enter a Savage Mirk area, so each world has one. A torchlight message and five white dots point toward it when it appears.",
         "Wilda and three Survivor guards live here. You may trade with Wilda, but you cannot place or build anything within about 26 tiles of the camp. No creatures spawn within 16 tiles of it.",
-        "Choose Trust in Wilda's conversation. She asks you to kill The Terror, a Mirkfang Matriarch that stalks the camp's area at night, and bring back the Head of The Terror. The Terror only appears after this request and never near the camp.",
+        "Choose Trust in Wilda's conversation. She asks you to kill The Terror, a Mirkfang Matriarch that stalks the camp's area at night, and bring back the Head of The Terror. The Terror only appears after this request, and only at night. She is never within 16 tiles of the camp's main hut, but can be anywhere else in the camp's 160 x 160-tile area, so search the area at night away from the camp.",
         "Hand the head to Wilda to unlock the ladder to Grand Mother's hut. Grand Mother's first greeting grants one skill point. She sells magic weapons, Summoning Stones and, later in the main quest, Magus' Shard.",
         "Wilda can then be summoned with a Summoning Stone, and the Survivors greet you as a friend."
       ],
