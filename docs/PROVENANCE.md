@@ -530,11 +530,12 @@ Page, and the index lists its pages. Terrain indexes one guide per ground kind a
 Areas one guide per area kind (the game's own word; it never says biome or zone).
 Optional `tables` (at most 12) and `images` (at most 12) follow a section index
 given by `after`. A table has 1 to 10 column headings, 1 to 64 rows and an
-optional caption; each cell is literal text or exactly one `entity`, `page` or
-`tile` reference. Entity cells reuse the Item and Creature templates or the
+optional caption; each cell is literal text, one `entity`, `page` or `tile`
+reference, or a list of 1 to 12 such references joined with commas. Entity cells reuse the Item and Creature templates or the
 ordinary icon link, page cells must be reviewed guides, and tile cells must be
 Terrain-indexed pages, rendered with `{{Tile}}`. Placed images name an approved
-illustration whose `guide` target is that page (or that has no guide target).
+illustration whose `guide` target is that page (or that has no guide target);
+an area page may also place a ground page's `tile` illustration.
 Percentages in the area and tile tables are computed from the game's spawn,
 tree and generation weights and rounded to two decimals; tougher-form odds are
 listed separately. Guides with numeric tables may cite up to sixteen evidence

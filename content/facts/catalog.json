@@ -8674,7 +8674,7 @@
       "A tile refuses every seed if it is under a solid object, covered in goo or cave spikes, or already holds something rooted, such as a boulder, a log, tall grass, a fern, a lilypad or another planted seed. You cannot plant inside other people's homes or other private areas. Each seed also has its own rules about ground height and ground type.",
       "A Simple Shelter or a Canopy gradually casts deep shade on the tiles beneath it. Deeply shaded tiles refuse seeds, and crops already growing there shrink away, so keep gardens out from under your shelters.",
       "In Fort Solid Shorehold the ground within about six tiles of the fort is kept clear. Until late in the main story, planting there always fails; after that, attempts there still usually fail.",
-      "Each seed takes a range of ground heights. The table uses the height bands described on Terrain, from deep water up to the high plateau. Heights are the game's internal values; the bands are what you see. Watercress Seeds go deepest and are the only seeds for medium and deep water. Cranberry Seeds need grassy shallow water. Trollgnarl Seed Pods only take raised ground.",
+      "Each seed grows only within its own range of depths and heights, from deep water up to the high plateau; see Terrain for the bands. Watercress Seeds go deepest and are the only seeds for medium and deep water. Cranberry Seeds need grassy shallow water. Trollgnarl Seed Pods only take raised ground.",
       "Apart from Watercress Seeds and Cranberry Seeds, every seed refuses stone, and only Elderberry Seeds accept sand. No seed takes a slope. Mud is fine for every land seed. Each ground kind's page lists the seeds that can grow on it.",
       "Planted seeds grow only while you are away from an area. When you return, the area catches up on the time you missed, up to ten days. Each tile gets a few growth chances per day, so results vary from plant to plant.",
       "Turnip, Cranberry and watercress crops pass through four growth stages and usually need around four to five days away to ripen. Seedlings of Willow, Cypress, Trollgnarl, Elderwort Shrub and Brambles become full-grown plants after about three days away on average, after which they follow the rules in Tree health and chopping.",
@@ -8699,16 +8699,16 @@
     "tables": [
       {
         "after": 5,
-        "columns": ["Seed", "Ground height", "Where that is", "Refused on", "Grows into"],
+        "columns": ["Seed", "Where it grows", "Refused on", "Grows into"],
         "rows": [
-          [{"entity": "item-231"}, "−0.45 to −0.26", "Deeper part of the open shallows, all medium water, and deep water down to waist depth", "Nothing else: the bottom does not matter", {"entity": "item-226"}],
-          [{"entity": "item-229"}, "Any shallow water", "Shallow water with thick grass or moss growing through it, in practice the shore shallows", "Slopes; muddy shallows never grow thick enough grass", {"entity": "nature-19"}],
-          [{"entity": "item-233"}, "−0.35 to 0.195", "Shallow water, the upper half of medium water, the waterline and low ground", "Stone, sand, slopes", {"entity": "nature-7"}],
-          [{"entity": "item-232"}, "−0.25 to 0.425", "Shore shallows, the waterline, low ground and the first plateau", "Stone, sand, slopes", {"entity": "nature-4"}],
-          [{"entity": "item-228"}, "−0.15 and above", "From partway up the waterline to the highest plateau", "Stone, slopes (sand is fine)", {"entity": "nature-20"}],
-          [{"entity": "item-230"}, "−0.05 to 0.925", "Low ground a little back from the water up to the high plateau", "Stone, sand, slopes", {"entity": "nature-18"}],
-          [{"entity": "item-227"}, "0.0667 and above", "The upper part of low ground and both plateaus", "Stone, sand, slopes", {"entity": "nature-6"}],
-          [{"entity": "item-234"}, "0.31 and above", "The upper part of the first plateau and the high plateau", "Stone, sand, slopes", {"entity": "nature-17"}]
+          [{"entity": "item-231"}, "All but the top edge of the open shallows, all medium water, and deep water down to waist depth", "Nothing else: the bottom does not matter", {"entity": "item-226"}],
+          [{"entity": "item-229"}, "Shallow water with thick grass or moss growing through it, in practice the shore shallows", "Slopes; muddy shallows never grow thick enough grass", {"entity": "nature-19"}],
+          [{"entity": "item-233"}, "The upper half of medium water, both shallow bands, the waterline and low ground", "Stone, sand, slopes", {"entity": "nature-7"}],
+          [{"entity": "item-232"}, "The shore shallows, the waterline, low ground and the first plateau", "Stone, sand, slopes", {"entity": "nature-4"}],
+          [{"entity": "item-228"}, "The upper half of the waterline and everything above it", "Stone, slopes (sand is fine)", {"entity": "nature-20"}],
+          [{"entity": "item-230"}, "Low ground a little back from the water, both plateaus, but not the very highest hilltops", "Stone, sand, slopes", {"entity": "nature-18"}],
+          [{"entity": "item-227"}, "The upper half of low ground and both plateaus", "Stone, sand, slopes", {"entity": "nature-6"}],
+          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau", "Stone, sand, slopes", {"entity": "nature-17"}]
         ],
         "caption": "Every seed is also refused under solid objects, on goo or spikes, on planted or cluttered tiles, in deep shade and near the fort."
       }
@@ -8727,14 +8727,14 @@
       "Who can go where"
     ],
     "paragraphs": [
-      "Every outdoor tile has a fixed ground height. The game uses it to draw water, soil and slopes, and to decide what grows and what can walk there. This wiki names the height bands below and uses the same names on every tile, seed and area page. The game itself only describes how deep you are standing, from \"Your feet are slightly submerged\" to \"You are swimming!\".",
+      "Every outdoor tile has a fixed ground height. The game uses it to draw water, soil and slopes, and to decide what grows and what can walk there. Ground heights fall into the bands below, from deep water up to the high plateau. In the water, the game describes how deep you are standing, from \"Your feet are slightly submerged\" to \"You are swimming!\".",
       "Every step costs action points depending on the tile you step onto. A diagonal step costs 0.4 AP more, heavy encumbrance raises the cost, and no single step costs more than 8 AP. Obstacles, water and the ground underneath combine: wading over sand or mud costs more than wading over soil.",
       "Water levels never change. Heights are set when an area is generated and are not touched by rain, time or weather afterwards, so a dry tile stays dry and a pool never spreads or drains. Rain only adds splash ripples to water and wets your clothes. The dark stains some tiles show are blood or acid, not wet ground.",
       "Each kind of ground has its own page covering where it appears, which creatures spawn and walk there, which seeds take, and whether you can build on it. The table summarizes them. The creature table column says which spawn table picks creatures that appear on that ground; see Areas.",
       "A Boulder or a water rock costs 2.5 AP to clamber over. A Mossy Log, ruin rubble or debris costs 1.8 AP. Tall Grass and Fern patches add up to about half as much again as they grow, and bramble thickets and Rift Vine growth cost far more. Water rocks only appear in medium or deep water and give dry footing there. None of these tiles can be built on or planted.",
       "A lit Campfire slowly scorches the ground beneath it into black ash. Ash walks like bare soil at 0.8 AP a step.",
       "Strider removes 8% of the extra cost of obstacles and thick growth per rank, Amphibian removes 8% of the extra cost of water per rank, and Firm Grip makes slopes cheaper with each rank. Balance and Jumper help with jumping across gaps rather than walking.",
-      "Creatures follow the same depth bands. Spawning ignores these limits, so a Mudfin can appear stuck in the shore shallows until it is attacked."
+      "Every land creature can wade into the shallows, but only some go deeper, as the table shows. The Mudfin and the Razorfin cannot enter the shore shallows. Any creature can stand on a water rock, a log or the dock. Spawning ignores these limits, so a Mudfin can appear stuck in the shore shallows until it is attacked."
     ],
     "related_entities": ["skill-0-0", "skill-0-1", "skill-0-2", "skill-0-3", "skill-0-4", "nature-1", "nature-2", "nature-3", "nature-6", "nature-9", "nature-13", "item-38"],
     "related_pages": ["Planting", "Areas", "Action points", "Placing objects"],
@@ -8755,7 +8755,7 @@
         "after": 0,
         "columns": ["Band", "Ground height", "What it looks like", "Page"],
         "rows": [
-          ["Deep water", "−0.4 and below", "Teal water; waist-deep at first, swimming from about −0.505", {"tile": "Deep water"}],
+          ["Deep water", "−0.4 and below", "Teal water; waist-deep at first, then deeper until you swim", {"tile": "Deep water"}],
           ["Medium water", "−0.4 to −0.3", "Greener, denser water; your legs are under", {"tile": "Medium water"}],
           ["Open shallows", "−0.3 to −0.25", "Shallow water over the darkest soil, with no grass", {"tile": "Shallow water"}],
           ["Shore shallows", "−0.25 to −0.2", "Shallow water where grass still grows through", {"tile": "Shallow water"}],
@@ -8777,7 +8777,7 @@
           [{"tile": "Goo"}, "1.2 (1.0 indoors)", "No", "None", "Rift-Thorn Mire table"],
           [{"tile": "Dock planks"}, "0.8", "No", "None", "Water table"],
           [{"tile": "Slopes"}, "5", "No", "None", "Area land table"],
-          [{"tile": "Shallow water"}, "1.2 to 1.4", "Rafts no; nothing else", "Cranberry, Willow, Cypress, Watercress", "Water table"],
+          [{"tile": "Shallow water"}, "1.2 to 1.4", "No", "Cranberry, Willow, Cypress, Watercress", "Water table"],
           [{"tile": "Medium water"}, "1.6 to 2.0", "Raft Base only", "Cypress, Watercress", "Water table"],
           [{"tile": "Deep water"}, "3.4 to 5", "Raft Base only", "Watercress", "Water table"],
           [{"tile": "Interior floors"}, "0.8", "Yes, outside private homes", "None", "Rift interiors only"]
@@ -8785,39 +8785,14 @@
       },
       {
         "after": 7,
-        "columns": ["Creature", "Land", "Shore shallows", "Open shallows", "Medium water", "Deep water"],
+        "columns": ["Where they can go", "Creatures"],
         "rows": [
-          [{"entity": "being-1"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-25"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-2"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-38"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-39"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-37"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-40"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-22"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
-          [{"entity": "being-4"}, "No", "No", "No", "Yes", "Yes"],
-          [{"entity": "being-17"}, "No", "No", "Yes", "Yes", "Yes"],
-          [{"entity": "being-24"}, "No", "No", "Yes", "Yes", "Yes"],
-          [{"entity": "being-0"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-7"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-30"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-10"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-23"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-11"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-29"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-27"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-13"}, "Yes", "Yes", "Yes", "No", "No"],
-          [{"entity": "being-21"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-31"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-32"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-14"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-15"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-16"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-3"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-18"}, "Yes", "Yes", "Yes", "Yes", "No"],
-          [{"entity": "being-28"}, "Yes", "Yes", "Yes", "Yes", "No"]
-        ],
-        "caption": "Flying creatures go anywhere. Swimmers never leave the water. Small walkers stop at medium water and larger walkers at deep water. Any creature can stand on a water rock, a log or the dock, because those count as dry footing."
+          ["Anywhere, including deep water", [{"entity": "being-1"}, {"entity": "being-25"}, {"entity": "being-2"}, {"entity": "being-38"}, {"entity": "being-39"}, {"entity": "being-37"}, {"entity": "being-40"}, {"entity": "being-22"}]],
+          ["Land and water down to medium water", [{"entity": "being-21"}, {"entity": "being-31"}, {"entity": "being-32"}, {"entity": "being-14"}, {"entity": "being-15"}, {"entity": "being-16"}, {"entity": "being-3"}, {"entity": "being-18"}, {"entity": "being-28"}]],
+          ["Land and shallow water", [{"entity": "being-0"}, {"entity": "being-7"}, {"entity": "being-30"}, {"entity": "being-10"}, {"entity": "being-23"}, {"entity": "being-11"}, {"entity": "being-29"}, {"entity": "being-27"}, {"entity": "being-13"}]],
+          ["Open shallows, medium and deep water", [{"entity": "being-17"}, {"entity": "being-24"}]],
+          ["Medium and deep water", [{"entity": "being-4"}]]
+        ]
       }
     ],
     "images": [
@@ -8873,12 +8848,12 @@
         "after": 3,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-227"}, "Ground height 0.0667 or more: upper low ground and the plateaus"],
-          [{"entity": "item-228"}, "Ground height −0.15 or more"],
-          [{"entity": "item-230"}, "Ground height −0.05 to 0.925"],
-          [{"entity": "item-232"}, "Ground height up to 0.425: the waterline, low ground and the first plateau"],
-          [{"entity": "item-233"}, "Ground height up to 0.195: the waterline and low ground"],
-          [{"entity": "item-234"}, "Ground height 0.31 or more: the upper first plateau and the high plateau"]
+          [{"entity": "item-227"}, "The upper half of low ground and both plateaus"],
+          [{"entity": "item-228"}, "The upper half of the waterline and everything above it"],
+          [{"entity": "item-230"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
+          [{"entity": "item-232"}, "The waterline, low ground and the first plateau"],
+          [{"entity": "item-233"}, "The waterline and low ground"],
+          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau"]
         ]
       }
     ],
@@ -8921,12 +8896,12 @@
         "after": 3,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-227"}, "Ground height 0.0667 or more: upper low ground and the plateaus"],
-          [{"entity": "item-228"}, "Ground height −0.15 or more"],
-          [{"entity": "item-230"}, "Ground height −0.05 to 0.925"],
-          [{"entity": "item-232"}, "Ground height up to 0.425: the waterline, low ground and the first plateau"],
-          [{"entity": "item-233"}, "Ground height up to 0.195: the waterline and low ground"],
-          [{"entity": "item-234"}, "Ground height 0.31 or more: the upper first plateau and the high plateau"],
+          [{"entity": "item-227"}, "The upper half of low ground and both plateaus"],
+          [{"entity": "item-228"}, "The upper half of the waterline and everything above it"],
+          [{"entity": "item-230"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
+          [{"entity": "item-232"}, "The waterline, low ground and the first plateau"],
+          [{"entity": "item-233"}, "The waterline and low ground"],
+          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau"],
           [{"entity": "item-229"}, "Only where thick grass or moss grows through shallow water"]
         ]
       }
@@ -8950,7 +8925,7 @@
       "Pale sand covers beaches and scattered sandy patches. It slopes gently from dry ground into the water.",
       "Any side of a land area that faces the edge of the world, a Vast Waters area or a Broken Fen becomes a sandy beach about thirty tiles deep, dropping into deep water. A Broken Fen has beaches on all four sides. Every land area also gets a few inland sandy patches: two to six per area, or 24 in the Withered Mire.",
       "Sand is heavy going at 1.2 AP a step. Wading over a sandy bottom also costs more than over soil: 1.4 AP in shallow water, 2.0 AP in medium water and 5 AP in deep water. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
-      "Elderberry Seeds are the only land seed that takes on dry sand, from ground height −0.15 up. Under water, Watercress Seeds ignore the bottom and grow on sand at their usual depth.",
+      "Elderberry Seeds are the only land seed that takes on dry sand, from the upper half of the waterline up. Under water, Watercress Seeds ignore the bottom and grow on sand at their usual depth.",
       "Dry sand has its own spawn table in every area except the Rift-Thorn Mire, day and night alike. The Boulder Crab is by far the most common creature on it, and bird nests are often built on sand. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
     "related_entities": ["being-7", "being-30", "being-2", "being-1", "being-31", "item-228", "item-231"],
@@ -9043,12 +9018,12 @@
         "after": 3,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-227"}, "Ground height 0.0667 or more: upper low ground and the plateaus"],
-          [{"entity": "item-228"}, "Ground height −0.15 or more"],
-          [{"entity": "item-230"}, "Ground height −0.05 to 0.925"],
-          [{"entity": "item-232"}, "Ground height up to 0.425: the waterline, low ground and the first plateau"],
-          [{"entity": "item-233"}, "Ground height up to 0.195: the waterline and low ground"],
-          [{"entity": "item-234"}, "Ground height 0.31 or more: the upper first plateau and the high plateau"]
+          [{"entity": "item-227"}, "The upper half of low ground and both plateaus"],
+          [{"entity": "item-228"}, "The upper half of the waterline and everything above it"],
+          [{"entity": "item-230"}, "Low ground a little back from the water and both plateaus, but not the very highest hilltops"],
+          [{"entity": "item-232"}, "The waterline, low ground and the first plateau"],
+          [{"entity": "item-233"}, "The waterline and low ground"],
+          [{"entity": "item-234"}, "The upper half of the first plateau and the high plateau"]
         ]
       }
     ]
@@ -9178,7 +9153,7 @@
       "Creatures"
     ],
     "paragraphs": [
-      "Slopes are the steep edges of raised ground, drawn as banks and cliffs. Ground height 0.2 starts the first plateau and 0.425 the high plateau, and a slope rings each one.",
+      "Slopes are the steep edges of raised ground, drawn as banks and cliffs. A slope rings the edge of each first plateau and each high plateau above it.",
       "Every land area has hills and plateaus. The Withered Mire has by far the most, with many raised hills and a base higher than any other area. Vast Waters has none.",
       "Climbing a slope costs 5 AP a step. Each rank of Firm Grip makes it cheaper. You cannot build or plant on a slope. The flat plateau top beyond the slope walks like soil at 0.8 AP.",
       "No seed takes on a slope. Trollgnarl Seed Pods do well on the plateau tops.",
@@ -9209,12 +9184,12 @@
       "Creatures"
     ],
     "paragraphs": [
-      "Shallow water covers ground between −0.3 and −0.2. The game says your feet are submerged. This wiki splits it in two. In the shore shallows, from −0.25 to −0.2, grass still grows through the water. The open shallows, from −0.3 to −0.25, are bare water over dark soil.",
+      "Shallow water lies just below the waterline. The game says your feet are submerged. It comes in two bands. In the shore shallows, nearest the bank, grass still grows through the water. The open shallows, a little deeper, are bare water over dark soil.",
       "Every land area has shallow water along its pools and shores and in scattered puddles: about 40 puddles in most areas, 800 in the Drowned Fen, 12 in the Withered Mire and 5 in a Broken Fen. Beaches and lakes have a band of it around their edges.",
       "Water levels never change, so shallow water stays shallow. You can attack and jump as usual, and your pack stays dry.",
       "Wading costs 1.2 AP a step over soil or stone, and 1.4 AP over sand, mud or thick grass. Each rank of Amphibian takes 8% off the water's share. You cannot build or place anything in shallow water, not even a Raft Base.",
-      "Shallow water takes four seeds. Cranberry Seeds need thick grass or moss growing through the water. Willow Seeds take the shore shallows, Cypress Seed Pods take both bands, and Watercress Seeds take the deeper part of the open shallows below −0.26.",
-      "Creatures that appear in shallow water come from the water table, day and night, in every area but the Rift-Thorn Mire. Fort Solid Shorehold never gets the tougher forms. Mudfin and Razorfin can swim in the open shallows but not the shore shallows. The Mire Serpent stays in medium and deep water."
+      "Shallow water takes four seeds. Cranberry Seeds need thick grass or moss growing through the water. Willow Seeds take the shore shallows, Cypress Seed Pods take both bands, and Watercress Seeds take all but the top edge of the open shallows.",
+      "Creatures that appear in shallow water come from the water table, day and night, in every area but the Rift-Thorn Mire. Fort Solid Shorehold never gets the tougher forms. Every land creature can wade into shallow water. Mudfin and Razorfin can swim in the open shallows but not the shore shallows. The Mire Serpent stays in medium and deep water."
     ],
     "related_entities": ["item-229", "item-232", "item-233", "item-231", "skill-0-1"],
     "related_pages": ["Terrain", "Medium water", "Planting", "Drowned Fen", "Grassy ground"],
@@ -9238,9 +9213,9 @@
         "columns": ["Seed", "Takes here when"],
         "rows": [
           [{"entity": "item-229"}, "Thick grass or moss grows through the water, in practice the shore shallows"],
-          [{"entity": "item-232"}, "Shore shallows only, from −0.25 up"],
-          [{"entity": "item-233"}, "Both bands, from −0.35 up"],
-          [{"entity": "item-231"}, "Open shallows below −0.26"]
+          [{"entity": "item-232"}, "The shore shallows only"],
+          [{"entity": "item-233"}, "Both bands"],
+          [{"entity": "item-231"}, "All but the top edge of the open shallows"]
         ]
       },
       {
@@ -9252,42 +9227,6 @@
           [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
         ],
         "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
-      },
-      {
-        "after": 5,
-        "columns": ["Creature", "Shore shallows", "Open shallows"],
-        "rows": [
-          [{"entity": "being-1"}, "Yes", "Yes"],
-          [{"entity": "being-25"}, "Yes", "Yes"],
-          [{"entity": "being-2"}, "Yes", "Yes"],
-          [{"entity": "being-38"}, "Yes", "Yes"],
-          [{"entity": "being-39"}, "Yes", "Yes"],
-          [{"entity": "being-37"}, "Yes", "Yes"],
-          [{"entity": "being-40"}, "Yes", "Yes"],
-          [{"entity": "being-22"}, "Yes", "Yes"],
-          [{"entity": "being-4"}, "No", "No"],
-          [{"entity": "being-17"}, "No", "Yes"],
-          [{"entity": "being-24"}, "No", "Yes"],
-          [{"entity": "being-0"}, "Yes", "Yes"],
-          [{"entity": "being-7"}, "Yes", "Yes"],
-          [{"entity": "being-30"}, "Yes", "Yes"],
-          [{"entity": "being-10"}, "Yes", "Yes"],
-          [{"entity": "being-23"}, "Yes", "Yes"],
-          [{"entity": "being-11"}, "Yes", "Yes"],
-          [{"entity": "being-29"}, "Yes", "Yes"],
-          [{"entity": "being-27"}, "Yes", "Yes"],
-          [{"entity": "being-13"}, "Yes", "Yes"],
-          [{"entity": "being-21"}, "Yes", "Yes"],
-          [{"entity": "being-31"}, "Yes", "Yes"],
-          [{"entity": "being-32"}, "Yes", "Yes"],
-          [{"entity": "being-14"}, "Yes", "Yes"],
-          [{"entity": "being-15"}, "Yes", "Yes"],
-          [{"entity": "being-16"}, "Yes", "Yes"],
-          [{"entity": "being-3"}, "Yes", "Yes"],
-          [{"entity": "being-18"}, "Yes", "Yes"],
-          [{"entity": "being-28"}, "Yes", "Yes"]
-        ],
-        "caption": "Which creatures can walk, swim or fly into this water. Spawning ignores these limits, so a creature can appear somewhere it could not walk to."
       }
     ]
     },
@@ -9302,12 +9241,12 @@
       "Creatures"
     ],
     "paragraphs": [
-      "Medium water, between −0.4 and −0.3, is greener and denser than the shallows. The game says your legs are submerged.",
+      "Medium water lies between the shallows and deep water and is greener and denser than the shallows. The game says your legs are submerged.",
       "Ponds and lakes in every land area have a band of medium water. There is much more of it in the Drowned Fen and the Broken Fen. Water rocks only appear in medium or deep water, and lilypads float on medium water and the upper part of deep water.",
       "Water levels never change. In medium water your pack stays dry, but jumps take a penalty of 3.",
       "Wading costs 1.6 AP a step over soil or stone and 2.0 AP over sand or mud. Amphibian reduces the water's share. A water rock costs 2.5 AP but keeps you out of the water. The only thing you can place here is a Raft Base, and not on a water rock. A raft moves at 1.8 AP a step.",
-      "Watercress Seeds take all medium water. Cypress Seed Pods take its upper half, from −0.35 up.",
-      "Creatures that appear here come from the water table. Whenever you end a move here outside Fort Solid Shorehold, there is a 2% chance a Mire Serpent bursts out of the water beside you. Small walkers such as the Giant Slug, the Viper, the Mirk Runner and the Boulder Crab cannot enter medium water. Larger walkers such as the Swamp Troll, the Toadkin and the Scaalmyr can."
+      "Watercress Seeds take all medium water. Cypress Seed Pods take its upper half.",
+      "Creatures that appear here come from the water table. Whenever you end a move here outside Fort Solid Shorehold, there is a 2% chance a Mire Serpent bursts out of the water beside you. Small walkers such as the Giant Slug, the Viper, the Mirk Runner and the Boulder Crab cannot enter medium water. Larger walkers such as the Swamp Troll, the Toadkin and the Scaalmyr can. Swimmers and the Mire Serpent move freely here."
     ],
     "related_entities": ["item-231", "item-233", "item-170", "being-4", "nature-8", "skill-0-1"],
     "related_pages": ["Terrain", "Shallow water", "Deep water", "Planting", "Drowned Fen", "Broken Fen"],
@@ -9331,7 +9270,7 @@
         "columns": ["Seed", "Takes here when"],
         "rows": [
           [{"entity": "item-231"}, "Anywhere in medium water"],
-          [{"entity": "item-233"}, "Upper half, from −0.35 up"]
+          [{"entity": "item-233"}, "The upper half"]
         ]
       },
       {
@@ -9343,42 +9282,6 @@
           [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
         ],
         "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
-      },
-      {
-        "after": 5,
-        "columns": ["Creature", "Medium water"],
-        "rows": [
-          [{"entity": "being-1"}, "Yes"],
-          [{"entity": "being-25"}, "Yes"],
-          [{"entity": "being-2"}, "Yes"],
-          [{"entity": "being-38"}, "Yes"],
-          [{"entity": "being-39"}, "Yes"],
-          [{"entity": "being-37"}, "Yes"],
-          [{"entity": "being-40"}, "Yes"],
-          [{"entity": "being-22"}, "Yes"],
-          [{"entity": "being-4"}, "Yes"],
-          [{"entity": "being-17"}, "Yes"],
-          [{"entity": "being-24"}, "Yes"],
-          [{"entity": "being-0"}, "No"],
-          [{"entity": "being-7"}, "No"],
-          [{"entity": "being-30"}, "No"],
-          [{"entity": "being-10"}, "No"],
-          [{"entity": "being-23"}, "No"],
-          [{"entity": "being-11"}, "No"],
-          [{"entity": "being-29"}, "No"],
-          [{"entity": "being-27"}, "No"],
-          [{"entity": "being-13"}, "No"],
-          [{"entity": "being-21"}, "Yes"],
-          [{"entity": "being-31"}, "Yes"],
-          [{"entity": "being-32"}, "Yes"],
-          [{"entity": "being-14"}, "Yes"],
-          [{"entity": "being-15"}, "Yes"],
-          [{"entity": "being-16"}, "Yes"],
-          [{"entity": "being-3"}, "Yes"],
-          [{"entity": "being-18"}, "Yes"],
-          [{"entity": "being-28"}, "Yes"]
-        ],
-        "caption": "Which creatures can walk, swim or fly into this water. Spawning ignores these limits, so a creature can appear somewhere it could not walk to."
       }
     ]
     },
@@ -9394,12 +9297,12 @@
       "Creatures"
     ],
     "paragraphs": [
-      "Deep water, at −0.4 and below, is teal and opaque. You stand waist-deep at first, chest-deep from about −0.455 and up to your shoulders from about −0.485. Below about −0.505 you are swimming.",
+      "Deep water is the lowest band, teal and opaque. At its edge you stand waist-deep. Further in the water reaches your chest, then your shoulders, and in the deepest water you swim.",
       "Lakes in every land area have deep middles, and every beach drops into deep water. A Broken Fen is mostly deep water between islands. The fort's dock stands over deep water. A Vast Waters area is entirely deep water, all of it at swimming depth.",
       "Water levels never change. In deep water your pack gets wet. From chest depth you cannot attack (\"The water is too deep!\") and combat ends. From shoulder depth you cannot jump, and before that jumps take a penalty of 7.",
       "Swimming costs 0.15 stamina a turn, more when overburdened, so a full stamina bar lasts about six or seven turns. When it runs out you start drowning, and after four turns you die. Standing on a raft or a water rock stops it.",
       "Wading or swimming costs 3.4 AP a step over soil or stone and 5 AP over sand or mud. The only thing you can place here is a Raft Base, not on a water rock. A raft moves at 1.8 AP a step and never swims or drowns, so it is the safe way across.",
-      "Watercress Seeds take the top of deep water, down to −0.45 at about waist depth. Nothing else grows here.",
+      "Watercress Seeds take the top of deep water, down to about waist depth. Nothing else grows here.",
       "Creatures that appear here come from the water table. Ending a move here outside the fort's area has a 2% chance of a Mire Serpent surging up beside you. Only flyers, swimmers and the Mire Serpent can enter deep water. Every walker stops at its edge, which makes it a refuge from them."
     ],
     "related_entities": ["item-231", "item-170", "being-4", "being-17", "being-24", "skill-0-1"],
@@ -9426,7 +9329,7 @@
         "after": 5,
         "columns": ["Seed", "Takes here when"],
         "rows": [
-          [{"entity": "item-231"}, "Down to −0.45, about waist depth"]
+          [{"entity": "item-231"}, "Down to about waist depth"]
         ]
       },
       {
@@ -9438,42 +9341,6 @@
           [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
         ],
         "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
-      },
-      {
-        "after": 6,
-        "columns": ["Creature", "Deep water"],
-        "rows": [
-          [{"entity": "being-1"}, "Yes"],
-          [{"entity": "being-25"}, "Yes"],
-          [{"entity": "being-2"}, "Yes"],
-          [{"entity": "being-38"}, "Yes"],
-          [{"entity": "being-39"}, "Yes"],
-          [{"entity": "being-37"}, "Yes"],
-          [{"entity": "being-40"}, "Yes"],
-          [{"entity": "being-22"}, "Yes"],
-          [{"entity": "being-4"}, "Yes"],
-          [{"entity": "being-17"}, "Yes"],
-          [{"entity": "being-24"}, "Yes"],
-          [{"entity": "being-0"}, "No"],
-          [{"entity": "being-7"}, "No"],
-          [{"entity": "being-30"}, "No"],
-          [{"entity": "being-10"}, "No"],
-          [{"entity": "being-23"}, "No"],
-          [{"entity": "being-11"}, "No"],
-          [{"entity": "being-29"}, "No"],
-          [{"entity": "being-27"}, "No"],
-          [{"entity": "being-13"}, "No"],
-          [{"entity": "being-21"}, "No"],
-          [{"entity": "being-31"}, "No"],
-          [{"entity": "being-32"}, "No"],
-          [{"entity": "being-14"}, "No"],
-          [{"entity": "being-15"}, "No"],
-          [{"entity": "being-16"}, "No"],
-          [{"entity": "being-3"}, "No"],
-          [{"entity": "being-18"}, "No"],
-          [{"entity": "being-28"}, "No"]
-        ],
-        "caption": "Which creatures can walk, swim or fly into this water. Spawning ignores these limits, so a creature can appear somewhere it could not walk to."
       }
     ]
     },
@@ -9768,7 +9635,7 @@
           ["Cranberry patches", "10 to 16", "10 to 16"],
           ["Bird nests", "8 to 16", "8 to 16"],
           ["Skeletons", "3 to 4", "3 to 4"],
-          ["Chance a skeleton is a chest", "2.5%", "–"],
+          ["Chance a skeleton is a chest", "2.5%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "12%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -9882,7 +9749,7 @@
           ["Cranberry patches", "10 to 16", "10 to 16"],
           ["Bird nests", "8 to 16", "8 to 16"],
           ["Skeletons", "3 to 4", "3 to 4"],
-          ["Chance a skeleton is a chest", "5%", "–"],
+          ["Chance a skeleton is a chest", "5%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "12%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -9904,7 +9771,7 @@
     ],
     "paragraphs": [
       "Withered Mire areas fill some of the map's leftover cells, so a world can have several or none.",
-      "The highest and driest kind of area. The ground sits well above the waterline and rises into many hills and plateaus, so there are lots of slopes and little water. Sandy and stony patches are common, and old ruins are never turned into boulders here.",
+      "The highest and driest kind of area. The ground sits well above the waterline and rises into many hills and plateaus, so there are lots of slopes and little water. Sandy and stony patches are common, and scattered ruin walls and rubble are much more common than elsewhere, where most of them are boulders instead.",
       "The Firelouse and Raving Unwanted are common here day and night. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
       "The shared water and sand tables apply. With so much sand, Boulder Crabs are common.",
       "Grass stays short and thin. Trollgnarl makes up a third of new trees, and trees here die off faster than in most areas.",
@@ -9995,7 +9862,7 @@
           ["Cranberry patches", "10 to 16", "10 to 16"],
           ["Bird nests", "16 to 24", "8 to 16"],
           ["Skeletons", "3 to 4", "3 to 4"],
-          ["Chance a skeleton is a chest", "10%", "–"],
+          ["Chance a skeleton is a chest", "10%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "12%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -10107,7 +9974,7 @@
           ["Cranberry patches", "20 to 26", "10 to 16"],
           ["Bird nests", "8 to 16", "8 to 16"],
           ["Skeletons", "3 to 4", "3 to 4"],
-          ["Chance a skeleton is a chest", "8%", "–"],
+          ["Chance a skeleton is a chest", "8%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "12%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -10222,7 +10089,7 @@
           ["Cranberry patches", "10 to 16", "10 to 16"],
           ["Bird nests", "2 to 4", "8 to 16"],
           ["Skeletons", "5 to 8", "3 to 4"],
-          ["Chance a skeleton is a chest", "25%", "–"],
+          ["Chance a skeleton is a chest", "25%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "12%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -10358,7 +10225,7 @@
           ["Cranberry patches", "10 to 16", "10 to 16"],
           ["Bird nests", "8 to 16", "8 to 16"],
           ["Skeletons", "4 to 6", "3 to 4"],
-          ["Chance a skeleton is a chest", "10%", "–"],
+          ["Chance a skeleton is a chest", "10%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "12%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -10465,7 +10332,7 @@
           ["Cranberry patches", "10 to 16", "10 to 16"],
           ["Bird nests", "8 to 16", "8 to 16"],
           ["Skeletons", "3 to 4", "3 to 4"],
-          ["Chance a skeleton is a chest", "12.5%", "–"],
+          ["Chance a skeleton is a chest", "12.5%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "55%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -10560,7 +10427,7 @@
           ["Cranberry patches", "None while the rift is active", "10 to 16"],
           ["Bird nests", "None while the rift is active", "8 to 16"],
           ["Skeletons", "3 to 4", "3 to 4"],
-          ["Chance a skeleton is a chest", "2.5%", "–"],
+          ["Chance a skeleton is a chest", "2.5%", "2.5% to 25%, by area"],
           ["Rubble with nothing in it", "12%", "12%"]
         ],
         "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
@@ -10601,8 +10468,6 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "raftMoveCost1.8.player_raft_ensure"}
     ],
     "index_page": "Areas",
-    "image_entity": "being-17",
-    "image_caption": "Mudfin are the most common creature in the Vast Waters.",
     "tables": [
       {
         "after": 0,
@@ -10620,6 +10485,9 @@
           [{"entity": "being-1"}, "4.26%", "15% Deathfly"]
         ]
       }
+    ],
+    "images": [
+      {"illustration": "tile-deep-water-illustration", "after": 1}
     ]
     }
   ],
@@ -10823,7 +10691,7 @@
     {
       "entity": "item-230",
       "paragraphs": [
-        "Plant Turnip Seeds on dry land from ground height −0.05 up to 0.925: low ground a little back from the waterline, both plateaus, and almost to the top of the high plateau. Soil, grass and mud all take them. Stone, sand, slopes and tiles under solid objects refuse them. See Planting for the height bands."
+        "Plant Turnip Seeds on dry land: low ground a little back from the waterline and both plateaus, though not the very highest hilltops. Soil, grass and mud all take them. Stone, sand, slopes and tiles under solid objects refuse them. See Planting for the height bands."
       ],
       "confidence": "observed",
       "evidence": [
@@ -10867,7 +10735,7 @@
     {
       "entity": "item-228",
       "paragraphs": [
-        "Plant Elderberry Seeds at ground height −0.15 and above: from partway up the waterline band to the top of the high plateau. Unlike most seeds they accept sand. Stone, slopes and tiles under solid objects refuse them. They grow into an Elderwort Shrub."
+        "Plant Elderberry Seeds anywhere from the upper half of the waterline up to the top of the high plateau. Unlike most seeds they accept sand. Stone, slopes and tiles under solid objects refuse them. They grow into an Elderwort Shrub."
       ],
       "confidence": "observed",
       "evidence": [
@@ -10886,7 +10754,7 @@
     {
       "entity": "item-231",
       "paragraphs": [
-        "Plant Watercress Seeds at ground height −0.45 to −0.26: the deeper part of the open shallows, all of medium water, and deep water down to waist depth. The bottom does not matter, only the depth. The shore shallows and dry land are too high, and deep water where you would swim is too deep."
+        "Plant Watercress Seeds in all but the top edge of the open shallows, in any medium water, and in deep water down to waist depth. The bottom does not matter, only the depth. The shore shallows and dry land are too high, and deep water where you would swim is too deep."
       ],
       "confidence": "observed",
       "evidence": [
@@ -10905,7 +10773,7 @@
     {
       "entity": "item-227",
       "paragraphs": [
-        "Plant Bramble Seeds at ground height 0.0667 and above: the upper part of low ground and both plateaus. Stone, sand, slopes and tiles under solid objects refuse them."
+        "Plant Bramble Seeds on the upper half of low ground and on both plateaus. Stone, sand, slopes and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [
@@ -10924,7 +10792,7 @@
     {
       "entity": "item-232",
       "paragraphs": [
-        "Plant Willow Seeds at ground height −0.25 to 0.425: the shore shallows, the waterline, low ground and the first plateau, but not the high plateau. Stone, sand, slopes and tiles under solid objects refuse them."
+        "Plant Willow Seeds in the shore shallows, the waterline, low ground and the first plateau, but not the high plateau. Stone, sand, slopes and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [
@@ -10943,7 +10811,7 @@
     {
       "entity": "item-233",
       "paragraphs": [
-        "Plant Cypress Seed Pods at ground height −0.35 to 0.195: the upper half of medium water, both shallow bands, the waterline and low ground. Both plateaus are too high. Stone, sand, slopes and tiles under solid objects refuse them."
+        "Plant Cypress Seed Pods in the upper half of medium water, both shallow bands, the waterline and low ground. Both plateaus are too high. Stone, sand, slopes and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [
@@ -10962,7 +10830,7 @@
     {
       "entity": "item-234",
       "paragraphs": [
-        "Trollgnarl Seed Pods only take at ground height 0.31 and above: the upper part of the first plateau and the high plateau, away from the slopes at their edges. Stone, sand and tiles under solid objects refuse them."
+        "Trollgnarl Seed Pods only take on the upper half of the first plateau and on the high plateau, away from the slopes at their edges. Stone, sand and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [

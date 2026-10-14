@@ -280,14 +280,12 @@ def _guide_blocks(guide, sections, entities, guides):
                 if isinstance(cell, str):
                     _text(cell, "guide.table.cell", 300)
                     continue
-                if not isinstance(cell, dict) or len(cell) != 1:
-                    raise DataError("guide.table.cell: expected text or one entity, page, or tile reference")
-                (kind, target), = cell.items()
-                if kind == "entity" and target in entities:
-                    continue
-                if kind in ("page", "tile") and target in guides:
-                    continue
-                raise DataError("guide.table.cell: unknown entity or unreviewed guide reference")
+                for ref in cell if isinstance(cell, list) and 1 <= len(cell) <= 12 else [cell]:
+                    if not isinstance(ref, dict) or len(ref) != 1:
+                        raise DataError("guide.table.cell: expected text or entity, page, or tile references")
+                    (kind, target), = ref.items()
+                    if not (kind == "entity" and target in entities or kind in ("page", "tile") and target in guides):
+                        raise DataError("guide.table.cell: unknown entity or unreviewed guide reference")
     images = guide.get("images", [])
     if not isinstance(images, list) or len(images) > 12:
         raise DataError("guide.images: expected at most twelve placed illustrations")

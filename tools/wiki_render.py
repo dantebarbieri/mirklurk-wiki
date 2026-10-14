@@ -1351,6 +1351,8 @@ def build_pages(root, data, catalog=None, details=None):
     def guide_cell(cell):
         if isinstance(cell, str):
             return literal(cell)
+        if isinstance(cell, list):
+            return ", ".join(map(guide_cell, cell))
         (kind, target), = cell.items()
         if kind == "tile":
             if target not in tile_titles:
@@ -1368,7 +1370,8 @@ def build_pages(root, data, catalog=None, details=None):
         for placed in guide.get("images", []):
             if placed["after"] == index:
                 image = approved.get(placed["illustration"])
-                if image is None or image.get("guide") not in (None, guide["title"]):
+                shared = image and image.get("role") == "tile" and guide.get("index_page") == "Areas"
+                if image is None or image.get("guide") not in (None, guide["title"]) and not shared:
                     raise DataError(f'guide {guide["title"]}: placed picture has no approved image metadata for this page')
                 text += illustration_markup(image, marker=False, page_image=False)
         for block in guide.get("tables", []):

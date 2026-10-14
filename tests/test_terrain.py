@@ -66,8 +66,12 @@ class TerrainGuideTests(unittest.TestCase):
         self.assertNotIn("past the shallow strip", "".join(self.pages.values()))
         planting = self.pages["Planting"]
         row = planting.split("| {{Item|Watercress Seeds}} ||", 1)[1].split("|-", 1)[0]
-        self.assertIn("−0.45", row)
-        self.assertIn("−0.26", row)
+        self.assertIn("All but the top edge of the open shallows", row)
+        for title in ["Planting", "Areas", *self.tiles]:
+            self.assertNotRegex(self.pages[title], r"−0\.\d|0\.425|This wiki", msg=title)
+        reach = self.pages["Terrain"].split("Where they can go", 1)[1].split("|}", 1)[0]
+        self.assertIn("{{Creature|Mudfin}}, {{Creature|Razorfin}}", reach)
+        self.assertNotIn("<nowiki>Yes</nowiki>", reach)
         self.assertNotIn("No flooding", planting)
         self.assertIn("No flooding", self.pages["Terrain"])
 
@@ -79,6 +83,8 @@ class TerrainGuideTests(unittest.TestCase):
             lambda g: g["tables"][0]["rows"][0].__setitem__(0, {"entity": "item-0-not-real"}),
             lambda g: g["tables"][0]["rows"][0].__setitem__(0, {"page": "Not a guide"}),
             lambda g: g["tables"][0]["rows"][0].__setitem__(0, {"entity": "item-1", "page": "Areas"}),
+            lambda g: g["tables"][0]["rows"][0].__setitem__(0, []),
+            lambda g: g["tables"][0]["rows"][0].__setitem__(0, [{"entity": "item-1"}, "text"]),
             lambda g: g["tables"].extend([g["tables"][0]] * 12),
             lambda g: g.update(images=[{"illustration": "x", "after": 99}]),
             lambda g: g.update(images=[{"illustration": "x", "after": 0}] * 2),
