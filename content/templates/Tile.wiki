@@ -1,0 +1,5 @@
+<includeonly>{{#invoke:Display|tile|{{{1|}}}}}</includeonly><noinclude>
+Use <nowiki>{{Tile|Mud}}</nowiki> or <nowiki>{{Tile|Deep water}}</nowiki> for a ground-tile sprite and linked terrain name.
+
+Use a canonical terrain page title, not an ID or filename. Spaces, underscores and first-letter normalization are supported. Unknown names, namespaces and section fragments produce an error. A terrain kind without approved tile art displays its name link.
+</noinclude>

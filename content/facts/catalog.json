@@ -4096,7 +4096,7 @@
       "location": {
         "paragraphs": [
           "Ihar lives in a wooden shipwreck on a Broken Fen shoreline. Entering a Broken Fen attempts to place it if it has not appeared yet. A search can fail after 1280 attempts to find suitable sand and water, even when a valid spot exists.",
-          "After a failed search, enter the same or another Broken Fen to retry. Revisits and loading an outdoor save count; caves do not. There is no alternative-biome fallback. Normal new worlds have Broken Fens; a world without them cannot place this wreck.",
+          "After a failed search, enter the same or another Broken Fen to retry. Revisits and loading an outdoor save count; caves do not. There is no fallback to another area type. Normal new worlds have Broken Fens; a world without them cannot place this wreck.",
           "Once placed, the wreck stays in that location. Ihar is inside."
         ],
         "related_entities": [],
@@ -5456,7 +5456,7 @@
       "conditions": null,
       "steps": [
         "Entering an unsaved zone creates fresh terrain. Saved zones load their existing terrain instead.",
-        "Gurb-Gurb, Ihar and the Survivors' camp can still appear on first visits, revisits or outdoor save loads until their locations have been created. See their pages for biome and placement rules."
+        "Gurb-Gurb, Ihar and the Survivors' camp can still appear on first visits, revisits or outdoor save loads until their locations have been created. See their pages for area and placement rules."
       ],
       "confidence": "observed",
       "evidence": [
@@ -8654,899 +8654,1973 @@
       ]
     },
     {
-      "title": "Planting",
-      "section_titles": [
-        "Planting a seed",
-        null,
-        "What blocks planting",
-        "Shelters and canopies",
-        "Near Fort Solid",
-        "Which seed goes where",
-        null,
-        "Growing while you are away",
-        null,
-        "Shrinking and dying back",
-        "Spreading"
-      ],
-      "paragraphs": [
-        "Seeds are planted the same way you place an object: choose the seed in your inventory, then pick a tile within three tiles of you. Planting costs action points like other placements and uses up one seed. Any grass on the tile is cleared and a seedling appears.",
-        "While you hold a seed, the target tile is framed in a color that shows whether the seed can grow there, and nearby tiles get a faint frame: white where the seed would take, red where it would not. Checking these frames is the quickest way to find a spot.",
-        "A tile refuses every seed if it is under a solid object, covered in goo or cave spikes, or already holds something rooted, such as a boulder, a log, tall grass, a fern, a lilypad or another planted seed. You cannot plant inside other people's homes or other private areas. Each seed also has its own rules about ground height and ground type.",
-        "A Simple Shelter or a Canopy gradually casts deep shade on the tiles beneath it. Deeply shaded tiles refuse seeds, and crops already growing there shrink away, so keep gardens out from under your shelters.",
-        "In Fort Solid Shorehold the ground within about six tiles of the fort is kept clear. Until late in the main story, planting there always fails; after that, attempts there still usually fail.",
-        "Seeds follow ground height, from open water up to the high plateaus. Watercress Seeds go deepest, in open water beyond the shore shallows. Cranberry Seeds need grassy shallow water at the shore fringe. Cypress Seed Pods take shallow and medium water and low ground but no raised ground. Willow Seeds run from the shore's edge up onto the first raised plateau.",
-        "Elderberry Seeds take almost all land, including sand. Turnip Seeds take dry soil from a little back from the shore up to the highest plateaus. Bramble Seeds want ground farther from the water. Trollgnarl Seed Pods only take raised plateaus. Apart from Watercress Seeds and Cranberry Seeds, every seed refuses stone, and only Elderberry Seeds accept sand. No seed takes a slope. The Terrain page explains how to read heights and ground types.",
-        "Planted seeds grow only while you are away from an area. When you return, the area catches up on the time you missed, up to ten days. Each tile gets a few growth chances per day, so results vary from plant to plant.",
-        "Turnip, Cranberry and watercress crops pass through four growth stages and usually need around four to five days away to ripen. Seedlings of Willow, Cypress, Trollgnarl, Elderwort Shrub and Brambles become full-grown plants after about three days away on average, after which they follow the rules in Tree health and chopping.",
-        "Crops shrink and eventually disappear on Rift Grass or in deep shade. In Rift-Thorn Mire after the rift has opened, crops stop partway and never fully ripen.",
-        "Established crops can seed neighboring tiles that suit them. Cranberries spread readily through suitable shallows, while Turnip and watercress plants spread only now and then."
-      ],
-      "related_entities": [
-        "item-227",
-        "item-228",
-        "item-229",
-        "item-230",
-        "item-231",
-        "item-232",
-        "item-233",
-        "item-234",
-        "nature-4",
-        "nature-6",
-        "nature-7",
-        "nature-17",
-        "nature-18",
-        "nature-19",
-        "nature-20",
-        "item-240"
-      ],
-      "related_pages": [
-        "Terrain",
-        "Biomes",
-        "Placing objects",
-        "Tree health and chopping",
-        "Fort Solid Shorehold",
-        "Withered Mire",
-        "Rift-Thorn Mire"
-      ],
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_cursor_Draw_73",
-          "key": "seed-placement.range48.area_is_private.Hinderance==0.nature_can_grow"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_can_grow.solid.goo.spikes.Data5.areaType0-fort104.MAINQUESTSTAGE22-chance0.9"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_station_Step_0",
-          "key": "shelter-canopy.Data5.chance0.01"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_screenfader_Step_0",
-          "key": "passedHours-cap240.growTick960-per-hour"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "mgmt_nature_ticker.random-tile-samples.spread-irandom2"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_grow.crop-stage4.Hinderance-tree-chance0.35.rift-grass-shrink.Data5-shrink"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_get_maxtile.areaType23-stage29-crop-max2-watercress3"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_spread.case18-chance0.15.case19.case21-chance0.2"
-        }
-      ]
+    "title": "Planting",
+    "section_titles": [
+      "Planting a seed",
+      null,
+      "What blocks planting",
+      "Shelters and canopies",
+      "Near Fort Solid",
+      "Which seed goes where",
+      null,
+      "Growing while you are away",
+      null,
+      "Shrinking and dying back",
+      "Spreading"
+    ],
+    "paragraphs": [
+      "Seeds are planted the same way you place an object: choose the seed in your inventory, then pick a tile within three tiles of you. Planting costs action points like other placements and uses up one seed. Any grass on the tile is cleared and a seedling appears.",
+      "While you hold a seed, the target tile is framed in a color that shows whether the seed can grow there, and nearby tiles get a faint frame: white where the seed would take, red where it would not. Checking these frames is the quickest way to find a spot.",
+      "A tile refuses every seed if it is under a solid object, covered in goo or cave spikes, or already holds something rooted, such as a boulder, a log, tall grass, a fern, a lilypad or another planted seed. You cannot plant inside other people's homes or other private areas. Each seed also has its own rules about ground height and ground type.",
+      "A Simple Shelter or a Canopy gradually casts deep shade on the tiles beneath it. Deeply shaded tiles refuse seeds, and crops already growing there shrink away, so keep gardens out from under your shelters.",
+      "In Fort Solid Shorehold the ground within about six tiles of the fort is kept clear. Until late in the main story, planting there always fails; after that, attempts there still usually fail.",
+      "Each seed takes a range of ground heights. The table uses the height bands described on Terrain, from deep water up to the high plateau. Heights are the game's internal values; the bands are what you see. Watercress Seeds go deepest and are the only seeds for medium and deep water. Cranberry Seeds need grassy shallow water. Trollgnarl Seed Pods only take raised ground.",
+      "Apart from Watercress Seeds and Cranberry Seeds, every seed refuses stone, and only Elderberry Seeds accept sand. No seed takes a slope. Mud is fine for every land seed. Each ground kind's page lists the seeds that can grow on it.",
+      "Planted seeds grow only while you are away from an area. When you return, the area catches up on the time you missed, up to ten days. Each tile gets a few growth chances per day, so results vary from plant to plant.",
+      "Turnip, Cranberry and watercress crops pass through four growth stages and usually need around four to five days away to ripen. Seedlings of Willow, Cypress, Trollgnarl, Elderwort Shrub and Brambles become full-grown plants after about three days away on average, after which they follow the rules in Tree health and chopping.",
+      "Crops shrink and eventually disappear on Rift Grass or in deep shade. In Rift-Thorn Mire after the rift has opened, crops stop partway and never fully ripen.",
+      "Established crops can seed neighboring tiles that suit them. Cranberries spread readily through suitable shallows, while Turnip and watercress plants spread only now and then."
+    ],
+    "related_entities": ["item-227", "item-228", "item-229", "item-230", "item-231", "item-232", "item-233", "item-234", "nature-4", "nature-6", "nature-7", "nature-17", "nature-18", "nature-19", "nature-20", "item-240"],
+    "related_pages": ["Terrain", "Areas", "Placing objects", "Tree health and chopping", "Fort Solid Shorehold", "Withered Mire", "Rift-Thorn Mire"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.range48.area_is_private.Hinderance==0.nature_can_grow"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.solid.goo.spikes.Data5.areaType0-fort104.MAINQUESTSTAGE22-chance0.9"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.case4.case6.case7.case17.case18.case19.case20.case21"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_station_Step_0", "key": "shelter-canopy.Data5.chance0.01"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "passedHours-cap240.growTick960-per-hour"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "mgmt_nature_ticker.random-tile-samples.spread-irandom2"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_grow.crop-stage4.Hinderance-tree-chance0.35.rift-grass-shrink.Data5-shrink"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType23-stage29-crop-max2-watercress3.mud-cap4"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_spread.case18-chance0.15.case19.case21-chance0.2"},
+      {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"}
+    ],
+    "tables": [
+      {
+        "after": 5,
+        "columns": ["Seed", "Ground height", "Where that is", "Refused on", "Grows into"],
+        "rows": [
+          [{"entity": "item-231"}, "−0.45 to −0.26", "Deeper part of the open shallows, all medium water, and deep water down to waist depth", "Nothing else: the bottom does not matter", {"entity": "item-226"}],
+          [{"entity": "item-229"}, "Any shallow water", "Shallow water with thick grass or moss growing through it, in practice the shore shallows", "Slopes; muddy shallows never grow thick enough grass", {"entity": "nature-19"}],
+          [{"entity": "item-233"}, "−0.35 to 0.195", "Shallow water, the upper half of medium water, the waterline and low ground", "Stone, sand, slopes", {"entity": "nature-7"}],
+          [{"entity": "item-232"}, "−0.25 to 0.425", "Shore shallows, the waterline, low ground and the first plateau", "Stone, sand, slopes", {"entity": "nature-4"}],
+          [{"entity": "item-228"}, "−0.15 and above", "From partway up the waterline to the highest plateau", "Stone, slopes (sand is fine)", {"entity": "nature-20"}],
+          [{"entity": "item-230"}, "−0.05 to 0.925", "Low ground a little back from the water up to the high plateau", "Stone, sand, slopes", {"entity": "nature-18"}],
+          [{"entity": "item-227"}, "0.0667 and above", "The upper part of low ground and both plateaus", "Stone, sand, slopes", {"entity": "nature-6"}],
+          [{"entity": "item-234"}, "0.31 and above", "The upper part of the first plateau and the high plateau", "Stone, sand, slopes", {"entity": "nature-17"}]
+        ],
+        "caption": "Every seed is also refused under solid objects, on goo or spikes, on planted or cluttered tiles, in deep shade and near the fort."
+      }
+    ]
     },
     {
-      "title": "Terrain",
-      "section_titles": [
-        "Ground height",
-        "Moving across tiles",
-        "Water",
-        "Slopes and plateaus",
-        "Grass",
-        "Tall grass and ferns",
-        "Moss",
-        "Mud and sand",
-        "Stone",
-        "Goo",
-        "Ash",
-        "Rift Grass",
-        "Dock planks",
-        "Boulders and logs",
-        "Thickets and vines",
-        "Indoors and caves"
-      ],
-      "paragraphs": [
-        "Every outdoor tile has a ground height. The lowest ground lies under water, which deepens in three steps. Above the shoreline comes open middle ground, and above that the land rises in two raised plateau levels whose edges are slopes. Height decides where plants grow and which seeds can be planted; see Planting.",
-        "Every step costs action points depending on the tile you step onto. Firm, open ground such as bare earth, short grass, moss, stone, ash and dock planks costs 0.8 AP a step. A diagonal step costs 0.4 AP more, heavy encumbrance raises the cost up to double, and no single step costs more than 8 AP.",
-        "Shallow water along the shore costs about 1.2 AP a step, medium-depth water about 1.6 AP and deep water about 3.4 AP. The Amphibian skill makes wading cheaper. Grass still grows in the shallowest fringe of water, and different water plants favor different depths.",
-        "Slopes are the edges of raised ground and are the slowest common terrain at 5 AP a step; the Firm Grip skill helps. The flat top of a plateau walks like ordinary ground. Nothing can be planted on a slope.",
-        "Short grass is easy going, while thicker grass costs about 1 AP a step. Grass grows on most land and in the shallowest water, but stays short on mud and thins out in the shade of trees. It is cleared from a tile when you plant a seed there.",
-        "Tall Grass and Fern patches add to the cost of a step as they grow larger. The Strider skill reduces the cost of crossing them and other obstacles.",
-        "Moss walks like short grass. In shallow water it counts as the thick growth that cranberries need.",
-        "Mud and sand both cost about 1.2 AP a step. Mud keeps grass short, so muddy shallows never suit cranberries. Sand refuses most seeds; elderberries are the exception.",
-        "Stone is firm and fast at 0.8 AP a step, but most seeds will not take in it.",
-        "Goo costs about 1.2 AP a step and nothing can be planted in it.",
-        "A Campfire slowly burns the ground beneath it to ash. Ash walks like bare ground.",
-        "Rift Grass walks like short grass, but crops growing on it wither away.",
-        "The planks laid at the Fort Solid Shorehold dock cost 0.8 AP a step and count as solid footing even over water.",
-        "A Boulder costs 2.5 AP to clamber over and a Mossy Log 1.8 AP. Strider helps with both. Their tiles cannot be planted.",
-        "Bramble thickets and Rift Vine growth add heavily to the cost of a step, and most walking creatures treat them as impassable.",
-        "Indoor floors cost 0.8 AP a step. Some rough dungeon floor costs 2.5 AP a step, and cave spikes cost 5 AP."
-      ],
-      "related_entities": [
-        "skill-0-0",
-        "skill-0-1",
-        "skill-0-3",
-        "nature-0",
-        "nature-1",
-        "nature-2",
-        "nature-3",
-        "nature-5",
-        "nature-6",
-        "nature-8",
-        "nature-9",
-        "nature-12",
-        "nature-13",
-        "item-38"
-      ],
-      "related_pages": [
-        "Planting",
-        "Biomes",
-        "Action points",
-        "Fort Solid Shorehold"
-      ],
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_tiles_movement",
-          "key": "tile_get_moment.slope0.2.boulder0.4.log0.55.stone1.25.sand-mud0.9.goo0.82"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_tiles_movement",
-          "key": "tile_get_moment.water-cap1.Water1-0.2.Water2-0.2.Water3-0.3.indoor1.25"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "apcost_step.1/mod.diagonal+0.4.encumbrance.round0.2.max8"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_tiles_finders",
-          "key": "tile_to_enum.Grass.Lower.OnLower.Hinderance.NatureData"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_tiles_autotiling",
-          "key": "height-thresholds.water-0.2-0.3-0.4.slope0.2-0.425"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_get_maxtile.grass-mud-cap4.tree-shade"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "dock-planks.Grass24-31"
-        }
-      ]
+    "title": "Terrain",
+    "section_titles": [
+      "Ground height",
+      "Moving across tiles",
+      "No flooding",
+      "Kinds of ground",
+      "Obstacles",
+      "Ash",
+      "Skills",
+      "Who can go where"
+    ],
+    "paragraphs": [
+      "Every outdoor tile has a fixed ground height. The game uses it to draw water, soil and slopes, and to decide what grows and what can walk there. This wiki names the height bands below and uses the same names on every tile, seed and area page. The game itself only describes how deep you are standing, from \"Your feet are slightly submerged\" to \"You are swimming!\".",
+      "Every step costs action points depending on the tile you step onto. A diagonal step costs 0.4 AP more, heavy encumbrance raises the cost, and no single step costs more than 8 AP. Obstacles, water and the ground underneath combine: wading over sand or mud costs more than wading over soil.",
+      "Water levels never change. Heights are set when an area is generated and are not touched by rain, time or weather afterwards, so a dry tile stays dry and a pool never spreads or drains. Rain only adds splash ripples to water and wets your clothes. The dark stains some tiles show are blood or acid, not wet ground.",
+      "Each kind of ground has its own page covering where it appears, which creatures spawn and walk there, which seeds take, and whether you can build on it. The table summarizes them. The creature table column says which spawn table picks creatures that appear on that ground; see Areas.",
+      "A Boulder or a water rock costs 2.5 AP to clamber over. A Mossy Log, ruin rubble or debris costs 1.8 AP. Tall Grass and Fern patches add up to about half as much again as they grow, and bramble thickets and Rift Vine growth cost far more. Water rocks only appear in medium or deep water and give dry footing there. None of these tiles can be built on or planted.",
+      "A lit Campfire slowly scorches the ground beneath it into black ash. Ash walks like bare soil at 0.8 AP a step.",
+      "Strider removes 8% of the extra cost of obstacles and thick growth per rank, Amphibian removes 8% of the extra cost of water per rank, and Firm Grip makes slopes cheaper with each rank. Balance and Jumper help with jumping across gaps rather than walking.",
+      "Creatures follow the same depth bands. Spawning ignores these limits, so a Mudfin can appear stuck in the shore shallows until it is attacked."
+    ],
+    "related_entities": ["skill-0-0", "skill-0-1", "skill-0-2", "skill-0-3", "skill-0-4", "nature-1", "nature-2", "nature-3", "nature-6", "nature-9", "nature-13", "item-38"],
+    "related_pages": ["Planting", "Areas", "Action points", "Placing objects"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step.1/mod.diagonal+0.4.encumbrance.round0.2.max8"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_day_Step_0", "key": "EffRain-ripples.no-ygrid-writes"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_smartones", "key": "blood_pool.acid_pool.Wets.campfire-ash"},
+      {"source": "ui-en", "section": "AEs", "key": "6.7.8.9.10.11.12.13.14.27"}
+    ],
+    "tables": [
+      {
+        "after": 0,
+        "columns": ["Band", "Ground height", "What it looks like", "Page"],
+        "rows": [
+          ["Deep water", "−0.4 and below", "Teal water; waist-deep at first, swimming from about −0.505", {"tile": "Deep water"}],
+          ["Medium water", "−0.4 to −0.3", "Greener, denser water; your legs are under", {"tile": "Medium water"}],
+          ["Open shallows", "−0.3 to −0.25", "Shallow water over the darkest soil, with no grass", {"tile": "Shallow water"}],
+          ["Shore shallows", "−0.25 to −0.2", "Shallow water where grass still grows through", {"tile": "Shallow water"}],
+          ["Waterline", "−0.2 to −0.1", "Dark soil just above the water", {"tile": "Soil"}],
+          ["Low ground", "−0.1 to 0.2", "Ordinary brown soil and grass", {"tile": "Soil"}],
+          ["First plateau", "0.2 to 0.425", "Raised ground ringed by slopes", {"tile": "Slopes"}],
+          ["High plateau", "0.425 and above", "A second raised level on top of the first, with lighter soil", {"tile": "Slopes"}]
+        ]
+      },
+      {
+        "after": 3,
+        "columns": ["Ground", "AP per straight step", "Can build", "Seeds that take", "Creature table"],
+        "rows": [
+          [{"tile": "Soil"}, "0.8", "Yes", "Every land seed, by height", "Area land table"],
+          [{"tile": "Grassy ground"}, "0.8; thick grass 1.0", "Yes", "As soil; crops shrink on Rift Grass", "Area land table"],
+          [{"tile": "Sand"}, "1.2", "Yes", "Elderberry Seeds", "Sand table"],
+          [{"tile": "Mud"}, "1.2", "Yes", "Every land seed, by height; not Cranberry Seeds", "Area land table"],
+          [{"tile": "Stone ground"}, "0.8", "Yes", "None on dry stone", "Area land table"],
+          [{"tile": "Goo"}, "1.2 (1.0 indoors)", "No", "None", "Rift-Thorn Mire table"],
+          [{"tile": "Dock planks"}, "0.8", "No", "None", "Water table"],
+          [{"tile": "Slopes"}, "5", "No", "None", "Area land table"],
+          [{"tile": "Shallow water"}, "1.2 to 1.4", "Rafts no; nothing else", "Cranberry, Willow, Cypress, Watercress", "Water table"],
+          [{"tile": "Medium water"}, "1.6 to 2.0", "Raft Base only", "Cypress, Watercress", "Water table"],
+          [{"tile": "Deep water"}, "3.4 to 5", "Raft Base only", "Watercress", "Water table"],
+          [{"tile": "Interior floors"}, "0.8", "Yes, outside private homes", "None", "Rift interiors only"]
+        ]
+      },
+      {
+        "after": 7,
+        "columns": ["Creature", "Land", "Shore shallows", "Open shallows", "Medium water", "Deep water"],
+        "rows": [
+          [{"entity": "being-1"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-25"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-2"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-38"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-39"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-37"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-40"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-22"}, "Yes", "Yes", "Yes", "Yes", "Yes"],
+          [{"entity": "being-4"}, "No", "No", "No", "Yes", "Yes"],
+          [{"entity": "being-17"}, "No", "No", "Yes", "Yes", "Yes"],
+          [{"entity": "being-24"}, "No", "No", "Yes", "Yes", "Yes"],
+          [{"entity": "being-0"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-7"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-30"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-10"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-23"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-11"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-29"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-27"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-13"}, "Yes", "Yes", "Yes", "No", "No"],
+          [{"entity": "being-21"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-31"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-32"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-14"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-15"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-16"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-3"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-18"}, "Yes", "Yes", "Yes", "Yes", "No"],
+          [{"entity": "being-28"}, "Yes", "Yes", "Yes", "Yes", "No"]
+        ],
+        "caption": "Flying creatures go anywhere. Swimmers never leave the water. Small walkers stop at medium water and larger walkers at deep water. Any creature can stand on a water rock, a log or the dock, because those count as dry footing."
+      }
+    ],
+    "images": [
+      {"illustration": "tile-water-rock-illustration", "after": 4},
+      {"illustration": "tile-ash-illustration", "after": 5}
+    ]
     },
     {
-      "title": "Biomes",
-      "section_titles": [
-        "Zone kinds",
-        "How many of each",
-        "Beaches and borders",
-        "What every land zone has",
-        "Trees by biome",
-        "Creatures",
-        null,
-        "Weather and time",
-        "Returning to a zone"
-      ],
-      "paragraphs": [
-        "The world map is a five-by-five grid of zones, and every zone has one of nine outdoor biomes. The biome shapes the lay of the land, which trees and plants grow, which creatures roam and what landmarks you might find. Caves, ruins, cellars and buildings are separate interiors entered from these outdoor zones.",
-        "Every world has one Fort Solid Shorehold on its left or right edge, surrounded by Common Bog zones (one neighbor can be Vast Waters instead). Each world also has two or three Rift-Thorn Mire zones, three or four Sunken Ancient Ruins, two or three Savage Mirk zones, two or three Broken Fen zones and between two and six Vast Waters zones. At least one zone is a Drowned Fen. The remaining zones are split roughly evenly between Common Bog, Withered Mire and Drowned Fen, so a world can lack a Withered Mire entirely.",
-        "Any side of a land zone that faces the edge of the world, a Vast Waters zone or a Broken Fen becomes a sandy beach about thirty tiles deep that slopes into deep water. A Broken Fen has beaches on all four sides.",
-        "Apart from Vast Waters, every zone mixes boulders, logs, scattered ruins, tall grass, ferns, lilypads and watercress. Some rocky outcrops are cave mouths. Bird nests sit on slopes and sand, Calmia Root plants grow on mud, and wild turnips and cranberries grow where the ground suits them. Skeletons lie around with loot, and some of them are treasure chests instead.",
-        "Willow is the most common tree almost everywhere, followed by Brambles. Each biome also has its own specialty: Trollgnarl is common in Withered Mire, Cypress in Drowned Fen, Elderwort Shrub in Sunken Ancient Ruins and Rift Vine in Rift-Thorn Mire.",
-        "Which creature appears depends on the biome and on the tile it appears on. Water tiles bring aquatic creatures such as the Mudfin, and sandy tiles favor the Boulder Crab. Outside Fort Solid Shorehold, some creatures can appear as a tougher form, for example a Viper as a Red Fang. In Savage Mirk this always happens. A Mire Serpent can also surge out of deeper water anywhere except the fort zone.",
-        "As the main story advances, rift creatures such as the Sceetler and Scaalmyr Grunt begin turning up in ordinary zones. Rift-Thorn Mire has its own population of them.",
-        "Weather, day and night, and the outdoor temperature are shared across the whole world rather than set per biome. The background sounds differ between biomes.",
-        "When you come back to a zone, it catches up on the time you were gone: plants grow, felled trees are gradually replaced and new Calmia Root plants appear on mud (except in Rift-Thorn Mire). See Planting and Terrain for how the ground and plants behave."
-      ],
-      "related_entities": [
-        "nature-4",
-        "nature-6",
-        "nature-7",
-        "nature-17",
-        "nature-20",
-        "nature-13",
-        "being-17",
-        "being-7",
-        "being-10",
-        "being-23",
-        "being-4",
-        "being-13",
-        "being-14",
-        "item-142"
-      ],
-      "related_pages": [
-        "Fort Solid Shorehold",
-        "Common Bog",
-        "Withered Mire",
-        "Drowned Fen",
-        "Broken Fen",
-        "Savage Mirk",
-        "Sunken Ancient Ruins",
-        "Rift-Thorn Mire",
-        "Vast Waters",
-        "Planting",
-        "Terrain"
-      ],
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_mapcreations",
-          "key": "terrain_create_shore.off-grid.areaType100.areaType4"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "tree_try_to_create.per-areaType-mix"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "being_initiate.variant-upgrade.AT!=0.AT==5"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_day_Step_0",
-          "key": "global-light.ambience-per-areaType"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_screenfader_Step_0",
-          "key": "revisit-regrowth.trees.calmia"
-        }
-      ]
+    "title": "Soil",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Bare soil is the ground under everything else outdoors. Its color shows its height: dark soil at the waterline, ordinary brown on low ground, and lighter soil on the plateaus. Grass, mud, sand and stone are laid on top of it. See Terrain for the height bands.",
+      "Soil is the base of every outdoor area except Vast Waters, which is all open water. Where nothing else covers it, it shows as bare earth.",
+      "Walking onto soil costs 0.8 AP, the cheapest outdoor step. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile. A lit Campfire slowly scorches the soil beneath it to ash, which walks the same.",
+      "Soil takes every land seed. Which ones depends on its height, as listed below. Cranberry Seeds and Watercress Seeds need water instead.",
+      "Creatures appearing on soil come from the area's land table, which depends on the area, the time of day and the main story; see each area page. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
+    ],
+    "related_entities": ["item-227", "item-228", "item-230", "item-232", "item-233", "item-234", "item-38"],
+    "related_pages": ["Terrain", "Planting", "Grassy ground", "Mud", "Areas"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Area", "How common", "Creatures spawn from"],
+        "rows": [
+          [{"page": "Fort Solid Shorehold"}, "Everywhere not covered by other ground", "Land table"],
+          [{"page": "Common Bog"}, "Everywhere not covered by other ground", "Land table"],
+          [{"page": "Withered Mire"}, "Everywhere not covered by other ground", "Land table"],
+          [{"page": "Drowned Fen"}, "Everywhere not covered by other ground", "Land table"],
+          [{"page": "Broken Fen"}, "Everywhere not covered by other ground", "Land table"],
+          [{"page": "Savage Mirk"}, "Everywhere not covered by other ground", "Land table"],
+          [{"page": "Sunken Ancient Ruins"}, "Everywhere not covered by other ground", "Land table"],
+          [{"page": "Rift-Thorn Mire"}, "Everywhere not covered by other ground", "Rift table (every tile)"]
+        ]
+      },
+      {
+        "after": 3,
+        "columns": ["Seed", "Takes here when"],
+        "rows": [
+          [{"entity": "item-227"}, "Ground height 0.0667 or more: upper low ground and the plateaus"],
+          [{"entity": "item-228"}, "Ground height −0.15 or more"],
+          [{"entity": "item-230"}, "Ground height −0.05 to 0.925"],
+          [{"entity": "item-232"}, "Ground height up to 0.425: the waterline, low ground and the first plateau"],
+          [{"entity": "item-233"}, "Ground height up to 0.195: the waterline and low ground"],
+          [{"entity": "item-234"}, "Ground height 0.31 or more: the upper first plateau and the high plateau"]
+        ]
+      }
+    ],
+    "images": [
+      {"illustration": "tile-soil-high-illustration", "after": 0},
+      {"illustration": "tile-soil-low-illustration", "after": 0}
+    ]
     },
     {
-      "title": "Fort Solid Shorehold",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "People",
-        "Creatures",
-        "Rules near the fort",
-        "Loot"
-      ],
-      "paragraphs": [
-        "This is the zone where every game begins, on the left or right edge of the world map, so at least one side is beach. Its neighbors are Common Bog zones, except that one of them can be Vast Waters.",
-        "The land is ordinary mixed swamp with a flattened, open middle. The fort stands in a fenced clearing beside a wooden dock where your boat arrives. Elsewhere in the zone lies an abandoned camp next to a rift, with a Campfire and a few supplies left in containers.",
-        "Captain Eir and the fort's Soldier garrison live here, and the fort building leads inside.",
-        "This is the safest zone. By day you mostly meet the Giant Slug, Giant Gnat, Viper and Dreadfly, with the Mirk Runner becoming common at night. Mudfin live in the water and Boulder Crab on sand. Creatures here never appear as their tougher forms, and the Mire Serpent does not ambush from the water.",
-        "Early in the story you cannot build within about thirty tiles of the fort, and the ground around it counts as private. At night the soldiers walk you back inside if you linger close by, until later in the story. Seeds cannot take within about six tiles of the fort, and at one point in the main story Viend will not let you leave the zone.",
-        "Skeletons here are rarely treasure chests; the odds are the lowest of any zone."
-      ],
-      "related_entities": [
-        "being-6",
-        "being-5",
-        "being-19",
-        "being-0",
-        "being-2",
-        "being-10",
-        "being-1",
-        "being-11",
-        "being-17",
-        "being-7",
-        "being-4",
-        "item-38"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Planting",
-        "Terrain",
-        "Common Bog",
-        "Vast Waters"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "being_initiate.variant-upgrade.AT!=0.AT==5"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_cursor_Draw_73",
-          "key": "areaType0.TooClose480.MAINQUESTSTAGE13"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "night-escort.MAINQUESTSTAGE15"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_UI_Draw_64",
-          "key": "QuestLeaveBlock.MAINQUESTSTAGE12.areaType0"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_can_grow.areaType0-fort104"
-        }
-      ]
+    "title": "Grassy ground",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Most dry ground and the shore shallows are covered in grass. Short grass is a few blades over soil. Thick grass grows until it covers the ground. Moss grows on stone and inside caves and ruins. Rift Grass replaces ordinary grass around the rift.",
+      "Grass grows anywhere from the shore shallows upward, in every outdoor area except Vast Waters. It stays short and thin in the Withered Mire, on mud, and in deep shade. Moss covers about a third of the stony patches in every area. Rift Grass spreads through the Rift-Thorn Mire until the rift is dealt with.",
+      "Short grass, moss and Rift Grass cost 0.8 AP a step, like bare soil. Thick grass costs 1.0 AP, and thick grass growing through shallow water 1.4 AP. Tall Grass and Fern patches are separate plants that slow you further. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
+      "Grass does not change which land seeds take. They follow the soil height underneath, and planting clears the grass. Thick grass or moss growing through shallow water is what Cranberry Seeds need. Crops on Rift Grass shrink away instead of growing, and moss on dry stone still counts as stone, which refuses seeds.",
+      "Creatures on grassy ground come from the area's land table; see each area page. In the Rift-Thorn Mire, Rift Grass tiles use the rift table like every other tile there. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
+    ],
+    "related_entities": ["nature-0", "nature-5", "nature-12", "nature-1", "nature-9", "item-229", "item-227", "item-228", "item-230", "item-232", "item-233", "item-234"],
+    "related_pages": ["Terrain", "Soil", "Stone ground", "Shallow water", "Planting", "Rift-Thorn Mire", "Withered Mire"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.mud-cap4.areaType2-grass-3..5.Data5"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "stone-clumps.moss0.35.rift-grass-walks480"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 3,
+        "columns": ["Seed", "Takes here when"],
+        "rows": [
+          [{"entity": "item-227"}, "Ground height 0.0667 or more: upper low ground and the plateaus"],
+          [{"entity": "item-228"}, "Ground height −0.15 or more"],
+          [{"entity": "item-230"}, "Ground height −0.05 to 0.925"],
+          [{"entity": "item-232"}, "Ground height up to 0.425: the waterline, low ground and the first plateau"],
+          [{"entity": "item-233"}, "Ground height up to 0.195: the waterline and low ground"],
+          [{"entity": "item-234"}, "Ground height 0.31 or more: the upper first plateau and the high plateau"],
+          [{"entity": "item-229"}, "Only where thick grass or moss grows through shallow water"]
+        ]
+      }
+    ],
+    "images": [
+      {"illustration": "tile-short-grass-illustration", "after": 0},
+      {"illustration": "tile-moss-ground-illustration", "after": 0},
+      {"illustration": "tile-rift-grass-illustration", "after": 0}
+    ]
     },
     {
-      "title": "Common Bog",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "Plants",
-        "Creatures",
-        "Loot"
-      ],
-      "paragraphs": [
-        "Common Bog zones surround Fort Solid Shorehold, and more are scattered across the rest of the map. One of the bogs next to the fort holds Ranger Bhato's hideout, with a cellar entrance not far away.",
-        "This is the baseline swamp: a balanced mix of water, open ground and low hills, with every ordinary feature at its usual amount.",
-        "Willow dominates the trees, with Brambles second and only a little Cypress. Bogs grow a few more wild Turnip plants than other zones, and Cranberry patches line the grassy shallows.",
-        "By day expect the Giant Slug, Giant Gnat, Viper and Dreadfly. At night the Mirk Runner, Swamp Troll and Mirkfang come out in greater numbers. Some creatures can appear as tougher forms.",
-        "Skeletons are occasionally treasure chests."
-      ],
-      "related_entities": [
-        "being-12",
-        "nature-4",
-        "nature-6",
-        "nature-7",
-        "nature-18",
-        "nature-19",
-        "being-0",
-        "being-2",
-        "being-10",
-        "being-1",
-        "being-11",
-        "being-3",
-        "being-38"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Fort Solid Shorehold",
-        "Planting"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "tree_try_to_create.per-areaType-mix"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "rangerCamp.built_48x32.entrances_64x48"
-        }
-      ]
+    "title": "Sand",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Pale sand covers beaches and scattered sandy patches. It slopes gently from dry ground into the water.",
+      "Any side of a land area that faces the edge of the world, a Vast Waters area or a Broken Fen becomes a sandy beach about thirty tiles deep, dropping into deep water. A Broken Fen has beaches on all four sides. Every land area also gets a few inland sandy patches: two to six per area, or 24 in the Withered Mire.",
+      "Sand is heavy going at 1.2 AP a step. Wading over a sandy bottom also costs more than over soil: 1.4 AP in shallow water, 2.0 AP in medium water and 5 AP in deep water. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
+      "Elderberry Seeds are the only land seed that takes on dry sand, from ground height −0.15 up. Under water, Watercress Seeds ignore the bottom and grow on sand at their usual depth.",
+      "Dry sand has its own spawn table in every area except the Rift-Thorn Mire, day and night alike. The Boulder Crab is by far the most common creature on it, and bird nests are often built on sand. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
+    ],
+    "related_entities": ["being-7", "being-30", "being-2", "being-1", "being-31", "item-228", "item-231"],
+    "related_pages": ["Terrain", "Areas", "Broken Fen", "Vast Waters", "Planting"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "terrain_create_shore.off-grid.areaType100.areaType4"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "sand-clumps.irandom2-6.areaType2-24"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Area", "How common", "Creatures spawn from"],
+        "rows": [
+          [{"page": "Fort Solid Shorehold"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; 2 to 6 inland patches", "Sand table"],
+          [{"page": "Common Bog"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; 2 to 6 inland patches", "Sand table"],
+          [{"page": "Withered Mire"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; 24 inland patches", "Sand table"],
+          [{"page": "Drowned Fen"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; 2 to 6 inland patches", "Sand table"],
+          [{"page": "Broken Fen"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; beaches on all four sides", "Sand table"],
+          [{"page": "Savage Mirk"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; 2 to 6 inland patches", "Sand table"],
+          [{"page": "Sunken Ancient Ruins"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; 2 to 6 inland patches", "Sand table"],
+          [{"page": "Rift-Thorn Mire"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen; 2 to 6 inland patches", "Rift table (every tile)"]
+        ]
+      },
+      {
+        "after": 4,
+        "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
+        "rows": [
+          [{"entity": "being-7"}, "89.29%", "15% Titanspine Crab", "Always Titanspine Crab"],
+          [{"entity": "being-2"}, "5.36%", "–", "–"],
+          [{"entity": "being-1"}, "3.57%", "15% Deathfly", "Always Deathfly"],
+          [{"entity": "being-31"}, "1.79%", "–", "–"]
+        ],
+        "caption": "The sand table. Fort Solid Shorehold never uses tougher forms."
+      }
+    ]
     },
     {
-      "title": "Withered Mire",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "Plants",
-        null,
-        "Creatures",
-        "Loot"
-      ],
-      "paragraphs": [
-        "Withered Mire zones fill some of the map's leftover cells, so a world can have several or none at all.",
-        "This is the highest and driest biome. The ground sits well above the waterline and rises into many hills and plateaus, so there are lots of slopes and little water. Sandy and stony patches are common, and more old ruins survive here than in most zones.",
-        "Grass stays short and thin. Trollgnarl makes up about a third of the trees, alongside Willow and Brambles, and the high plateaus suit Trollgnarl Seed Pods. Trees here die off faster than in most zones. Bird nests are plentiful on the slopes and sand.",
-        "The stunted grass means few tiles qualify for Cranberry Seeds, but the dry ground suits turnips, brambles and trollgnarls.",
-        "The Firelouse and Raving Unwanted are common here day and night, and the sandy ground brings out the Boulder Crab. The usual swamp creatures also roam, and some can appear as tougher forms.",
-        "Treasure chests turn up more often than in Common Bog."
-      ],
-      "related_entities": [
-        "nature-17",
-        "nature-4",
-        "nature-6",
-        "item-234",
-        "item-229",
-        "being-27",
-        "being-31",
-        "being-7"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Planting",
-        "Terrain",
-        "Tree health and chopping",
-        "Common Bog"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "tree_try_to_create.per-areaType-mix"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_get_maxtile.areaType2-grass-3..5.tree-death+0.0025"
-        }
-      ]
+    "title": "Mud",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Dark, wet mud lies in winding streaks across low ground. It is dry ground, not water.",
+      "Every land area has 16 to 24 winding mud streaks, laid between the waterline and the first plateau. A Broken Fen has only about a third as many. Calmia Root plants grow only on mud, so mud is where to look for them.",
+      "Mud costs 1.2 AP a step, the same as sand. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
+      "Mud takes every land seed at the right height, just like soil. Grass on mud never grows thick, so muddy shallows are no good for Cranberry Seeds.",
+      "Creatures on mud come from the area's land table; see each area page. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
+    ],
+    "related_entities": ["item-142", "item-227", "item-228", "item-230", "item-232", "item-233", "item-234", "item-229"],
+    "related_pages": ["Terrain", "Soil", "Planting", "Areas", "Savage Mirk", "Drowned Fen"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "mud-walks.irandom16-24.calmia-mud-only"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.mud-cap4"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Area", "How common", "Creatures spawn from"],
+        "rows": [
+          [{"page": "Fort Solid Shorehold"}, "8 to 16 Calmia Root plants", "Land table"],
+          [{"page": "Common Bog"}, "8 to 16 Calmia Root plants", "Land table"],
+          [{"page": "Withered Mire"}, "8 to 16 Calmia Root plants", "Land table"],
+          [{"page": "Drowned Fen"}, "16 to 24 Calmia Root plants", "Land table"],
+          [{"page": "Broken Fen"}, "About a third as many streaks; 8 to 16 Calmia Root plants", "Land table"],
+          [{"page": "Savage Mirk"}, "24 to 32 Calmia Root plants", "Land table"],
+          [{"page": "Sunken Ancient Ruins"}, "8 to 16 Calmia Root plants", "Land table"],
+          [{"page": "Rift-Thorn Mire"}, "No Calmia Root while the rift is active", "Rift table (every tile)"]
+        ],
+        "caption": "Mud streaks per area are the same everywhere except the Broken Fen. The middle column gives the Calmia Root plants that grow on them."
+      },
+      {
+        "after": 3,
+        "columns": ["Seed", "Takes here when"],
+        "rows": [
+          [{"entity": "item-227"}, "Ground height 0.0667 or more: upper low ground and the plateaus"],
+          [{"entity": "item-228"}, "Ground height −0.15 or more"],
+          [{"entity": "item-230"}, "Ground height −0.05 to 0.925"],
+          [{"entity": "item-232"}, "Ground height up to 0.425: the waterline, low ground and the first plateau"],
+          [{"entity": "item-233"}, "Ground height up to 0.195: the waterline and low ground"],
+          [{"entity": "item-234"}, "Ground height 0.31 or more: the upper first plateau and the high plateau"]
+        ]
+      }
+    ]
     },
     {
-      "title": "Drowned Fen",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "Plants",
-        "Creatures",
-        "Landmarks",
-        "Loot"
-      ],
-      "paragraphs": [
-        "Every world has at least one Drowned Fen, and more appear among the map's leftover cells.",
-        "This is the wettest land biome. Low ground and a maze of shallow pools leave most of the zone under shallow water, broken up by small islands and humps of higher ground.",
-        "Cypress is much more common here, at about one tree in seven, alongside plenty of Willow and Brambles. Cranberry patches are abundant, and Calmia Root plants are more numerous than in most zones. The shallow water suits Cypress Seed Pods, Willow Seeds and Watercress Seeds.",
-        "With so much water, the Mudfin and its tougher form, the Razorfin, are everywhere, and a Mire Serpent can burst out of deeper water. On dry land the usual swamp creatures roam.",
-        "Gurb-Gurb's hollow is placed in the first Drowned Fen you enter, and smoke gives away its position.",
-        "Treasure chests are fairly common."
-      ],
-      "related_entities": [
-        "nature-7",
-        "nature-4",
-        "nature-6",
-        "nature-19",
-        "item-142",
-        "item-233",
-        "item-232",
-        "item-231",
-        "being-17",
-        "being-24",
-        "being-4",
-        "being-26"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Planting",
-        "Terrain"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "tree_try_to_create.per-areaType-mix"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_6",
-          "key": "first-visit-landmarks.hut.shipwreck.camp"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "areaType3.cranberries+10.calmia16-24"
-        }
-      ]
+    "title": "Stone ground",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Grey rock breaks through the soil in stony patches. Some patches are overgrown with moss. Old ruins add squares of paving and broken paths.",
+      "Every land area has about 48 stony patches, or 80 in the Withered Mire and about 14 in a Broken Fen. Stony patches can reach into shallow and medium water. Each area also has 4 to 8 paved ruin squares, while the Sunken Ancient Ruins have 32 to 48 large ones plus paved paths.",
+      "Stone and paving cost 0.8 AP a step, like soil. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
+      "Dry stone refuses every land seed, with or without moss, and so does paving. In the water, mossy stone in the shallows suits Cranberry Seeds, and Watercress Seeds grow on any bottom at their usual depth.",
+      "Creatures on stone come from the area's land table; see each area page. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
+    ],
+    "related_entities": ["nature-5", "item-229", "item-231"],
+    "related_pages": ["Terrain", "Planting", "Sunken Ancient Ruins", "Withered Mire", "Interior floors"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "stone-clumps48.areaType2-80.moss0.35.ruin-squares4-8.areaType22-32-48"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Area", "How common", "Creatures spawn from"],
+        "rows": [
+          [{"page": "Fort Solid Shorehold"}, "About 48 patches, 4 to 8 ruin squares", "Fort table"],
+          [{"page": "Common Bog"}, "About 48 patches, 4 to 8 ruin squares", "Land table"],
+          [{"page": "Withered Mire"}, "About 80 patches, 4 to 8 ruin squares", "Land table"],
+          [{"page": "Drowned Fen"}, "About 48 patches, 4 to 8 ruin squares", "Land table"],
+          [{"page": "Broken Fen"}, "About 14 patches, 1 to 2 ruin squares", "Land table"],
+          [{"page": "Savage Mirk"}, "About 48 patches, 4 to 8 ruin squares", "Land table"],
+          [{"page": "Sunken Ancient Ruins"}, "About 48 patches, 32 to 48 large ruin squares and paved paths", "Ruins table"],
+          [{"page": "Rift-Thorn Mire"}, "About 48 patches, 4 to 8 ruin squares", "Rift table (every tile)"]
+        ]
+      }
+    ],
+    "images": [
+      {"illustration": "tile-mossy-stone-illustration", "after": 0},
+      {"illustration": "tile-ruin-paving-illustration", "after": 0}
+    ]
     },
     {
-      "title": "Broken Fen",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "Creatures",
-        "Loot",
-        "Landmarks"
-      ],
-      "paragraphs": [
-        "Each world has two or three Broken Fens. Neighboring zones treat a Broken Fen like open sea, so their shared edges become beaches.",
-        "A Broken Fen is an archipelago: beaches on all four sides drop into deep water, leaving scattered sandy islands and shallows in between. Only about a third of the usual rocks, logs, trees and plants appear, so the zone looks sparse and open. The world map draws it as water.",
-        "Most of the area is water or sand, so the Mudfin and Boulder Crab are the usual company, with the ordinary swamp creatures on the few patches of firmer land.",
-        "Broken Fens hold the most loot of any zone: more skeletons than usual, and about a quarter of them are treasure chests.",
-        "Ihar's shipwreck can be placed on a shoreline of the first Broken Fen you enter. If it does not fit, the game tries again later; see Ihar for details."
-      ],
-      "related_entities": [
-        "being-17",
-        "being-7",
-        "being-33"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Terrain",
-        "Vast Waters"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_mapcreations",
-          "key": "terrain_create_shore.areaType4-all-sides"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_6",
-          "key": "first-visit-landmarks.hut.shipwreck.camp"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_items",
-          "key": "loot_create_treasure.areaType4.skeletons5-8.chest0.25"
-        }
-      ]
+    "title": "Goo",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Glistening violet goo seeps from the rift and pools over the ground. Stepping in it gives the message that your feet are entirely submerged, but it is never deep enough to swim in.",
+      "Goo is found only in the Rift-Thorn Mire, which has 48 to 56 spreading pools, and in the rift depths below it.",
+      "Goo costs 1.2 AP a step outdoors and 1.0 AP in the rift depths. You cannot build, place objects or plant on it.",
+      "No seed takes on goo.",
+      "Every creature in the Rift-Thorn Mire, on goo or anywhere else, comes from the rift table; see Rift-Thorn Mire. Any creature can wade into goo."
+    ],
+    "related_entities": ["being-14", "being-13", "being-15", "being-32"],
+    "related_pages": ["Terrain", "Rift-Thorn Mire", "Interior floors"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType23.goo-walks48-56"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.tile_is_goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.goo-height2"}
+    ],
+    "index_page": "Terrain"
     },
     {
-      "title": "Savage Mirk",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "Creatures",
-        null,
-        "Landmarks",
-        "Loot"
-      ],
-      "paragraphs": [
-        "Each world has two or three Savage Mirk zones.",
-        "The terrain looks like an ordinary bog, but Calmia Root plants are more plentiful here than anywhere else.",
-        "This is the most dangerous biome. Every creature that has a tougher form always appears as it: the Viper as a Red Fang, the Mudfin as a Razorfin, the Dreadfly as a Deathfly, the Mirk Runner as a Mirk Mauler, the Mirkfang as a Giant Mirkfang and the Boulder Crab as a Titanspine Crab. A few Giant Mirkfang turn out to be a Mirkfang Matriarch.",
-        "While the Survivors' camp request is still open, The Terror can come out at night.",
-        "The Survivors' camp is built in the first Savage Mirk you enter, with torchlight pointing the way. Wilda, the Survivor group and Grand Mother live there. Building close to the camp is not allowed, and the camp clears away rifts near it.",
-        "Skeletons are more numerous than usual, and some are treasure chests."
-      ],
-      "related_entities": [
-        "item-142",
-        "being-23",
-        "being-24",
-        "being-25",
-        "being-29",
-        "being-39",
-        "being-30",
-        "being-37",
-        "being-40",
-        "being-34",
-        "being-35",
-        "being-36"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Survivors' camp"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_basic_useful",
-          "key": "being_initiate.variant-upgrade.AT!=0.AT==5"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_6",
-          "key": "first-visit-landmarks.hut.shipwreck.camp"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_cursor_Draw_73",
-          "key": "TooCloseCamp420"
-        }
-      ]
+    "title": "Dock planks",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "The wooden dock where your boat arrives at Fort Solid Shorehold. The planks are built over deep water.",
+      "Only at Fort Solid Shorehold, beside the fort.",
+      "The dock costs 0.8 AP a step and never adds a water penalty, even though water lies beneath. You cannot build or plant on it, because the game treats it as water.",
+      "The dock counts as dry footing, so any creature can walk onto it, including the walkers that cannot enter deep water. Creatures that appear on the dock come from the water table, because there is water under the planks."
+    ],
+    "related_entities": ["being-17", "being-2", "being-1"],
+    "related_pages": ["Terrain", "Fort Solid Shorehold", "Deep water"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "fort-dock.Grass24-31.deep-carve"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 3,
+        "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
+        "rows": [
+          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "being-2"}, "31.91%", "–", "–"],
+          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+        ],
+        "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
+      }
+    ]
     },
     {
-      "title": "Sunken Ancient Ruins",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "Plants",
-        "Creatures",
-        "Loot"
-      ],
-      "paragraphs": [
-        "Each world has three or four Sunken Ancient Ruins. One of them holds the Library.",
-        "Ruins are everywhere: stone floors with broken walls, paved stone paths and many crumbling structures. Most rocky outcrops are cellar entrances or ruined buildings rather than caves, and there are few boulders.",
-        "There are only about half as many trees as usual. The first tree placed in these zones is always an Elderwort Shrub, so each one usually has at least one, and more appear now and then.",
-        "Toadkin are the most common creatures, often in pairs. The Dreadfly, Giant Gnat, Viper and Mirk Runner also roam, and the Mirkfang appears at night.",
-        "Treasure chests are common, but rubble piles have mostly been picked clean."
-      ],
-      "related_entities": [
-        "nature-20",
-        "being-21",
-        "being-1",
-        "being-2",
-        "being-10",
-        "being-11",
-        "being-38"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Terrain"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "tree_try_to_create.per-areaType-mix"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_mapcreations",
-          "key": "create_solid.areaType22.entrances->21.building_128x96->20"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_items",
-          "key": "rubble59-60.areaType22.nothing0.55"
-        }
-      ]
+    "title": "Slopes",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Slopes are the steep edges of raised ground, drawn as banks and cliffs. Ground height 0.2 starts the first plateau and 0.425 the high plateau, and a slope rings each one.",
+      "Every land area has hills and plateaus. The Withered Mire has by far the most, with many raised hills and a base higher than any other area. Vast Waters has none.",
+      "Climbing a slope costs 5 AP a step. Each rank of Firm Grip makes it cheaper. You cannot build or plant on a slope. The flat plateau top beyond the slope walks like soil at 0.8 AP.",
+      "No seed takes on a slope. Trollgnarl Seed Pods do well on the plateau tops.",
+      "Creatures appearing on a slope come from the area's land table. Creatures can climb slopes but never choose one as a place to wander to, so they mostly stay on level ground. Bird nests are often built on slopes. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
+    ],
+    "related_entities": ["skill-0-3", "item-234"],
+    "related_pages": ["Terrain", "Withered Mire", "Planting"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "wander-target.not-slope"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType2.base+0.25.mountain-walks80.nests-slope-sand"}
+    ],
+    "index_page": "Terrain"
     },
     {
-      "title": "Rift-Thorn Mire",
-      "section_titles": [
-        "Where it is",
-        "Landscape",
-        "Plants",
-        null,
-        "Creatures",
-        "After the rift"
-      ],
-      "paragraphs": [
-        "Each world has two or three Rift-Thorn Mires. One always sits directly opposite Fort Solid Shorehold on the world map and holds the way down to Scaal's lair.",
-        "The rift has corrupted the land. Pools of goo spread across the ground and Rift Grass replaces ordinary grass. Rifts dot the zone, and zones near the lair also get some.",
-        "There are far fewer trees, and about a quarter of them are Rift Vine. Trees die off faster here than anywhere else. While the rift is active, no lilypads, watercress, bird nests, Calmia Root plants, wild turnips or cranberries grow, and Calmia Root does not come back on later visits.",
-        "Crops planted on Rift Grass wither, and goo cannot be planted, so this is a poor place for a garden.",
-        "Rift creatures rule here, even in the water: the Scaalmyr Grunt (often joined by a Sceetler), the Scaalmyr Warrior and the occasional Mutated Unwanted.",
-        "Late in the main story, once the rift is dealt with, rift creatures become rare, Rift Grass and Rift Vine stop growing, and the remaining plants stay stunted. Crops still cannot fully ripen here."
-      ],
-      "related_entities": [
-        "being-22",
-        "nature-12",
-        "nature-13",
-        "being-14",
-        "being-13",
-        "being-15",
-        "being-32"
-      ],
-      "related_pages": [
-        "Biomes",
-        "Fort Solid Shorehold",
-        "Planting",
-        "Terrain",
-        "Tree health and chopping"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "tree_try_to_create.per-areaType-mix"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_4",
-          "key": "spawn-tables.per-areaType.water.sand"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_nature",
-          "key": "nature_get_maxtile.areaType23.riftDeg.tree-death+0.005"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "obj_rift.dist2.5.areaType23-max5"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_screenfader_Step_0",
-          "key": "revisit-regrowth.trees.calmia"
-        }
-      ]
+    "title": "Shallow water",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Depth",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Shallow water covers ground between −0.3 and −0.2. The game says your feet are submerged. This wiki splits it in two. In the shore shallows, from −0.25 to −0.2, grass still grows through the water. The open shallows, from −0.3 to −0.25, are bare water over dark soil.",
+      "Every land area has shallow water along its pools and shores and in scattered puddles: about 40 puddles in most areas, 800 in the Drowned Fen, 12 in the Withered Mire and 5 in a Broken Fen. Beaches and lakes have a band of it around their edges.",
+      "Water levels never change, so shallow water stays shallow. You can attack and jump as usual, and your pack stays dry.",
+      "Wading costs 1.2 AP a step over soil or stone, and 1.4 AP over sand, mud or thick grass. Each rank of Amphibian takes 8% off the water's share. You cannot build or place anything in shallow water, not even a Raft Base.",
+      "Shallow water takes four seeds. Cranberry Seeds need thick grass or moss growing through the water. Willow Seeds take the shore shallows, Cypress Seed Pods take both bands, and Watercress Seeds take the deeper part of the open shallows below −0.26.",
+      "Creatures that appear in shallow water come from the water table, day and night, in every area but the Rift-Thorn Mire. Fort Solid Shorehold never gets the tougher forms. Mudfin and Razorfin can swim in the open shallows but not the shore shallows. The Mire Serpent stays in medium and deep water."
+    ],
+    "related_entities": ["item-229", "item-232", "item-233", "item-231", "skill-0-1"],
+    "related_pages": ["Terrain", "Medium water", "Planting", "Drowned Fen", "Grassy ground"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "puddles40.areaType3-800.areaType2-12.areaType4-5"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 4,
+        "columns": ["Seed", "Takes here when"],
+        "rows": [
+          [{"entity": "item-229"}, "Thick grass or moss grows through the water, in practice the shore shallows"],
+          [{"entity": "item-232"}, "Shore shallows only, from −0.25 up"],
+          [{"entity": "item-233"}, "Both bands, from −0.35 up"],
+          [{"entity": "item-231"}, "Open shallows below −0.26"]
+        ]
+      },
+      {
+        "after": 5,
+        "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
+        "rows": [
+          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "being-2"}, "31.91%", "–", "–"],
+          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+        ],
+        "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
+      },
+      {
+        "after": 5,
+        "columns": ["Creature", "Shore shallows", "Open shallows"],
+        "rows": [
+          [{"entity": "being-1"}, "Yes", "Yes"],
+          [{"entity": "being-25"}, "Yes", "Yes"],
+          [{"entity": "being-2"}, "Yes", "Yes"],
+          [{"entity": "being-38"}, "Yes", "Yes"],
+          [{"entity": "being-39"}, "Yes", "Yes"],
+          [{"entity": "being-37"}, "Yes", "Yes"],
+          [{"entity": "being-40"}, "Yes", "Yes"],
+          [{"entity": "being-22"}, "Yes", "Yes"],
+          [{"entity": "being-4"}, "No", "No"],
+          [{"entity": "being-17"}, "No", "Yes"],
+          [{"entity": "being-24"}, "No", "Yes"],
+          [{"entity": "being-0"}, "Yes", "Yes"],
+          [{"entity": "being-7"}, "Yes", "Yes"],
+          [{"entity": "being-30"}, "Yes", "Yes"],
+          [{"entity": "being-10"}, "Yes", "Yes"],
+          [{"entity": "being-23"}, "Yes", "Yes"],
+          [{"entity": "being-11"}, "Yes", "Yes"],
+          [{"entity": "being-29"}, "Yes", "Yes"],
+          [{"entity": "being-27"}, "Yes", "Yes"],
+          [{"entity": "being-13"}, "Yes", "Yes"],
+          [{"entity": "being-21"}, "Yes", "Yes"],
+          [{"entity": "being-31"}, "Yes", "Yes"],
+          [{"entity": "being-32"}, "Yes", "Yes"],
+          [{"entity": "being-14"}, "Yes", "Yes"],
+          [{"entity": "being-15"}, "Yes", "Yes"],
+          [{"entity": "being-16"}, "Yes", "Yes"],
+          [{"entity": "being-3"}, "Yes", "Yes"],
+          [{"entity": "being-18"}, "Yes", "Yes"],
+          [{"entity": "being-28"}, "Yes", "Yes"]
+        ],
+        "caption": "Which creatures can walk, swim or fly into this water. Spawning ignores these limits, so a creature can appear somewhere it could not walk to."
+      }
+    ]
     },
     {
-      "title": "Vast Waters",
-      "section_titles": [
-        "Where it is",
-        "What it is",
-        "Entering"
-      ],
-      "paragraphs": [
-        "Each world has between two and six Vast Waters zones, and one can sit beside Fort Solid Shorehold. Land zones next to one get a beach along the shared edge.",
-        "A Vast Waters zone is open sea: the whole area is deep water with no islands, trees, plants, loot or skeletons. The world map draws it as water.",
-        "You can travel into it from a neighboring edge, but there is no ground to stand on. You will be swimming in deep water and can drown, so it is effectively a barrier."
-      ],
-      "related_entities": [],
-      "related_pages": [
-        "Biomes",
-        "Terrain",
-        "Broken Fen"
-      ],
-      "index_page": "Biomes",
-      "confidence": "observed",
-      "evidence": [
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Alarm_8",
-          "key": "worldGrid5x5.areaType-placement"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_area_Alarm_2",
-          "key": "outdoor-generation.per-areaType-knobs"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_UI_Draw_64",
-          "key": "edge-travel.grid-bounds-only"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_player_Alarm_0",
-          "key": "drownPoints>=4"
-        }
-      ]
+    "title": "Medium water",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Depth",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Medium water, between −0.4 and −0.3, is greener and denser than the shallows. The game says your legs are submerged.",
+      "Ponds and lakes in every land area have a band of medium water. There is much more of it in the Drowned Fen and the Broken Fen. Water rocks only appear in medium or deep water, and lilypads float on medium water and the upper part of deep water.",
+      "Water levels never change. In medium water your pack stays dry, but jumps take a penalty of 3.",
+      "Wading costs 1.6 AP a step over soil or stone and 2.0 AP over sand or mud. Amphibian reduces the water's share. A water rock costs 2.5 AP but keeps you out of the water. The only thing you can place here is a Raft Base, and not on a water rock. A raft moves at 1.8 AP a step.",
+      "Watercress Seeds take all medium water. Cypress Seed Pods take its upper half, from −0.35 up.",
+      "Creatures that appear here come from the water table. Whenever you end a move here outside Fort Solid Shorehold, there is a 2% chance a Mire Serpent bursts out of the water beside you. Small walkers such as the Giant Slug, the Viper, the Mirk Runner and the Boulder Crab cannot enter medium water. Larger walkers such as the Swamp Troll, the Toadkin and the Scaalmyr can."
+    ],
+    "related_entities": ["item-231", "item-233", "item-170", "being-4", "nature-8", "skill-0-1"],
+    "related_pages": ["Terrain", "Shallow water", "Deep water", "Planting", "Drowned Fen", "Broken Fen"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "jump-penalty.water+3.deep+7"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 4,
+        "columns": ["Seed", "Takes here when"],
+        "rows": [
+          [{"entity": "item-231"}, "Anywhere in medium water"],
+          [{"entity": "item-233"}, "Upper half, from −0.35 up"]
+        ]
+      },
+      {
+        "after": 5,
+        "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
+        "rows": [
+          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "being-2"}, "31.91%", "–", "–"],
+          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+        ],
+        "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
+      },
+      {
+        "after": 5,
+        "columns": ["Creature", "Medium water"],
+        "rows": [
+          [{"entity": "being-1"}, "Yes"],
+          [{"entity": "being-25"}, "Yes"],
+          [{"entity": "being-2"}, "Yes"],
+          [{"entity": "being-38"}, "Yes"],
+          [{"entity": "being-39"}, "Yes"],
+          [{"entity": "being-37"}, "Yes"],
+          [{"entity": "being-40"}, "Yes"],
+          [{"entity": "being-22"}, "Yes"],
+          [{"entity": "being-4"}, "Yes"],
+          [{"entity": "being-17"}, "Yes"],
+          [{"entity": "being-24"}, "Yes"],
+          [{"entity": "being-0"}, "No"],
+          [{"entity": "being-7"}, "No"],
+          [{"entity": "being-30"}, "No"],
+          [{"entity": "being-10"}, "No"],
+          [{"entity": "being-23"}, "No"],
+          [{"entity": "being-11"}, "No"],
+          [{"entity": "being-29"}, "No"],
+          [{"entity": "being-27"}, "No"],
+          [{"entity": "being-13"}, "No"],
+          [{"entity": "being-21"}, "Yes"],
+          [{"entity": "being-31"}, "Yes"],
+          [{"entity": "being-32"}, "Yes"],
+          [{"entity": "being-14"}, "Yes"],
+          [{"entity": "being-15"}, "Yes"],
+          [{"entity": "being-16"}, "Yes"],
+          [{"entity": "being-3"}, "Yes"],
+          [{"entity": "being-18"}, "Yes"],
+          [{"entity": "being-28"}, "Yes"]
+        ],
+        "caption": "Which creatures can walk, swim or fly into this water. Spawning ignores these limits, so a creature can appear somewhere it could not walk to."
+      }
+    ]
+    },
+    {
+    "title": "Deep water",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Depth",
+      "Swimming and drowning",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Deep water, at −0.4 and below, is teal and opaque. You stand waist-deep at first, chest-deep from about −0.455 and up to your shoulders from about −0.485. Below about −0.505 you are swimming.",
+      "Lakes in every land area have deep middles, and every beach drops into deep water. A Broken Fen is mostly deep water between islands. The fort's dock stands over deep water. A Vast Waters area is entirely deep water, all of it at swimming depth.",
+      "Water levels never change. In deep water your pack gets wet. From chest depth you cannot attack (\"The water is too deep!\") and combat ends. From shoulder depth you cannot jump, and before that jumps take a penalty of 7.",
+      "Swimming costs 0.15 stamina a turn, more when overburdened, so a full stamina bar lasts about six or seven turns. When it runs out you start drowning, and after four turns you die. Standing on a raft or a water rock stops it.",
+      "Wading or swimming costs 3.4 AP a step over soil or stone and 5 AP over sand or mud. The only thing you can place here is a Raft Base, not on a water rock. A raft moves at 1.8 AP a step and never swims or drowns, so it is the safe way across.",
+      "Watercress Seeds take the top of deep water, down to −0.45 at about waist depth. Nothing else grows here.",
+      "Creatures that appear here come from the water table. Ending a move here outside the fort's area has a 2% chance of a Mire Serpent surging up beside you. Only flyers, swimmers and the Mire Serpent can enter deep water. Every walker stops at its edge, which makes it a refuge from them."
+    ],
+    "related_entities": ["item-231", "item-170", "being-4", "being-17", "being-24", "skill-0-1"],
+    "related_pages": ["Terrain", "Medium water", "Vast Waters", "Broken Fen", "Planting", "Stamina"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_player_Alarm_0", "key": "drownPoints>=4"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_height.Water3-cap28.raft-2"},
+      {"source": "ui-en", "section": "Pops", "key": "TooDeep"},
+      {"source": "ui-en", "section": "AEs", "key": "10.11.12.13.14.27"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 5,
+        "columns": ["Seed", "Takes here when"],
+        "rows": [
+          [{"entity": "item-231"}, "Down to −0.45, about waist depth"]
+        ]
+      },
+      {
+        "after": 6,
+        "columns": ["Creature", "Share", "Tougher form", "In the Savage Mirk"],
+        "rows": [
+          [{"entity": "being-17"}, "63.83%", "33% Razorfin", "Always Razorfin"],
+          [{"entity": "being-2"}, "31.91%", "–", "–"],
+          [{"entity": "being-1"}, "4.26%", "15% Deathfly", "Always Deathfly"]
+        ],
+        "caption": "The water table, used day and night in every area except Rift-Thorn Mire. Fort Solid Shorehold never uses tougher forms."
+      },
+      {
+        "after": 6,
+        "columns": ["Creature", "Deep water"],
+        "rows": [
+          [{"entity": "being-1"}, "Yes"],
+          [{"entity": "being-25"}, "Yes"],
+          [{"entity": "being-2"}, "Yes"],
+          [{"entity": "being-38"}, "Yes"],
+          [{"entity": "being-39"}, "Yes"],
+          [{"entity": "being-37"}, "Yes"],
+          [{"entity": "being-40"}, "Yes"],
+          [{"entity": "being-22"}, "Yes"],
+          [{"entity": "being-4"}, "Yes"],
+          [{"entity": "being-17"}, "Yes"],
+          [{"entity": "being-24"}, "Yes"],
+          [{"entity": "being-0"}, "No"],
+          [{"entity": "being-7"}, "No"],
+          [{"entity": "being-30"}, "No"],
+          [{"entity": "being-10"}, "No"],
+          [{"entity": "being-23"}, "No"],
+          [{"entity": "being-11"}, "No"],
+          [{"entity": "being-29"}, "No"],
+          [{"entity": "being-27"}, "No"],
+          [{"entity": "being-13"}, "No"],
+          [{"entity": "being-21"}, "No"],
+          [{"entity": "being-31"}, "No"],
+          [{"entity": "being-32"}, "No"],
+          [{"entity": "being-14"}, "No"],
+          [{"entity": "being-15"}, "No"],
+          [{"entity": "being-16"}, "No"],
+          [{"entity": "being-3"}, "No"],
+          [{"entity": "being-18"}, "No"],
+          [{"entity": "being-28"}, "No"]
+        ],
+        "caption": "Which creatures can walk, swim or fly into this water. Spawning ignores these limits, so a creature can appear somewhere it could not walk to."
+      }
+    ]
+    },
+    {
+    "title": "Interior floors",
+    "section_titles": [
+      "What it is",
+      "Where it appears",
+      "Moving and building",
+      "Seeds",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Caves, ruin buildings, cellars, the rift depths and people's homes have their own floors. Cave floors are bare rock. Ruin and cellar floors are old stone slabs with moss. The rift depths have dark, alien ground with goo and pits.",
+      "Cave mouths are scattered through every land area. In the Sunken Ancient Ruins most of them lead to cellars and ruined buildings instead. The rift depths lie under the Rift-Thorn Mire opposite the fort. Homes belong to people such as Ranger Bhato and Gurb-Gurb.",
+      "Interior floors cost 0.8 AP a step. Rubble costs 2.5 AP, husks in the deepest rift chamber 1.6 AP and cave spikes 5 AP. You can build on open floor except in other people's homes.",
+      "Cave and ruin floors count as stone, so seeds refuse them. Planting on rift-depth floors has not been tested.",
+      "Caves and ruin interiors do not spawn creatures turn by turn. Each time you return after at least a day, a cave may restock with up to four creatures, about one for every two days away, and grows new Vile Bulb mushrooms. Ruin buildings and cellars restock the same way from a different list. The two outer rift chambers spawn every turn, up to 8 or 12 creatures. Homes never spawn creatures."
+    ],
+    "related_entities": ["being-11", "being-29", "being-18", "being-27", "being-28", "being-14", "being-13", "being-15", "being-16"],
+    "related_pages": ["Terrain", "Stone ground", "Goo", "Sunken Ancient Ruins", "Rift-Thorn Mire"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.interior1.25.Dungeon1-9.Dungeon80-89.spikes"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "LastVisit.cave-restock.areas20-21"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "areaType24-cap8.areaType25-cap12.interior-table"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"}
+    ],
+    "index_page": "Terrain",
+    "tables": [
+      {
+        "after": 4,
+        "columns": ["Creature", "Caves", "Ruin buildings and cellars", "Outer rift chambers"],
+        "rows": [
+          [{"entity": "being-11"}, "50.00%", "–", "–"],
+          [{"entity": "being-29"}, "16.67%", "20.00%", "–"],
+          [{"entity": "being-18"}, "16.67%", "–", "–"],
+          [{"entity": "being-27"}, "16.67%", "–", "–"],
+          [{"entity": "being-28"}, "–", "80.00%", "–"],
+          [{"entity": "being-14"}, "–", "–", "26.32%"],
+          [{"entity": "being-13"}, "–", "–", "13.16%"],
+          [{"entity": "being-15"}, "–", "–", "39.47%"],
+          [{"entity": "being-16"}, "–", "–", "21.05%"]
+        ],
+        "caption": "Chance that a restocked or spawned creature is each kind."
+      }
+    ],
+    "images": [
+      {"illustration": "tile-cave-floor-illustration", "after": 0},
+      {"illustration": "tile-rift-floor-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Areas",
+    "section_titles": [
+      "Areas",
+      "How many of each",
+      "Beaches and borders",
+      "How creatures appear",
+      "Water and sand",
+      "Tougher forms",
+      "The main story",
+      "Mire Serpent and fireflies",
+      "Trees",
+      "Plants, nests and loot",
+      null,
+      "Weather and revisiting"
+    ],
+    "paragraphs": [
+      "The world map is a five-by-five grid of areas. The game calls each one an area, as in \"Entering new area\" and \"Map of area\", and names it by its kind, such as Common Bog or Drowned Fen. There are nine kinds. The kind shapes the land, which trees and plants grow, which creatures roam and what landmarks you can find. Caves, ruin buildings, cellars and homes are separate interiors entered from an area.",
+      "Every world follows the same recipe. After the fixed kinds are placed, the leftover cells are split roughly evenly between Common Bog, Withered Mire and Drowned Fen, so a world can lack a Withered Mire entirely.",
+      "Any side of a land area that faces the edge of the world, a Vast Waters area or a Broken Fen becomes a sandy beach about thirty tiles deep that drops into deep water. A Broken Fen has beaches on all four sides. See Terrain for the ground itself.",
+      "Each time you end a turn of eight minutes, the area may add one creature, or a small group, at a random spot out of your sight and outside private ground. Nothing more appears once 24 creatures are about. In real-time combat, 95% of turns add nothing. The ground at the chosen spot picks the table: every tile in the Rift-Thorn Mire uses its rift table; elsewhere water tiles use the water table, dry sand the sand table, and other ground the area's land table. Each area page lists its land table.",
+      "The water and sand tables are the same in every area except the Rift-Thorn Mire, and they do not change with the time of day or the story.",
+      "Outside Fort Solid Shorehold, some creatures can appear as a tougher form. In the Savage Mirk they always do. A Giant Mirkfang, including one upgraded from a Mirkfang, is a Mirkfang Matriarch 4% of the time.",
+      "The land tables change as the main story moves on. From the journal entry \"Bring the rune back\", Sceetlers join them. From \"Escort Viend\", Scaalmyr Grunts and Mutated Unwanted join too, and a Grunt brings a Sceetler 52.5% of the time. After \"Scaal defeated\", 95% of Scaalmyr spawns are cancelled and re-rolled elsewhere. Scaalmyr then make up under 1% of land spawns: 0.90% by day and 0.72% at night, or 0.63% and 0.54% in the Withered Mire. The Rift-Thorn Mire falls to about a 46% chance of any spawn each turn.",
+      "Whenever you end a move, on foot or by raft, in medium or deep water anywhere but Fort Solid Shorehold, there is a 2% chance a Mire Serpent surges out beside you. It never appears any other way. At night, each turn has a 50% chance of releasing one to four Firefly lights while fewer than five are about.",
+      "Each new tree's kind is drawn from the area's mix before a spot is chosen. A kind that cannot grow at the chosen spot simply fails, so kinds with a narrow height range, such as Trollgnarl and Cypress, end up rarer than the table suggests.",
+      "Each area is stocked with wild plants, bird nests and skeletons when it is first made. A skeleton is sometimes a treasure chest instead. A chest is a common chest 88.2% of the time, a richer chest 9.8% and a treasure chest 2%. They have value budgets of roughly 3 to 20, 5 to 40 and 10 to 50, filled with a few valuable items rather than many cheap ones.",
+      "A bird nest gives 1 to 7 Feathers (2.5 on average), an Egg or more 40% of the time, and a small trinket 5% of the time. Ground litter gives a Rock, Twigs or both, plus independent chances of extra finds.",
+      "Weather, the time of day and the outdoor temperature are shared by the whole world. When you return to an area it catches up on up to ten days. Plants grow, new Calmia Root plants appear on mud (two per day away, except in the Rift-Thorn Mire), nests and rubble refill, and after a day or more felled trees are gradually replaced toward about 120."
+    ],
+    "related_entities": ["being-17", "being-7", "being-4", "being-10", "being-23", "being-14", "being-13", "item-247", "item-77", "item-87", "nature-4", "nature-6", "nature-7", "nature-17", "nature-20", "nature-13"],
+    "related_pages": ["Fort Solid Shorehold", "Common Bog", "Withered Mire", "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters", "Terrain", "Planting"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "ui-en", "section": "Menus", "key": "NewArea"},
+      {"source": "items-en", "section": "Items", "key": "89"},
+      {"source": "ui-en", "section": "LocTitles", "key": "0.1.2.3.4.5.22.23.100"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "terrain_create_shore.off-grid.areaType100.areaType4"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "popCap24.repeat12.inside_view.spot_is_private.one-group-per-turn"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "ui-en", "section": "Journal", "key": "10.12.29"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "fireflies.night.chance0.5.lt5"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "loot_create_treasure.chest-chance.loot_amountchances"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"}
+    ],
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Area", "Per world", "Notes"],
+        "rows": [
+          [{"page": "Fort Solid Shorehold"}, "1", "On the left or right edge; where every game starts"],
+          [{"page": "Common Bog"}, "Several", "Around the fort, plus a share of the leftover cells"],
+          [{"page": "Withered Mire"}, "0 or more", "A share of the leftover cells"],
+          [{"page": "Drowned Fen"}, "1 or more", "At least one, plus a share of the leftover cells"],
+          [{"page": "Broken Fen"}, "2 to 3", "Treated as open sea by its neighbors"],
+          [{"page": "Savage Mirk"}, "2 to 3", "One holds the Survivors' camp"],
+          [{"page": "Sunken Ancient Ruins"}, "3 to 4", "One holds the Library"],
+          [{"page": "Rift-Thorn Mire"}, "2 to 3", "One sits opposite the fort and leads to the rift depths"],
+          [{"page": "Vast Waters"}, "2 to 6", "Open sea; one may border the fort"]
+        ]
+      },
+      {
+        "after": 4,
+        "columns": ["Creature", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "63.83%", "–"],
+          [{"entity": "being-7"}, "–", "89.29%"],
+          [{"entity": "being-2"}, "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "1.79%"]
+        ]
+      },
+      {
+        "after": 5,
+        "columns": ["Creature", "Tougher form", "Chance", "In the Savage Mirk"],
+        "rows": [
+          [{"entity": "being-10"}, {"entity": "being-23"}, "33%", "Always"],
+          [{"entity": "being-17"}, {"entity": "being-24"}, "33%", "Always"],
+          [{"entity": "being-1"}, {"entity": "being-25"}, "15%", "Always"],
+          [{"entity": "being-11"}, {"entity": "being-29"}, "15%", "Always"],
+          [{"entity": "being-38"}, {"entity": "being-39"}, "20%", "Always"],
+          [{"entity": "being-7"}, {"entity": "being-30"}, "15%", "Always"],
+          [{"entity": "being-39"}, {"entity": "being-37"}, "4%", "4%"]
+        ]
+      },
+      {
+        "after": 8,
+        "columns": ["Tree", "Fort, Common Bog, Broken Fen, Savage Mirk", "Withered Mire", "Drowned Fen", "Sunken Ancient Ruins", "Rift-Thorn Mire"],
+        "rows": [
+          [{"entity": "nature-4"}, "65.18%", "43.67%", "58.01%", "63.53%", "65.18%"],
+          [{"entity": "nature-6"}, "27.93%", "18.72%", "24.86%", "27.23%", "4.19%"],
+          [{"entity": "nature-7"}, "4.90%", "3.28%", "15.25%", "4.78%", "4.90%"],
+          [{"entity": "nature-17"}, "0.99%", "33.33%", "0.88%", "0.97%", "0.99%"],
+          [{"entity": "nature-20"}, "1.00%", "1.00%", "1.00%", "3.50%", "1.00%"],
+          [{"entity": "nature-13"}, "–", "–", "–", "–", "23.74%"]
+        ],
+        "caption": "The first tree in a Sunken Ancient Ruins area is always an Elderwort Shrub. Vast Waters has no trees."
+      },
+      {
+        "after": 9,
+        "columns": ["Area", "Tree attempts", "Calmia Root plants", "Turnip patches", "Cranberry patches", "Bird nests", "Skeletons", "Chance a skeleton is a chest"],
+        "rows": [
+          [{"page": "Fort Solid Shorehold"}, "160 to 240", "8 to 16", "5 to 10", "10 to 16", "8 to 16", "3 to 4", "2.5%"],
+          [{"page": "Common Bog"}, "160 to 240", "8 to 16", "8 to 13", "10 to 16", "8 to 16", "3 to 4", "5%"],
+          [{"page": "Withered Mire"}, "160 to 240", "8 to 16", "5 to 10", "10 to 16", "16 to 24", "3 to 4", "10%"],
+          [{"page": "Drowned Fen"}, "160 to 240", "16 to 24", "5 to 10", "20 to 26", "8 to 16", "3 to 4", "8%"],
+          [{"page": "Broken Fen"}, "48 to 72", "8 to 16", "5 to 10", "10 to 16", "2 to 4", "5 to 8", "25%"],
+          [{"page": "Savage Mirk"}, "160 to 240", "24 to 32", "5 to 10", "10 to 16", "8 to 16", "4 to 6", "10%"],
+          [{"page": "Sunken Ancient Ruins"}, "80 to 112", "8 to 16", "5 to 10", "10 to 16", "8 to 16", "3 to 4", "12.5%"],
+          [{"page": "Rift-Thorn Mire"}, "64 to 96 (32 to 48 in the rift's own area)", "None while the rift is active", "None while the rift is active", "None while the rift is active", "None while the rift is active", "3 to 4", "2.5%"],
+          [{"page": "Vast Waters"}, "None", "None", "None", "None", "None", "None", "–"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      },
+      {
+        "after": 10,
+        "columns": ["Extra find", "Chance per search"],
+        "rows": [
+          ["Flint", "7.5%"],
+          ["Large Maggot", "12.5%"],
+          ["Large Beetle", "12.5%"],
+          ["Frog", "5%"],
+          ["Wakebug or Bursthopper", "3.25%"],
+          ["Baby Firelouse", "1.5%"],
+          ["Fool's Gold", "6%, rising to 16% on the plateaus"],
+          ["Strange Glowing Bug", "1%"],
+          ["Dragon Flint", "0.1%, rising to 0.4% on the high plateau"]
+        ],
+        "caption": "Rolled separately each time you search ground litter."
+      }
+    ]
+    },
+    {
+    "title": "Fort Solid Shorehold",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "People",
+      "Creatures on land",
+      "Creatures in water and on sand",
+      "Trees",
+      "Plants, nests and loot",
+      "Rules near the fort"
+    ],
+    "paragraphs": [
+      "Every game begins here. The area sits on the left or right edge of the world map, so at least one side is beach. Its neighbors are Common Bog areas, except that one of them can be Vast Waters.",
+      "Ordinary mixed swamp with a flattened, open middle. The fort stands in a fenced clearing beside the wooden dock where your boat arrives. Elsewhere lies an abandoned camp next to a rift, with a Campfire and a few supplies left in containers.",
+      "Captain Eir and the fort's Soldier garrison live here, and the fort building leads inside.",
+      "This is the safest area. Creatures here never appear as their tougher forms, and the Mire Serpent never ambushes from the water. Its land table does not change with the story, so no Scaalmyr spawn here. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
+      "The shared water and sand tables apply, without tougher forms.",
+      "The usual mix, mostly Willow and Brambles.",
+      "Skeletons here are the least likely of any area to be treasure chests, and none lie close to the fort.",
+      "Early in the story you cannot build within about thirty tiles of the fort, and the ground around it counts as private. At night the soldiers walk you back inside if you linger nearby, until later in the story. Seeds cannot take within about six tiles of the fort. At one point in the main story Viend will not let you leave the area."
+    ],
+    "related_entities": ["being-6", "being-5", "being-19", "being-0", "being-2", "being-10", "being-1", "being-11", "being-31", "being-39", "being-17", "being-7", "item-38"],
+    "related_pages": ["Areas", "Planting", "Terrain", "Common Bog", "Vast Waters"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "areaType0.TooClose480.MAINQUESTSTAGE13"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "night-escort.MAINQUESTSTAGE15"},
+      {"source": "game-data-0900", "section": "gml_Object_UI_Draw_64", "key": "QuestLeaveBlock.MAINQUESTSTAGE12.areaType0"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.areaType0-fort104"}
+    ],
+    "index_page": "Areas",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Most dry ground and the shore shallows"],
+          [{"tile": "Sand"}, "Beach along the world's edge, and 2 to 6 inland patches"],
+          [{"tile": "Mud"}, "16 to 24 winding streaks on low ground"],
+          [{"tile": "Stone ground"}, "About 48 stony patches and 4 to 8 paved ruin squares"],
+          [{"tile": "Dock planks"}, "The fort's dock, over deep water"],
+          [{"tile": "Slopes"}, "Around hills and plateaus"],
+          [{"tile": "Shallow water"}, "Pool and lake edges, and about 40 puddles"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Off the beach and under the dock"],
+          [{"tile": "Interior floors"}, "Caves behind the cave mouths"]
+        ]
+      },
+      {
+        "after": 3,
+        "columns": ["Creature", "Tougher form", "Day", "Night"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "27.78%", "22.61%"],
+          [{"entity": "being-2"}, "–", "24.69%", "20.10%"],
+          [{"entity": "being-1"}, "Never in this area", "18.52%", "15.08%"],
+          [{"entity": "being-10"}, "Never in this area", "24.69%", "20.10%"],
+          [{"entity": "being-31"}, "–", "1.23%", "1.01%"],
+          [{"entity": "being-11"}, "Never in this area", "3.09%", "20.10%"],
+          [{"entity": "being-39"}, "Never in this area", "–", "1.01%"]
+        ],
+        "caption": "Land tiles. The table never changes with the story."
+      },
+      {
+        "after": 4,
+        "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "Never in this area", "63.83%", "–"],
+          [{"entity": "being-7"}, "Never in this area", "–", "89.29%"],
+          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "Never in this area", "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "–", "1.79%"]
+        ],
+        "caption": "Water and sand tiles use the same tables day and night, at every story stage."
+      },
+      {
+        "after": 5,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "65.18%"],
+          [{"entity": "nature-6"}, "27.93%"],
+          [{"entity": "nature-7"}, "4.90%"],
+          [{"entity": "nature-20"}, "1.00%"],
+          [{"entity": "nature-17"}, "0.99%"]
+        ],
+        "caption": "160 to 240 tree attempts when the area is made."
+      },
+      {
+        "after": 6,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "160 to 240", "160 to 240"],
+          ["Calmia Root plants", "8 to 16", "8 to 16"],
+          ["Turnip patches", "5 to 10", "5 to 10"],
+          ["Cranberry patches", "10 to 16", "10 to 16"],
+          ["Bird nests", "8 to 16", "8 to 16"],
+          ["Skeletons", "3 to 4", "3 to 4"],
+          ["Chance a skeleton is a chest", "2.5%", "–"],
+          ["Rubble with nothing in it", "12%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ],
+    "images": [
+      {"illustration": "area-fort-solid-shorehold-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Common Bog",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "Creatures on land",
+      "Creatures in water and on sand",
+      "Trees",
+      "Plants, nests and loot",
+      "Landmarks"
+    ],
+    "paragraphs": [
+      "Common Bog areas surround Fort Solid Shorehold, and more are scattered across the rest of the map.",
+      "The baseline swamp: a balanced mix of water, open ground and low hills, with every ordinary feature at its usual amount.",
+      "By day expect the Giant Slug, Giant Gnat, Viper and Dreadfly. At night the Mirk Runner, Swamp Troll and Mirkfang come out in greater numbers. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
+      "The shared water and sand tables apply.",
+      "Willow dominates, with Brambles second and only a little Cypress.",
+      "Bogs grow three more wild Turnip patches than other areas. Cranberry patches line the grassy shallows.",
+      "One of the bogs next to the fort holds Ranger Bhato's hideout, with a cellar entrance not far away."
+    ],
+    "related_entities": ["being-12", "being-0", "being-2", "being-10", "being-1", "being-11", "being-3", "being-38", "being-27", "being-13", "being-14", "being-32", "nature-18", "nature-19"],
+    "related_pages": ["Areas", "Fort Solid Shorehold", "Planting", "Terrain"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "ui-en", "section": "Journal", "key": "10.12.29"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "rangerCamp.built_48x32.entrances_64x48.turnips+3"}
+    ],
+    "index_page": "Areas",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Most dry ground and the shore shallows"],
+          [{"tile": "Sand"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen, and 2 to 6 inland patches"],
+          [{"tile": "Mud"}, "16 to 24 winding streaks on low ground"],
+          [{"tile": "Stone ground"}, "About 48 stony patches and 4 to 8 paved ruin squares"],
+          [{"tile": "Slopes"}, "Around hills and plateaus"],
+          [{"tile": "Shallow water"}, "Pool and lake edges, and about 40 puddles"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Lake middles and off every beach"],
+          [{"tile": "Interior floors"}, "Caves behind the cave mouths"]
+        ]
+      },
+      {
+        "after": 2,
+        "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "being-1"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "being-10"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "being-11"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+        ],
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+      },
+      {
+        "after": 3,
+        "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "–", "1.79%"]
+        ],
+        "caption": "Water and sand tiles use the same tables day and night, at every story stage."
+      },
+      {
+        "after": 4,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "65.18%"],
+          [{"entity": "nature-6"}, "27.93%"],
+          [{"entity": "nature-7"}, "4.90%"],
+          [{"entity": "nature-20"}, "1.00%"],
+          [{"entity": "nature-17"}, "0.99%"]
+        ],
+        "caption": "160 to 240 tree attempts when the area is made."
+      },
+      {
+        "after": 5,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "160 to 240", "160 to 240"],
+          ["Calmia Root plants", "8 to 16", "8 to 16"],
+          ["Turnip patches", "8 to 13", "5 to 10"],
+          ["Cranberry patches", "10 to 16", "10 to 16"],
+          ["Bird nests", "8 to 16", "8 to 16"],
+          ["Skeletons", "3 to 4", "3 to 4"],
+          ["Chance a skeleton is a chest", "5%", "–"],
+          ["Rubble with nothing in it", "12%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ],
+    "images": [
+      {"illustration": "area-common-bog-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Withered Mire",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "Creatures on land",
+      "Creatures in water and on sand",
+      "Trees",
+      "Plants, nests and loot"
+    ],
+    "paragraphs": [
+      "Withered Mire areas fill some of the map's leftover cells, so a world can have several or none.",
+      "The highest and driest kind of area. The ground sits well above the waterline and rises into many hills and plateaus, so there are lots of slopes and little water. Sandy and stony patches are common, and old ruins are never turned into boulders here.",
+      "The Firelouse and Raving Unwanted are common here day and night. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
+      "The shared water and sand tables apply. With so much sand, Boulder Crabs are common.",
+      "Grass stays short and thin. Trollgnarl makes up a third of new trees, and trees here die off faster than in most areas.",
+      "Bird nests are twice as plentiful, on the slopes and sand. The stunted grass leaves few tiles for Cranberry Seeds, but the high, dry ground suits turnips, brambles and trollgnarls."
+    ],
+    "related_entities": ["nature-17", "item-234", "being-27", "being-31", "being-7", "being-0", "being-2", "being-10", "being-1", "being-11", "being-3", "being-38", "being-13", "being-14"],
+    "related_pages": ["Areas", "Planting", "Terrain", "Tree health and chopping", "Slopes"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType2-grass-3..5.tree-death+0.0025"}
+    ],
+    "index_page": "Areas",
+    "image_entity": "nature-17",
+    "image_caption": "Trollgnarl trees make up a third of the Withered Mire's trees.",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Short, thin grass on most dry ground"],
+          [{"tile": "Sand"}, "Beaches and 24 inland patches"],
+          [{"tile": "Mud"}, "16 to 24 winding streaks on low ground"],
+          [{"tile": "Stone ground"}, "About 80 stony patches and 4 to 8 paved ruin squares"],
+          [{"tile": "Slopes"}, "Everywhere: the base is higher, with many extra hills"],
+          [{"tile": "Shallow water"}, "Only about 12 puddles and the edges of a few pools"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Lake middles and off every beach"],
+          [{"tile": "Interior floors"}, "Caves behind the cave mouths"]
+        ]
+      },
+      {
+        "after": 2,
+        "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "16.85%", "7.94%", "16.25%", "7.69%", "14.95%", "7.16%"],
+          [{"entity": "being-2"}, "–", "14.98%", "9.52%", "14.44%", "9.23%", "13.29%", "8.60%"],
+          [{"entity": "being-1"}, "15% Deathfly", "11.24%", "9.52%", "10.83%", "9.23%", "9.97%", "8.60%"],
+          [{"entity": "being-10"}, "33% Red Fang", "14.98%", "12.70%", "14.44%", "12.31%", "13.29%", "11.46%"],
+          [{"entity": "being-31"}, "–", "15.73%", "14.60%", "15.16%", "14.15%", "13.95%", "13.18%"],
+          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "2.66%", "2.29%"],
+          [{"entity": "being-11"}, "15% Mirk Mauler", "7.49%", "12.70%", "7.22%", "12.31%", "6.64%", "11.46%"],
+          [{"entity": "being-3"}, "–", "3.75%", "9.52%", "3.61%", "9.23%", "3.32%", "8.60%"],
+          [{"entity": "being-13"}, "–", "–", "–", "3.61%", "3.08%", "3.32%", "2.87%"],
+          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "5.32%", "4.58%"],
+          [{"entity": "being-27"}, "–", "14.98%", "13.97%", "14.44%", "13.54%", "13.29%", "12.61%"],
+          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "9.52%", "–", "9.23%", "–", "8.60%"]
+        ],
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+      },
+      {
+        "after": 3,
+        "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "–", "1.79%"]
+        ],
+        "caption": "Water and sand tiles use the same tables day and night, at every story stage."
+      },
+      {
+        "after": 4,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "43.67%"],
+          [{"entity": "nature-17"}, "33.33%"],
+          [{"entity": "nature-6"}, "18.72%"],
+          [{"entity": "nature-7"}, "3.28%"],
+          [{"entity": "nature-20"}, "1.00%"]
+        ],
+        "caption": "160 to 240 tree attempts when the area is made."
+      },
+      {
+        "after": 5,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "160 to 240", "160 to 240"],
+          ["Calmia Root plants", "8 to 16", "8 to 16"],
+          ["Turnip patches", "5 to 10", "5 to 10"],
+          ["Cranberry patches", "10 to 16", "10 to 16"],
+          ["Bird nests", "16 to 24", "8 to 16"],
+          ["Skeletons", "3 to 4", "3 to 4"],
+          ["Chance a skeleton is a chest", "10%", "–"],
+          ["Rubble with nothing in it", "12%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ]
+    },
+    {
+    "title": "Drowned Fen",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "Creatures on land",
+      "Creatures in water and on sand",
+      "Trees",
+      "Plants, nests and loot",
+      "Landmarks"
+    ],
+    "paragraphs": [
+      "Every world has at least one Drowned Fen, and more appear among the map's leftover cells.",
+      "The wettest land area. Low ground and around 800 shallow pools leave most of it under shallow water, broken up by islands and humps of higher ground.",
+      "On dry land the table is the same as in the Common Bog. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
+      "With so much water, most creatures here come from the water table: Mudfin and Razorfin are everywhere. Ending a move in medium or deep water risks a Mire Serpent.",
+      "Cypress is three times as common as usual, about one new tree in seven.",
+      "Cranberry patches are abundant, and there are twice the usual Calmia Root plants. The shallows suit Cypress Seed Pods, Willow Seeds, Cranberry Seeds and Watercress Seeds.",
+      "Gurb-Gurb's hollow is placed in the first Drowned Fen you enter, decided as you arrive. Smoke gives away its position."
+    ],
+    "related_entities": ["being-26", "being-17", "being-24", "being-4", "nature-7", "nature-19", "item-142", "item-233", "item-232", "item-229", "item-231"],
+    "related_pages": ["Areas", "Planting", "Terrain", "Shallow water", "Common Bog"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_6", "key": "first-visit-landmarks.hut.shipwreck.camp"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType3.puddles800.cranberries+10.calmia16-24"}
+    ],
+    "index_page": "Areas",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Most dry ground and the shore shallows"],
+          [{"tile": "Sand"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen, and 2 to 6 inland patches"],
+          [{"tile": "Mud"}, "16 to 24 winding streaks on low ground"],
+          [{"tile": "Stone ground"}, "About 48 stony patches and 4 to 8 paved ruin squares"],
+          [{"tile": "Slopes"}, "Around hills and plateaus"],
+          [{"tile": "Shallow water"}, "Most of the area: about 800 pools and puddles"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Lake middles and off every beach"],
+          [{"tile": "Interior floors"}, "Caves behind the cave mouths"]
+        ]
+      },
+      {
+        "after": 2,
+        "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "being-1"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "being-10"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "being-11"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+        ],
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+      },
+      {
+        "after": 3,
+        "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "–", "1.79%"]
+        ],
+        "caption": "Water and sand tiles use the same tables day and night, at every story stage."
+      },
+      {
+        "after": 4,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "58.01%"],
+          [{"entity": "nature-6"}, "24.86%"],
+          [{"entity": "nature-7"}, "15.25%"],
+          [{"entity": "nature-20"}, "1.00%"],
+          [{"entity": "nature-17"}, "0.88%"]
+        ],
+        "caption": "160 to 240 tree attempts when the area is made."
+      },
+      {
+        "after": 5,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "160 to 240", "160 to 240"],
+          ["Calmia Root plants", "16 to 24", "8 to 16"],
+          ["Turnip patches", "5 to 10", "5 to 10"],
+          ["Cranberry patches", "20 to 26", "10 to 16"],
+          ["Bird nests", "8 to 16", "8 to 16"],
+          ["Skeletons", "3 to 4", "3 to 4"],
+          ["Chance a skeleton is a chest", "8%", "–"],
+          ["Rubble with nothing in it", "12%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ],
+    "images": [
+      {"illustration": "area-drowned-fen-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Broken Fen",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "Creatures on land",
+      "Creatures in water and on sand",
+      "Trees",
+      "Plants, nests and loot",
+      "Landmarks"
+    ],
+    "paragraphs": [
+      "Each world has two or three Broken Fens. Neighboring areas treat a Broken Fen like open sea, so their shared edges become beaches.",
+      "An archipelago: beaches on all four sides drop into deep water, leaving sandy islands and shallows in between. Only about a third of the usual rocks, logs, trees, nests and plants appear, so it looks sparse and open. The world map draws it as water.",
+      "Most of the area is water or sand, so the water and sand tables supply most creatures. On the few patches of firmer land, the table is the same as in the Common Bog. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
+      "Mudfin and Boulder Crabs are the usual company. Ending a move in medium or deep water risks a Mire Serpent.",
+      "The usual mix, but only 48 to 72 trees to start with. Felled or missing trees regrow toward the usual number over later visits.",
+      "Broken Fens hold the most loot of any area: more skeletons than usual, and a quarter of them are treasure chests.",
+      "Ihar's shipwreck is placed on a shoreline of the first Broken Fen you enter. If it does not fit there, the game tries again in the next Broken Fen you enter."
+    ],
+    "related_entities": ["being-33", "being-17", "being-7", "being-4"],
+    "related_pages": ["Areas", "Terrain", "Sand", "Deep water", "Vast Waters"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "terrain_create_shore.areaType4-all-sides"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_6", "key": "first-visit-landmarks.hut.shipwreck.camp"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "loot_create_treasure.chest-chance.loot_amountchances"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"}
+    ],
+    "index_page": "Areas",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Most dry ground and the shore shallows"],
+          [{"tile": "Sand"}, "Beaches on all four sides and around the islands"],
+          [{"tile": "Mud"}, "About 5 to 7 streaks"],
+          [{"tile": "Stone ground"}, "About 14 stony patches and 1 to 2 paved ruin squares"],
+          [{"tile": "Slopes"}, "A few low hills"],
+          [{"tile": "Shallow water"}, "Around the islands, and about 5 puddles"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Most of the area"],
+          [{"tile": "Interior floors"}, "Caves behind the cave mouths"]
+        ]
+      },
+      {
+        "after": 2,
+        "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "being-1"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "being-10"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "being-11"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+        ],
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+      },
+      {
+        "after": 3,
+        "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "–", "1.79%"]
+        ],
+        "caption": "Water and sand tiles use the same tables day and night, at every story stage."
+      },
+      {
+        "after": 4,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "65.18%"],
+          [{"entity": "nature-6"}, "27.93%"],
+          [{"entity": "nature-7"}, "4.90%"],
+          [{"entity": "nature-20"}, "1.00%"],
+          [{"entity": "nature-17"}, "0.99%"]
+        ],
+        "caption": "48 to 72 tree attempts when the area is made."
+      },
+      {
+        "after": 5,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "48 to 72", "160 to 240"],
+          ["Calmia Root plants", "8 to 16", "8 to 16"],
+          ["Turnip patches", "5 to 10", "5 to 10"],
+          ["Cranberry patches", "10 to 16", "10 to 16"],
+          ["Bird nests", "2 to 4", "8 to 16"],
+          ["Skeletons", "5 to 8", "3 to 4"],
+          ["Chance a skeleton is a chest", "25%", "–"],
+          ["Rubble with nothing in it", "12%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ],
+    "images": [
+      {"illustration": "area-broken-fen-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Savage Mirk",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "Creatures on land",
+      "The Terror",
+      "Creatures in water and on sand",
+      "Trees",
+      "Plants, nests and loot",
+      "Landmarks"
+    ],
+    "paragraphs": [
+      "Each world has two or three Savage Mirk areas.",
+      "The terrain looks like an ordinary bog, but Calmia Root plants are more plentiful here than anywhere else.",
+      "The most dangerous kind of area: every creature with a tougher form always appears as it. The Viper is always a Red Fang, the Dreadfly a Deathfly, the Mirk Runner a Mirk Mauler and the Mirkfang a Giant Mirkfang. 4% of Giant Mirkfang are a Mirkfang Matriarch. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
+      "At night in the Savage Mirk that holds the Survivors' camp, while Wilda's request to kill The Terror is still open, The Terror joins the land table if it is not already about. It cannot appear on private ground.",
+      "Mudfin always come as Razorfin and Boulder Crabs as Titanspine Crabs.",
+      "The usual mix, mostly Willow and Brambles.",
+      "Skeletons are more numerous than usual, and one in ten is a treasure chest.",
+      "The Survivors' camp is built in the first Savage Mirk you enter, with torchlight pointing the way. Wilda, the Survivor group and Grand Mother live there. Building close to the camp is not allowed. Rifts near the camp go dead, and vines, skeletons and chests right beside it are cleared."
+    ],
+    "related_entities": ["being-23", "being-24", "being-25", "being-29", "being-39", "being-30", "being-37", "being-40", "being-34", "being-35", "being-36", "item-142"],
+    "related_pages": ["Areas", "Survivors' camp", "Terrain"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_6", "key": "first-visit-landmarks.hut.shipwreck.camp"},
+      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "TooCloseCamp420"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "terror25.night.campQUESTstage0.building_48x48_tall"}
+    ],
+    "index_page": "Areas",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Most dry ground and the shore shallows"],
+          [{"tile": "Sand"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen, and 2 to 6 inland patches"],
+          [{"tile": "Mud"}, "16 to 24 winding streaks on low ground"],
+          [{"tile": "Stone ground"}, "About 48 stony patches and 4 to 8 paved ruin squares"],
+          [{"tile": "Slopes"}, "Around hills and plateaus"],
+          [{"tile": "Shallow water"}, "Pool and lake edges, and about 40 puddles"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Lake middles and off every beach"],
+          [{"tile": "Interior floors"}, "Caves behind the cave mouths"]
+        ]
+      },
+      {
+        "after": 2,
+        "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "being-2"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
+          [{"entity": "being-1"}, "Always Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
+          [{"entity": "being-10"}, "Always Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
+          [{"entity": "being-31"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "being-32"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
+          [{"entity": "being-11"}, "Always Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
+          [{"entity": "being-3"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
+          [{"entity": "being-13"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
+          [{"entity": "being-14"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "being-27"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
+          [{"entity": "being-38"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+        ],
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+      },
+      {
+        "after": 3,
+        "columns": ["Creature", "Appears as", "Night, early", "Night, from Bring the rune back", "Night, from Escort Viend"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "8.77%", "8.47%", "7.84%"],
+          [{"entity": "being-2"}, "–", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "being-1"}, "Always Deathfly", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "being-10"}, "Always Red Fang", "14.04%", "13.56%", "12.54%"],
+          [{"entity": "being-31"}, "–", "2.11%", "2.03%", "1.88%"],
+          [{"entity": "being-32"}, "–", "–", "–", "2.51%"],
+          [{"entity": "being-11"}, "Always Mirk Mauler", "14.04%", "13.56%", "12.54%"],
+          [{"entity": "being-3"}, "–", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "being-13"}, "–", "–", "3.39%", "3.13%"],
+          [{"entity": "being-14"}, "–", "–", "–", "5.02%"],
+          [{"entity": "being-27"}, "–", "1.40%", "1.36%", "1.25%"],
+          [{"entity": "being-38"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "being-40"}, "–", "17.54%", "16.95%", "15.67%"]
+        ],
+        "caption": "Land tiles at night in the Savage Mirk that holds the Survivors' camp, while Wilda's request to kill The Terror is open and The Terror is not already in the area."
+      },
+      {
+        "after": 4,
+        "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "Always Razorfin", "63.83%", "–"],
+          [{"entity": "being-7"}, "Always Titanspine Crab", "–", "89.29%"],
+          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "Always Deathfly", "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "–", "1.79%"]
+        ],
+        "caption": "Water and sand tiles use the same tables day and night, at every story stage."
+      },
+      {
+        "after": 5,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "65.18%"],
+          [{"entity": "nature-6"}, "27.93%"],
+          [{"entity": "nature-7"}, "4.90%"],
+          [{"entity": "nature-20"}, "1.00%"],
+          [{"entity": "nature-17"}, "0.99%"]
+        ],
+        "caption": "160 to 240 tree attempts when the area is made."
+      },
+      {
+        "after": 6,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "160 to 240", "160 to 240"],
+          ["Calmia Root plants", "24 to 32", "8 to 16"],
+          ["Turnip patches", "5 to 10", "5 to 10"],
+          ["Cranberry patches", "10 to 16", "10 to 16"],
+          ["Bird nests", "8 to 16", "8 to 16"],
+          ["Skeletons", "4 to 6", "3 to 4"],
+          ["Chance a skeleton is a chest", "10%", "–"],
+          ["Rubble with nothing in it", "12%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ],
+    "images": [
+      {"illustration": "area-savage-mirk-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Sunken Ancient Ruins",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "Creatures on land",
+      "Creatures in water and on sand",
+      "Trees",
+      "Plants, nests and loot"
+    ],
+    "paragraphs": [
+      "Each world has three or four Sunken Ancient Ruins. The Library is in one of them, chosen at random at least two cells from the fort and away from the rift.",
+      "Ruins are everywhere: stone floors with broken walls, paved paths and many crumbling structures. Most rocky outcrops are cellar entrances or ruined buildings rather than caves, and almost all loose rocks are rubble.",
+      "Toadkin are the most common creatures, and three in four come as a pair. The land table never changes with the story, so no Scaalmyr spawn here. Creatures that appear on land here are drawn from the table below. Night runs from dusk to dawn. Water and sand tiles use the shared tables underneath.",
+      "The shared water and sand tables apply.",
+      "Only about half as many trees as usual. The first tree placed is always an Elderwort Shrub, so each of these areas has at least one.",
+      "Treasure chests are common, but more than half of the rubble piles have been picked clean."
+    ],
+    "related_entities": ["being-21", "being-1", "being-2", "being-10", "being-11", "being-38", "being-0", "nature-20"],
+    "related_pages": ["Areas", "Terrain", "Stone ground", "Interior floors"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "create_solid.areaType22.entrances->21.building_128x96->20"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "rubble59-60.areaType22.nothing0.55"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "libraryArea.dist2-fort.dist1.2-rift.areaType22"}
+    ],
+    "index_page": "Areas",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Most dry ground and the shore shallows"],
+          [{"tile": "Sand"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen, and 2 to 6 inland patches"],
+          [{"tile": "Mud"}, "16 to 24 winding streaks on low ground"],
+          [{"tile": "Stone ground"}, "Stony patches, 32 to 48 large paved ruin squares and paved paths"],
+          [{"tile": "Slopes"}, "Around hills and plateaus"],
+          [{"tile": "Shallow water"}, "Pool and lake edges, and about 40 puddles"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Lake middles and off every beach"],
+          [{"tile": "Interior floors"}, "Cellars and ruined buildings behind most rocky outcrops"]
+        ]
+      },
+      {
+        "after": 2,
+        "columns": ["Creature", "Tougher form", "Day", "Night", "Notes"],
+        "rows": [
+          [{"entity": "being-0"}, "–", "3.68%", "2.94%", "–"],
+          [{"entity": "being-2"}, "–", "14.71%", "11.76%", "–"],
+          [{"entity": "being-1"}, "15% Deathfly", "22.06%", "17.65%", "–"],
+          [{"entity": "being-10"}, "33% Red Fang", "14.71%", "11.76%", "–"],
+          [{"entity": "being-11"}, "15% Mirk Mauler", "11.76%", "23.53%", "–"],
+          [{"entity": "being-21"}, "–", "33.09%", "26.47%", "75% come as a pair"],
+          [{"entity": "being-38"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "5.88%", "–"]
+        ],
+        "caption": "Land tiles. The table never changes with the story."
+      },
+      {
+        "after": 3,
+        "columns": ["Creature", "Tougher form", "Water tiles", "Sand tiles"],
+        "rows": [
+          [{"entity": "being-17"}, "33% Razorfin", "63.83%", "–"],
+          [{"entity": "being-7"}, "15% Titanspine Crab", "–", "89.29%"],
+          [{"entity": "being-2"}, "–", "31.91%", "5.36%"],
+          [{"entity": "being-1"}, "15% Deathfly", "4.26%", "3.57%"],
+          [{"entity": "being-31"}, "–", "–", "1.79%"]
+        ],
+        "caption": "Water and sand tiles use the same tables day and night, at every story stage."
+      },
+      {
+        "after": 4,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "63.53%"],
+          [{"entity": "nature-6"}, "27.23%"],
+          [{"entity": "nature-7"}, "4.78%"],
+          [{"entity": "nature-20"}, "3.50%"],
+          [{"entity": "nature-17"}, "0.97%"]
+        ],
+        "caption": "80 to 112 tree attempts when the area is made."
+      },
+      {
+        "after": 5,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "80 to 112", "160 to 240"],
+          ["Calmia Root plants", "8 to 16", "8 to 16"],
+          ["Turnip patches", "5 to 10", "5 to 10"],
+          ["Cranberry patches", "10 to 16", "10 to 16"],
+          ["Bird nests", "8 to 16", "8 to 16"],
+          ["Skeletons", "3 to 4", "3 to 4"],
+          ["Chance a skeleton is a chest", "12.5%", "–"],
+          ["Rubble with nothing in it", "55%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ],
+    "images": [
+      {"illustration": "area-sunken-ancient-ruins-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Rift-Thorn Mire",
+    "section_titles": [
+      "Where it is",
+      "Landscape",
+      "Creatures",
+      "Trees",
+      "Plants, nests and loot",
+      "After the rift"
+    ],
+    "paragraphs": [
+      "Each world has two or three Rift-Thorn Mires. One always sits directly opposite Fort Solid Shorehold on the world map and holds the way down into the rift depths.",
+      "The rift has corrupted the land. Pools of goo spread across the ground and Rift Grass replaces ordinary grass. Rifts dot the area, and areas near the rift's own area also get some.",
+      "Rift creatures rule here on every kind of ground, even in the water, from the start of the game. No animals, Mudfin or Boulder Crabs spawn here, but a Mire Serpent can still surge out of medium or deep water.",
+      "Far fewer trees, and about a quarter are Rift Vine. Trees die off faster here than anywhere else.",
+      "While the rift is active, no lilypads, watercress, bird nests, Calmia Root plants, wild turnips or cranberries are placed, and Calmia Root does not come back on later visits. Crops on Rift Grass wither and goo cannot be planted, so this is a poor place for a garden.",
+      "After \"Scaal defeated\", 95% of rift creature spawns are cancelled, leaving about a 46% chance of any spawn each turn. Rift Grass and Rift Vine stop growing, and crops still cannot fully ripen."
+    ],
+    "related_entities": ["being-22", "being-14", "being-13", "being-15", "being-32", "being-4", "nature-12", "nature-13"],
+    "related_pages": ["Areas", "Fort Solid Shorehold", "Goo", "Grassy ground", "Planting", "Interior floors", "Tree health and chopping"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType23.riftDeg.tree-death+0.005"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "obj_rift.dist2.5.areaType23-max5.endedRift-gate"}
+    ],
+    "index_page": "Areas",
+    "tables": [
+      {
+        "after": 1,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Soil"}, "The base ground under everything"],
+          [{"tile": "Grassy ground"}, "Rift Grass over most dry ground"],
+          [{"tile": "Sand"}, "Beaches on edges facing the world's edge, Vast Waters or a Broken Fen, and 2 to 6 inland patches"],
+          [{"tile": "Mud"}, "16 to 24 winding streaks on low ground"],
+          [{"tile": "Stone ground"}, "About 48 stony patches and 4 to 8 paved ruin squares"],
+          [{"tile": "Goo"}, "48 to 56 spreading pools"],
+          [{"tile": "Slopes"}, "Around hills and plateaus"],
+          [{"tile": "Shallow water"}, "Pool and lake edges, and about 40 puddles"],
+          [{"tile": "Medium water"}, "Ponds and lakes"],
+          [{"tile": "Deep water"}, "Lake middles and off every beach"],
+          [{"tile": "Interior floors"}, "Caves, and the rift depths below the rift's own area"]
+        ]
+      },
+      {
+        "after": 2,
+        "columns": ["Creature", "Share, day and night", "Notes"],
+        "rows": [
+          [{"entity": "being-14"}, "52.63%", "52.5% bring a Sceetler"],
+          [{"entity": "being-13"}, "26.32%", "–"],
+          [{"entity": "being-15"}, "17.54%", "–"],
+          [{"entity": "being-32"}, "3.51%", "–"]
+        ],
+        "caption": "Every tile, land, water or sand. Rift creatures have no tougher forms."
+      },
+      {
+        "after": 3,
+        "columns": ["Tree", "Share of new trees"],
+        "rows": [
+          [{"entity": "nature-4"}, "65.18%"],
+          [{"entity": "nature-13"}, "23.74%"],
+          [{"entity": "nature-7"}, "4.90%"],
+          [{"entity": "nature-6"}, "4.19%"],
+          [{"entity": "nature-20"}, "1.00%"],
+          [{"entity": "nature-17"}, "0.99%"]
+        ],
+        "caption": "64 to 96 tree attempts when the area is made; half that in the rift's own area."
+      },
+      {
+        "after": 4,
+        "columns": ["Feature", "Here", "Usual"],
+        "rows": [
+          ["Tree attempts", "64 to 96 (32 to 48 in the rift's own area)", "160 to 240"],
+          ["Calmia Root plants", "None while the rift is active", "8 to 16"],
+          ["Turnip patches", "None while the rift is active", "5 to 10"],
+          ["Cranberry patches", "None while the rift is active", "10 to 16"],
+          ["Bird nests", "None while the rift is active", "8 to 16"],
+          ["Skeletons", "3 to 4", "3 to 4"],
+          ["Chance a skeleton is a chest", "2.5%", "–"],
+          ["Rubble with nothing in it", "12%", "12%"]
+        ],
+        "caption": "Rolled once when the area is first made. Wild turnips and cranberries spread into small patches. Skeletons are 2 more on the easiest difficulty and 1 to 2 fewer on the hardest. Three in four bird nests hold feathers and eggs; empty ones refill after 4 to 12 days."
+      }
+    ],
+    "images": [
+      {"illustration": "area-rift-thorn-mire-illustration", "after": 0}
+    ]
+    },
+    {
+    "title": "Vast Waters",
+    "section_titles": [
+      "Where it is",
+      "What it is",
+      "Entering",
+      "Swimming and drowning",
+      "Creatures"
+    ],
+    "paragraphs": [
+      "Each world has between two and six Vast Waters areas, and one can sit beside Fort Solid Shorehold. Land areas next to one get a beach along the shared edge.",
+      "Open sea. The whole area is deep water at swimming depth, with no ground, trees, plants, nests or skeletons. The world map draws it as water.",
+      "You can travel in from any neighboring edge, swimming or on a raft.",
+      "Swimming costs 0.15 stamina a turn, more when overburdened, so a full bar lasts about six or seven turns. When stamina runs out you start drowning, and four turns later you die. You cannot attack while swimming. A raft never swims or drowns and moves at 1.8 AP a step, so it is the safe way across.",
+      "Every tile is water, so every creature comes from the water table. Normal tougher-form odds apply. Ending a move here, swimming or rafting, has a 2% chance of a Mire Serpent."
+    ],
+    "related_entities": ["being-17", "being-24", "being-2", "being-1", "being-25", "being-4", "item-170"],
+    "related_pages": ["Areas", "Deep water", "Broken Fen", "Stamina"],
+    "confidence": "observed",
+    "evidence": [
+      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_Object_UI_Draw_64", "key": "edge-travel.grid-bounds-only.state24"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+      {"source": "game-data-0900", "section": "gml_Object_obj_player_Alarm_0", "key": "drownPoints>=4"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "raftMoveCost1.8.player_raft_ensure"}
+    ],
+    "index_page": "Areas",
+    "image_entity": "being-17",
+    "image_caption": "Mudfin are the most common creature in the Vast Waters.",
+    "tables": [
+      {
+        "after": 0,
+        "columns": ["Ground", "In this area"],
+        "rows": [
+          [{"tile": "Deep water"}, "The whole area"]
+        ]
+      },
+      {
+        "after": 4,
+        "columns": ["Creature", "Share", "Tougher form"],
+        "rows": [
+          [{"entity": "being-17"}, "63.83%", "33% Razorfin"],
+          [{"entity": "being-2"}, "31.91%", "–"],
+          [{"entity": "being-1"}, "4.26%", "15% Deathfly"]
+        ]
+      }
+    ]
     }
   ],
   "item_effects": [
@@ -9749,7 +10823,7 @@
     {
       "entity": "item-230",
       "paragraphs": [
-        "Plant Turnip Seeds on dry land, starting a little way back from the water's edge and reaching all the way up to the highest plateaus. The tile must be ordinary soil or grass: stone, sand and slopes refuse them, as does any tile under a solid object."
+        "Plant Turnip Seeds on dry land from ground height −0.05 up to 0.925: low ground a little back from the waterline, both plateaus, and almost to the top of the high plateau. Soil, grass and mud all take them. Stone, sand, slopes and tiles under solid objects refuse them. See Planting for the height bands."
       ],
       "confidence": "observed",
       "evidence": [
@@ -9768,7 +10842,7 @@
     {
       "entity": "item-229",
       "paragraphs": [
-        "Cranberry Seeds only take in shallow water that has thick grass or moss growing through it. Such tiles mostly sit in the narrow grassy fringe where the shore meets the water. Bare water, muddy shallows (grass on mud never grows thick enough), slopes and tiles under solid objects refuse them.",
+        "Cranberry Seeds only take in shallow water that has thick grass or moss growing through it, which in practice means the shore shallows. Bare open shallows, deeper water, muddy shallows (grass on mud never grows thick enough), slopes and tiles under solid objects refuse them.",
         "Thick grass is scarcer in Withered Mire, and in Rift-Thorn Mire once the rift has opened, so good cranberry tiles are harder to find there."
       ],
       "confidence": "observed",
@@ -9793,7 +10867,7 @@
     {
       "entity": "item-228",
       "paragraphs": [
-        "Plant Elderberry Seeds anywhere on land except right at the waterline, from the shore up to the highest plateaus. Unlike most seeds they accept sandy ground. Stone, slopes and tiles under solid objects refuse them. They grow into an Elderwort Shrub."
+        "Plant Elderberry Seeds at ground height −0.15 and above: from partway up the waterline band to the top of the high plateau. Unlike most seeds they accept sand. Stone, slopes and tiles under solid objects refuse them. They grow into an Elderwort Shrub."
       ],
       "confidence": "observed",
       "evidence": [
@@ -9812,7 +10886,7 @@
     {
       "entity": "item-231",
       "paragraphs": [
-        "Plant Watercress Seeds out in open water: past the shallow strip along the shore, through medium-depth water, to just beyond where the deepest water begins. The bottom does not matter, only the depth. Shore shallows, dry land and the open deep are too shallow or too deep."
+        "Plant Watercress Seeds at ground height −0.45 to −0.26: the deeper part of the open shallows, all of medium water, and deep water down to waist depth. The bottom does not matter, only the depth. The shore shallows and dry land are too high, and deep water where you would swim is too deep."
       ],
       "confidence": "observed",
       "evidence": [
@@ -9831,7 +10905,7 @@
     {
       "entity": "item-227",
       "paragraphs": [
-        "Plant Bramble Seeds on dry soil or grass well back from the water, anywhere up to the highest plateaus. Stone, sand, slopes and tiles under solid objects refuse them."
+        "Plant Bramble Seeds at ground height 0.0667 and above: the upper part of low ground and both plateaus. Stone, sand, slopes and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [
@@ -9850,7 +10924,7 @@
     {
       "entity": "item-232",
       "paragraphs": [
-        "Plant Willow Seeds from the shallowest water at the shore's edge up across low and middle ground and onto the first raised plateau, but not the higher plateau above it. Stone, sand, slopes and tiles under solid objects refuse them."
+        "Plant Willow Seeds at ground height −0.25 to 0.425: the shore shallows, the waterline, low ground and the first plateau, but not the high plateau. Stone, sand, slopes and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [
@@ -9869,7 +10943,7 @@
     {
       "entity": "item-233",
       "paragraphs": [
-        "Plant Cypress Seed Pods in shallow and medium-depth water or on low and middle ground. They stop where the land starts to rise, so raised plateaus refuse them, and so do stone, sand, slopes and tiles under solid objects."
+        "Plant Cypress Seed Pods at ground height −0.35 to 0.195: the upper half of medium water, both shallow bands, the waterline and low ground. Both plateaus are too high. Stone, sand, slopes and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [
@@ -9888,7 +10962,7 @@
     {
       "entity": "item-234",
       "paragraphs": [
-        "Trollgnarl Seed Pods only take on high ground: the flat tops of raised plateaus, away from the slopes at their edges. On the lowest plateaus, the lower parts can still be too low. Stone, sand and tiles under solid objects refuse them."
+        "Trollgnarl Seed Pods only take at ground height 0.31 and above: the upper part of the first plateau and the high plateau, away from the slopes at their edges. Stone, sand and tiles under solid objects refuse them."
       ],
       "confidence": "observed",
       "evidence": [

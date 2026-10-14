@@ -34,6 +34,23 @@ function p.creature(frame)
         :attr('title', title.text):attr('aria-label', title.text):wikitext(frame:preprocess(markup)))
 end
 
+function p.tile(frame)
+    local value = argument(frame)
+    if not value or #value > 160 then
+        return failure('Tile requires a registered terrain page title (at most 160 bytes).')
+    end
+    local title = mw.title.new(value)
+    if not title or title.namespace ~= 0 or title.isExternal or title.fragment ~= '' then
+        return failure('Tile requires a main-namespace terrain page title without a section fragment.')
+    end
+    local markup = assets().tiles[title.text]
+    if not markup then
+        return failure('Unknown tile title. Use a registered terrain page title.')
+    end
+    return tostring(mw.html.create('span'):addClass('mirklurk-tile')
+        :attr('title', title.text):attr('aria-label', title.text):wikitext(frame:preprocess(markup)))
+end
+
 function p.coins(frame)
     local value = argument(frame)
     if not value or #value < 1 or #value > 18 or not value:match('^[0-9]+$') then

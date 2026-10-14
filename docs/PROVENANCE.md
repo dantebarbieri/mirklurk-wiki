@@ -526,8 +526,19 @@ continuation paragraph. Explicit related-guide and related-entity names become
 safe links without treating prose as executable wikitext.
 Optional `index_page` names another reviewed guide that is not itself indexed;
 the guide then links back to that index instead of Game mechanics and the Main
-Page, and the index lists its pages. Planting, Terrain and the Biomes index with
-one guide per zone kind follow this pattern.
+Page, and the index lists its pages. Terrain indexes one guide per ground kind and
+Areas one guide per area kind (the game's own word; it never says biome or zone).
+Optional `tables` (at most 12) and `images` (at most 12) follow a section index
+given by `after`. A table has 1 to 10 column headings, 1 to 64 rows and an
+optional caption; each cell is literal text or exactly one `entity`, `page` or
+`tile` reference. Entity cells reuse the Item and Creature templates or the
+ordinary icon link, page cells must be reviewed guides, and tile cells must be
+Terrain-indexed pages, rendered with `{{Tile}}`. Placed images name an approved
+illustration whose `guide` target is that page (or that has no guide target).
+Percentages in the area and tile tables are computed from the game's spawn,
+tree and generation weights and rounded to two decimals; tougher-form odds are
+listed separately. Guides with numeric tables may cite up to sixteen evidence
+references instead of eight.
 
 The meter pages own their contribution thresholds and ordinary losses;
 Wellbeing owns the combination, rounding, active-effect and shared difficulty

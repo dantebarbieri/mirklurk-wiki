@@ -11,6 +11,7 @@ DISPLAY_FILES = {
     "Template:Attack grid": "templates/Attack_grid.wiki",
     "Template:Creature": "templates/Creature.wiki",
     "Template:Item": "templates/Item.wiki",
+    "Template:Tile": "templates/Tile.wiki",
     "Template:Recipe row": "templates/Recipe_row.wiki",
     "Template:Ware row": "templates/Ware_row.wiki",
     "Template:Unverified": "templates/Unverified.wiki",
@@ -101,7 +102,7 @@ def lua_string(text):
     return "[" + equals + "[" + ("\n" if text.startswith("[") else "") + text + "]" + equals + "]"
 
 
-def display_pages(root, coin_icons, shield_icons, creatures, items):
+def display_pages(root, coin_icons, shield_icons, creatures, items, tiles=None):
     pages = {title: read_authored(root, title, filename, directory="",
                                  limit=16 * 1024 if title.startswith("Module:") else 4 * 1024)
              for title, filename in DISPLAY_FILES.items()}
@@ -117,6 +118,9 @@ def display_pages(root, coin_icons, shield_icons, creatures, items):
         + "    },\n    items = {\n"
         + "".join(f"        [ {lua_string(title)} ] = {lua_string(markup)},\n"
                   for title, markup in sorted(items.items()))
+        + "    },\n    tiles = {\n"
+        + "".join(f"        [ {lua_string(title)} ] = {lua_string(markup)},\n"
+                  for title, markup in sorted((tiles or {}).items()))
         + "    }\n}\n"
     )
     return pages

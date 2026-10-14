@@ -15,7 +15,7 @@ from wiki_acquisition import validate_acquisition
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
-MAX_CATALOG_BYTES = 448 * 1024
+MAX_CATALOG_BYTES = 512 * 1024
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS, "NPCs", "Source provenance", "Loot mechanics"}
 VALUE_LINK = "[[Currency and trading#currency-trade-standard-value|Value]]"
 VALUE_NOTE = ("Merchants sell at this value and pay it for an item in full condition; "
@@ -254,6 +254,53 @@ def validate_category_graph(categories):
             raise DataError("taxonomy: empty category leaf")
 
 
+def _guide_blocks(guide, sections, entities, guides):
+    """Structured tables and illustration placements that follow a guide section."""
+    tables = guide.get("tables", [])
+    if not isinstance(tables, list) or len(tables) > 12:
+        raise DataError("guide.tables: expected at most twelve tables")
+    for table in tables:
+        _object(table, {"after", "columns", "rows"}, {"caption"}, "guide.table")
+        if type(table["after"]) is not int or not 0 <= table["after"] < sections:
+            raise DataError("guide.table.after: expected an existing section index")
+        if "caption" in table:
+            _text(table["caption"], "guide.table.caption", 600)
+        columns = table["columns"]
+        if not isinstance(columns, list) or not 1 <= len(columns) <= 10:
+            raise DataError("guide.table.columns: expected one to ten headings")
+        for heading in columns:
+            _text(heading, "guide.table.column", 80)
+        rows = table["rows"]
+        if not isinstance(rows, list) or not 1 <= len(rows) <= 64:
+            raise DataError("guide.table.rows: expected one to sixty-four rows")
+        for row in rows:
+            if not isinstance(row, list) or len(row) != len(columns):
+                raise DataError("guide.table.row: expected one cell per column")
+            for cell in row:
+                if isinstance(cell, str):
+                    _text(cell, "guide.table.cell", 300)
+                    continue
+                if not isinstance(cell, dict) or len(cell) != 1:
+                    raise DataError("guide.table.cell: expected text or one entity, page, or tile reference")
+                (kind, target), = cell.items()
+                if kind == "entity" and target in entities:
+                    continue
+                if kind in ("page", "tile") and target in guides:
+                    continue
+                raise DataError("guide.table.cell: unknown entity or unreviewed guide reference")
+    images = guide.get("images", [])
+    if not isinstance(images, list) or len(images) > 12:
+        raise DataError("guide.images: expected at most twelve placed illustrations")
+    placed = set()
+    for image in images:
+        _object(image, {"illustration", "after"}, set(), "guide.image")
+        if not isinstance(image["illustration"], str) or image["illustration"] in placed:
+            raise DataError("guide.image.illustration: expected a unique illustration ID")
+        placed.add(image["illustration"])
+        if type(image["after"]) is not int or not 0 <= image["after"] < sections:
+            raise DataError("guide.image.after: expected an existing section index")
+
+
 def validate_catalog(catalog, data):
     _object(catalog, {"schema_version", "pages", "classifications", "entry_links"},
             {"stations", "entry_display", "unit_prices", "currency", "taxonomy", "state_history", "guides",
@@ -307,7 +354,7 @@ def validate_catalog(catalog, data):
     guides_seen = set()
     for guide in _records(catalog.get("guides", []), "guides"):
         _object(guide, {"title", "paragraphs", "related_entities", "confidence", "evidence"},
-                {"related_pages", "image_entity", "image_caption", "section_titles", "index_page"}, "guide")
+                {"related_pages", "image_entity", "image_caption", "section_titles", "index_page", "tables", "images"}, "guide")
         title = _title(guide["title"])
         if title not in guide_titles or title in guides_seen:
             raise DataError("guide: duplicate or unsupported canonical owner")
@@ -348,8 +395,9 @@ def validate_catalog(catalog, data):
             if not isinstance(identity, str) or identity not in required or entities[identity]["category"] == "damage_class":
                 raise DataError("guide: image must reference a documented illustrated entity")
             _text(guide["image_caption"], "guide.image_caption", 500)
+        _guide_blocks(guide, len(guide["paragraphs"]), required, registered_guides)
         _confidence(guide["confidence"], "guide.confidence")
-        _evidence(guide["evidence"], sources, "guide.evidence")
+        _evidence(guide["evidence"], sources, "guide.evidence", 16)
     effects_seen = set()
     for effect in _records(catalog.get("item_effects", []), "item effects"):
         _object(effect, {"entity", "paragraphs", "confidence", "evidence"}, set(), "item effect")

@@ -131,6 +131,16 @@ anchors and destinations. MediaWiki's automatically generated category member
 labels remain plain text links; templates cannot change those native labels.
 No skin hooks, JavaScript or duplicate member directory is added.
 
+## Tile
+
+`{{Tile|Mud}}` or `{{Tile|Deep water}}` displays the reviewed ground-tile
+sprite and a link to that ground's page. Only the pages indexed by Terrain
+are registered; the sprite comes from the guide's `role: "tile"` illustration
+through `pixel_image()`, and a ground page without approved tile art keeps its
+name link. Area names, item or creature names, namespaces, section fragments,
+empty input and titles over 160 bytes produce visible errors. Terrain lists its
+pages with this template, and guide tables use it for `tile` cells.
+
 ## Coins
 
 `{{Coins|1234}}` displays **1 gold 2 silver 34 copper**, with the approved

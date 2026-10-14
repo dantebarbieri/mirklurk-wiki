@@ -12848,6 +12848,653 @@
         "height": 80,
         "source_scale": 1
       }
+    },
+    {
+      "id": "tile-soil-illustration",
+      "guide": "Soil",
+      "file_title": "File:Tile-Soil.png",
+      "caption": "Soil ground tile at middle height.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "f797c6933a2c831eceecaefb424efaaf237eb71fb60a2780b3560c196ad055ab",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_lower",
+          "key": "frame 32"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-soil-high-illustration",
+      "guide": "Soil",
+      "file_title": "File:Tile-Soil-high.png",
+      "caption": "Soil on the highest ground, the lightest of the five shades.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "818ff50a3dae63511ccdb72fc21272207c40eac73edefd853830fa920385f2b2",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_lower",
+          "key": "frame 16"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-soil-low-illustration",
+      "guide": "Soil",
+      "file_title": "File:Tile-Soil-low.png",
+      "caption": "Soil at the lowest heights, the darkest shade, as seen under water.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "6629078da0de481ff2bd8a1bac2bce5e882678e5834addcd4b09659c47908478",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_lower",
+          "key": "frame 48"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-grassy-ground-illustration",
+      "guide": "Grassy ground",
+      "file_title": "File:Tile-Grassy-ground.png",
+      "caption": "Thick grass ground tile over soil.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "f5d6a1128f41b58cd3392689907c379db9ea5b847fd6562ad3e719e99415e420",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_grass",
+          "key": "frame 12"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-short-grass-illustration",
+      "guide": "Grassy ground",
+      "file_title": "File:Tile-Short-grass.png",
+      "caption": "Short grass over soil.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "9c5cf4e4baa5dd29fd7ecf20cd53f18f3305c996d0995e4e06a53e9dd8bcc6ac",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_grass",
+          "key": "frame 4"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-moss-ground-illustration",
+      "guide": "Grassy ground",
+      "file_title": "File:Tile-Moss-ground.png",
+      "caption": "Moss over soil.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "b8601edb52b1725abe270809bd92a58947afa30b78998e03699cc7735292631c",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_grass",
+          "key": "frame 21"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-rift-grass-illustration",
+      "guide": "Grassy ground",
+      "file_title": "File:Tile-Rift-grass.png",
+      "caption": "Rift grass over soil.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "ed839657e3d7f648ce1acec9b9ccdffc87797c14194d87a49664ea4f879d1431",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_grass",
+          "key": "frame 37"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-sand-illustration",
+      "guide": "Sand",
+      "file_title": "File:Tile-Sand.png",
+      "caption": "Sand ground tile.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "6efa437989889a0d656529b17a8e8a333d75fb6a88cffd273d35e581f24f4107",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_lower",
+          "key": "frame 1"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-mud-illustration",
+      "guide": "Mud",
+      "file_title": "File:Tile-Mud.png",
+      "caption": "Mud ground tile.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "39d89e9088585b5c7a4d2de47119b03d406465bedff8c32dab28d29c1e727361",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_lower",
+          "key": "frame 4"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-stone-illustration",
+      "guide": "Stone ground",
+      "file_title": "File:Tile-Stone.png",
+      "caption": "Bare stone ground tile.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "d5e32d0034c108a4b6c57deae0c5649cc55619e8bc37a06853bb9a67b7448e1e",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_onlower",
+          "key": "frame 1"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-mossy-stone-illustration",
+      "guide": "Stone ground",
+      "file_title": "File:Tile-Mossy-stone.png",
+      "caption": "Stone with a moss cover.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "3bcb7f999c1a673df8dfd9e0e1054e1cc7bff64ebfd590f43cc93e8fdef642b7",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_onlower",
+          "key": "frame 1"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-ruin-paving-illustration",
+      "guide": "Stone ground",
+      "file_title": "File:Tile-Ruin-paving.png",
+      "caption": "Broken ruin paving over soil.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "2bfbfeb07e2f254ebddb1c22978b6fd1615f6d00405c28d3201c3986f9bb5a50",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_onlower",
+          "key": "frame 36"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-goo-illustration",
+      "guide": "Goo",
+      "file_title": "File:Tile-Goo.png",
+      "caption": "Goo ground tile.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "7e19cd260507720711e125faf7a0276fc0ae6c0b067dd660d9444a1b6a54c8ec",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_onlower",
+          "key": "frame 4"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-dock-planks-illustration",
+      "guide": "Dock planks",
+      "file_title": "File:Tile-Dock-planks.png",
+      "caption": "Dock planks over water.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "1a30a8a48a6be0a7087bc739ba0706a7943933de46851293ec76cb90c5789f7f",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_grass",
+          "key": "frame 29"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-slope-illustration",
+      "guide": "Slopes",
+      "file_title": "File:Tile-Slope.png",
+      "caption": "A slope edge between two heights.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "40cfac82aaf65b33be9a4740c3e17ce294e6a122d44be31977a1fe2444c7e7e1",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_slopes1",
+          "key": "frame 35"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-shallow-water-illustration",
+      "guide": "Shallow water",
+      "file_title": "File:Tile-Shallow-water.png",
+      "caption": "Shallow water over the lowest soil.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "1bb5f399f374b580ae57cca8ceed11143c212800393c2bb500cd0a3ed67e99f4",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_water1",
+          "key": "frame 1"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-medium-water-illustration",
+      "guide": "Medium water",
+      "file_title": "File:Tile-Medium-water.png",
+      "caption": "Medium water: two water layers over the lowest soil.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "5f85ec839514e7efb92e5a7dadb86ab16cf9382a22604f3e42179850148e31ee",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_water2",
+          "key": "frame 1"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-deep-water-illustration",
+      "guide": "Deep water",
+      "file_title": "File:Tile-Deep-water.png",
+      "caption": "Deep water: three water layers over the lowest soil.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "acce6ac320fede693ef5fac9b9c151f7ce396b5f1eef9f055825910090d3bad4",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_water3",
+          "key": "frame 1"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-ruin-floor-illustration",
+      "guide": "Interior floors",
+      "file_title": "File:Tile-Ruin-floor.png",
+      "caption": "Ruin and cellar floor slab.",
+      "role": "tile",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "0094f015112657ed6cbaa9cac751c3aa2ac7ca2d13e7c2c1758bfa79841d574a",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_onlower",
+          "key": "frame 48"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-cave-floor-illustration",
+      "guide": "Interior floors",
+      "file_title": "File:Tile-Cave-floor.png",
+      "caption": "Cave floor.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "af1aebe9c422dd55b51f64e5a2dd3844810dd558ec8089e7a14b4d6c600aea73",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_onlower",
+          "key": "frame 2"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-rift-floor-illustration",
+      "guide": "Interior floors",
+      "file_title": "File:Tile-Rift-floor.png",
+      "caption": "Floor of the rift depths.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "574a2262bcc41a11436e14d929bb1f1e6c8cd83ef392319c8df4529140bf9a31",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_lower",
+          "key": "frame 56"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-ash-illustration",
+      "guide": "Terrain",
+      "file_title": "File:Tile-Ash.png",
+      "caption": "Ash left on the ground by a campfire.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "e316bce83dd2e4c7cf403c5c7f21c1e2d1ac569e084412aa1505c71fa17a7c1f",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_grass",
+          "key": "frame 43"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "tile-water-rock-illustration",
+      "guide": "Terrain",
+      "file_title": "File:Tile-Water-rock.png",
+      "caption": "A rock standing in water.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "c12310b468528bfbf3c26a641b2aea1f5796f724eefa5f7d6a707bc505fab25d",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "ts_hinderance",
+          "key": "frame 12"
+        }
+      ],
+      "pixel_art": {"width": 128, "height": 128, "source_scale": 8}
+    },
+    {
+      "id": "area-fort-solid-shorehold-illustration",
+      "guide": "Fort Solid Shorehold",
+      "file_title": "File:Area-Fort-Solid-Shorehold.png",
+      "caption": "The game's own map of one Fort Solid Shorehold area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "acf60686deee1b9f1e2386f43656239dafe23834f426c1b96f8e7d3d1c49e0de",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "0"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
+      "id": "area-common-bog-illustration",
+      "guide": "Common Bog",
+      "file_title": "File:Area-Common-Bog.png",
+      "caption": "The game's own map of one Common Bog area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "feb36b6dac375e0ade0f379738cd73663306e1ed0b8758a9431d42918e8ab1d5",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "1"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
+      "id": "area-drowned-fen-illustration",
+      "guide": "Drowned Fen",
+      "file_title": "File:Area-Drowned-Fen.png",
+      "caption": "The game's own map of one Drowned Fen area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "f85fec31a3cce75f2433dc6cdebb1a1775fbe931628a78846a8a1847c714722e",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "3"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
+      "id": "area-broken-fen-illustration",
+      "guide": "Broken Fen",
+      "file_title": "File:Area-Broken-Fen.png",
+      "caption": "The game's own map of one Broken Fen area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "64daf2ba0eaf5bc42469a0ef87f5d33a2e54d0f0e6fae6f2aba34de65d7bf0d4",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "4"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
+      "id": "area-savage-mirk-illustration",
+      "guide": "Savage Mirk",
+      "file_title": "File:Area-Savage-Mirk.png",
+      "caption": "The game's own map of one Savage Mirk area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "285cf3bc178ed71d01a18cc79487a8ffdd19676d8f1b21f5c257db6805f3caa8",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "5"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
+      "id": "area-sunken-ancient-ruins-illustration",
+      "guide": "Sunken Ancient Ruins",
+      "file_title": "File:Area-Sunken-Ancient-Ruins.png",
+      "caption": "The game's own map of one Sunken Ancient Ruins area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "8614fa8a207f8dfde3cedd5aba53d7c37aa55e9190167ef0f4505d473400f20d",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "22"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
+      "id": "area-rift-thorn-mire-illustration",
+      "guide": "Rift-Thorn Mire",
+      "file_title": "File:Area-Rift-Thorn-Mire.png",
+      "caption": "The game's own map of one Rift-Thorn Mire area, drawn as the player explored it.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "6501faaebd0fce094430e3466d5b055529a142b467ffc8c4c7ebec925c9b6f15",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "Maps/x_y.png"
+        },
+        {
+          "source": "ui-en",
+          "section": "LocTitles",
+          "key": "23"
+        }
+      ],
+      "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
     }
   ]
 }

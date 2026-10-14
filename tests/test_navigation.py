@@ -95,19 +95,24 @@ class NavigationTests(unittest.TestCase):
 
     def test_indexed_guides_link_back_to_their_index_only(self):
         data, catalog, _ = load_publication_inputs(ROOT)
-        children = [row["title"] for row in catalog["guides"] if row.get("index_page") == "Biomes"]
-        self.assertEqual(len(children), 9)
-        for title in children:
-            self.assertTrue(self.pages[title].startswith("[[Biomes]] | [[Main Page]]\n"))
-            self.assertIn(f"\n* [[{title}]]", self.pages["Biomes"])
-            self.assertNotIn(f"[[{title}]]", self.pages["Game mechanics"] + self.pages["Main Page"])
-        for title in ("Biomes", "Planting", "Terrain"):
+        indexed = {index: [row["title"] for row in catalog["guides"] if row.get("index_page") == index]
+                   for index in ("Areas", "Terrain")}
+        self.assertEqual({index: len(rows) for index, rows in indexed.items()}, {"Areas": 9, "Terrain": 12})
+        for index, children in indexed.items():
+            entry = "\n* {{Tile|%s}}" if index == "Terrain" else "\n* [[%s]]"
+            for title in children:
+                self.assertTrue(self.pages[title].startswith(f"[[{index}]] | [[Main Page]]\n"))
+                self.assertIn(entry % title, self.pages[index])
+                self.assertNotIn(f"[[{title}]]", self.pages["Game mechanics"] + self.pages["Main Page"])
+        for title in ("Areas", "Planting", "Terrain"):
             self.assertIn(f"[[{title}]]", self.pages["Game mechanics"])
+        self.assertNotIn("Biomes", "".join(self.pages.values()))
         self.assertIn("== Where to plant ==", self.pages["Cranberry Seeds"])
         self.assertIn("[[Planting]]", self.pages["Cranberry Seeds"])
         # Self, nested, unknown and indexed-index references are refused.
-        for owner, index in ((children[0], children[0]), (children[0], children[1]),
-                             (children[0], "Not a guide"), ("Biomes", "Terrain")):
+        areas, tiles = indexed["Areas"], indexed["Terrain"]
+        for owner, index in ((areas[0], areas[0]), (areas[0], areas[1]), (areas[0], tiles[0]),
+                             (areas[0], "Not a guide"), ("Areas", "Terrain"), ("Planting", "Soil")):
             changed = copy.deepcopy(catalog)
             next(row for row in changed["guides"] if row["title"] == owner)["index_page"] = index
             with self.subTest(owner=owner, index=index), self.assertRaises(DataError):
