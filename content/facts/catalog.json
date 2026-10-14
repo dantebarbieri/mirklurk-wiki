@@ -5032,7 +5032,7 @@
         "Multiply by jump distance / maximum range. A jump at full range costs the whole amount.",
         "Multiply by your encumbrance: 1.2 when overburdened, 1.6 when very overburdened (10 or more over your carry limit) and 2.0 when extremely overburdened (20 or more over).",
         "Round to the nearest 0.2 AP. You cannot make a jump that costs more than your maximum AP, even with a full bar.",
-        "For example, a jump to an adjacent tile on flat, dry ground costs 8 x 1 / 2 = 4.0 AP at rank 0. At rank 10 the range is 4.75 tiles, so it costs 8 x 1 / 4.75 = 1.68, shown as 1.6 AP. DavidLokison's screenshots below show every rank from 0 to 10: an adjacent jump costs 4.0, 3.6, 3.2, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.8 and 1.6 AP; a jump two tiles away costs 8.0, 7.2, 6.4, 5.4, 5.0, 4.6, 4.2, 4.0, 3.8, 3.6 and 3.4 AP."
+        "For example, a jump to an adjacent tile on flat, dry ground costs 8 x 1 / 2 = 4.0 AP at rank 0. At rank 10 the range is 4.75 tiles, so it costs 8 x 1 / 4.75 = 1.68, shown as 1.6 AP. The screenshots below show every rank from 0 to 10: an adjacent jump costs 4.0, 3.6, 3.2, 2.6, 2.4, 2.2, 2.2, 2.0, 1.8, 1.8 and 1.6 AP; a jump two tiles away costs 8.0, 7.2, 6.4, 5.4, 5.0, 4.6, 4.2, 4.0, 3.8, 3.6 and 3.4 AP."
       ],
       "confidence": "observed",
       "evidence": [
