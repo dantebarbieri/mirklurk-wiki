@@ -1197,6 +1197,9 @@ def build_pages(root, data, catalog=None, details=None):
             return "{{Creature|" + locations[identity] + "}}"
         if identity in items:
             return item_reference(identity, locations)
+        if identity in construction_actions and image_for(identity, images):
+            # Not an {{Item}}, but its reviewed world sprite still identifies it in lists.
+            return icon(identity, images, entities, locations) + " " + entity_link(identity, entities, locations)
         return entity_link(identity, entities, locations)
 
     classification_summaries = {row["entity"]: row["summary"] for row in catalog["classifications"] if "summary" in row}
