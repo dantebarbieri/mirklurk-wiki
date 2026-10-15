@@ -79,7 +79,7 @@ class BeingArticleTests(unittest.TestCase):
             self.assertEqual(slug.count(f'id="base-{field}"'), 1)
         boss = self.pages["Magus Clay (boss)"]
         self.assertLess(boss.index("== <nowiki>Blink and rewards</nowiki> =="), boss.index("== Combat =="))
-        self.assertIn("[[Clays' Magus Hood|", boss)
+        self.assertIn("[[Clay's Magus Hood|", boss)
 
     def test_unmatched_values_and_conflicts_are_never_dropped(self):
         profile = {"id": "x-profile", "entity": "being-13", "values": {"base-xp": 5, "melee-pattern-min": 1,

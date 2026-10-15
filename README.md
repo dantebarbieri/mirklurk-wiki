@@ -24,18 +24,28 @@ branch `next_version_tester` (2026-10-13). Against that test build only
 to Survivor and Fire Striker to Fire Bond, and adds 43 entries: 25 merchant
 offers, one recipe, 12 corpse-loot entries and five quest notes. Changed
 values cite the 0.8.9.9 fingerprints; unchanged records keep their 0.8.1.5
-citations. Pages show 0.9.0.0 values. The public **Version 0.9.0.0** changelog
+citations. The public **Version 0.9.0.0** changelog
 lists the new content and every documented value that changed, with its 0.8.1.5
 and 0.9.0.0 values, plus the fixes since the test build; each page it links gets
 a "New in" or "Changed in" link back. The old **Version 0.8.9.9** title redirects
 there. [Provenance](docs/PROVENANCE.md#version-0900-release) records the amendments.
 
-The reference now contains **107 numeric facts and 336 structured entries**:
-36 quest/journal notes, 88 merchant offers, 97 station-specific recipe
-variants, 82 conditional loot entries, and 33 original algorithm/skill
+Patch **0.9.0.1** followed on 2026-10-15. `data.win`, `Items.ini`, `Bestiary.ini`
+and `UI.ini` have new `-0901` fingerprints; `Nature.ini` is unchanged. Orbs now
+have 30 durability and cost 1 per cast, with higher drains for six of them;
+Magus Clay's boss form gains one armor layer per cell; Poison Arrow II and III
+cost more; Butchery's extra-item roll applies only to hides and meat; poison
+and bleeding keep ticking off-screen; and Clays' Magus Hood is renamed Clay's
+Magus Hood, with the old title kept as a redirect. Pages show 0.9.0.1 values,
+and the **Version 0.9.0.1** changelog lists each change.
+[Provenance](docs/PROVENANCE.md#version-0901-update) records the amendments.
+
+The reference now contains **107 numeric facts and 338 structured entries**:
+37 quest/journal notes, 88 merchant offers, 97 station-specific recipe
+variants, 82 conditional loot entries, and 34 original algorithm/skill
 summaries. The encyclopedia presentation generates 421 main-namespace pages:
 355 individual item, being, nature, skill, and damage-type pages, plus
-workstation articles, topic guides/indexes, the version page and compatibility
+workstation articles, topic guides/indexes, the version pages and compatibility
 redirects. Another 104 ordinary MediaWiki category pages support hierarchical
 browsing; the retired Miscellaneous items category redirects to Items.
 

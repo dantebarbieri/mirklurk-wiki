@@ -166,7 +166,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "c47c1a52c6ebba3732bc04de297bd54cb827e3ed453b6cd70bfe8d6be37de554")
+                         "ac9535c25bad9de7af08fb9a7482817668fe1330f0c8a09a571f9e4be0f34eb7")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
@@ -342,11 +342,11 @@ class AcquisitionTests(unittest.TestCase):
         from test_editorial import gameplay_record
         unchanged = [gameplay_record(pool) for pool in document["pools"]]
         self.assertEqual(hashlib.sha256((json.dumps(unchanged, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "89036ca3713c305c14ce405d2186fb1e08042f85606b19969de1cea2cdf0f8ea")
+                         "63f6ff18da055d838343d9110a73b29761e90ee095f00c28f895cc7c12a40eba")
         self.assertEqual({identity: len(pool["eligible_item_ids"]) for identity, pool in pools.items()}, {
             "skeleton-outdoors": 91, "skeleton-indoors": 70, "chest-common": 96, "chest-middle": 95,
             "chest-rich": 78, "ruins-large": 20, "ruins-small": 9, "nest-tiny": 7,
-            "cracks-tiny": 6, "unwanted-remains": 72, "survivor-remains": 66,
+            "cracks-tiny": 6, "unwanted-remains": 72, "survivor-remains": 67,
         })
         self.assertEqual(pools["chest-common"]["item_conditions"], {})
         self.assertIn("item-258", set(pools["unwanted-remains"]["eligible_item_ids"]) & set(pools["survivor-remains"]["eligible_item_ids"]))

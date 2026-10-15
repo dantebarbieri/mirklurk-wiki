@@ -101,7 +101,7 @@
           "Decent Cloak",
           "Traveller's Cloak",
           "Ranger's Cloak",
-          "Clays' Magus Hood",
+          "Clay's Magus Hood",
           "Magi's Ropebelt"
         ]
       },
@@ -663,7 +663,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Hoods worn separately from helmets.",
-        "members": ["Simple Hood", "Troll Skin Hood", "Wool Hood", "Ranger's Hood", "Clays' Magus Hood"],
+        "members": ["Simple Hood", "Troll Skin Hood", "Wool Hood", "Ranger's Hood", "Clay's Magus Hood"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[2]"},
@@ -1073,9 +1073,9 @@
           "Expedition Vest",
           "Hiker's Shirt",
           "Hiker's Pants",
-          "Clays' Magus Hood"
+          "Clay's Magus Hood"
         ],
-        "summary": "Backpacks, herbalist belts, pocketed vests, Hiker's Shirt, Hiker's Pants and Clays' Magus Hood add storage cells, not weight allowance.",
+        "summary": "Backpacks, herbalist belts, pocketed vests, Hiker's Shirt, Hiker's Pants and Clay's Magus Hood add storage cells, not weight allowance.",
         "confidence": "inferred",
         "evidence": [
           {
@@ -2869,8 +2869,8 @@
     },
     {
       "entity": "item-264",
-      "title": "Clays' Magus Hood",
-      "aliases": []
+      "title": "Clay's Magus Hood",
+      "aliases": ["Clays' Magus Hood"]
     },
     {
       "entity": "item-265",
@@ -4740,11 +4740,12 @@
         "paragraphs": [
           "This is the same Magus Clay who trades and gives advice in Fort Solid's undercroft earlier in the story. Throw Magus' Shard to open the portal to his realm.",
           "Clay starts the fight as soon as you arrive. Every third turn while he has a target, he teleports to a random free spot in the realm at least 7 tiles from you, usually 10 or more.",
-          "His corpse holds 6 to 10 Gold Coins, Clays' Magus Hood and Magi's Ropebelt."
+          "His corpse holds 6 to 10 Gold Coins, Clay's Magus Hood and Magi's Ropebelt.",
+          "Each of his 49 hit points has one layer of armor, which must be broken before that cell can be damaged."
         ],
         "related_entities": [
           "Magus Clay",
-          "Clays' Magus Hood",
+          "Clay's Magus Hood",
           "Magi's Ropebelt",
           "Gold Coin",
           "Magus' Shard"
@@ -4752,6 +4753,11 @@
         "related_pages": [],
         "confidence": "observed",
         "evidence": [
+          {
+            "source": "game-data-0901",
+            "section": "gml_Object_databank_Alarm_3",
+            "key": "beingDB[41].armor"
+          },
           {
             "source": "game-data-0899",
             "section": "gml_Object_obj_being_Alarm_10",
@@ -5127,7 +5133,7 @@
     {
       "entry": "skill-2-1-mechanics",
       "title": "Effects",
-      "summary": "Skin and butcher for 0.2 less AP per rank. Each rank also adds a 10% chance to obtain an extra meat or skin result.",
+      "summary": "Skin and butcher for 0.2 less AP per rank. Each rank also adds a 10% chance to get one extra hide or meat. Other butchering results, such as fangs, glands, husks and trophies, never get the extra item.",
       "conditions": null,
       "steps": []
     },
@@ -7130,11 +7136,11 @@
       },
       {
         "entity": "item-219",
-        "value": 0.12,
+        "value": 0.25,
         "confidence": "inferred",
         "evidence": [
           {
-            "source": "game-data-0899",
+            "source": "game-data-0901",
             "section": "gml_Object_databank_Alarm_1",
             "key": "itemDB[219].price/recipe-postprocessing-eligibility"
           },
@@ -7510,16 +7516,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.0.0",
-      "confirmation": "The wiki operator installed version 0.9.0.0, the official release, on 2026-10-14. Its content was first published on 2026-10-13 as test build 0.8.9.9 on the Steam beta branch next_version_tester. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
+      "version": "0.9.0.1",
+      "confirmation": "The wiki operator installed patch 0.9.0.1, which followed the 0.9.0.0 release, and loaded a character in it to regenerate the English language files. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
       "evidence": [
         {
-          "source": "game-data-0900",
+          "source": "game-data-0901",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0900",
+          "source": "game-data-0901",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -7727,7 +7733,8 @@
         "Sharp attacks add bleeding to unarmored hit points instead of removing them immediately. Bleeding stacks and takes effect at the start of the target's turn.",
         "Remaining bleeding spreads to the next neighboring hit point in a fixed direction. Rotating the attack changes that direction. Spreading bleeding can reach beneath armor.",
         "An initial sharp hit normally removes armor without causing bleeding on that cell. At rank 10, Blade Master lets remaining damage cause bleeding after breaking armor.",
-        "Apply an Improvised Bandage or Bandage to bleeding cells. Bandages stop bleeding but do not restore lost hit points."
+        "Apply an Improvised Bandage or Bandage to bleeding cells. Bandages stop bleeding but do not restore lost hit points.",
+        "A bleeding creature keeps taking its turns while it is out of sight or idle, so bleeding keeps working until it stops."
       ],
       "related_entities": [
         "Improvised Bandage",
@@ -7736,6 +7743,11 @@
       ],
       "confidence": "inferred",
       "evidence": [
+        {
+          "source": "game-data-0901",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.delayedEffects.POISON/BLEED"
+        },
         {
           "source": "ui-en",
           "section": "TTgen",
@@ -7768,7 +7780,8 @@
       "paragraphs": [
         "Poison stacks on individual hit points. At the start of the target's turn, a poisoned cell is lost and one poison counter is spent. Remaining poison can spread to a random adjacent healthy cell, including diagonals.",
         "Spreading poison can reach beneath armor. An ordinary direct poison hit removes one armor layer instead of poisoning an armored cell. Thrown poison has different rules; see the flask's effect.",
-        "Minor Antidote and Antidote clear poison from the cells they cover without restoring lost hit points. Natural Antidote can reduce poison before it takes effect."
+        "Minor Antidote and Antidote clear poison from the cells they cover without restoring lost hit points. Natural Antidote can reduce poison before it takes effect.",
+        "A poisoned creature keeps taking its turns while it is out of sight or idle, so poison keeps working until it runs out."
       ],
       "related_entities": [
         "Minor Antidote",
@@ -7796,6 +7809,11 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_items",
           "key": "item_is_antidote"
+        },
+        {
+          "source": "game-data-0901",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.delayedEffects.POISON/BLEED"
         }
       ]
     },
@@ -8401,13 +8419,15 @@
       "section_titles": [
         "Orbs",
         "Casting cost",
+        "Durability",
         "What orbs ignore",
         "Staff of The Fire Eater",
         "Where to get them"
       ],
       "paragraphs": [
-        "Orbs are one-handed ranged weapons. They need no ammunition and never lose durability. Each has its own damage type, attack pattern and range: poison, fire, blunt (iron and steel essence), weak (wind) or force (storm).",
+        "Orbs are one-handed ranged weapons. They need no ammunition. Each has its own damage type, attack pattern and range: poison, fire, blunt (iron and steel essence), weak (wind) or force (storm).",
         "Every cast drains one of your survival meters: focus for poison orbs, warmth for fire orbs, satiation for essence orbs and stamina for wind and storm. If the meter is lower than the cost, the shortfall is taken from wellbeing instead.",
+        "Every cast also uses 1 durability. An orb has 30 durability, so a new one lasts 30 casts and then breaks. Orbs cannot be repaired, and being hit does not wear them. Like other gear, orbs left in ordinary stashes lose durability over time, and orbs found as random treasure are already partly used, with 18 to 29 durability left. Resale value falls with durability.",
         "Orbs can be used at any distance up to their range, including next to an enemy. Fast Draw's AP reduction and free-shot chance apply to bows, not orbs. Master Basher and Force Fighter bonuses apply only to melee weapons, so they do not boost blunt or force orbs.",
         "Staff of The Fire Eater is a two-handed melee fire weapon with no casting cost. Whenever an attack hits more than one cell, it also treats one of your burnt hit points.",
         "Grand Mother at the Survivors' camp sells every orb and the staff. They are not crafted."
@@ -8434,19 +8454,19 @@
       "confidence": "observed",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "itemDB[266-274].bonuses/damageClass/apCost/tileRange"
+          "key": "itemDB[266-274].bonuses/damageClass/apCost/tileRange/durabilityMax"
         },
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_obj_player_Step_0",
-          "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/no-ammo;attack.hits>1.item266.being_heal_burnt"
+          "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/no-ammo/item_durloss;attack.hits>1.item266.being_heal_burnt"
         },
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_GlobalScript_scr_items",
-          "key": "weapon_is_orb/item_durloss.orb-exit/weapon_is_ranged.orb"
+          "key": "weapon_is_orb/item_durloss/weapon_is_ranged.orb;player_dur_damage.orb-skip;container_time_pass;treasure_get_lootarray.durLoss;item_get_price"
         },
         {
           "source": "game-data-0899",
@@ -10555,74 +10575,74 @@
     },
     {
       "entity": "item-267",
-      "paragraphs": ["Each cast drains 8% focus. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 12% focus. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[267].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {
       "entity": "item-268",
-      "paragraphs": ["Each cast drains 10% focus. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 15% focus. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[268].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {
       "entity": "item-269",
-      "paragraphs": ["Each cast drains 15% warmth. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 20% warmth. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[269].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {
       "entity": "item-270",
-      "paragraphs": ["Each cast drains 25% warmth. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 30% warmth. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[270].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {
       "entity": "item-271",
-      "paragraphs": ["Each cast drains 10% satiation. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 12% satiation. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[271].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {
       "entity": "item-272",
-      "paragraphs": ["Each cast drains 12.5% satiation. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 15% satiation. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[272].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {
       "entity": "item-273",
-      "paragraphs": ["Each cast drains 10% stamina. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 10% stamina. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[273].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {
       "entity": "item-274",
-      "paragraphs": ["Each cast drains 15% stamina. If you have less than that, the shortfall is taken from wellbeing. Orbs never lose durability and need no ammunition."],
+      "paragraphs": ["Each cast drains 15% stamina. If you have less than that, the shortfall is taken from wellbeing. Each cast also uses 1 of the orb's 30 durability, and orbs cannot be repaired. Orbs need no ammunition."],
       "confidence": "observed",
       "evidence": [
         {"source": "game-data-0899", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[274].bonuses"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg"}
+        {"source": "game-data-0901", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses-drain/player_wellbeing_dmg/item_durloss"}
       ]
     },
     {

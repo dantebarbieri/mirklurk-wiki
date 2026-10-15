@@ -1,4 +1,4 @@
-'''Version 0.9.0.0''' is the official patch released on 14 October 2026. This wiki shows 0.9.0.0 values. This page lists what is new and every documented value that changed from 0.8.1.5, the previous official version.
+'''Version 0.9.0.0''' is the official patch released on 14 October 2026. This page lists what is new and every documented value that changed from 0.8.1.5, the previous official version. The wiki now shows values from [[Version 0.9.0.1]], which followed a day later.
 
 '''Spoilers:''' this page names late-story content.
 
@@ -27,7 +27,7 @@ The same content was tested a day earlier as '''version 0.8.9.9''' on the Steam 
 === Items ===
 * [[Magic weapons]]: [[Orb of Poison]], [[Orb of Greater Poison]], [[Orb of Fire]], [[Orb of Greater Fire]], [[Orb of Iron Essence]], [[Orb of Steel Essence]], [[Orb of Wind]], [[Orb of Storm]] and [[Staff of The Fire Eater]].
 * [[Storage Chest]], a placeable chest that keeps its contents safe.
-* [[Magus' Shard]], [[Clays' Magus Hood]], [[Magi's Ropebelt]], [[Head of The Terror]], [[Bat Hide]], [[Bat Meat]] and [[Grilled Bat Meat]] (cooked at a [[Campfire]]).
+* [[Magus' Shard]], [[Clay's Magus Hood|Clays' Magus Hood]], [[Magi's Ropebelt]], [[Head of The Terror]], [[Bat Hide]], [[Bat Meat]] and [[Grilled Bat Meat]] (cooked at a [[Campfire]]).
 
 === Controls ===
 * [[Strict move]]: hold Left Ctrl to walk to a tile without interacting with what is there.
@@ -292,6 +292,6 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 * [[Quests and journal#quest-A_possible_homecoming|A possible homecoming]] is no longer the last journal entry: [[Quests and journal#quest-Clay_defeated|Clay defeated]] and [[Quests and journal#quest-Peace_at_Fort_Solid|Peace at Fort Solid]] follow.
 
 === Music ===
-The patch notes announce a new song. Its track ships with the game, but no code plays it yet.
+The patch notes announce a new song. Its track ships with the game, but in 0.9.0.0 no code plays it. [[Version 0.9.0.1]] adds it to the playlist.
 
 [[Game mechanics]] | [[Main Page]]

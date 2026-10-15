@@ -289,7 +289,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                 raise RuntimeError("Attack sums or caveats changed.")
         if "overflow-x:auto" not in rendered.replace(" ", ""):
             raise RuntimeError("Native grids lost horizontal overflow.")
-    if totals != {0: 366, 1: 210, 2: 35, 3: 10}:
+    if totals != {0: 317, 1: 259, 2: 35, 3: 10}:
         raise RuntimeError("The 42 native health grids differ from the reviewed HP/armor totals.")
 
     for amount in (0, 1, 99, 100, 999, 1000, 1234, 9007199254740993, 999999999999999999):

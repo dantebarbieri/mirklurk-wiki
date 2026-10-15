@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "build": "0.9.0.0",
+  "build": "0.9.0.1",
   "sources": [
     {
       "id": "starting-equipment",
@@ -5066,6 +5066,7 @@
         "item-205",
         "item-207",
         "item-208",
+        "item-219",
         "item-220",
         "item-235",
         "item-236",
@@ -5092,7 +5093,7 @@
           "key": "loot_amountchances;i_r;treasure_get_lootarray.minimum-budget-adjustment"
         },
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"
         },
@@ -5177,7 +5178,7 @@
     {
       "item": "item-48",
       "kind": "unverified",
-      "text": "Availability in 0.9.0.0: Unknown. No acquisition method is documented.",
+      "text": "Availability in 0.9.0.1: Unknown. No acquisition method is documented.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5189,7 +5190,7 @@
     {
       "item": "item-49",
       "kind": "unverified",
-      "text": "Availability in 0.9.0.0: Unknown. No acquisition method is documented.",
+      "text": "Availability in 0.9.0.1: Unknown. No acquisition method is documented.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5201,7 +5202,7 @@
     {
       "item": "item-40",
       "kind": "unverified",
-      "text": "Acquisition in 0.9.0.0: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
+      "text": "Acquisition in 0.9.0.1: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
       "evidence": [
         {
           "source": "game-data-0899",
