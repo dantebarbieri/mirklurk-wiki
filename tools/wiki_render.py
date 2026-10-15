@@ -163,9 +163,9 @@ def pixel_image(image, width=224, height=288, link=None, alt=None, css_class="pi
     _, _, scale = pixel_geometry(image, width, height)
     label = literal(image_caption(image) if alt is None else alt)
     target = "" if link is None else "|link=" + link
-    # Inline icons, coins and shields must never be a page's PageImages thumbnail.
+    # Inline icons must never be a PageImages thumbnail.
     exclusion = "" if page_image else "|class=notpageimage"
-    # Request the original, never an interpolated server thumbnail (including srcset variants).
+    # Use the original, never a resized thumbnail.
     return (
         f'<span class="{css_class}" style="display:inline-block;line-height:0;image-rendering:pixelated;'
         f'zoom:calc({scale} / {pixels["source_scale"]});">'
@@ -569,7 +569,7 @@ def merchant_table(entries, images, entities, locations, standard_prices=False, 
     for entry in entries:
         merchant, item = entry["details"]["merchant"], locations[entry["details"]["item"]]
         anchor = entry.get("anchor") or titled("offer", item)
-        # Rows are transcluded onto item pages; only the owner page keeps the anchor.
+        # Only the owner page keeps the row anchor.
         arguments = {
             "anchors": "<noinclude>" + span(anchor) + "</noinclude>",
             "seller": f'[[{locations[merchant]}#{anchor}|{literal(entities[merchant]["name"])}]]',
@@ -1132,7 +1132,7 @@ def currency_page(currency, entities, locations):
 def build_pages(root, data, catalog=None, details=None):
     if not isinstance(data, dict):
         raise DataError("root: expected an object")
-    # Station images need the registry after base validation.
+    # Station images need the registry.
     base = {key: value for key, value in data.items() if key != "illustrations"}
     validate_data(base)
     catalog = validate_catalog(default_catalog(base) if catalog is None else catalog, base)
@@ -1184,7 +1184,7 @@ def build_pages(root, data, catalog=None, details=None):
         if identity in items:
             return item_reference(identity, locations)
         if identity in construction_actions and image_for(identity, images):
-            # Its reviewed world sprite still identifies it in lists.
+            # Its world sprite identifies it.
             return icon(identity, images, entities, locations) + " " + entity_link(identity, entities, locations)
         return entity_link(identity, entities, locations)
 
@@ -1411,7 +1411,7 @@ def build_pages(root, data, catalog=None, details=None):
                                            for group in catalog.get("taxonomy", {}).get(field, [])):
             pages[guide["title"]] += "\n[[:Category:Food and drink|Browse foods and drinks]] | [[Crafting|Find a preparation recipe]]\n"
 
-    # Each overview lists its canonical destinations with readable entity anchors.
+    # Overviews link canonical pages via entity anchors.
     navigation = defaultdict(lambda: defaultdict(set))
     for entity in data["entities"]:
         npc = classified.get(entity["id"]) == "npc"
@@ -1680,7 +1680,7 @@ def build_pages(root, data, catalog=None, details=None):
             uses = sorted({owners[entry["id"]] for entry in related if entry["kind"] == "recipe"}
                           | {locations[recipe["owner_item"]] for recipe in catalog.get("construction_recipes", [])
                              if any(component["item"] == identity for component in recipe["inputs"])})
-            # An appositive stays grammatical for plural names such as Cranberries.
+            # An appositive suits plural names (Cranberries).
             lead = ": " + ITEM_GROUP_NOUNS.get(item_categories.get(identity), "an item")
             if ways:
                 lead += " that can be " + prose_list(ways, "or") + (" and is" if uses else "")
@@ -1688,6 +1688,8 @@ def build_pages(root, data, catalog=None, details=None):
                 lead += " used to make " + (prose_list([literal(use) for use in uses], "and") if len(uses) <= 3
                                             else f"{len(uses)} different things")
             lead += "."
+            if acquisition_notes.get(identity, {}).get("kind") == "unreleased":
+                lead = ": '''unreleased content'''. Named in the game files, it is not in the game yet."
             label = f"'''{literal(entities[identity]['name'])}'''"
             pages[title] = pages[title].replace(label + "\n", label + lead + "\n", 1)
         for recipe in catalog.get("construction_recipes", []):
@@ -1700,7 +1702,7 @@ def build_pages(root, data, catalog=None, details=None):
             pages[title] += f'\n== {"Main quest" if main else "Quests"} ==\n' + "\n".join(text for _, text in sorted(quests)) + "\n"
         if other:
             pages[title] += "\n== Related pages ==\n" + "\n".join(sorted(set(other))) + "\n"
-        if entities[identity]["category"] == "item" and not any(facts[fact["id"]] == title for fact in data["facts"]) and not any(profile["entity"] == identity for profile in details["profiles"]):
+        if entities[identity]["category"] == "item" and not any(facts[fact["id"]] == title for fact in data["facts"]) and not any(profile["entity"] == identity for profile in details["profiles"]) and identity not in {"item-48", "item-49"}:
             pages[title] += "\nStats: Unknown.\n"
 
     for entity in entities.values():
@@ -1796,7 +1798,7 @@ def build_pages(root, data, catalog=None, details=None):
         )
     pages["Source provenance"] = "#REDIRECT [[Game mechanics]]\n"
     if "Version 0.9.0.0" in pages:
-        # 0.8.9.9 was 0.9.0.0's public test; its old changelog title points to the release notes.
+        # 0.8.9.9 was 0.9.0.0's public test; its old title redirects.
         pages["Version 0.8.9.9"] = "#REDIRECT [[Version 0.9.0.0#Public_test_build]]\n"
     if "Starting equipment" not in pages:
         pages["Getting started"] = "#REDIRECT [[Main Page]]\n"

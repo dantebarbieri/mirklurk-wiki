@@ -92,7 +92,7 @@ class FollowupTests(unittest.TestCase):
         # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
-            "Items": "078e6b82a3cc007c4763118c1bbdaa9b10c661797762797612317aa14eebfd34",
+            "Items": "dfb05d053f246b5aeb26868578892d74a64e900ef10683485490af9f53261387",
             "Wooden Recorder": "c5750feaa6e5947168b749f789a330015d0b8c3fc79baefdeba3acdde7325310",
         }
         for title, digest in digests.items():

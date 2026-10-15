@@ -111,8 +111,7 @@ def compose_portals(pages, extra, images, entities, context=None):
                  else image_for(by_name.get(name), images) if name else None)
         if not image:
             return ""
-        # Fit the native sprite to the box: whole-number zoom when it is at least 2x, otherwise a
-        # fractional one, so portraits shrink and small sprites grow to match their neighbours.
+        # Fit the sprite to the box: whole zoom from 2x up, else fractional, so portraits shrink.
         pixels = image["pixel_art"]
         fit = min(size * pixels["source_scale"] / pixels["width"], size * pixels["source_scale"] / pixels["height"])
         fit = int(fit) if fit >= 2 else round(fit, 3)
@@ -120,6 +119,11 @@ def compose_portals(pages, extra, images, entities, context=None):
         return (f'<span style="display:inline-block;width:{size}px;text-align:center;vertical-align:middle;'
                 f'margin-right:4px;">{art}</span>')
 
+    # Each topic page leads with its homepage icon, which link previews use.
+    for title, icon in ({t: i for t, _, i in NEW_PLAYER_PATH} | EXPLORE_ICONS).items():
+        art = picture((icon[0] if isinstance(icon, tuple) else icon, 64), None).replace("|class=notpageimage", "")
+        if art and published(title, pages):
+            pages[title] = f'<div style="float:right;margin-left:1em;">{art}</div>\n' + pages[title]
     main = explore_cards(pages["Main Page"], picture)
     for heading, body in (("== New to the Mirk? ==", new_player_steps(pages, picture)),
                           ("== Guides by topic ==", topic_cards(pages, extra, picture))):

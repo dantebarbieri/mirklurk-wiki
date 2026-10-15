@@ -100,8 +100,9 @@ class DisplayTests(unittest.TestCase):
                 self.assertEqual(candidates(lead)[:1], [image["file_title"]])
             checked += 1
         self.assertGreater(checked, 300)
-        for title in ("Items", "Bestiary", "Merchants"):
-            self.assertFalse(candidates(re.split(r"(?m)^==", self.pages[title], maxsplit=1)[0]), title)
+        self.assertFalse(candidates(re.split(r"(?m)^==", self.pages["Merchants"], maxsplit=1)[0]))
+        for title, icon in (("Items", "Iron Longsword icon (cropped)"), ("Bestiary", "Giant Slug sprite (cropped)")):
+            self.assertEqual(candidates(re.split(r"(?m)^==", self.pages[title], maxsplit=1)[0]), [f"File:{icon}.png"])
 
     def test_exact_price_conversion_and_boundaries(self):
         for copper in (0, 1, 99, 100, 999, 1000, 1234, 9007199254740993, MAX_COPPER):

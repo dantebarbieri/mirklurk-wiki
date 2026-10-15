@@ -44,7 +44,7 @@ class AcquisitionTests(unittest.TestCase):
             elif entry["kind"] == "loot" and entry["details"]["outcome"] is not None:
                 normal.add(entry["details"]["outcome"])
         notes = {note["item"]: note for note in document["item_notes"]}
-        unverified = {identity for identity, note in notes.items() if note["kind"] == "unverified"}
+        unverified = {identity for identity, note in notes.items() if note["kind"] in {"unverified", "unreleased"}}
         self.assertEqual(unverified, {"item-40", "item-48", "item-49"})
         self.assertFalse(normal & unverified)
         self.assertIn("item-254", normal)
@@ -57,7 +57,7 @@ class AcquisitionTests(unittest.TestCase):
         for identity in ("item-170",):
             self.assertIn("[[" + locations[identity] + "#Recipes|", self.pages["Finish Raft"])
         for identity in unverified:
-            self.assertIn("Unknown", self.pages[locations[identity]])
+            self.assertIn("Unknown" if identity == "item-40" else "unreleased content", self.pages[locations[identity]])
             self.assertNotIn("unobtainable", self.pages[locations[identity]])
 
     def test_clothing_is_browsable_in_items_and_category_by_reviewed_slots(self):
@@ -166,7 +166,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "03ea017ad807dcb9800fe4039e3e62ec8bcc5a64a5a3ce651cd227a918833936")
+                         "8fbc1d83e8bcff28cfd2b46988afefafb398ec0441e4d0f14a805a6cc13e4917")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}

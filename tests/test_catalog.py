@@ -202,7 +202,7 @@ class CatalogTests(unittest.TestCase):
                     else:
                         self.assertIn("| No" if "treasure" in key else profile_value(key, value, entities, locations), page)
         for name in ("Flax", "Linen"):
-            self.assertIn("Stats: Unknown.", self.pages[name])
+            self.assertIn("unreleased content", self.pages[name])
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):

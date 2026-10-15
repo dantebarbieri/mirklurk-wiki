@@ -5184,8 +5184,8 @@
     },
     {
       "item": "item-48",
-      "kind": "unverified",
-      "text": "Availability in 0.9.0.1: Unknown. No acquisition method is documented.",
+      "kind": "unreleased",
+      "text": "Not obtainable in 0.9.0.1. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5196,8 +5196,8 @@
     },
     {
       "item": "item-49",
-      "kind": "unverified",
-      "text": "Availability in 0.9.0.1: Unknown. No acquisition method is documented.",
+      "kind": "unreleased",
+      "text": "Not obtainable in 0.9.0.1. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",

@@ -169,7 +169,7 @@ def validate_acquisition(document, data, existing_titles):
         if note["item"] in notes:
             raise DataError("acquisition item note: duplicate owner")
         notes.add(note["item"])
-        if not isinstance(note["kind"], str) or note["kind"] not in {"built-in", "construction-action", "gathering", "story", "unverified"}:
+        if not isinstance(note["kind"], str) or note["kind"] not in {"built-in", "construction-action", "gathering", "story", "unverified", "unreleased"}:
             raise DataError("acquisition item note: unsupported scope")
         _text(note["text"], "acquisition item note.text", 1200)
         _evidence(note["evidence"], evidence_sources, "acquisition item note.evidence")
