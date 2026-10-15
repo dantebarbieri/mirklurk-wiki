@@ -6732,7 +6732,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[219].weight/price/stackLimit/craftCost/craftReturn/extraDamage"
         },
@@ -6744,7 +6744,7 @@
       ],
       "values": {
         "initial-weight": 0.1,
-        "initial-price": 0.12,
+        "initial-price": 0.25,
         "stack-limit": 20,
         "craft-ap-cost": 6,
         "craft-yield": 4,
@@ -6758,7 +6758,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[220].weight/price/stackLimit/craftCost/craftReturn/extraDamage"
         },
@@ -6770,7 +6770,7 @@
       ],
       "values": {
         "initial-weight": 0.1,
-        "initial-price": 0.25,
+        "initial-price": 0.4,
         "stack-limit": 20,
         "craft-ap-cost": 7,
         "craft-yield": 4,
@@ -13554,7 +13554,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[267].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -13568,7 +13568,7 @@
         "initial-weight": 1,
         "initial-price": 10,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 4,
         "damage-class-id": 2
       }
@@ -13628,7 +13628,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[268].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -13642,7 +13642,7 @@
         "initial-weight": 1,
         "initial-price": 32.5,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 4,
         "damage-class-id": 2
       }
@@ -13702,7 +13702,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[269].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -13716,7 +13716,7 @@
         "initial-weight": 1,
         "initial-price": 10,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 4,
         "damage-class-id": 18
       }
@@ -13776,7 +13776,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[270].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -13790,7 +13790,7 @@
         "initial-weight": 1,
         "initial-price": 30,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 4,
         "damage-class-id": 18
       }
@@ -13850,7 +13850,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[271].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -13864,7 +13864,7 @@
         "initial-weight": 1.5,
         "initial-price": 10,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 4,
         "damage-class-id": 15
       }
@@ -13924,7 +13924,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[272].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -13938,7 +13938,7 @@
         "initial-weight": 1.5,
         "initial-price": 20,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 4,
         "damage-class-id": 15
       }
@@ -13998,7 +13998,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[273].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -14012,7 +14012,7 @@
         "initial-weight": 0.8,
         "initial-price": 8,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 2,
         "damage-class-id": 24
       }
@@ -14072,7 +14072,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[274].weight/price/stackLimit/durabilityMax/apCost/damageClass"
         },
@@ -14086,7 +14086,7 @@
         "initial-weight": 0.8,
         "initial-price": 25,
         "stack-limit": 1,
-        "durability-max": 1,
+        "durability-max": 30,
         "item-ap-cost": 2,
         "damage-class-id": 16
       }
@@ -15465,12 +15465,12 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[41].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/rangedAttackCost/dodgeChance/damageClass"
         },
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[41].rangedDamageClass/hpgridsize"
         },
@@ -15482,7 +15482,7 @@
       ],
       "values": {
         "base-xp": 750,
-        "being-armor": 0,
+        "being-armor": 49,
         "tile-speed": 6,
         "idle-move-chance": 0.5,
         "base-speed": 1,
@@ -24450,211 +24450,211 @@
         [
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           }
         ],
         [
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           }
         ],
         [
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           }
         ],
         [
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           }
         ],
         [
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           }
         ],
         [
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           }
         ],
         [
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           },
           {
             "health": 1,
-            "armor": 0
+            "armor": 1
           }
         ]
       ],
@@ -24662,7 +24662,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0901",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[41].hpgridsize/armor"
         },

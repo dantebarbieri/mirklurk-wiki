@@ -15,6 +15,6 @@ Welcome to the '''MirkLurk Wiki''', an independent guide to the Mirk.
 
 '''Spoilers:''' this wiki includes story events, locations and discoveries.
 
-Mechanics cover [[Game mechanics#Version|version 0.9.0.0]], the official patch of 14 October 2026. See [[Version 0.9.0.0|what's new in 0.9.0.0]].
+Mechanics cover [[Game mechanics#Version|version 0.9.0.1]], the patch of 15 October 2026. See [[Version 0.9.0.1|what's new in 0.9.0.1]] and [[Version 0.9.0.0|in 0.9.0.0]].
 
 MirkLurk is developed and published by [https://edympixels.com/ Edym Pixels], as listed on [https://store.steampowered.com/app/3972980/MirkLurk/ its Steam page]. This is an unofficial community wiki; game names and artwork remain subject to their owners' rights.
