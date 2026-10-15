@@ -5,26 +5,35 @@ import re
 # Pages are shown only when published; any other top-level guide falls into "Other guides".
 # Icons name entities whose figure is published; a missing figure simply shows no icon.
 NEW_PLAYER_PATH = [
-    ("Starting equipment", "what you carry at the start", None),
-    ("Action points", "every step, swing and craft costs AP", None),
+    ("Difficulty", "Easy, Medium or Hard", "Shoddy Dagger"),
+    ("Controls", "mouse, keyboard and controller", "Map of area"),
+    ("Starting equipment", "what you carry at the start", "Small Backpack"),
+    ("Action points", "every step, swing and craft costs AP", "Strider"),
     ("Satiation", "hunger and eating", "Loaf of Bread"),
     ("Foods", "what to eat and what makes you sick", "Pleasant Vegetable Soup"),
     ("Resting", "recover focus and stamina", "Great Bedroll"),
-    ("Health and armor", "how hits land on your body", "Steel Shield"),
-    ("Bestiary", "know what hunts in the Mirk", "Mirkfang"),
+    ("Combat basics", "turns, attacking and escaping", "Iron Hand Axe"),
+    ("Health and armor", "how hits land on your body", ("Steel Shield", 24)),
+    ("Death", "what kills you and what happens next", "File:Dead Unwanted portrait.png"),
+    ("Bestiary", "know what hunts in the Mirk", "Mirk Runner"),
 ]
+# An icon is an entity name or a File title, optionally with its box size in pixels (default 32).
+EIR = "File:Captain Eir portrait.png"
 EXPLORE_ICONS = {
-    "Items": "Iron Longsword", "Bestiary": "Giant Mirkfang", "Nature": "Log (Willow)", "Skills": "Shield Savant",
-    "Damage types": "Orb of Poison", "Health and armor": "Steel Shield", "Game mechanics": "Campfire",
+    "Items": "Iron Longsword", "Bestiary": ("Giant Slug", 48), "NPCs": EIR, "Nature": "Log (Willow)",
+    "Skills": "Shield Savant", "Damage types": "Orb of Poison", "Health and armor": "Steel Chestplate",
+    "Game mechanics": "Campfire", "Action points": "Fast Feet",
 }
 TOPIC_GROUPS = [
-    ("Survival", "Campfire", ["Satiation", "Foods", "Stamina", "Focus", "Temperature", "Wellbeing", "Resting", "Weather"]),
-    ("Combat", "Iron Shortsword", ["Action points", "Strict move", "Health and armor", "Armor points", "Damage types",
-                                   "Magic weapons", "Skills", "Level progression"]),
-    ("Items and crafting", "Iron Felling Axe", ["Items", "Starting equipment", "Crafting", "Placing objects", "Planting",
-                                                "Tree health and chopping", "Loot tables", "Currency and trading", "Merchants"]),
-    ("World", "Map of area", ["Areas", "Terrain", "Nature", "World generation", "Survivors' camp", "Dead camp"]),
-    ("People and story", None, ["NPCs", "Quests and journal", "Bestiary"]),
+    ("Getting started", "Torch", ["Difficulty", "Controls", "Starting equipment", "Death"]),
+    ("Survival", "Survivor's Field Kit", ["Satiation", "Foods", "Stamina", "Focus", "Temperature",
+                                          "Wellbeing", "Resting", "Weather"]),
+    ("Combat", "Iron Battleaxe", ["Combat basics", "Action points", "Strict move", "Health and armor", "Armor points",
+                                  "Damage types", "Magic weapons", "Skills", "Level progression"]),
+    ("Items and crafting", "Storage Chest", ["Items", "Crafting", "Placing objects", "Planting",
+                                             "Tree health and chopping", "Loot tables", "Currency and trading", "Merchants"]),
+    ("World", "Map Ledger", ["Areas", "Terrain", "Nature", "World generation", "Survivors' camp", "Dead camp"]),
+    ("People and story", "File:Magus Clay portrait.png", ["NPCs", "Quests and journal", "Bestiary"]),
 ]
 CARD_GRID = '<div class="mirklurk-cards" style="display:flex;flex-wrap:wrap;gap:12px;margin:0.5em 0 1em;">'
 CARD = ('<div class="mirklurk-card" style="flex:1 1 16em;min-width:0;border:1px solid #a2a9b1;'
@@ -38,6 +47,8 @@ def browse_order(name, kind, values):
     rank = values.get("base-xp" if kind == "creature" else "initial-price")
     rank = float("inf") if rank is None else float(rank)
     if kind == "creature":
+        return ("", rank, name)
+    if name in ("Rock", "Flint", "Drake Jasper", "Dragon Flint"):
         return ("", rank, name)
     base = re.sub(r"\s*\(.*\)", "", name)
     return ((base.split(" of ")[0] if " of " in base else base).split()[-1], rank, name)
@@ -71,8 +82,14 @@ def topic_cards(pages, extra, picture, exclude=()):
     others = sorted(title for title in set(extra) - shown - set(exclude) if published(title, pages))
     if others:
         groups.append(("Other guides", None, others))
-    return grid([card(picture(icon, titles[0]), f"'''{heading}'''", " &middot; ".join(f"[[{title}]]" for title in titles))
+    return grid([card(picture(icon, titles[0]), f"'''{heading}'''", links(titles))
                  for heading, icon, titles in groups if titles])
+
+
+def links(titles):
+    """Inline link list that wraps only between entries, never inside a title or before a separator."""
+    return " ".join(f'<span style="white-space:nowrap;">[[{title}]]{" &middot;" if i < len(titles) - 1 else ""}</span>'
+                    for i, title in enumerate(titles))
 
 
 def new_player_steps(pages, picture):
@@ -81,20 +98,50 @@ def new_player_steps(pages, picture):
     return "Read these in order for a first run:\n" + "\n".join(steps) + "\n" if steps else ""
 
 
-def compose_portals(pages, extra, images, entities):
+def compose_portals(pages, extra, images, entities, context=None):
     from wiki_render import image_for, pixel_image  # wiki_render imports this module
 
     by_name = {row["name"]: identity for identity, row in entities.items()}
 
-    def picture(name, link):
-        image = image_for(by_name.get(name), images) if name else None
-        return pixel_image(image, 32, 32, link, link) + " " if image else ""
+    by_file = {image["file_title"]: image for image in images}
+
+    def picture(icon, link):
+        name, size = icon if isinstance(icon, tuple) else (icon, 32)
+        image = (by_file.get(name) if str(name).startswith("File:")
+                 else image_for(by_name.get(name), images) if name else None)
+        if not image:
+            return ""
+        # Fit the native sprite to the box: whole-number zoom when it is at least 2x, otherwise a
+        # fractional one, so portraits shrink and small sprites grow to match their neighbours.
+        pixels = image["pixel_art"]
+        fit = min(size * pixels["source_scale"] / pixels["width"], size * pixels["source_scale"] / pixels["height"])
+        fit = int(fit) if fit >= 2 else round(fit, 3)
+        art = re.sub(r"zoom:calc\([\d.]+ /", f"zoom:calc({fit} /", pixel_image(image, size, size, link, link), count=1)
+        return (f'<span style="display:inline-block;width:{size}px;text-align:center;vertical-align:middle;'
+                f'margin-right:4px;">{art}</span>')
 
     main = explore_cards(pages["Main Page"], picture)
     for heading, body in (("== New to the Mirk? ==", new_player_steps(pages, picture)),
                           ("== Guides by topic ==", topic_cards(pages, extra, picture))):
         main = main.replace(heading + "\n", heading + "\n" + body) if body else main.replace(heading + "\n\n", "")
     pages["Main Page"] = main
+    if context:
+        from wiki_families import add_families
+        add_families(pages, entities, *context)
     if "Game mechanics" in pages:
         pages["Game mechanics"] = (pages["Game mechanics"].rstrip("\n") + "\n\n== Guides by topic ==\n"
                                    + topic_cards(pages, extra, picture, exclude={"Game mechanics"}))
+
+
+STORY = ("Wooden Recorder", "Glowing Rune", "Clay's Strange Potion", "Ancient Strongbox", "Ward Breaker",
+         "Head of The Terror", "Magus' Shard")
+
+
+def story_order(entity):
+    name = entity["name"]
+    return (STORY.index(name) if name in STORY else len(STORY), name)
+
+
+# Spoiler-heavy factions go last so readers only meet them by scrolling.
+def section_order(row):
+    return ({"Scaalmyr faction": 1, "Nightmare faction": 2}.get(row["title"], 0), row["title"])

@@ -88,17 +88,17 @@ class FollowupTests(unittest.TestCase):
         # Items is re-pinned for 0.8.9.9: its only changes are additive rows for new items and sellers,
         # plus the Finish Raft world sprite beside its plain link.
         # Wooden Recorder is re-pinned for its item summary box, phone-width summary sizing and linked {{Coins}} value.
-        # Items is re-pinned for basic-to-best family ordering; its lines are unchanged, only reordered.
+        # Items is re-pinned for basic-to-best ordering, tag-backed sections and capacity kinds.
         # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
-            "Items": "2e08476572f622b16ed6670fb93e1dc905e29bcc8afaf47ca1b1c6d3c410b6e7",
-            "Wooden Recorder": "f7fe0957468e0da67a0eb1232118a09a2116ded853a81dd3b4180efd7cbc5571",
+            "Items": "e7e3560f3adbd1cb9744a941b83ce79fedeba94b9df4de43773c4e346a6dbedc",
+            "Wooden Recorder": "c5750feaa6e5947168b749f789a330015d0b8c3fc79baefdeba3acdde7325310",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):
                 text = self.pages[title]
-                table_count = 7 if title == "Items" else 1
+                table_count = 10 if title == "Items" else 1
                 wrapper = scroll_open() if title == "Items" else scroll_open("Item summary")
                 self.assertEqual(text.count(wrapper), table_count)
                 text, count = re.subn(re.escape(wrapper) + r"(.*?)\n</div>\n",
@@ -184,10 +184,10 @@ class FollowupTests(unittest.TestCase):
                     self.assertIn(f"+<nowiki>{slots}</nowiki> inventory slots", self.pages["Category:" + category])
         self.assertIn("+<nowiki>9</nowiki> inventory slots", self.pages["Forager's Vest"])
         self.assertIn("Replacing an item replaces its capacity bonus", self.pages["Forager's Vest"])
-        carrying = self.pages["Items"].split("== Carrying equipment ==", 1)[1].split("\n== ", 1)[0]
-        for identity in self.categories["Carrying equipment"]["members"]:
+        carrying = self.pages["Items"].split("== Belts and backpacks ==", 1)[1].split("\n== ", 1)[0]
+        for identity in self.categories["Belts and backpacks"]["members"]:
             self.assertIn('id="item-' + self.locations[identity].replace(" ", "_") + '"', carrying)
-            self.assertIn("{{Item|" + self.locations[identity] + "}}", self.pages["Category:Carrying equipment"])
+            self.assertIn("{{Item|" + self.locations[identity] + "}}", self.pages["Category:Belts and backpacks"])
 
     def test_capacity_validation_rejects_ambiguous_or_incomplete_bonus_data(self):
         for mutate in (

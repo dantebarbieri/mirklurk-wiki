@@ -239,7 +239,7 @@ class DisplayTests(unittest.TestCase):
             self.assertNotIn("Medium Backpack icon (cropped)", registry)
             self.assertIn("[[Iron Hand Axe|<nowiki>Iron Hand Axe</nowiki>]]", registry)
         self.assertIn("{{Item|Iron Hand Axe}}", self.pages["Items"])
-        self.assertEqual(self.pages["Items"].count('id="item-'), 264)
+        self.assertEqual(self.pages["Items"].count('id="item-'), 263)
 
     def test_actual_sources_compose_rows_and_keep_exact_owner_filters(self):
         readers = {title: text for title, text in self.pages.items() if title not in DISPLAY_TITLES}
@@ -247,7 +247,8 @@ class DisplayTests(unittest.TestCase):
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (97, 78))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 79)
-        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2128)
+        self.assertEqual(sum(text.split("<div class=\"mirklurk-navbox\"", 1)[0].count("{{Item|") for title, text in readers.items()
+                             if f"\n'''{title}''' groups " not in text), 2231)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("|Value]]: ") for text in readers.values()), 58)

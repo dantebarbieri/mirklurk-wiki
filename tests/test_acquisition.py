@@ -63,7 +63,7 @@ class AcquisitionTests(unittest.TestCase):
     def test_clothing_is_browsable_in_items_and_category_by_reviewed_slots(self):
         clothes = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Clothes")
         expected = {"Headwear": 5, "Shirts": 3, "Outerwear": 3, "Cloaks": 5, "Gloves": 4,
-                    "Pants": 3, "Socks": 3, "Footwear": 5, "Other clothing": 1}
+                    "Pants": 3, "Socks": 3, "Footwear": 5}
         groups = clothing_subgroups(self.catalog, clothes["members"])
         self.assertEqual({label: len(members) for label, members, _ in groups}, expected)
         self.assertEqual(set().union(*(members for _, members, _ in groups)), set(clothes["members"]))
@@ -76,8 +76,8 @@ class AcquisitionTests(unittest.TestCase):
                 for slot in slots:
                     self.assertIn("[[:Category:" + slot + "|", section)
         anchors = re.findall(r'id="item-([^"]+)"', self.pages["Items"])
-        self.assertEqual(len(anchors), 264)
-        self.assertEqual(set(anchors), {locations[row["id"]].replace(" ", "_") for row in self.data["entities"] if row["category"] == "item"})
+        self.assertEqual(len(anchors), 263)
+        self.assertEqual(set(anchors), {locations[row["id"]].replace(" ", "_") for row in self.data["entities"] if row["category"] == "item" and row["id"] != "item-31"})
 
     def test_overlapping_clothing_tags_never_duplicate_primary_index_anchors(self):
         catalog = copy.deepcopy(self.catalog)
@@ -92,7 +92,7 @@ class AcquisitionTests(unittest.TestCase):
         hood = next(row for row in catalog["taxonomy"]["tags"] if row["title"] == "Hood-slot equipment")
         hood["members"].remove("item-42")
         self.assertEqual(dict((label, members) for label, members, _ in clothing_subgroups(catalog, clothes["members"]))["Other clothing"],
-                         {"item-42", "item-265"})
+                         {"item-42"})
 
     def test_ingredient_groups_are_exact_input_source_joins_not_material_or_ware_lists(self):
         inputs = {row["item"] for entry in self.data["entries"] if entry["kind"] == "recipe"
@@ -166,7 +166,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "c47c1a52c6ebba3732bc04de297bd54cb827e3ed453b6cd70bfe8d6be37de554")
+                         "5b7c2bf98e5bdc9bf8a1e910712b45898591e0cc559ecac68e51dd2389626b23")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}

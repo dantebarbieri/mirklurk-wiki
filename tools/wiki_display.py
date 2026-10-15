@@ -52,7 +52,7 @@ def dependencies(text, lua=False):
             found.add(title_key(raw[1:]))
         elif raw.lower().startswith("#invoke:"):
             found.add(title_key("Module:" + raw.split(":", 1)[1]))
-        elif not raw.startswith("#") and raw not in {"PAGENAME", "FULLPAGENAME", "!"}:
+        elif not raw.startswith(("#", "DEFAULTSORT:")) and raw not in {"PAGENAME", "FULLPAGENAME", "!"}:
             found.add(title_key(raw if raw.lower().startswith("template:") else "Template:" + raw))
     return found
 

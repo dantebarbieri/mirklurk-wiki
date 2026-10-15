@@ -26,7 +26,7 @@ class PortalTests(unittest.TestCase):
             self.assertIn(f"\n== {heading} ==\n", self.main)
         self.assertNotIn("\n[[", self.main.split("\n== About this wiki ==\n", 1)[1])
         steps = re.findall(r"^# .*?'''\[\[([^]|]+)\]\]'''", self.section("Main Page", "New to the Mirk?"), re.M)
-        self.assertEqual(steps[:2], ["Starting equipment", "Action points"])
+        self.assertEqual(steps[:4], ["Difficulty", "Controls", "Starting equipment", "Action points"])
         explore = self.section("Main Page", "Explore")
         self.assertTrue(explore.startswith('<div class="mirklurk-cards"'))
         self.assertNotIn("\n* [[", explore)
@@ -59,6 +59,27 @@ class PortalTests(unittest.TestCase):
         mirkfangs = self.pages["Bestiary"].split("\n== Mirkfang faction ==\n", 1)[1].split("\n== ", 1)[0]
         self.assertEqual(re.findall(r"\{\{Creature\|([^}]+)\}\}", mirkfangs),
                          ["Mirkfang", "Giant Mirkfang", "Mirkfang Matriarch", "The Terror"])
+
+    def test_family_pages_and_navboxes_list_tiers_in_order(self):
+        self.assertEqual(re.findall(r"^\| \d+ \|\| \{\{Item\|([^}]+)\}\}", self.pages["Socks"], re.M),
+                         ["Worn Socks", "Decent Socks", "Fine Wool Socks"])
+        socks = self.pages["Decent Socks"]
+        navbox = socks.split('<div class="mirklurk-navbox"', 1)[1].split("</div>", 1)[0]
+        self.assertIn("'''[[Socks]]''' (lowest to highest value)", navbox)
+        self.assertIn("{{DEFAULTSORT:Socks 02 Decent Socks}}", socks)
+        self.assertLess(socks.index("mirklurk-navbox"), socks.index("[[Category:"))
+        mirkfang = self.pages["Giant Mirkfang"]
+        self.assertIn("'''[[:Category:Mirkfangs|Mirkfangs]]''' (weakest to strongest)", mirkfang)
+        self.assertIn("{{DEFAULTSORT:Mirkfangs 02 Giant Mirkfang}}", mirkfang)
+
+    def test_guides_open_with_a_lead_and_section_links(self):
+        stamina = self.pages["Stamina"].split("\n== How it works ==\n", 1)[0]
+        self.assertIn("'''Stamina''' is one of the [[Game mechanics|survival topics]].", stamina)
+        self.assertIn("'''Sharp''' is one of the [[Damage types|damage types]].", self.pages["Sharp"])
+        self.assertNotIn("'''<nowiki>Sharp</nowiki>'''", self.pages["Sharp"])
+        self.assertIn("On this page: [[#Mouse|Mouse]] &middot; [[#Keyboard|Keyboard]]", self.pages["Controls"])
+        for title in ("Controls", "Difficulty", "Death", "Combat basics"):
+            self.assertIn(f"[[{title}]]", self.section("Main Page", "New to the Mirk?"))
 
 
 if __name__ == "__main__":

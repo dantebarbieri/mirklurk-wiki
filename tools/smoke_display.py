@@ -9,7 +9,7 @@ from sync_wiki import SyncError, fetch_live, sync
 from wiki_anchors import fragment
 from wiki_catalog import page_locations, primary_groups, title_key
 from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, lua_string, page_namespace
-from wiki_portal import browse_order
+from wiki_portal import browse_order, section_order
 from wiki_render import image_for, merchant_table, pixel_geometry
 
 
@@ -221,7 +221,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             raise RuntimeError("Creature icon diverged from the shared integer-native sizing policy.")
         if "mirklurk-cell-grid" in rendered or "occupied health cells" in rendered:
             raise RuntimeError("Creature display unexpectedly copied statistics.")
-    groups = sorted((group for group in primary_groups(catalog) if group["index"] == "Bestiary"), key=lambda g: g["title"])
+    groups = sorted((group for group in primary_groups(catalog) if group["index"] == "Bestiary"), key=section_order)
     values, names = {}, {row["id"]: row["name"] for row in data["entities"]}
     for row in details["profiles"]:
         values.setdefault(row["entity"], {}).update(row["values"])
