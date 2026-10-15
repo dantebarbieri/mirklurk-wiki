@@ -42,7 +42,7 @@ class EditorialTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(DataError):
                 base_value_text(Decimal(value))
         self.assertFalse(any("silver equivalents" in text for text in self.pages.values()))
-        self.assertIn("|| {{Coins|100}} ||", self.pages["Silver Coin"])
+        self.assertIn("|| {{Coins|100}} = {{Coins|100|copper}} ||", self.pages["Silver Coin"])
 
     def test_construction_action_listing_shows_its_world_sprite(self):
         # Finish Raft is never an {{Item}}, but the Items list still shows its reviewed world sprite.

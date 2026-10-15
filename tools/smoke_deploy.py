@@ -253,8 +253,8 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
         with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
             if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
                 raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
-    if "pageimage" in first(api, t="Items", prop="pageimages", piprop="name", pilicense="any"):
-        raise RuntimeError("An index page borrowed an inline icon as its search and preview icon.")
+    # Items leads with its homepage icon; no inline list icon may displace it.
+    smoke_link_preview(api, "Items", "Iron Longsword icon (cropped).png", open_media)
     axe = image_for("item-27", data["illustrations"])
     smoke_link_preview(api, locations["item-27"], axe["file_title"].removeprefix("File:"), open_media)
     for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]:

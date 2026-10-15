@@ -266,3 +266,10 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         text += body + "\n" if body else ""
         text += display + "\n" if display else ""
     return text
+
+
+def coin_value(coins):
+    """Coin pages also state their value in each smaller denomination: 1 gold = 10 silver = 1000 copper."""
+    total = int(coins[8:-2])
+    return " = ".join([coins] + [f"{{{{Coins|{total}|{unit}}}}}" for unit, size in (("silver", 100), ("copper", 1))
+                                 if total > size and total % size == 0])

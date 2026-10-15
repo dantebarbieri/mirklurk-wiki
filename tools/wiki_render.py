@@ -569,7 +569,6 @@ def merchant_table(entries, images, entities, locations, standard_prices=False, 
     for entry in entries:
         merchant, item = entry["details"]["merchant"], locations[entry["details"]["item"]]
         anchor = entry.get("anchor") or titled("offer", item)
-        # Only the owner page keeps the row anchor.
         arguments = {
             "anchors": "<noinclude>" + span(anchor) + "</noinclude>",
             "seller": f'[[{locations[merchant]}#{anchor}|{literal(entities[merchant]["name"])}]]',
@@ -1084,11 +1083,12 @@ def entities_name(data, identity):
 
 
 def coin_summary(coin, entities, locations):
+    from wiki_items import coin_value
     return (
         "\n== Coin value and weight ==\n<onlyinclude>\n"
         + table(["Coin", "Value", "Weight", "Maximum stack"], [[
             span(titled("coin", locations[coin["entity"]])) + entity_link(coin["entity"], entities, locations),
-            price_text({"value": coin["value_in_silver"]}), known(coin["weight_grams"]) + " g", known(coin["stack_limit"]),
+            coin_value(price_text({"value": coin["value_in_silver"]})), known(coin["weight_grams"]) + " g", known(coin["stack_limit"]),
         ]]) + "</onlyinclude>\n\n[[Currency and trading|Barter, change, and coin consolidation]]\n"
     )
 
@@ -1132,7 +1132,6 @@ def currency_page(currency, entities, locations):
 def build_pages(root, data, catalog=None, details=None):
     if not isinstance(data, dict):
         raise DataError("root: expected an object")
-    # Station images need the registry.
     base = {key: value for key, value in data.items() if key != "illustrations"}
     validate_data(base)
     catalog = validate_catalog(default_catalog(base) if catalog is None else catalog, base)
@@ -1410,7 +1409,6 @@ def build_pages(root, data, catalog=None, details=None):
                                            for group in catalog.get("taxonomy", {}).get(field, [])):
             pages[guide["title"]] += "\n[[:Category:Food and drink|Browse foods and drinks]] | [[Crafting|Find a preparation recipe]]\n"
 
-    # Overviews link canonical pages via entity anchors.
     navigation = defaultdict(lambda: defaultdict(set))
     for entity in data["entities"]:
         npc = classified.get(entity["id"]) == "npc"
