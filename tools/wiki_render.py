@@ -12,7 +12,7 @@ from wiki_catalog import (
     CURRENCY_RULE_TITLES, INGREDIENT_METHODS, armor_groups, category_definitions, default_catalog, entry_owners, entry_relations,
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
-from wiki_anchors import acquisition_fragments, entity_fragment, entry_fragments, fragment, illustration_fragment, span, titled, validate_anchors
+from wiki_anchors import acquisition_fragments, entity_fragment, entry_fragments, fragment, illustration_fragment, span, titled, validate_anchors, validate_readable_identifiers
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, prose_link_parts, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
@@ -1940,5 +1940,6 @@ def build_pages(root, data, catalog=None, details=None):
                     raise DataError(f'NPC dialogue: missing linked page or explicit anchor: {link["target"]}')
     validate_transclusions(pages)
     validate_anchors(pages, lenient={*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs"})
+    validate_readable_identifiers(pages)
     validate_display_dependencies(pages)
     return pages

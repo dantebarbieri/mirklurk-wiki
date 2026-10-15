@@ -96,8 +96,8 @@ differs from the generated text, which catches wikitext that MediaWiki's
 pre-save transform would change. It also lists `[[File:...]]` references that
 are not on the wiki yet.
 
-The sync never deletes, moves or renames pages and never uploads files. A page
-dropped from the generator stays on the wiki until someone removes it.
+The sync never deletes, moves or renames pages and never uploads files
+([File moves](IMAGES.md#renaming-files)). A dropped page stays until removed.
 
 ### Retired research pages
 

@@ -27,6 +27,7 @@ from build_wiki import build_pages, build_xml, title_key
 from sync_wiki import Api, fetch_live, normalize, sync
 from wiki_anchors import acquisition_fragments, entry_fragments, titled
 from wiki_catalog import entry_owners, entry_relations, page_locations
+from wiki_data import HEALTH_ARMOR_ICONS
 from wiki_details import load_publication_inputs
 from wiki_display import page_namespace
 from smoke_display import (
@@ -49,9 +50,9 @@ MATURE_TREES = {
     "nature-4": (508, 520), "nature-7": (616, 860), "nature-17": (272, 484), "nature-20": (196, 220),
 }
 LANDMARK_IMAGES = {
-    "Ranger-Bhato-hut-exterior-cropped.png": (48, 42),
-    "Gurb-Gurb-hollow-exterior-cropped.png": (79, 120),
-    "Ihar-shipwreck-exterior-cropped.png": (128, 92),
+    "Ranger Bhato exterior (cropped).png": (48, 42),
+    "Gurb-Gurb exterior (cropped).png": (79, 120),
+    "Ihar exterior (cropped).png": (128, 92),
 }
 
 
@@ -108,6 +109,11 @@ class RenderedGrids(HTMLParser):
             self.cell["text"] += data
 
 
+def file_key(title):
+    """A File name as MediaWiki reports it in URLs and parse ``images``."""
+    return title.removeprefix("File:").replace(" ", "_")
+
+
 def check_shield_icon(images, links, styles, armor):
     name = {1: "bronze", 2: "silver", 3: "gold"}[armor]
     label = f'1 HP, {armor} armor {"layer" if armor == 1 else "layers"} ({name} shield)'
@@ -115,7 +121,7 @@ def check_shield_icon(images, links, styles, armor):
         ("alt", label), ("width", "64"), ("height", "64"),
     )):
         raise RuntimeError(f"A health shield lost its exact size or accessible HP/armor label: {images!r}")
-    filename = f"Health-armor-{armor}.png"
+    filename = file_key(HEALTH_ARMOR_ICONS[armor][0])
     if filename not in urllib.parse.unquote(images[0].get("src", "")):
         raise RuntimeError("A health cell displays the wrong armor sprite.")
     if len(links) != 1 or "File:" + filename not in urllib.parse.unquote(links[0].get("href", "")):
@@ -141,18 +147,18 @@ def smoke_npc_locations(api, data, catalog, image_hashes, open_media=urllib.requ
             raise RuntimeError("An NPC location illustration must not replace a missing portrait.")
         parsed = api({"action": "parse", "page": locations[image["entity"]], "prop": "text|images"})["parse"]
         check_parser_errors(parsed["text"]["*"])
-        if not {filename, portrait["file_title"].removeprefix("File:")} <= set(parsed["images"]):
+        if not {file_key(filename), file_key(portrait["file_title"])} <= set(parsed["images"]):
             raise RuntimeError("An NPC page lost its portrait or location illustration.")
         rendered = RenderedGrids()
         rendered.feed(parsed["text"]["*"])
-        matches = [row for row in rendered.images if filename in urllib.parse.unquote(row.get("src", ""))]
+        matches = [row for row in rendered.images if file_key(filename) in urllib.parse.unquote(row.get("src", ""))]
         scale = pixel_geometry(image)[2]
         if (len(matches) != 1 or tuple(matches[0].get(key) for key in ("width", "height")) != tuple(map(str, size))
                 or "srcset" in matches[0] or "/thumb/" in matches[0].get("src", "")
                 or not any(f"zoom:calc({scale}/1)" in style.replace(" ", "") and "image-rendering:pixelated" in style
                            for style in rendered.pixel_styles)):
             raise RuntimeError("An NPC location picture lost its original source or exact integer-scaled presentation.")
-        if not any(portrait["file_title"].removeprefix("File:") in urllib.parse.unquote(row.get("src", ""))
+        if not any(file_key(portrait["file_title"]) in urllib.parse.unquote(row.get("src", ""))
                    for row in rendered.images):
             raise RuntimeError("An NPC portrait did not resolve to an actual rendered image.")
         info_page = next(iter(api({
@@ -194,7 +200,7 @@ def smoke_pixel_art(api, data):
             source = urllib.parse.unquote(actual.get("src", ""))
             if (tuple(actual.get(key) for key in ("width", "height")) != tuple(str(pixels[key]) for key in ("width", "height"))
                     or "srcset" in actual or "/thumb/" in source
-                    or not source.endswith(image["file_title"].removeprefix("File:"))
+                    or not source.endswith(file_key(image["file_title"]))
                     or expected_zoom not in style.replace(" ", "") or "image-rendering:pixelated" not in style):
                 raise RuntimeError("Pixel art used a resampled source, lost aspect ratio or lost its integer-native scale.")
 
@@ -237,7 +243,7 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
         old_filename = identity.capitalize() + ".png"
         parsed = api({"action": "parse", "page": locations[identity], "prop": "text|images"})["parse"]
         check_parser_errors(parsed["text"]["*"])
-        if filename not in parsed["images"] or old_filename in parsed["images"]:
+        if file_key(filename) not in parsed["images"] or old_filename in parsed["images"]:
             raise RuntimeError("A tree page does not use its reviewed mature composition exclusively.")
         if "shape varies" not in parsed["text"]["*"]:
             raise RuntimeError("A mature-tree caption lost its shape qualification.")
@@ -257,13 +263,13 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
         image = image_for(guide["image_entity"], data["illustrations"])
         parsed = api({"action": "parse", "page": guide["title"], "prop": "text|images|links"})["parse"]
         check_parser_errors(parsed["text"]["*"])
-        if image["file_title"].removeprefix("File:") not in parsed["images"]:
+        if file_key(image["file_title"]) not in parsed["images"]:
             raise RuntimeError("A mechanics guide lost its approved contextual image.")
         if not set(guide.get("related_pages", [])) <= {link["*"] for link in parsed["links"] if link["ns"] == 0}:
             raise RuntimeError("A mechanics guide lost its related guide links.")
         images = RenderedGrids()
         images.feed(parsed["text"]["*"])
-        if not any(image["file_title"].removeprefix("File:") in urllib.parse.unquote(row.get("src", "")) for row in images.images):
+        if not any(file_key(image["file_title"]) in urllib.parse.unquote(row.get("src", "")) for row in images.images):
             raise RuntimeError("A contextual guide illustration did not resolve to an actual rendered image.")
     for title, category in (("Nightmare", "Bugs"), ("Mirk Runner", "Rodents"),
                             ("Sceetler", "Scaalmyr"), ("Mudfin", "Aquatic creatures")):
@@ -331,14 +337,14 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
     if seen_armor != {1, 2, 3}:
         raise RuntimeError("The armored-cell smoke fixtures did not exercise all three shield levels.")
     guide = api({"action": "parse", "page": "Health and armor", "prop": "text|images"})["parse"]
-    if set(guide["images"]) != {f"Health-armor-{armor}.png" for armor in (1, 2, 3)}:
+    if set(guide["images"]) != {file_key(title) for title, _ in HEALTH_ARMOR_ICONS.values()}:
         raise RuntimeError("The shield legend did not resolve exactly the three reviewed File references.")
     legend = RenderedGrids()
     legend.feed(guide["text"]["*"])
     if len(legend.images) != 3 or len(legend.icon_styles) != 3 or "Shield legend" not in guide["text"]["*"]:
         raise RuntimeError("The guide lost its compact three-shield legend.")
     for armor in (1, 2, 3):
-        filename = f"Health-armor-{armor}.png"
+        filename = file_key(HEALTH_ARMOR_ICONS[armor][0])
         links = [link for link in legend.links if "File:" + filename in urllib.parse.unquote(link.get("href", ""))]
         check_shield_icon([legend.images[armor - 1]], links, [legend.icon_styles[armor - 1]], armor)
     for title, expected in (
@@ -1108,8 +1114,8 @@ def synthetic_image_specs(data):
     # Original solid-color RGB/RGBA pixels, not game artwork or a committed fixture.
     specs = {"Synthetic-thumbnail.png": (64, 32, bytes((37, 149, 211)), 16)}
     specs.update({filename: (size, size, pixel, 32) for filename, size, pixel in BRANDING_IMAGES.values()})
-    specs.update({f"Health-armor-{armor}.png": (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
-                  for armor in (1, 2, 3)})
+    specs.update({title.removeprefix("File:"): (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
+                  for armor, (title, _) in HEALTH_ARMOR_ICONS.items()})
     for index, image in enumerate(sorted(data["illustrations"], key=lambda row: row["file_title"])):
         filename = image["file_title"].removeprefix("File:")
         pixels = image["pixel_art"]

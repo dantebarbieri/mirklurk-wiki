@@ -60,7 +60,9 @@ not inherit the caller's view/filter parameters. Readable row anchors such as
 `recipe-Bandage` or `offer-Iron_Hand_Axe` are passed with `anchors`; merged
 identical variants keep every record's anchor (`recipe-Bandage`, `recipe-Bandage-2`).
 Offer, loot and acquisition anchors are wrapped in `noinclude`; recipe anchors
-are unique wiki-wide, so workstations transclude them.
+are unique wiki-wide, so workstations transclude them. Anchors, `item=`
+values and File titles never contain source IDs (`being-7`, `item-27`,
+`skill-group-2`, ...); the build rejects them.
 
 Syntax example (illustrative, not a verified recipe):
 

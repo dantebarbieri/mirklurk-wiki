@@ -151,7 +151,7 @@ class DialogueTests(unittest.TestCase):
             })
             self.assertNotIn("Dialogue and guidance", selected)
             self.assertNotIn('id="dialogue-', selected)
-            self.assertNotIn("Healing-popup.png", selected)
+            self.assertNotIn("Viend ability (healing popup).png", selected)
             self.assertNotIn("Viend automatically heals", selected)
             for topic in self.topics[owner]:
                 for paragraph in topic["paragraphs"]:
@@ -193,8 +193,8 @@ class DialogueTests(unittest.TestCase):
         self.assertLess(healing, dialogue)
         self.assertLess(dialogue, stats)
         self.assertEqual(page.count("Viend automatically heals"), 1)
-        self.assertEqual(page.count("[[File:Healing-popup.png|"), 1)
-        self.assertIn("[[File:Healing-popup.png|", page[healing:dialogue])
+        self.assertEqual(page.count("[[File:Viend ability (healing popup).png|"), 1)
+        self.assertIn("[[File:Viend ability (healing popup).png|", page[healing:dialogue])
         self.assertNotIn("dialogue-information", page[healing:dialogue])
         self.assertIn('id="dialogue-information"', page[dialogue:stats])
         self.assertIn('id="dialogue-quest-guidance"', page[dialogue:stats])

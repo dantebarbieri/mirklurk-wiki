@@ -626,7 +626,7 @@ class HealthArmorTests(unittest.TestCase):
         self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 6)
         guide = self.pages["Health and armor"]
         for armor, name in ((1, "Bronze"), (2, "Silver"), (3, "Gold")):
-            self.assertEqual(guide.count(f"[[File:Health-armor-{armor}.png|64px|"), 1)
+            self.assertEqual(guide.count(f"[[File:Armor shield ({name.lower()}).png|64px|"), 1)
             self.assertIn(f"{name} shield: {armor} armor", guide)
 
     def test_shared_shields_require_finite_targets_and_approved_metadata(self):
@@ -639,7 +639,7 @@ class HealthArmorTests(unittest.TestCase):
             lambda i: i.update(health_armor=True), lambda i: i.update(health_armor="1"),
             lambda i: i.update(entity="item-0"), lambda i: i.update(station="armor-workstation"),
             lambda i: i.update(variant="early-game"),
-            lambda i: i.update(file_title="File:Health-armor-2.png"),
+            lambda i: i.update(file_title="File:Armor shield (silver).png"),
             lambda i: i.update(file_title="File:Invented-shield.png"),
             lambda i: i.update(sha256=None), lambda i: i.update(creator=None),
             lambda i: i.update(rights_basis=None), lambda i: i.update(rights_note=None),

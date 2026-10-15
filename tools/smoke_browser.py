@@ -23,7 +23,7 @@ def smoke_search_thumbnail(page, base, data):
         return {thumbnail, native, fit: native && scaling.fit(native.width, native.height, 80, 80)};
     }""")
     thumbnail = result["thumbnail"] or {}
-    filename = image["file_title"].removeprefix("File:")
+    filename = image["file_title"].removeprefix("File:").replace(" ", "_")
     if (not urllib.parse.unquote(thumbnail.get("url", "")).endswith("/" + filename) or "/thumb/" in thumbnail["url"]
             or (thumbnail.get("width"), thumbnail.get("height")) != (pixels["width"], pixels["height"])):
         raise RuntimeError(f"Search did not use the item's original lead figure: {thumbnail!r}")

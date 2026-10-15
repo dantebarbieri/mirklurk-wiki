@@ -59,10 +59,13 @@ MECHANIC_GUIDE_TITLES = {
     "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters",
 }
 HEALTH_ARMOR_ICONS = {
-    1: ("File:Health-armor-1.png", "Bronze"),
-    2: ("File:Health-armor-2.png", "Silver"),
-    3: ("File:Health-armor-3.png", "Gold"),
+    1: ("File:Armor shield (bronze).png", "Bronze"),
+    2: ("File:Armor shield (silver).png", "Silver"),
+    3: ("File:Armor shield (gold).png", "Gold"),
 }
+# Reader-visible names (File titles, anchors, view parameters) use page titles, never source IDs.
+SOURCE_ID = re.compile(r"\b(?:being|item|nature|skill|skill-group|damage-class)-\d", re.IGNORECASE)
+FILE_TITLE = r"File:[A-Z][A-Za-z0-9 _.,'()-]{0,119}"
 MAX_FACTS_BYTES = 640 * 1024
 IDENTIFIER = re.compile(r"[a-z0-9][a-z0-9_.-]{0,79}\Z")
 
@@ -357,8 +360,10 @@ def _validate_illustrations(records, sources, entities, stations=None):
             if illustration["file_title"] != HEALTH_ARMOR_ICONS[armor][0]:
                 raise DataError(f"{where}.file_title: does not match the fixed health_armor target")
         title = illustration["file_title"]
-        if not isinstance(title, str) or not re.fullmatch(r"File:[A-Z][A-Za-z0-9 _.-]{0,119}\.(?:png|jpg|jpeg|webp)", title):
+        if not isinstance(title, str) or not re.fullmatch(FILE_TITLE + r"\.(?:png|jpg|jpeg|webp)", title):
             raise DataError(f"{where}.file_title: expected a plain local File title for a raster image")
+        if SOURCE_ID.search(title):
+            raise DataError(f"{where}.file_title: name the File by its page title and role, not a source ID")
         canonical = " ".join(title.replace("_", " ").split())
         if canonical in titles:
             raise DataError(f"{where}.file_title: duplicate canonical File title")
@@ -414,8 +419,8 @@ def _cropped_from(illustration, where):
     source = illustration["cropped_from"]
     _object(source, {"file_title", "sha256", "pixel_art", "left", "top"}, set(), where)
     title = source["file_title"]
-    if not isinstance(title, str) or not re.fullmatch(r"File:[A-Z][A-Za-z0-9 _.-]{0,119}\.png", title):
-        raise DataError(f"{where}.file_title: expected the preserved source PNG File title")
+    if not isinstance(title, str) or not re.fullmatch(FILE_TITLE + r"\.png", title) or SOURCE_ID.search(title):
+        raise DataError(f"{where}.file_title: expected the preserved source PNG File title, named without a source ID")
     if not isinstance(source["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", source["sha256"]) \
             or source["sha256"] == illustration["sha256"]:
         raise DataError(f"{where}.sha256: expected the distinct SHA-256 of the preserved source bytes")

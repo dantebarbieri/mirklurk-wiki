@@ -213,9 +213,10 @@ class CatalogTests(unittest.TestCase):
                  for row in self.data["illustrations"] if not {"role", "guide"} & row.keys()]
         self.assertEqual({row.get("entity") for row in every[-len(later):]}, later)
         images = [row for row in every if row.get("entity") not in later]
+        # Pins follow the readable File titles; tools/plan_file_moves.py proves only titles moved.
         self.assertEqual(
             hashlib.sha256((json.dumps({"schema_version": 1, "illustrations": images}, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "b423fc3efd7daa2e754845f5ad83180ac7dd3803216c27b408638185a031e7e0",
+            "3ffc896d69f2fae2a8bf9ee2b1287fff02994259a1261a46019480f81a249dfe",
         )
         replaced_trees = {"nature-4", "nature-7", "nature-17", "nature-20"}
         # 0.8.9.9 renamed these two; old captions reproduce the original pins.
@@ -227,13 +228,13 @@ class CatalogTests(unittest.TestCase):
             row for row in restored if "health_armor" not in row and row.get("entity") not in replaced_trees]}
         self.assertEqual(
             hashlib.sha256((json.dumps(original_batch, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "d3df203720abfff6fe543008b9a6cdfe02906c3e5079cadaca6268ede9a576c7",
+            "dc884dc9a3ac92f646967d183d14a70c8ec53ebc2426d4775397ce3fa21d1ee4",
         )
         self.assertEqual(len(images), 326)
         original = {"schema_version": 1, "illustrations": [
             row for row in restored if "entity" in row and row["entity"] not in replaced_trees]}
         self.assertEqual(hashlib.sha256((json.dumps(original, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "16e17eb58db7b29c276393755aa73df2a6315607c9e621d1f260f21f84d0b799")
+                         "a2d0f8032836c040e9ec0fc26b9b2f1920225fef7bccf078ac625f77fc33bf34")
         missing = {row["entity"] for row in self.catalog["pages"] if not row["entity"].startswith("damage-class-")} - {row["entity"] for row in every if "entity" in row}
         self.assertEqual(missing, {"item-31", "item-48", "item-49"})
         locations = self.locations
