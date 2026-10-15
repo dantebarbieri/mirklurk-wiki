@@ -1882,7 +1882,7 @@ def build_pages(root, data, catalog=None, details=None):
     if catalog.get("taxonomy") and "Items" in categories and "Miscellaneous items" not in categories:
         pages["Category:Miscellaneous items"] = "#REDIRECT [[Items]]\n"
     if "Belts and backpacks" in categories:
-        pages["Category:Carrying equipment"] = "#REDIRECT [[:Category:Belts and backpacks]]\n"
+        pages["Category:Carrying equipment"] = "#REDIRECT [[Category:Belts and backpacks]]\n"
     if any(any("{{" + name + "|" in text for name in ("Coins", "Health grid", "Attack grid", "Creature", "Item", "Tile")) for text in pages.values()):
         coin_icons = {}
         needs_coins = any("{{Coins|" in text for text in pages.values())
