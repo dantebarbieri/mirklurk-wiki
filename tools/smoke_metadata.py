@@ -56,7 +56,8 @@ def check_head(head, canonical, social=False, title=None, description=None, imag
         return
     for key, value in {"og:url": canonical, "og:title": title, "description": description,
                        "og:description": description, "twitter:card": "summary", "og:image": image}.items():
-        if head.meta.get(key) != value:
+        actual = head.meta.get(key)
+        if actual != value and not (key == "og:image" and value and value.endswith("/") and str(actual).startswith(value)):
             raise RuntimeError(f"{key} metadata mismatch: {head.meta.get(key)!r} != {value!r}")
 
 
@@ -139,12 +140,17 @@ def smoke_metadata(run, api, base, image_path, drain_jobs, open_authenticated):
                     "inprop": "url"})["query"]["pages"]
         urls = {page["title"]: page["canonicalurl"] for page in info.values()}
         description = "Browse equipment, materials and supplies. Item pages list stats, recipes, sellers and loot sources."
-        for title, expected_description in [(TITLE, LEAD), ("Items", description),
-                                             ("Category:Synthetic metadata", "Browse the synthetic guide.")]:
+        # Items leads with its own icon, so its preview is a generated page image, not the site logo.
+        for title, expected_description, image in [
+                (TITLE, LEAD, origin + image_path), ("Items", description, origin + "/images/mirklurk-preview/"),
+                ("Category:Synthetic metadata", "Browse the synthetic guide.", origin + image_path)]:
             status, _, body = get(article(title))
             if status != 200:
                 raise RuntimeError("Reader article is not HTTP 200.")
-            check_head(Head(body.decode()), urls[title], True, title, expected_description, origin + image_path)
+            head = Head(body.decode())
+            check_head(head, urls[title], True, title, expected_description, image)
+            if image.endswith("/") and get(head.meta["og:image"], origin)[0] != 200:
+                raise RuntimeError("Generated page preview image is not served.")
         for title in ("Synthetic metadata long", "Synthetic metadata caveat"):
             head = Head(get(article(title))[2].decode())
             if "description" in head.meta or "og:description" in head.meta or head.meta.get("og:url") != urls[title]:
