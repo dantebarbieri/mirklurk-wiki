@@ -1,4 +1,4 @@
-"""Reader navigation: Main Page and Game mechanics portal cards, and index-list ordering."""
+"""Main Page and Game mechanics portal cards, and index-list ordering."""
 
 import re
 
@@ -105,7 +105,7 @@ def compose_portals(pages, extra, images, entities, context=None):
 
     by_file = {image["file_title"]: image for image in images}
 
-    def picture(icon, link):
+    def picture(icon, link, lead=False):
         name, size = icon if isinstance(icon, tuple) else (icon, 32)
         image = (by_file.get(name) if str(name).startswith("File:")
                  else image_for(by_name.get(name), images) if name else None)
@@ -114,14 +114,14 @@ def compose_portals(pages, extra, images, entities, context=None):
         # Fit the sprite to the box: whole zoom from 2x up, else fractional, so portraits shrink.
         pixels = image["pixel_art"]
         fit = min(size * pixels["source_scale"] / pixels["width"], size * pixels["source_scale"] / pixels["height"])
-        fit = int(fit) if fit >= 2 else round(fit, 3)
+        fit = max(1, int(fit)) if lead or fit >= 2 else round(fit, 3)
         art = re.sub(r"zoom:calc\([\d.]+ /", f"zoom:calc({fit} /", pixel_image(image, size, size, link, link), count=1)
         return (f'<span style="display:inline-block;width:{size}px;text-align:center;vertical-align:middle;'
                 f'margin-right:4px;">{art}</span>')
 
-    # Each topic page leads with its homepage icon, which link previews use.
+    # Topic pages lead with their homepage icon at whole native scale; link previews use it.
     for title, icon in ({t: i for t, _, i in NEW_PLAYER_PATH} | EXPLORE_ICONS).items():
-        art = picture((icon[0] if isinstance(icon, tuple) else icon, 64), None).replace("|class=notpageimage", "")
+        art = picture((icon[0] if isinstance(icon, tuple) else icon, 64), None, True).replace("|class=notpageimage", "").replace("width:64px;", "")
         if art and published(title, pages):
             pages[title] = f'<div style="float:right;margin-left:1em;">{art}</div>\n' + pages[title]
     main = explore_cards(pages["Main Page"], picture)
