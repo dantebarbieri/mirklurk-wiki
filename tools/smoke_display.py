@@ -326,6 +326,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
 
     valid = {
         "{{Coins| 0001234 }}": ("1 gold", None),
+        "{{Coins|1000| silver }}": ("10 silver", None), "{{Coins|1000|copper}}": ("1000 copper", None),
         "{{Health grid| 0,1,0 ; 1,4,1 ; 0,1,0 }}": ("5 occupied health cells", [3, 3, 3]),
         "{{Attack grid|0-1,0;0,1000}}": ("Sum of occupied-cell ranges: 1000 to 1001.", [2, 2]),
         "{{Attack grid|0}}": ("Sum of occupied-cell ranges: 0 to 0.", [1]),
