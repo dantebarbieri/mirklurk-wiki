@@ -342,12 +342,13 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
         raise RuntimeError("The shield legend did not resolve exactly the three reviewed File references.")
     legend = RenderedGrids()
     legend.feed(guide["text"]["*"])
-    if len([i for i in legend.images if lead not in urllib.parse.unquote(i.get("src", ""))]) != 3 or len(legend.icon_styles) != 3 or "Shield legend" not in guide["text"]["*"]:
+    shields = [i for i in legend.images if lead not in urllib.parse.unquote(i.get("src", ""))]
+    if len(shields) != 3 or len(legend.icon_styles) != 3 or "Shield legend" not in guide["text"]["*"]:
         raise RuntimeError("The guide lost its compact three-shield legend.")
     for armor in (1, 2, 3):
         filename = file_key(HEALTH_ARMOR_ICONS[armor][0])
         links = [link for link in legend.links if "File:" + filename in urllib.parse.unquote(link.get("href", ""))]
-        check_shield_icon([legend.images[armor - 1]], links, [legend.icon_styles[armor - 1]], armor)
+        check_shield_icon([shields[armor - 1]], links, [legend.icon_styles[armor - 1]], armor)
     for title, expected in (
         ("Survivor's Field Kit", "2 gold"), ("Gurb-Gurb", "2 gold"),
         ("Fine Wool Socks", "50%"), ("Steel Hand Axe", "AP"),
