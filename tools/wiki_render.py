@@ -15,6 +15,7 @@ from wiki_catalog import (
 from wiki_anchors import acquisition_fragments, entity_fragment, entry_fragments, fragment, illustration_fragment, span, titled, validate_anchors, validate_readable_identifiers
 from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, prose_link_parts, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
+from wiki_portal import browse_order, compose_portals
 from wiki_display import MAX_COPPER, display_pages, grid_argument, validate_display_dependencies
 from wiki_views import filtered_row, html_row, html_table, scroll_open, selective_view, validate_transclusions
 
@@ -1191,10 +1192,7 @@ def build_pages(root, data, catalog=None, details=None):
         for grid in details.get("grids", [])
     ):
         pages["Health and armor"] += health_armor_legend(images)
-    if active:
-        navigation = "\n== Explore more ==\n" + " | ".join(f"[[{title}]]" for title in sorted(active)) + "\n"
-        pages["Main Page"] = pages["Main Page"].replace("== More guides ==", "== More guides ==\n" + navigation.split("\n", 2)[2])
-        pages["Game mechanics"] += navigation
+    portal_extra = set(active)
     classified = {row["entity"]: row["kind"] for row in catalog["classifications"]}
     creatures = {identity for identity, kind in classified.items() if kind == "creature"}
     construction_actions = {recipe["owner_item"] for recipe in catalog.get("construction_recipes", [])}
@@ -1341,7 +1339,7 @@ def build_pages(root, data, catalog=None, details=None):
         pages[source["title"]] = text
         pages["Loot tables"] += f'\n* [[{source["title"]}]]\n'
         if source["kind"] in {"starting", "fixed-location"}:
-            pages["Main Page"] += f'\n[[{source["title"]}]]\n'
+            portal_extra.add(source["title"])
         for identity in source["related_entities"]:
             context = source.get("entity_context", {}).get(identity)
             pages[locations[identity]] += (
@@ -1395,8 +1393,7 @@ def build_pages(root, data, catalog=None, details=None):
             pages[guide["title"]] = f'[[{guide["index_page"]}]] | [[Main Page]]\n'
         elif guide["title"] not in pages:
             pages[guide["title"]] = "[[Game mechanics]] | [[Main Page]]\n"
-            pages["Game mechanics"] += f'\n[[{guide["title"]}]]\n'
-            pages["Main Page"] += f'\n[[{guide["title"]}]]\n'
+            portal_extra.add(guide["title"])
         if "image_entity" in guide:
             image = image_for(guide["image_entity"], images)
             if image is None:
@@ -1446,11 +1443,20 @@ def build_pages(root, data, catalog=None, details=None):
         if entry["kind"] == "merchant" and owners[entry["id"]] != entry_page(entry):
             navigation[entry_page(entry)][owners[entry["id"]]]
 
+    profile_values = defaultdict(dict)
+    for row in details["profiles"]:
+        profile_values[row["entity"]].update(row["values"])
+
+    def browse_key(target, entity):
+        kind = entity and ("creature" if entity["id"] in creatures else "item" if entity["id"] in items else None)
+        return browse_order(entity["name"], kind, profile_values[entity["id"]]) if kind else (target, 0, target)
+
     def navigation_lines(targets):
         lines = []
-        for target, markers in sorted(targets.items()):
+        entities_by_target = {locations[row["id"]]: row for row in reversed(data["entities"])}
+        for target, markers in sorted(targets.items(), key=lambda pair: browse_key(pair[0], entities_by_target.get(pair[0]))):
             label = target.split("#")[0]
-            source_entity = next((row for row in data["entities"] if locations[row["id"]] == target), None)
+            source_entity = entities_by_target.get(target)
             if source_entity:
                 label = source_entity["name"]
             link = listed_entity(source_entity["id"]) if source_entity else f"[[{target}|{literal(label)}]]"
@@ -1812,9 +1818,9 @@ def build_pages(root, data, catalog=None, details=None):
         pages["Getting started"] = "#REDIRECT [[Main Page]]\n"
     if "currency" in catalog:
         pages["Currency and trading"] = currency_page(catalog["currency"], entities, locations)
-        for title in ("Main Page", "Merchants"):
-            if title in pages:
-                pages[title] += "\n[[Currency and trading|Currency, coin weights, and trading]]\n"
+        portal_extra.add("Currency and trading")
+        if "Merchants" in pages:
+            pages["Merchants"] += "\n[[Currency and trading|Currency, coin weights, and trading]]\n"
         for entry in entries:
             if entry["kind"] == "merchant" and "[[Currency and trading" not in pages[owners[entry["id"]]]:
                 pages[owners[entry["id"]]] += "\n[[Currency and trading|How prices, condition, and change work]]\n"
@@ -1864,18 +1870,18 @@ def build_pages(root, data, catalog=None, details=None):
                 for subgroup in armor_groups(catalog):
                     text += f'\n=== {subgroup["title"]} ===\n[[:Category:{subgroup["title"]}|Browse category]]\n'
                     text += "\n".join("* " + listed_entity(identity)
-                                      for identity in sorted(subgroup["members"], key=lambda identity: locations[identity])) + "\n"
+                                      for identity in sorted(subgroup["members"], key=lambda identity: browse_key(locations[identity], entities[identity]))) + "\n"
             elif category == "Clothes":
                 for label, members, slots in clothing_subgroups(catalog, row["members"]):
                     text += f"\n=== {label} ===\n"
                     text += " | ".join(f"[[:Category:{slot}|{slot}]]" for slot in slots) + "\n"
                     text += "\n".join("* " + listed_entity(identity)
-                                      for identity in sorted(members, key=lambda identity: locations[identity])) + "\n"
+                                      for identity in sorted(members, key=lambda identity: browse_key(locations[identity], entities[identity]))) + "\n"
             elif category in INGREDIENT_METHODS:
                 text += ingredient_table(category, ingredients, entities, locations)
             else:
                 text += "\n".join("* " + listed_entity(identity)
-                                  for identity in sorted(row["members"], key=lambda identity: locations[identity])) + "\n"
+                                  for identity in sorted(row["members"], key=lambda identity: browse_key(locations[identity], entities[identity]))) + "\n"
             if category not in {"Carrying equipment", "Capacity-granting equipment"} and set(row["members"]) & capacity_members:
                 text += "\n== Capacity bonuses ==\n" + capacity_table(row["members"], details, catalog, entities, locations)
                 text += "\n[[Items#Capacity-granting_equipment|How added inventory capacity works]].\n"
@@ -1938,6 +1944,8 @@ def build_pages(root, data, catalog=None, details=None):
                 title, separator, part = link["target"].partition("#")
                 if title not in pages or (separator and f'id="{part}"' not in pages[title]):
                     raise DataError(f'NPC dialogue: missing linked page or explicit anchor: {link["target"]}')
+    compose_portals(pages, portal_extra, images, entities)
+
     validate_transclusions(pages)
     validate_anchors(pages, lenient={*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs"})
     validate_readable_identifiers(pages)

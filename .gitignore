@@ -63,6 +63,7 @@
 !/tools/wiki_catalog.py
 !/tools/wiki_details.py
 !/tools/wiki_render.py
+!/tools/wiki_portal.py
 !/tools/wiki_views.py
 !/tools/wiki_beings.py
 !/tools/wiki_items.py
@@ -95,6 +96,7 @@
 !/tests/test_beings.py
 !/tests/test_editorial.py
 !/tests/test_navigation.py
+!/tests/test_portal.py
 !/tests/test_terrain.py
 !/tests/test_references.py
 !/tests/test_identifiers.py
@@ -117,6 +119,8 @@
 !/deploy/mirklurk-editing.php
 !/deploy/mirklurk-uploads.php
 !/tests/test_uploads.php
+!/deploy/mirklurk-search.php
+!/tests/test_search.php
 !/tools/smoke_uploads.py
 !/tests/test_editing.php
 !/tools/smoke_editing.py

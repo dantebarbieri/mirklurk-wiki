@@ -6,6 +6,7 @@ COPY deploy/mirklurk-metadata.php /var/www/html/mirklurk-metadata.php
 COPY deploy/mirklurk-pixel-thumbnails.js /var/www/html/mirklurk-pixel-thumbnails.js
 COPY deploy/mirklurk-editing.php /var/www/html/mirklurk-editing.php
 COPY deploy/mirklurk-uploads.php /var/www/html/mirklurk-uploads.php
+COPY deploy/mirklurk-search.php /var/www/html/mirklurk-search.php
 COPY deploy/install.php deploy/healthcheck.php deploy/robots.php deploy/refresh-sitemap.php /usr/local/lib/mirklurk/
 COPY deploy/metadata.conf /etc/apache2/conf-available/mirklurk-metadata.conf
 COPY deploy/apache-short-urls.conf /etc/apache2/sites-available/000-default.conf
@@ -27,6 +28,7 @@ RUN a2enmod rewrite headers \
     && php -l /var/www/html/mirklurk-metadata.php \
     && php -l /var/www/html/mirklurk-editing.php \
     && php -l /var/www/html/mirklurk-uploads.php \
+    && php -l /var/www/html/mirklurk-search.php \
     && php -l /usr/local/lib/mirklurk/robots.php \
     && php -l /usr/local/lib/mirklurk/refresh-sitemap.php \
     && php -l /usr/local/lib/mirklurk/install.php \

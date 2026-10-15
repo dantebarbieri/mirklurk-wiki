@@ -9,6 +9,7 @@ from sync_wiki import SyncError, fetch_live, sync
 from wiki_anchors import fragment
 from wiki_catalog import page_locations, primary_groups, title_key
 from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, lua_string, page_namespace
+from wiki_portal import browse_order
 from wiki_render import image_for, merchant_table, pixel_geometry
 
 
@@ -221,8 +222,13 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
         if "mirklurk-cell-grid" in rendered or "occupied health cells" in rendered:
             raise RuntimeError("Creature display unexpectedly copied statistics.")
     groups = sorted((group for group in primary_groups(catalog) if group["index"] == "Bestiary"), key=lambda g: g["title"])
-    surfaces = {"Bestiary": [locations[i] for group in groups for i in sorted(group["members"], key=lambda i: locations[i])]}
-    surfaces.update({"Category:" + group["title"]: sorted(locations[i] for i in group["members"]) for group in groups})
+    values, names = {}, {row["id"]: row["name"] for row in data["entities"]}
+    for row in details["profiles"]:
+        values.setdefault(row["entity"], {}).update(row["values"])
+    ordered = {group["title"]: [locations[i] for i in sorted(
+        group["members"], key=lambda i: browse_order(names[i], "creature", values.get(i, {})))] for group in groups}
+    surfaces = {"Bestiary": [title for group in groups for title in ordered[group["title"]]]}
+    surfaces.update({"Category:" + title: members for title, members in ordered.items()})
     for title, expected in surfaces.items():
         rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
         check_errors(rendered)

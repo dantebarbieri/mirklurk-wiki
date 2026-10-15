@@ -166,9 +166,15 @@ class DisplayTests(unittest.TestCase):
         for row in self.catalog["classifications"]:
             if row["kind"] == "npc":
                 self.assertNotIn("[ " + lua_string(locations[row["entity"]]) + " ]", assets)
+        values = {}
+        for row in self.details["profiles"]:
+            values.setdefault(row["entity"], {}).update(row["values"])
+        names = {row["id"]: row["name"] for row in self.data["entities"]}
         for group in primary_groups(self.catalog):
             if group["index"] == "Bestiary":
-                expected = sorted(locations[identity] for identity in group["members"])
+                # Weakest first: base XP, then name.
+                expected = [locations[identity] for identity in sorted(
+                    group["members"], key=lambda identity: (float(values.get(identity, {}).get("base-xp", "inf")), names[identity]))]
                 for title, section in (
                     ("Bestiary", self.pages["Bestiary"].split("\n== " + group["title"] + " ==\n")[1].split("\n== ", 1)[0]),
                     ("Category:" + group["title"], self.pages["Category:" + group["title"]]),

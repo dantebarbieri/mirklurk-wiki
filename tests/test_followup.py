@@ -88,10 +88,11 @@ class FollowupTests(unittest.TestCase):
         # Items is re-pinned for 0.8.9.9: its only changes are additive rows for new items and sellers,
         # plus the Finish Raft world sprite beside its plain link.
         # Wooden Recorder is re-pinned for its item summary box, phone-width summary sizing and linked {{Coins}} value.
+        # Items is re-pinned for basic-to-best family ordering; its lines are unchanged, only reordered.
         # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
-            "Items": "408eb33965a984e68db0e91b71ce27bc412a7d1c2b645a28589904536b97657d",
+            "Items": "2e08476572f622b16ed6670fb93e1dc905e29bcc8afaf47ca1b1c6d3c410b6e7",
             "Wooden Recorder": "f7fe0957468e0da67a0eb1232118a09a2116ded853a81dd3b4180efd7cbc5571",
         }
         for title, digest in digests.items():

@@ -104,6 +104,9 @@ try {
     check($wgPageImagesScores['width'] === [0 => 10] && $wgPageImagesScores['ratio'] === [0 => 0],
         'Small and tall pixel-art lead figures must be page image candidates.');
     check($wgThumbnailNamespaces === [6, 0], 'Article search results must show page images.');
+    check($wgSearchType === 'MirklurkSearch'
+        && $wgAutoloadClasses['MirklurkSearch'] === realpath(__DIR__ . '/../deploy') . '/mirklurk-search.php',
+        'Search suggestions must match words inside titles.');
     check($wgHooks['BeforePageDisplay'] === ['MirklurkMetadata::onBeforePageDisplay'], 'Pixelated search CSS missing.');
     check($wgResourceModules['mirklurk.pixelThumbnails']['packageFiles'] === ['mirklurk-pixel-thumbnails.js']
         && is_file($wgResourceModules['mirklurk.pixelThumbnails']['localBasePath'] . '/mirklurk-pixel-thumbnails.js'),
