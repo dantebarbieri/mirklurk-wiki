@@ -1183,8 +1183,7 @@ def build_pages(root, data, catalog=None, details=None):
             return "{{Creature|" + locations[identity] + "}}"
         if identity in items:
             return item_reference(identity, locations)
-        if identity in construction_actions and image_for(identity, images):
-            # Its world sprite identifies it.
+        if (identity in construction_actions or entities[identity]["category"] == "skill") and image_for(identity, images):
             return icon(identity, images, entities, locations) + " " + entity_link(identity, entities, locations)
         return entity_link(identity, entities, locations)
 
