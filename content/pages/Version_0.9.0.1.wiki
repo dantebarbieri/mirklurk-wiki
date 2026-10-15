@@ -1,0 +1,92 @@
+'''Version 0.9.0.1''' is the patch released on 15 October 2026, the day after [[Version 0.9.0.0]]. This wiki shows 0.9.0.1 values. This page lists every documented change from 0.9.0.0, including a few the patch notes do not mention.
+
+'''Spoilers:''' this page names late-story content.
+
+== New content ==
+=== Music ===
+* The new song announced with 0.9.0.0 now plays. It joins the in-game playlist, which now has 9 tracks, and can also play in the main menu.
+
+== Changes ==
+=== Magic weapons ===
+Orbs now wear out. Each cast uses 1 durability, so a new orb lasts 30 casts and then breaks. Orbs cannot be repaired, and being hit does not wear them. See [[Magic weapons]].
+
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Magic weapons (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Orb !! Drains !! 0.9.0.0 cost per cast !! 0.9.0.1 cost per cast
+|-
+| [[Orb of Poison]] || Focus || 8% || 12%
+|-
+| [[Orb of Greater Poison]] || Focus || 10% || 15%
+|-
+| [[Orb of Fire]] || Warmth || 15% || 20%
+|-
+| [[Orb of Greater Fire]] || Warmth || 25% || 30%
+|-
+| [[Orb of Iron Essence]] || Satiation || 10% || 12%
+|-
+| [[Orb of Steel Essence]] || Satiation || 12.5% || 15%
+|-
+| [[Orb of Wind]] || Stamina || 10% || 10% (unchanged)
+|-
+| [[Orb of Storm]] || Stamina || 15% || 15% (unchanged)
+|}
+</div>
+
+Not in the patch notes:
+* Like other gear, orbs left in ordinary stashes now lose durability over time.
+* Orbs found in [[Random treasure|treasure chests]] are already partly used, with 18 to 29 durability left.
+* An orb's resale value falls with its durability.
+* When you load an older save, orbs you have equipped, including orbs in an equipped bag, are set to 30 durability. Orbs stored anywhere else keep the 1 durability they had in 0.9.0.0, out of 30, so they break after one cast.
+
+=== Creatures ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Creatures (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Creature !! 0.9.0.0 !! 0.9.0.1
+|-
+| [[Magus Clay (boss)]] || No armor || One armor layer on each of his 49 hit points
+|}
+</div>
+
+=== Poison and bleeding ===
+* A [[Poison|poisoned]] creature now keeps taking its turns while it is out of sight or idle, so poison keeps working until it runs out.
+* Not in the patch notes: the same fix applies to bleeding from [[Sharp]] attacks.
+
+=== Prices ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Prices (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Item !! 0.9.0.0 !! 0.9.0.1
+|-
+| [[Poison Arrow II]] || 12 copper || 25 copper
+|-
+| [[Poison Arrow III]] || 25 copper || 40 copper
+|}
+</div>
+
+[[Wilda]] sells Poison Arrow II at the new price. The higher value also makes it a possible [[Survivor loot|Survivor corpse]] find.
+
+=== Skills ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Skills (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Skill !! 0.9.0.0 !! 0.9.0.1
+|-
+| [[Butchery]] extra-item chance || Any butchering result || Hides and meat only
+|}
+</div>
+
+Butchery no longer gives an extra [[Serpent Fang]], [[Small Venom Gland]], [[Small Fire Gland]], [[Troll Fat]], [[Rift Weave]], [[Glow Goo]], [[Scaalmyr Husk]], [[Large Scaalmyr Husk]], [[Glowing Rune]], [[Head of The Terror]], [[Gold Coin]], [[Clay's Magus Hood]] or [[Magi's Ropebelt]]. Its AP reduction is unchanged.
+
+=== Renamed ===
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Renamed (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! 0.9.0.0 name !! 0.9.0.1 name
+|-
+| Clays' Magus Hood || [[Clay's Magus Hood]]
+|}
+</div>
+
+=== Fixes ===
+* Clicking in a menu no longer reopens the menu of the last object you used.
+* [[Survivor]] guards greet you with "Grand Mother's blessing to you!", and [[Grand Mother]]'s description calls her "Wilda's grandmother". Both were missing their apostrophes.
+* Not in the patch notes: the [[Wood Buckler]] inventory icon was retouched. Its stats are unchanged.
+
+[[Game mechanics]] | [[Main Page]]

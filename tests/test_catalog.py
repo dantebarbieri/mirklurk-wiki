@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 355)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 449)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 451)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 355)
@@ -152,7 +152,7 @@ class CatalogTests(unittest.TestCase):
                     "equip-ap-cost", "inventory-slots-added", "storage-grid-width", "storage-grid-height"}],
                 "profiles": [r for r in self.details["profiles"] if not r["id"].endswith(("-equip-cost", "-capacity"))],
             }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "4b0d7ff225f119e5a445292a2e16a974a1df072bc984fefac60eb92d4c06946e",
+            "ad56ad466d633eb578e93140dc5fc3ee484e5f0f5bdb455b8332557b2b4338af",
         )
         self.assertEqual(len(self.details["properties"]), 54)
         self.assertEqual(len(self.details["profiles"]), 598)
@@ -533,7 +533,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256((json.dumps(original_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
                          "cacc81734f11f214e0bf28c0115050d129fe497112d0e415ba70e8aff4e1dc4e")
         self.assertEqual(hashlib.sha256((json.dumps(raw_prices["prices"][42:], ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "39303553c58c16a7cb9d5ae264a9800c4259875da8adee3f1f00e58ca5d1c0c5")
+                         "125f614c56fda32d7cd9eb43ccbdce7269688f1e1a179e5edf9366cb7c3cdf04")
         self.assertEqual(len(prices["prices"]), 58)
         self.assertEqual(len(prices["covered_offers"]), 88)
         self.assertEqual(prices["unresolved_offers"], [])
@@ -622,7 +622,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.0.0")
+        self.assertEqual(self.data["game"]["build"], "0.9.0.1")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1151,12 +1151,12 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.0.0 pin, game build blanked.
+        # 0.9.0.1 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.0.0"', b'"build": null', 1,
+                b'"build": "0.9.0.1"', b'"build": null', 1,
             )).hexdigest(),
-            "51ecb20d5d8522cb30e47b6f8e6e1c51dc91dc9a2f87f9c28f81e277ac56493f",
+            "80e2d3599fff6a180cb6a674c0857f0ff1865b2119327beeed77e3d73cde2a5d",
         )
 
 

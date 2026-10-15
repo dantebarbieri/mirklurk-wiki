@@ -306,6 +306,16 @@ purchase total; `item_get_price` for selling). Thirteen crafted items whose
 initializer value is replaced by the `databank_Alarm_1` recipe-value pass now
 show the final value in `item-N-value` profiles (`value` property).
 
+## Version 0.9.0.1 update
+
+Patch 0.9.0.1 (2026-10-15) was diffed privately against 0.9.0.0: 12 code
+entries changed. `game-data-0901` and new `items`, `beings` and `ui` `-0901`
+sources cite each amended record: orb durability 30 and drains, Poison Arrow
+II/III values, Magus Clay's armor, Butchery (`butchery-extra-yield`, inferred
+from `UI_Draw_64`), off-screen poison and bleeding, and the hood rename. Its
+File titles moved without redirects. Save migration of stored orbs is
+inferred, not tested.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

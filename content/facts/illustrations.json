@@ -12094,8 +12094,8 @@
     {
       "id": "item-264-illustration",
       "entity": "item-264",
-      "file_title": "File:Clays' Magus Hood icon (cropped).png",
-      "caption": "Clays' Magus Hood inventory icon.",
+      "file_title": "File:Clay's Magus Hood icon (cropped).png",
+      "caption": "Clay's Magus Hood inventory icon.",
       "creator": "Edym Pixels",
       "sha256": "6b94556511429bd3fb6885612328eee20462cff9d46618fbe596f0bb32aaf138",
       "rights_status": "approved",
@@ -12120,7 +12120,7 @@
         "source_scale": 8
       },
       "cropped_from": {
-        "file_title": "File:Clays' Magus Hood icon.png",
+        "file_title": "File:Clay's Magus Hood icon.png",
         "sha256": "105c1ec2e9fc06f250388be1bd0b232ada00e1326bd9986003fb031fadd56d61",
         "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
         "left": 8,

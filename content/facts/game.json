@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.0.0",
+    "build": "0.9.0.1",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -66,6 +66,30 @@
       "path": "data.win",
       "sha256": "1e348276f3f95e61465c303fcf1a3944984513d09f4f24926c4dd6d9d0b0e6a5",
       "build": "0.9.0.0"
+    },
+    {
+      "id": "items-en-0901",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "99dfdd90b58defb0e1982969b69d87961457fb6ea3fea2031011b325a08cb2f5",
+      "build": "0.9.0.1"
+    },
+    {
+      "id": "beings-en-0901",
+      "path": "Languages\\English\\Bestiary.ini",
+      "sha256": "1435afb3615acf1c7d50dfec85fc704987de52bd14cc50ac6dcf11cdde253e86",
+      "build": "0.9.0.1"
+    },
+    {
+      "id": "ui-en-0901",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "0f78b4a72dd1db9b09ecaeb4f9786010e3e1ae30da6cdbf82b27dccf2fcd29ff",
+      "build": "0.9.0.1"
+    },
+    {
+      "id": "game-data-0901",
+      "path": "data.win",
+      "sha256": "aa2d735ee8bfcc341958c71adbbe3768ca6d653475540027ef94fe9281b86bdc",
+      "build": "0.9.0.1"
     }
   ],
   "entities": [
@@ -4530,11 +4554,11 @@
     {
       "id": "item-264",
       "category": "item",
-      "name": "Clays' Magus Hood",
+      "name": "Clay's Magus Hood",
       "confidence": "observed",
       "evidence": [
         {
-          "source": "items-en-0899",
+          "source": "items-en-0901",
           "section": "ItemTitles",
           "key": "264"
         }
@@ -15903,6 +15927,33 @@
       }
     },
     {
+      "id": "butchery-extra-yield",
+      "kind": "algorithm",
+      "title": "Butchery: extra hide or meat",
+      "summary": "Each time you cut a hide or meat out of a corpse, Butchery gives a chance of one extra. Other results never get the extra.",
+      "conditions": "Applies only to item types 18 (hides) and 19 (meat) since version 0.9.0.1. Fangs, glands, Troll Fat, Sceetler and Scaalmyr parts, Head of The Terror and Clay's drops are excluded.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0901",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "butcher.hunterSkills[1].APU/chance.type18/19.extra-item"
+        }
+      ],
+      "details": {
+        "page": "Skills",
+        "steps": [
+          "Cutting an item out of a corpse costs AP based on its size, reduced by 0.2 per Butchery rank to a minimum of 0.2.",
+          "After the AP is paid, the game rolls a chance of 10% per Butchery rank.",
+          "If the roll succeeds and the item is a hide or meat, one more is added to that stack, or to your inventory when the stack is full.",
+          "Other items, such as fangs, glands, husks and trophies, never get the extra item, although they still get the AP reduction."
+        ],
+        "fact_ids": [
+          "butchery-ap"
+        ]
+      }
+    },
+    {
       "id": "skill-2-2-mechanics",
       "kind": "algorithm",
       "title": "Fast Feet: described effects",
@@ -20664,7 +20715,7 @@
     {
       "id": "corpse-41-264",
       "kind": "loot",
-      "title": "Magus Clay: Clays' Magus Hood",
+      "title": "Magus Clay: Clay's Magus Hood",
       "summary": "Always in the base corpse loot.",
       "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional.",
       "confidence": "inferred",
@@ -20685,7 +20736,7 @@
           "key": "8"
         },
         {
-          "source": "items-en-0899",
+          "source": "items-en-0901",
           "section": "ItemTitles",
           "key": "264"
         }

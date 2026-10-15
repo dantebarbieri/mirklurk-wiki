@@ -21,6 +21,7 @@ PAGE_FILES = {
     "Action points": "Action_points.wiki",
     "Health and armor": "Health_and_armor.wiki",
     "Version 0.9.0.0": "Version_0.9.0.0.wiki",
+    "Version 0.9.0.1": "Version_0.9.0.1.wiki",
 }
 RESEARCH_PAGE_FILES = {
     "Quests and journal": "Quests_and_journal.wiki",

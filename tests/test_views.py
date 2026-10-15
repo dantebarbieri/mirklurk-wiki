@@ -181,7 +181,7 @@ class SelectiveViewTests(unittest.TestCase):
         locations = self.locations
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
-        self.assertEqual(owner.count('id="pool-item-'), 610)
+        self.assertEqual(owner.count('id="pool-item-'), 611)
         for placeholder in ("Budget-dependent", "Unknown", "Eligible, not guaranteed."):
             self.assertNotIn(placeholder, owner)
         for pool in self.catalog["acquisition"]["pools"]:
@@ -470,20 +470,21 @@ class SelectiveViewTests(unittest.TestCase):
         }
         self.assertTrue({"Category:" + title for title in historical_categories} <= set(self.pages))
         from wiki_display import DISPLAY_TITLES
-        # 0.8.9.9 added entity pages and release notes and renamed two titles; the old titles stay as redirects.
-        # 0.9.0.0 moved those release notes to its own title; "Version 0.8.9.9" now redirects there.
+        # 0.8.9.9 added pages and renamed two titles (old ones redirect).
+        # 0.9.0.0 moved its release notes; "Version 0.8.9.9" redirects.
         locations = self.locations
         added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
-            "Version 0.8.9.9", "Version 0.9.0.0", "Survivor", "Fire Bond"}
-        self.assertEqual(len(added), 28)
+            "Version 0.8.9.9", "Version 0.9.0.0", "Version 0.9.0.1", "Survivor", "Fire Bond"}
+        self.assertEqual(len(added), 29)
         families = {title for title, text in self.pages.items() if f"\n'''{title}''' groups " in text}
         old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added - families
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
-        self.assertEqual(len(old_titles), 401)
+        self.assertEqual(len(old_titles), 402)
         self.assertEqual(self.pages["Unwanted Guard"], "#REDIRECT [[Survivor]]\n")
         self.assertEqual(self.pages["Fire Striker"], "#REDIRECT [[Fire Bond]]\n")
+        self.assertEqual(self.pages["Clays' Magus Hood"], "#REDIRECT [[Clay's Magus Hood]]\n")
         self.assertEqual(hashlib.sha256(("\n".join(old_titles) + "\n").encode()).hexdigest(),
-                         "b32b5d0645406b2b6e8073d4c355ebca0eacf1fbd554ba1b6dfdc1bbffc78b75")
+                         "b017c9d79b46f42e18ff43418a9ca40878cd9c1d90e3165c87bad15257e6ca8e")
 
     def test_four_tree_references_use_distinct_reviewed_mature_compositions(self):
         locations = self.locations

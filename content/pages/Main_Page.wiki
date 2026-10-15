@@ -2,7 +2,7 @@ Welcome to the '''MirkLurk Wiki''', an independent guide to the Mirk.
 
 '''MirkLurk''' is a turn-based, single-player survival RPG by [https://edympixels.com/ Edym Pixels], in Early Access on [https://store.steampowered.com/app/3972980/MirkLurk/ Steam] since 11 June 2026. Exiled to the Mirk, a hostile swampland, you spend [[Action points|action points]] on every step, fight and harvest while keeping yourself fed, rested and warm.
 
-'''Current version:''' 0.9.0.0, the official patch of 14 October 2026. See [[Version 0.9.0.0|what's new in 0.9.0.0]].
+'''Current version:''' [[Game mechanics#Version|0.9.0.1]], the patch of 15 October 2026. See [[Version 0.9.0.1|what's new in 0.9.0.1]] and [[Version 0.9.0.0|in 0.9.0.0]].
 
 '''Spoilers:''' this wiki includes story events, locations and discoveries.
 
@@ -22,4 +22,4 @@ Welcome to the '''MirkLurk Wiki''', an independent guide to the Mirk.
 == Guides by topic ==
 
 == About this wiki ==
-This is an unofficial community wiki. MirkLurk is developed and published by Edym Pixels; game names and artwork remain subject to their owners' rights.
+MirkLurk is developed and published by [https://edympixels.com/ Edym Pixels], as listed on [https://store.steampowered.com/app/3972980/MirkLurk/ its Steam page]. This is an unofficial community wiki; game names and artwork remain subject to their owners' rights.
