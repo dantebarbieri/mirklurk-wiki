@@ -100,8 +100,9 @@ class DisplayTests(unittest.TestCase):
                 self.assertEqual(candidates(lead)[:1], [image["file_title"]])
             checked += 1
         self.assertGreater(checked, 300)
-        for title in ("Items", "Bestiary", "Merchants"):
-            self.assertFalse(candidates(re.split(r"(?m)^==", self.pages[title], maxsplit=1)[0]), title)
+        self.assertFalse(candidates(re.split(r"(?m)^==", self.pages["Merchants"], maxsplit=1)[0]))
+        for title, icon in (("Items", "Iron Longsword icon (cropped)"), ("Bestiary", "Giant Slug sprite (cropped)")):
+            self.assertEqual(candidates(re.split(r"(?m)^==", self.pages[title], maxsplit=1)[0]), [f"File:{icon}.png"])
 
     def test_exact_price_conversion_and_boundaries(self):
         for copper in (0, 1, 99, 100, 999, 1000, 1234, 9007199254740993, MAX_COPPER):
@@ -166,9 +167,15 @@ class DisplayTests(unittest.TestCase):
         for row in self.catalog["classifications"]:
             if row["kind"] == "npc":
                 self.assertNotIn("[ " + lua_string(locations[row["entity"]]) + " ]", assets)
+        values = {}
+        for row in self.details["profiles"]:
+            values.setdefault(row["entity"], {}).update(row["values"])
+        names = {row["id"]: row["name"] for row in self.data["entities"]}
         for group in primary_groups(self.catalog):
             if group["index"] == "Bestiary":
-                expected = sorted(locations[identity] for identity in group["members"])
+                # Weakest first: base XP, then name.
+                expected = [locations[identity] for identity in sorted(
+                    group["members"], key=lambda identity: (float(values.get(identity, {}).get("base-xp", "inf")), names[identity]))]
                 for title, section in (
                     ("Bestiary", self.pages["Bestiary"].split("\n== " + group["title"] + " ==\n")[1].split("\n== ", 1)[0]),
                     ("Category:" + group["title"], self.pages["Category:" + group["title"]]),
@@ -233,7 +240,7 @@ class DisplayTests(unittest.TestCase):
             self.assertNotIn("Medium Backpack icon (cropped)", registry)
             self.assertIn("[[Iron Hand Axe|<nowiki>Iron Hand Axe</nowiki>]]", registry)
         self.assertIn("{{Item|Iron Hand Axe}}", self.pages["Items"])
-        self.assertEqual(self.pages["Items"].count('id="item-'), 264)
+        self.assertEqual(self.pages["Items"].count('id="item-'), 263)
 
     def test_actual_sources_compose_rows_and_keep_exact_owner_filters(self):
         readers = {title: text for title, text in self.pages.items() if title not in DISPLAY_TITLES}
@@ -241,7 +248,8 @@ class DisplayTests(unittest.TestCase):
         recipes = [row for row in self.data["entries"] if row["kind"] == "recipe"]
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (97, 78))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 79)
-        self.assertEqual(sum(text.count("{{Item|") for text in readers.values()), 2128)
+        self.assertEqual(sum(text.split("<div class=\"mirklurk-navbox\"", 1)[0].count("{{Item|") for title, text in readers.items()
+                             if f"\n'''{title}''' groups " not in text), 2231)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("|Value]]: ") for text in readers.values()), 58)

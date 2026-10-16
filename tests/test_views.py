@@ -414,14 +414,14 @@ class SelectiveViewTests(unittest.TestCase):
 
     def test_food_effect_amounts_have_one_item_owner_not_copied_guide_values(self):
         locations = self.locations
-        consumables = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Consumables")["members"]
-        seeds = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Seeds")["members"]
-        headings = {"Consumption effects": 0, "Effects": 0, "Where to plant": 0}
+        groups = {row["title"]: row["members"] for row in self.catalog["taxonomy"]["groups"]}
+        consumables, seeds, quests = groups["Consumables"], groups["Seeds"], groups["Quest items"]
+        headings = {"Consumption effects": 0, "Effects": 0, "Where to plant": 0, "How it's used": 0}
         for effect in self.catalog["item_effects"]:
             page = self.pages[locations[effect["entity"]]]
-            # Only consumables use "Consumption effects"; seeds use "Where to plant".
             heading = ("Consumption effects" if effect["entity"] in consumables
-                       else "Where to plant" if effect["entity"] in seeds else "Effects")
+                       else "Where to plant" if effect["entity"] in seeds
+                       else "How it's used" if effect["entity"] in quests else "Effects")
             headings[heading] += 1
             self.assertIn(f"== {heading} ==\n" + literal(effect["paragraphs"][0]), page)
             for other in set(headings) - {heading}:
@@ -429,7 +429,7 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertIn("\n\n".join(literal(paragraph) for paragraph in effect["paragraphs"]), page)
             for paragraph in effect["paragraphs"]:
                 self.assertFalse(any(paragraph in self.pages[guide["title"]] for guide in self.catalog["guides"]))
-        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 14, "Where to plant": 8})
+        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 12, "Where to plant": 8, "How it's used": 7})
         bursthopper = next(row for row in self.catalog["item_effects"] if row["entity"] == "item-243")
         self.assertIn("15 percentage points of stamina", bursthopper["paragraphs"][0])
         self.assertNotIn("focus", bursthopper["paragraphs"][0].lower())
@@ -470,13 +470,14 @@ class SelectiveViewTests(unittest.TestCase):
         }
         self.assertTrue({"Category:" + title for title in historical_categories} <= set(self.pages))
         from wiki_display import DISPLAY_TITLES
-        # 0.8.9.9 added entity pages and release notes and renamed two titles; the old titles stay as redirects.
-        # 0.9.0.0 moved those release notes to its own title; "Version 0.8.9.9" now redirects there.
+        # 0.8.9.9 added pages and renamed two titles (old ones redirect).
+        # 0.9.0.0 moved its release notes; "Version 0.8.9.9" redirects.
         locations = self.locations
         added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
             "Version 0.8.9.9", "Version 0.9.0.0", "Version 0.9.0.1", "Survivor", "Fire Bond"}
         self.assertEqual(len(added), 29)
-        old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added
+        families = {title for title, text in self.pages.items() if f"\n'''{title}''' groups " in text}
+        old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added - families
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
         self.assertEqual(len(old_titles), 402)
         self.assertEqual(self.pages["Unwanted Guard"], "#REDIRECT [[Survivor]]\n")

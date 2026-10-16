@@ -253,8 +253,8 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
         with open_media(info["imageinfo"][0]["url"], timeout=30) as response:
             if hashlib.sha256(response.read()).hexdigest() != image_hashes[old_filename]:
                 raise RuntimeError("A legacy tree image was removed or changed during the seed import.")
-    if "pageimage" in first(api, t="Items", prop="pageimages", piprop="name", pilicense="any"):
-        raise RuntimeError("An index page borrowed an inline icon as its search and preview icon.")
+    # Items leads with its homepage icon; no inline list icon may displace it.
+    smoke_link_preview(api, "Items", "Iron Longsword icon (cropped).png", open_media)
     axe = image_for("item-27", data["illustrations"])
     smoke_link_preview(api, locations["item-27"], axe["file_title"].removeprefix("File:"), open_media)
     for guide in [*catalog["guides"], *catalog.get("acquisition", {}).get("sources", [])]:
@@ -337,16 +337,18 @@ def smoke_reader_release(api, pages, data, catalog, details, image_hashes, open_
     if seen_armor != {1, 2, 3}:
         raise RuntimeError("The armored-cell smoke fixtures did not exercise all three shield levels.")
     guide = api({"action": "parse", "page": "Health and armor", "prop": "text|images"})["parse"]
-    if set(guide["images"]) != {file_key(title) for title, _ in HEALTH_ARMOR_ICONS.values()}:
+    lead = file_key("Steel Chestplate icon (cropped).png")  # the guide's homepage icon
+    if set(guide["images"]) != {file_key(title) for title, _ in HEALTH_ARMOR_ICONS.values()} | {lead}:
         raise RuntimeError("The shield legend did not resolve exactly the three reviewed File references.")
     legend = RenderedGrids()
     legend.feed(guide["text"]["*"])
-    if len(legend.images) != 3 or len(legend.icon_styles) != 3 or "Shield legend" not in guide["text"]["*"]:
+    shields = [i for i in legend.images if lead not in urllib.parse.unquote(i.get("src", ""))]
+    if len(shields) != 3 or len(legend.icon_styles) != 3 or "Shield legend" not in guide["text"]["*"]:
         raise RuntimeError("The guide lost its compact three-shield legend.")
     for armor in (1, 2, 3):
         filename = file_key(HEALTH_ARMOR_ICONS[armor][0])
         links = [link for link in legend.links if "File:" + filename in urllib.parse.unquote(link.get("href", ""))]
-        check_shield_icon([legend.images[armor - 1]], links, [legend.icon_styles[armor - 1]], armor)
+        check_shield_icon([shields[armor - 1]], links, [legend.icon_styles[armor - 1]], armor)
     for title, expected in (
         ("Survivor's Field Kit", "2 gold"), ("Gurb-Gurb", "2 gold"),
         ("Fine Wool Socks", "50%"), ("Steel Hand Axe", "AP"),

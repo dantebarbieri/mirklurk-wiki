@@ -206,11 +206,12 @@ def validate_capacity_profiles(catalog, details):
         raise DataError("capacity: browse category must match every reviewed capacity-granting item")
     if capacity:
         carrying = next((set(row["members"]) for row in taxonomy.get("groups", [])
-                         if row["title"] == "Carrying equipment"), set())
-        slots = {identity for row in taxonomy.get("tags", []) if "Equipment by slot" in row.get("parents", [])
-                 for identity in row["members"]}
-        if not carrying <= capacity or not capacity <= slots:
-            raise DataError("capacity: every carrying item needs a bonus and every bonus needs an equipment slot")
+                         if row["title"] == "Belts and backpacks"), set())
+        tags = {row["title"]: set(row["members"]) for row in taxonomy.get("tags", [])
+                if "Equipment by slot" in row.get("parents", [])}
+        packs = tags.get("Belt-slot equipment", set()) | tags.get("Backpack-slot equipment", set())
+        if not carrying <= packs or not capacity <= set().union(*tags.values()):
+            raise DataError("capacity: belts and backpacks need their slots and every bonus needs an equipment slot")
 
 
 def load_publication_inputs(root):

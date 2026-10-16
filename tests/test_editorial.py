@@ -42,7 +42,7 @@ class EditorialTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(DataError):
                 base_value_text(Decimal(value))
         self.assertFalse(any("silver equivalents" in text for text in self.pages.values()))
-        self.assertIn("|| {{Coins|100}} ||", self.pages["Silver Coin"])
+        self.assertIn("|| {{Coins|100}} = {{Coins|100|copper}} ||", self.pages["Silver Coin"])
 
     def test_construction_action_listing_shows_its_world_sprite(self):
         # Finish Raft is never an {{Item}}, but the Items list still shows its reviewed world sprite.
@@ -116,7 +116,7 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(known(0), "<nowiki>0</nowiki>")
         self.assertEqual(known(False), "No")
         # 0.8.9.9 documented the former Unwanted Guard (now Survivor), so it no longer shows Unknown.
-        for title in ("Flax", "Linen", "Firesteel", "Mixed ground debris"):
+        for title in ("Firesteel", "Mixed ground debris"):
             self.assertIn("Unknown", self.pages[title])
         variable = next(row for source in self.catalog["acquisition"]["sources"]
                         for row in source["rows"] if row["probability"] is None)

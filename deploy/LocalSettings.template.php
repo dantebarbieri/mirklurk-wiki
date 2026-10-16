@@ -63,6 +63,9 @@ if ($appleTouchIcon !== '') {
 }
 
 $wgDBtype = 'mysql';
+// Search suggestions also match words inside titles ("socks" finds Worn Socks).
+$wgAutoloadClasses['MirklurkSearch'] = __DIR__ . '/mirklurk-search.php';
+$wgSearchType = 'MirklurkSearch';
 $wgDBserver = mirklurkEnv('MW_DB_SERVER', 'mirklurk-db');
 $wgDBname = mirklurkEnv('MW_DB_NAME', 'mirklurk');
 $wgDBuser = mirklurkEnv('MW_DB_USER', 'mirklurk');

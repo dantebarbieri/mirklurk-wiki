@@ -76,6 +76,17 @@ function p.coins(frame)
         parts[#parts + 1] = tostring(part)
     end
 
+    -- An optional unit shows the whole total in one smaller denomination, e.g. 1000|silver as 10 silver.
+    local unit = mw.text.trim(frame.args[2] or '')
+    if unit ~= '' then
+        if unit == 'copper' then add(value ~= '' and value or '0', unit)
+        elseif unit == 'silver' and padded:sub(-2) == '00' then
+            local count = padded:sub(1, -3):gsub('^0+', '')
+            add(count ~= '' and count or '0', unit)
+        else return failure('Coins unit must be copper, or silver for a whole number of silver.') end
+        return parts[1]
+    end
+
     if gold ~= '' then add(gold, 'gold') end
     if silver > 0 then add(tostring(silver), 'silver') end
     if copper > 0 or #parts == 0 then add(tostring(copper), 'copper') end

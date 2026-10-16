@@ -494,6 +494,16 @@ up to 16x80 native, shows at 1x or more; 16px icons show at 5x. A few large
 trees and creatures, cross-origin files and no-JavaScript views fall back to an
 uncropped `image-rendering: pixelated` fit.
 
+Search-box suggestions use `MirklurkSearch` (`deploy/mirklurk-search.php`,
+`$wgSearchType`). MediaWiki's MySQL suggester only matches the start of a title,
+and most item titles begin with a quality word, so typing "socks" suggested
+nothing. The engine keeps those prefix suggestions first, then fills the free
+slots with article titles that contain the typed text anywhere (case-insensitive,
+redirects excluded), ranking matches at the start of a word and shorter titles
+first. Namespaced input and later result pages keep the default behaviour.
+Full-text `Special:Search` results are unchanged. The infix match cannot use an
+index, but it scans only this wiki's few thousand titles and keeps 200 candidates.
+
 PageImages stores its choice in page properties during links updates. After
 deploying this runtime to an existing wiki, populate them once (then drain jobs):
 

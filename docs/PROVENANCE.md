@@ -464,6 +464,9 @@ other primary groups.
 
 Armor now uses the same slot evidence: the 18 primary Armor members are
 partitioned into Head armor, Torso armor, Armored gloves, Leg armor and Shields.
+Each armor section is ordered by armor points, then price, so it reads basic to
+best. Belts and backpacks (formerly Carrying equipment) lists Belts, including
+Magi's Ropebelt, and Backpacks by their reviewed slots.
 These child categories are derived intersections, not another editable
 membership list. Each links to Armor and its equipment-slot category.
 Validation rejects missing or overlapping armor-slot coverage.
@@ -497,7 +500,7 @@ storage available while equipped, not item footprint, weight allowance, stack
 limit or total player capacity. Each grid remains separate; replacing equipment
 replaces that item's contribution. Forager's Vest adds exactly 9 cells (3 x 3).
 Hidden Hollow's placed storage is not an equipment bonus. The capacity category
-must match all capacity profiles and cover every Carrying equipment member;
+must match all capacity profiles and cover every Belts and backpacks member;
 all members must have a reviewed equipment slot. Item stats and browse tables
 use the same profiles. These are source-traced facts, not runtime playtests.
 

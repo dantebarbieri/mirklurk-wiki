@@ -101,8 +101,7 @@
           "Decent Cloak",
           "Traveller's Cloak",
           "Ranger's Cloak",
-          "Clay's Magus Hood",
-          "Magi's Ropebelt"
+          "Clay's Magus Hood"
         ]
       },
       {
@@ -149,7 +148,6 @@
           "Steel Hand Axe",
           "Iron Felling Axe",
           "Steel Felling Axe",
-          "Unarmed",
           "Shortbow (Willow)",
           "Stone Club",
           "Improvised Bow",
@@ -187,6 +185,8 @@
         "index": "Items",
         "summary": "Tools for lighting, fire-making, mapping and other tasks. Some are also ingredients or consumables.",
         "members": [
+          "Rock",
+          "Flint",
           "Firesteel",
           "Torch",
           "Map of area",
@@ -195,7 +195,6 @@
           "Lantern",
           "Masterwork Lantern",
           "Map Drawing Kit",
-          "Survivor's Field Kit",
           "Drake Jasper",
           "Dragon Flint",
           "Improvised Enduring Torch",
@@ -281,8 +280,6 @@
           "Branch (Willow)",
           "Log (Willow)",
           "Firewood (Willow)",
-          "Rock",
-          "Flint",
           "Flax",
           "Linen",
           "Beeswax",
@@ -319,7 +316,7 @@
         ]
       },
       {
-        "title": "Carrying equipment",
+        "title": "Belts and backpacks",
         "index": "Items",
         "members": [
           "Small Backpack",
@@ -329,9 +326,10 @@
           "Ranger's Backpack",
           "Journeyman Herbalist's Belt",
           "Expert Herbalist's Belt",
-          "Master Herbalist's Belt"
+          "Master Herbalist's Belt",
+          "Magi's Ropebelt"
         ],
-        "summary": "Backpacks and belts that add inventory space."
+        "summary": "Belts and backpacks. Most add inventory space; Magi's Ropebelt restores focus instead."
       },
       {
         "title": "Camping and construction",
@@ -348,6 +346,7 @@
           "Finish Raft",
           "Chopping Log",
           "Primitive Farmwork Table",
+          "Survivor's Field Kit",
           "Simple Shelter",
           "Canopy (2x2 tiles)",
           "Canopy (3x3 tiles)",
@@ -508,6 +507,27 @@
         ]
       },
       {
+        "title": "Fire-starting stones",
+        "index": "Items",
+        "parents": ["Tools"],
+        "summary": "Stones struck with a striker to make sparks when lighting a fire. Each strike can break the stone.",
+        "members": ["Rock", "Flint", "Drake Jasper", "Dragon Flint"]
+      },
+      {
+        "title": "Strikers",
+        "index": "Items",
+        "parents": ["Tools"],
+        "summary": "Struck against a fire-starting stone to make sparks; strikes wear down their durability. Metal equipment with a spark chance can also strike.",
+        "members": ["Worn Firesteel", "Iron Firesteel", "Firesteel", "Fool's Gold"]
+      },
+      {
+        "title": "Mapping tools",
+        "index": "Items",
+        "parents": ["Tools"],
+        "summary": "Items for drawing and keeping maps of the Mirk.",
+        "members": ["Map Drawing Kit", "Map Ledger", "Map of area"]
+      },
+      {
         "title": "Fire-making supplies",
         "index": "Items",
         "parents": ["Tools"],
@@ -540,6 +560,20 @@
           "Worn Firesteel"
         ]
       },
+      {"title": "Sharp weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Sharp damage: daggers, knives and swords.", "members": ["Shoddy Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Greatsword", "Steel Greatsword"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[2,3,4,5,6,7,8,9,10,11,184,185].damageClass"}]},
+      {"title": "Blunt weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Blunt damage, which can stun.", "members": ["Stone Club", "Iron Cudgel", "Steel Cudgel", "Heavy Branch (Cypress)", "Iron Warhammer", "Steel Warhammer", "Orb of Iron Essence", "Orb of Steel Essence"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[31,90,157,158,169,186,187,271,272].damageClass"}]},
+      {"title": "Force weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Force damage.", "members": ["Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Orb of Storm"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[27,28,29,30,188,189,190,191,274].damageClass"}]},
+      {"title": "Piercing weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Piercing damage, mostly bows.", "members": ["Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Iron Morning Star", "Steel Morning Star", "Gurb's Expertimental Bow"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[44,93,105,106,160,161,179].damageClass"}]},
+      {"title": "Fire weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Fire damage.", "members": ["Staff of The Fire Eater", "Orb of Fire", "Orb of Greater Fire"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[266,269,270].damageClass"}]},
+      {"title": "Weak-damage weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Weak damage.", "members": ["Orb of Wind"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[273].damageClass"}]},
+      {"title": "Repair kits", "index": "Items", "parents": ["Consumables", "Repair and refuelling supplies"], "summary": "Cloth, Wood and Metal Repair Kits, which restore the condition of equipment.", "members": ["Cloth Repair Kit", "Wood Repair Kit", "Metal Repair Kit"], "confidence": "inferred", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "items_bonus_apply.repair-and-fuel/amount-decrement"}]},
+      {"title": "Coins", "index": "Items", "parents": ["Coins and valuables"], "summary": "Copper, Silver and Gold Coins, used as money.", "members": ["Copper Coin", "Silver Coin", "Gold Coin"]},
+      {"title": "Gems", "index": "Items", "parents": ["Coins and valuables"], "summary": "Gems valued for trading.", "members": ["Emerald", "Ruby", "Amethyst", "Sapphire", "Topaz"]},
+      {"title": "Workstations", "index": "Items", "parents": ["Camping and construction"], "summary": "Placed stations with their own crafting recipes.", "members": ["Campfire", "Chopping Log", "Primitive Farmwork Table", "Survivor's Field Kit"]},
+      {"title": "Beds and tents", "index": "Items", "parents": ["Camping and construction"], "summary": "Bedrolls and tents for resting and sleeping. Tents work as beds.", "members": ["Improvised Bedroll", "Tattered Bedroll", "Decent Bedroll", "Furhide Bedroll", "Great Bedroll", "Small Linen Tent", "Waxed Linen Tent"], "confidence": "observed", "evidence": [{"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "item_is_sleeper"}, {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "item_is_tent"}]},
+      {"title": "Shelters", "index": "Items", "parents": ["Camping and construction"], "summary": "Roofed structures that cast shade on the tiles beneath them.", "members": ["Simple Shelter", "Canopy (2x2 tiles)", "Canopy (3x3 tiles)"]},
+      {"title": "Rafts", "index": "Items", "parents": ["Camping and construction"], "summary": "The Raft Base and its finishing step, for crossing water.", "members": ["Raft Base", "Finish Raft"]},
+      {"title": "Storage containers", "index": "Items", "parents": ["Camping and construction"], "summary": "Placed storage that protects the items inside.", "members": ["Hidden Hollow", "Storage Chest"], "confidence": "observed", "evidence": [{"source": "items-en", "section": "ItemDesc", "key": "108"}]},
       {
         "title": "Remedies",
         "index": "Items",
@@ -10510,9 +10544,596 @@
     "images": [
       {"illustration": "tile-deep-water-illustration", "after": 1}
     ]
+    },
+    {
+      "title": "Controls",
+      "paragraphs": [
+        "MirkLurk is played mainly with the mouse. Point at a tile and left-click to walk there; while you hover, each step shows its action point cost. Left click moves, selects and attacks. Right click cancels and rotates things such as your attack pattern. The mouse wheel zooms the camera. There are no WASD movement keys.",
+        "Every other action has a keyboard shortcut. The table lists the defaults, using the names shown in Options > Controls. Tooltips always show the key you have bound, so they stay correct after you change it.",
+        "Every binding can be changed in Options > Controls: click an entry, then press any key or mouse button. If another action already used that key, it becomes unbound and is highlighted as a conflict. Reset restores the defaults. Even if Close is left unbound, Esc still closes menus.",
+        "A controller is also supported, with its own Controller page in the options. You can swap the sticks and set their sensitivity (default 1) and dead zone (default 0.1). Stats, Crafting, Draw Weapon, Rest, Hitpoints, Auto-walk, Jump, Loot All, Journal, Swap, Scout, Codex, Show UI and Screenshot have no controller button by default.",
+        "Early in the tutorial, Draw Weapon, Jump, Rest, Examine and End Turn stay locked until the story moves on."
+      ],
+      "section_titles": [
+        "Mouse",
+        "Keyboard",
+        "Changing keys",
+        "Controller",
+        "Tutorial"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Action points",
+        "Strict move",
+        "Placing objects",
+        "Combat basics",
+        "Resting"
+      ],
+      "tables": [
+        {
+          "after": 1,
+          "caption": "Default keyboard bindings",
+          "columns": [
+            "Key",
+            "Action"
+          ],
+          "rows": [
+            [
+              "Space",
+              "End Turn"
+            ],
+            [
+              "Tab",
+              "Equipment"
+            ],
+            [
+              "B",
+              "Inventory"
+            ],
+            [
+              "C",
+              "Stats & Skills"
+            ],
+            [
+              "V",
+              "Crafting"
+            ],
+            [
+              "J",
+              "Journal"
+            ],
+            [
+              "F1",
+              "Codex"
+            ],
+            [
+              "X",
+              "Search / Examine / Harvest"
+            ],
+            [
+              "E",
+              "Use / Confirm; also rotates an item held on the cursor"
+            ],
+            [
+              "Esc",
+              "Close / Cancel"
+            ],
+            [
+              "F",
+              "Draw Weapon (enter or leave combat mode)"
+            ],
+            [
+              "Z",
+              "Weapon Swap (costs AP); flips an object while placing it"
+            ],
+            [
+              "Q",
+              "Jump Stance"
+            ],
+            [
+              "N",
+              "Scout (costs 2 AP)"
+            ],
+            [
+              "T",
+              "Rest"
+            ],
+            [
+              "G",
+              "Hitpoints"
+            ],
+            [
+              "A",
+              "Auto-walk on or off"
+            ],
+            [
+              "R (hold)",
+              "Loot All"
+            ],
+            [
+              "M (hold)",
+              "Show Map"
+            ],
+            [
+              "Left Shift (hold)",
+              "Highlight objects you can interact with, or compare items"
+            ],
+            [
+              "Left Ctrl (hold)",
+              "Strict Move: walk without interacting"
+            ],
+            [
+              "F2",
+              "Show or hide the interface"
+            ],
+            [
+              "F12",
+              "Screenshot"
+            ]
+          ]
+        },
+        {
+          "after": 3,
+          "caption": "Default controller buttons",
+          "columns": [
+            "Button",
+            "Action"
+          ],
+          "rows": [
+            [
+              "Left stick",
+              "Move the cursor"
+            ],
+            [
+              "Right stick",
+              "Scroll and zoom"
+            ],
+            [
+              "LB",
+              "Primary click"
+            ],
+            [
+              "RB",
+              "Secondary click"
+            ],
+            [
+              "D-pad left / right",
+              "Previous or next action-bar slot"
+            ],
+            [
+              "RT",
+              "Click the selected action-bar slot"
+            ],
+            [
+              "A",
+              "Inventory"
+            ],
+            [
+              "B",
+              "Equipment"
+            ],
+            [
+              "X",
+              "Map"
+            ],
+            [
+              "Y",
+              "End Turn"
+            ],
+            [
+              "LT",
+              "Use"
+            ],
+            [
+              "Back / Select",
+              "Search / Examine"
+            ],
+            [
+              "Start",
+              "Close"
+            ],
+            [
+              "Right stick click",
+              "Highlight"
+            ]
+          ]
+        }
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_startups",
+          "key": "controls_set_default;cursor_get_keys;keys_write_array"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Create_0",
+          "key": "controlsMax"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Step_0",
+          "key": "conflictOne"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_UI_Step_0",
+          "key": "safetyESC"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_camera_Step_0",
+          "key": "mouseWheelInput"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "leftRelease"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "keySwap"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "textf_keyreplace"
+        },
+        {
+          "source": "ui-en",
+          "section": "Menus",
+          "key": "Controls;Controller;CursorMovement;ScrollZoom;LeftStick;RightStick;Sensitivity;DeadZone"
+        },
+        {
+          "source": "ui-en",
+          "section": "KeysReset",
+          "key": "Reset"
+        },
+        {
+          "source": "ui-en",
+          "section": "KeyNames",
+          "key": "1Clicker..Screenshot;StrictMove;LeftBAR;RightBAR;ClickBAR"
+        },
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "21;44;46;47"
+        },
+        {
+          "source": "ui-en",
+          "section": "Tutorial",
+          "key": "-6"
+        }
+      ]
+    },
+    {
+      "title": "Difficulty",
+      "paragraphs": [
+        "You choose Easy, Medium or Hard when you create your character, and the choice is saved with that character. Medium is the default and the baseline the other two are measured against.",
+        "On Hard, satiation, stamina, focus and warmth all drain 20% faster. Most enemies aim their attacks one step more precisely, up to the highest level (see Combat basics). Treasure caches are less common.",
+        "On Easy, those four meters drain at 67% of the normal rate. Your own position is marked on the local map, and treasure caches are more common. You also start with better gear: an Iron Dagger instead of a Shoddy Dagger, plus Flint and three Firewood (Willow).",
+        "Every difficulty starts with a Small Backpack, a Loaf of Bread, a Tattered Bedroll and a Map of area.",
+        "On Easy and Medium, cloudy weather cannot turn into rain during your first two days. On Hard, rain can start from the first day."
+      ],
+      "section_titles": [
+        "Choosing a difficulty",
+        "Hard",
+        "Easy",
+        "Starting gear on every difficulty",
+        "Early weather"
+      ],
+      "related_entities": [
+        "Iron Dagger",
+        "Shoddy Dagger",
+        "Flint",
+        "Firewood (Willow)",
+        "Small Backpack",
+        "Loaf of Bread",
+        "Tattered Bedroll",
+        "Map of area"
+      ],
+      "related_pages": [
+        "Wellbeing",
+        "Satiation",
+        "Stamina",
+        "Focus",
+        "Temperature",
+        "Weather",
+        "Combat basics"
+      ],
+      "tables": [
+        {
+          "after": 0,
+          "caption": "Differences from Medium",
+          "columns": [
+            "Difficulty",
+            "Meter drain",
+            "Enemy aim",
+            "Treasure caches",
+            "Starting weapon"
+          ],
+          "rows": [
+            [
+              "Easy",
+              "67% of normal",
+              "Normal",
+              "More common",
+              [
+                {
+                  "entity": "Iron Dagger"
+                }
+              ]
+            ],
+            [
+              "Medium",
+              "Normal",
+              "Normal",
+              "Normal",
+              [
+                {
+                  "entity": "Shoddy Dagger"
+                }
+              ]
+            ],
+            [
+              "Hard",
+              "120% of normal",
+              "One step sharper",
+              "Less common",
+              [
+                {
+                  "entity": "Shoddy Dagger"
+                }
+              ]
+            ]
+          ]
+        }
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "ui-en",
+          "section": "Menus",
+          "key": "CharEdit5;Diffs1;Diffs2;Diffs3;DiffsDesc1;DiffsDesc3"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Step_0",
+          "key": "global.GAMEDIFF"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Create_0",
+          "key": "diffPos"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "myDiff"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_energy_lose;player_hunger_lose;player_focus_lose;player_warmth_lose;player_endturn"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_cursor_Draw_75",
+          "key": "global.GAMEDIFF"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "global.GAMEDIFF"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "loot_create_treasure"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "global.GAMEDIFF"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Step_0",
+          "key": "global.GAMEDIFF"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_attack_xy"
+        },
+        {
+          "source": "items-en",
+          "section": "ItemTitles",
+          "key": "2;3;12;25;36;39;68;89"
+        }
+      ]
+    },
+    {
+      "title": "Death",
+      "paragraphs": [
+        "You die when your wellbeing runs out, when you lose all of your HP, or after drowning for four turns in deep water. Poison and bleeding take effect at the start of your turn, so they can finish you off before you act.",
+        "Wellbeing falls when satiation, stamina, focus or warmth are neglected, when you are sick, when thorns scratch you, when a magic weapon costs more of a meter than you have, and near rifts. When death is close, the interface counts down the turns you have left.",
+        "When you die, the music fades, the interface hides and a menu shows one of ten farewell messages. It offers Load Latest Save in place of Save and Exit, along with Options and the exits to the main menu or desktop.",
+        "Death does not delete your save; there is no permadeath. Loading takes you back to your most recent save. The game saves automatically when you enter a new area and after a successful sleep, but skips that autosave when your wellbeing is almost gone. You can also save when you exit. Saves are removed only when you delete them yourself on the load screen by holding Delete."
+      ],
+      "section_titles": [
+        "Ways to die",
+        "Warning signs",
+        "The death screen",
+        "Saves"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Wellbeing",
+        "Health and armor",
+        "Deep water",
+        "Poison",
+        "Sharp",
+        "Magic weapons",
+        "Resting",
+        "Combat basics"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "haelth"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_aftermath;delayed_effects_check"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_player_Alarm_0",
+          "key": "drownPoints"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_rift_Alarm_0",
+          "key": "haelth"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_day_Step_0",
+          "key": "playerDead"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Create_0",
+          "key": "LoadLast"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Step_0",
+          "key": "LoadLast"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_menu_Draw_64",
+          "key": "directory_destroy"
+        },
+        {
+          "source": "ui-en",
+          "section": "Main",
+          "key": "WELLBEING"
+        },
+        {
+          "source": "ui-en",
+          "section": "AEsGeneral",
+          "key": "TurnTillDeath"
+        },
+        {
+          "source": "ui-en",
+          "section": "Pops",
+          "key": "Dead0..Dead9"
+        },
+        {
+          "source": "ui-en",
+          "section": "Menus",
+          "key": "LoadLast;ExitToMain;DeleteSave"
+        },
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "1;6"
+        }
+      ]
+    },
+    {
+      "title": "Combat basics",
+      "paragraphs": [
+        "Combat is turn-based. On your turn you spend action points, normally 8, on moving, attacking and other actions, then press End Turn. Each turn is 8 minutes of game time. Every creature that wants to act then takes its turn, one at a time, before your AP refill.",
+        "A fight starts when a hostile creature notices you: it must be close enough, able to see you and pass a detection check. Resting in a well-hidden spot makes you harder to find. You can also start a fight yourself with Draw Weapon. Before combat continues you place your armor points on your HP grid. While enemies are targeting you, you cannot leave combat or rest.",
+        "Leaving an enemy's melee range can give it a free attack. Jumping away avoids that.",
+        "Left-click the base of a creature to select it and open its HP grid. Hover over the grid to aim your weapon's attack pattern, right-click to rotate the pattern a quarter turn, and left-click to strike. You need enough AP and must be in range; ranged weapons also need ammunition and a clear shot. Every cell the pattern covers takes damage. Creatures may dodge, shifting the hit by one cell.",
+        "When an enemy attacks you, you may get a chance to dodge: you see where the attack will land and choose which way to shift your own grid.",
+        "Enemies aim according to their intelligence. The least intelligent hit completely at random. Smarter ones go after your remaining HP, then also allow for the size of their pattern, then target clusters of healthy cells. The smartest also rotate their pattern for the most damage. On Hard, most enemies aim one step more precisely.",
+        "A fight ends when no hostile creature is targeting you. There is no flee button, but distance works: beyond about one and a half times a creature's detection range it becomes more and more likely to give up, and beyond three times that range it always does. It also gives up when it can no longer find a way to reach you, and some creatures retreat when you hide in a sheltered spot. A blunt stun makes the victim lose its next turn."
+      ],
+      "section_titles": [
+        "Turns",
+        "Starting a fight",
+        "Moving away",
+        "Attacking",
+        "Dodging",
+        "How enemies aim",
+        "Ending a fight"
+      ],
+      "related_entities": [],
+      "related_pages": [
+        "Action points",
+        "Health and armor",
+        "Blunt",
+        "Difficulty",
+        "Controls",
+        "Death"
+      ],
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn;player_myturn_check;get_dodges;get_target_findchance;player_real_combat_check;attack_aftermath"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_obj_player_Alarm_0",
+          "key": "AP"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Step_0",
+          "key": "turnList;doFightChance;targetEscaped"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_target;being_endturn;being_get_attack_xy;pattern_rotate;being_attacks_target"
+        },
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "attackRotation"
+        },
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "8;9;10;11;12;13;14;15;17;19;25;31;33"
+        },
+        {
+          "source": "ui-en",
+          "section": "TTspec",
+          "key": "URinCombat"
+        },
+        {
+          "source": "ui-en",
+          "section": "Pops",
+          "key": "CombatExitFail"
+        },
+        {
+          "source": "ui-en",
+          "section": "Tutorial",
+          "key": "-9"
+        }
+      ]
     }
   ],
   "item_effects": [
+    {"entity": "item-75", "paragraphs": ["Speak with Captain Eir at Fort Solid while carrying it. She takes one recorder automatically and the main quest moves on."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Eir.player_inventory_lose_amount[75];MAINQUESTSTAGE=2"}]},
+    {"entity": "item-123", "paragraphs": ["Speak with Ranger Bhato while carrying it to report the kill. He sends you back to Fort Solid.", "Then speak with Magus Clay while carrying it. He takes the rune and gives you Clay's Strange Potion."], "confidence": "inferred", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Bhato.player_inventory_get_amount[123];MAINQUESTSTAGE=10"}, {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Clay.MAINQUESTSTAGE10.player_inventory_lose_amount[123]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.Clay.205.item_receive[126]"}]},
+    {"entity": "item-126", "paragraphs": ["Speak with the Dead Unwanted at the dead camp while carrying it. A new option pours the potion into his mouth; the potion is used up and he revives as Viend, who must then be escorted to Fort Solid."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.DeadUnwanted.option114.requires[126]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.DeadUnwanted.114.player_inventory_lose_amount[126];112.being_initiate[19]"}]},
+    {"entity": "item-130", "paragraphs": ["Picking it up advances the journal to The sealed strongbox. Speak with Magus Clay while carrying it; he takes the box and keeps it while he investigates."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_receive.player[130].MAINQUESTSTAGE=19"}, {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Clay.MAINQUESTSTAGE19.player_inventory_lose_amount[130]"}]},
+    {"entity": "item-132", "paragraphs": ["Picking it up advances the journal to Toward Scaal.", "A magic ward blocks a passage on the way down to Scaal. Interact with the ward while carrying the Ward Breaker to dissolve it; the Ward Breaker is used up. Without it, the ward cannot be passed."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_receive.player[132].MAINQUESTSTAGE=26"}, {"source": "game-data", "section": "gml_GlobalScript_scr_smartones", "key": "transPoint.index-2991.BlockedMagic/player_inventory_lose_amount[132]"}]},
     {
       "entity": "item-51",
       "paragraphs": ["Eating Honey adds 1 percentage point of wellbeing and reduces sickness duration."],

@@ -9,6 +9,7 @@ from sync_wiki import SyncError, fetch_live, sync
 from wiki_anchors import fragment
 from wiki_catalog import page_locations, primary_groups, title_key
 from wiki_display import ASSETS_TITLE, DISPLAY_TITLES, content_model, lua_string, page_namespace
+from wiki_portal import browse_order, section_order
 from wiki_render import image_for, merchant_table, pixel_geometry
 
 
@@ -91,7 +92,7 @@ def smoke_editorial_release(api, pages):
         if title.startswith("Module:"):
             continue
         if text.startswith("#REDIRECT"):
-            target = re.fullmatch(r"#REDIRECT \[\[([^\]#]+)(?:#[^\]]*)?\]\]\n", text)[1]
+            target = re.fullmatch(r"#REDIRECT \[\[([^\]#]+)(?:#[^\]]*)?\]\]\n", text)[1].lstrip(":")
             resolved = api({"action": "query", "titles": title, "redirects": "1"})["query"].get("redirects", [])
             if not any(row["from"] == title and row["to"] == target for row in resolved):
                 raise RuntimeError(f"{title}: retirement or compatibility redirect did not resolve.")
@@ -220,9 +221,14 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             raise RuntimeError("Creature icon diverged from the shared integer-native sizing policy.")
         if "mirklurk-cell-grid" in rendered or "occupied health cells" in rendered:
             raise RuntimeError("Creature display unexpectedly copied statistics.")
-    groups = sorted((group for group in primary_groups(catalog) if group["index"] == "Bestiary"), key=lambda g: g["title"])
-    surfaces = {"Bestiary": [locations[i] for group in groups for i in sorted(group["members"], key=lambda i: locations[i])]}
-    surfaces.update({"Category:" + group["title"]: sorted(locations[i] for i in group["members"]) for group in groups})
+    groups = sorted((group for group in primary_groups(catalog) if group["index"] == "Bestiary"), key=section_order)
+    values, names = {}, {row["id"]: row["name"] for row in data["entities"]}
+    for row in details["profiles"]:
+        values.setdefault(row["entity"], {}).update(row["values"])
+    ordered = {group["title"]: [locations[i] for i in sorted(
+        group["members"], key=lambda i: browse_order(names[i], "creature", values.get(i, {})))] for group in groups}
+    surfaces = {"Bestiary": [title for group in groups for title in ordered[group["title"]]]}
+    surfaces.update({"Category:" + title: members for title, members in ordered.items()})
     for title, expected in surfaces.items():
         rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
         check_errors(rendered)
@@ -320,6 +326,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
 
     valid = {
         "{{Coins| 0001234 }}": ("1 gold", None),
+        "{{Coins|1000| silver }}": ("10 silver", None), "{{Coins|1000|copper}}": ("1000 copper", None),
         "{{Health grid| 0,1,0 ; 1,4,1 ; 0,1,0 }}": ("5 occupied health cells", [3, 3, 3]),
         "{{Attack grid|0-1,0;0,1000}}": ("Sum of occupied-cell ranges: 1000 to 1001.", [2, 2]),
         "{{Attack grid|0}}": ("Sum of occupied-cell ranges: 0 to 0.", [1]),

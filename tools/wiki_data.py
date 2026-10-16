@@ -58,6 +58,7 @@ MECHANIC_GUIDE_TITLES = {
     "Planting", "Terrain", "Soil", "Grassy ground", "Sand", "Mud", "Stone ground", "Goo", "Dock planks",
     "Slopes", "Shallow water", "Medium water", "Deep water", "Interior floors", "Areas", "Fort Solid Shorehold", "Common Bog", "Withered Mire",
     "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters",
+    "Controls", "Difficulty", "Death", "Combat basics",
 }
 HEALTH_ARMOR_ICONS = {
     1: ("File:Armor shield (bronze).png", "Bronze"),

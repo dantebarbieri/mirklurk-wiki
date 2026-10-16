@@ -99,7 +99,7 @@ class NavigationTests(unittest.TestCase):
                    for index in ("Areas", "Terrain")}
         self.assertEqual({index: len(rows) for index, rows in indexed.items()}, {"Areas": 9, "Terrain": 12})
         for index, children in indexed.items():
-            entry = "\n* {{Tile|%s}}" if index == "Terrain" else "\n* [[%s]]"
+            entry = "\n<div>{{Tile|%s}}</div>" if index == "Terrain" else "\n* [[%s]]"
             for title in children:
                 self.assertTrue(self.pages[title].startswith(f"[[{index}]] | [[Main Page]]\n"))
                 self.assertIn(entry % title, self.pages[index])

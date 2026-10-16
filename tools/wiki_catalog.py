@@ -19,6 +19,7 @@ from wiki_references import resolve_catalog_references
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
 MAX_CATALOG_BYTES = 512 * 1024
+BUILT_IN_ATTACK = "item-31"  # Unarmed: the game's fist attack, stored as an item but never carried.
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS, "NPCs", "Source provenance", "Loot mechanics"}
 VALUE_LINK = "[[Currency and trading#currency-trade-standard-value|Value]]"
 VALUE_NOTE = ("Merchants sell at this value and pay it for an item in full condition; "
@@ -175,6 +176,8 @@ def category_definitions(data, catalog):
     categories = {}
     for row in catalog["pages"]:
         entity = entities[row["entity"]]
+        if entity["id"] == BUILT_IN_ATTACK:
+            continue
         root = "NPCs" if kinds.get(entity["id"]) == "npc" else CATEGORY_PAGES[entity["category"]]
         category = categories.setdefault(root, {
             "title": root, "index": root, "parents": [], "members": [],
@@ -683,7 +686,7 @@ def validate_catalog(catalog, data):
                             raise DataError("taxonomy: each entity needs a single primary group")
                         grouped.add(identity)
         expected = {e["id"] for e in entities.values() if e["category"] in {"item", "nature"}
-                    or (e["category"] == "being" and classified_kind.get(e["id"]) == "creature")}
+                    or (e["category"] == "being" and classified_kind.get(e["id"]) == "creature")} - {BUILT_IN_ATTACK}
         if grouped != expected:
             raise DataError("taxonomy: primary groups must cover every item, nature record and creature")
         armor = next((set(row["members"]) for row in taxonomy["groups"] if row["title"] == "Armor"), set())

@@ -5106,6 +5106,13 @@
     }
   ],
   "item_notes": [
+    {"item": "item-75", "kind": "story", "text": "Interact with the Dead Unwanted at the dead camp early in the main quest; he hands over the recorder.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.DeadUnwanted.113.item_receive[75];MAINQUESTSTAGE=1"}]},
+    {"item": "item-123", "kind": "story", "text": "Ranger Bhato points you to an old cellar beneath nearby ruins. The Sceetler living there drops the rune when you kill it during this quest step.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeon.MAINQUESTSTAGE8.spawn_in_dungeon[13]"}, {"source": "game-data", "section": "gml_Object_obj_being_Alarm_0", "key": "loot.being13.item_drop[123];MAINQUESTSTAGE=9"}]},
+    {"item": "item-126", "kind": "story", "text": "Magus Clay gives it to you after you bring him the Glowing Rune.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.Clay.205.item_receive[126];MAINQUESTSTAGE=11"}]},
+    {"item": "item-130", "kind": "story", "text": "Search the strongbox spot in the ancient library ruins marked in your journal. Ordinary empty shelves do not contain it.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_smartones", "key": "search.tile62.loot_create_stash[130]"}]},
+    {"item": "item-132", "kind": "story", "text": "Magus Clay drops it when he vanishes after you confront him following the blast at Fort Solid.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.Clay.217.item_drop[132];MAINQUESTSTAGE=25"}]},
+    {"item": "item-261", "kind": "story", "text": "The Terror drops it when killed. It hunts the Survivors' camp's Savage Mirk area at night.", "evidence": [{"source": "game-data", "section": "gml_Object_obj_being_Alarm_0", "key": "loot.Terror.lootArray[261]"}]},
+    {"item": "item-262", "kind": "story", "text": "Grand Mother sells it once your journal reaches A possible homecoming and Wilda has let you up to her hut.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "trade.GrandMother.MAINQUESTSTAGE>=30.item[262]"}]},
     {
       "item": "item-142",
       "kind": "gathering",
@@ -5177,8 +5184,8 @@
     },
     {
       "item": "item-48",
-      "kind": "unverified",
-      "text": "Availability in 0.9.0.1: Unknown. No acquisition method is documented.",
+      "kind": "unreleased",
+      "text": "Not obtainable in 0.9.0.1. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5189,8 +5196,8 @@
     },
     {
       "item": "item-49",
-      "kind": "unverified",
-      "text": "Availability in 0.9.0.1: Unknown. No acquisition method is documented.",
+      "kind": "unreleased",
+      "text": "Not obtainable in 0.9.0.1. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",

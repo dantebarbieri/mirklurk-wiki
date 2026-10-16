@@ -40,6 +40,17 @@ ITEM_SECTION_KEYS = {
     "Durability": ("durability-max", "break-chance"),
 }
 
+# The game only wears items whose maximum is above 1, and never shows it for coins, gems or quest items.
+HIDDEN_DURABILITY = {f"item-{n}" for n in (72, 73, 74, 75, 97, 98, 99, 100, 101)}
+DURABILITY_LABELS = {"item-25": ("Portions", "; eating it uses one portion at a time."), "item-112": ("Oil", ".")}
+HANDS = {f"item-{n}": text for numbers, text in (
+    ((2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 27, 28, 90, 157, 158, 159, 160, 161, 190, 191, 267, 268, 269, 270, 271, 272, 273,
+      274), "One-handed; main-hand slot"),
+    ((29, 30, 169, 184, 185, 186, 187, 188, 189, 206, 266), "Two-handed; fills the main-hand and off-hand slots"),
+    ((44, 93, 105, 106, 179), "Two-handed bow; main-hand slot, leaving the off-hand slot for arrows"),
+    ((0, 1, 50, 58, 118, 45, 46, 76, 174, 219, 220, 110, 111), "Off-hand slot only"),
+    ((41, 96, 212), "Main-hand or off-hand slot")) for n in numbers}
+
 
 def item_article(name, facts, profiles, properties, entities, locations, price=None, coin=None, recipes=(), grids=(),
                  constructions=(), armor_guide=False, chop_guide=False):
@@ -54,6 +65,9 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
             values.setdefault(key, value)
             sources.setdefault(key, profile["id"])
     skipped = set(folded)
+    identity = profiles[0]["entity"] if profiles else None
+    if values.get("durability-max", 2) <= 1 or identity in HIDDEN_DURABILITY:
+        skipped.add("durability-max")
     if coin is not None:
         skipped.update({"initial-price", "initial-weight", "stack-limit"})
     if "initial-price" in values and ("value" in values or price is not None):
@@ -92,6 +106,8 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         else:
             cell = take(key, "summary")
         rows.append((heading + (" (items)" if key == "craft-yield" else ""), cell))
+    if identity in HANDS:
+        rows.insert(0, ("Hands", HANDS[identity]))
 
     for grid in grids:
         kind = grid["kind"]
@@ -106,7 +122,8 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         for suffix in ("min", "max"):
             used.setdefault(f"{kind}-pattern-{suffix}", heading)
         sections.append([heading, anchor("grid", grid["id"]), " ".join(lines),
-                         "{{Attack grid|" + grid_argument(grid) + "|label=" + heading + "}}"])
+                         '<div style="clear:both;">\n{{Attack grid|' + grid_argument(grid) + "|label=" + heading
+                         + "}}\n</div>"])
 
     combat = []
     for key in ("damage-class-id", "ranged-damage-class-id"):
@@ -200,13 +217,16 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
     keys = present("Durability")
     if keys:
         sentences = []
-        if "durability-max" in keys:
+        if identity in DURABILITY_LABELS:
+            text, rest = DURABILITY_LABELS[identity]
+            sentences.append(f"{text}: " + take("durability-max", text) + rest)
+        elif "durability-max" in keys:
             sentences.append("Maximum durability: " + take("durability-max", "Durability")
                              + ". An individual item's condition can be lower.")
         if "break-chance" in keys:
             sentences.append("Break chance: " + take("break-chance", "Durability")
                              + ", tested when an action uses it.")
-        sections.append(["Durability", "", " ".join(sentences), ""])
+        sections.append([DURABILITY_LABELS.get(identity, ("Durability",))[0], "", " ".join(sentences), ""])
 
     other = [f"* {fact_marks[key]}{literal(label(key))}: " + take(key, "Other details")
              for key in remaining if key not in used]
@@ -246,3 +266,10 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         text += body + "\n" if body else ""
         text += display + "\n" if display else ""
     return text
+
+
+def coin_value(coins):
+    """Coin pages also state their value in each smaller denomination: 1 gold = 10 silver = 1000 copper."""
+    total = int(coins[8:-2])
+    return " = ".join([coins] + [f"{{{{Coins|{total}|{unit}}}}}" for unit, size in (("silver", 100), ("copper", 1))
+                                 if total > size and total % size == 0])
