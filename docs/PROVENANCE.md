@@ -316,6 +316,15 @@ from `UI_Draw_64`), off-screen poison and bleeding, and the hood rename. Its
 File titles moved without redirects. Save migration of stored orbs is
 inferred, not tested.
 
+## Version 0.9.0.2 update
+
+Patch 0.9.0.2 (2026-10-16) was diffed privately against 0.9.0.1: 8 code
+entries changed and `obj_menu_Step_1` is new. `game-data-0902` records the new
+`data.win`; the English `.ini` files match their 0.9.0.1 fingerprints, and no
+reviewed fact or entry changed. The changelog cites `cursor_Draw_73` (per-throw
+`item_player_weightloss`), `object_update_light` (`radiusMemory` reset in
+daylight) and `obj_menu_Step_1`/`Draw_64` (menu music and particles).
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

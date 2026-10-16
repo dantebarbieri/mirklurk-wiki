@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.0.1",
+    "build": "0.9.0.2",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -90,6 +90,12 @@
       "path": "data.win",
       "sha256": "aa2d735ee8bfcc341958c71adbbe3768ca6d653475540027ef94fe9281b86bdc",
       "build": "0.9.0.1"
+    },
+    {
+      "id": "game-data-0902",
+      "path": "data.win",
+      "sha256": "7ed817e36bc676872aed3025330a9715c0110bd4869b8358e557aa7fe3ec586f",
+      "build": "0.9.0.2"
     }
   ],
   "entities": [
