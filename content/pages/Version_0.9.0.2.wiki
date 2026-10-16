@@ -1,0 +1,17 @@
+'''Version 0.9.0.2''' is the patch released on 16 October 2026, the day after [[Version 0.9.0.1]]. This wiki shows 0.9.0.2 values. It is a small fixes patch: no item, creature, merchant, recipe, loot, quest or skill values changed, and the English text files are unchanged.
+
+== New content ==
+=== Main menu ===
+* '''Music now loops.''' Before, the main menu played one random track once and then fell silent. Now, shortly after a track ends, another starts. It is picked at random from all 9 songs and is never the same as the one that just played.
+* '''Cozy particles.''' Faint golden snowflakes drift across the main menu. Each one fades in, drifts slowly while it grows or shrinks a little, and then fades out.
+
+== Fixes ==
+=== Throwing from a stack ===
+Throwing one item from a stack, such as [[Gurb's Flask of Vileness]] or [[Flask of Fire]], now lowers your carried weight and the weight of the bag that holds the stack by one item each throw. Before, throwing did not reduce either weight, so they stayed too high.
+
+=== Outdoor light at night ===
+Light sources placed outdoors, such as the two torches at the Survivors' camp, now light up their surroundings again each night. Before, after a day in between, one could stay dark on later nights even though it was still burning.
+
+Not in the patch notes: the same fix covers light sources you place yourself, such as a [[Campfire]], a [[Torch]] or [[Lantern]] set on the ground, a lit [[Survivor's Field Kit]] or a [[Jar of Fireflies]].
+
+[[Game mechanics]] | [[Main Page]]

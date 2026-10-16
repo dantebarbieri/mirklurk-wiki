@@ -36,9 +36,17 @@ have 30 durability and cost 1 per cast, with higher drains for six of them;
 Magus Clay's boss form gains one armor layer per cell; Poison Arrow II and III
 cost more; Butchery's extra-item roll applies only to hides and meat; poison
 and bleeding keep ticking off-screen; and Clays' Magus Hood is renamed Clay's
-Magus Hood, with the old title kept as a redirect. Pages show 0.9.0.1 values,
-and the **Version 0.9.0.1** changelog lists each change.
+Magus Hood, with the old title kept as a redirect. The **Version 0.9.0.1**
+changelog lists each change.
 [Provenance](docs/PROVENANCE.md#version-0901-update) records the amendments.
+
+Patch **0.9.0.2** followed on 2026-10-16. Only `data.win` has a new fingerprint,
+`game-data-0902`; the English text files still match their 0.9.0.1 fingerprints.
+No documented value changed. Throwing from a stack now lowers carried and bag
+weight, placed outdoor light sources light up again each night, and the main menu
+keeps playing music and shows drifting snowflakes. Pages show 0.9.0.2 values, and
+the **Version 0.9.0.2** changelog lists each change.
+[Provenance](docs/PROVENANCE.md#version-0902-update) records the amendments.
 
 The reference now contains **107 numeric facts and 338 structured entries**:
 37 quest/journal notes, 88 merchant offers, 97 station-specific recipe

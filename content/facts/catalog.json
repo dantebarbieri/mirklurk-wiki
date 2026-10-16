@@ -7550,16 +7550,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.0.1",
-      "confirmation": "The wiki operator installed patch 0.9.0.1, which followed the 0.9.0.0 release, and loaded a character in it to regenerate the English language files. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
+      "version": "0.9.0.2",
+      "confirmation": "The wiki operator installed patch 0.9.0.2, which followed the 0.9.0.1 patch, and launched it to regenerate the English language files, which match their 0.9.0.1 fingerprints. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
       "evidence": [
         {
-          "source": "game-data-0901",
+          "source": "game-data-0902",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0901",
+          "source": "game-data-0902",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }

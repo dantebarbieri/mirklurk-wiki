@@ -1,10 +1,10 @@
-'''Version 0.9.0.1''' is the patch released on 15 October 2026, the day after [[Version 0.9.0.0]]. This wiki shows 0.9.0.1 values. This page lists every documented change from 0.9.0.0, including a few the patch notes do not mention.
+'''Version 0.9.0.1''' is the patch released on 15 October 2026, the day after [[Version 0.9.0.0]]. This page lists every documented change from 0.9.0.0, including a few the patch notes do not mention. The wiki now shows values from [[Version 0.9.0.2]], which followed a day later.
 
 '''Spoilers:''' this page names late-story content.
 
 == New content ==
 === Music ===
-* The new song announced with 0.9.0.0 now plays. It joins the in-game playlist, which now has 9 tracks, and can also play in the main menu.
+* The new song announced with 0.9.0.0 now plays. It joins the in-game playlist, which now has 9 tracks, and can also play in the main menu. [[Version 0.9.0.2]] makes the main menu keep playing tracks.
 
 == Changes ==
 === Magic weapons ===

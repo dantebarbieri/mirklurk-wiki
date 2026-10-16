@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "build": "0.9.0.1",
+  "build": "0.9.0.2",
   "sources": [
     {
       "id": "starting-equipment",
@@ -5185,7 +5185,7 @@
     {
       "item": "item-48",
       "kind": "unreleased",
-      "text": "Not obtainable in 0.9.0.1. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
+      "text": "Not obtainable in 0.9.0.2. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5197,7 +5197,7 @@
     {
       "item": "item-49",
       "kind": "unreleased",
-      "text": "Not obtainable in 0.9.0.1. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
+      "text": "Not obtainable in 0.9.0.2. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5209,7 +5209,7 @@
     {
       "item": "item-40",
       "kind": "unverified",
-      "text": "Acquisition in 0.9.0.1: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
+      "text": "Acquisition in 0.9.0.2: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
       "evidence": [
         {
           "source": "game-data-0899",
