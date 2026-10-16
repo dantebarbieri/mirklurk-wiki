@@ -92,7 +92,7 @@ def smoke_editorial_release(api, pages):
         if title.startswith("Module:"):
             continue
         if text.startswith("#REDIRECT"):
-            target = re.fullmatch(r"#REDIRECT \[\[([^\]#]+)(?:#[^\]]*)?\]\]\n", text)[1]
+            target = re.fullmatch(r"#REDIRECT \[\[([^\]#]+)(?:#[^\]]*)?\]\]\n", text)[1].lstrip(":")
             resolved = api({"action": "query", "titles": title, "redirects": "1"})["query"].get("redirects", [])
             if not any(row["from"] == title and row["to"] == target for row in resolved):
                 raise RuntimeError(f"{title}: retirement or compatibility redirect did not resolve.")
