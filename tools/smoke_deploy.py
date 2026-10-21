@@ -718,10 +718,8 @@ def check_price_cell(cell, value):
 
 def check_seller_context(result, merchant, item, text, stock_text=None, location_page=None):
     if item is not None:
-        if {row["*"] for row in result.get("templates", [])} != {
-            merchant, "Template:Ware row", "Template:Item", "Module:Display", "Module:Display assets"
-        } or "Unit price" in text:
-            raise RuntimeError("A seller view has missing dependencies or recursively transcluded item prices.")
+        if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in text:
+            raise RuntimeError("A seller view has extra dependencies or recursively transcluded item prices.")
     if stock_text is not None or location_page is not None:
         parsed = dom(result["text"]["*"], merchant if item is None else "Synthetic seller view")
         if stock_text is not None:
@@ -796,9 +794,12 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         if merchant in {locations[identity] for identity in catalog.get("currency", {}).get("standard_merchants", [])}:
             stock_text = next(rule["text"] for rule in catalog["currency"]["rules"] if rule["id"] == "trade-stock-and-funds")
         for item in [None, *sorted({entry["details"]["item"] for entry in offered})]:
+            # Item pages build one seller row from the merchant's offers, location and availability views.
+            cells = "" if item is None else "".join("<td>{{:" + merchant + "|view=" + view + "|item=" + locations[item] + "}}</td>"
+                                                    for view in ("offers", "location", "availability"))
             query = {"action": "parse", "page": merchant, "prop": "text|templates"} if item is None else {
-                "action": "parse", "title": "Synthetic seller view",
-                "text": "{{:" + merchant + "|view=offers|item=" + locations[item] + "}}", "prop": "text|templates"}
+                "action": "parse", "title": "Synthetic seller view", "text": "<table><tr>" + cells + "</tr></table>",
+                "prop": "text|templates"}
             result = api(query, post=item is not None)["parse"]
             rendered = result["text"]["*"]
             check_parser_errors(rendered)
@@ -812,8 +813,15 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             for row in parsed.rows:
                 entry = wanted[next(iter(row["entries"]))]
                 detail, cells = entry["details"], row["cells"]
-                if plain(cells[0]["text"]) != entities[detail["merchant"]]["name"] or item_links(cells[1], locations) != [locations[detail["item"]]]:
-                    raise RuntimeError("An offer changed its seller or item cell.")
+                if plain(cells[0]["text"]) != entities[detail["merchant"]]["name"]:
+                    raise RuntimeError("An offer changed its seller cell.")
+                if item is not None:
+                    if len(cells) != 3 or plain(scalar(entry["conditions"])) not in plain(cells[2]["text"]) or (
+                            merchant not in location_pages and plain(cells[1]["text"]) != plain(scalar(detail["location"]))):
+                        raise RuntimeError("An item's seller row lost its location or availability cell.")
+                    continue
+                if item_links(cells[1], locations) != [locations[detail["item"]]]:
+                    raise RuntimeError("An offer changed its item cell.")
                 index = 2
                 if any(entry["details"]["quantity"] is not None for entry in offered):
                     if plain(cells[index]["text"]) != scalar(detail["quantity"]):
@@ -821,9 +829,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                     index += 1
                 elif stock_text is None and "Quantity: Unknown." not in parsed.text:
                     raise RuntimeError("An offer invented stock quantity or lost the unknown-quantity note.")
-                if item is None:
-                    check_price_cell(cells[index], prices[detail["item"]])
-                    index += 1
+                check_price_cell(cells[index], prices[detail["item"]])
+                index += 1
                 for field in ("location", "conditions"):
                     if field == "location" and merchant in location_pages:
                         continue
@@ -834,7 +841,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                             raise RuntimeError("An offer changed its location/condition cell.")
                         index += 1
                     elif expected is not None and plain(expected) not in plain(parsed.text):
-                        raise RuntimeError("A filtered offer lost its shared location/condition.")
+                        raise RuntimeError("A seller page lost its shared location/condition.")
                 if len(cells) != index:
                     raise RuntimeError("An offer has unexpected ordered data cells.")
     for owner in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "loot"}:
@@ -871,7 +878,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         if source.get("loot_context"):
             note = api({"action": "parse", "title": "Synthetic loot note", "text": "{{:" + source["title"] + "|view=loot-note}}",
                         "prop": "text"}, post=True)["parse"]["text"]["*"]
-            if plain(source["loot_context"]) not in plain(note) or "<table" in note:
+            if plain(source["loot_context"]) not in dom(note, "Synthetic loot note").text or "<table" in note:
                 raise RuntimeError("A source's shared interruption/eligibility qualifier is not its own note view.")
         for item in sorted({row["item"] for row in source["rows"]}):
             text = "<table>{{:" + source["title"] + "|view=loot|item=" + locations[item] + "}}</table>"

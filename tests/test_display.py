@@ -131,7 +131,9 @@ class DisplayTests(unittest.TestCase):
                       scroll_open('A "quote" & <tag>'))
         table = html_table(["Item", "Price"], ["{{Ware row|item=Iron Hand Axe|price={{:Iron Hand Axe}}}}\n"],
                            normal_only=(1,))
-        self.assertTrue(table.startswith(opening + '<table class="wikitable">\n'))
+        # Data tables clear the floated item summary; other wrappers keep the plain style.
+        self.assertTrue(table.startswith(scroll_open(clear=True) + '<table class="wikitable">\n'))
+        self.assertEqual(scroll_open(clear=True), opening.replace('style="', 'style="clear:right;'))
         self.assertTrue(table.endswith("</table>\n</div>\n"))
         self.assertIn('<noinclude><th scope="col">Price</th></noinclude>', table)
         self.assertIn("=" + table + "|#default=}}</onlyinclude>", selective_view(table, "wares"))
@@ -252,7 +254,7 @@ class DisplayTests(unittest.TestCase):
                              if f"\n'''{title}''' groups " not in text), 2258)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
-        self.assertEqual(sum(text.count("|Value]]: ") for text in readers.values()), 58)
+        self.assertEqual(sum(text.count("Merchants sell it at its [[#price|Value]].") for text in readers.values()), 58)
         self.assertEqual(dependencies(self.pages["Template:Ware row"]), {"Template:Item"})
         self.assertEqual(dependencies(self.pages["Template:Item"]), {"Module:Display"})
         self.assertIn("Template:Recipe row", dependencies(self.pages["Simple Burn Remedy"]))

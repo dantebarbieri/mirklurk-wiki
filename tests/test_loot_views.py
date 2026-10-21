@@ -1,8 +1,10 @@
-"""Item acquisition sections: transcluded views must merge into tables with rows, never header-only stubs."""
+"""Item tables: transcluded views merge into tables with rows, never header-only stubs, and values show once."""
 
 import re
 import sys
 import unittest
+from collections import defaultdict
+from decimal import Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,7 +12,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from wiki_catalog import entry_owners, entry_relations, page_locations
 from wiki_details import load_publication_inputs
-from wiki_render import LOOT_HEADERS, LOOT_ITEM_HEADERS, LOOT_QUANTITY_NOTE, build_pages
+from wiki_render import LOOT_HEADERS, LOOT_ITEM_HEADERS, LOOT_QUANTITY_NOTE, build_pages, price_text
 from test_views import expand_selective_view
 
 TABLE = re.compile(r"<table[^>]*>(.*?)</table>", re.S)
@@ -101,3 +103,61 @@ class LootViewTests(unittest.TestCase):
                 self.assertNotIn("<th", view)
                 self.assertNotIn(LOOT_QUANTITY_NOTE, view)
                 self.assertNotIn("<table", view)
+
+    def test_buying_lists_every_seller_as_one_row_of_one_table(self):
+        sellers = defaultdict(set)
+        for entry in self.data["entries"]:
+            if entry["kind"] == "merchant":
+                sellers[entry["details"]["item"]].add(self.locations[entry["details"]["merchant"]])
+        self.assertEqual(len(sellers), 58)
+        for identity, merchants in sellers.items():
+            title = self.locations[identity]
+            with self.subTest(item=title):
+                section = self.acquisition(title).split("=== Buying ===\n", 1)[1].split("\n===", 1)[0]
+                tables = TABLE.findall(section)
+                self.assertEqual(len(tables), 1)
+                columns = headers(tables[0])
+                self.assertEqual([columns[0], *columns[-2:]], ["Seller", "Location", "Availability"])
+                rows = data_rows(tables[0])
+                self.assertEqual(sorted(re.match(r"<td><a [^>]*>([^<]+)</a></td>", row)[1] for row in rows), sorted(merchants))
+                self.assertTrue(all(row.count("<td>") == len(columns) for row in rows))
+                outside = TABLE.sub("", section)
+                for text in ("Location:", "Story availability", "Value]]: ", "{{Coins"):
+                    self.assertNotIn(text, outside)
+
+    def test_every_item_summary_shows_one_value_matching_its_merchant_price(self):
+        prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
+        profiles = defaultdict(set)
+        for profile in self.details["profiles"]:
+            for key in ("initial-price", "value"):
+                if key in profile["values"]:
+                    profiles[profile["entity"]].add(Decimal(str(profile["values"][key])))
+        summaries = 0
+        for item in (row for row in self.data["entities"] if row["category"] == "item"):
+            title = self.locations[item["id"]]
+            page = self.pages[title]
+            with self.subTest(item=title):
+                if 'class="mirklurk-summary"' not in page:
+                    self.assertIn(title, {"Copper Coin", "Silver Coin", "Gold Coin", "Flax", "Linen"})
+                    continue
+                summaries += 1
+                summary = page.split('class="mirklurk-summary"', 1)[1].split("\n|}", 1)[0]
+                values = re.findall(r"\|Value\]\]\n\| (.*)", summary)
+                self.assertEqual(len(values), 1 if profiles[item["id"]] or item["id"] in prices else 0)
+                self.assertNotIn(" per ", "".join(values))
+                if item["id"] in prices:
+                    self.assertEqual(profiles[item["id"]], {Decimal(str(prices[item["id"]]["value"]))})
+                    self.assertEqual(values[0], '<span id="price"></span><onlyinclude>{{#switch:{{{view|<noinclude>page'
+                                     "</noinclude>}}}|page|price|=" + price_text(prices[item["id"]]) + "|#default=}}</onlyinclude>")
+                    self.assertEqual(page.count('<span id="price">'), 1)
+        self.assertEqual(summaries, 261)
+
+    def test_currency_denominations_are_one_table_of_coin_rows(self):
+        section = self.pages["Currency and trading"].split("== Denominations ==\n", 1)[1].split("\n==", 1)[0]
+        expanded = re.sub(r"\{\{:([^{}|\n]+)\}\}", lambda match: "".join(re.findall(r"<onlyinclude>(.*?)</onlyinclude>", self.pages[match[1]], re.S)),
+                          section)
+        tables = TABLE.findall(expanded)
+        self.assertEqual(len(tables), 1)
+        self.assertEqual(headers(tables[0]), ["Coin", "Value", "Weight", "Maximum stack"])
+        self.assertEqual([re.search(r"\[\[([^|\]]+)", row)[1] for row in data_rows(tables[0])],
+                         ["Copper Coin", "Silver Coin", "Gold Coin"])

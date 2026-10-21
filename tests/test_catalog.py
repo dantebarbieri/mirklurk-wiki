@@ -553,14 +553,16 @@ class CatalogTests(unittest.TestCase):
             page = self.pages[locations[identity]]
             self.assertIn(selective_view(price_text(known_prices.get(identity), self.data["illustrations"]), "price", True), page)
             if identity in known_prices:
+                # The summary's Value row owns the single price view; Buying only links to it.
                 self.assertNotIn("Base value", page)
-                self.assertNotIn("|Value]]\n", page)
+                self.assertEqual(page.count('|Value]]\n| <span id="price"></span><onlyinclude>'), 1)
+                self.assertNotIn("|Value]]: ", page)
         for entry in self.data["entries"]:
             if entry["kind"] != "merchant":
                 continue
             page = self.pages[locations[entry["details"]["merchant"]]]
             self.assertIn("{{:" + locations[entry["details"]["item"]] + "}}", page)
-            self.assertEqual(available_views(page), {"offers"})
+            self.assertEqual(available_views(page), {"offers", "location", "availability"})
 
     def test_unit_price_validation_rejects_wrong_currency_or_coverage(self):
         for change in (

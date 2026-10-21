@@ -89,20 +89,20 @@ class FollowupTests(unittest.TestCase):
         # plus the Finish Raft world sprite beside its plain link.
         # Wooden Recorder is re-pinned for its item summary box, phone-width summary sizing and linked {{Coins}} value.
         # Items is re-pinned for basic-to-best ordering, tag-backed sections and capacity kinds.
-        # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
+        # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors;
+        # Wooden Recorder again for its loot table clearing the summary box.
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
             "Items": "941a328acf17161c80948f3c3763dd00a82e05bdf0751e4fff3a2c4ac7f4225e",
-            "Wooden Recorder": "cf5c04f52a8637f2aff1cfc47b9b75d0ed77326880ca4e22eace681423b1bc2c",
+            "Wooden Recorder": "f370ff4fed8b8663817b5e12e77d217eb3ccb8acd4b0d301bb2b2f576d0b6df3",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):
                 text = self.pages[title]
                 table_count = 10 if title == "Items" else 1
-                wrapper = scroll_open() if title == "Items" else scroll_open("Item summary")
-                self.assertEqual(text.count(wrapper), table_count)
-                text, count = re.subn(re.escape(wrapper) + r"(.*?)\n</div>\n",
-                                     r"\1\n", text, flags=re.DOTALL)
+                wrappers = [scroll_open(), scroll_open(clear=True)] if title == "Items" else [scroll_open("Item summary")]
+                pattern = "(?:" + "|".join(map(re.escape, wrappers)) + r")(.*?)\n</div>\n"
+                text, count = re.subn(pattern, r"\1\n", text, flags=re.DOTALL)
                 self.assertEqual(count, table_count)
                 if title == "Wooden Recorder":
                     figure = scroll_open("Wooden Recorder inventory icon.", "pixel-art-figure")

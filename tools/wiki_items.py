@@ -53,8 +53,9 @@ HANDS = {f"item-{n}": text for numbers, text in (
 
 
 def item_article(name, facts, profiles, properties, entities, locations, price=None, coin=None, recipes=(), grids=(),
-                 constructions=(), armor_guide=False, chop_guide=False):
-    """An item's at-a-glance summary box followed by prose sections for its stats and attack patterns."""
+                 constructions=(), armor_guide=False, chop_guide=False, price_view=None):
+    """An item's at-a-glance summary box followed by prose sections for its stats and attack patterns.
+    price_view is the item's single standard-price view; when given it is the summary's Value row."""
     if not facts and not profiles:
         return ""
     values, sources, fact_marks = {}, {}, defaultdict(str)
@@ -72,6 +73,8 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         skipped.update({"initial-price", "initial-weight", "stack-limit"})
     if "initial-price" in values and ("value" in values or price is not None):
         skipped.add("initial-price")
+    if price_view is not None:
+        skipped.update({"initial-price", "value"})
     coalesced = set()
     for fact in facts:
         for profile in profiles:
@@ -98,6 +101,8 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
     sections = []
     rows = []
     for key, heading in ITEM_SUMMARY_ROWS:
+        if key == "initial-price" and price_view is not None:
+            rows.append(("Value", price_view))
         if key not in remaining:
             continue
         if key == "random-treasure-exclusion":
@@ -251,7 +256,7 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         notes = ["Base stats can change with equipment, condition and other effects."] if coin is None else []
         if coin is None and "initial-weight" in values:
             notes.append("Base weight is before crafting adjustments; final weight may differ.")
-        if any(key in used and used[key] == "summary" for key in ("initial-price", "value")):
+        if price_view is not None or any(key in used and used[key] == "summary" for key in ("initial-price", "value")):
             notes.append(VALUE_NOTE)
         lines = ['{| class="wikitable"', "|+ " + literal(name)]
         for heading, cell in rows:

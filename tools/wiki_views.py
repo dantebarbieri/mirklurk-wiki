@@ -10,16 +10,18 @@ from wiki_display import INERT
 VIEW_SELECTOR = "{{{view|<noinclude>page</noinclude>}}}"
 
 
-def scroll_open(label="Table", css_class="mirklurk-scroll noresize"):
+def scroll_open(label="Table", css_class="mirklurk-scroll noresize", clear=False):
+    # Data tables clear the floated item summary instead of squeezing beside it.
     return (
         '<div class="' + html.escape(css_class, quote=True) + '" role="group" tabindex="0" aria-label="'
         + html.escape(label + " (scroll horizontally)", quote=True)
-        + '" style="max-width:100%;overflow-x:auto;">\n'
+        + '" style="' + ("clear:right;" if clear else "") + 'max-width:100%;overflow-x:auto;">\n'
     )
 
 
-def selective_view(content, view, default=False):
-    cases = ["page", view]
+def selective_view(content, view, default=False, page=True):
+    cases = ["page"] if page else []
+    cases.append(view)
     if default:
         cases.append("")
     return (
@@ -45,7 +47,7 @@ def html_row(cells, normal_only=()):
 
 def html_table(headers, rows, normal_only=()):
     return (
-        scroll_open() + '<table class="wikitable">\n<tr>'
+        scroll_open(clear=True) + '<table class="wikitable">\n<tr>'
         + "".join(
             ("<noinclude>" if index in normal_only else "") + '<th scope="col">' + heading + "</th>"
             + ("</noinclude>" if index in normal_only else "")

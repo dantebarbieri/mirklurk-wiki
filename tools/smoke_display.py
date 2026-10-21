@@ -406,27 +406,27 @@ def smoke_vendor_rows(api, pages, data, catalog, token, dom, check_errors):
     if result.get("edit", {}).get("result") != "Success":
         raise RuntimeError("Vendor-price fixture could not be saved.")
     full = api({"action": "parse", "page": title, "prop": "text|templates"})["parse"]
-    for index in (None, 0, 1):
-        result = full if index is None else api({
-            "action": "parse", "title": locations[offers[index]["details"]["item"]],
-            "text": "{{:" + title + "|view=offers|item=" + locations[offers[index]["details"]["item"]] + "}}",
-            "prop": "text|templates"}, post=True)["parse"]
-        rendered = result["text"]["*"]
-        check_errors(rendered)
-        projection = dom(rendered, title)
-        if len(projection.rows) != (2 if index is None else 1):
-            raise RuntimeError("Mixed vendor-price views lost exact offer filtering.")
-        for row in projection.rows:
-            if row["headers"] != ["Seller", "Item", "Quantity", "Unit price", "Location", "Conditions"] or len(row["cells"]) != 6:
-                raise RuntimeError("Mixed vendor prices misaligned headers and cells.")
-        if index in (None, 0) and "1 gold 9 silver" not in projection.text:
-            raise RuntimeError("A vendor exception no longer uses the exact Coins value.")
-        if index is not None:
-            dependencies = {row["*"] for row in result.get("templates", [])}
-            if dependencies & set(locations.values()):
-                raise RuntimeError("A mixed-price item view recursively included an item article.")
-            if index == 1 and projection.rows[0]["cells"][3]["text"] != "Standard item price":
-                raise RuntimeError("A mixed-price standard row lost its nonrecursive price link.")
+    check_errors(full["text"]["*"])
+    projection = dom(full["text"]["*"], title)
+    if len(projection.rows) != 2 or "1 gold 9 silver" not in projection.text:
+        raise RuntimeError("Mixed vendor-price owner lost an offer or its exact Coins value.")
+    for row in projection.rows:
+        if row["headers"] != ["Seller", "Item", "Quantity", "Unit price", "Location", "Conditions"] or len(row["cells"]) != 6:
+            raise RuntimeError("Mixed vendor prices misaligned headers and cells.")
+    seller = entities[offers[0]["details"]["merchant"]]["name"]
+    for index, expected in ((0, [seller, "3", "1 gold 9 silver", "First place", "First condition"]),
+                            (1, [seller, "Unknown", "Standard item price", "Second place", "Second condition"])):
+        item = locations[offers[index]["details"]["item"]]
+        cells = "".join("<td>{{:" + title + "|view=" + view + "|item=" + item + "}}</td>"
+                        for view in ("offers", "offer-quantity", "offer-price", "location", "availability"))
+        result = api({"action": "parse", "title": item, "text": "<table><tr>" + cells + "</tr></table>",
+                      "prop": "text|templates"}, post=True)["parse"]
+        check_errors(result["text"]["*"])
+        rows = dom(result["text"]["*"], title).rows
+        if len(rows) != 1 or [" ".join(cell["text"].split()) for cell in rows[0]["cells"]] != expected:
+            raise RuntimeError("A mixed-price item view lost exact offer filtering or a per-offer cell.")
+        if {row["*"] for row in result.get("templates", [])} & set(locations.values()):
+            raise RuntimeError("A mixed-price item view recursively included an item article.")
 
 
 def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):

@@ -726,12 +726,13 @@ retain their initial prices after the actual numeric-ID-ordered recipe-value
 pass, with the game's comparison and rounding behavior, rather than a recursive
 or quantity-multiplied reconstruction. The builder publishes the curated
 results; it does not reimplement the game engine. All 42 standard prices now
-cover the 63 offers, with none unresolved. The
-42 distinct offered items each own one selective price value in their
-How to acquire / Buying section.
+cover the 63 offers, with none unresolved. Each
+offered item owns one selective price value: the Value row of its summary
+box, anchored `#price`. Buying links to that row instead of repeating it.
 The same item's matching raw initializer-value row is folded into it rather
 than rendered twice. Merchant wares use `{{:Canonical item title}}`; the rest
-of the item article is not transcluded. Actual vendor-specific prices, if
+of the item article is not transcluded. A base value below one copper is shown
+as decimal copper (`14.4 copper`), never as a bulk `N copper per D` price. Actual vendor-specific prices, if
 separately documented, remain owned by the vendor offer instead.
 
 ### Named selective views
@@ -740,15 +741,16 @@ The pinned runtime explicitly loads bundled ParserFunctions. A shared block uses
 `<onlyinclude>{{#switch:{{{view|<noinclude>page</noinclude>}}}|page|VIEW=CONTENT|#default=}}</onlyinclude>`.
 On its own article the default is `page`; during inclusion it is empty.
 Price blocks also accept an empty case, preserving `{{:Item}}` exactly.
-Coin summaries retain their existing unparameterized selective block.
+A coin page's one unparameterized block is its row of the guide's single
+Denominations table; the header stays on the guide.
 Multiple balanced blocks are intentional; counting one pair per article is
 no longer a valid readiness check.
 
 | Reader | Inclusion | Editable owner |
 | --- | --- | --- |
-| Merchant wares | `{{:Item}}` | Item's single Buying price |
+| Merchant wares | `{{:Item}}` | Item's summary Value |
 | Workstation recipe table | `{{:Item|view=recipes|station=station-id}}` | Output item's recipe rows |
-| Item seller table | `{{:Merchant|view=offers|item=Item title}}` | Merchant's stock and conditions |
+| Item seller row | `{{:Merchant|view=V|item=Item title}}`, V = `offers`, `location`, `availability` (`offer-quantity`, `offer-price` when recorded) | Merchant's offer cells and shared notes |
 | Item loot rows | `{{:Source|view=loot|item=Item title}}` (`item=empty` for nothing) | Creature or other documented loot owner |
 | Item loot qualifier | `{{:Source|view=loot-note}}` | Source's `loot_context` |
 | Item random-source context | `{{:Source|view=pool-source|pool=pool-id}}` | Source's condition, including tier/attempt qualifications |
@@ -764,6 +766,10 @@ containers. Certainty is conditional on the recorded event, not repeated stock
 or respawn. Unknown probabilities require an explicit note and never become
 zero or a guessed percentage. Terminating percentages are exact; other
 probabilities retain their exact fraction and selection scope.
+
+An item's Buying section is likewise one table that it heads itself: Seller,
+Location and Availability, with a row of cell views per merchant. Wide tables
+clear the floated summary box instead of squeezing beside it.
 
 Items select these source rows with the existing `view=loot` contract.
 Loot and acquisition rows share fixed columns (Source, Item, Quantity,
