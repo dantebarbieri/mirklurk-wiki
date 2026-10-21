@@ -48,7 +48,7 @@ def browse_order(name, kind, values):
     rank = float("inf") if rank is None else float(rank)
     if kind == "creature":
         return ("", rank, name)
-    if name in ("Rock", "Flint", "Drake Jasper", "Dragon Flint"):
+    if name in ("Rock", "Flint", "Flint (Large)", "Drake Jasper", "Dragon Flint"):
         return ("", rank, name)
     base = re.sub(r"\s*\(.*\)", "", name)
     return ((base.split(" of ")[0] if " of " in base else base).split()[-1], rank, name)

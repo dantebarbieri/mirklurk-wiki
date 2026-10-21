@@ -45,7 +45,7 @@ HIDDEN_DURABILITY = {f"item-{n}" for n in (72, 73, 74, 75, 97, 98, 99, 100, 101)
 DURABILITY_LABELS = {"item-25": ("Portions", "; eating it uses one portion at a time."), "item-112": ("Oil", ".")}
 HANDS = {f"item-{n}": text for numbers, text in (
     ((2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 27, 28, 90, 157, 158, 159, 160, 161, 190, 191, 267, 268, 269, 270, 271, 272, 273,
-      274), "One-handed; main-hand slot"),
+      274, 277), "One-handed; main-hand slot"),
     ((29, 30, 169, 184, 185, 186, 187, 188, 189, 206, 266), "Two-handed; fills the main-hand and off-hand slots"),
     ((44, 93, 105, 106, 179), "Two-handed bow; main-hand slot, leaving the off-hand slot for arrows"),
     ((0, 1, 50, 58, 118, 45, 46, 76, 174, 219, 220, 110, 111), "Off-hand slot only"),

@@ -44,28 +44,40 @@ Patch **0.9.0.2** followed on 2026-10-16. Only `data.win` has a new fingerprint,
 `game-data-0902`; the English text files still match their 0.9.0.1 fingerprints.
 No documented value changed. Throwing from a stack now lowers carried and bag
 weight, placed outdoor light sources light up again each night, and the main menu
-keeps playing music and shows drifting snowflakes. Pages show 0.9.0.2 values, and
-the **Version 0.9.0.2** changelog lists each change.
+keeps playing music and shows drifting snowflakes. The **Version 0.9.0.2**
+changelog lists each change.
 [Provenance](docs/PROVENANCE.md#version-0902-update) records the amendments.
 
-The reference now contains **107 numeric facts and 338 structured entries**:
-37 quest/journal notes, 88 merchant offers, 97 station-specific recipe
-variants, 82 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 421 main-namespace pages:
-355 individual item, being, nature, skill, and damage-type pages, plus
-workstation articles, topic guides/indexes, the version pages and compatibility
-redirects. Another 104 ordinary MediaWiki category pages support hierarchical
+Patch **0.9.1.0** followed on 2026-10-21. `data.win`, `Items.ini` and `UI.ini`
+have new `-0910` fingerprints; `Bestiary.ini` and `Nature.ini` are unchanged.
+It adds **Flint (Large)**, a 2.5% find in five forage-spot tables, and the
+**Flint Dagger** crafted from it, with stats, recipe, loot, treasure pools,
+categories and icons. Planting costs 6 AP instead of 8 and six seed recipes
+are cheaper; coins and gems keep their full value; Forager's, Explorer's and
+Expedition Vests no longer count as armor for Tailor-Made; rifts no longer
+spawn in Vast Waters; and Controls covers Balanced Zoom, longer scouting and
+the on-screen name keyboard. Pages show 0.9.1.0 values, and the
+**Version 0.9.1.0** changelog lists each change.
+[Provenance](docs/PROVENANCE.md#version-0910-update) records the amendments.
+
+The reference now contains **107 numeric facts and 344 structured entries**:
+37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
+variants, 87 conditional loot entries, and 34 original algorithm/skill
+summaries. The encyclopedia presentation generates 507 main-namespace pages:
+357 individual item, being, nature, skill, and damage-type pages, 52 item-family
+pages, plus workstation articles, topic guides/indexes, the version pages and
+compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical
 browsing; the retired Miscellaneous items category redirects to Items.
 
-Supplemental source-scoped profiles preserve **2,887 scalar values**
-in 585 profiles across 320 entities: 262 items, 42 beings, and 16 nature records.
+Supplemental source-scoped profiles preserve **2,921 scalar values**
+in 603 profiles across 322 entities: 264 items, 42 beings, and 16 nature records.
 Their 53 shared property definitions distinguish literal initializer values,
 computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
 have localized names but no reviewed initializer profile; no stats are invented
 for them. Equipment AP costs are documented separately from attack/use costs,
 and 48 range profiles record each weapon's literal reach in tiles.
 
-The 139 curated grids preserve 42 base health shapes and 97 attack patterns,
+The 140 curated grids preserve 42 base health shapes and 98 attack patterns,
 including holes, orientation, armor layers, and occupied zero-to-one cells.
 Native `{{Health grid|...}}` and `{{Attack grid|...}}` templates render accessible
 tables with coordinate/value hover titles. They reference three separately approved shield
@@ -89,10 +101,11 @@ image-sizing policy as other artwork. See [author syntax and limits](docs/TEMPLA
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication
 fails closed before page edits if the target wiki lacks working Scribunto.
 
-The metadata-only artwork register covers 364 reviewed selections: 261 items,
-42 beings, 25 skills, 16 nature records, and three workstation variants.
+The metadata-only artwork register covers 399 reviewed selections: 263 items,
+42 beings, 25 skills, 16 nature records, three workstation variants and 31
+ground and area guide images.
 Three supplementary NPC-location exteriors and ten overworld sprites
-preserve the existing portraits. 318 records now embed transparent-margin crops
+preserve the existing portraits. 320 records now embed transparent-margin crops
 under `(cropped)` File titles; the original Files are kept. All File titles
 use readable [page-title names](docs/IMAGES.md#file-titles)
 ([details](docs/IMAGES.md#transparent-margin-crops)).
@@ -108,7 +121,8 @@ File pages and bytes remain live history, not overwritten artwork. Other nature
 pictures retain their explicit ground-tile or branch qualifications. Image bytes
 stay in separately approved server storage. The 0.8.9.9 items and beings and
 the world-only finished raft gained reviewed artwork on 2026-10-13
-([details](docs/IMAGES.md#version-0899-additions-and-the-finished-raft)).
+([details](docs/IMAGES.md#version-0899-additions-and-the-finished-raft)), and
+the 0.9.1.0 flint icons on 2026-10-21 ([details](docs/IMAGES.md#version-0910-flint-icons)).
 
 Viend's Healing section explains his automatic wound healing, target priority,
 range, AP cost and idle-turn frequency, with the game's shared health-plus
@@ -183,13 +197,13 @@ redirects to the new title. Supplemental citations retain the original research 
 Twenty-two source pages own 130 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree
 harvesting, insects, story rewards, Survivor corpses and mapmaking. All 27 historical world-loot
-records move to named owners without changing their evidence. Random treasure owns eleven source-specific pools with 610 verified
+records move to named owners without changing their evidence. Random treasure owns eleven source-specific pools with 613 verified
 eligibility memberships, not invented per-item probabilities. Shared interruption
 and story gates remain visible in filtered item views. Pools show alphabetical
 item/category lists beneath their budget rules, not repeated unknown quantity
 and probability cells. Item readers get short named-source references after
-their recipes, sellers and specific acquisition records. All 264 item pages have
-documented methods or explicit notes: 261 cover acquisition, built-in equipment,
+their recipes, sellers and specific acquisition records. All 266 item pages have
+documented methods or explicit notes: 263 cover acquisition, built-in equipment,
 or construction actions; three explain the limits of the available evidence.
 
 Fifty-eight verified standard unit prices cover all 88 offers. Each offered
@@ -288,8 +302,8 @@ skill tree.
 The Clothes section in Items and its category expose Headwear, Shirts,
 Outerwear, Cloaks, Gloves, Pants, Socks and Footwear, derived from those same
 reviewed slots without moving an item's primary group. Recipe-ingredient
-acquisition browsing joins the 54 actual inputs to existing source owners:
-13 creature-drop ingredients, 36 gatherables, one purchased ingredient
+acquisition browsing joins the 55 actual inputs to existing source owners:
+13 creature-drop ingredients, 37 gatherables, one purchased ingredient
 (Iron Arrow), four crafted ingredients, and Flint's additional starting grant.
 These method groups can overlap. Random eligibility alone does not qualify a
 creature drop, gatherable or purchase; material-family browsing remains intact.

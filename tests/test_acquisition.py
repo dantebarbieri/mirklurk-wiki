@@ -48,7 +48,7 @@ class AcquisitionTests(unittest.TestCase):
         self.assertEqual(unverified, {"item-40", "item-48", "item-49"})
         self.assertFalse(normal & unverified)
         self.assertIn("item-254", normal)
-        self.assertEqual(len(normal | (notes.keys() - unverified)), 261)
+        self.assertEqual(len(normal | (notes.keys() - unverified)), 263)
         self.assertEqual(normal | notes.keys(), {entity["id"] for entity in self.data["entities"] if entity["category"] == "item"})
         self.assertFalse(any("No documented acquisition source is available yet." in text for text in self.pages.values()))
         self.assertIn("built-in", self.pages["Unarmed"])
@@ -76,7 +76,7 @@ class AcquisitionTests(unittest.TestCase):
                 for slot in slots:
                     self.assertIn("[[:Category:" + slot + "|", section)
         anchors = re.findall(r'id="item-([^"]+)"', self.pages["Items"])
-        self.assertEqual(len(anchors), 263)
+        self.assertEqual(len(anchors), 265)
         self.assertEqual(set(anchors), {locations[row["id"]].replace(" ", "_") for row in self.data["entities"] if row["category"] == "item" and row["id"] != "item-31"})
 
     def test_overlapping_clothing_tags_never_duplicate_primary_index_anchors(self):
@@ -100,8 +100,8 @@ class AcquisitionTests(unittest.TestCase):
         inputs.update(row["item"] for recipe in self.catalog["construction_recipes"] for row in recipe["inputs"])
         routes = ingredient_acquisition(self.data, self.catalog)
         self.assertEqual(set(routes), inputs)
-        self.assertEqual(len(inputs), 54)
-        expected = {"Creature drops": 13, "Gatherables": 36, "Purchased ingredients": 1,
+        self.assertEqual(len(inputs), 55)
+        expected = {"Creature drops": 13, "Gatherables": 37, "Purchased ingredients": 1,
                     "Crafted ingredients": 4, "Other ingredient sources": 1}
         categories = category_definitions(self.data, self.catalog)
         self.assertEqual(set(categories["Recipe ingredients"]["members"]), inputs)
@@ -166,7 +166,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "97df973b573c94a5ad96ed6eca8b56d8d97f1a13c11ba65599cebfcb6b44f6ee")
+                         "33e231db72a5f11a6cb50fdf1b9b378a3b17168aa9e0a10718c0e3382092936f")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
@@ -342,11 +342,11 @@ class AcquisitionTests(unittest.TestCase):
         from test_editorial import gameplay_record
         unchanged = [gameplay_record(pool) for pool in document["pools"]]
         self.assertEqual(hashlib.sha256((json.dumps(unchanged, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "63f6ff18da055d838343d9110a73b29761e90ee095f00c28f895cc7c12a40eba")
+                         "dda22507ce2ad209ff7504ed1bf9b40b0aa675706c010722e9dbd4b4a0f0d479")
         self.assertEqual({identity: len(pool["eligible_item_ids"]) for identity, pool in pools.items()}, {
-            "skeleton-outdoors": 91, "skeleton-indoors": 70, "chest-common": 96, "chest-middle": 95,
+            "skeleton-outdoors": 92, "skeleton-indoors": 70, "chest-common": 96, "chest-middle": 95,
             "chest-rich": 78, "ruins-large": 20, "ruins-small": 9, "nest-tiny": 7,
-            "cracks-tiny": 6, "unwanted-remains": 72, "survivor-remains": 67,
+            "cracks-tiny": 6, "unwanted-remains": 73, "survivor-remains": 67,
         })
         self.assertEqual(pools["chest-common"]["item_conditions"], {})
         self.assertIn("item-258", set(pools["unwanted-remains"]["eligible_item_ids"]) & set(pools["survivor-remains"]["eligible_item_ids"]))
@@ -393,7 +393,7 @@ class AcquisitionTests(unittest.TestCase):
     def test_world_rehoming_moves_records_to_one_readable_anchor_on_their_new_owner(self):
         sources = self.catalog["acquisition"]["sources"]
         inherited = {identity: source["title"] for source in sources for identity in source.get("existing_entry_ids", [])}
-        self.assertEqual(len(inherited), 27)
+        self.assertEqual(len(inherited), 32)
         text = "\n".join(self.pages.values())
         for identity, target in inherited.items():
             self.assertEqual(self.pages[target].count('id="' + self.shown[identity] + '"'), 1)

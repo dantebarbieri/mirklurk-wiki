@@ -135,6 +135,7 @@
         "summary": "Melee weapons, bows, magic weapons and thrown flasks. Unarmed is a built-in attack, not a carried item. Arrows are under Ammunition.",
         "members": [
           "Shoddy Dagger",
+          "Flint Dagger",
           "Iron Dagger",
           "Steel Dagger",
           "Decent Hunting Knife",
@@ -187,6 +188,7 @@
         "members": [
           "Rock",
           "Flint",
+          "Flint (Large)",
           "Firesteel",
           "Torch",
           "Map of area",
@@ -473,6 +475,7 @@
         "summary": "Cutting and chopping implements, including weapons. Effectiveness varies by tool and task.",
         "members": [
           "Shoddy Dagger",
+          "Flint Dagger",
           "Iron Dagger",
           "Steel Dagger",
           "Decent Hunting Knife",
@@ -510,8 +513,8 @@
         "title": "Fire-starting stones",
         "index": "Items",
         "parents": ["Tools"],
-        "summary": "Stones struck with a striker to make sparks when lighting a fire. Each strike can break the stone.",
-        "members": ["Rock", "Flint", "Drake Jasper", "Dragon Flint"]
+        "summary": "Stones struck with a striker to make sparks when lighting a fire, including the stone blade of a Flint Dagger. Each strike can break the stone.",
+        "members": ["Rock", "Flint", "Flint (Large)", "Drake Jasper", "Dragon Flint", "Flint Dagger"]
       },
       {
         "title": "Strikers",
@@ -539,6 +542,7 @@
           "Firewood (Willow)",
           "Rock",
           "Flint",
+          "Flint (Large)",
           "Firesteel",
           "Twig (Cypress)",
           "Branch (Cypress)",
@@ -557,10 +561,11 @@
           "Bark (Trollgnarl)",
           "Branch (Elderwort)",
           "Iron Firesteel",
-          "Worn Firesteel"
+          "Worn Firesteel",
+          "Flint Dagger"
         ]
       },
-      {"title": "Sharp weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Sharp damage: daggers, knives and swords.", "members": ["Shoddy Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Greatsword", "Steel Greatsword"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[2,3,4,5,6,7,8,9,10,11,184,185].damageClass"}]},
+      {"title": "Sharp weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Sharp damage: daggers, knives and swords.", "members": ["Shoddy Dagger", "Flint Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Greatsword", "Steel Greatsword"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[2,3,4,5,6,7,8,9,10,11,184,185].damageClass"}, {"source": "game-data-0910", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[277].damageClass"}]},
       {"title": "Blunt weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Blunt damage, which can stun.", "members": ["Stone Club", "Iron Cudgel", "Steel Cudgel", "Heavy Branch (Cypress)", "Iron Warhammer", "Steel Warhammer", "Orb of Iron Essence", "Orb of Steel Essence"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[31,90,157,158,169,186,187,271,272].damageClass"}]},
       {"title": "Force weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Force damage.", "members": ["Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Orb of Storm"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[27,28,29,30,188,189,190,191,274].damageClass"}]},
       {"title": "Piercing weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Piercing damage, mostly bows.", "members": ["Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Iron Morning Star", "Steel Morning Star", "Gurb's Expertimental Bow"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[44,93,105,106,160,161,179].damageClass"}]},
@@ -659,7 +664,7 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "One-handed weapons, two-handed weapons and torches. Two-handed melee weapons occupy both hands; bows use arrows in the off hand.",
-        "members": ["Shoddy Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Torch", "Shortbow (Willow)", "Stone Club", "Improvised Bow", "Improvised Torch", "Longbow (Cypress)", "Longbow (Yew)", "Iron Cudgel", "Steel Cudgel", "Serpent Fang", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Thorns of Wackah", "Improvised Enduring Torch", "Staff of The Fire Eater", "Orb of Poison", "Orb of Greater Poison", "Orb of Fire", "Orb of Greater Fire", "Orb of Iron Essence", "Orb of Steel Essence", "Orb of Wind", "Orb of Storm"],
+        "members": ["Shoddy Dagger", "Flint Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Torch", "Shortbow (Willow)", "Stone Club", "Improvised Bow", "Improvised Torch", "Longbow (Cypress)", "Longbow (Yew)", "Iron Cudgel", "Steel Cudgel", "Serpent Fang", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Thorns of Wackah", "Improvised Enduring Torch", "Staff of The Fire Eater", "Orb of Poison", "Orb of Greater Poison", "Orb of Fire", "Orb of Greater Fire", "Orb of Iron Essence", "Orb of Steel Essence", "Orb of Wind", "Orb of Storm"],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[16,17,23]"},
@@ -829,7 +834,7 @@
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Daggers and hunting knives, also used for cutting.",
-        "members": ["Shoddy Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife"]
+        "members": ["Shoddy Dagger", "Flint Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife"]
       },
       {
         "title": "Swords",
@@ -977,8 +982,8 @@
         "title": "Mineral materials",
         "index": "Items",
         "parents": ["Crafting materials"],
-        "summary": "Rock, Flint and Lump of Coal for crafting. Coal cannot be assumed to work as campfire fuel.",
-        "members": ["Rock", "Flint", "Lump of Coal"]
+        "summary": "Rock, Flint, Flint (Large) and Lump of Coal for crafting. Coal cannot be assumed to work as campfire fuel.",
+        "members": ["Rock", "Flint", "Flint (Large)", "Lump of Coal"]
       },
       {
         "title": "Plant and fungal reagents",
@@ -2959,6 +2964,16 @@
     {
       "entity": "item-275",
       "title": "Storage Chest",
+      "aliases": []
+    },
+    {
+      "entity": "item-276",
+      "title": "Flint (Large)",
+      "aliases": []
+    },
+    {
+      "entity": "item-277",
+      "title": "Flint Dagger",
       "aliases": []
     },
     {
@@ -5195,9 +5210,14 @@
     {
       "entry": "skill-3-0-mechanics",
       "title": "Effects",
-      "summary": "Make worn armor count less toward your carried weight, with a 7.5% reduction per rank. Armor carried but not worn does not receive this benefit.",
+      "summary": "Make worn armor count less toward your carried weight, with a 7.5% reduction per rank. Armor carried but not worn does not receive this benefit. Forager's Vest, Explorer's Vest and Expedition Vest are clothing, not armor, so their weight is not reduced.",
       "conditions": null,
-      "steps": []
+      "steps": [],
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0910", "section": "gml_GlobalScript_scr_items", "key": "item_get_weight.item_is_armor/item_is_equipped/fighterSkills[0]*0.075"},
+        {"source": "game-data-0910", "section": "gml_GlobalScript_scr_items", "key": "item_is_armor.item196/item197/item198=false"}
+      ]
     },
     {
       "entry": "skill-3-1-mechanics",
@@ -5271,6 +5291,15 @@
       "summary": "Fight poison before it deals damage at the start of your turn. Each poisoned cell has a 9% chance per rank to lose one poison count; at rank 10, a successful check removes one more count.",
       "conditions": null,
       "steps": []
+    },
+    {
+      "entry": "journal-8",
+      "summary": "Bhato points toward local ruins with a route into an old cellar. Until the rune is found, the cellar holds only the Sceetler you are hunting: other creatures out of your sight there vanish, and a new Sceetler appears if it is missing.",
+      "confidence": "inferred",
+      "evidence": [
+        {"source": "game-data-0910", "section": "gml_Object_manager_area_Alarm_4", "key": "MAINQUESTSTAGE8.quest_active_check.item123-not-found.being13.instance_destroy-unseen.spawn_in_dungeon[13]"},
+        {"source": "game-data-0910", "section": "gml_GlobalScript_scr_smartones", "key": "quest_active_check.case8.rangerCamp.areaType21"}
+      ]
     },
     {
       "entry": "journal-11",
@@ -5374,6 +5403,31 @@
       "entry": "loot-64-flint-bonus",
       "title": "Flint",
       "summary": "A separate 7.5% check adds Flint. Lower quantities are more likely."
+    },
+    {
+      "entry": "loot-50-flint-large-bonus",
+      "title": "Flint (Large)",
+      "summary": "A separate 2.5% check adds one Flint (Large)."
+    },
+    {
+      "entry": "loot-54-flint-large-bonus",
+      "title": "Flint (Large)",
+      "summary": "A separate 2.5% check adds one Flint (Large)."
+    },
+    {
+      "entry": "loot-55-flint-large-bonus",
+      "title": "Flint (Large)",
+      "summary": "A separate 2.5% check adds one Flint (Large)."
+    },
+    {
+      "entry": "loot-51-flint-large-bonus",
+      "title": "Flint (Large)",
+      "summary": "A separate 2.5% check adds one Flint (Large)."
+    },
+    {
+      "entry": "loot-64-flint-large-bonus",
+      "title": "Flint (Large)",
+      "summary": "A separate 2.5% check adds one Flint (Large)."
     },
     {
       "entry": "loot-50-frog-bonus",
@@ -7550,16 +7604,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.0.2",
-      "confirmation": "The wiki operator installed patch 0.9.0.2, which followed the 0.9.0.1 patch, and launched it to regenerate the English language files, which match their 0.9.0.1 fingerprints. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
+      "version": "0.9.1.0",
+      "confirmation": "The wiki operator installed patch 0.9.1.0, which followed the 0.9.0.2 patch, and launched it to regenerate the English language files. Items.ini and UI.ini changed; Bestiary.ini and Nature.ini match their earlier fingerprints. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
       "evidence": [
         {
-          "source": "game-data-0902",
+          "source": "game-data-0910",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0902",
+          "source": "game-data-0910",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -7718,12 +7772,17 @@
       {
         "id": "trade-durability",
         "text": "Resale value is standard value multiplied by remaining durability as a fraction of maximum, with a 10% floor. Half durability gives half value; one-tenth durability or less gives 10%.",
-        "qualification": "Items without durability use full value. There is no second wear discount.",
+        "qualification": "Items without durability use full value, and coins and gems always do: their hidden condition never lowers their value, and they do not wear in stashes. There is no second wear discount.",
         "evidence": [
           {
             "source": "game-data",
             "section": "gml_GlobalScript_scr_items",
             "key": "item_get_price.durability/durabilityMax/max[0.1]"
+          },
+          {
+            "source": "game-data-0910",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_get_price.type!=25;container_time_pass.type!=25"
           }
         ]
       },
@@ -8723,7 +8782,7 @@
       "Spreading"
     ],
     "paragraphs": [
-      "Seeds are planted the same way you place an object: choose the seed in your inventory, then pick a tile within three tiles of you. Planting costs action points like other placements and uses up one seed. Any grass on the tile is cleared and a seedling appears.",
+      "Seeds are planted the same way you place an object: choose the seed in your inventory, then pick a tile within three tiles of you. Planting costs 6 AP and uses up one seed. Any grass on the tile is cleared and a seedling appears.",
       "While you hold a seed, the target tile is framed in a color that shows whether the seed can grow there, and nearby tiles get a faint frame: white where the seed would take, red where it would not. Checking these frames is the quickest way to find a spot.",
       "A tile refuses every seed if it is under a solid object, covered in goo or cave spikes, or already holds something rooted, such as a boulder, a log, tall grass, a fern, a lilypad or another planted seed. You cannot plant inside other people's homes or other private areas. Each seed also has its own rules about ground height and ground type.",
       "A Simple Shelter or a Canopy gradually casts deep shade on the tiles beneath it. Deeply shaded tiles refuse seeds, and crops already growing there shrink away, so keep gardens out from under your shelters.",
@@ -8739,6 +8798,8 @@
     "related_pages": ["Terrain", "Areas", "Placing objects", "Tree health and chopping", "Fort Solid Shorehold", "Withered Mire", "Rift-Thorn Mire"],
     "confidence": "observed",
     "evidence": [
+      {"source": "game-data-0910", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[227..234].apCost"},
+      {"source": "game-data-0910", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.Papcost=apCost.player_ap_lose"},
       {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.range48.area_is_private.Hinderance==0.nature_can_grow"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.solid.goo.spikes.Data5.areaType0-fort104.MAINQUESTSTAGE22-chance0.9"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.case4.case6.case7.case17.case18.case19.case20.case21"},
@@ -10409,7 +10470,7 @@
     ],
     "paragraphs": [
       "Each world has two or three Rift-Thorn Mires. One always sits directly opposite Fort Solid Shorehold on the world map and holds the way down into the rift depths.",
-      "The rift has corrupted the land. Pools of goo spread across the ground and Rift Grass replaces ordinary grass. Rifts dot the area, and areas near the rift's own area also get some.",
+      "The rift has corrupted the land. Pools of goo spread across the ground and Rift Grass replaces ordinary grass. Rifts dot the area, and nearby areas also get some, fewer the further away they are. Fort Solid Shorehold, Vast Waters and the zones of Ranger Bhato's hideout and the Library never get rifts this way.",
       "Rift creatures rule here on every kind of ground, even in the water, from the start of the game. No animals, Mudfin or Boulder Crabs spawn here, but a Mire Serpent can still surge out of medium or deep water.",
       "Far fewer trees, and about a quarter are Rift Vine. Trees die off faster here than anywhere else.",
       "While the rift is active, no lilypads, watercress, bird nests, Calmia Root plants, wild turnips or cranberries are placed, and Calmia Root does not come back on later visits. Crops on Rift Grass wither and goo cannot be planted, so this is a poor place for a garden.",
@@ -10427,7 +10488,8 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
       {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType23.riftDeg.tree-death+0.005"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "obj_rift.dist2.5.areaType23-max5.endedRift-gate"}
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "obj_rift.dist2.5.areaType23-max5.endedRift-gate"},
+      {"source": "game-data-0910", "section": "gml_Object_manager_area_Alarm_2", "key": "obj_rift.AT!=0.AT!=100.!rangerCamp.!libraryArea.round(10-3*dist)"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10503,7 +10565,7 @@
     ],
     "paragraphs": [
       "Each world has between two and six Vast Waters areas, and one can sit beside Fort Solid Shorehold. Land areas next to one get a beach along the shared edge.",
-      "Open sea. The whole area is deep water at swimming depth, with no ground, trees, plants, nests or skeletons. The world map draws it as water.",
+      "Open sea. The whole area is deep water at swimming depth, with no ground, trees, plants, nests, skeletons or rifts. The world map draws it as water.",
       "You can travel in from any neighboring edge, swimming or on a raft.",
       "Swimming costs 0.15 stamina a turn, more when overburdened, so a full bar lasts about six or seven turns. When stamina runs out you start drowning, and four turns later you die. You cannot attack while swimming. A raft never swims or drowns and moves at 1.8 AP a step, so it is the safe way across.",
       "Every tile is water, so every creature comes from the water table. Normal tougher-form odds apply. Ending a move here, swimming or rafting, has a 2% chance of a Mire Serpent."
@@ -10520,7 +10582,8 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
       {"source": "game-data-0900", "section": "gml_Object_obj_player_Alarm_0", "key": "drownPoints>=4"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "raftMoveCost1.8.player_raft_ensure"}
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "raftMoveCost1.8.player_raft_ensure"},
+      {"source": "game-data-0910", "section": "gml_Object_manager_area_Alarm_2", "key": "obj_rift.AT!=100"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10548,7 +10611,7 @@
     {
       "title": "Controls",
       "paragraphs": [
-        "MirkLurk is played mainly with the mouse. Point at a tile and left-click to walk there; while you hover, each step shows its action point cost. Left click moves, selects and attacks. Right click cancels and rotates things such as your attack pattern. The mouse wheel zooms the camera. There are no WASD movement keys.",
+        "MirkLurk is played mainly with the mouse. Point at a tile and left-click to walk there; while you hover, each step shows its action point cost. Left click moves, selects and attacks. Right click cancels and rotates things such as your attack pattern. The mouse wheel zooms the camera. With Balanced Zoom, an option that is on by default, the view is the same size at every screen resolution: 30 tiles wide fully zoomed out and 15 tiles fully zoomed in. With it off, the view is a fixed share of your screen, so a 4K screen shows twice as wide an area as a 1080p one. Scout slides the view toward the cursor so you can look ahead; the further the cursor is from you, the further it looks. When you name a new character, the button beside the name field opens an on-screen keyboard. There are no WASD movement keys.",
         "Every other action has a keyboard shortcut. The table lists the defaults, using the names shown in Options > Controls. Tooltips always show the key you have bound, so they stay correct after you change it.",
         "Every binding can be changed in Options > Controls: click an entry, then press any key or mouse button. If another action already used that key, it becomes unbound and is highlighted as a conflict. Reset restores the defaults. Even if Close is left unbound, Esc still closes menus.",
         "A controller is also supported, with its own Controller page in the options. You can swap the sticks and set their sensitivity (default 1) and dead zone (default 0.1). Stats, Crafting, Draw Weapon, Rest, Hitpoints, Auto-walk, Jump, Loot All, Journal, Swap, Scout, Codex, Show UI and Screenshot have no controller button by default.",
@@ -10762,9 +10825,24 @@
           "key": "safetyESC"
         },
         {
-          "source": "game-data-0900",
+          "source": "game-data-0910",
           "section": "gml_Object_camera_Step_0",
-          "key": "mouseWheelInput"
+          "key": "mouseWheelInput;balancedZoom.zoomMax=480/gui-width.zoomMin=zoomMax/2;else0.25/0.125;scout.howFar512*strength*1.5"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_Room_rm_int_Create",
+          "key": "global.balancedZoom=true;Settings.BalancedZoom"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_obj_menu_Draw_64",
+          "key": "showStuff[3].balancedZoom;showVirtKey.virtkeys"
+        },
+        {
+          "source": "ui-en-0910",
+          "section": "Menus",
+          "key": "BalancedZoom;PressEnter"
         },
         {
           "source": "game-data-0900",
@@ -11485,6 +11563,117 @@
           "source": "game-data-0900",
           "section": "gml_Object_cursor_Draw_73",
           "key": "placement.item234.Hinderance169"
+        }
+      ]
+    },
+    {
+      "entity": "item-276",
+      "paragraphs": [
+        "Flint (Large) works like Flint when you light a fire: put it in the stone slot and strike it with a striker. It adds the same 20% to the spark chance and is a little sturdier, with a 1.5% chance to break on each strike instead of 2%."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[276].sparkChanceStone/breakChance"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "firestart.subSlots[0].sparkChanceStone;rockItem.breakChance"
+        }
+      ]
+    },
+    {
+      "entity": "item-277",
+      "paragraphs": [
+        "Its blade is flint, so it can also be the stone when you light a fire, adding 20% to the spark chance like Flint. Each strike has a 2% chance to break it, and a broken dagger is lost. Unlike metal daggers, it cannot be the striker.",
+        "It weighs about a quarter of a kilogram, not its listed base weight, because the game recalculates the weight of crafted items from their ingredients."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].sparkChanceStone/breakChance/!sparkChance;postprocessing.components.weight*0.7"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "firestart.subSlots[0].sparkChanceStone;subSlots[1].sparkChance;rockItem.breakChance.player_inventory_lose_item"
+        }
+      ]
+    },
+    {
+      "entity": "item-196",
+      "paragraphs": [
+        "It counts as clothing, not armor. Its armor value still adds to your Total Armor, but it shows no armor icon and Tailor-Made does not reduce its weight."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_armor.item196/item197/item198=false"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw/item_draw_info.item_is_armor.spr_ui_16x16[33];item_get_weight.item_is_armor"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_update_gearstats.totalArmor"
+        }
+      ]
+    },
+    {
+      "entity": "item-197",
+      "paragraphs": [
+        "It counts as clothing, not armor. Its armor value still adds to your Total Armor, but it shows no armor icon and Tailor-Made does not reduce its weight."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_armor.item196/item197/item198=false"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw/item_draw_info.item_is_armor.spr_ui_16x16[33];item_get_weight.item_is_armor"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_update_gearstats.totalArmor"
+        }
+      ]
+    },
+    {
+      "entity": "item-198",
+      "paragraphs": [
+        "It counts as clothing, not armor. Its armor value still adds to your Total Armor, but it shows no armor icon and Tailor-Made does not reduce its weight."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_armor.item196/item197/item198=false"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw/item_draw_info.item_is_armor.spr_ui_16x16[33];item_get_weight.item_is_armor"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_update_gearstats.totalArmor"
         }
       ]
     }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "build": "0.9.0.2",
+  "build": "0.9.1.0",
   "sources": [
     {
       "id": "starting-equipment",
@@ -515,9 +515,9 @@
       "confidence": "observed",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275);loot_amountchances"
+          "key": "treasure_get_lootarray.irandom(277);loot_amountchances"
         },
         {
           "source": "game-data-0899",
@@ -1001,6 +1001,7 @@
         "loot-50-willow",
         "loot-50-cypress",
         "loot-50-flint-bonus",
+        "loot-50-flint-large-bonus",
         "loot-50-frog-bonus",
         "loot-50-maggot-bonus"
       ],
@@ -1306,6 +1307,7 @@
       "existing_entry_ids": [
         "loot-54-rock",
         "loot-54-flint-bonus",
+        "loot-54-flint-large-bonus",
         "loot-54-frog-bonus",
         "loot-54-maggot-bonus"
       ],
@@ -1614,6 +1616,7 @@
         "loot-55-willow",
         "loot-55-cypress",
         "loot-55-flint-bonus",
+        "loot-55-flint-large-bonus",
         "loot-55-frog-bonus",
         "loot-55-maggot-bonus"
       ],
@@ -2025,6 +2028,7 @@
       ],
       "existing_entry_ids": [
         "loot-51-flint-bonus",
+        "loot-51-flint-large-bonus",
         "loot-51-frog-bonus",
         "loot-51-maggot-bonus"
       ],
@@ -2492,7 +2496,8 @@
         }
       ],
       "existing_entry_ids": [
-        "loot-64-flint-bonus"
+        "loot-64-flint-bonus",
+        "loot-64-flint-large-bonus"
       ],
       "related_entities": [],
       "related_pages": [
@@ -4205,7 +4210,8 @@
         "item-220",
         "item-251",
         "item-253",
-        "item-257"
+        "item-257",
+        "item-277"
       ],
       "quantity": null,
       "probability": null,
@@ -4214,9 +4220,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4319,9 +4325,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4450,9 +4456,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4582,9 +4588,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4697,9 +4703,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4752,9 +4758,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4796,9 +4802,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4874,9 +4880,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4972,7 +4978,8 @@
         "item-246",
         "item-255",
         "item-257",
-        "item-258"
+        "item-258",
+        "item-277"
       ],
       "quantity": null,
       "probability": null,
@@ -4981,9 +4988,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -5083,9 +5090,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(275)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(277)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -5185,7 +5192,7 @@
     {
       "item": "item-48",
       "kind": "unreleased",
-      "text": "Not obtainable in 0.9.0.2. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
+      "text": "Not obtainable in 0.9.1.0. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5197,7 +5204,7 @@
     {
       "item": "item-49",
       "kind": "unreleased",
-      "text": "Not obtainable in 0.9.0.2. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
+      "text": "Not obtainable in 0.9.1.0. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5209,7 +5216,7 @@
     {
       "item": "item-40",
       "kind": "unverified",
-      "text": "Acquisition in 0.9.0.2: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
+      "text": "Acquisition in 0.9.1.0: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
       "evidence": [
         {
           "source": "game-data-0899",

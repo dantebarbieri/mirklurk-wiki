@@ -13520,6 +13520,78 @@
         }
       ],
       "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
+    },
+    {
+      "id": "item-276-illustration",
+      "entity": "item-276",
+      "file_title": "File:Flint (Large) icon (cropped).png",
+      "caption": "Flint (Large) inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "a7eb5c2fd3757ba2dd6d6520f0768b1f54a659a852352c05a5d85ee151dcb379",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[276].sprite/pic"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ],
+      "pixel_art": {
+        "width": 208,
+        "height": 112,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Flint (Large) icon.png",
+        "sha256": "a778c461b6e0889f25455521dc05b379e74a59bbe14842172d15b851de67ed1f",
+        "pixel_art": {"width": 256, "height": 128, "source_scale": 8},
+        "left": 24,
+        "top": 8
+      }
+    },
+    {
+      "id": "item-277-illustration",
+      "entity": "item-277",
+      "file_title": "File:Flint Dagger icon (cropped).png",
+      "caption": "Flint Dagger inventory icon.",
+      "creator": "Edym Pixels",
+      "sha256": "b27dd464e2ef43876ea8bb19aef5679c300d44f4acc66d3dc83e26f6f304bdcc",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].sprite/pic"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "277"
+        }
+      ],
+      "pixel_art": {
+        "width": 96,
+        "height": 208,
+        "source_scale": 8
+      },
+      "cropped_from": {
+        "file_title": "File:Flint Dagger icon.png",
+        "sha256": "f2ae4d98c23073a98c6c6349036ff39009ef4ce342a43ed08e5cce2b7aa6f8ad",
+        "pixel_art": {"width": 128, "height": 256, "source_scale": 8},
+        "left": 16,
+        "top": 24
+      }
     }
   ]
 }

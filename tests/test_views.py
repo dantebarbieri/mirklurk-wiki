@@ -181,7 +181,7 @@ class SelectiveViewTests(unittest.TestCase):
         locations = self.locations
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
-        self.assertEqual(owner.count('id="pool-item-'), 611)
+        self.assertEqual(owner.count('id="pool-item-'), 613)
         for placeholder in ("Budget-dependent", "Unknown", "Eligible, not guaranteed."):
             self.assertNotIn(placeholder, owner)
         for pool in self.catalog["acquisition"]["pools"]:
@@ -429,7 +429,7 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertIn("\n\n".join(literal(paragraph) for paragraph in effect["paragraphs"]), page)
             for paragraph in effect["paragraphs"]:
                 self.assertFalse(any(paragraph in self.pages[guide["title"]] for guide in self.catalog["guides"]))
-        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 12, "Where to plant": 8, "How it's used": 7})
+        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 17, "Where to plant": 8, "How it's used": 7})
         bursthopper = next(row for row in self.catalog["item_effects"] if row["entity"] == "item-243")
         self.assertIn("15 percentage points of stamina", bursthopper["paragraphs"][0])
         self.assertNotIn("focus", bursthopper["paragraphs"][0].lower())
@@ -474,8 +474,8 @@ class SelectiveViewTests(unittest.TestCase):
         # 0.9.0.0 moved its release notes; "Version 0.8.9.9" redirects.
         locations = self.locations
         added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
-            "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Survivor", "Fire Bond"}
-        self.assertEqual(len(added), 30)
+            "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Version 0.9.1.0", "Survivor", "Fire Bond"}
+        self.assertEqual(len(added), 33)
         families = {title for title, text in self.pages.items() if f"\n'''{title}''' groups " in text}
         old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added - families
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
@@ -494,8 +494,8 @@ class SelectiveViewTests(unittest.TestCase):
             "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
             "nature-20": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
         }
-        self.assertEqual(len(self.data["illustrations"]), 397)
-        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 369)
+        self.assertEqual(len(self.data["illustrations"]), 399)
+        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 371)
         for identity, digest in hashes.items():
             images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
             self.assertEqual(len(images), 1)

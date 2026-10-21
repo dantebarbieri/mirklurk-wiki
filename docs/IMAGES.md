@@ -201,6 +201,24 @@ portraits pixel for pixel, except Wilda's (frame 8), which differs in 7 native
 pixels. The hotfix therefore can touch textures. Frames 9 and 10 have no
 pre-hotfix comparison, and the live Wilda portrait was left unchanged.
 
+## Version 0.9.1.0 flint icons
+
+The 2026-10-21 selection adds the inventory icons of the two 0.9.1.0 items,
+exported from the fingerprinted `game-data-0910` file. Each uses the frame
+named by `itemDB[N].sprite/pic`: Flint (Large) is `spr_ui_items32x16` frame 24
+(32 x 16) and Flint Dagger is `spr_ui_items16x32` frame 34 (16 x 32). Both full
+canvases were enlarged 8x with nearest-neighbor scaling and cropped by the
+transparent-margin rule; both pages embed the crop.
+
+| Item | Original | Crop | Offset |
+| --- | --- | --- | --- |
+| Flint (Large) | `File:Flint (Large) icon.png`, 256 x 128, 3,774 bytes | `File:Flint (Large) icon (cropped).png`, 208 x 112, 3,349 bytes | 24, 8 |
+| Flint Dagger | `File:Flint Dagger icon.png`, 128 x 256, 3,653 bytes | `File:Flint Dagger icon (cropped).png`, 96 x 208, 2,972 bytes | 16, 24 |
+
+Both were decoded independently and reduce exactly to their native frames;
+hashes are in the records. The four PNGs were imported with the standard
+attribution sidecars. The active register is 399 with 320 crops.
+
 ## Site branding
 
 On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and

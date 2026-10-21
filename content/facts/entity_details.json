@@ -6947,7 +6947,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[227].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -6961,7 +6961,7 @@
         "initial-weight": 0,
         "initial-price": 0,
         "stack-limit": 99,
-        "item-ap-cost": 8,
+        "item-ap-cost": 6,
         "craft-ap-cost": 6,
         "craft-yield": 1,
         "random-treasure-exclusion": true
@@ -6974,7 +6974,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[228].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -6988,8 +6988,8 @@
         "initial-weight": 0,
         "initial-price": 0.01,
         "stack-limit": 99,
-        "item-ap-cost": 8,
-        "craft-ap-cost": 6,
+        "item-ap-cost": 6,
+        "craft-ap-cost": 5,
         "craft-yield": 1,
         "random-treasure-exclusion": true
       }
@@ -7001,7 +7001,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[229].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -7015,7 +7015,7 @@
         "initial-weight": 0,
         "initial-price": 0.01,
         "stack-limit": 99,
-        "item-ap-cost": 8,
+        "item-ap-cost": 6,
         "craft-ap-cost": 6,
         "craft-yield": 1,
         "random-treasure-exclusion": true
@@ -7028,7 +7028,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[230].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -7042,8 +7042,8 @@
         "initial-weight": 0,
         "initial-price": 0.01,
         "stack-limit": 99,
-        "item-ap-cost": 8,
-        "craft-ap-cost": 8,
+        "item-ap-cost": 6,
+        "craft-ap-cost": 6,
         "craft-yield": 1,
         "random-treasure-exclusion": true
       }
@@ -7055,7 +7055,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[231].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -7069,8 +7069,8 @@
         "initial-weight": 0,
         "initial-price": 0.01,
         "stack-limit": 99,
-        "item-ap-cost": 8,
-        "craft-ap-cost": 8,
+        "item-ap-cost": 6,
+        "craft-ap-cost": 6,
         "craft-yield": 1,
         "random-treasure-exclusion": true
       }
@@ -7082,7 +7082,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[232].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -7096,8 +7096,8 @@
         "initial-weight": 0,
         "initial-price": 0.01,
         "stack-limit": 99,
-        "item-ap-cost": 8,
-        "craft-ap-cost": 8,
+        "item-ap-cost": 6,
+        "craft-ap-cost": 6,
         "craft-yield": 1,
         "random-treasure-exclusion": true
       }
@@ -7109,7 +7109,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[233].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -7123,8 +7123,8 @@
         "initial-weight": 0.02,
         "initial-price": 0.01,
         "stack-limit": 99,
-        "item-ap-cost": 8,
-        "craft-ap-cost": 8,
+        "item-ap-cost": 6,
+        "craft-ap-cost": 6,
         "craft-yield": 1,
         "random-treasure-exclusion": true
       }
@@ -7136,7 +7136,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[234].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
         },
@@ -7150,8 +7150,8 @@
         "initial-weight": 0,
         "initial-price": 0.02,
         "stack-limit": 99,
-        "item-ap-cost": 8,
-        "craft-ap-cost": 8,
+        "item-ap-cost": 6,
+        "craft-ap-cost": 6,
         "craft-yield": 1,
         "random-treasure-exclusion": true
       }
@@ -14165,6 +14165,111 @@
       }
     },
     {
+      "id": "item-276-initializer",
+      "entity": "item-276",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[276].weight/price/stackLimit/sparkChanceStone/breakChance"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.35,
+        "initial-price": 0.07,
+        "stack-limit": 5,
+        "stone-spark-chance": 0.2,
+        "break-chance": 0.015
+      }
+    },
+    {
+      "id": "item-277-initializer",
+      "entity": "item-277",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].weight/price/stackLimit/durabilityMax/apCost/chopMod/cutMod/breakChance/sparkChanceStone/damageClass/craftCost/craftReturn"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "277"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.55,
+        "initial-price": 0.1,
+        "stack-limit": 1,
+        "durability-max": 20,
+        "item-ap-cost": 5,
+        "chopping-capability": 1.2,
+        "cutting-capability": 1.4,
+        "break-chance": 0.02,
+        "stone-spark-chance": 0.2,
+        "damage-class-id": 14,
+        "craft-ap-cost": 8,
+        "craft-yield": 1
+      }
+    },
+    {
+      "id": "item-277-attack-pattern-totals",
+      "entity": "item-277",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].attackPattern/rangedAttackPattern;postprocessing.damage"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "277"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 2,
+        "melee-pattern-max": 2
+      }
+    },
+    {
+      "id": "item-277-equip-cost",
+      "entity": "item-277",
+      "context": "Base equip action cost after item initialization. The inventory footprint, not the current attack cost, determines this value.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].sprite/type;postprocessing.width/height/equipCost"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_equippable"
+        },
+        {
+          "source": "game-data",
+          "section": "spr_ui_items16x32",
+          "key": "width/height"
+        }
+      ],
+      "values": {
+        "equip-ap-cost": 0.8
+      }
+    },
+    {
       "id": "item-264-capacity",
       "entity": "item-264",
       "context": "Source-traced item-constructor storage grid used by pickup while equipped. Replacing equipment replaces that item's contribution. Cells are storage capacity, not weight, occupied footprint or the player's total. Not runtime-playtested.",
@@ -15193,6 +15298,27 @@
       ],
       "values": {
         "tile-range": 16
+      }
+    },
+    {
+      "id": "item-277-range",
+      "entity": "item-277",
+      "context": "Literal tileRange from the item definition. Since 0.9.0.0 the item tooltip shows its whole-tile part as melee or ranged range.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].tileRange"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_draw_info.tileRange.floor"
+        }
+      ],
+      "values": {
+        "tile-range": 1.5
       }
     },
     {
@@ -23541,6 +23667,42 @@
         },
         {
           "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-277-melee",
+      "entity": "item-277",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 1
+          },
+          {
+            "min": 1,
+            "max": 1
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].attackPattern"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        },
+        {
+          "source": "game-data",
           "section": "gml_GlobalScript_scr_gui_general",
           "key": "attack_draw.minD/maxD"
         }

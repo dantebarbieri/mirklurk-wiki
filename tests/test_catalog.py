@@ -76,7 +76,7 @@ class CatalogTests(unittest.TestCase):
         table = page.split("== Tools by chopping strength ==", 1)[1]
         tools = {row["entity"] for row in self.details["profiles"] if "chopping-capability" in row["values"]}
         locations = self.locations
-        self.assertEqual(len(tools), 20)
+        self.assertEqual(len(tools), 21)
         for identity in tools:
             self.assertIn("{{Item|" + locations[identity] + "}}", table)
         self.assertLess(table.index("{{Item|Steel Felling Axe}}"), table.index("{{Item|Unarmed}}"))
@@ -96,11 +96,11 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["skill-0-0"], "Strider")
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
-        self.assertEqual(len(self.catalog["pages"]), 355)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 452)
+        self.assertEqual(len(self.catalog["pages"]), 357)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 455)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
-        self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 355)
+        self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 357)
 
     def test_all_primary_records_and_typed_relationships_are_retained(self):
         locations = self.locations
@@ -152,12 +152,12 @@ class CatalogTests(unittest.TestCase):
                     "equip-ap-cost", "inventory-slots-added", "storage-grid-width", "storage-grid-height"}],
                 "profiles": [r for r in self.details["profiles"] if not r["id"].endswith(("-equip-cost", "-capacity"))],
             }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "ad56ad466d633eb578e93140dc5fc3ee484e5f0f5bdb455b8332557b2b4338af",
+            "ecc8ff4930b88047f7341de00ba0e7589dc64020dc1b2c310e556af8f541b503",
         )
         self.assertEqual(len(self.details["properties"]), 54)
-        self.assertEqual(len(self.details["profiles"]), 598)
-        self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 320)
-        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2900)
+        self.assertEqual(len(self.details["profiles"]), 603)
+        self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 322)
+        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2921)
         locations = self.locations
         entities = {row["id"]: row for row in self.data["entities"]}
         prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
@@ -206,12 +206,12 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        self.assertEqual(len(self.data["illustrations"]), 397)
-        self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 318)
+        self.assertEqual(len(self.data["illustrations"]), 399)
+        self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 320)
         current = {row["id"]: row for row in self.data["illustrations"]}
-        # 0.8.9.9 art and Finish Raft came later.
+        # 0.8.9.9 art, Finish Raft and the 0.9.1.0 flints came later.
         added = {f"item-{n}" for n in (*range(258, 263), *range(264, 276))} | {f"being-{n}" for n in range(36, 42)}
-        later = added | {"item-171"}
+        later = added | {"item-171", "item-276", "item-277"}
         every = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
                  for row in self.data["illustrations"] if not {"role", "guide"} & row.keys()]
         self.assertEqual({row.get("entity") for row in every[-len(later):]}, later)
@@ -444,8 +444,8 @@ class CatalogTests(unittest.TestCase):
     def test_workstations_are_output_catalogs_and_recipe_facts_have_one_owner(self):
         locations, owners = self.locations, self.owners
         recipes = [display_entry(row, self.catalog) for row in self.data["entries"] if row["kind"] == "recipe"]
-        self.assertEqual(len(recipes), 97)
-        self.assertEqual(len(recipe_groups(recipes)), 78)
+        self.assertEqual(len(recipes), 98)
+        self.assertEqual(len(recipe_groups(recipes)), 79)
         self.assertEqual(self.pages["Alchemy workstation"].count('<table class="wikitable">'), 1)
         self.assertEqual(len(transclusions(self.pages["Alchemy workstation"])), 15)
         self.assertIn("Ingredients", self.pages["Alchemy workstation"])
@@ -514,7 +514,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(set(links), {"Lesser Wound Salve#Recipes", "Minor Wound Salve#Recipes", "Wound Salve#Recipes"})
         self.assertEqual(len(links), 3)
         recipes = {self.shown[r["id"]]: r["id"] for r in self.data["entries"] if r["kind"] == "recipe"}
-        self.assertEqual(len(recipes), 97)
+        self.assertEqual(len(recipes), 98)
         for anchor, identity in recipes.items():
             self.assertEqual(self.pages[self.owners[identity]].count(f'id="{anchor}"'), 1)
         self.assertFalse(any('id="entry-' in page for page in self.pages.values()))
@@ -622,7 +622,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.0.2")
+        self.assertEqual(self.data["game"]["build"], "0.9.1.0")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -803,7 +803,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_equipment_categories_match_native_slot_acceptance_not_dimensions(self):
         slots = {
-            "Main-hand equipment": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 27, 28, 29, 30, 41, 44, 90, 93, 96, 105, 106, 157, 158, 159, 160, 161, 169, 179, 184, 185, 186, 187, 188, 189, 190, 191, 206, 212, *range(266, 275)],
+            "Main-hand equipment": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 27, 28, 29, 30, 41, 44, 90, 93, 96, 105, 106, 157, 158, 159, 160, 161, 169, 179, 184, 185, 186, 187, 188, 189, 190, 191, 206, 212, *range(266, 275), 277],
             "Off-hand equipment": [0, 1, 41, 45, 46, 50, 58, 76, 96, 110, 111, 118, 174, 212, 219, 220],
             "Helmet-slot equipment": [54, 116, 117, 119],
             "Hood-slot equipment": [42, 146, 204, 205, 264],
@@ -824,8 +824,8 @@ class CatalogTests(unittest.TestCase):
         for title, numbers in slots.items():
             self.assertEqual(set(actual[title]["members"]), {f"item-{number}" for number in numbers})
             self.assertTrue(actual[title]["evidence"])
-        self.assertEqual(sum(len(row["members"]) for row in actual.values()), 116)
-        self.assertEqual(len(set().union(*(set(row["members"]) for row in actual.values()))), 113)
+        self.assertEqual(sum(len(row["members"]) for row in actual.values()), 117)
+        self.assertEqual(len(set().union(*(set(row["members"]) for row in actual.values()))), 114)
         for title in ("Torch", "Improvised Torch", "Improvised Enduring Torch"):
             self.assertIn("[[Category:Main-hand equipment]]", self.pages[title])
             self.assertIn("[[Category:Off-hand equipment]]", self.pages[title])
@@ -894,7 +894,7 @@ class CatalogTests(unittest.TestCase):
             children = [row for row in categories.values() if parent in row["parents"]]
             self.assertTrue(set(categories[parent]["members"]) <= set().union(*(set(row["members"]) for row in children)))
         self.assertIn("Fiber, twine and fabrics", self.pages["Category:Fibers and fabrics"])
-        self.assertEqual(len(recipes), 97)
+        self.assertEqual(len(recipes), 98)
         self.assertEqual(sum(entry["kind"] == "merchant" for entry in self.data["entries"]), 88)
         self.assertEqual(len(self.catalog["unit_prices"]["prices"]), 58)
 
@@ -925,7 +925,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_health_and_attack_grids_preserve_shape_orientation_and_cell_meaning(self):
         grids = self.details["grids"]
-        self.assertEqual(len(grids), 139)
+        self.assertEqual(len(grids), 140)
         self.assertEqual(sum(g["kind"] == "health" for g in grids), 42)
         nightmare = next(g for g in grids if g["id"] == "being-28-health")
         self.assertEqual((len(nightmare["rows"]), len(nightmare["rows"][0])), (7, 3))
@@ -1151,12 +1151,12 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.0.2 pin, game build blanked.
+        # 0.9.1.0 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.0.2"', b'"build": null', 1,
+                b'"build": "0.9.1.0"', b'"build": null', 1,
             )).hexdigest(),
-            "41db5d32a6c2c5f216f284cebb39cb80c001f58694f74d4fb0a1c72546f7a833",
+            "d7e3b344b4bd1864846c24a33c3b9a4850caf5adc345f071ce274d60b154fc1c",
         )
 
 
