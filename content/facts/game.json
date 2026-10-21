@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.0.2",
+    "build": "0.9.1.0",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -96,6 +96,24 @@
       "path": "data.win",
       "sha256": "7ed817e36bc676872aed3025330a9715c0110bd4869b8358e557aa7fe3ec586f",
       "build": "0.9.0.2"
+    },
+    {
+      "id": "items-en-0910",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "13e6e11a2527564ddadd7cae4cd4bbed6ae1758c2a4df8d08f1e19e937f02c7c",
+      "build": "0.9.1.0"
+    },
+    {
+      "id": "ui-en-0910",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "79ce7f9524fec7822490c48066097b9126571090984e3375a22abd326fea83b0",
+      "build": "0.9.1.0"
+    },
+    {
+      "id": "game-data-0910",
+      "path": "data.win",
+      "sha256": "8e538fadf74ffe0c4d6799a62cc7b0bd3ae74c4c4a82ccec2fb70e6c14355239",
+      "build": "0.9.1.0"
     }
   ],
   "entities": [
@@ -4710,6 +4728,32 @@
           "source": "items-en-0899",
           "section": "ItemTitles",
           "key": "275"
+        }
+      ]
+    },
+    {
+      "id": "item-276",
+      "category": "item",
+      "name": "Flint (Large)",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ]
+    },
+    {
+      "id": "item-277",
+      "category": "item",
+      "name": "Flint Dagger",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "277"
         }
       ]
     },
@@ -13331,7 +13375,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[228].components/craftCost/craftReturn"
         },
@@ -13371,7 +13415,7 @@
           }
         ],
         "cost": {
-          "amount": 6.0,
+          "amount": 5.0,
           "unit": "base AP"
         }
       }
@@ -13385,7 +13429,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[230].components/craftCost/craftReturn"
         },
@@ -13425,7 +13469,7 @@
           }
         ],
         "cost": {
-          "amount": 8.0,
+          "amount": 6.0,
           "unit": "base AP"
         }
       }
@@ -13439,7 +13483,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[231].components/craftCost/craftReturn"
         },
@@ -13479,7 +13523,7 @@
           }
         ],
         "cost": {
-          "amount": 8.0,
+          "amount": 6.0,
           "unit": "base AP"
         }
       }
@@ -13493,7 +13537,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[232].components/craftCost/craftReturn"
         },
@@ -13533,7 +13577,7 @@
           }
         ],
         "cost": {
-          "amount": 8.0,
+          "amount": 6.0,
           "unit": "base AP"
         }
       }
@@ -13547,7 +13591,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[233].components/craftCost/craftReturn"
         },
@@ -13587,7 +13631,7 @@
           }
         ],
         "cost": {
-          "amount": 8.0,
+          "amount": 6.0,
           "unit": "base AP"
         }
       }
@@ -13601,7 +13645,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0910",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[234].components/craftCost/craftReturn"
         },
@@ -13641,7 +13685,7 @@
           }
         ],
         "cost": {
-          "amount": 8.0,
+          "amount": 6.0,
           "unit": "base AP"
         }
       }
@@ -17297,9 +17341,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0910",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances;treasure_get_lootarray.irandom(275)"
+          "key": "loot_amountchances;treasure_get_lootarray.irandom(277)"
         },
         {
           "source": "game-data",
@@ -17311,7 +17355,7 @@
         "page": "Loot tables",
         "steps": [
           "The amount helper builds progressively wider inclusive integer draws from the minimum up to the stated maximum, then chooses one of those draws uniformly. Low quantities therefore occur more frequently.",
-          "The treasure helper repeatedly samples an item ID from zero through 275, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
+          "The treasure helper repeatedly samples an item ID from zero through 277, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
           "Accepted items reduce the remaining value budget. Defined-item attempts increment a counter capped at 500; undefined-item draws and the early story-gated rejection are not counted.",
           "Durability and stack size can be randomized after selection. Listed shared bonus checks are additive rather than mutually exclusive weights."
         ],
@@ -20977,6 +21021,240 @@
       "details": {
         "quest_id": "Camp",
         "stage": "Access granted"
+      }
+    },
+    {
+      "id": "recipe-personal-crafting-menu-277",
+      "kind": "recipe",
+      "title": "Flint Dagger at Personal crafting menu",
+      "summary": "Listed inputs and yield are the base recipe. Skill or station modifiers can reduce AP expenditure or ingredient consumption; this is not a claim about every effective crafting cost.",
+      "conditions": "Requires the listed ingredients and sufficient AP.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[277].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myCraftingMenu.item[277]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_inventory_has_reqs/player_inventory_get_amount"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "crafting.result.craftReturn"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "277"
+        }
+      ],
+      "details": {
+        "station": "Personal crafting menu",
+        "inputs": [
+          {
+            "item": "item-276",
+            "quantity": 1
+          }
+        ],
+        "outputs": [
+          {
+            "item": "item-277",
+            "quantity": 1
+          }
+        ],
+        "cost": {
+          "amount": 8.0,
+          "unit": "base AP"
+        }
+      }
+    },
+    {
+      "id": "loot-50-flint-large-bonus",
+      "kind": "loot",
+      "title": "Table 50: Flint (Large)",
+      "summary": "An additional Flint (Large) check uses a 2.5-percent threshold and adds one stone. It is rolled independently of the Flint check.",
+      "conditions": "Conditional on this table reaching the shared bonus checks; additive to its main outcome.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[50].loot-50-flint-large-bonus"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "chance/i_r"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ],
+      "details": {
+        "table": "50",
+        "outcome": "item-276",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.025,
+        "rolls": null
+      }
+    },
+    {
+      "id": "loot-54-flint-large-bonus",
+      "kind": "loot",
+      "title": "Table 54: Flint (Large)",
+      "summary": "An additional Flint (Large) check uses a 2.5-percent threshold and adds one stone. It is rolled independently of the Flint check.",
+      "conditions": "Conditional on this table reaching the shared bonus checks; additive to its main outcome.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[54].loot-54-flint-large-bonus"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "chance/i_r"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ],
+      "details": {
+        "table": "54",
+        "outcome": "item-276",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.025,
+        "rolls": null
+      }
+    },
+    {
+      "id": "loot-55-flint-large-bonus",
+      "kind": "loot",
+      "title": "Table 55: Flint (Large)",
+      "summary": "An additional Flint (Large) check uses a 2.5-percent threshold and adds one stone. It is rolled independently of the Flint check.",
+      "conditions": "Conditional on this table reaching the shared bonus checks; additive to its main outcome.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[55].loot-55-flint-large-bonus"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "chance/i_r"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ],
+      "details": {
+        "table": "55",
+        "outcome": "item-276",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.025,
+        "rolls": null
+      }
+    },
+    {
+      "id": "loot-51-flint-large-bonus",
+      "kind": "loot",
+      "title": "Table 51: Flint (Large)",
+      "summary": "An additional Flint (Large) check uses a 2.5-percent threshold and adds one stone. It is rolled independently of the Flint check.",
+      "conditions": "Conditional on this table reaching the shared bonus checks; additive to its main outcome.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[51].loot-51-flint-large-bonus"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "chance/i_r"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ],
+      "details": {
+        "table": "51",
+        "outcome": "item-276",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.025,
+        "rolls": null
+      }
+    },
+    {
+      "id": "loot-64-flint-large-bonus",
+      "kind": "loot",
+      "title": "Table 64: Flint (Large)",
+      "summary": "An additional Flint (Large) check uses a 2.5-percent threshold and adds one stone. It is rolled independently of the Flint check.",
+      "conditions": "Conditional on this table reaching the shared bonus checks; additive to its main outcome.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0910",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_generate.case[64].loot-64-flint-large-bonus"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "chance/i_r"
+        },
+        {
+          "source": "items-en-0910",
+          "section": "ItemTitles",
+          "key": "276"
+        }
+      ],
+      "details": {
+        "table": "64",
+        "outcome": "item-276",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.025,
+        "rolls": null
       }
     }
   ]

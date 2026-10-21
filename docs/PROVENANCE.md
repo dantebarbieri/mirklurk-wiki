@@ -325,6 +325,37 @@ reviewed fact or entry changed. The changelog cites `cursor_Draw_73` (per-throw
 `item_player_weightloss`), `object_update_light` (`radiusMemory` reset in
 daylight) and `obj_menu_Step_1`/`Draw_64` (menu music and particles).
 
+## Version 0.9.1.0 update
+
+Patch 0.9.1.0 (2026-10-21) was diffed privately against 0.9.0.2: 23 code
+entries changed and `item_correct_weighloss` is new. `game-data-0910`,
+`items-en-0910` and `ui-en-0910` record the new `data.win`, `Items.ini` and
+`UI.ini`; `Bestiary.ini` and `Nature.ini` match `beings-en-0901` and
+`nature-en`. Every patch-note claim was checked against the decompile.
+
+Additions cite the new fingerprints: entities `item-276` (Flint (Large)) and
+`item-277` (Flint Dagger), their profiles, range and melee grid, the
+personal-menu recipe, and five `loot-N-flint-large-bonus` entries for tables
+50, 51, 54, 55 and 64 (`loot_generate`, 2.5%). New entries are appended after
+the existing ones. Flint Dagger joins the `skeleton-outdoors` and
+`unwanted-remains` pools: a model of `treasure_get_lootarray` (now
+`irandom(277)`) reproduced all eleven existing pools exactly before it was
+applied to the new IDs; type-18 materials and values under the corpse minimums
+keep Flint (Large) out of every pool. Its listed weight is the literal 0.55;
+the recipe pass makes the real weight 0.35 x 70 / 100, an exact .5 tie that
+GameMaker rounds to 0.24 or 0.25, so readers see "about a quarter".
+
+Amended on purpose: the eight seed initializers (`apCost` 8 to 6) and the
+Elderberry, Turnip, Watercress, Willow, Cypress and Trollgnarl seed recipes
+(`craftCost`); `loot-amount-distribution` (IDs 0-277); the treasure pools'
+`irandom` citations; the Tailor-Made display and three vest item effects
+(`item_is_armor` excludes items 196-198); the trade-durability rule
+(`item_get_price` and `container_time_pass` skip type 25); a journal stage 8
+display (`manager_area_Alarm_4` clears other unseen beings); and the Controls,
+Planting, Vast Waters and Rift-Thorn Mire guides (`camera_Step_0`,
+`rm_int_Create`, `obj_menu_Draw_64`, `manager_area_Alarm_2`). The test
+handoff lists the six seed recipes with the other amended entries.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

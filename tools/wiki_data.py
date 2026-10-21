@@ -23,6 +23,7 @@ PAGE_FILES = {
     "Version 0.9.0.0": "Version_0.9.0.0.wiki",
     "Version 0.9.0.1": "Version_0.9.0.1.wiki",
     "Version 0.9.0.2": "Version_0.9.0.2.wiki",
+    "Version 0.9.1.0": "Version_0.9.1.0.wiki",
 }
 RESEARCH_PAGE_FILES = {
     "Quests and journal": "Quests_and_journal.wiki",

@@ -1,0 +1,76 @@
+'''Version 0.9.1.0''' is the patch released on 21 October 2026, five days after [[Version 0.9.0.2]]. This wiki shows 0.9.1.0 values. This page lists every documented change from 0.9.0.2, including a few the patch notes do not mention.
+
+== New content ==
+=== Items ===
+* [[Flint (Large)]] is a big flint stone. Searching fallen twigs, pebbles, mixed ground debris, boulders and cave-floor cracks now has a separate 2.5% chance to add one, on top of the usual Flint chance. It works like Flint as the stone when you light a fire, and it is the material for a Flint Dagger.
+* [[Flint Dagger]] is crafted from one Flint (Large) for 8 AP in your personal crafting menu, which every character knows. It hits two cells for 1 damage each and has the same 5 AP action cost as an Iron Dagger, but only 20 durability. Its stone blade also works as the stone when you light a fire. It can also turn up in outdoor skeletons and on Raving and Mutated Unwanted corpses.
+
+== Changes ==
+=== Seeds ===
+Planting any seed now costs 6 AP instead of 8. Crafting several seeds at the Primitive Farmwork Table is cheaper too. See [[Planting]].
+
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Seeds (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Seed !! Planting, 0.9.0.2 !! Planting, 0.9.1.0 !! Crafting, 0.9.0.2 !! Crafting, 0.9.1.0
+|-
+| [[Bramble Seeds]] || 8 AP || 6 AP || 6 AP || 6 AP (unchanged)
+|-
+| [[Elderberry Seeds]] || 8 AP || 6 AP || 6 AP || 5 AP
+|-
+| [[Cranberry Seeds]] || 8 AP || 6 AP || 6 AP || 6 AP (unchanged)
+|-
+| [[Turnip Seeds]] || 8 AP || 6 AP || 8 AP || 6 AP
+|-
+| [[Watercress Seeds]] || 8 AP || 6 AP || 8 AP || 6 AP
+|-
+| [[Willow Seeds]] || 8 AP || 6 AP || 8 AP || 6 AP
+|-
+| [[Cypress Seed Pods]] || 8 AP || 6 AP || 8 AP || 6 AP
+|-
+| [[Trollgnarl Seed Pods]] || 8 AP || 6 AP || 8 AP || 6 AP
+|}
+</div>
+
+=== Coins and gems ===
+[[Copper Coin|Copper]], [[Silver Coin|Silver]] and [[Gold Coin|Gold Coins]] are now always worth their full value. Before, they had a hidden condition that wore down while they lay in a bag or other stash, so they sold for less, down to 10% of their value, and a stack left long enough could disappear. Coins that already wore down in an older save are worth their full value again. See [[Currency and trading]].
+
+Not in the patch notes: the same fix covers the gems, [[Emerald]], [[Ruby]], [[Amethyst]], [[Sapphire]] and [[Topaz]].
+
+=== Cloth vests ===
+[[Forager's Vest]], [[Explorer's Vest]] and [[Expedition Vest]] now count as clothing, not armor. They no longer show the armor icon, and [[Tailor-Made]] no longer reduces their weight. Their armor value still adds to your Total Armor.
+
+=== Rifts ===
+Rifts no longer appear in [[Vast Waters]]. Before, Vast Waters areas near the [[Rift-Thorn Mire]] that holds the rift could get some. The change applies when an area is first generated; areas you have already visited load from your save unchanged.
+
+=== Controls ===
+* '''Balanced Zoom''' is a new option, on by default and recommended by the game. It makes the zoom range the same at every screen resolution: 30 tiles across fully zoomed out and 15 fully zoomed in. Before, the view was a fixed share of your screen, so a 4K screen showed twice as wide an area as a 1080p one. Turning the option off restores that. See [[Controls]].
+* '''Scouting''' looks much further ahead. The patch notes say about 2.5 times; the furthest the view can slide toward the cursor is three times what it was, and the cursor must be twice as far from you to reach it.
+* '''On-screen keyboard.''' When you name a new character, a button beside the name field opens an on-screen keyboard with letters, space, backspace, caps and enter, so you can name a character with only a mouse or controller. The prompt now reads "Press (your primary click) here to Confirm (or press Enter)".
+
+== Fixes ==
+=== Weight from bags on the ground ===
+Eating or using an item, throwing one or placing one straight from a bag or container on the ground now lowers that container's weight. Before, its weight stayed too high. For an item with several uses, such as a remedy, each use removes its share of the weight.
+
+=== The Sceetler's cellar ===
+While you hunt the [[Sceetler]] for the rune, its cellar no longer fills with deadly creatures. Until the rune is found, other creatures out of your sight there vanish, and a new Sceetler appears if it is missing. See [[Quests and journal]].
+
+=== Interface ===
+* You can apply a remedy, such as a wound salve or bandage, while a container's menu is open.
+* Menus underneath the menu you are using no longer react to the mouse, so hovering, clicking or scrolling only affects the menu on top.
+* The journal could scroll to negative entry numbers and crash. It no longer can.
+* Hovering over a building's door, or over anything right next to you, no longer shows a question-mark cursor in the dark.
+
+=== Changing area ===
+You no longer get stuck inside a boulder or other solid object when you arrive in an outdoor area; the game moves you to the nearest free spot.
+
+Not in the patch notes:
+* Entering [[Ihar]]'s shipwreck now places you one tile lower than before.
+* The two huts of the [[Survivors' camp]] now clear trees and other objects that would overlap them when the camp is built.
+
+=== Sounds ===
+A faint knocking in the soft rain and a child's voice in the background of the daytime swamp ambience were edited out.
+
+=== Main menu ===
+Not in the patch notes: while the main menu fades out to start or load a game, it no longer starts a new song or adds snowflakes. The victory screen no longer sets off fireworks.
+
+[[Game mechanics]] | [[Main Page]]

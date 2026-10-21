@@ -1,4 +1,4 @@
-'''Version 0.9.0.2''' is the patch released on 16 October 2026, the day after [[Version 0.9.0.1]]. This wiki shows 0.9.0.2 values. It is a small fixes patch: no item, creature, merchant, recipe, loot, quest or skill values changed, and the English text files are unchanged.
+'''Version 0.9.0.2''' is the patch released on 16 October 2026, the day after [[Version 0.9.0.1]]. The wiki now shows values from [[Version 0.9.1.0]], which followed on 21 October. It is a small fixes patch: no item, creature, merchant, recipe, loot, quest or skill values changed, and the English text files are unchanged.
 
 == New content ==
 === Main menu ===
