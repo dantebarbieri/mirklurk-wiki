@@ -270,7 +270,7 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertIn("[[Category:Merchants]]", page)
             self.assertIn("[[" + locations[identity] + "|", self.pages["Category:Merchants"])
             self.assertIn("<onlyinclude>{{#switch:", page)
-            self.assertEqual(available_views(page), {"offers"})
+            self.assertEqual(available_views(page), {"offers", "location", "availability"})
             for offer in self.data["entries"]:
                 if offer["kind"] == "merchant" and offer["details"]["merchant"] == identity:
                     rendered = expand_selective_view(page, {"view": "offers", "item": offer["details"]["item"]})
@@ -296,11 +296,13 @@ class SelectiveViewTests(unittest.TestCase):
         for identity, profile in profiles.items():
             page = self.pages[locations[identity]]
             self.assertEqual(page.count(profile["conditions"]), 1)
-            offers_view = page.split("<onlyinclude>", 1)[1].split("</onlyinclude>", 1)[0]
-            self.assertIn(profile["conditions"], offers_view)
+            availability = next(block for block in re.findall(r"<onlyinclude>(.*?)</onlyinclude>", page, re.S)
+                                if "|page|availability=" in block)
+            self.assertIn(profile["conditions"], availability)
+            self.assertNotIn("\n", availability)
             if profile["spoiler"]:
-                self.assertIn('class="mw-collapsible mw-collapsed"', offers_view)
-                self.assertIn("Story availability (spoilers)", offers_view)
+                self.assertIn('class="mw-collapsible mw-collapsed"', availability)
+                self.assertIn("Story availability (spoilers)", availability)
             for original in self.data["entries"]:
                 if original["kind"] == "merchant" and original["details"]["merchant"] == identity:
                     self.assertEqual(display_entry(original, self.catalog)["conditions"], profile["conditions"])
@@ -338,10 +340,14 @@ class SelectiveViewTests(unittest.TestCase):
         entities = {row["id"]: row for row in self.data["entities"]}
         locations = self.locations
         rendered = merchant_table(offers, [], entities, locations, True)
-        self.assertIn("|price={{Coins|1900}}", rendered)
+        vendor, standard = (locations[offer["details"]["item"]] for offer in offers)
+        self.assertIn("|page|offer-price={{#switch:{{{item|}}}||" + vendor + "={{Coins|1900}}|", rendered)
         self.assertNotIn("<noinclude>{{Coins|1900}}", rendered)
-        self.assertIn("<includeonly>[[", rendered)
-        self.assertIn("|Standard item price]]</includeonly>", rendered)
+        # The standard row shows the item's own price on the page and only links to it from item views.
+        self.assertIn("|price=<noinclude>{{:" + standard + "}}</noinclude><onlyinclude>{{#switch:{{{view|<noinclude>page"
+                      "</noinclude>}}}|offer-price={{#switch:{{{item|}}}||" + standard + "=[[" + standard
+                      + "#price|Standard item price]]|", rendered)
+        self.assertNotIn("<includeonly>", rendered)
 
     def test_new_guides_require_evidence_and_finite_existing_targets(self):
         catalog = copy.deepcopy(self.catalog)

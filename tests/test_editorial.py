@@ -35,14 +35,14 @@ class EditorialTests(unittest.TestCase):
 
     def test_base_values_use_coins_and_state_sub_copper_fractions(self):
         for value, expected in ((Decimal("2.2"), "{{Coins|220}}"), (0, "{{Coins|0}}"),
-                                (Decimal("0.005"), "{{Coins|1}} per 2"), (Decimal("0.002"), "{{Coins|1}} per 5"),
-                                (Decimal("0.001"), "{{Coins|1}} per 10"), (Decimal("0.125"), "{{Coins|25}} per 2")):
+                                (Decimal("0.005"), "<nowiki>0.5</nowiki> copper"), (Decimal("0.002"), "<nowiki>0.2</nowiki> copper"),
+                                (Decimal("0.001"), "<nowiki>0.1</nowiki> copper"), (Decimal("0.125"), "<nowiki>12.5</nowiki> copper")):
             self.assertEqual(base_value_text(value), expected)
         for value in ("-1", "NaN"):
             with self.subTest(value=value), self.assertRaises(DataError):
                 base_value_text(Decimal(value))
         self.assertFalse(any("silver equivalents" in text for text in self.pages.values()))
-        self.assertIn("|| {{Coins|100}} = {{Coins|100|copper}} ||", self.pages["Silver Coin"])
+        self.assertIn("<td>{{Coins|100}} = {{Coins|100|copper}}</td>", self.pages["Silver Coin"])
 
     def test_construction_action_listing_shows_its_world_sprite(self):
         # Finish Raft is never an {{Item}}, but the Items list still shows its reviewed world sprite.

@@ -224,17 +224,17 @@ class LandmarkTests(unittest.TestCase):
             for offer in self.data["entries"]:
                 if offer["kind"] != "merchant" or offer["details"]["merchant"] != identity:
                     continue
-                rendered = expand_selective_view(self.pages[owner], {"view": "offers", "item": offer["details"]["item"]})
+                rendered = "".join(expand_selective_view(self.pages[owner], {"view": view, "item": offer["details"]["item"]})
+                                   for view in ("offers", "location", "availability"))
                 selected = dom(rendered, "Filtered seller")
-                self.assertIn({"target": owner + "#Location_and_access", "text": "Location and access"}, selected.links)
+                self.assertIn(owner + "#Location_and_access", [link["target"] for link in selected.links])
                 self.assertNotIn("Location: Unknown", selected.text)
                 for paragraph in location["paragraphs"]:
                     self.assertNotIn(paragraph, selected.text)
                 if identity in self.images:
                     self.assertNotIn(self.images[identity]["file_title"], rendered)
                 check_seller_context(
-                    {"templates": [{"*": title} for title in (owner, "Template:Ware row", "Template:Item",
-                                                             "Module:Display", "Module:Display assets")], "text": {"*": rendered}},
+                    {"templates": [{"*": owner}], "text": {"*": rendered}},
                     owner, offer["details"]["item"], selected.text, location_page=owner,
                 )
         historical = {row["details"]["location"] for row in self.data["entries"]
@@ -316,14 +316,13 @@ class LandmarkTests(unittest.TestCase):
     def test_seller_smoke_keeps_filtered_views_leaf_and_checks_stock_rule_references(self):
         stock = "Listed wares do not run out, and merchants have unlimited buying funds."
         reference = '<a href="/index.php?title=Category:Merchants#Trading_rules">Shared trading rules</a>'
-        result = {"templates": [{"*": title} for title in ("Merchant", "Template:Ware row", "Template:Item",
-                                                         "Module:Display", "Module:Display assets")], "text": {"*": ""}}
+        result = {"templates": [{"*": "Merchant"}], "text": {"*": ""}}
         check_seller_context(result, "Merchant", "item-0", "", stock)
         full = dict(result, text={"*": reference})
         check_seller_context(full, "Merchant", None, "Shared trading rules", stock)
         check_seller_context(result, "Merchant", "item-0", "Quantity: Unknown.")
         for templates in ([], ["Currency and trading"], ["Merchant", "Currency and trading"], ["Merchant", "Item"],
-                          ["Merchant", "Currency and trading", "Copper Coin"]):
+                          ["Merchant", "Template:Ware row"], ["Merchant", "Currency and trading", "Copper Coin"]):
             with self.assertRaises(RuntimeError):
                 check_seller_context(dict(result, templates=[{"*": title} for title in templates]), "Merchant", "item-0", "", stock)
         for text in (stock, "Shared trading rules", "Shared stock and merchant-funds rules", "Unit price", "Quantity: Unknown."):
