@@ -93,7 +93,7 @@ class FollowupTests(unittest.TestCase):
         # Strip only the known mobile wrappers for this comparison, never for sync.
         digests = {
             "Items": "941a328acf17161c80948f3c3763dd00a82e05bdf0751e4fff3a2c4ac7f4225e",
-            "Wooden Recorder": "c5750feaa6e5947168b749f789a330015d0b8c3fc79baefdeba3acdde7325310",
+            "Wooden Recorder": "cf5c04f52a8637f2aff1cfc47b9b75d0ed77326880ca4e22eace681423b1bc2c",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):

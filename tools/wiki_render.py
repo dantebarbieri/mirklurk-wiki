@@ -634,48 +634,39 @@ def construction_table(recipe, images, entities, locations, anchor_id):
     return "\n=== Recipes ===\n" + html_table(["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], [row])
 
 
-def loot_table(entries, images, entities, locations, owner):
-    headers = ["Source", "Result", "Quantity", "Conditional probability"]
-    getters = []
-    for field, label, formatter in (
-        ("weight", "Reported weight", known),
-        ("rolls", "Rolls", count_range),
-    ):
-        if any(entry["details"][field] is not None for entry in entries):
-            headers.append(label)
-            getters.append(lambda entry, field=field, formatter=formatter: formatter(entry["details"][field]))
-    same_conditions, conditions = shared_field(entries, lambda entry: entry["conditions"])
-    if not same_conditions:
-        headers.append("Conditions")
-    same_summary, summary = shared_field(entries, lambda entry: entry["summary"])
-    if not same_summary:
-        headers.append("Notes")
+# Loot and acquisition rows share fixed columns; each row is a "loot" view, so item pages write one header.
+LOOT_HEADERS = ["Source", "Item", "Quantity", "Conditional probability", "Conditions and notes"]
+LOOT_ITEM_HEADERS = [heading for heading in LOOT_HEADERS if heading != "Item"]
+LOOT_QUANTITY_NOTE = "Quantities within a range are not necessarily equally likely."
+
+
+def loot_row(anchor, owner, item, quantity, probability, notes, selector, item_cell=True):
+    # Item cells are owner-only; item pages name their own item.
+    cells = [f'<noinclude>{span(anchor)}</noinclude>[[{owner}#{anchor}|{literal(owner)}]]',
+             *([item] if item_cell else []), quantity, probability, notes]
+    return selective_view(filtered_row(html_row(cells, (1,) if item_cell else ()), "item", [selector]), "loot")
+
+
+def loot_rows(entries, locations, owner, item_cell=True):
     rows = []
     for entry in entries:
         details = entry["details"]
-        result = "No items" if details["outcome"] is None else item_reference(details["outcome"], locations)
-        probability = details["probability"]
-        row = [
-            f'<noinclude>{span(entry["anchor"])}</noinclude>[[{owner}#{entry["anchor"]}|{literal(owner)}]]',
-            result, count_range(details["quantity"]),
-            known(Decimal(str(probability)) * 100) + "%" if probability is not None else "Unknown",
-            *(getter(entry) for getter in getters),
-        ]
-        if not same_conditions:
-            row.append(known(entry["conditions"]))
-        if not same_summary:
-            row.append(literal(entry["summary"]))
-        rows.append(filtered_row(html_row(row), "item", [locations[details["outcome"]] if details["outcome"] else "empty"]))
-    notes = ["Quantities within a range are not necessarily equally likely."]
-    if any(entry["details"]["weight"] is not None for entry in entries):
-        notes.append("Selection weights are not percentages.")
-    if same_conditions and conditions:
-        notes.append(literal(conditions))
-    if same_summary:
-        notes.append(literal(summary))
-    return "\n== Loot ==\n" + selective_view(
-        "\n\n".join(notes) + "\n\n" + html_table(headers, rows), "loot",
-    ) + "\n"
+        chance = "Unknown" if details["probability"] is None else known(Decimal(str(details["probability"])) * 100) + "%"
+        if details["weight"] is not None:
+            chance += "<br />Selection weight " + known(details["weight"]) + " (not a percentage)"
+        if details["rolls"] is not None:
+            chance += "<br />Rolls: " + count_range(details["rolls"])
+        outcome = details["outcome"]
+        rows.append(loot_row(
+            entry["anchor"], owner, item_reference(outcome, locations) if outcome else "No items",
+            count_range(details["quantity"]), chance,
+            "<br />".join(literal(text) for text in (entry["summary"], entry["conditions"]) if text),
+            locations[outcome] if outcome else "empty", item_cell))
+    return rows
+
+
+def loot_table(entries, images, entities, locations, owner):
+    return "\n== Loot ==\n" + LOOT_QUANTITY_NOTE + "\n\n" + html_table(LOOT_HEADERS, loot_rows(entries, locations, owner)) + "\n"
 
 
 def acquisition_probability(row):
@@ -698,17 +689,11 @@ def acquisition_probability(row):
 
 
 def acquisition_table(source, images, entities, locations):
-    rows, anchors = [], acquisition_fragments(source, locations)
-    for row in source["rows"]:
-        cells = [
-            f'<noinclude>{span(anchors[row["id"]])}</noinclude>[[{source["title"]}#{anchors[row["id"]]}|{literal(source["title"])}]]',
-            item_reference(row["item"], locations), count_range(row["quantity"]),
-            acquisition_probability(row), literal(row["condition"]),
-        ]
-        rows.append(filtered_row(html_row(cells), "item", [locations[row["item"]]]))
-    return "\n== Contents and acquisition ==\n" + selective_view(html_table(
-        ["Source", "Item", "Quantity", "Conditional probability", "Condition"], rows,
-    ), "loot") + "\n"
+    anchors = acquisition_fragments(source, locations)
+    rows = [loot_row(anchors[row["id"]], source["title"], item_reference(row["item"], locations),
+                     count_range(row["quantity"]), acquisition_probability(row), literal(row["condition"]),
+                     locations[row["item"]]) for row in source["rows"]]
+    return "\n== Contents and acquisition ==\n" + html_table(LOOT_HEADERS, rows) + "\n"
 
 
 def acquisition_pool_table(pool, owner, entities, locations, categories):
@@ -1155,6 +1140,7 @@ def build_pages(root, data, catalog=None, details=None):
     coins = {row["entity"]: row for row in catalog.get("currency", {}).get("coins", [])}
     acquisition_sources = catalog.get("acquisition", {}).get("sources", [])
     acquisition_by_id = {source["id"]: source for source in acquisition_sources}
+    acquisition_by_title = {source["title"]: source for source in acquisition_sources}
     acquisition_pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
     acquisition_notes = {note["item"]: note for note in catalog.get("acquisition", {}).get("item_notes", [])}
     item_categories = {identity: group["title"] for group in catalog.get("taxonomy", {}).get("groups", [])
@@ -1282,7 +1268,7 @@ def build_pages(root, data, catalog=None, details=None):
             text += "\n== How random selection works ==\n"
         text += "\n\n".join(linked_prose(condition, links) for condition in source["conditions"]) + "\n"
         if source.get("loot_context"):
-            text += "\n" + selective_view(linked_prose(source["loot_context"], links), "loot") + "\n"
+            text += "\n" + selective_view(linked_prose(source["loot_context"], links), "loot-note") + "\n"
         if source["rows"]:
             text += acquisition_table(source, images, entities, locations)
         owned_pools = [acquisition_pools[identity] for identity in source.get("pool_ids", [])]
@@ -1645,19 +1631,23 @@ def build_pages(root, data, catalog=None, details=None):
                 ) + "\n"
             loot = [entry for entry in entries if entry["kind"] == "loot" and entry["details"]["outcome"] == identity]
             owned_loot = [entry for entry in loot if owners[entry["id"]] == title]
-            if owned_loot:
-                pages[title] += loot_table(owned_loot, images, entities, locations, title)
             loot_owners = {owners[entry["id"]] for entry in loot if owners[entry["id"]] != title}
             documented_sources = {source["title"] for source in acquisition_sources if any(
                 row["item"] == identity for row in source["rows"])}
             loot_owners.update(documented_sources)
-            if loot_owners:
-                pages[title] += "\n=== Loot sources ===\n" + "\n".join(
-                    "{{:" + owner + "|view=loot|item=" + title + "}}"
+            if loot_owners or owned_loot:
+                rows = loot_rows(owned_loot, locations, title, item_cell=False) + [
+                    "{{:" + owner + "|view=loot|item=" + title + "}}\n"
                     for owner in sorted(loot_owners, key=lambda owner: (
-                        not any(source["title"] == owner and source["kind"] in {"starting", "fixed-location"}
-                                for source in acquisition_sources), owner))
-                ) + "\n"
+                        acquisition_by_title.get(owner, {}).get("kind") not in {"starting", "fixed-location"}, owner))
+                ]
+                quantities = [entry["details"]["quantity"] for entry in loot] + [
+                    row["quantity"] for source in acquisition_sources for row in source["rows"] if row["item"] == identity]
+                notes = [LOOT_QUANTITY_NOTE] if any(q and q["min"] != q["max"] for q in quantities) else []
+                notes += ["{{:" + owner + "|view=loot-note}}" for owner in sorted(loot_owners)
+                          if acquisition_by_title.get(owner, {}).get("loot_context")]
+                pages[title] += "\n=== Loot sources ===\n" + html_table(LOOT_ITEM_HEADERS, rows) + "".join(
+                    note + "\n\n" for note in notes)
             eligible_sources = [(source, reference, acquisition_pools[reference["pool"]])
                                 for source in acquisition_sources for reference in source.get("pool_refs", [])
                                 if identity in acquisition_pools[reference["pool"]]["eligible_item_ids"]]

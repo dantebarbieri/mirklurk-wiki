@@ -73,6 +73,7 @@ ALLOWED_FILES = {
     "tests/test_anchors.py": 8 * 1024,
     "tests/test_catalog.py": 76 * 1024,
     "tests/test_views.py": 34 * 1024,
+    "tests/test_loot_views.py": 8 * 1024,
     "tests/test_landmarks.py": 26 * 1024,
     "tests/test_sprites.py": 16 * 1024,
     "tests/test_dialogue.py": 16 * 1024,
