@@ -360,26 +360,25 @@ Publish approved metadata only after the corresponding operator import is ready.
 ## Survivors' camp scene
 
 `File:Survivors' camp area.png` (256 x 280, 30209 bytes, shown at 1x) is the
-lead image of the Survivors' camp guide. Unlike the other area images, it is
-not a game-saved map. The operator's own 0.9.1.0 world save was drawn with
-MirkMap's realistic renderer from the game's own tiles and sprites. Then it was
-edited so that it shows a camp and nothing more of that world:
+Survivors' camp guide image. Unlike other area images it is not a game-saved
+map: the operator's 0.9.1.0 save was drawn with MirkMap's realistic renderer
+from the game's own tiles and sprites, then edited to show only the camp:
 
-- Only terrain inside the palisade ring is kept: tiles whose top-left corner is
-  within 136 px (yard radius 104 + 32) of the camp centre, as in
-  `manager_area` Alarm 6. Everything else is transparent.
+- Only tiles whose top-left corner is within 136 px (yard radius 104 + 32) of
+  the camp centre are kept, as in `manager_area` Alarm 6; the rest is transparent.
 - Two boulders outside the ring and every tree were removed. No tree is part of
-  the camp's design; the 0.9.1.0 clearing around the side huts removed none in
-  this save.
-- Wilda and the three Survivors were moved to separate open tiles within their
+  the camp's design; the 0.9.1.0 side-hut clearing removed none in this save.
+- Wilda and the three Survivors were moved to separate open tiles in their
   home range. They wander in play.
 - The two lit torches add `spr_fire_small` frame 0 at (x, y - 6), as
-  `obj_station` Draw does for lit torches.
+  `obj_station` Draw does.
 
-The caption says it is one world's layout. The Wilda, Survivor and Grand Mother
-location sections have no image of their own. Their optional `related_pages`
-(at most four reviewed guides, each named in the paragraphs) link
-"Survivors' camp" to this guide. Neither the save nor the PNG is in Git.
+The caption says it is one world's layout. The imageless Wilda, Survivor and
+Grand Mother location sections link "Survivors' camp" to the guide through
+optional `related_pages` (at most four reviewed guides, each named in the
+paragraphs). Seller location notes that name a related guide link it, on the
+NPC page and in item seller rows; other sellers link their Location and access
+section. Neither the save nor the PNG is in Git.
 
 ## File titles
 

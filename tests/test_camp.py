@@ -44,6 +44,18 @@ class CampSceneTests(unittest.TestCase):
                 self.assertIn("[[" + GUIDE + "|", location)
                 self.assertNotIn("[[" + FILE, page)
 
+    def test_camp_seller_locations_link_the_guide_on_npc_and_item_views(self):
+        sellers = {self.locations[row["details"]["merchant"]] for row in self.data["entries"]
+                   if row["kind"] == "merchant" and row["details"]["merchant"] in {"being-34", "being-36"}}
+        self.assertEqual(sellers, {"Wilda", "Grand Mother"})
+        for title in sellers:
+            with self.subTest(seller=title):
+                note = self.pages[title].split("Location: ", 1)[1].split("\n", 1)[0]
+                self.assertIn("[[" + GUIDE + "|<nowiki>" + GUIDE + "</nowiki>]]", note)
+                self.assertNotIn(title + "#Location_and_access", note)
+        for title in ("Ranger Bhato",):
+            self.assertIn("[[" + title + "#Location_and_access|", self.pages[title])
+
     def test_related_guides_must_be_unique_registered_and_named(self):
         for change, message in (
             ([GUIDE, GUIDE], "at most four unique"),

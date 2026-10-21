@@ -20,7 +20,7 @@ from test_views import expand_selective_view
 from wiki_catalog import category_definitions, default_catalog, page_locations, validate_catalog
 from wiki_data import DataError
 from wiki_details import load_publication_inputs, parse_illustrations
-from wiki_render import audit_report, image_caption, build_pages, display_entry, icon, image_for
+from wiki_render import audit_report, image_caption, build_pages, display_entry, icon, image_for, location_guide
 from test_wiki import synthetic_data
 
 
@@ -227,7 +227,8 @@ class LandmarkTests(unittest.TestCase):
                 rendered = "".join(expand_selective_view(self.pages[owner], {"view": view, "item": offer["details"]["item"]})
                                    for view in ("offers", "location", "availability"))
                 selected = dom(rendered, "Filtered seller")
-                self.assertIn(owner + "#Location_and_access", [link["target"] for link in selected.links])
+                target = location_guide(offer["details"]["location"], location.get("related_pages", ())) or owner + "#Location_and_access"
+                self.assertIn(target, [link["target"] for link in selected.links])
                 self.assertNotIn("Location: Unknown", selected.text)
                 for paragraph in location["paragraphs"]:
                     self.assertNotIn(paragraph, selected.text)
@@ -235,7 +236,7 @@ class LandmarkTests(unittest.TestCase):
                     self.assertNotIn(self.images[identity]["file_title"], rendered)
                 check_seller_context(
                     {"templates": [{"*": owner}], "text": {"*": rendered}},
-                    owner, offer["details"]["item"], selected.text, location_page=owner,
+                    owner, offer["details"]["item"], selected.text, location_page=owner, location_target=target,
                 )
         historical = {row["details"]["location"] for row in self.data["entries"]
                       if row["kind"] == "merchant" and row["details"]["merchant"] in {"being-26", "being-33"}}

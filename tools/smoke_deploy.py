@@ -41,7 +41,7 @@ from smoke_metadata import Head, smoke_metadata
 from smoke_navigation import install_sidebar_fixture
 from smoke_urls import smoke_urls
 from smoke_uploads import confirm_editor, smoke_uploads
-from wiki_render import display_entry, image_for, literal, pixel_geometry, pixel_image, recipe_groups
+from wiki_render import display_entry, image_for, literal, location_guide, pixel_geometry, pixel_image, recipe_groups
 from wiki_views import selective_view
 
 
@@ -716,7 +716,7 @@ def check_price_cell(cell, value):
         raise RuntimeError("A merchant price differs from its canonical item value.")
 
 
-def check_seller_context(result, merchant, item, text, stock_text=None, location_page=None):
+def check_seller_context(result, merchant, item, text, stock_text=None, location_page=None, location_target=None):
     if item is not None:
         if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in text:
             raise RuntimeError("A seller view has extra dependencies or recursively transcluded item prices.")
@@ -732,7 +732,7 @@ def check_seller_context(result, merchant, item, text, stock_text=None, location
                     or (item is not None and "Shared trading rules" in text)):
                 raise RuntimeError("A seller view lost its category link or repeated a stock rule/reference or unknown-quantity claim.")
         if location_page is not None and (
-            not any(link["target"] == location_page + "#Location_and_access" for link in parsed.links)
+            not any(link["target"] == (location_target or location_page + "#Location_and_access") for link in parsed.links)
             or "Location: Unknown" in text
         ):
             raise RuntimeError("A seller view lost its reviewed location link or retained an unknown-location claim.")
@@ -750,6 +750,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     entities = {entity["id"]: entity for entity in data["entities"]}
     prices = {row["entity"]: row["value"] for row in catalog["unit_prices"]["prices"]}
     location_pages = {locations[row["entity"]] for row in catalog["classifications"] if "location" in row}
+    location_guides = {locations[row["entity"]]: row["location"].get("related_pages", [])
+                       for row in catalog["classifications"] if "location" in row}
     for station in catalog["stations"]:
         rendered = api({"action": "parse", "page": station["title"], "prop": "text"})["parse"]["text"]["*"]
         check_parser_errors(rendered)
@@ -809,7 +811,10 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             if {identity for row in parsed.rows for identity in row["entries"]} != wanted.keys() or len(parsed.rows) != len(wanted):
                 raise RuntimeError("A seller view lost or duplicated an exact offer.")
             check_seller_context(result, merchant, item, parsed.text, stock_text,
-                                 merchant if merchant in location_pages else None)
+                                 merchant if merchant in location_pages else None,
+                                 location_guide(next(iter({entry["details"]["location"] for entry in offered})),
+                                                location_guides.get(merchant, ()))
+                                 if len({entry["details"]["location"] for entry in offered}) == 1 else None)
             for row in parsed.rows:
                 entry = wanted[next(iter(row["entries"]))]
                 detail, cells = entry["details"], row["cells"]

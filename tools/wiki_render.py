@@ -90,6 +90,12 @@ def anchor(kind, identity):
     return span(fragment(kind, identity))
 
 
+def location_guide(location, guides):
+    """The first related guide that a reviewed seller location names, if any."""
+    parts = prose_link_parts(location, set(guides)) if location and guides else []
+    return parts[1] if len(parts) > 1 else None
+
+
 def table(headers, rows):
     lines = ['{| class="wikitable"', "! " + " !! ".join(headers)]
     for row in rows:
@@ -524,9 +530,10 @@ def offer_view(view, item, content, page=True):
     return selective_view(filtered_row(content, "item", [item]), view, page=page)
 
 
-def merchant_table(entries, images, entities, locations, standard_prices=False, standard_stock=False, story_spoiler=False, location_page=None):
+def merchant_table(entries, images, entities, locations, standard_prices=False, standard_stock=False, story_spoiler=False, location_page=None, location_guides=()):
     """Header and notes are page-only. Item pages build one seller table from the offers (seller link),
-    location and availability views, plus offer-quantity and offer-price where the merchant records them."""
+    location and availability views, plus offer-quantity and offer-price where the merchant records them.
+    A reviewed location naming one of its related guides links that guide instead of the NPC's section."""
     headers = ["Seller", "Item"]
     columns = []
     notes = ["<noinclude>[[:Category:Merchants#Trading_rules|Shared trading rules]]</noinclude>"] if standard_stock else []
@@ -544,8 +551,13 @@ def merchant_table(entries, images, entities, locations, standard_prices=False, 
         notes.append(" and ".join(unknown).capitalize() + ": Unknown.")
     same_location, location = shared_field(entries, lambda entry: entry["details"]["location"])
     if location_page is not None or same_location:
-        place = known(location) if location_page is None else (
-            f"[[{location_page}#Location_and_access|{literal(location) if location else 'Location and access'}]]")
+        guides = {guide: guide for guide in location_guides}
+        if location_page is None:
+            place = known(location)
+        elif location_guide(location, location_guides):
+            place = linked_prose(location, guides)
+        else:
+            place = f"[[{location_page}#Location_and_access|{literal(location) if location else 'Location and access'}]]"
         notes.append("Location: " + selective_view(place, "location") + ".")
     else:
         headers.append("Location")
@@ -1559,6 +1571,8 @@ def build_pages(root, data, catalog=None, details=None):
                 bool(entity_ids & set(catalog.get("currency", {}).get("standard_merchants", []))),
                 merchant_profile["spoiler"] if merchant_profile is not None else False,
                 title if entity_ids & npc_locations.keys() else None,
+                [guide for identity in sorted(entity_ids & npc_locations.keys())
+                 for guide in npc_locations[identity].get("related_pages", [])],
             )),
             ("loot", lambda rows: loot_table(rows, images, entities, locations, title)),
         ):
