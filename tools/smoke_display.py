@@ -439,8 +439,9 @@ def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
          "native-item-row-marker", "Gurb-Gurb", "mirklurk-item", 'id="price"'),
         ("Template:Recipe row", pages["Template:Recipe row"].replace("<td>", "<td>native-recipe-marker ", 1),
          "native-recipe-marker", "Campfire", "base", "<b>Simple Burn Remedy</b>:"),
+        # Item pages read leaf merchant views, not Ware rows; the merchant's own wares table uses the template.
         ("Template:Ware row", pages["Template:Ware row"].replace("<td>", "<td>native-ware-marker ", 1),
-         "native-ware-marker", "Iron Hand Axe", "Magus Clay", 'id="health-grid"'),
+         "native-ware-marker", "Magus Clay", 'aria-label="Iron Hand Axe"', owner_anchor),
         ("Template:Coins", pages["Template:Coins"].replace("<includeonly>", "<includeonly>native-template-marker ", 1),
          "native-template-marker", "Gurb-Gurb", "2 gold", owner_anchor),
         ("Module:Display", pages["Module:Display"].replace("return table.concat(parts, ' ')", "return 'native-module-marker ' .. table.concat(parts, ' ')"),
