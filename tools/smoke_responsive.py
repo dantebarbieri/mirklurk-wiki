@@ -24,10 +24,16 @@ def measure(page):
         };
         const regions = [...root.querySelectorAll('.mirklurk-scroll, .pixel-art-figure')];
         const tables = [...root.querySelectorAll('table.wikitable, table.mirklurk-cell-grid')];
+        // MediaWiki's script adds Expand/Collapse buttons to collapsible spoilers; they are chrome, not table content.
+        const cellText = c => {
+            const copy = c.cloneNode(true);
+            copy.querySelectorAll('.mw-collapsible-toggle').forEach(e => e.remove());
+            return copy.textContent.trim();
+        };
         const semantics = tables.map(t => ({
             caption:t.caption?.textContent.trim() || '',
             rows:[...t.rows].map(r => [...r.cells].map(c => ({
-                tag:c.tagName, text:c.textContent.trim(), label:c.getAttribute('aria-label'),
+                tag:c.tagName, text:cellText(c), label:c.getAttribute('aria-label'),
                 title:c.getAttribute('title'), scope:c.getAttribute('scope'),
                 colspan:c.colSpan, rowspan:c.rowSpan,
                 links:[...c.querySelectorAll('a')].map(a => [a.textContent, a.getAttribute('href')])
