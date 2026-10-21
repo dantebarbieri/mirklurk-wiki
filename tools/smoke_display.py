@@ -468,8 +468,12 @@ def smoke_display_propagation(run, api, pages, token, wait_tick, refreshed):
         wait_tick(api)
         api({"action": "edit", "title": owner, "text": pages[owner], "token": token,
              "summary": "Restore disposable display fixture"}, post=True)
-        rendered = refreshed(run, api, reader, restored_marker, forbidden_anchor, owner)
-        if marker in rendered:
+        # The restored marker also matches the edited render, so wait for the edit marker to leave instead.
+        for _ in range(10):
+            if marker not in refreshed(run, api, reader, restored_marker, forbidden_anchor, owner):
+                break
+            wait_tick(api)
+        else:
             raise RuntimeError("Restoring a display owner did not invalidate the cached reader.")
     prefix = "        [ " + lua_string("Sceetler") + " ] = "
     lines = pages[ASSETS_TITLE].splitlines()
