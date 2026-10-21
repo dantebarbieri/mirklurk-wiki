@@ -144,6 +144,7 @@ class PublicationTests(unittest.TestCase):
             "uploads/page.png", "backups/wiki.sql.gz", "cert.pem", "private.key",
             "README.txt", "content/facts/unreviewed.json", "content/pages/Unreviewed.wiki",
             "docs/raw.txt", "tools/extra.py", ".github/workflows/unreviewed.yml",
+            ".github/skills/unreviewed/SKILL.md", ".github/skills/game-update/notes.md",
             ".local/seed.xml", "deploy/LocalSettings.php", "deploy/.env",
             "deploy/secret.json", "tests/fixtures/raw.json",
             "content/images/Item-2.png", "content/pages/Item-2.png",
