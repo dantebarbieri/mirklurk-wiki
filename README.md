@@ -171,8 +171,9 @@ hut, hollow and shipwreck exteriors. Bhato's directions link to Captain Eir;
 Gurb-Gurb's one-time smoke cue and Ihar's conditional shoreline placement retain
 their source qualifications. These are supplementary native sprites, not
 screenshots or replacements for dialogue portraits. Wilda, the Survivors and
-Grand Mother have text-only location sections for the Survivors' camp, which
-also has its own guide.
+Grand Mother have text-only location sections that link to the Survivors' camp
+guide. That guide shows one world's camp, drawn from the game's tiles and
+sprites with the surroundings and trees removed.
 
 Nine characters have original Information, Advice, trade-tip and quest-briefing
 summaries, with the actual menu labels kept distinct. Linked mechanics and journal

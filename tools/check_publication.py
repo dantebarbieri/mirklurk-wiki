@@ -75,6 +75,7 @@ ALLOWED_FILES = {
     "tests/test_views.py": 34 * 1024,
     "tests/test_loot_views.py": 12 * 1024,
     "tests/test_landmarks.py": 26 * 1024,
+    "tests/test_camp.py": 8 * 1024,
     "tests/test_sprites.py": 16 * 1024,
     "tests/test_dialogue.py": 16 * 1024,
     "tests/test_followup.py": 20 * 1024,

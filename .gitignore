@@ -92,6 +92,7 @@
 !/tests/test_views.py
 !/tests/test_loot_views.py
 !/tests/test_landmarks.py
+!/tests/test_camp.py
 !/tests/test_sprites.py
 !/tests/test_dialogue.py
 !/tests/test_followup.py

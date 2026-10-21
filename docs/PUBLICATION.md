@@ -83,7 +83,9 @@ No private input, XML, measurement, artwork,
 or broad directory exception is allowed. `tests/test_landmarks.py` is separately allowlisted at
 20 KiB for metadata, rights, portrait preservation, seller projections and
 synthetic-image regressions; `tests/test_sprites.py` is allowlisted at 12 KiB for
-NPC overworld-sprite and healing-ability metadata and presentation regressions.
+NPC overworld-sprite and healing-ability metadata and presentation regressions;
+`tests/test_camp.py` is allowlisted at 8 KiB for the Survivors' camp scene and
+the camp NPCs' guide links.
 The combined ability and dialogue sections use 48 KiB for `docs/PROVENANCE.md`,
 108 KiB for `tools/wiki_render.py`, and 60 KiB for `tools/wiki_catalog.py`.
 `tests/test_dialogue.py` is separately allowlisted at 16 KiB for conversation,
