@@ -131,9 +131,8 @@ class DisplayTests(unittest.TestCase):
                       scroll_open('A "quote" & <tag>'))
         table = html_table(["Item", "Price"], ["{{Ware row|item=Iron Hand Axe|price={{:Iron Hand Axe}}}}\n"],
                            normal_only=(1,))
-        # Data tables clear the floated item summary; other wrappers keep the plain style.
-        self.assertTrue(table.startswith(scroll_open(clear=True) + '<table class="wikitable">\n'))
-        self.assertEqual(scroll_open(clear=True), opening.replace('style="', 'style="clear:right;'))
+        # Data tables clear the floated item summary through a separate element; wrappers stay layout-neutral.
+        self.assertTrue(table.startswith('<div style="clear:right;"></div>\n' + opening + '<table class="wikitable">\n'))
         self.assertTrue(table.endswith("</table>\n</div>\n"))
         self.assertIn('<noinclude><th scope="col">Price</th></noinclude>', table)
         self.assertIn("=" + table + "|#default=}}</onlyinclude>", selective_view(table, "wares"))
