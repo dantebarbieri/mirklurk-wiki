@@ -1,0 +1,55 @@
+name: Auto-merge base image patches
+
+on: pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  base-image:
+    # Only Dependabot's own PRs; a person's PR never auto-merges.
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'dantebarbieri/mirklurk-wiki'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Allow only a MediaWiki 1.43 patch or digest bump of the Dockerfile FROM line
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          files=$(gh api "repos/$REPO/pulls/$NUMBER/files" --paginate --jq '.[].filename')
+          if [ "$files" != "deploy/Dockerfile" ]; then
+            echo "::notice::Not auto-merged: the PR changes more than deploy/Dockerfile."
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          raw() { gh api "repos/$REPO/contents/deploy/Dockerfile?ref=$1" -H "Accept: application/vnd.github.raw"; }
+          raw "$BASE_SHA" > "$RUNNER_TEMP/before"
+          raw "$HEAD_SHA" > "$RUNNER_TEMP/after"
+          eligible=$(python3 - "$RUNNER_TEMP/before" "$RUNNER_TEMP/after" <<'PY'
+          import re, sys
+          before, after = (open(path, encoding="utf-8").read().splitlines() for path in sys.argv[1:])
+          pin = re.compile(r"FROM mediawiki:1\.43\.\d+@sha256:[0-9a-f]{64}")
+          changed = [i for i, (old, new) in enumerate(zip(before, after)) if old != new]
+          ok = (len(before) == len(after) and len(changed) == 1
+                and pin.fullmatch(before[changed[0]]) and pin.fullmatch(after[changed[0]]))
+          print("true" if ok else "false")
+          PY
+          )
+          if [ "$eligible" != true ]; then
+            echo "::notice::Not auto-merged: the change is not exactly one mediawiki:1.43 FROM line."
+          fi
+          echo "eligible=$eligible" >> "$GITHUB_OUTPUT"
+      - name: Merge once the required checks pass
+        if: steps.check.outputs.eligible == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR"

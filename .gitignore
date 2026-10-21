@@ -132,8 +132,10 @@
 !/deploy/install.php
 !/deploy/healthcheck.php
 !/.github/
+!/.github/dependabot.yml
 !/.github/workflows/
 !/.github/workflows/validate.yml
+!/.github/workflows/auto-merge-base-image.yml
 !/.github/skills/
 !/.github/skills/game-update/
 !/.github/skills/game-update/SKILL.md
