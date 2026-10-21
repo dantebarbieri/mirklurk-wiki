@@ -19,6 +19,7 @@ Below, `<v>` is the new version (`0.9.0.2`), `<p>` the previous one, and `<d>` t
 
 | Precedent | Shape |
 | --- | --- |
+| #66 (0.9.1.0) | Two new items with art, recipes and treasure pools; amended seed recipes; `Items`/`UI` fingerprints. |
 | #64 (0.9.0.2) | Fixes only: Version page, build bump, `game-data-0902`. Start here. |
 | #62 (0.9.0.1) | Amended facts, new `.ini` fingerprints, an item rename with redirect and File moves. |
 | #52 (0.9.0.0) | Release relabel; old `Version 0.8.9.9` title redirected by `tools/wiki_render.py`. |
@@ -70,7 +71,7 @@ Follow #64's diff (`git show ca380e7`):
    `== Fixes ==` with `===` subsections, add a spoiler line when it names late-story content, and end with
    `[[Game mechanics]] | [[Main Page]]`. `tools/wiki_render.py` gives every page linked under the top-level New content or
    Changes headings a "New in" or "Changed in" footer, which changes those pages and some pins; links under other top-level
-   headings, such as Fixes, get none.
+   headings, such as Fixes, get none. A change that no page documents (a splash screen, say) goes on the Version page only.
 2. **Register it:** add `!/content/pages/Version_<v>.wiki` to `.gitignore`, which is an allowlist, and
    `"Version <v>": "Version_<v>.wiki"` to `PAGE_FILES` in `tools/wiki_data.py`; the publication check allows it from there.
 3. **Build:** `game.build` in `content/facts/game.json`; `currency.documented_build` in `catalog.json`, with the version,
@@ -92,7 +93,9 @@ Follow #64's diff (`git show ca380e7`):
 ## 4. Amended facts and renames
 
 - Amend the record in place and re-cite it to `game-data-<d>` (section = code entry, key = field) or to the new `.ini`
-  source. Keep the [confidence](../../../docs/PROVENANCE.md#confidence-semantics) honest.
+  source. Keep the [confidence](../../../docs/PROVENANCE.md#confidence-semantics) honest. Append new entries at the end of
+  `entries`. The first 293 entries are a pinned handoff, so an amended one also joins the `amended` set in
+  `test_expanded_snapshot_preserves_the_complete_vetted_handoff` (`tests/test_wiki.py`), as #66's seed recipes did.
 - Follow each value everywhere it appears: catalog prose (`entry_display`, guides, topics), `entity_details.json` profiles
   and grids, recipes, and `acquisition.json`. Treasure-pool eligibility depends on price, so a price change can move an item
   between pools (in 0.9.0.1 Poison Arrow II became a Survivor-corpse find), and the `databank_Alarm_1` recipe-value pass can
@@ -104,18 +107,29 @@ Follow #64's diff (`git show ca380e7`):
 
 ## 5. New items and entities
 
-Mirror an item added in #45 (for example `item-275`) across `game.json` (entity, cited to `ItemTitles`/`<N>` in
-`items-en-<d>`, and its recipe, loot and merchant entries), `catalog.json` (page, classifications, taxonomy, guides),
-`entity_details.json` (profiles from `itemDB[<N>]` in `databank_Alarm_1`), `acquisition.json` and `illustrations.json`.
+Mirror #66's Flint (Large) and Flint Dagger (`item-276`, `item-277`), or an item from #45, across:
+
+- `game.json`: the entity, cited to `ItemTitles`/`<N>` in `items-en-<d>`, plus its recipe, loot and merchant entries;
+- `catalog.json`: page, classifications, taxonomy, item effects and guides;
+- `entity_details.json`: profiles and attack grids from `itemDB[<N>]` in `databank_Alarm_1`;
+- `acquisition.json` rows and treasure pools, and `illustrations.json`;
+- hand-kept lists in `tools/`: `HANDS` in `wiki_items.py` (the item's hands info) and `browse_order` in `wiki_portal.py`.
+
 Rules: [PROVENANCE](../../../docs/PROVENANCE.md), [TEMPLATES](../../../docs/TEMPLATES.md),
 [readable identifiers](../../../CONTRIBUTING.md#reusable-displays).
 
 - Title each page with the exact in-game name. MirkMap links pages by that title and bundles
   `File:<Title> icon (cropped).png`, falling back to `File:<Title> icon.png`.
-- Art: [0.8.9.9 additions](../../../docs/IMAGES.md#version-0899-additions-and-the-finished-raft) gives the frame choice,
-  scaling and crop; [File titles](../../../docs/IMAGES.md#file-titles) the names; and the
-  [operator workflow](../../../docs/IMAGES.md#operator-only-mediawiki-143-workflow) the import, with sidecars and a paired
-  backup. Stage the PNGs outside Git. Pages publish before their images exist, showing red links until the import runs.
+- Random-treasure membership depends on item type and value against each pool's rules. Before adding a new item to pools,
+  model `treasure_get_lootarray` and confirm that the model reproduces every existing pool exactly, as #66 did.
+- Art: export the frame that `itemDB[<N>].sprite/pic` names from the fingerprinted new `data.win`, and follow
+  [0.8.9.9 additions](../../../docs/IMAGES.md#version-0899-additions-and-the-finished-raft) for scaling and crop,
+  [File titles](../../../docs/IMAGES.md#file-titles) for names, and the
+  [operator workflow](../../../docs/IMAGES.md#operator-only-mediawiki-143-workflow) for the import of originals and crops
+  after a paired backup. Stage the PNGs outside Git, copy the sidecar wording from a live curated File page (for example
+  `File:Bat Hide icon (cropped).png`), run `importImages` with `--dry` first, then confirm each served file's bytes match
+  its record and its uploader is `WikiAdmin`. Add a `## Version <v> ...` section to `docs/IMAGES.md` with the new register
+  count. Pages publish before their images exist, showing red links until the import runs.
 
 ## 6. Validate
 
@@ -127,15 +141,19 @@ git add -A; uv run --no-project python tools/check_publication.py   # audits the
 - Update pins only for deliberate changes, and copy each new value from the failure: the build strings, `These guides cover`
   and the source, entity, fact and entry counts (`test_wiki.py`); page counts (`test_wiki.py`, `test_catalog.py`); the
   `Version …` titles set in `test_views.py`; and the hashes in `test_catalog.py` (`game.json` with its build blanked),
-  `test_acquisition.py` and `test_followup.py`. The Docker smoke, which runs only in CI, keeps its own copies of some
-  values, such as the health-grid totals in `tools/smoke_display.py`; grep `tools/smoke_*.py` for anything you change.
-- Each published file has a byte cap in `ALLOWED_FILES` (`tools/check_publication.py`); `docs/PROVENANCE.md`,
-  `tests/test_views.py` and `tools/wiki_render.py` are near theirs. Trim, or raise a cap deliberately and say so in the PR.
+  `test_acquisition.py`, `test_wiki.py` and `test_followup.py`. New items also move the item, recipe and attack-grid counts
+  in `test_display.py`, the illustration counts in `test_landmarks.py` and `test_views.py`, and the pool and effect counts in
+  `test_views.py`. The Docker smoke, which runs only in CI, keeps its own copies of some values, such as the health-grid
+  totals and the summary counts in `tools/smoke_display.py`; grep `tools/smoke_*.py` for anything you change.
+- Each published file has a byte cap in `ALLOWED_FILES` (`tools/check_publication.py`). #62 and #66 had to raise
+  `docs/PROVENANCE.md`, `tests/test_catalog.py`, `tests/test_views.py` and `tools/wiki_portal.py`, and `tools/wiki_render.py`
+  is close to its cap. Trim, or raise a cap deliberately and say so in the PR.
 
 ## 7. PR, merge and publish
 
 1. Commit, push and open a ready-for-review PR titled `Document MirkLurk patch <v>`. CI runs the publication job (about
-   2 minutes) and the Docker smoke (12 to 40 minutes). If the smoke flakes on cache timing, `gh run rerun <id> --failed`.
+   2 minutes) and the Docker smoke (12 to 40 minutes). If the smoke flakes on cache timing ("did not invalidate the cached
+   reader"), `gh run rerun <id> --failed`. The main run can flake the same way, which skips the publish; rerun it there too.
 2. **File moves** (renames only), before merging and after a paired database and images backup:
    `uv run --no-project python tools/plan_file_moves.py --base origin/main --output <files>\moves.txt` writes the moves,
    but it rejects records with other edits, such as a caption change; then list the moves by hand. Moving Files needs the
