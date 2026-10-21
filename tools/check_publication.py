@@ -113,7 +113,7 @@ ALLOWED_FILES = {
     "deploy/install.php": 16 * 1024,
     "deploy/healthcheck.php": 8 * 1024,
     ".github/workflows/validate.yml": 8 * 1024,
-    ".github/skills/game-update/SKILL.md": 16 * 1024,
+    ".github/skills/game-update/SKILL.md": 20 * 1024,
     **{f"content/pages/{name}": 32 * 1024 for name in (*PAGE_FILES.values(), *RESEARCH_PAGE_FILES.values())},
 }
 FORBIDDEN_DIRECTORIES = {
