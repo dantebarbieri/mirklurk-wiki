@@ -9,7 +9,10 @@ or live deployment. The operator owns those choices.
 Build from the repository root using `deploy/Dockerfile`. It extends the
 official Apache image:
 
-`mediawiki:1.43.9@sha256:39a6503b8739f6aa58f8a458e9537258dd537f7cec7dd93c665bd3b43252d971`
+`mediawiki:1.43.11@sha256:ff4bcc4866b27594d0eb597d8a12e27acf6dc2fd43d2f813cfb69bf0ab2920ce`
+
+This digest bundles PHP 8.3.36, which fixes the PHP2Shell pre-auth RCE
+(CVE-2026-109618, CVE-2026-109619). Never deploy a base whose PHP is older.
 
 The development database and agreed production interface use:
 
