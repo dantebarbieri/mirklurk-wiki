@@ -471,7 +471,7 @@ class ResearchTests(unittest.TestCase):
         self.assertNotIn("[[World generation]]", pages["Main Page"])
         self.assertNotIn("[[World seed logic]]", pages["Main Page"])
         self.assertIn("Unknown", pages["Synthetic merchant"])
-        self.assertIn("Selection weights are not percentages", pages["Synthetic merchant"])
+        self.assertIn("Selection weight <nowiki>2</nowiki> (not a percentage)", pages["Synthetic merchant"])
         self.assertNotIn("50%", pages["Synthetic merchant"])
         self.assertIn("{{Item|Entity synthetic-item|quantity=", pages["Entity synthetic-item"])
         self.assertIn("[[Game mechanics]]", pages["Weather"])

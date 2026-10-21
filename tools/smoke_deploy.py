@@ -718,10 +718,8 @@ def check_price_cell(cell, value):
 
 def check_seller_context(result, merchant, item, text, stock_text=None, location_page=None):
     if item is not None:
-        if {row["*"] for row in result.get("templates", [])} != {
-            merchant, "Template:Ware row", "Template:Item", "Module:Display", "Module:Display assets"
-        } or "Unit price" in text:
-            raise RuntimeError("A seller view has missing dependencies or recursively transcluded item prices.")
+        if {row["*"] for row in result.get("templates", [])} != {merchant} or "Unit price" in text:
+            raise RuntimeError("A seller view has extra dependencies or recursively transcluded item prices.")
     if stock_text is not None or location_page is not None:
         parsed = dom(result["text"]["*"], merchant if item is None else "Synthetic seller view")
         if stock_text is not None:
@@ -796,9 +794,12 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
         if merchant in {locations[identity] for identity in catalog.get("currency", {}).get("standard_merchants", [])}:
             stock_text = next(rule["text"] for rule in catalog["currency"]["rules"] if rule["id"] == "trade-stock-and-funds")
         for item in [None, *sorted({entry["details"]["item"] for entry in offered})]:
+            # Item pages build one seller row from the merchant's offers, location and availability views.
+            cells = "" if item is None else "".join("<td>{{:" + merchant + "|view=" + view + "|item=" + locations[item] + "}}</td>"
+                                                    for view in ("offers", "location", "availability"))
             query = {"action": "parse", "page": merchant, "prop": "text|templates"} if item is None else {
-                "action": "parse", "title": "Synthetic seller view",
-                "text": "{{:" + merchant + "|view=offers|item=" + locations[item] + "}}", "prop": "text|templates"}
+                "action": "parse", "title": "Synthetic seller view", "text": "<table><tr>" + cells + "</tr></table>",
+                "prop": "text|templates"}
             result = api(query, post=item is not None)["parse"]
             rendered = result["text"]["*"]
             check_parser_errors(rendered)
@@ -812,8 +813,15 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             for row in parsed.rows:
                 entry = wanted[next(iter(row["entries"]))]
                 detail, cells = entry["details"], row["cells"]
-                if plain(cells[0]["text"]) != entities[detail["merchant"]]["name"] or item_links(cells[1], locations) != [locations[detail["item"]]]:
-                    raise RuntimeError("An offer changed its seller or item cell.")
+                if plain(cells[0]["text"]) != entities[detail["merchant"]]["name"]:
+                    raise RuntimeError("An offer changed its seller cell.")
+                if item is not None:
+                    if len(cells) != 3 or plain(scalar(entry["conditions"])) not in plain(cells[2]["text"]) or (
+                            merchant not in location_pages and plain(cells[1]["text"]) != plain(scalar(detail["location"]))):
+                        raise RuntimeError("An item's seller row lost its location or availability cell.")
+                    continue
+                if item_links(cells[1], locations) != [locations[detail["item"]]]:
+                    raise RuntimeError("An offer changed its item cell.")
                 index = 2
                 if any(entry["details"]["quantity"] is not None for entry in offered):
                     if plain(cells[index]["text"]) != scalar(detail["quantity"]):
@@ -821,9 +829,8 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                     index += 1
                 elif stock_text is None and "Quantity: Unknown." not in parsed.text:
                     raise RuntimeError("An offer invented stock quantity or lost the unknown-quantity note.")
-                if item is None:
-                    check_price_cell(cells[index], prices[detail["item"]])
-                    index += 1
+                check_price_cell(cells[index], prices[detail["item"]])
+                index += 1
                 for field in ("location", "conditions"):
                     if field == "location" and merchant in location_pages:
                         continue
@@ -834,14 +841,21 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
                             raise RuntimeError("An offer changed its location/condition cell.")
                         index += 1
                     elif expected is not None and plain(expected) not in plain(parsed.text):
-                        raise RuntimeError("A filtered offer lost its shared location/condition.")
+                        raise RuntimeError("A seller page lost its shared location/condition.")
                 if len(cells) != index:
                     raise RuntimeError("An offer has unexpected ordered data cells.")
     for owner in {owners[entry["id"]] for entry in data["entries"] if entry["kind"] == "loot"}:
         loot = [display_entry(entry, catalog) for entry in data["entries"]
                 if entry["kind"] == "loot" and owners[entry["id"]] == owner]
+        parsed = RenderedRows("loot-", page_title=owner)
+        parsed.feed(api({"action": "parse", "page": owner, "prop": "text"})["parse"]["text"]["*"])
+        for row in parsed.rows:
+            outcome = next(entry for entry in loot if shown[entry["id"]] in row["entries"])["details"]["outcome"]
+            if len(row["cells"]) != 5 or (item_links(row["cells"][1], locations) != [locations[outcome]] if outcome
+                                          else plain(row["cells"][1]["text"]) != "No items"):
+                raise RuntimeError("An owner's loot row lost its five fixed columns or its item cell.")
         for item in sorted({entry["details"]["outcome"] or "empty" for entry in loot}):
-            text = "{{:" + owner + "|view=loot|item=" + locations.get(item, item) + "}}"
+            text = "<table>{{:" + owner + "|view=loot|item=" + locations.get(item, item) + "}}</table>"
             rendered = api({"action": "parse", "title": "Synthetic loot view", "text": text, "prop": "text"}, post=True)["parse"]["text"]["*"]
             check_parser_errors(rendered)
             parsed = RenderedRows("loot-")
@@ -849,68 +863,62 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
             expected = {shown[entry["id"]]: entry for entry in loot if (entry["details"]["outcome"] or "empty") == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys() or len(parsed.rows) != len(expected):
                 raise RuntimeError("A loot view lost, duplicated or leaked an outcome row.")
+            if "<th" in rendered or "not necessarily equally likely" in rendered:
+                raise RuntimeError("A loot row view leaked its owner's header or notes.")
             for row in parsed.rows:
                 entry = expected[next(iter(row["entries"]))]
                 detail, cells = entry["details"], row["cells"]
-                if item != "empty" and item_links(cells[1], locations) != [locations[item]]:
-                    raise RuntimeError("A historical loot row changed its item link.")
-                if item == "empty" and plain(cells[1]["text"]) != "No items":
-                    raise RuntimeError("An empty-result row implies an inventory item.")
-                if plain(cells[2]["text"]) != interval(detail["quantity"]):
-                    raise RuntimeError("A historical loot row changed its quantity.")
-                check_probability(cells[3], None if detail["probability"] is None else Fraction(Decimal(str(detail["probability"]))))
-                index = 4
-                for field in ("weight", "rolls"):
-                    if any(entry["details"][field] is not None for entry in loot):
-                        expected_value = interval(detail[field]) if field == "rolls" else scalar(detail[field])
-                        if plain(cells[index]["text"]) != expected_value:
-                            raise RuntimeError("A historical loot row changed its rolls or weight.")
-                        index += 1
-                for field in ("conditions", "summary"):
-                    if len({entry[field] for entry in loot}) > 1:
-                        if plain(cells[index]["text"]) != plain(scalar(entry[field])):
-                            raise RuntimeError("A historical loot row changed its condition or notes.")
-                        index += 1
-                    elif entry[field] and plain(entry[field]) not in plain(parsed.text):
-                        raise RuntimeError("A historical loot view lost its shared condition or notes.")
-                if len(cells) != index:
-                    raise RuntimeError("A historical loot row has unexpected ordered cells.")
-            source = next((source for source in catalog["acquisition"]["sources"] if source["title"] == owner), None)
-            if source and source.get("loot_context") and plain(source["loot_context"]) not in plain(parsed.text):
-                raise RuntimeError("A historical loot outcome lost its shared interruption qualifier.")
+                if len(cells) != 4 or plain(cells[1]["text"]) != interval(detail["quantity"]):
+                    raise RuntimeError("A loot row changed its fixed reader columns or quantity.")
+                check_probability(cells[2], None if detail["probability"] is None else Fraction(Decimal(str(detail["probability"]))))
+                if plain(cells[3]["text"]) != plain(" ".join(text for text in (entry["summary"], entry["conditions"]) if text)):
+                    raise RuntimeError("A loot row changed its conditions and notes.")
     for source in catalog.get("acquisition", {}).get("sources", []):
         anchors = acquisition_fragments(source, locations)
+        if source.get("loot_context"):
+            note = api({"action": "parse", "title": "Synthetic loot note", "text": "{{:" + source["title"] + "|view=loot-note}}",
+                        "prop": "text"}, post=True)["parse"]["text"]["*"]
+            if plain(source["loot_context"]) not in dom(note, "Synthetic loot note").text or "<table" in note:
+                raise RuntimeError("A source's shared interruption/eligibility qualifier is not its own note view.")
         for item in sorted({row["item"] for row in source["rows"]}):
-            text = "{{:" + source["title"] + "|view=loot|item=" + locations[item] + "}}"
+            text = "<table>{{:" + source["title"] + "|view=loot|item=" + locations[item] + "}}</table>"
             result = api({"action": "parse", "title": "Synthetic acquisition view", "text": text,
                           "prop": "text|templates"}, post=True)["parse"]
             rendered = result["text"]["*"]
             check_parser_errors(rendered)
             parsed = RenderedRows("acquisition-")
             parsed.feed(rendered)
-            if source.get("loot_context") and source["loot_context"] not in parsed.text:
-                raise RuntimeError("A filtered acquisition view omitted its shared interruption/eligibility qualifier.")
             expected = {anchors[row["id"]]: row for row in source["rows"] if row["item"] == item}
             if {identity for row in parsed.rows for identity in row["entries"]} != expected.keys():
                 raise RuntimeError("A fixed acquisition view leaked another item or omitted a documented condition.")
-            if len(parsed.rows) != len(expected) or {row["*"] for row in result.get("templates", [])} != {
-                source["title"], "Template:Item", "Module:Display", "Module:Display assets"
-            }:
+            if len(parsed.rows) != len(expected) or {row["*"] for row in result.get("templates", [])} != {source["title"]}:
                 raise RuntimeError("An acquisition view duplicated rows or included an unexpected owner.")
-            if 'id="source-' in rendered or source["summary"] in rendered:
-                raise RuntimeError("An acquisition view leaked the source article.")
+            if 'id="source-' in rendered or source["summary"] in rendered or "<th" in rendered:
+                raise RuntimeError("An acquisition view leaked the source article or its header.")
             for rendered_row in parsed.rows:
                 row = expected[next(iter(rendered_row["entries"]))]
                 cells = rendered_row["cells"]
-                if len(cells) != 5 or item_links(cells[1], locations) != [locations[item]] or plain(cells[2]["text"]) != interval(row["quantity"]):
-                    raise RuntimeError("An acquisition row changed its ordered item/quantity cells.")
+                if len(cells) != 4 or plain(cells[1]["text"]) != interval(row["quantity"]):
+                    raise RuntimeError("An acquisition row changed its ordered quantity cells.")
                 probability = row["probability"]
-                check_probability(cells[3], None if probability is None else Fraction(probability["numerator"], probability["denominator"]),
+                check_probability(cells[2], None if probability is None else Fraction(probability["numerator"], probability["denominator"]),
                                   probability["scope"] if probability else None, row.get("odds_note"))
-                if plain(row["condition"]) != plain(cells[4]["text"]):
+                if plain(row["condition"]) != plain(cells[3]["text"]):
                     raise RuntimeError("An acquisition view lost its exact difficulty/location condition.")
                 if row["coverage"] == "fixed" and "100%" not in rendered_row["text"]:
                     raise RuntimeError("A fixed acquisition view lost its explicitly conditional certainty.")
+    for entity in data["entities"]:
+        identity, title = entity["id"], locations.get(entity["id"])
+        count = sum(entry["kind"] == "loot" and entry["details"]["outcome"] == identity for entry in data["entries"]) + sum(
+            row["item"] == identity for source in catalog["acquisition"]["sources"] for row in source["rows"])
+        if entity["category"] != "item" or not count:
+            continue
+        rendered = api({"action": "parse", "page": title, "prop": "text"})["parse"]["text"]["*"]
+        section = re.split(r"<h[1-6]", rendered.split('id="Loot_sources"', 1)[1], 1)[0]
+        tables = re.findall(r"<table.*?</table>", section, re.S)
+        rows = [row for row in re.findall(r"<tr>(.*?)</tr>", "".join(tables), re.S) if "<th" not in row]
+        if len(tables) != 1 or len(rows) != count or any(row.count("<td") != 4 for row in rows):
+            raise RuntimeError(f"{title}: Loot sources must be one four-column table with every source row.")
     original = pages["Dead camp"]
     fixture = titled("acquisition", locations["item-41"])
     row = next(row for row in re.findall(r"<tr>.*?</tr>", original, re.DOTALL)
@@ -926,7 +934,7 @@ def smoke_canonical_views(run, api, pages, data, catalog, token):
     rendered = refreshed_transclusion(run, api, locations["item-41"], "703", 'id="source-dead-camp"', "Dead camp")
     parsed = RenderedRows("acquisition-")
     parsed.feed(rendered)
-    if not any(fixture in row["entries"] and plain(row["cells"][2]["text"]) == "703" for row in parsed.rows):
+    if not any(fixture in row["entries"] and plain(row["cells"][1]["text"]) == "703" for row in parsed.rows):
         raise RuntimeError("The changed quantity did not reach the item's exact acquisition row.")
     restored = api({"action": "edit", "title": "Dead camp", "text": original, "token": token}, post=True)
     if restored.get("edit", {}).get("result") != "Success":

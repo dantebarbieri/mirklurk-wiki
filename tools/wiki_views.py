@@ -10,6 +10,11 @@ from wiki_display import INERT
 VIEW_SELECTOR = "{{{view|<noinclude>page</noinclude>}}}"
 
 
+# Data tables start below the floated item summary instead of squeezing beside it. The clear is a
+# separate element so the scroll wrapper itself stays layout-neutral.
+FLOAT_CLEAR = '<div style="clear:right;"></div>\n'
+
+
 def scroll_open(label="Table", css_class="mirklurk-scroll noresize"):
     return (
         '<div class="' + html.escape(css_class, quote=True) + '" role="group" tabindex="0" aria-label="'
@@ -18,8 +23,9 @@ def scroll_open(label="Table", css_class="mirklurk-scroll noresize"):
     )
 
 
-def selective_view(content, view, default=False):
-    cases = ["page", view]
+def selective_view(content, view, default=False, page=True):
+    cases = ["page"] if page else []
+    cases.append(view)
     if default:
         cases.append("")
     return (
@@ -45,7 +51,7 @@ def html_row(cells, normal_only=()):
 
 def html_table(headers, rows, normal_only=()):
     return (
-        scroll_open() + '<table class="wikitable">\n<tr>'
+        FLOAT_CLEAR + scroll_open() + '<table class="wikitable">\n<tr>'
         + "".join(
             ("<noinclude>" if index in normal_only else "") + '<th scope="col">' + heading + "</th>"
             + ("</noinclude>" if index in normal_only else "")

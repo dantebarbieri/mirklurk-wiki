@@ -315,14 +315,13 @@ def price_text(price, images=None):
 
 
 def base_value_text(value):
-    """Show a base value in coins; a fraction of a copper becomes the smallest quantity worth whole copper."""
+    """Show a base value in coins; a fraction of a copper is shown as decimal copper, not as a bulk price."""
     amount = Decimal(str(value))
     if not amount.is_finite() or amount < 0:
         raise DataError("base value must be a finite nonnegative amount")
-    copper = Fraction(amount) * 100
-    if copper.denominator == 1:
+    if (Fraction(amount) * 100).denominator == 1:
         return price_text({"value": amount})
-    return price_text({"value": Decimal(copper.numerator) / 100}) + " per " + str(copper.denominator)
+    return literal(decimal_text(amount * 100)) + " copper"
 
 
 def recipe_profile_values(profile, recipes, constructions=()):
@@ -521,76 +520,89 @@ def vendor_price(details):
     return known(value) + " " + known(currency)
 
 
+def offer_view(view, item, content, page=True):
+    return selective_view(filtered_row(content, "item", [item]), view, page=page)
+
+
 def merchant_table(entries, images, entities, locations, standard_prices=False, standard_stock=False, story_spoiler=False, location_page=None):
+    """Header and notes are page-only. Item pages build one seller table from the offers (seller link),
+    location and availability views, plus offer-quantity and offer-price where the merchant records them."""
     headers = ["Seller", "Item"]
-    getters = []
+    columns = []
     notes = ["<noinclude>[[:Category:Merchants#Trading_rules|Shared trading rules]]</noinclude>"] if standard_stock else []
     unknown = []
-    normal_only = []
     has_vendor_prices = any(entry["details"]["price"] is not None for entry in entries)
     for field, label in (("quantity", "Quantity"), ("price", "Unit price"), ("currency", "Currency")):
-        if field == "price" and standard_prices:
-            if not has_vendor_prices:
-                normal_only.append(len(headers))
-            headers.append(label)
-            getters.append(lambda entry: "{{:" + locations[entry["details"]["item"]] + "}}"
-                           if entry["details"]["price"] is None
-                           else vendor_price(entry["details"]))
-            continue
         if field == "currency" and standard_prices:
             continue
-        if any(entry["details"][field] is not None for entry in entries):
+        if field == "price" and standard_prices or any(entry["details"][field] is not None for entry in entries):
             headers.append(label)
-            getters.append(lambda entry, field=field: known(entry["details"][field]))
+            columns.append(field)
         elif field != "currency" and not (field == "quantity" and standard_stock):
             unknown.append(label.lower())
     if unknown:
         notes.append(" and ".join(unknown).capitalize() + ": Unknown.")
     same_location, location = shared_field(entries, lambda entry: entry["details"]["location"])
-    if location_page is not None:
-        notes.append(f"Location: [[{location_page}#Location_and_access|Location and access]].")
-    elif same_location:
-        notes.append("Location: " + known(location) + ".")
+    if location_page is not None or same_location:
+        place = known(location) if location_page is None else (
+            f"[[{location_page}#Location_and_access|{literal(location) if location else 'Location and access'}]]")
+        notes.append("Location: " + selective_view(place, "location") + ".")
     else:
         headers.append("Location")
-        getters.append(lambda entry: known(entry["details"]["location"]))
+        columns.append("location")
     same_conditions, conditions = shared_field(entries, lambda entry: entry["conditions"])
-    if same_conditions and conditions:
-        note = literal(conditions)
-        if story_spoiler:
-            note = ('<div class="mw-collapsible mw-collapsed">\n'
-                    "'''[[Quests and journal|Story availability (spoilers)]].'''\n"
-                    '<div class="mw-collapsible-content">\n' + note + "\n</div></div>")
-        notes.append(note)
-    elif not same_conditions:
+    if same_conditions:
+        note = literal(conditions) if conditions else ""
+        if note and story_spoiler:
+            note = ('<div class="mw-collapsible mw-collapsed">' "'''[[Quests and journal|Story availability (spoilers)]].'''"
+                    '<div class="mw-collapsible-content">' + note + "</div></div>")
+        notes.append(selective_view(note, "availability"))
+    else:
         headers.append("Conditions")
-        getters.append(lambda entry: known(entry["conditions"]))
+        columns.append("conditions")
     rows = []
     for entry in entries:
-        merchant, item = entry["details"]["merchant"], locations[entry["details"]["item"]]
+        details = entry["details"]
+        merchant, item = details["merchant"], locations[details["item"]]
         anchor = entry.get("anchor") or titled("offer", item)
         arguments = {
             "anchors": "<noinclude>" + span(anchor) + "</noinclude>",
-            "seller": f'[[{locations[merchant]}#{anchor}|{literal(entities[merchant]["name"])}]]',
+            "seller": offer_view("offers", item, f'[[{locations[merchant]}#{anchor}|{literal(entities[merchant]["name"])}]]'),
             "item": item,
         }
-        fields = {"Quantity": "quantity", "Unit price": "price", "Currency": "currency",
-                  "Location": "location", "Conditions": "conditions"}
-        for index, (heading, getter) in enumerate(zip(headers[2:], getters), 2):
-            value = getter(entry)
-            arguments[fields[heading]] = "<noinclude>" + value + "</noinclude>" if index in normal_only else value
-        if standard_prices and has_vendor_prices and entry["details"]["price"] is None:
-            arguments["price"] = (
-                "<noinclude>" + arguments["price"] + "</noinclude><includeonly>"
-                + f'[[{item}#price|Standard item price]]'
-                + "</includeonly>"
-            )
-        row = row_template("Ware row", arguments)
-        rows.append(filtered_row(row, "item", [item]))
-    rendered = html_table(headers, rows, normal_only)
-    return "\n== Wares ==\n" + selective_view(
-        "\n\n".join(notes) + "\n\n" + rendered, "offers",
-    ) + "\n"
+        for field in columns:
+            if field == "price" and standard_prices and details["price"] is None:
+                arguments["price"] = "<noinclude>{{:" + item + "}}</noinclude>" + (
+                    offer_view("offer-price", item, f"[[{item}#price|Standard item price]]", page=False) if has_vendor_prices else "")
+            elif field == "price":
+                arguments["price"] = offer_view("offer-price", item, vendor_price(details) if standard_prices else known(details["price"]))
+            elif field == "quantity":
+                arguments["quantity"] = offer_view("offer-quantity", item, known(details["quantity"]))
+            elif field == "currency":
+                arguments["currency"] = known(details["currency"])
+            else:
+                value = details["location"] if field == "location" else entry["conditions"]
+                arguments[field] = offer_view("location" if field == "location" else "availability", item, known(value))
+        rows.append(row_template("Ware row", arguments))
+    return "\n== Wares ==\n" + "\n\n".join(notes) + "\n\n" + html_table(headers, rows) + "\n"
+
+
+def seller_table(offers, stock, title):
+    """One Buying table for an item page: a row per seller, every cell transcluded from that merchant's views."""
+    quantity = any(entry["details"]["quantity"] is not None for entry in offers)
+    vendor = any(entry["details"]["price"] is not None for entry in offers)
+    headers = ["Seller", *(["Quantity"] if quantity else []), *(["Unit price"] if vendor else []), "Location", "Availability"]
+    rows = []
+    for owner in sorted(stock):
+        def view(name):
+            return "{{:" + owner + "|view=" + name + "|item=" + title + "}}"
+        has = {field: any(entry["details"][field] is not None for entry in stock[owner]) for field in ("quantity", "price")}
+        rows.append(html_row([
+            view("offers"), *([view("offer-quantity") if has["quantity"] else "Unknown"] if quantity else []),
+            *([view("offer-price") if has["price"] else f"[[{title}#price|Standard item price]]"] if vendor else []),
+            view("location"), view("availability"),
+        ]))
+    return html_table(headers, rows)
 
 
 def recipe_table(entries, stations, images, entities, locations):
@@ -634,48 +646,39 @@ def construction_table(recipe, images, entities, locations, anchor_id):
     return "\n=== Recipes ===\n" + html_table(["Ingredients", "Output", "Crafting method", "Base cost", "Conditions"], [row])
 
 
-def loot_table(entries, images, entities, locations, owner):
-    headers = ["Source", "Result", "Quantity", "Conditional probability"]
-    getters = []
-    for field, label, formatter in (
-        ("weight", "Reported weight", known),
-        ("rolls", "Rolls", count_range),
-    ):
-        if any(entry["details"][field] is not None for entry in entries):
-            headers.append(label)
-            getters.append(lambda entry, field=field, formatter=formatter: formatter(entry["details"][field]))
-    same_conditions, conditions = shared_field(entries, lambda entry: entry["conditions"])
-    if not same_conditions:
-        headers.append("Conditions")
-    same_summary, summary = shared_field(entries, lambda entry: entry["summary"])
-    if not same_summary:
-        headers.append("Notes")
+# Loot and acquisition rows share fixed columns; each row is a "loot" view, so item pages write one header.
+LOOT_HEADERS = ["Source", "Item", "Quantity", "Conditional probability", "Conditions and notes"]
+LOOT_ITEM_HEADERS = [heading for heading in LOOT_HEADERS if heading != "Item"]
+LOOT_QUANTITY_NOTE = "Quantities within a range are not necessarily equally likely."
+
+
+def loot_row(anchor, owner, item, quantity, probability, notes, selector, item_cell=True):
+    # Item cells are owner-only; item pages name their own item.
+    cells = [f'<noinclude>{span(anchor)}</noinclude>[[{owner}#{anchor}|{literal(owner)}]]',
+             *([item] if item_cell else []), quantity, probability, notes]
+    return selective_view(filtered_row(html_row(cells, (1,) if item_cell else ()), "item", [selector]), "loot")
+
+
+def loot_rows(entries, locations, owner, item_cell=True):
     rows = []
     for entry in entries:
         details = entry["details"]
-        result = "No items" if details["outcome"] is None else item_reference(details["outcome"], locations)
-        probability = details["probability"]
-        row = [
-            f'<noinclude>{span(entry["anchor"])}</noinclude>[[{owner}#{entry["anchor"]}|{literal(owner)}]]',
-            result, count_range(details["quantity"]),
-            known(Decimal(str(probability)) * 100) + "%" if probability is not None else "Unknown",
-            *(getter(entry) for getter in getters),
-        ]
-        if not same_conditions:
-            row.append(known(entry["conditions"]))
-        if not same_summary:
-            row.append(literal(entry["summary"]))
-        rows.append(filtered_row(html_row(row), "item", [locations[details["outcome"]] if details["outcome"] else "empty"]))
-    notes = ["Quantities within a range are not necessarily equally likely."]
-    if any(entry["details"]["weight"] is not None for entry in entries):
-        notes.append("Selection weights are not percentages.")
-    if same_conditions and conditions:
-        notes.append(literal(conditions))
-    if same_summary:
-        notes.append(literal(summary))
-    return "\n== Loot ==\n" + selective_view(
-        "\n\n".join(notes) + "\n\n" + html_table(headers, rows), "loot",
-    ) + "\n"
+        chance = "Unknown" if details["probability"] is None else known(Decimal(str(details["probability"])) * 100) + "%"
+        if details["weight"] is not None:
+            chance += "<br />Selection weight " + known(details["weight"]) + " (not a percentage)"
+        if details["rolls"] is not None:
+            chance += "<br />Rolls: " + count_range(details["rolls"])
+        outcome = details["outcome"]
+        rows.append(loot_row(
+            entry["anchor"], owner, item_reference(outcome, locations) if outcome else "No items",
+            count_range(details["quantity"]), chance,
+            "<br />".join(literal(text) for text in (entry["summary"], entry["conditions"]) if text),
+            locations[outcome] if outcome else "empty", item_cell))
+    return rows
+
+
+def loot_table(entries, images, entities, locations, owner):
+    return "\n== Loot ==\n" + LOOT_QUANTITY_NOTE + "\n\n" + html_table(LOOT_HEADERS, loot_rows(entries, locations, owner)) + "\n"
 
 
 def acquisition_probability(row):
@@ -698,17 +701,11 @@ def acquisition_probability(row):
 
 
 def acquisition_table(source, images, entities, locations):
-    rows, anchors = [], acquisition_fragments(source, locations)
-    for row in source["rows"]:
-        cells = [
-            f'<noinclude>{span(anchors[row["id"]])}</noinclude>[[{source["title"]}#{anchors[row["id"]]}|{literal(source["title"])}]]',
-            item_reference(row["item"], locations), count_range(row["quantity"]),
-            acquisition_probability(row), literal(row["condition"]),
-        ]
-        rows.append(filtered_row(html_row(cells), "item", [locations[row["item"]]]))
-    return "\n== Contents and acquisition ==\n" + selective_view(html_table(
-        ["Source", "Item", "Quantity", "Conditional probability", "Condition"], rows,
-    ), "loot") + "\n"
+    anchors = acquisition_fragments(source, locations)
+    rows = [loot_row(anchors[row["id"]], source["title"], item_reference(row["item"], locations),
+                     count_range(row["quantity"]), acquisition_probability(row), literal(row["condition"]),
+                     locations[row["item"]]) for row in source["rows"]]
+    return "\n== Contents and acquisition ==\n" + html_table(LOOT_HEADERS, rows) + "\n"
 
 
 def acquisition_pool_table(pool, owner, entities, locations, categories):
@@ -1082,15 +1079,18 @@ def entities_name(data, identity):
     return next(row["name"] for row in data["entities"] if row["id"] == identity)
 
 
+COIN_HEADERS = ["Coin", "Value", "Weight", "Maximum stack"]
+
+
 def coin_summary(coin, entities, locations):
+    # Only the row is transcluded, so Currency and trading lists every coin in one table.
     from wiki_items import coin_value
-    return (
-        "\n== Coin value and weight ==\n<onlyinclude>\n"
-        + table(["Coin", "Value", "Weight", "Maximum stack"], [[
-            span(titled("coin", locations[coin["entity"]])) + entity_link(coin["entity"], entities, locations),
-            coin_value(price_text({"value": coin["value_in_silver"]})), known(coin["weight_grams"]) + " g", known(coin["stack_limit"]),
-        ]]) + "</onlyinclude>\n\n[[Currency and trading|Barter, change, and coin consolidation]]\n"
-    )
+    row = html_row([
+        span(titled("coin", locations[coin["entity"]])) + entity_link(coin["entity"], entities, locations),
+        coin_value(price_text({"value": coin["value_in_silver"]})), known(coin["weight_grams"]) + " g", known(coin["stack_limit"]),
+    ])
+    return ("\n== Coin value and weight ==\n" + html_table(COIN_HEADERS, ["<onlyinclude>" + row + "</onlyinclude>\n"])
+            + "\n[[Currency and trading|Barter, change, and coin consolidation]]\n")
 
 
 CURRENCY_QUALIFICATIONS = {
@@ -1114,7 +1114,7 @@ def currency_page(currency, entities, locations):
         text += "\n" + anchor("currency", rule["id"]) + f'\n== {CURRENCY_RULE_TITLES[rule["id"]]} ==\n'
         if rule["id"] == "coin-denominations":
             text += "Compare each coin's value:\n\n"
-            text += "\n".join("{{:" + locations[coin["entity"]] + "}}" for coin in coins) + "\n"
+            text += html_table(COIN_HEADERS, ["{{:" + locations[coin["entity"]] + "}}\n" for coin in coins])
         elif rule["id"] == "coin-weight-units":
             text += "A coin stack's weight is its per-coin weight multiplied by the quantity. Consolidating equal value into higher denominations reduces carried weight.\n"
         elif rule["id"] == "trade-stock-and-funds":
@@ -1155,6 +1155,7 @@ def build_pages(root, data, catalog=None, details=None):
     coins = {row["entity"]: row for row in catalog.get("currency", {}).get("coins", [])}
     acquisition_sources = catalog.get("acquisition", {}).get("sources", [])
     acquisition_by_id = {source["id"]: source for source in acquisition_sources}
+    acquisition_by_title = {source["title"]: source for source in acquisition_sources}
     acquisition_pools = {pool["id"]: pool for pool in catalog.get("acquisition", {}).get("pools", [])}
     acquisition_notes = {note["item"]: note for note in catalog.get("acquisition", {}).get("item_notes", [])}
     item_categories = {identity: group["title"] for group in catalog.get("taxonomy", {}).get("groups", [])
@@ -1282,7 +1283,7 @@ def build_pages(root, data, catalog=None, details=None):
             text += "\n== How random selection works ==\n"
         text += "\n\n".join(linked_prose(condition, links) for condition in source["conditions"]) + "\n"
         if source.get("loot_context"):
-            text += "\n" + selective_view(linked_prose(source["loot_context"], links), "loot") + "\n"
+            text += "\n" + selective_view(linked_prose(source["loot_context"], links), "loot-note") + "\n"
         if source["rows"]:
             text += acquisition_table(source, images, entities, locations)
         owned_pools = [acquisition_pools[identity] for identity in source.get("pool_ids", [])]
@@ -1532,6 +1533,8 @@ def build_pages(root, data, catalog=None, details=None):
                 entities[next(iter(sorted(entity_ids)))]["name"], matching_facts, matching_profiles, properties,
                 entities, locations, prices.get(price_item), coin, recipes, grids,
                 catalog.get("construction_recipes", []), armor_guide, chop_guide,
+                span("price") + selective_view(price_text(prices[price_item], images), "price", default=True)
+                if price_item in prices else None,
             )
         elif entity_ids and all(entities[identity]["category"] == "being" for identity in entity_ids):
             from wiki_beings import being_article
@@ -1633,31 +1636,33 @@ def build_pages(root, data, catalog=None, details=None):
                     pages[title] += construction_table(recipe, images, entities, locations, shown[recipe["id"]])
             offers = [entry for entry in entries if entry["kind"] == "merchant" and entry["details"]["item"] == identity]
             if identity in price_items:
-                pages[title] += (
-                    "\n=== Buying ===\n" + span("price") + VALUE_LINK + ": "
-                    + selective_view(price_text(prices.get(identity), images), "price", default=True)
-                    + " per item. " + VALUE_NOTE + "\n"
-                )
+                pages[title] += "\n=== Buying ===\n" + (
+                    "Merchants sell it at its [[#price|Value]].\n" if span("price") in pages[title] else
+                    span("price") + VALUE_LINK + ": " + selective_view(price_text(prices.get(identity), images), "price", default=True)
+                    + " per item. " + VALUE_NOTE + "\n")
             if offers:
-                pages[title] += "\n".join(
-                    "{{:" + owner + "|view=offers|item=" + title + "}}"
-                    for owner in sorted({owners[entry["id"]] for entry in offers})
-                ) + "\n"
+                pages[title] += seller_table(offers, {owners[entry["id"]]: [
+                    row for row in entries if row["kind"] == "merchant" and owners[row["id"]] == owners[entry["id"]]]
+                    for entry in offers}, title)
             loot = [entry for entry in entries if entry["kind"] == "loot" and entry["details"]["outcome"] == identity]
             owned_loot = [entry for entry in loot if owners[entry["id"]] == title]
-            if owned_loot:
-                pages[title] += loot_table(owned_loot, images, entities, locations, title)
             loot_owners = {owners[entry["id"]] for entry in loot if owners[entry["id"]] != title}
             documented_sources = {source["title"] for source in acquisition_sources if any(
                 row["item"] == identity for row in source["rows"])}
             loot_owners.update(documented_sources)
-            if loot_owners:
-                pages[title] += "\n=== Loot sources ===\n" + "\n".join(
-                    "{{:" + owner + "|view=loot|item=" + title + "}}"
+            if loot_owners or owned_loot:
+                rows = loot_rows(owned_loot, locations, title, item_cell=False) + [
+                    "{{:" + owner + "|view=loot|item=" + title + "}}\n"
                     for owner in sorted(loot_owners, key=lambda owner: (
-                        not any(source["title"] == owner and source["kind"] in {"starting", "fixed-location"}
-                                for source in acquisition_sources), owner))
-                ) + "\n"
+                        acquisition_by_title.get(owner, {}).get("kind") not in {"starting", "fixed-location"}, owner))
+                ]
+                quantities = [entry["details"]["quantity"] for entry in loot] + [
+                    row["quantity"] for source in acquisition_sources for row in source["rows"] if row["item"] == identity]
+                notes = [LOOT_QUANTITY_NOTE] if any(q and q["min"] != q["max"] for q in quantities) else []
+                notes += ["{{:" + owner + "|view=loot-note}}" for owner in sorted(loot_owners)
+                          if acquisition_by_title.get(owner, {}).get("loot_context")]
+                pages[title] += "\n=== Loot sources ===\n" + html_table(LOOT_ITEM_HEADERS, rows) + "".join(
+                    note + "\n\n" for note in notes)
             eligible_sources = [(source, reference, acquisition_pools[reference["pool"]])
                                 for source in acquisition_sources for reference in source.get("pool_refs", [])
                                 if identity in acquisition_pools[reference["pool"]]["eligible_item_ids"]]
