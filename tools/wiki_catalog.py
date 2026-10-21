@@ -486,7 +486,7 @@ def validate_catalog(catalog, data):
             if row["kind"] != "npc":
                 raise DataError("classification.location: requires an NPC owner")
             location = row["location"]
-            _object(location, {"paragraphs", "related_entities", "confidence", "evidence"}, set(), "NPC location")
+            _object(location, {"paragraphs", "related_entities", "confidence", "evidence"}, {"related_pages"}, "NPC location")
             if not isinstance(location["paragraphs"], list) or not 1 <= len(location["paragraphs"]) <= 3:
                 raise DataError("NPC location: expected one to three original paragraphs")
             for paragraph in location["paragraphs"]:
@@ -496,6 +496,16 @@ def validate_catalog(catalog, data):
                 not isinstance(target, str) or target not in required or target == identity for target in related
             ) or len(related) != len(set(related)):
                 raise DataError("NPC location: expected at most eight unique related entities")
+            related_pages = location.get("related_pages", [])
+            if not isinstance(related_pages, list) or len(related_pages) > 4 or any(
+                not isinstance(target, str) or target not in registered_guides
+                for target in related_pages
+            ) or len(related_pages) != len(set(related_pages)):
+                raise DataError("NPC location: expected at most four unique related guides")
+            linked = {part for paragraph in location["paragraphs"]
+                      for part in prose_link_parts(paragraph, set(related_pages))[1::2]}
+            if linked != set(related_pages):
+                raise DataError("NPC location: every related guide must be named in its paragraphs")
             _confidence(location["confidence"], "NPC location.confidence")
             _evidence(location["evidence"], sources, "NPC location.evidence")
         if "ability" in row:

@@ -13472,6 +13472,36 @@
       "pixel_art": {"width": 320, "height": 320, "source_scale": 2}
     },
     {
+      "id": "survivors-camp-area-illustration",
+      "guide": "Survivors' camp",
+      "file_title": "File:Survivors' camp area.png",
+      "caption": "One world's Survivors' camp, drawn with the game's own tiles and sprites. Trees and everything beyond the palisade ring are left out, and Wilda and the Survivors are shown in the open; they wander in play.",
+      "creator": "Edym Pixels",
+      "rights_status": "approved",
+      "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+      "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This camp scene was requested for the Survivors' camp guide on 2026-10-21. This is not a license to redistribute game assets through the source repository.",
+      "sha256": "77e751494be3e000e27b6f79e670ad72aae0eb2ed18296f17c39d59ac35f1af5",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0900",
+          "section": "gml_Object_manager_area_Alarm_6",
+          "key": "createdCamp/rad104/palisade-ring-rad+32/spr_building_48x48_tall/index-2987+2988/torches-station41"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_obj_station_Draw_0",
+          "key": "index41.activeTurns>0/spr_fire_small.frame0/y-6"
+        },
+        {
+          "source": "game-data-0910",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[34].sprite/spr_wilda.frame0/beingDB[35].sprite/spr_survivor.frame0"
+        }
+      ],
+      "pixel_art": {"width": 256, "height": 280, "source_scale": 1}
+    },
+    {
       "id": "area-sunken-ancient-ruins-illustration",
       "guide": "Sunken Ancient Ruins",
       "file_title": "File:Sunken Ancient Ruins area.png",

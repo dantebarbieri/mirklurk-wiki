@@ -4195,6 +4195,9 @@
           "Grand Mother",
           "The Terror"
         ],
+        "related_pages": [
+          "Survivors' camp"
+        ],
         "confidence": "observed",
         "evidence": [
           {
@@ -4405,6 +4408,9 @@
         "related_entities": [
           "Wilda"
         ],
+        "related_pages": [
+          "Survivors' camp"
+        ],
         "confidence": "observed",
         "evidence": [
           {
@@ -4459,6 +4465,9 @@
         ],
         "related_entities": [
           "Wilda"
+        ],
+        "related_pages": [
+          "Survivors' camp"
         ],
         "confidence": "observed",
         "evidence": [
@@ -8616,6 +8625,9 @@
       "related_pages": [
         "Placing objects",
         "Magic weapons"
+      ],
+      "images": [
+        {"illustration": "survivors-camp-area-illustration", "after": 0}
       ],
       "confidence": "observed",
       "evidence": [

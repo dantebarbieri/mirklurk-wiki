@@ -53,7 +53,8 @@ Terrain); the record can only be placed on that page. A guide record may have
 `role: "tile"`, at most one per guide: that tile sprite becomes the page's lead
 image and the `{{Tile}}` icon for the page. Ground tiles are frames of the
 0.9.0.0 tilesets, and area images are the game's own explored-area maps that
-it saves as `Maps/x_y.png`. Both were uploaded as File pages crediting game
+it saves as `Maps/x_y.png`, except the edited
+[Survivors' camp scene](#survivors-camp-scene). All were uploaded as File pages crediting game
 artwork by Edym Pixels; the bytes stay off Git like every other image.
 Only station targets may have `variant`. A being-targeted record may additionally
 have `role: "location"`: one supplementary exterior per NPC with a reviewed
@@ -355,6 +356,30 @@ reviewed `pixel_art` geometry are required.
 An approved flag is a recorded human decision, not a legal conclusion made by
 the software. The builder cannot verify permission or the live file's existence.
 Publish approved metadata only after the corresponding operator import is ready.
+
+## Survivors' camp scene
+
+`File:Survivors' camp area.png` (256 x 280, 30209 bytes, shown at 1x) is the
+lead image of the Survivors' camp guide. Unlike the other area images, it is
+not a game-saved map. The operator's own 0.9.1.0 world save was drawn with
+MirkMap's realistic renderer from the game's own tiles and sprites. Then it was
+edited so that it shows a camp and nothing more of that world:
+
+- Only terrain inside the palisade ring is kept: tiles whose top-left corner is
+  within 136 px (yard radius 104 + 32) of the camp centre, as in
+  `manager_area` Alarm 6. Everything else is transparent.
+- Two boulders outside the ring and every tree were removed. No tree is part of
+  the camp's design; the 0.9.1.0 clearing around the side huts removed none in
+  this save.
+- Wilda and the three Survivors were moved to separate open tiles within their
+  home range. They wander in play.
+- The two lit torches add `spr_fire_small` frame 0 at (x, y - 6), as
+  `obj_station` Draw does for lit torches.
+
+The caption says it is one world's layout. The Wilda, Survivor and Grand Mother
+location sections have no image of their own. Their optional `related_pages`
+(at most four reviewed guides, each named in the paragraphs) link
+"Survivors' camp" to this guide. Neither the save nor the PNG is in Git.
 
 ## File titles
 

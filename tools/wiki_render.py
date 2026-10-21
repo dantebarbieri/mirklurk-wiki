@@ -1242,6 +1242,7 @@ def build_pages(root, data, catalog=None, details=None):
                 if image.get("entity") == entity["id"] and image.get("role") == "location":
                     text += illustration_markup(image)
             links = {entities[identity]["name"]: locations[identity] for identity in location["related_entities"]}
+            links.update({title: title for title in location.get("related_pages", [])})
             text += "\n\n".join(linked_prose(paragraph, links) for paragraph in location["paragraphs"]) + "\n"
         if entity["id"] in abilities:
             ability = abilities[entity["id"]]
