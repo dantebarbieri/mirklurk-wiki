@@ -1,0 +1,154 @@
+---
+name: game-update
+description: >-
+  Documents a new MirkLurk game version on mirklurk.wiki: the Version changelog page, the build bump, new source fingerprints,
+  amended facts, new items and their art, test pins, then a squash-merged PR that publishes and a live check. Use when a MirkLurk
+  patch is out and the wiki must catch up, or when the mirklurk-game-update coordinator hands this repo a patch report.
+---
+
+# Game update (wiki)
+
+**Goal:** one squash-merged PR, titled `Document MirkLurk patch <v>`, after which mirklurk.wiki shows `<v>` everywhere, has a
+**Version `<v>`** changelog, and every fact the patch changed is amended and cited to the new build.
+
+The personal coordinator skill `mirklurk-game-update` (`~/.copilot/skills/mirklurk-game-update/`) owns the shared work: backing
+up `data.win`, the Steam patch notes, decompiling and diffing, and the findings report. Start from its report. MirkMap
+(`dantebarbieri/mirklurk-map`) has its own `game-update` skill and session.
+
+Below, `<v>` is the new version (`0.9.0.2`), `<p>` the previous one, and `<d>` the version digits (`0902`).
+
+| Precedent | Shape |
+| --- | --- |
+| #64 (0.9.0.2) | Fixes only: Version page, build bump, `game-data-0902`. Start here. |
+| #62 (0.9.0.1) | Amended facts, new `.ini` fingerprints, an item rename with redirect and File moves. |
+| #52 (0.9.0.0) | Release relabel; old `Version 0.8.9.9` title redirected by `tools/wiki_render.py`. |
+| #45 (0.8.9.9) | 24 new entities with profiles, entries, acquisition rows and art; two renames. |
+
+## Rules
+
+- Never commit or paste dumps, decompiled code, game text, `.ini` files or images, in the repo, PR text or commits. Cite code
+  as section = entry or function name, key = field ([source identity](../../../docs/PROVENANCE.md#source-identity)).
+  `tools/check_publication.py` also rejects personal absolute paths and lines shaped like decompiled functions.
+- Never modify anything in the game folder.
+- Verify every claim in the new dump, reading the whole function, not just the hunk. Label changes the patch notes omit with
+  "Not in the patch notes:". Write reader prose as [CONTRIBUTING](../../../CONTRIBUTING.md#reader-facing-prose) asks.
+
+## 1. Inputs
+
+From the coordinator: `patch-<v>-report.md`, `patch-<v>-analysis.md`, `steam-notes-<v>.md`, `code.diff`, `strings.diff`,
+`dump-<v>\` and `dump-<p>\`, `Languages-<v>\English\*.ini`, and the SHA-256 of `data.<v>.win`.
+
+**No report?** If the coordinator skill is installed, run its script and write the report from its `report-template.md`:
+
+```powershell
+& "$HOME\.copilot\skills\mirklurk-game-update\analyze-patch.ps1" -OutDir "<this session's files folder>"
+```
+
+Otherwise do it by hand, outside the repo: copy `data.win` to `data.<v>.win` beside it (never overwrite a backup), decompile
+both builds with the UndertaleModTool CLI, `UndertaleModCli.exe dump <data.win> -o <files>\dump-<v> -c UMT_DUMP_ALL -s`, and
+`git diff --no-index` the two dumps. Launch the game once first: it rewrites `Languages\English\*.ini` on launch, and the
+wiki fingerprints those files. The report must give, with entry names: the version strings; every changed item, being, recipe,
+loot, merchant, skill, quest and world-generation value as before → after; new and renamed names; which `.ini` hashes changed;
+the patch-note ↔ code cross-check; and changes the notes omit. Tell the user that MirkMap needs its own session.
+
+## 2. Before editing
+
+- `get_sessions_status`: list other mirklurk-wiki sessions and the files they touch. Whoever merges second rebases and
+  re-pins. The user asked that no session block another's deploy without checking with it first.
+- Branch from a fresh `origin/main`.
+- `python` may be the Windows Store alias. Use `uv run --no-project python`. Don't use WSL git on this Windows worktree,
+  and never run the tests with `GIT_DIR` or `GIT_WORK_TREE` exported: `test_safety`'s temporary repository then rewrites the
+  real index and sets `core.worktree`.
+- Write files with LF line endings, and edit large JSON with exact-count string replacements that keep its formatting.
+
+## 3. Every update
+
+Follow #64's diff (`git show ca380e7`):
+
+1. **Changelog** `content/pages/Version_<v>.wiki`. Open with `'''Version <v>''' is the patch released on <d Month yyyy>, ...`,
+   using the Steam post's date, and say "This wiki shows `<v>` values." Use `== New content ==`, `== Changes ==` and
+   `== Fixes ==` with `===` subsections, add a spoiler line when it names late-story content, and end with
+   `[[Game mechanics]] | [[Main Page]]`. `tools/wiki_render.py` gives every page linked under the top-level New content or
+   Changes headings a "New in" or "Changed in" footer, which changes those pages and some pins; links under other top-level
+   headings, such as Fixes, get none.
+2. **Register it:** add `!/content/pages/Version_<v>.wiki` to `.gitignore`, which is an allowlist, and
+   `"Version <v>": "Version_<v>.wiki"` to `PAGE_FILES` in `tools/wiki_data.py`; the publication check allows it from there.
+3. **Build:** `game.build` in `content/facts/game.json`; `currency.documented_build` in `catalog.json`, with the version,
+   the confirmation sentence and both evidence rows (`obj_menu_Create_0`/`versionString` and `obj_menu_Step_0`/`versionCheck`)
+   re-cited to `game-data-<d>`; and `build` plus the "Not obtainable in `<v>`" and "Acquisition in `<v>`" notes in
+   `acquisition.json`.
+4. **Sources:** append `game-data-<d>` (`data.win`, lowercase SHA-256, build `<v>`) to `sources` in `game.json`. For each
+   `.ini` whose hash is not recorded yet, add `items-en-<d>` (`Items.ini`), `beings-en-<d>` (`Bestiary.ini`) or `ui-en-<d>`
+   (`UI.ini`), with the path `Languages\\English\\<file>`. `Nature.ini` has never changed (`nature-en`). Unchanged records
+   keep their old citations.
+5. **Version mentions:** the "Current version" line on `Main_Page.wiki`; the `== Version ==` paragraph of
+   `Game_mechanics.wiki`, which lists every Version page; "This guide covers" in `World_generation.wiki`; and the previous
+   Version page, whose lead drops "This wiki shows `<p>` values" and points on ("The wiki now shows values from
+   [[Version `<v>`]] ..."). Then run `git grep -n "<p>" -- content tools tests docs README.md` for any others.
+6. **Docs:** add a paragraph for the patch to the README after the previous one, linking `docs/PROVENANCE.md#version-<d>-update`,
+   and fix its totals if counts changed. Add `## Version <v> update` to `docs/PROVENANCE.md` before `## Build output`,
+   covering the date, the code entries changed, new sources, each amended record and the entries cited.
+
+## 4. Amended facts and renames
+
+- Amend the record in place and re-cite it to `game-data-<d>` (section = code entry, key = field) or to the new `.ini`
+  source. Keep the [confidence](../../../docs/PROVENANCE.md#confidence-semantics) honest.
+- Follow each value everywhere it appears: catalog prose (`entry_display`, guides, topics), `entity_details.json` profiles
+  and grids, recipes, and `acquisition.json`. Treasure-pool eligibility depends on price, so a price change can move an item
+  between pools (in 0.9.0.1 Poison Arrow II became a Survivor-corpse find), and the `databank_Alarm_1` recipe-value pass can
+  override an initializer price.
+- **Renamed names:** update the entity name and its citation, set the new catalog page `title` and put the old one in
+  `aliases`, which makes it a redirect. Update taxonomy members, summaries and related entities. File titles follow page
+  titles ([File titles](../../../docs/IMAGES.md#file-titles)), so change `file_title` and `cropped_from.file_title` too.
+  The live Files must then move before the merge (section 7).
+
+## 5. New items and entities
+
+Mirror an item added in #45 (for example `item-275`) across `game.json` (entity, cited to `ItemTitles`/`<N>` in
+`items-en-<d>`, and its recipe, loot and merchant entries), `catalog.json` (page, classifications, taxonomy, guides),
+`entity_details.json` (profiles from `itemDB[<N>]` in `databank_Alarm_1`), `acquisition.json` and `illustrations.json`.
+Rules: [PROVENANCE](../../../docs/PROVENANCE.md), [TEMPLATES](../../../docs/TEMPLATES.md),
+[readable identifiers](../../../CONTRIBUTING.md#reusable-displays).
+
+- Title each page with the exact in-game name. MirkMap links pages by that title and bundles
+  `File:<Title> icon (cropped).png`, falling back to `File:<Title> icon.png`.
+- Art: [0.8.9.9 additions](../../../docs/IMAGES.md#version-0899-additions-and-the-finished-raft) gives the frame choice,
+  scaling and crop; [File titles](../../../docs/IMAGES.md#file-titles) the names; and the
+  [operator workflow](../../../docs/IMAGES.md#operator-only-mediawiki-143-workflow) the import, with sidecars and a paired
+  backup. Stage the PNGs outside Git. Pages publish before their images exist, showing red links until the import runs.
+
+## 6. Validate
+
+```powershell
+uv run --no-project python -m unittest discover -s tests
+git add -A; uv run --no-project python tools/check_publication.py   # audits the Git index, not the working tree
+```
+
+- Update pins only for deliberate changes, and copy each new value from the failure: the build strings, `These guides cover`
+  and the source, entity, fact and entry counts (`test_wiki.py`); page counts (`test_wiki.py`, `test_catalog.py`); the
+  `Version …` titles set in `test_views.py`; and the hashes in `test_catalog.py` (`game.json` with its build blanked),
+  `test_acquisition.py` and `test_followup.py`. The Docker smoke, which runs only in CI, keeps its own copies of some
+  values, such as the health-grid totals in `tools/smoke_display.py`; grep `tools/smoke_*.py` for anything you change.
+- Each published file has a byte cap in `ALLOWED_FILES` (`tools/check_publication.py`); `docs/PROVENANCE.md`,
+  `tests/test_views.py` and `tools/wiki_render.py` are near theirs. Trim, or raise a cap deliberately and say so in the PR.
+
+## 7. PR, merge and publish
+
+1. Commit, push and open a ready-for-review PR titled `Document MirkLurk patch <v>`. CI runs the publication job (about
+   2 minutes) and the Docker smoke (12 to 40 minutes). If the smoke flakes on cache timing, `gh run rerun <id> --failed`.
+2. **File moves** (renames only), before merging and after a paired database and images backup:
+   `uv run --no-project python tools/plan_file_moves.py --base origin/main --output <files>\moves.txt` writes the moves,
+   but it rejects records with other edits, such as a caption change; then list the moves by hand. Moving Files needs the
+   `movefile` right, which the MediaWiki MCP account lacks, so use the operator's `moveBatch --noredirects`
+   ([Renaming Files](../../../docs/IMAGES.md#renaming-files)). Check the moved hashes against `illustrations.json`.
+3. **Deploy window:** no other wiki session is merging or publishing; `gh run list --branch main --limit 3` has nothing in
+   progress; the wiki is not read-only (`readonly` in
+   `https://mirklurk.wiki/api.php?action=query&meta=siteinfo&siprop=general&format=json`); and the PR is mergeable.
+4. `gh pr merge <n> --squash`, then `gh run watch <run> --exit-status` on the main run. Its publish job summary lists
+   pages created, updated and skipped. A timed-out dependent refresh fails the job after its writes; rerun the failed job.
+   Skipped pages were edited by a person ([PUBLISHING](../../../docs/PUBLISHING.md#when-a-person-edits-a-generated-page)).
+5. **Live check:** read `Version <v>`, `Main Page`, every changed or new page and each renamed title's redirect from
+   `https://mirklurk.wiki/api.php?action=parse&page=<Title>&prop=wikitext|images&format=json&formatversion=2`, and confirm
+   new images are present.
+6. **Report:** send the MirkMap session every new or renamed page title and icon File so it can run `deno task wiki`, then
+   send the coordinator the PR link, those titles and a short player-facing summary.

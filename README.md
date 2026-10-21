@@ -252,6 +252,7 @@ documented pools, not a measurement of each item's final drop rate.
 | `tools/smoke_deploy.py` | Disposable Docker install, publication, and reader/editor checks |
 | `deploy` | Digest-pinned MediaWiki image, nonsecret runtime template, development Compose |
 | `tests` | Publication, facts, escaping, deterministic export, sync, and runtime-policy tests |
+| `.github/skills/game-update` | Agent skill for documenting a new game version, from patch report to live check |
 
 ## Work locally
 

@@ -133,6 +133,9 @@
 !/.github/
 !/.github/workflows/
 !/.github/workflows/validate.yml
+!/.github/skills/
+!/.github/skills/game-update/
+!/.github/skills/game-update/SKILL.md
 
 # Defense in depth. Never add exceptions below these exclusions.
 # .gitignore does NOT protect files already tracked or added with --force.
