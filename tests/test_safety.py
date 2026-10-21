@@ -113,6 +113,25 @@ class PublicationTests(unittest.TestCase):
         # Dispatch input reaches the shell only through a quoted environment variable.
         self.assertFalse(any("${{ inputs." in line for line in workflow.splitlines() if "run:" in line or "python3" in line))
 
+    def test_only_dependabot_mediawiki_143_from_line_bumps_auto_merge(self):
+        workflow = (ROOT / ".github" / "workflows" / "auto-merge-base-image.yml").read_text(encoding="utf-8")
+        self.assertIn("\non: pull_request\n", workflow)
+        self.assertNotIn("pull_request_target", workflow)
+        self.assertNotIn("secrets.", workflow)
+        self.assertIn("if: github.event.pull_request.user.login == 'dependabot[bot]'", workflow)
+        self.assertIn('if [ "$files" != "deploy/Dockerfile" ]; then', workflow)
+        self.assertIn(r'pin = re.compile(r"FROM mediawiki:1\.43\.\d+@sha256:[0-9a-f]{64}")', workflow)
+        self.assertIn("len(before) == len(after) and len(changed) == 1", workflow)
+        # --auto leaves the required publication and docker-smoke checks as the merge gate.
+        self.assertIn("if: steps.check.outputs.eligible == 'true'", workflow)
+        self.assertIn('run: gh pr merge --auto --squash "$PR"\n', workflow)
+        self.assertEqual(workflow.count("gh pr merge"), 1)
+        dependabot = (ROOT / ".github" / "dependabot.yml").read_text(encoding="utf-8")
+        self.assertIn("package-ecosystem: docker\n    directory: /deploy\n", dependabot)
+        self.assertIn('update-types: ["version-update:semver-major", "version-update:semver-minor"]', dependabot)
+        dockerfile = (ROOT / "deploy" / "Dockerfile").read_text(encoding="utf-8")
+        self.assertRegex(dockerfile.splitlines()[0], r"^FROM mediawiki:1\.43\.\d+@sha256:[0-9a-f]{64}$")
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)

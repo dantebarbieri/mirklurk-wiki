@@ -1,0 +1,15 @@
+version: 2
+updates:
+  # Upstream ships PHP security fixes as new 1.43 patch tags or same-tag digest
+  # rebuilds; .github/workflows/auto-merge-base-image.yml merges those PRs.
+  - package-ecosystem: docker
+    directory: /deploy
+    schedule:
+      interval: daily
+      time: "06:00"
+      timezone: Etc/UTC
+    ignore:
+      # Stay on the 1.43 LTS branch. A MediaWiki minor or major upgrade can need
+      # update.php, so it remains a deliberate manual release.
+      - dependency-name: mediawiki
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]

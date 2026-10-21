@@ -7,17 +7,24 @@ or live deployment. The operator owns those choices.
 ## Pinned images and persistent state
 
 Build from the repository root using `deploy/Dockerfile`. It extends the
-official Apache image:
-
-`mediawiki:1.43.9@sha256:39a6503b8739f6aa58f8a458e9537258dd537f7cec7dd93c665bd3b43252d971`
+official Apache image, pinned by MediaWiki 1.43 LTS tag and digest in its `FROM`
+line. That line is the single source of truth for the base; do not copy the
+digest elsewhere. Never deploy a base whose PHP is older than 8.3.36, the fix
+for the PHP2Shell pre-auth RCE (CVE-2026-109618, CVE-2026-109619).
 
 The development database and agreed production interface use:
 
 `mariadb:11.4.13@sha256:70cc072b29b4a89ae07abb2d4da2c64678a7f2dfe092751bb51c87d67dc1338b`
 
-Review supported upstream releases and refresh **both tag and digest** deliberately
-when applying security updates. A digest makes a build repeatable, not perpetually
-secure. No game content is baked into the image.
+A digest makes a build repeatable, not perpetually secure, so base security
+updates are automated. Upstream ships PHP fixes as new 1.43 patch tags or as
+same-tag digest rebuilds. Dependabot (`.github/dependabot.yml`) proposes either
+daily. The `Auto-merge base image patches` workflow merges such a pull request
+after the required checks pass, but only when its whole change is that one
+`FROM mediawiki:1.43.N@sha256:…` line. MediaWiki minor and major upgrades are
+ignored. They can need `update.php`, so they stay a deliberate manual release
+with both tag and digest refreshed. Merging never deploys; the homeserver owns
+rollout. No game content is baked into the image.
 
 Apache serves HTTP on container port 80. Production should expose only the app
 through an operator-managed TLS proxy; do not publish the database port. The app
