@@ -131,6 +131,8 @@ class PublicationTests(unittest.TestCase):
         self.assertIn('update-types: ["version-update:semver-major", "version-update:semver-minor"]', dependabot)
         dockerfile = (ROOT / "deploy" / "Dockerfile").read_text(encoding="utf-8")
         self.assertRegex(dockerfile.splitlines()[0], r"^FROM mediawiki:1\.43\.\d+@sha256:[0-9a-f]{64}$")
+        # PHP2Shell defense in depth: the unused upload-progress session handler stays off.
+        self.assertIn(r"\nsession.upload_progress.enabled=0\n' > /usr/local/etc/php/conf.d/mirklurk.ini", dockerfile)
 
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()

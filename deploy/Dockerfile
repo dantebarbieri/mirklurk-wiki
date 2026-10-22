@@ -33,7 +33,7 @@ RUN a2enmod rewrite headers \
     && php -l /usr/local/lib/mirklurk/refresh-sitemap.php \
     && php -l /usr/local/lib/mirklurk/install.php \
     && php -l /usr/local/lib/mirklurk/healthcheck.php \
-    && printf 'display_errors=Off\nlog_errors=On\nexpose_php=Off\nfile_uploads=On\nupload_max_filesize=10M\npost_max_size=12M\n' > /usr/local/etc/php/conf.d/mirklurk.ini \
+    && printf 'display_errors=Off\nlog_errors=On\nexpose_php=Off\nfile_uploads=On\nupload_max_filesize=10M\npost_max_size=12M\nsession.upload_progress.enabled=0\n' > /usr/local/etc/php/conf.d/mirklurk.ini \
     && install -d -o www-data -g www-data /var/lib/mirklurk-sitemap /var/lib/mirklurk-sitemap/public \
     && a2enconf mirklurk-metadata \
     && apache2ctl -t
