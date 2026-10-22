@@ -89,4 +89,4 @@ Butchery no longer gives an extra [[Serpent Fang]], [[Small Venom Gland]], [[Sma
 * [[Survivor]] guards greet you with "Grand Mother's blessing to you!", and [[Grand Mother]]'s description calls her "Wilda's grandmother". Both were missing their apostrophes.
 * Not in the patch notes: the [[Wood Buckler]] inventory icon was retouched. Its stats are unchanged.
 
-[[Game mechanics]] | [[Main Page]]
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

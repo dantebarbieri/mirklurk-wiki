@@ -281,7 +281,7 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 18, "entities": 362, "facts": 107, "entries": 344},
+            {"sources": 19, "entities": 362, "facts": 107, "entries": 344},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
@@ -308,14 +308,14 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "e832b60b287bc7c9c61a574d3bda549f43060211542596957056967f5f3350a4")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 411)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 415)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("These guides cover '''0.9.1.0'''", pages["Game mechanics"])
+        self.assertIn("These guides cover '''0.9.1.2'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -335,7 +335,7 @@ class DataTests(unittest.TestCase):
         amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
         raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "b01bcaa107dafc8f873b5c978fe3fb27905e4f7bdee8f18cb337f41ff65254ee")
-        self.assertEqual(data["game"]["build"], "0.9.1.0")
+        self.assertEqual(data["game"]["build"], "0.9.1.2")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
@@ -457,6 +457,7 @@ class ResearchTests(unittest.TestCase):
         pages = build_pages(ROOT, data)
         from wiki_display import DISPLAY_TITLES
         self.assertEqual(set(pages), {*PAGE_FILES, *DISPLAY_TITLES, "Source provenance", "Version 0.8.9.9", "NPCs",
+                                      "Version history", "Patch notes",
                                       "Entity synthetic-item", "Category:Items"})
         self.assertNotIn("More researched topics", pages["Main Page"])
         self.assertNotIn("Illustration references", pages["Items"])

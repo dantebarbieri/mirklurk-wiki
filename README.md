@@ -56,14 +56,23 @@ categories and icons. Planting costs 6 AP instead of 8 and six seed recipes
 are cheaper; coins and gems keep their full value; Forager's, Explorer's and
 Expedition Vests no longer count as armor for Tailor-Made; rifts no longer
 spawn in Vast Waters; and Controls covers Balanced Zoom, longer scouting and
-the on-screen name keyboard. Pages show 0.9.1.0 values, and the
-**Version 0.9.1.0** changelog lists each change.
+the on-screen name keyboard. The **Version 0.9.1.0** changelog lists each change.
 [Provenance](docs/PROVENANCE.md#version-0910-update) records the amendments.
+
+Patch **0.9.1.2** followed on 2026-10-22. Only `data.win` has a new fingerprint,
+`game-data-0912`; the English text files still match their 0.9.1.0 fingerprints.
+No documented value changed. You can click far tiles you can see, such as while
+scouting, and ranged attacks go ahead on visible targets within range and line of
+sight. Pages show 0.9.1.2 values, and the **Version 0.9.1.2** changelog lists each
+change. The **Versions** page lists every documented version, newest first, with
+its date and a one-line summary; the Main Page and Game mechanics name only the
+latest version and link there. **Version history** and **Patch notes** redirect to it.
+[Provenance](docs/PROVENANCE.md#version-0912-update) records the amendments.
 
 The reference now contains **107 numeric facts and 344 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
 variants, 87 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 507 main-namespace pages:
+summaries. The encyclopedia presentation generates 511 main-namespace pages:
 357 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical

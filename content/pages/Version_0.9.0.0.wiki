@@ -294,4 +294,4 @@ Lower budgets drop items that now cost more than a pool's largest budget. Each r
 === Music ===
 The patch notes announce a new song. Its track ships with the game, but in 0.9.0.0 no code plays it. [[Version 0.9.0.1]] adds it to the playlist.
 
-[[Game mechanics]] | [[Main Page]]
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

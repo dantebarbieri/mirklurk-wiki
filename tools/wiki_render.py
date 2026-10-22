@@ -1817,6 +1817,8 @@ def build_pages(root, data, catalog=None, details=None):
     if "Version 0.9.0.0" in pages:
         # 0.8.9.9 was 0.9.0.0's public test; its old title redirects.
         pages["Version 0.8.9.9"] = "#REDIRECT [[Version 0.9.0.0#Public_test_build]]\n"
+    if "Versions" in pages:
+        pages["Version history"] = pages["Patch notes"] = "#REDIRECT [[Versions]]\n"
     if "Starting equipment" not in pages:
         pages["Getting started"] = "#REDIRECT [[Main Page]]\n"
     if "currency" in catalog:

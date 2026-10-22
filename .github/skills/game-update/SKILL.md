@@ -19,6 +19,7 @@ Below, `<v>` is the new version (`0.9.1.0`), `<p>` the previous one, and `<d>` t
 
 | Precedent | Shape |
 | --- | --- |
+| #72 (0.9.1.2) | Fixes only, like #64; added the `Versions` index that later patches add a row to. |
 | #66 (0.9.1.0) | New items with art, recipes and treasure pools; amended recipes; `Items`/`UI` fingerprints. Start here for new items. |
 | #64 (0.9.0.2) | Fixes only: Version page, build bump, `game-data-0902`. Start here for a fixes-only patch. |
 | #62 (0.9.0.1) | Amended facts, new `.ini` fingerprints, an item rename with redirect and File moves. |
@@ -74,13 +75,15 @@ Follow #64's diff (`git show ca380e7`):
    (`https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=3972980&count=3&maxlength=0`; 0.9.1.0 posted at
    06:57 UTC on 21 October, which Steam's Pacific-time pages show as the 20th), and say "This wiki shows `<v>` values."
    Use `== New content ==`, `== Changes ==` and `== Fixes ==` with `===` subsections, add a spoiler line when it names
-   late-story content, and end with `[[Game mechanics]] | [[Main Page]]`. `tools/wiki_render.py` gives every page linked
+   late-story content, and end with `[[Versions]] | [[Game mechanics]] | [[Main Page]]`. `tools/wiki_render.py` gives every page linked
    under the top-level New content or Changes headings a "New in" or "Changed in" footer, which changes those pages and
    some pins; links under other top-level headings, such as Fixes, get none. Link existing pages from Changes, never from
    New content. A change that no page documents (a splash screen, say) goes on the Version page only.
 2. **Register it:** add `!/content/pages/Version_<v>.wiki` to `.gitignore`, which is an allowlist,
    `"Version <v>": "Version_<v>.wiki"` to `PAGE_FILES` in `tools/wiki_data.py` (the publication check allows it from there),
-   and the title to the `added` set in `tests/test_views.py`.
+   and the title to the `added` set in `tests/test_views.py`. Add a row at the top of the table in `Versions.wiki`
+   (`[[Version <v>|<v>]]`, the date and a one-line player-facing summary) and point its lead at `<v>`. It is the only page
+   that lists every version, so nothing else should grow per patch.
 3. **Build:** `game.build` in `content/facts/game.json`; `currency.documented_build` in `catalog.json`, with the version,
    the confirmation sentence and both evidence rows (`obj_menu_Create_0`/`versionString` and `obj_menu_Step_0`/`versionCheck`)
    re-cited to `game-data-<d>`; and `build` plus the "Not obtainable in `<v>`" and "Acquisition in `<v>`" notes for items
@@ -89,8 +92,9 @@ Follow #64's diff (`git show ca380e7`):
    `.ini` whose hash is not recorded yet, add `items-en-<d>` (`Items.ini`), `beings-en-<d>` (`Bestiary.ini`) or `ui-en-<d>`
    (`UI.ini`), with the path `Languages\\English\\<file>`. `Nature.ini` has never changed (`nature-en`). Unchanged records
    keep their old citations.
-5. **Version mentions:** the "Current version" line on `Main_Page.wiki`; the `== Version ==` paragraph of
-   `Game_mechanics.wiki`, which lists every Version page; "This guide covers" in `World_generation.wiki`; and the previous
+5. **Version mentions:** the "Current version" line on `Main_Page.wiki` and the `== Version ==` paragraph of
+   `Game_mechanics.wiki`, which name only the latest version and link `[[Versions]]` for the rest (replace `<p>` there with
+   `<v>`, never add it to a list); "This guide covers" in `World_generation.wiki`; and the previous
    Version page, whose lead drops "This wiki shows `<p>` values" and points on ("The wiki now shows values from
    [[Version `<v>`]] ..."). Then run `git grep -n "<p>" -- content tools tests docs README.md` for any others.
 6. **Docs:** add a paragraph for the patch to the README after the previous one, linking `docs/PROVENANCE.md#version-<d>-update`,

@@ -356,6 +356,19 @@ Planting, Vast Waters and Rift-Thorn Mire guides (`camera_Step_0`,
 `rm_int_Create`, `obj_menu_Draw_64`, `manager_area_Alarm_2`). The test
 handoff lists the six seed recipes with the other amended entries.
 
+## Version 0.9.1.2 update
+
+Patch 0.9.1.2 (2026-10-22) was diffed privately against 0.9.1.0: 9 code
+entries changed and none are new. `game-data-0912` records the new `data.win`;
+the English `.ini` files match their 0.9.1.0 fingerprints, and no reviewed fact
+or entry changed beyond the documented build. The changelog cites `cursor_Step_1`
+(cursor clamp skipped where `tile_is_visible`), `tile_is_in_rangedarray` (range,
+visibility and `collision_line_tile` check before `rangedAvArray`),
+`cursor_resolve_highlight` (`collision_point`, 4 px) and `obj_menu_Draw_64`
+(particle fade). `obj_player_Create_0` raises `scoutRange` from 240 to 512; its
+only daylight use is that clamp. A blanked, unreferenced `spr_logo` frame is not
+documented. The authored **Versions** page indexes the changelogs.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

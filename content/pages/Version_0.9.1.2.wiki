@@ -1,0 +1,17 @@
+'''Version 0.9.1.2''' is the patch released on 22 October 2026, the day after [[Version 0.9.1.0]]. This wiki shows 0.9.1.2 values. It is a small fixes patch: no item, creature, merchant, recipe, loot, quest or skill values changed, and the English text files are unchanged.
+
+== Fixes ==
+=== Clicking far targets ===
+You can click a tile you can see however far it is from you, so while scouting you can pick a far creature to shoot at. Before, the cursor could not select a tile more than 16 tiles from you: it was pulled back toward you, so targets you could see while scouting could not be clicked. In the dark, the cursor still stops at the edge of the area you can see around you, except on tiles that another light source lights up. See [[Controls]].
+
+Not in the patch notes: the same fix lets you click a far tile you can see to walk there.
+
+=== Aiming ranged weapons ===
+A ranged attack now goes ahead when the target is within your weapon's range, on a tile you can see and with no solid tile in the way. Before, the target also had to be on a list of tiles in reach that the game rebuilt only at certain moments, so it could refuse a shot at a creature that was plainly visible and in range. See [[Combat basics]].
+
+Creatures standing slightly off the centre of their tile can also be highlighted under the cursor now. Before, only a creature exactly on the tile's centre could be.
+
+=== Main menu ===
+Not in the patch notes: when you start or load a game, the main menu's drifting snowflakes now fade out four times as fast, so they disappear with the menu.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

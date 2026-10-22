@@ -1,0 +1,23 @@
+'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki shows values from the latest, [[Version 0.9.1.2|0.9.1.2]]. Each version's page lists what changed from the one before it, including changes the patch notes leave out.
+
+<div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Versions (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
+{| class="wikitable"
+! Version !! Released !! Summary
+|-
+| [[Version 0.9.1.2|0.9.1.2]] || 22 October 2026 || Fixes: you can click far targets you can see while scouting, and ranged weapons can target visible creatures within range.
+|-
+| [[Version 0.9.1.0|0.9.1.0]] || 21 October 2026 || Flint (Large) and the Flint Dagger, cheaper seed planting, coins and gems that keep their value, Balanced Zoom and longer scouting.
+|-
+| [[Version 0.9.0.2|0.9.0.2]] || 16 October 2026 || Fixes: throwing from a stack lowers your weight, outdoor lights shine again each night, and the main menu keeps playing music.
+|-
+| [[Version 0.9.0.1|0.9.0.1]] || 15 October 2026 || Orb durability and casting costs, dearer Poison Arrows, Butchery's extra item only for hides and meat, and poison and bleeding that keep working off-screen.
+|-
+| [[Version 0.9.0.0|0.9.0.0]] || 14 October 2026 || A large content update: new story, the Survivors' camp, six creatures, 17 items and many changed values since 0.8.1.5.
+|-
+| [[Version 0.9.0.0#Public_test_build|0.8.9.9]] || 13 October 2026 || The public test of 0.9.0.0 on a Steam beta branch.
+|}
+</div>
+
+Versions before 0.9.0.0, back to the Early Access launch on 11 June 2026, have no page here.
+
+[[Game mechanics]] | [[Main Page]]
