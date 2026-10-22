@@ -14,4 +14,4 @@ Light sources placed outdoors, such as the two torches at the Survivors' camp, n
 
 Not in the patch notes: the same fix covers light sources you place yourself, such as a [[Campfire]], a [[Torch]] or [[Lantern]] set on the ground, a lit [[Survivor's Field Kit]] or a [[Jar of Fireflies]].
 
-[[Game mechanics]] | [[Main Page]]
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

@@ -1,4 +1,4 @@
-'''Version 0.9.1.0''' is the patch released on 21 October 2026, five days after [[Version 0.9.0.2]]. This wiki shows 0.9.1.0 values. This page lists every documented change from 0.9.0.2, including a few the patch notes do not mention.
+'''Version 0.9.1.0''' is the patch released on 21 October 2026, five days after [[Version 0.9.0.2]]. This page lists every documented change from 0.9.0.2, including a few the patch notes do not mention. The wiki now shows values from [[Version 0.9.1.2]], which followed a day later.
 
 == New content ==
 === Items ===
@@ -44,7 +44,7 @@ Rifts no longer appear in [[Vast Waters]]. Before, Vast Waters areas near the [[
 
 === Controls ===
 * '''Balanced Zoom''' is a new option, on by default and recommended by the game. It makes the zoom range the same at every screen resolution: 30 tiles across fully zoomed out and 15 fully zoomed in. Before, the view was a fixed share of your screen, so a 4K screen showed twice as wide an area as a 1080p one. Turning the option off restores that. See [[Controls]].
-* '''Scouting''' looks much further ahead. The patch notes say about 2.5 times; the furthest the view can slide toward the cursor is three times what it was, and the cursor must be twice as far from you to reach it.
+* '''Scouting''' looks much further ahead. The patch notes say about 2.5 times; the furthest the view can slide toward the cursor is three times what it was, and the cursor must be twice as far from you to reach it. [[Version 0.9.1.2]] lets you click the far tiles you see.
 * '''On-screen keyboard.''' When you name a new character, a button beside the name field opens an on-screen keyboard with letters, space, backspace, caps and enter, so you can name a character with only a mouse or controller. The prompt now reads "Press (your primary click) here to Confirm (or press Enter)".
 
 == Fixes ==
@@ -73,4 +73,4 @@ A faint knocking in the soft rain and a child's voice in the background of the d
 === Main menu ===
 Not in the patch notes: while the main menu fades out to start or load a game, it no longer starts a new song or adds snowflakes. The victory screen no longer sets off fireworks.
 
-[[Game mechanics]] | [[Main Page]]
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

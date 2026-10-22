@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 357)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 455)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 459)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 357)
@@ -624,7 +624,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.1.0")
+        self.assertEqual(self.data["game"]["build"], "0.9.1.2")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1153,12 +1153,12 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.1.0 pin, game build blanked.
+        # 0.9.1.2 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.1.0"', b'"build": null', 1,
+                b'"build": "0.9.1.2"', b'"build": null', 1,
             )).hexdigest(),
-            "d7e3b344b4bd1864846c24a33c3b9a4850caf5adc345f071ce274d60b154fc1c",
+            "2a211495999d4ac2e84dd6e1b52d02c7d012c359f67586f8985e437062966ad2",
         )
 
 

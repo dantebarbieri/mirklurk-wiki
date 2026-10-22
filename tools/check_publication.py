@@ -20,7 +20,7 @@ ALLOWED_FILES = {
     ".dockerignore": 4 * 1024,
     "README.md": 32 * 1024,
     "CONTRIBUTING.md": 32 * 1024,
-    "docs/PROVENANCE.md": 60 * 1024,
+    "docs/PROVENANCE.md": 64 * 1024,
     "docs/IMPORTING.md": 32 * 1024,
     "docs/PUBLICATION.md": 32 * 1024,
     "docs/DEPLOYMENT.md": 44 * 1024,

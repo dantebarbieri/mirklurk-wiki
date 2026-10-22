@@ -480,8 +480,9 @@ class SelectiveViewTests(unittest.TestCase):
         # 0.9.0.0 moved its release notes; "Version 0.8.9.9" redirects.
         locations = self.locations
         added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
-            "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Version 0.9.1.0", "Survivor", "Fire Bond"}
-        self.assertEqual(len(added), 33)
+            "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Version 0.9.1.0", "Version 0.9.1.2", "Versions",
+            "Version history", "Patch notes", "Survivor", "Fire Bond"}
+        self.assertEqual(len(added), 37)
         families = {title for title, text in self.pages.items() if f"\n'''{title}''' groups " in text}
         old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added - families
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
