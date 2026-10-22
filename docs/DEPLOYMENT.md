@@ -10,7 +10,9 @@ Build from the repository root using `deploy/Dockerfile`. It extends the
 official Apache image, pinned by MediaWiki 1.43 LTS tag and digest in its `FROM`
 line. That line is the single source of truth for the base; do not copy the
 digest elsewhere. Never deploy a base whose PHP is older than 8.3.36, the fix
-for the PHP2Shell pre-auth RCE (CVE-2026-109618, CVE-2026-109619).
+for the PHP2Shell pre-auth RCE (CVE-2026-109618, CVE-2026-109619). As
+defense in depth the image also sets `session.upload_progress.enabled=0`;
+MediaWiki does not use PHP session upload progress.
 
 The development database and agreed production interface use:
 
