@@ -31,7 +31,7 @@ SUMMARY_STYLE = (
 SUMMARY_CLEAR_STYLE = f"display:flow-root;height:0;width:min(100%, calc((({SUMMARY_FLOAT_MIN}) - 100%) * 1000));"
 ITEM_FIRE_KEYS = ("light-radius", "burn-time", "tinder-bonus", "spark-chance", "stone-spark-chance")
 ITEM_SECTION_KEYS = {
-    "Protection": ("item-armor", "insulation", "waterproof"),
+    "Protection": ("item-armor", "block-chance", "insulation", "waterproof"),
     "Storage": ("inventory-slots-added", "storage-grid-width", "storage-grid-height"),
     "Chopping and cutting": ("chopping-capability", "cutting-capability"),
     "Fire": ITEM_FIRE_KEYS,
@@ -121,7 +121,10 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
         class_key = "ranged-damage-class-id" if kind == "ranged" else "damage-class-id"
         if class_key in remaining and class_key not in used:
             damage = take(class_key, heading)
-            lines.append(f"Deals {damage} damage." if damage.startswith("[[") else damage + ".")
+            if kind != "ranged" and identity in {"item-41", "item-96", "item-212"}:
+                lines.append(f"Deals {damage} damage while lit and [[Blunt]] damage while unlit.")
+            else:
+                lines.append(f"Deals {damage} damage." if damage.startswith("[[") else damage + ".")
         if kind != "ranged" and "tile-range" in remaining and "tile-range" not in used:
             lines.append("Attack range: " + take("tile-range", heading) + ".")
         for suffix in ("min", "max"):

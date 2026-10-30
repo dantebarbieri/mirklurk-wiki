@@ -5262,9 +5262,13 @@
     {
       "entry": "skill-3-4-mechanics",
       "title": "Effects",
-      "summary": "Block attacks completely while carrying an equipped shield. Each rank gives a 2.5% chance of a full block.",
-      "conditions": null,
-      "steps": []
+      "summary": "An equipped shield can block an attack completely even without this skill. Each rank adds 2.5 percentage points to the shield's base block chance.",
+      "conditions": "Without an equipped shield, your block chance is zero.",
+      "steps": [
+        "Add 2.5 percentage points per skill rank to the shield's base chance, rather than multiplying that chance.",
+        "A successful block stops the whole attack and costs the shield 1 durability with a 75% chance or 2 with a 25% chance.",
+        "The character panel shows the combined block chance; the shield tooltip shows its base chance."
+      ]
     },
     {
       "entry": "skill-4-0-mechanics",
@@ -7613,16 +7617,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.1.2",
-      "confirmation": "The wiki operator installed patch 0.9.1.2, which followed the 0.9.1.0 patch, and launched it to regenerate the English language files, which match their 0.9.1.0 fingerprints. The inspected menu code contains the same displayed version label; no external release-feed verification is asserted.",
+      "version": "0.9.2.0",
+      "confirmation": "Patch 0.9.2.0 was installed and launched to regenerate the English language files. The menu display and version check agree with the 29 October 2026 Steam announcement.",
       "evidence": [
         {
-          "source": "game-data-0912",
+          "source": "game-data-0920",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0912",
+          "source": "game-data-0920",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -8013,22 +8017,57 @@
         "Place an attack pattern over the target's health grid. Only overlapping cells can hit. Each number is that cell's damage range; rotation and dodging change the overlap.",
         "The grids show starting health and armor. Wounds, story events, equipment, skills, ammunition and status effects can change combat results.",
         "Ammunition adds bonus damage to a bow's pattern. Roll its bonus range separately for each occupied attack cell.",
-        "Wellbeing is separate from combat HP. Resting can heal ordinary wounds when its recovery conditions are met, but not burns unless you have Fire Bond at rank 5 or higher."
+        "Wellbeing is separate from combat HP. Resting can heal ordinary wounds when its recovery conditions are met, but not burns unless you have Fire Bond at rank 5 or higher.",
+        "Blocking is separate from armor layers: a successful block stops the whole attack before its pattern hits. Shields have an innate chance, increased by Shield Savant; some creatures can also block. See Combat basics."
       ],
       "related_entities": [],
       "related_pages": [
         "Wellbeing",
-        "Resting"
+        "Resting",
+        "Combat basics"
       ],
       "confidence": "inferred",
       "evidence": [
-        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_hitpoints;being_attacks_target.AttPatt/overlap"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.hpgrid/armor;attack_lands"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_gui_general", "key": "hpcell_draw.hpValue/armor;attack_draw"},
-        {"source": "game-data", "section": "gml_Object_obj_projectile_Step_0", "key": "ammoDat.extraDamage/minD/maxD/extraDmg"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.rest-healing.haelth>=0.5/hpgrid==0"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.survivorSkills[0]>=5.being_heal_burnt"}
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_get_hitpoints;being_attacks_target.AttPatt/overlap"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.hpgrid/armor;attack_lands"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_gui_general",
+          "key": "hpcell_draw.hpValue/armor;attack_draw"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_projectile_Step_0",
+          "key": "ammoDat.extraDamage/minD/maxD/extraDmg"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.extraDmg-per-positive-pattern-cell"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.rest-healing.haelth>=0.5/hpgrid==0"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.survivorSkills[0]>=5.being_heal_burnt"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_blocks_attack;being_attacks_target"
+        }
       ]
     },
     {
@@ -8679,13 +8718,15 @@
         "Flipping",
         "Placing from containers",
         "Where you cannot build",
-        "Storage Chest"
+        "Storage Chest",
+        "Carry weight"
       ],
       "paragraphs": [
         "While placing an object, press the Weapon Swap key (Z by default) to flip it horizontally before you confirm.",
         "An object can be placed directly from a nearby container, not only from your inventory.",
         "You cannot place objects within about 26 tiles of the Survivors' camp. Until you bring Viend back to the fort, the same applies within 30 tiles of Fort Solid. Placement also fails on water, slopes, plants, goo and occupied tiles.",
-        "Storage Chest is a placeable 7 x 5 container. Items inside lose no durability, stay dry and never go missing, unlike items left in ordinary stashes. Clay and Viend sell it."
+        "Storage Chest is a placeable 7 x 5 container. Items inside lose no durability, stay dry and never go missing, unlike items left in ordinary stashes. Clay and Viend sell it.",
+        "Placing an equipped item, such as a torch, removes its weight from your carry total."
       ],
       "related_entities": [
         "Storage Chest",
@@ -8731,6 +8772,11 @@
           "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_menu_related",
           "key": "menu_add.trade.vendor[8/19].item[275]"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_correct_weighloss"
         }
       ]
     },
@@ -10627,14 +10673,16 @@
         "Every other action has a keyboard shortcut. The table lists the defaults, using the names shown in Options > Controls. Tooltips always show the key you have bound, so they stay correct after you change it.",
         "Every binding can be changed in Options > Controls: click an entry, then press any key or mouse button. If another action already used that key, it becomes unbound and is highlighted as a conflict. Reset restores the defaults. Even if Close is left unbound, Esc still closes menus.",
         "A controller is also supported, with its own Controller page in the options. You can swap the sticks and set their sensitivity (default 1) and dead zone (default 0.1). Stats, Crafting, Draw Weapon, Rest, Hitpoints, Auto-walk, Jump, Loot All, Journal, Swap, Scout, Codex, Show UI and Screenshot have no controller button by default.",
-        "Early in the tutorial, Draw Weapon, Jump, Rest, Examine and End Turn stay locked until the story moves on."
+        "Early in the tutorial, Draw Weapon, Jump, Rest, Examine and End Turn stay locked until the story moves on.",
+        "Quick-looting, stacking and inventory sorting can turn an item to fit if its current orientation has no room. A failed placement restores the original orientation. Automatic ground-pile resizing and preparation for trading or crafting do not use this rotation."
       ],
       "section_titles": [
         "Mouse",
         "Keyboard",
         "Changing keys",
         "Controller",
-        "Tutorial"
+        "Tutorial",
+        "Inventory rotation"
       ],
       "related_entities": [],
       "related_pages": [
@@ -10823,11 +10871,6 @@
         },
         {
           "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Create_0",
-          "key": "controlsMax"
-        },
-        {
-          "source": "game-data-0900",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "conflictOne"
         },
@@ -10895,6 +10938,11 @@
           "source": "ui-en",
           "section": "Tutorial",
           "key": "-6"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_add;item_add_and_resize"
         }
       ]
     },
@@ -11148,7 +11196,9 @@
         "Left-click the base of a creature to select it and open its HP grid. Hover over the grid to aim your weapon's attack pattern, right-click to rotate the pattern a quarter turn, and left-click to strike. You need enough AP and must be in range; ranged weapons also need ammunition and a clear shot. Every cell the pattern covers takes damage. Creatures may dodge, shifting the hit by one cell.",
         "When an enemy attacks you, you may get a chance to dodge: you see where the attack will land and choose which way to shift your own grid.",
         "Enemies aim according to their intelligence. The least intelligent hit completely at random. Smarter ones go after your remaining HP, then also allow for the size of their pattern, then target clusters of healthy cells. The smartest also rotate their pattern for the most damage. On Hard, most enemies aim one step more precisely.",
-        "A fight ends when no hostile creature is targeting you. There is no flee button, but distance works: beyond about one and a half times a creature's detection range it becomes more and more likely to give up, and beyond three times that range it always does. It also gives up when it can no longer find a way to reach you, and some creatures retreat when you hide in a sheltered spot. A blunt stun makes the victim lose its next turn."
+        "A fight ends when no hostile creature is targeting you. There is no flee button, but distance works: beyond about one and a half times a creature's detection range it becomes more and more likely to give up, and beyond three times that range it always does. It also gives up when it can no longer find a way to reach you, and some creatures retreat when you hide in a sheltered spot. A blunt stun makes the victim lose its next turn.",
+        "A block stops the whole attack, before its pattern can hit. An equipped shield gives its base block chance plus 2.5 percentage points per Shield Savant rank. For example, a Wood Buckler has 8% base chance and 10.5% at rank 1. Without an equipped shield you cannot block. Each successful block costs the shield 1 durability (75% chance) or 2 (25% chance). Some creatures and friendly characters also have their own block chance, shown when you examine them; it applies to melee and projectile attacks.",
+        "A creature with no current target reacts to the attacker even when a distant attack misses or is blocked. Blend Into Nature can still evade detection after a miss at 6.5% per rank; a blocked attack does not use that evasion check."
       ],
       "section_titles": [
         "Turns",
@@ -11157,9 +11207,13 @@
         "Attacking",
         "Dodging",
         "How enemies aim",
-        "Ending a fight"
+        "Ending a fight",
+        "Blocking",
+        "Reacting to distant attacks"
       ],
-      "related_entities": [],
+      "related_entities": [
+        "Shield Savant"
+      ],
       "related_pages": [
         "Action points",
         "Health and armor",
@@ -11214,11 +11268,44 @@
           "source": "ui-en",
           "section": "Tutorial",
           "key": "-9"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_block;attack_aftermath;attacker_evades_me"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_blocks_attack;being_attacks_target"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;item_durloss"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_obj_projectile_Step_0",
+          "key": "being_attacks_target"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "player_get_block;dat.blockChance"
         }
       ]
     }
   ],
   "item_effects": [
+    {"entity": "item-0", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
+    {"entity": "item-1", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
+    {"entity": "item-50", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
+    {"entity": "item-58", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
+    {"entity": "item-118", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
+    {"entity": "item-41", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[41].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"}]},
+    {"entity": "item-96", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[96].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"}]},
+    {"entity": "item-212", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[212].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"}]},
     {"entity": "item-75", "paragraphs": ["Speak with Captain Eir at Fort Solid while carrying it. She takes one recorder automatically and the main quest moves on."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Eir.player_inventory_lose_amount[75];MAINQUESTSTAGE=2"}]},
     {"entity": "item-123", "paragraphs": ["Speak with Ranger Bhato while carrying it to report the kill. He sends you back to Fort Solid.", "Then speak with Magus Clay while carrying it. He takes the rune and gives you Clay's Strange Potion."], "confidence": "inferred", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Bhato.player_inventory_get_amount[123];MAINQUESTSTAGE=10"}, {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Clay.MAINQUESTSTAGE10.player_inventory_lose_amount[123]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.Clay.205.item_receive[126]"}]},
     {"entity": "item-126", "paragraphs": ["Speak with the Dead Unwanted at the dead camp while carrying it. A new option pours the potion into his mouth; the potion is used up and he revives as Viend, who must then be escorted to Fort Solid."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.DeadUnwanted.option114.requires[126]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.DeadUnwanted.114.player_inventory_lose_amount[126];112.being_initiate[19]"}]},

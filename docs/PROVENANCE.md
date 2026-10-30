@@ -369,6 +369,53 @@ visibility and `collision_line_tile` check before `rangedAvArray`),
 only daylight use is that clamp. A blanked, unreferenced `spr_logo` frame is not
 documented. The authored **Versions** page indexes the changelogs.
 
+## Version 0.9.2.0 update
+
+Patch 0.9.2.0 (2026-10-29 UTC) was compared privately with 0.9.1.2: 17 code
+entries changed, none were added, and there are no new entities, recipes,
+world-generation rules or item icons. `game-data-0920` fingerprints the new
+binary; `items-en-0920` and `ui-en-0920` fingerprint the regenerated English
+files. Bestiary still matches `beings-en-0901`; Nature is unchanged.
+
+`gml_Object_databank_Alarm_1` supplies `blockChance` for item 118 (10%),
+items 0 and 1 (8%), and items 50 and 58 (12%); items 41, 96 and 212 have
+`stackLimit` 3. Their initializer profiles are amended in place and cited
+to the new build. Static torch damage remains Fire: the lit-state override
+in `gml_Object_obj_player_Step_0` supplies Blunt for unlit attacks.
+`item_stack_match`, `item_fits` and `item_stack` in
+`gml_GlobalScript_scr_items`, plus both UI stack paths in
+`gml_Object_UI_Draw_64`, require exactly matching fuel and durability.
+
+`gml_Object_databank_Alarm_3` supplies creature `blockChance` for beings 31
+(5%), 15/18/5/12 (10%), 16 (7.5%), 6 (15%) and 35 (20%). Being 15's
+`dodgeChance` also changes from 12% to 10%, not separately announced.
+These eight profiles retain their other values. `player_get_block` in
+`gml_GlobalScript_scr_basic_useful` confirms the shield base plus 2.5
+percentage points per Shield Savant rank. The amended `shield-savant-block`
+fact and `skill-3-4-mechanics` entry now cite that runtime calculation and
+the new UI description, with inferred confidence. `being_blocks_attack`
+and `being_attacks_target` in `gml_GlobalScript_scr_ai_related` establish
+whole-attack blocking and shield wear; `loot_amountchances` in
+`gml_GlobalScript_scr_items` establishes the 75%/25% split for 1/2 durability.
+Item effects and Combat basics explain this separately from armor.
+
+Controls and Placing objects cover the weight and rotation changes, citing
+`load_player` in `gml_GlobalScript_scr_saveload`, `item_add`,
+`item_add_and_resize`, `item_correct_weighloss`, `item_removed` and
+`itemgrid_struct_psynch` in `gml_GlobalScript_scr_items`, and `inventory_sort`
+and `player_has_item` in `gml_GlobalScript_scr_basic_useful`.
+The changelog distinguishes the optional container `alpha` save field,
+read conditionally by `load_containers`, from the water-landing changes
+in `gml_Object_obj_container_Step_0` and its shadow draw event.
+`attack_aftermath` and `attacker_evades_me` establish missed-attack reactions;
+the blocked-attack reaction in `being_attacks_target` does not use that
+stealth check. Blend Into Nature remains 6.5% per rank.
+
+Menu version display/check entries confirm the build label. The changelog
+also distinguishes unannounced hover-sound and logo changes; those are not
+new item art. Normal starting equipment, loot, merchants, prices, weights,
+durability maxima, fuel durations and crafting records remain unchanged.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

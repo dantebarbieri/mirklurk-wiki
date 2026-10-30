@@ -68,6 +68,8 @@ def being_article(facts, profiles, properties, entities, locations, grids=(), fa
         behavior.append("'''Targeting:''' " + " ".join(parts) + ". [[Bestiary#Aggression_rules|Faction and targeting rules]] decide who is eligible.")
     if "dodge-chance" in values:
         behavior.append("'''Dodging:''' " + value("dodge-chance") + " base chance to dodge an attack.")
+    if "block-chance" in values:
+        behavior.append("'''Blocking:''' " + value("block-chance") + " chance to stop a whole attack.")
     if "opportunity-chance" in values:
         behavior.append("'''Opportunity attacks:''' " + value("opportunity-chance")
                         + " chance to strike when an opportunity attack is triggered.")

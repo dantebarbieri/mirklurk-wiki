@@ -22,13 +22,16 @@ from wiki_anchors import entry_fragments
 from wiki_render import audit_report, display_entry, recipe_groups
 from smoke_deploy import smoke_category_memberships, smoke_reader_release, wait_for_server_tick
 
-# Original 0.8.1.5 fields of the records that the reviewed 0.8.9.9 update deliberately renamed or re-evidenced.
+# Original 0.8.1.5 fields deliberately renamed or re-evidenced by later patches.
 AMENDED_0815 = {
     "being-35": {"name": "Unwanted Guard", "evidence": [{"source": "beings-en", "section": "Titles", "key": "35"}]},
     "skill-1-0": {"name": "Fire Striker", "evidence": [{"source": "ui-en", "section": "SkillsTitle1", "key": "0"}]},
     "fire-striker-chance": {"entity": "Fire Striker", "evidence": [{"source": "ui-en", "section": "SkillsDesc1", "key": "0"}]},
     "master-basher-stun": {"value": 1.5, "description": "The description associates the chance bonus with blunt melee attacks.",
                            "evidence": [{"source": "ui-en", "section": "SkillsDesc3", "key": "1"}]},
+    "shield-savant-block": {"description": "The skill description requires an equipped shield.",
+                            "confidence": "localization-described",
+                            "evidence": [{"source": "ui-en", "section": "SkillsDesc3", "key": "4"}]},
 }
 
 
@@ -281,14 +284,14 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 19, "entities": 362, "facts": 107, "entries": 344},
+            {"sources": 22, "entities": 362, "facts": 107, "entries": 344},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
             {"quest": 37, "merchant": 88, "recipe": 98, "loot": 87, "algorithm": 34},
         )
         # 0.8.9.9 deliberately amended these original entries; the rest of the handoff stays pinned.
-        amended = {"skill-1-0-mechanics", "loot-amount-distribution", "crafting-station-modifiers",
+        amended = {"skill-1-0-mechanics", "skill-3-4-mechanics", "loot-amount-distribution", "crafting-station-modifiers",
                    "corpse-budgeted-treasure", "corpse-30-66", "corpse-29-103", "corpse-4-82", "corpse-14-129",
                    *(f"corpse-{n}-69" for n in (1, 25, 27, 28)),
                    *(f"corpse-{n}-{m}" for n in (13, 14, 15, 16) for m in (107, 124)),
@@ -297,25 +300,25 @@ class DataTests(unittest.TestCase):
         extension = {"sources": [], "entities": [], "facts": data["facts"][79:],
                      "entries": [row for row in data["entries"][:249] if row["id"] not in amended]}
         raw = json.dumps(extension, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "5ce78c7ba94c38b0684a1074600f71f8e0f0eb81687df07d7ae1efb06b55358b")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "d35d1c9e56eebb519be9bb9c24769b6731d43b4b3f84948512adba0149613d58")
         supplement = {"sources": [], "entities": [], "facts": [],
                       "entries": [row for row in data["entries"][249:293] if row["id"] not in amended]}
         raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "d6aa4b58cbb7179362901457682a3e5270931d4fa9fb1846beaa2e26520686cc")
         update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
-        self.assertEqual(len(update), 76)
+        self.assertEqual(len(update), 77)
         raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "e832b60b287bc7c9c61a574d3bda549f43060211542596957056967f5f3350a4")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "c427f967956f89a2e7be20cce866097178f78253ae5bb20dd8178138622ad35a")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 415)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 416)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("These guides cover '''0.9.1.2'''", pages["Game mechanics"])
+        self.assertIn("These guides cover '''0.9.2.0'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -334,12 +337,12 @@ class DataTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(raw).hexdigest(), digest, f"Original {key} changed")
         amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
         raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "b01bcaa107dafc8f873b5c978fe3fb27905e4f7bdee8f18cb337f41ff65254ee")
-        self.assertEqual(data["game"]["build"], "0.9.1.2")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "e6628b69210b8cdd1509e51498117e28ffe2d9987d8e542d58eb82a82cf517c1")
+        self.assertEqual(data["game"]["build"], "0.9.2.0")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
-            {"localization-described": 28, "inferred": 51},
+            {"localization-described": 27, "inferred": 52},
         )
         pages = build_pages(ROOT, data)
         self.assertTrue(set(PAGE_FILES) <= pages.keys())

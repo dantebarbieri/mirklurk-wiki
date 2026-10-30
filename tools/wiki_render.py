@@ -277,7 +277,7 @@ def fact_value(fact):
 
 
 PERCENT_PROPERTIES = {
-    "awareness-chance", "break-chance", "dodge-chance", "idle-move-chance",
+    "awareness-chance", "block-chance", "break-chance", "dodge-chance", "idle-move-chance",
     "opportunity-chance", "satiation-gain", "sickness-risk", "spark-chance",
     "stone-spark-chance", "tinder-bonus", "waterproof", "insulation",
 }

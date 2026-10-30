@@ -1,8 +1,10 @@
-'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki shows values from the latest, [[Version 0.9.1.2|0.9.1.2]]. Each version's page lists what changed from the one before it, including changes the patch notes leave out.
+'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki shows values from the latest, [[Version 0.9.2.0|0.9.2.0]]. Each version's page lists what changed from the one before it, including changes the patch notes leave out.
 
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Versions (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
 ! Version !! Released !! Summary
+|-
+| [[Version 0.9.2.0|0.9.2.0]] || 29 October 2026 || Shields and some creatures can block, matching torches stack to three, and inventory rotation, carry weight and unlit torch damage are fixed.
 |-
 | [[Version 0.9.1.2|0.9.1.2]] || 22 October 2026 || Fixes: you can click far targets you can see while scouting, and ranged weapons can target visible creatures within range.
 |-
