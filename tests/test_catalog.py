@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 357)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 459)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 460)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 357)
@@ -152,12 +152,12 @@ class CatalogTests(unittest.TestCase):
                     "equip-ap-cost", "inventory-slots-added", "storage-grid-width", "storage-grid-height"}],
                 "profiles": [r for r in self.details["profiles"] if not r["id"].endswith(("-equip-cost", "-capacity"))],
             }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "ecc8ff4930b88047f7341de00ba0e7589dc64020dc1b2c310e556af8f541b503",
+            "58efd3055da0e991e6499563976917a50b477731c656872b94a8e592509d0b63",
         )
-        self.assertEqual(len(self.details["properties"]), 54)
+        self.assertEqual(len(self.details["properties"]), 55)
         self.assertEqual(len(self.details["profiles"]), 603)
         self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 322)
-        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2921)
+        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2934)
         locations = self.locations
         entities = {row["id"]: row for row in self.data["entities"]}
         prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
@@ -624,7 +624,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.1.2")
+        self.assertEqual(self.data["game"]["build"], "0.9.2.0")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1153,13 +1153,63 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.1.2 pin, game build blanked.
+        # 0.9.2.0 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.1.2"', b'"build": null', 1,
+                b'"build": "0.9.2.0"', b'"build": null', 1,
             )).hexdigest(),
-            "2a211495999d4ac2e84dd6e1b52d02c7d012c359f67586f8985e437062966ad2",
+            "82d99a537810a82435bd6b848f4c0d8d01a68d45a328daffc1482f564dc9762d",
         )
+
+
+    def test_patch_0920_blocks_torches_and_creature_dodge(self):
+        self.data, self.catalog, self.details = load_publication_inputs(ROOT)
+        self.pages = build_pages(ROOT, self.data, self.catalog, self.details)
+        self.locations = page_locations(self.data, self.catalog)
+        profiles = {row["entity"]: row for row in self.details["profiles"]
+                    if row["id"].endswith("-initializer")}
+        shields = {0: 0.08, 1: 0.08, 50: 0.12, 58: 0.12, 118: 0.1}
+        beings = {31: 0.05, 15: 0.1, 16: 0.075, 18: 0.1, 5: 0.1, 6: 0.15, 12: 0.1, 35: 0.2}
+        for kind, chances in (("item", shields), ("being", beings)):
+            for number, chance in chances.items():
+                identity = f"{kind}-{number}"
+                with self.subTest(entity=identity):
+                    profile = profiles[identity]
+                    self.assertEqual(profile["values"]["block-chance"], chance)
+                    self.assertTrue(any(row["source"] == "game-data-0920" and "blockChance" in row["key"]
+                                        for row in profile["evidence"]))
+                    page = self.pages[self.locations[identity]]
+                    self.assertIn(profile_value("block-chance", chance, {}, {}), page)
+                    if kind == "being":
+                        self.assertIn("'''Blocking:'''", page)
+                    else:
+                        self.assertIn("2.5 percentage points per rank", page)
+                        self.assertIn("1 durability 75% of the time or 2 durability 25%", page)
+        self.assertEqual(profiles["being-15"]["values"]["dodge-chance"], 0.1)
+        self.assertIn("'''Dodging:''' <nowiki>10</nowiki>%", self.pages["Scaalmyr Warrior"])
+        for number in (41, 96, 212):
+            profile = profiles[f"item-{number}"]
+            self.assertEqual(profile["values"]["stack-limit"], 3)
+            self.assertEqual(profile["values"]["damage-class-id"], 18)
+            page = self.pages[self.locations[f"item-{number}"]]
+            self.assertIn("both their remaining burn time and durability must match exactly", page)
+            self.assertIn("Deals [[Fire|<nowiki>Fire</nowiki>]] damage while lit and [[Blunt]] damage while unlit.", page)
+            self.assertNotIn("Deals [[Fire|<nowiki>Fire</nowiki>]] damage.", page)
+            self.assertIn("[[Version 0.9.2.0", page)
+        skill = self.pages["Shield Savant"]
+        self.assertIn("2.5 percentage points", skill)
+        self.assertIn("75% chance", skill)
+        self.assertIn("Without an equipped shield", skill)
+        self.assertIn("10.5% at rank 1", self.pages["Combat basics"])
+        self.assertIn("0.9.2.0", self.pages["Main Page"])
+        self.assertIn("29 October 2026", self.pages["Version 0.9.2.0"])
+        sources = {row["id"]: row for row in self.data["sources"]}
+        self.assertEqual(sources["game-data-0920"]["sha256"],
+                         "d2d5736313c1d51f1c81b259ba96e7366e4465a7aa1ff5530a5ab128503da26d")
+        for source in ("game-data-0920", "items-en-0920", "ui-en-0920"):
+            self.assertEqual(sources[source]["build"], "0.9.2.0")
+        self.assertNotIn("beings-en-0920", sources)
+        self.assertNotIn("nature-en-0920", sources)
 
 
 if __name__ == "__main__":

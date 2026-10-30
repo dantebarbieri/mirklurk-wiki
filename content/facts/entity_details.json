@@ -324,6 +324,12 @@
       "label": "Attack range",
       "unit": "tiles",
       "description": "Literal weapon reach from the item definition, measured in tiles."
+    },
+    {
+      "id": "block-chance",
+      "label": "Base block chance",
+      "unit": "0-1 fraction",
+      "description": "Innate chance to stop a whole attack; Shield Savant adds to an equipped shield's value."
     }
   ],
   "profiles": [
@@ -334,9 +340,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "itemDB[0].weight/price/stackLimit/durabilityMax/armor"
+          "key": "itemDB[0].weight/price/stackLimit/durabilityMax/armor/blockChance"
         },
         {
           "source": "items-en",
@@ -349,7 +355,8 @@
         "initial-price": 0.5,
         "stack-limit": 1,
         "durability-max": 50,
-        "item-armor": 1.5
+        "item-armor": 1.5,
+        "block-chance": 0.08
       }
     },
     {
@@ -359,9 +366,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "itemDB[1].weight/price/stackLimit/durabilityMax/armor/sparkChance"
+          "key": "itemDB[1].weight/price/stackLimit/durabilityMax/armor/sparkChance/blockChance"
         },
         {
           "source": "items-en",
@@ -375,7 +382,8 @@
         "stack-limit": 1,
         "durability-max": 100,
         "item-armor": 2.5,
-        "spark-chance": 0.15
+        "spark-chance": 0.15,
+        "block-chance": 0.08
       }
     },
     {
@@ -1795,7 +1803,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[41].weight/price/stackLimit/durabilityMax/apCost/tinderBonus/burnTime/lightRadius/damageClass"
         },
@@ -1808,7 +1816,7 @@
       "values": {
         "initial-weight": 0.8,
         "initial-price": 0.2,
-        "stack-limit": 1,
+        "stack-limit": 3,
         "durability-max": 30,
         "item-ap-cost": 6,
         "tinder-bonus": 0.15,
@@ -2027,9 +2035,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "itemDB[50].weight/price/stackLimit/durabilityMax/armor"
+          "key": "itemDB[50].weight/price/stackLimit/durabilityMax/armor/blockChance"
         },
         {
           "source": "items-en",
@@ -2042,7 +2050,8 @@
         "initial-price": 4.5,
         "stack-limit": 1,
         "durability-max": 200,
-        "item-armor": 3.5
+        "item-armor": 3.5,
+        "block-chance": 0.12
       }
     },
     {
@@ -2215,9 +2224,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "itemDB[58].weight/price/stackLimit/durabilityMax/armor/sparkChance"
+          "key": "itemDB[58].weight/price/stackLimit/durabilityMax/armor/sparkChance/blockChance"
         },
         {
           "source": "items-en",
@@ -2231,7 +2240,8 @@
         "stack-limit": 1,
         "durability-max": 300,
         "item-armor": 5,
-        "spark-chance": 0.25
+        "spark-chance": 0.25,
+        "block-chance": 0.12
       }
     },
     {
@@ -3243,7 +3253,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[96].weight/price/stackLimit/durabilityMax/apCost/craftCost/craftReturn/burnTime/lightRadius/damageClass"
         },
@@ -3256,7 +3266,7 @@
       "values": {
         "initial-weight": 0.8,
         "initial-price": 0.02,
-        "stack-limit": 1,
+        "stack-limit": 3,
         "durability-max": 12,
         "item-ap-cost": 6,
         "craft-ap-cost": 5,
@@ -3852,9 +3862,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "itemDB[118].weight/price/stackLimit/durabilityMax/craftCost/craftReturn/armor"
+          "key": "itemDB[118].weight/price/stackLimit/durabilityMax/craftCost/craftReturn/armor/blockChance"
         },
         {
           "source": "items-en",
@@ -3869,7 +3879,8 @@
         "durability-max": 25,
         "craft-ap-cost": 5,
         "craft-yield": 1,
-        "item-armor": 1.5
+        "item-armor": 1.5,
+        "block-chance": 0.1
       }
     },
     {
@@ -6519,7 +6530,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_1",
           "key": "itemDB[212].weight/price/stackLimit/durabilityMax/apCost/craftCost/craftReturn/tinderBonus/burnTime/lightRadius/damageClass"
         },
@@ -6532,7 +6543,7 @@
       "values": {
         "initial-weight": 0.8,
         "initial-price": 0.08,
-        "stack-limit": 1,
+        "stack-limit": 3,
         "durability-max": 20,
         "item-ap-cost": 6,
         "craft-ap-cost": 6,
@@ -8075,7 +8086,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[5].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/rangedAttackCost/dodgeChance/damageClass"
         },
@@ -8088,6 +8099,11 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "5"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[5].blockChance"
         }
       ],
       "values": {
@@ -8107,7 +8123,8 @@
         "damage-class-id": 15,
         "ranged-damage-class-id": 17,
         "hp-grid-width": 4,
-        "hp-grid-height": 3
+        "hp-grid-height": 3,
+        "block-chance": 0.1
       }
     },
     {
@@ -8141,7 +8158,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[6].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
         },
@@ -8149,6 +8166,11 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "6"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[6].blockChance"
         }
       ],
       "values": {
@@ -8166,7 +8188,8 @@
         "dodge-chance": 0.15,
         "damage-class-id": 15,
         "hp-grid-width": 5,
-        "hp-grid-height": 4
+        "hp-grid-height": 4,
+        "block-chance": 0.15
       }
     },
     {
@@ -8493,7 +8516,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[12].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/rangedAttackCost/dodgeChance/damageClass"
         },
@@ -8506,6 +8529,11 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "12"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[12].blockChance"
         }
       ],
       "values": {
@@ -8525,7 +8553,8 @@
         "damage-class-id": 14,
         "ranged-damage-class-id": 17,
         "hp-grid-width": 3,
-        "hp-grid-height": 4
+        "hp-grid-height": 4,
+        "block-chance": 0.1
       }
     },
     {
@@ -8683,7 +8712,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[15].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/aooChance/damageClass/hpgridsize"
         },
@@ -8691,6 +8720,11 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "15"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[15].blockChance"
         }
       ],
       "values": {
@@ -8705,11 +8739,12 @@
         "melee-ap-cost": 6,
         "melee-distance": 2.25,
         "ranged-distance": -1,
-        "dodge-chance": 0.12,
+        "dodge-chance": 0.1,
         "opportunity-chance": 0.6,
         "damage-class-id": 14,
         "hp-grid-width": 5,
-        "hp-grid-height": 3
+        "hp-grid-height": 3,
+        "block-chance": 0.1
       }
     },
     {
@@ -8741,7 +8776,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[16].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/rangedAttackCost/dodgeChance/aooChance"
         },
@@ -8754,6 +8789,11 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "16"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[16].blockChance"
         }
       ],
       "values": {
@@ -8774,7 +8814,8 @@
         "damage-class-id": 24,
         "ranged-damage-class-id": 18,
         "hp-grid-width": 5,
-        "hp-grid-height": 3
+        "hp-grid-height": 3,
+        "block-chance": 0.075
       }
     },
     {
@@ -8865,7 +8906,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[18].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
         },
@@ -8873,6 +8914,11 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "18"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[18].blockChance"
         }
       ],
       "values": {
@@ -8890,7 +8936,8 @@
         "dodge-chance": 0,
         "damage-class-id": 15,
         "hp-grid-width": 5,
-        "hp-grid-height": 5
+        "hp-grid-height": 5,
+        "block-chance": 0.1
       }
     },
     {
@@ -9623,7 +9670,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[31].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/aooChance/damageClass/hpgridsize"
         },
@@ -9631,6 +9678,11 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "31"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[31].blockChance"
         }
       ],
       "values": {
@@ -9649,7 +9701,8 @@
         "opportunity-chance": 0.45,
         "damage-class-id": 14,
         "hp-grid-width": 4,
-        "hp-grid-height": 2
+        "hp-grid-height": 2,
+        "block-chance": 0.05
       }
     },
     {
@@ -9862,7 +9915,7 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0899",
+          "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[35].xp/armor/tilespeed/moveChance/baseSpeed/hostileDist/hostileChance/APmax/attackCost/meleeDist/rangedDist/dodgeChance/damageClass/hpgridsize"
         },
@@ -9870,6 +9923,11 @@
           "source": "beings-en-0899",
           "section": "Titles",
           "key": "35"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[35].blockChance"
         }
       ],
       "values": {
@@ -9887,7 +9945,8 @@
         "dodge-chance": 0.25,
         "damage-class-id": 17,
         "hp-grid-width": 4,
-        "hp-grid-height": 3
+        "hp-grid-height": 3,
+        "block-chance": 0.2
       }
     },
     {

@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.1.2",
+    "build": "0.9.2.0",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -120,6 +120,24 @@
       "path": "data.win",
       "sha256": "71de4279f35101e95708c9de36f4fdc5ffd5aa4c1e06b79c88c188504b1e99b8",
       "build": "0.9.1.2"
+    },
+    {
+      "id": "game-data-0920",
+      "path": "data.win",
+      "sha256": "d2d5736313c1d51f1c81b259ba96e7366e4465a7aa1ff5530a5ab128503da26d",
+      "build": "0.9.2.0"
+    },
+    {
+      "id": "items-en-0920",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "d48094f0e1b6b600081780d3335be5af1d252637d878f7ad932abb0a7141ac46",
+      "build": "0.9.2.0"
+    },
+    {
+      "id": "ui-en-0920",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "80db657b6371a68e88b8ba8eb5581f3363f3a263ffc7efe4a3ac498849770885",
+      "build": "0.9.2.0"
     }
   ],
   "entities": [
@@ -5213,13 +5231,18 @@
       "entity": "Shield Savant",
       "property": "Full-block chance bonus per rank (%)",
       "value": 2.5,
-      "description": "The skill description requires an equipped shield.",
-      "confidence": "localization-described",
+      "description": "Adds 2.5 percentage points per rank to the equipped shield's innate block chance; without a shield the block chance is zero.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
+          "source": "ui-en-0920",
           "section": "SkillsDesc3",
           "key": "4"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_block"
         }
       ]
     },
@@ -16188,22 +16211,38 @@
     {
       "id": "skill-3-4-mechanics",
       "kind": "algorithm",
-      "title": "Shield Savant: described effects",
-      "summary": "Shield Savant adds a 2.5-percent-per-rank full-block check while a shield is equipped.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "title": "Shield Savant: shield blocking",
+      "summary": "An equipped shield supplies its innate block chance, and Shield Savant adds 2.5 percentage points per rank.",
+      "conditions": "Requires a recognized shield in the active off-hand slot; no shield means no block chance.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
+          "source": "ui-en-0920",
           "section": "SkillsDesc3",
           "key": "4"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_block"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_blocks_attack"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances;item_durloss"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "Add 2.5 percentage points per skill rank to the shield's base chance, rather than multiplying that chance.",
+          "A successful block stops the whole attack and costs the shield 1 durability with a 75% chance or 2 with a 25% chance.",
+          "The character panel shows the combined block chance; the shield tooltip shows its base chance."
         ],
         "fact_ids": [
           "shield-savant-block"

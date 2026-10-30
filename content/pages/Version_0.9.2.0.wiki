@@ -1,0 +1,55 @@
+'''Version 0.9.2.0''' is the patch released on 29 October 2026, a week after [[Version 0.9.1.2]]. This wiki shows 0.9.2.0 values. It adds innate shield and creature blocking, improves inventory handling and fixes torch damage.
+
+This page names late-story creatures and equipment.
+
+== New content ==
+There are no new items, creatures, recipes or locations.
+
+== Changes ==
+=== Shields and blocking ===
+All five shields now have a base chance to stop an entire attack, even without [[Shield Savant]]:
+* [[Improvised Shield]]: 10%.
+* [[Wood Buckler]] and [[Iron Buckler]]: 8%.
+* [[Steel Shield]] and [[Large Scaalmyr Husk]]: 12%.
+
+Shield Savant adds 2.5 percentage points per rank to that base chance. Without an equipped shield, your block chance is zero. Each successful block costs the shield 1 durability with a 75% chance or 2 with a 25% chance. Shield armor and maximum durability have not changed. The shield tooltip shows the base chance; the character panel shows your combined chance. See [[Combat basics]] and [[Health and armor]].
+
+=== Creature blocking ===
+Some creatures and friendly characters can now block melee and projectile attacks. Their chance is shown when examined:
+* [[Raving Unwanted]]: 5%.
+* [[Scaalmyr Warrior]], [[Cave Troll]], [[Soldier]] and [[Ranger Bhato]]: 10%.
+* [[Scaalmyr Geomancer]]: 7.5%.
+* [[Captain Eir]]: 15%.
+* [[Survivor]]: 20%.
+
+Not in the patch notes: Scaalmyr Warrior's base dodge chance also falls from 12% to 10%.
+
+=== Torch stacks ===
+[[Torch]], [[Improvised Torch]] and [[Improvised Enduring Torch]] now stack up to three of the same type. Both remaining burn time and durability must match exactly. Prices, weights, maximum durability, fuel duration and recipes are unchanged.
+
+=== Inventory rotation ===
+Quick-looting, stacking and inventory sorting can turn an item to fit after trying its current orientation. If neither orientation fits, it returns to its original orientation. Automatic ground-container resizing and preparation for trading or crafting do not use this rotation. See [[Controls]].
+
+=== Thrown containers ===
+Thrown containers sit lower and become more transparent in water; their shadows fade with them.
+
+Not in the patch notes: the container's transparency is now saved. Older saves without this optional value still load.
+
+== Fixes ==
+=== Carry weight and inventory loading ===
+Loading no longer inflates carry weight by counting container contents twice. Placing an equipped item, such as a torch, now removes its weight from your carry total. These are accounting fixes, not changes to item weights. See [[Placing objects]].
+
+Not in the patch notes: loading rebuilds the occupied cells of saved inventory items, and removing an item clears every cell that belongs to it, including after rotation.
+
+=== Unlit torches ===
+Unlit torches now deal [[Blunt]] damage when used as melee weapons. Lit torches still deal [[Fire]] damage.
+
+=== Reactions to distant attacks ===
+A creature with no target now reacts to the actual attacker when a distant attack misses, rather than looking for a nearby target. Blocking an attack also makes it react to that attacker.
+
+[[Blend Into Nature]] still gives 6.5% detection evasion per rank after a miss; the blocked-attack reaction does not use that check. The skill's strength has not changed.
+
+=== Main menu ===
+Not in the patch notes: rapid changes of the highlighted menu option can retrigger its hover sound, whose volume is slightly lower. The previously transparent logo graphic is no longer blank.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

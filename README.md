@@ -69,18 +69,28 @@ its date and a one-line summary; the Main Page and Game mechanics name only the
 latest version and link there. **Version history** and **Patch notes** redirect to it.
 [Provenance](docs/PROVENANCE.md#version-0912-update) records the amendments.
 
+Patch **0.9.2.0** followed on 2026-10-29. `data.win`, `Items.ini` and `UI.ini`
+have new `-0920` fingerprints; Bestiary and Nature are unchanged. Five shields
+gain innate block chances, Shield Savant adds to them, and successful blocks
+wear the shield. Eight creatures gain blocking and Scaalmyr Warrior's dodge
+falls to 10%. Matching torches stack to three and unlit torch attacks are blunt.
+The **Version 0.9.2.0** changelog also covers inventory rotation, carry-weight
+fixes, distant-attack reactions and optional saved container transparency.
+Pages now show 0.9.2.0 values; no entities, recipes or icons were added.
+[Provenance](docs/PROVENANCE.md#version-0920-update) records the amendments.
+
 The reference now contains **107 numeric facts and 344 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
 variants, 87 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 511 main-namespace pages:
+summaries. The encyclopedia presentation generates 512 main-namespace pages:
 357 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical
 browsing; the retired Miscellaneous items category redirects to Items.
 
-Supplemental source-scoped profiles preserve **2,921 scalar values**
+Supplemental source-scoped profiles preserve **2,934 scalar values**
 in 603 profiles across 322 entities: 264 items, 42 beings, and 16 nature records.
-Their 53 shared property definitions distinguish literal initializer values,
+Their 55 shared property definitions distinguish literal initializer values,
 computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
 have localized names but no reviewed initializer profile; no stats are invented
 for them. Equipment AP costs are documented separately from attack/use costs,
