@@ -1,4 +1,4 @@
-FROM mediawiki:1.43.11@sha256:6b24a06db8d66f4fc8dd0f664375cc9d03a556b521c79fce1474e45225580548
+FROM mediawiki:1.43.11@sha256:fe7fe8565a4ee862f578c9b17eec3725d6d2f2810d380b8144a614d95f764d69
 
 COPY deploy/LocalSettings.template.php /var/www/html/LocalSettings.php
 COPY deploy/mirklurk-runtime.php /var/www/html/mirklurk-runtime.php
