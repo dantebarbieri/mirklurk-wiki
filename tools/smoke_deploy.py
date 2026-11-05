@@ -1402,7 +1402,7 @@ def smoke(uploads_only=False):
             smoke_vendor_rows(api, pages, data, catalog, csrf, dom, check_parser_errors)
             smoke_display_propagation(run, api, pages, csrf, wait_for_server_tick, refreshed_transclusion)
             for title, expected_links in {
-                "Items": {"Wood Buckler", "Turnip (item)"},
+                "Items": {"Wooden Buckler", "Turnip (item)"},
                 "NPCs": {"Captain Eir", "Magus Clay", "Ranger Bhato"},
                 "Nature": {"Turnip (nature)"},
                 "Skills": {"Strider", "Focused Mind"},
