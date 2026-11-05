@@ -4,8 +4,8 @@
     {
       "id": "item-0-illustration",
       "entity": "item-0",
-      "file_title": "File:Wood Buckler icon (cropped).png",
-      "caption": "Wood Buckler inventory icon.",
+      "file_title": "File:Wooden Buckler icon (cropped).png",
+      "caption": "Wooden Buckler inventory icon.",
       "creator": "Edym Pixels",
       "sha256": "8710129fbb47227c980708f9415858ea56dc890dad025e4981ff5b7eaa6fac92",
       "rights_status": "approved",
@@ -30,7 +30,7 @@
         "source_scale": 8
       },
       "cropped_from": {
-        "file_title": "File:Wood Buckler icon.png",
+        "file_title": "File:Wooden Buckler icon.png",
         "sha256": "56b2b82e1af98e8a32281ccb03c15d70a18d6b59c24dab19a79efee17afc115b",
         "pixel_art": {"width": 256, "height": 256, "source_scale": 8},
         "left": 40,
@@ -13623,5 +13623,10 @@
         "top": 24
       }
     }
+  ,
+    {"id": "item-278-illustration", "entity": "item-278", "file_title": "File:Snail Shell Shard icon (cropped).png", "caption": "Snail Shell Shard inventory icon.", "creator": "Edym Pixels", "sha256": "1fe30cca915784e6ea6d087a29163cf5e4b5df38df1377781b2dda14ff2c6749", "rights_status": "approved", "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots", "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[278].sprite/pic"}, {"source": "items-en-0950", "section": "ItemTitles", "key": "278"}], "pixel_art": {"width": 104, "height": 232, "source_scale": 8}, "cropped_from": {"file_title": "File:Snail Shell Shard icon.png", "sha256": "27d006a01cf7513aa82e1092f1cf79446635f1551f674c3b22197c6f853e5110", "pixel_art": {"width": 128, "height": 256, "source_scale": 8}, "left": 16, "top": 16}},
+    {"id": "item-279-illustration", "entity": "item-279", "file_title": "File:Intact Snail Shell icon (cropped).png", "caption": "Intact Snail Shell inventory icon.", "creator": "Edym Pixels", "sha256": "c5d3fa6a7b15f1efabe81e1580f31d5d1e9c97be5eba53bed146c02917a388a0", "rights_status": "approved", "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots", "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[279].sprite/pic"}, {"source": "items-en-0950", "section": "ItemTitles", "key": "279"}], "pixel_art": {"width": 232, "height": 240, "source_scale": 8}, "cropped_from": {"file_title": "File:Intact Snail Shell icon.png", "sha256": "58634ec7316d51600e53c154b5c155f674bd587655d654189f00c072009a9bc2", "pixel_art": {"width": 256, "height": 256, "source_scale": 8}, "left": 16, "top": 8}},
+    {"id": "being-42-illustration", "entity": "being-42", "file_title": "File:Toadkin Shaman sprite (cropped).png", "caption": "Toadkin Shaman in-game sprite, shown in a representative frame.", "creator": "Edym Pixels", "sha256": "4641271c01a606e9b044986911111a3334e7ef6916e988bdef1ccfda3ffcfc4e", "rights_status": "approved", "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots", "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[42].sprite.frame0"}, {"source": "beings-en-0950", "section": "Titles", "key": "42"}], "pixel_art": {"width": 120, "height": 174, "source_scale": 6}, "cropped_from": {"file_title": "File:Toadkin Shaman sprite.png", "sha256": "0c03fdb894f61ffa6d095b973eb0e5fe9e83a7227e12eedc4a0021720099906e", "pixel_art": {"width": 228, "height": 216, "source_scale": 6}, "left": 24, "top": 30}},
+    {"id": "being-43-illustration", "entity": "being-43", "file_title": "File:Giant Snail sprite (cropped).png", "caption": "Giant Snail in-game sprite, shown in a representative frame.", "creator": "Edym Pixels", "sha256": "4d0dd9bfce6c8af580f662cabe1e652693fe4a13fb09de8070a76c82a2629979", "rights_status": "approved", "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots", "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[43].sprite.frame0"}, {"source": "beings-en-0950", "section": "Titles", "key": "43"}], "pixel_art": {"width": 80, "height": 56, "source_scale": 8}, "cropped_from": {"file_title": "File:Giant Snail sprite.png", "sha256": "704ebe4db9b2eca60677f495a8f02a27253b2d11b355ed9d83e06d6c49262794", "pixel_art": {"width": 128, "height": 128, "source_scale": 8}, "left": 24, "top": 32}}
   ]
 }

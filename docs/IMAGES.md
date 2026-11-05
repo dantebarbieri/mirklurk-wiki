@@ -34,7 +34,7 @@ repository asset publication, or change the separately reviewed curated register
 
 Optional `illustrations` records associate an item, being, nature record, or
 skill with a local title that follows the [File title convention](#file-titles),
-such as `File:Wood Buckler icon.png`. The encyclopedia
+such as `File:Wooden Buckler icon.png`. The encyclopedia
 stores new records in the exact allowlisted `content/facts/illustrations.json`
 with root `{"schema_version": 1, "illustrations": [...]}` and a 512 KiB cap.
 Non-item workstation illustrations use `station` instead of `entity`, with an
@@ -220,6 +220,29 @@ Both were decoded independently and reduce exactly to their native frames;
 hashes are in the records. The four PNGs were imported with the standard
 attribution sidecars. The active register is 399 with 320 crops.
 
+## Version 0.9.5.0 shells and creatures
+
+The 2026-11-05 selection adds four primary illustrations from the fingerprinted
+`game-data-0950` build: Snail Shell Shard, Intact Snail Shell, Toadkin Shaman and
+Giant Snail. Item frames are `spr_ui_items16x32` frame 35 and
+`spr_ui_items32x32` frame 48, respectively, as named by their item records.
+The appended placeholder frames 36 and 49 are not used. Creatures use frame 0
+of `spr_toadkin_shaman` and `spr_snail`.
+
+The privately exported frames are enlarged by integer nearest-neighbor scaling
+(8x for the items and snail, 6x for the shaman), with transparent RGB normalized
+to zero, then cropped to their alpha bounds. System.Drawing independently
+decodes all eight PNGs and compares every pixel, scale, crop boundary and hash
+against the native frames. The retained original and cropped hashes are in
+the metadata register. Each File description credits Edym Pixels under the
+2026-10-14 developer approval for public-wiki display, not redistribution in Git.
+Import originals and crops with attribution sidecars before publication.
+
+The Wood Buckler original and crop are renamed to
+`File:Wooden Buckler icon.png` and `File:Wooden Buckler icon (cropped).png`,
+without changing their image bytes or leaving File redirects, after the paired
+SQL/images backup. The active register now contains 404 records and 324 crops.
+
 ## Site branding
 
 On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and
@@ -402,7 +425,7 @@ rejects them in `file_title` and `cropped_from` (see `tests/test_identifiers.py`
 
 Qualifiers separate variants of one role. A transparent-margin crop adds
 `cropped` as the last qualifier, so its preserved original is the same title
-without it (`File:Wood Buckler icon (cropped).png` and `File:Wood Buckler icon.png`;
+without it (`File:Wooden Buckler icon (cropped).png` and `File:Wooden Buckler icon.png`;
 `File:Willow sprite (mature, cropped).png` and `File:Willow sprite (mature).png`).
 Titles are ASCII raster basenames (PNG, JPEG or WebP) of letters, digits,
 spaces and `_.,'()-`, never URLs. MediaWiki resolves these relative File
@@ -531,13 +554,13 @@ only the individually reviewed images for this batch. Exclude symlinks,
 unexpected formats, oversized images, unnecessary embedded metadata, and any
 unreviewed export. Compare each image's SHA-256 with its approved record.
 
-The basename becomes the MediaWiki File title: `Wood Buckler icon.png` becomes
-`File:Wood Buckler icon.png`. Follow the [File title convention](#file-titles),
+The basename becomes the MediaWiki File title: `Wooden Buckler icon.png` becomes
+`File:Wooden Buckler icon.png`. Follow the [File title convention](#file-titles),
 check existing titles before import, and rename only through the
 [reviewed move plan](#renaming-files).
 
 Place an original attribution sidecar beside each image, for example
-`Wood Buckler icon.png.txt`. Its wikitext should identify the creator/rightsholder, describe
+`Wooden Buckler icon.png.txt`. Its wikitext should identify the creator/rightsholder, describe
 the actual permission or license basis, record the source and review scope,
 and give the original caption and image fingerprint. Do not reproduce
 localization prose, private correspondence, personal paths, or confidential

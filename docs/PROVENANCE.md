@@ -416,6 +416,67 @@ also distinguishes unannounced hover-sound and logo changes; those are not
 new item art. Normal starting equipment, loot, merchants, prices, weights,
 durability maxima, fuel durations and crafting records remain unchanged.
 
+## Version 0.9.5.0 update
+
+Patch 0.9.5.0 (2026-11-05 UTC) was compared privately with 0.9.2.0.
+Thirty-nine of 284 code entries changed, with none added or removed.
+`game-data-0950`, `items-en-0950`, `ui-en-0950` and `beings-en-0950`
+identify the binary and regenerated English files; Nature is unchanged.
+Source material remains private; only curated facts and entry/field references
+are published. The Steam announcement and installed menu agree on the version.
+
+`gml_Object_databank_Alarm_1` defines items 278 and 279, Snail Shell Shard and
+Intact Snail Shell. Their literal profiles, equipment cost, item values,
+categories and external image metadata are new. No recipes are defined.
+The same initializer excludes Improvised Bedroll 257 from recipe-derived weight
+and removes Flint Dagger 277's metal repair category. Item 0's new English name
+is Wooden Buckler; the old title redirects and both File titles move without
+changing their hashes. Reserved names 280-283 have no item definitions or sources.
+
+`gml_Object_databank_Alarm_3` defines beings 42 and 43 and adds Toadkin 21's
+10% block chance. `being_initiate` in `gml_GlobalScript_scr_basic_useful`
+establishes their exact HP shapes and inherent armor, separately from static
+armor. `gml_Object_manager_area_Step_0` and `gml_Object_obj_being_Step_0`
+establish Shaman healing and Snail armor restoration every third own turn.
+The former restores lost HP, not burnt cells; the latter restores only living
+shell cells' armor. `gml_Object_manager_area_Alarm_4` adds the independent
+20% Shaman companion roll. Normal initialization substitutes Snails for selected
+Slugs outside area 0 (55% in area 5; 22.5% elsewhere).
+`gml_Object_obj_being_Alarm_0` supplies three new explicit corpse entries and
+the Shaman's class-5 budgeted treasure. All eleven prior treasure pools are
+reconstructed before adding eligible shell memberships; the Shaman's new pool
+retains the one-cell, type and budget restrictions. No equal per-item odds are
+inferred from eligibility. `loot_amountchances` supplies nonuniform quantities.
+As with existing budgeted drops, Random treasure owns the candidate list;
+Toadkin Shaman loot supplies the source context on all six eligible item pages.
+
+Amended Strider, Amphibian, Firm Grip, Slow Metabolism, Body Warmth and Pack
+Mule entries cite `being_steps_here`, `tile_get_penalty`,
+`tile_get_penalty_water`, `tile_get_moment`, `player_get_stat_changes` and
+`player_get_carrymax`. The Firm Grip numeric fact changes from 6 to 8.
+Hunger's unskilled wellbeing penalty worsens to 1.5 percentage points; the
+two wellbeing skills apply their every-third-rank multipliers before rounding.
+Movement AP selects one penalty grid, whereas routing still sums both.
+Terrain guides no longer derive AP from animation speed.
+
+Death and Difficulty cite creation, draw and save/load handlers plus
+`gml_Object_manager_day_Step_0`: default mode 1 for creation and absent old
+save fields, deletion at death-menu creation, and qualified crawl recovery
+before the ensuing end turn. Crafting cites the two nearby-container helpers,
+`player_inventory_lose_reqs`, `item_get_real_craftcost` and UI parent fallback:
+24-pixel radius, corpse exclusion, component saving and AP rounding/debt.
+Rain cites `player_rained_upon` and container updates, not new waterproof stats.
+Other changed guides cover the Add Armor threshold, path cleanup, tent/log
+occupancy, NPC advice and ultrawide correction. The changelog records remaining
+presentation, audio and backward-compatible identifier fixes, distinguishing
+silent changes and avoiding claims of unchanged complete seeded output.
+
+The catalog byte budget increases from 528 to 576 KiB for the two creature
+abilities, four entity pages, acquisition context and revised mechanics guides.
+Publication and schema limits remain enforced.
+The publication caps also grow deliberately: provenance 64 to 72 KiB, image
+documentation 36 to 40 KiB and catalog regression tests 76 to 84 KiB.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

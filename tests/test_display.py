@@ -113,8 +113,8 @@ class DisplayTests(unittest.TestCase):
 
     def test_grid_migration_has_only_the_authorized_templates(self):
         articles = {title: text for title, text in self.pages.items() if title not in DISPLAY_TITLES}
-        self.assertEqual(sum(text.count("{{Health grid|") for text in articles.values()), 42)
-        self.assertEqual(sum(text.count("{{Attack grid|") for text in articles.values()), 98)
+        self.assertEqual(sum(text.count("{{Health grid|") for text in articles.values()), 44)
+        self.assertEqual(sum(text.count("{{Attack grid|") for text in articles.values()), 100)
         self.assertEqual(sum(text.count("|label=Ranged attack}}") for text in articles.values()), 8)
         self.assertFalse(any('class="mirklurk-cell-grid"' in text for text in articles.values()))
         for title in ("Sceetler", "Nightmare"):
@@ -152,8 +152,8 @@ class DisplayTests(unittest.TestCase):
     def test_creature_lookup_and_existing_lists_use_reviewed_classifications_and_art(self):
         locations = page_locations(self.data, self.catalog)
         creatures = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "creature"}
-        self.assertEqual(len(creatures), 30)
-        self.assertEqual(self.pages["Bestiary"].count("{{Creature|"), 30)
+        self.assertEqual(len(creatures), 32)
+        self.assertEqual(self.pages["Bestiary"].count("{{Creature|"), 32)
         self.assertNotIn("{{Creature|", self.pages["NPCs"])
         assets = self.pages[ASSETS_TITLE]
         for identity in creatures:
@@ -206,7 +206,7 @@ class DisplayTests(unittest.TestCase):
         items = {row["id"]: row for row in self.data["entities"] if row["category"] == "item"
                  and row["id"] not in {recipe["owner_item"] for recipe in self.catalog["construction_recipes"]}}
         registry = self.pages[ASSETS_TITLE].split("    items = {\n", 1)[1].split("\n    },")[0]
-        self.assertEqual(len(items), 265)
+        self.assertEqual(len(items), 267)
         self.assertEqual(registry.count("        [ "), len(items))
         for identity, item in items.items():
             title = locations[identity]
@@ -241,7 +241,7 @@ class DisplayTests(unittest.TestCase):
             self.assertNotIn("Medium Backpack icon (cropped)", registry)
             self.assertIn("[[Iron Hand Axe|<nowiki>Iron Hand Axe</nowiki>]]", registry)
         self.assertIn("{{Item|Iron Hand Axe}}", self.pages["Items"])
-        self.assertEqual(self.pages["Items"].count('id="item-'), 265)
+        self.assertEqual(self.pages["Items"].count('id="item-'), 267)
 
     def test_actual_sources_compose_rows_and_keep_exact_owner_filters(self):
         readers = {title: text for title, text in self.pages.items() if title not in DISPLAY_TITLES}
@@ -250,7 +250,7 @@ class DisplayTests(unittest.TestCase):
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (98, 79))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 80)
         self.assertEqual(sum(text.split("<div class=\"mirklurk-navbox\"", 1)[0].count("{{Item|") for title, text in readers.items()
-                             if f"\n'''{title}''' groups " not in text), 2258)
+                             if f"\n'''{title}''' groups " not in text), 2271)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("Merchants sell it at its [[#price|Value]].") for text in readers.values()), 58)

@@ -181,20 +181,22 @@ class SelectiveViewTests(unittest.TestCase):
         locations = self.locations
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
-        self.assertEqual(owner.count('id="pool-item-'), 613)
+        self.assertEqual(owner.count('id="pool-item-'), 624)
         for placeholder in ("Budget-dependent", "Unknown", "Eligible, not guaranteed."):
             self.assertNotIn(placeholder, owner)
         for pool in self.catalog["acquisition"]["pools"]:
+            source = next(row for row in self.catalog["acquisition"]["sources"] if row["id"] == pool["owner_source"])
+            pool_owner = self.pages[source["title"]]
             params = {"view": "pool", "pool": pool["id"]}
-            listing = expand_selective_view(owner, params)
-            parsed = check_pool_projection(listing, pool, "Random treasure", locations, self.catalog)
+            listing = expand_selective_view(pool_owner, params)
+            parsed = check_pool_projection(listing, pool, source["title"], locations, self.catalog)
             expected = sorted(pool["eligible_item_ids"], key=lambda identity: (names[identity], identity))
             self.assertEqual([row["ids"] for row in parsed.rows],
                              [[titled("pool-item-" + pool["id"], locations[item])] for item in expected])
             for item in [*expected, "item-48"]:
                 with self.subTest(pool=pool["id"], item=item):
-                    rendered = expand_selective_view(owner, {**params, "item": locations[item]})
-                    check_pool_projection(rendered, pool, "Random treasure", locations, self.catalog, item)
+                    rendered = expand_selective_view(pool_owner, {**params, "item": locations[item]})
+                    check_pool_projection(rendered, pool, source["title"], locations, self.catalog, item)
                     self.assertNotIn("<table", rendered)
         self.assertEqual(expand_selective_view(owner, {"view": "pool", "pool": "missing", "item": "Amethyst"}), "")
         self.assertEqual(expand_selective_view(owner, {"view": "price"}), "")
@@ -435,7 +437,7 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertIn("\n\n".join(literal(paragraph) for paragraph in effect["paragraphs"]), page)
             for paragraph in effect["paragraphs"]:
                 self.assertFalse(any(paragraph in self.pages[guide["title"]] for guide in self.catalog["guides"]))
-        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 25, "Where to plant": 8, "How it's used": 7})
+        self.assertEqual(headings, {"Consumption effects": 11, "Effects": 28, "Where to plant": 8, "How it's used": 7})
         bursthopper = next(row for row in self.catalog["item_effects"] if row["entity"] == "item-243")
         self.assertIn("15 percentage points of stamina", bursthopper["paragraphs"][0])
         self.assertNotIn("focus", bursthopper["paragraphs"][0].lower())
@@ -480,9 +482,9 @@ class SelectiveViewTests(unittest.TestCase):
         # 0.9.0.0 moved its release notes; "Version 0.8.9.9" redirects.
         locations = self.locations
         added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
-            "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Version 0.9.1.0", "Version 0.9.1.2", "Version 0.9.2.0", "Versions",
+            "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Version 0.9.1.0", "Version 0.9.1.2", "Version 0.9.2.0", "Version 0.9.5.0", "Wooden Buckler", "Versions",
             "Version history", "Patch notes", "Survivor", "Fire Bond"}
-        self.assertEqual(len(added), 38)
+        self.assertEqual(len(added), 44)
         families = {title for title, text in self.pages.items() if f"\n'''{title}''' groups " in text}
         old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added - families
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
@@ -490,6 +492,7 @@ class SelectiveViewTests(unittest.TestCase):
         self.assertEqual(self.pages["Unwanted Guard"], "#REDIRECT [[Survivor]]\n")
         self.assertEqual(self.pages["Fire Striker"], "#REDIRECT [[Fire Bond]]\n")
         self.assertEqual(self.pages["Clays' Magus Hood"], "#REDIRECT [[Clay's Magus Hood]]\n")
+        self.assertEqual(self.pages["Wood Buckler"], "#REDIRECT [[Wooden Buckler]]\n")
         self.assertEqual(hashlib.sha256(("\n".join(old_titles) + "\n").encode()).hexdigest(),
                          "b017c9d79b46f42e18ff43418a9ca40878cd9c1d90e3165c87bad15257e6ca8e")
 
@@ -501,8 +504,8 @@ class SelectiveViewTests(unittest.TestCase):
             "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
             "nature-20": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
         }
-        self.assertEqual(len(self.data["illustrations"]), 400)
-        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 372)
+        self.assertEqual(len(self.data["illustrations"]), 404)
+        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 376)
         for identity, digest in hashes.items():
             images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
             self.assertEqual(len(images), 1)

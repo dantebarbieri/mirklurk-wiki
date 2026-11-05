@@ -1,0 +1,75 @@
+'''Version 0.9.5.0''' is the patch released on 5 November 2026, following [[Version 0.9.2.0]]. This wiki shows 0.9.5.0 values. It adds death modes, shell equipment and two creatures, changes travel costs and several skills, and fixes crafting, rain and inventory behavior.
+
+This page names late-story locations and characters.
+
+== New content ==
+=== Shells and creatures ===
+* [[Giant Snail]] has five HP cells and regenerates armor on its four shell cells every third own turn. It does not heal lost HP. It can replace an ordinary Giant Slug outside the fort's area: 55% of applicable selections in Savage Mirk and 22.5% elsewhere.
+* [[Snail Shell Shard]] drops from a Giant Snail in quantities of 1 to 3, with lower quantities more likely. No recipe or use is defined for it.
+* [[Intact Snail Shell]] is an off-hand shield with 1.6 armor, 9% base block chance and 16 maximum durability. While equipped it restores 0.3 durability each player end turn. A Giant Snail has a separate 15% chance to drop one with 9 to 15 durability.
+* [[Toadkin Shaman]] has 13 HP cells, with two armor layers on each of five central cells. Every third own turn it can heal up to five lost HP cells on itself or the closest eligible wounded Toadkin-faction creature within eight tiles, at a cost of 4 AP. A selected Toadkin repopulation spawn can bring one on a 20% roll, independently of its existing extra-Toadkin roll.
+
+The announcement mentions one new enemy; the installed build defines and spawns both creatures above. Four other new equipment names have no item definitions, recipes or sources, so they are not documented as obtainable gear.
+
+== Changes ==
+=== Death modes ===
+[[Death]] now has three separately chosen modes: Crawl to Safety, Load Latest and Permadeath. [[Difficulty]] remains a separate choice. Load Latest is the creation default and the fallback for older saves without a saved mode.
+
+Crawl to Safety retains reload and offers recovery elsewhere in the same area, wounded and with damaged equipment. It applies 40 to 120 durability-loss calls across eligible equipped gear, excluding orbs; that is not a percentage penalty. It heals 1 to 3 lost HP cells only if none remain, never burnt cells. Recovery targets are 15-25% wellbeing, 5-25% stamina and 10-25% focus before the ensuing turn resolves, not guaranteed final displayed values.
+
+Permadeath deletes the character's save directory when the death menu appears and removes the reload option while dead. Names are colored by difficulty and accompanied by the chosen death-mode icon.
+
+=== Travel and skills ===
+[[Action points]] for a step now use the selected water or land penalty grid: 1 plus penalty divided by 16, plus 0.4 for a diagonal, then encumbrance, rounding to 0.2 AP and an 8 AP cap. Pathfinding still sums both grids; it is not guaranteed to choose a minimum-AP route. Animation speed remains separate.
+
+[[Terrain]], [[Sand]], [[Mud]], [[Shallow water]], [[Medium water]] and [[Deep water]] use revised penalties. Clear ground, paths, stone and ordinary indoor flooring have a -2.5 base bonus; mud and sand add 6; the three water layers contribute 5, 15 and 40 where present. Hindrance classes use 50 or 37.5 instead of 75 or 56.25. This does not make every step cheaper: an unskilled straight dry [[Slopes|slope]] costs 7.2 AP instead of 5.
+
+* [[Firm Grip]] improves slope penalties and movement speed by 8% per rank instead of 6%. Rank 5 removes the extra descending-slip increment, not every slip risk.
+* [[Strider]] now wears paths through high grass too, with strength increasing every third rank. Its 8%-per-rank positive nonslope penalty reduction is unchanged.
+* [[Amphibian]] still reduces water penalties by 8% per rank; it uses the revised water values.
+* [[Slow Metabolism]] and [[Body Warmth]] reduce their respective hungry and hot/cold [[Wellbeing]] penalties every third rank. Their existing 4%-per-rank retention effects are unchanged.
+* [[Pack Mule]] adds 1 kg for each completed three ranks on top of 1.5 kg per rank: 58 kg total allowance at rank 10.
+
+Not in the patch notes: unskilled hunger now costs up to 1.5 wellbeing percentage points per turn instead of 1. See [[Satiation]] and [[Temperature]] for the thresholds and rounding. No general [[Resting]] recovery-rate change was found.
+
+=== Items and combat ===
+[[Wooden Buckler]] is the new name of Wood Buckler; its stats and art are unchanged. [[Toadkin]] gains a 10% base block chance.
+
+[[Flint Dagger]] no longer accepts metal repair bonuses and can supply stone sparks for a fire while equipped. [[Improvised Bedroll]] now keeps its 2 kg weight instead of receiving the generic recipe-derived weight rewrite.
+
+Not in the patch notes: the Toadkin block chance is an additional static combat change. Existing recipes, sellers and quest progression are unchanged.
+
+=== Crafting and rain ===
+[[Crafting]] automatically uses ingredients only from adjacent containers within 24 world pixels, including diagonals, instead of a four-tile radius. Corpses are excluded; take their ingredients manually first. [[Brewer]] ingredient saving now works on previously missed brewing surfaces, including Survivor's Field Kit.
+
+[[Weather]] now applies filtered rain wetness to body parts and carried gear. Container waterproofing reduces rain entry, and rain slows drying without making the drying amount negative. Waterproofing stats themselves are unchanged.
+
+=== Advice and presentation ===
+[[Captain Eir]], [[Magus Clay]] and [[Ranger Bhato]] vary their Advice with main-quest progress. Eir can point toward the Broken Fen shipment, Clay toward a magical being in the Drowned Fens, and Bhato toward distant aiming with Scout. Their stock and progression requirements do not change.
+
+[[Controls|Balanced Zoom]] corrects displays wider than 16:9 while keeping the minimum zoom at half the maximum. Drowning muffles environmental and sound-effect audio; this does not establish that music is filtered too.
+
+== Fixes ==
+=== Inventory and crafting ===
+Equipping a stack takes just one [[Torch]], [[Improvised Torch]] or [[Improvised Enduring Torch]] and leaves the rest in inventory. Carried stacks of three remain supported; equipment slots cannot stack torches.
+
+Repeated crafting now accumulates overspent AP debt and ends a depleted turn correctly. Craft costs round to 0.2 AP before being clamped to at least zero. Ingredient counts are colored separately from item names. The fire menu preserves wet-tinder modifiers when no spark item is selected.
+
+Empty temporary loot containers close cleanly. Linked inventories cannot be accidentally separated through an overlaid menu.
+
+=== Movement and world time ===
+Jump landings and standing up halt stale movement paths and synchronize positions. Tent exits prefer dry footing without guaranteeing it, and tent path occupancy is restored correctly. [[Waxed Linen Tent]] is registered as blocking movement. [[Chopping Log]] still blocks walking but no longer acts as a ranged-attack blocker.
+
+Stations and equipped lights advance their timers on area reentry. The catch-up helper receives a scaled AP amount, not a literal 47.5 turns per hour. Sleeper and interior workstation depth fixes improve drawing order.
+
+=== Combat and interface ===
+Rapid harvest and search clicks recalculate AP before checking it. HP-grid attacks accept a previously unresponsive state. Opportunity-attack setup now requires an idle enemy; this is not a new universal attack-per-turn cap.
+
+The Add Armor prompt and tutorial require at least 1 total equipment armor, without hiding the combat interface from unarmored players. [[Leeching]] now has a proper damage-type label. Skill-category headings and search/harvest AP icons respect UI scaling. Returning to the main menu stops lingering ambient audio, and [[Brambles]] have revised visual movement.
+
+=== Saves and world generation ===
+Not in the patch notes: new items receive persistent identifiers, and older saved items missing one receive one on loading. Old saves remain supported without either the new identifier or death-mode field.
+
+[[World generation|World layout algorithms]] are unchanged, but the new creature and companion rolls consume randomness. This does not promise identical complete generation results for an old seed.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

@@ -26,7 +26,7 @@ class BeingArticleTests(unittest.TestCase):
         cls.beings = sorted(identity for identity, row in cls.entities.items() if row["category"] == "being")
 
     def test_being_pages_replace_the_raw_stat_table_with_a_combat_section(self):
-        self.assertEqual(len(self.beings), 42)
+        self.assertEqual(len(self.beings), 44)
         for identity in self.beings:
             page = self.pages[self.locations[identity]]
             with self.subTest(being=identity):
