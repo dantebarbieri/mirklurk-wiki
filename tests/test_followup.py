@@ -21,7 +21,7 @@ from smoke_deploy import smoke_pixel_art
 FACTIONS = {  # 0.8.9.9 moved Wilda and the Survivors into the camp faction (10) and added Mirkfangs (11).
     0: [5, 6, 8, 9, 12, 19, 20, 26, 33],
     3: [1, 2, 4, 7, 11, 17, 24, 25, 27, 29, 30],
-    4: [0], 5: [13, 14, 15, 16, 22, 32], 6: [21], 7: [10, 23], 8: [28, 31, 41], 9: [3, 18],
+    4: [0, 43], 5: [13, 14, 15, 16, 22, 32], 6: [21, 42], 7: [10, 23], 8: [28, 31, 41], 9: [3, 18],
     10: [34, 35, 36], 11: [37, 38, 39, 40],
 }
 CAPACITY = {
@@ -92,7 +92,7 @@ class FollowupTests(unittest.TestCase):
         # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers and float clears for this comparison, never for sync.
         digests = {
-            "Items": "941a328acf17161c80948f3c3763dd00a82e05bdf0751e4fff3a2c4ac7f4225e",
+            "Items": "65181a1ad9ef6775be5e9ae426f7bd1a90fe2adf5ff924c59d8766c27d5c9895",
             "Wooden Recorder": "cf5c04f52a8637f2aff1cfc47b9b75d0ed77326880ca4e22eace681423b1bc2c",
         }
         for title, digest in digests.items():
@@ -124,7 +124,7 @@ class FollowupTests(unittest.TestCase):
                           for row in factions}, {team: set(members) for team, members in FACTIONS.items()})
         groups = [row for row in primary_groups(self.catalog) if row["index"] == "Bestiary"]
         self.assertEqual(len(groups), 8)
-        self.assertEqual(sum(len(row["members"]) for row in groups), 30)
+        self.assertEqual(sum(len(row["members"]) for row in groups), 32)
         for faction in factions:
             title = faction["title"]
             index = "NPCs" if faction["id"] in {0, 10} else "Bestiary"
@@ -220,11 +220,11 @@ class FollowupTests(unittest.TestCase):
     def test_armor_groups_cover_each_item_once_using_reviewed_slots(self):
         expected = {
             "Head armor": {54, 116, 117, 119}, "Torso armor": {43, 55, 147, 194},
-            "Armored gloves": {165}, "Leg armor": {56, 192, 193, 195}, "Shields": {0, 1, 50, 58, 118},
+            "Armored gloves": {165}, "Leg armor": {56, 192, 193, 195}, "Shields": {0, 1, 50, 58, 118, 279},
         }
         groups = armor_groups(self.catalog)
         self.assertEqual({row["title"]: {int(identity.split("-")[1]) for identity in row["members"]} for row in groups}, expected)
-        self.assertEqual(sum(len(row["members"]) for row in groups), 18)
+        self.assertEqual(sum(len(row["members"]) for row in groups), 19)
         for group in groups:
             for title in ("Items", "Category:Armor"):
                 self.assertIn("=== " + group["title"] + " ===", self.pages[title])

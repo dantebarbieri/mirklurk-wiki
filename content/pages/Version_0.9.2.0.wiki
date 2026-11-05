@@ -1,4 +1,4 @@
-'''Version 0.9.2.0''' is the patch released on 29 October 2026, a week after [[Version 0.9.1.2]]. This wiki shows 0.9.2.0 values. It adds innate shield and creature blocking, improves inventory handling and fixes torch damage.
+'''Version 0.9.2.0''' is the patch released on 29 October 2026, a week after [[Version 0.9.1.2]]. The wiki now shows values from [[Version 0.9.5.0]]; this page records what changed in 0.9.2.0. It adds innate shield and creature blocking, improves inventory handling and fixes torch damage.
 
 This page names late-story creatures and equipment.
 

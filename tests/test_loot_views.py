@@ -150,7 +150,7 @@ class LootViewTests(unittest.TestCase):
                     self.assertEqual(values[0], '<span id="price"></span><onlyinclude>{{#switch:{{{view|<noinclude>page'
                                      "</noinclude>}}}|page|price|=" + price_text(prices[item["id"]]) + "|#default=}}</onlyinclude>")
                     self.assertEqual(page.count('<span id="price">'), 1)
-        self.assertEqual(summaries, 261)
+        self.assertEqual(summaries, 263)
 
     def test_currency_denominations_are_one_table_of_coin_rows(self):
         section = self.pages["Currency and trading"].split("== Denominations ==\n", 1)[1].split("\n==", 1)[0]

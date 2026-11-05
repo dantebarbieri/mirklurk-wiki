@@ -295,8 +295,8 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
                 raise RuntimeError("Attack sums or caveats changed.")
         if "overflow-x:auto" not in rendered.replace(" ", ""):
             raise RuntimeError("Native grids lost horizontal overflow.")
-    if totals != {0: 317, 1: 259, 2: 35, 3: 10}:
-        raise RuntimeError("The 42 native health grids differ from the reviewed HP/armor totals.")
+    if totals != {0: 326, 1: 263, 2: 40, 3: 10}:
+        raise RuntimeError("The 44 native health grids differ from the reviewed HP/armor totals.")
 
     for amount in (0, 1, 99, 100, 999, 1000, 1234, 9007199254740993, 999999999999999999):
         rendered = parse("{{Coins|" + str(amount) + "}}")
@@ -388,7 +388,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             "No item inputs", "Unknown", "Unknown", cost, "Unknown"
         ]:
             raise RuntimeError("Recipe row invented a default value or lost a custom/zero cost.")
-    print("Native displays: all 140 grids, exact coins, 265 items, 30 creatures and authored lists, "
+    print("Native displays: all 144 grids, exact coins, 267 items, 32 creatures and authored lists, "
           "images, accessibility, invalid inputs and resource bounds passed.", flush=True)
 
 

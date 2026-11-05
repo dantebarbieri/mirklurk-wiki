@@ -31,7 +31,7 @@ class AcquisitionTests(unittest.TestCase):
 
     def test_every_item_has_a_verified_method_or_an_explicit_scoped_note(self):
         document = self.catalog["acquisition"]
-        self.assertEqual(len(document["sources"]), 22)
+        self.assertEqual(len(document["sources"]), 24)
         self.assertEqual(sum(len(source["rows"]) for source in document["sources"]), 130)
         normal = {row["item"] for source in document["sources"] for row in source["rows"]}
         normal.update(item for pool in document["pools"] for item in pool["eligible_item_ids"])
@@ -48,7 +48,7 @@ class AcquisitionTests(unittest.TestCase):
         self.assertEqual(unverified, {"item-40", "item-48", "item-49"})
         self.assertFalse(normal & unverified)
         self.assertIn("item-254", normal)
-        self.assertEqual(len(normal | (notes.keys() - unverified)), 263)
+        self.assertEqual(len(normal | (notes.keys() - unverified)), 265)
         self.assertEqual(normal | notes.keys(), {entity["id"] for entity in self.data["entities"] if entity["category"] == "item"})
         self.assertFalse(any("No documented acquisition source is available yet." in text for text in self.pages.values()))
         self.assertIn("built-in", self.pages["Unarmed"])
@@ -76,7 +76,7 @@ class AcquisitionTests(unittest.TestCase):
                 for slot in slots:
                     self.assertIn("[[:Category:" + slot + "|", section)
         anchors = re.findall(r'id="item-([^"]+)"', self.pages["Items"])
-        self.assertEqual(len(anchors), 265)
+        self.assertEqual(len(anchors), 267)
         self.assertEqual(set(anchors), {locations[row["id"]].replace(" ", "_") for row in self.data["entities"] if row["category"] == "item" and row["id"] != "item-31"})
 
     def test_overlapping_clothing_tags_never_duplicate_primary_index_anchors(self):
@@ -166,7 +166,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "4068f9c1889dafda2a9b06f0e13703deef47c9cc746207ef58e70859d449aba5")
+                         "ff23b475375b0343322911d1729e1e01f3d37c09c4713a26b3ce5e1ba5d6e451")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
@@ -342,11 +342,11 @@ class AcquisitionTests(unittest.TestCase):
         from test_editorial import gameplay_record
         unchanged = [gameplay_record(pool) for pool in document["pools"]]
         self.assertEqual(hashlib.sha256((json.dumps(unchanged, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "dda22507ce2ad209ff7504ed1bf9b40b0aa675706c010722e9dbd4b4a0f0d479")
+                         "93f049ae565a07d9e4deb59bd32b35cb2f9e64e3b53a24eabb5d98b48763b74c")
         self.assertEqual({identity: len(pool["eligible_item_ids"]) for identity, pool in pools.items()}, {
-            "skeleton-outdoors": 92, "skeleton-indoors": 70, "chest-common": 96, "chest-middle": 95,
+            "skeleton-outdoors": 93, "skeleton-indoors": 71, "chest-common": 97, "chest-middle": 96,
             "chest-rich": 78, "ruins-large": 20, "ruins-small": 9, "nest-tiny": 7,
-            "cracks-tiny": 6, "unwanted-remains": 73, "survivor-remains": 67,
+            "cracks-tiny": 6, "unwanted-remains": 73, "survivor-remains": 68, "shaman-remains": 6,
         })
         self.assertEqual(pools["chest-common"]["item_conditions"], {})
         self.assertIn("item-258", set(pools["unwanted-remains"]["eligible_item_ids"]) & set(pools["survivor-remains"]["eligible_item_ids"]))
@@ -393,7 +393,7 @@ class AcquisitionTests(unittest.TestCase):
     def test_world_rehoming_moves_records_to_one_readable_anchor_on_their_new_owner(self):
         sources = self.catalog["acquisition"]["sources"]
         inherited = {identity: source["title"] for source in sources for identity in source.get("existing_entry_ids", [])}
-        self.assertEqual(len(inherited), 32)
+        self.assertEqual(len(inherited), 35)
         text = "\n".join(self.pages.values())
         for identity, target in inherited.items():
             self.assertEqual(self.pages[target].count('id="' + self.shown[identity] + '"'), 1)

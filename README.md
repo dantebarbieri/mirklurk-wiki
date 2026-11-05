@@ -79,24 +79,34 @@ fixes, distant-attack reactions and optional saved container transparency.
 Pages now show 0.9.2.0 values; no entities, recipes or icons were added.
 [Provenance](docs/PROVENANCE.md#version-0920-update) records the amendments.
 
-The reference now contains **107 numeric facts and 344 structured entries**:
+Patch **0.9.5.0** followed on 2026-11-05. Four new fingerprints identify the
+binary and regenerated Items, UI and Bestiary files; Nature is unchanged.
+It adds Snail Shell Shard, Intact Snail Shell, Giant Snail and Toadkin Shaman,
+including approved externally hosted art, exact health grids, regeneration,
+spawn conditions and loot. Wood Buckler is renamed Wooden Buckler with a redirect.
+Death modes, terrain AP, skill milestones, adjacent crafting and corpse exclusion,
+rain, advice and equipment fixes are reflected in the existing guides as well as
+the **Version 0.9.5.0** changelog. Reserved equipment names are not obtainable items.
+[Provenance](docs/PROVENANCE.md#version-0950-update) records the amendments.
+
+The reference now contains **107 numeric facts and 347 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
-variants, 87 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 512 main-namespace pages:
-357 individual item, being, nature, skill, and damage-type pages, 52 item-family
+variants, 90 conditional loot entries, and 34 original algorithm/skill
+summaries. The encyclopedia presentation generates 520 main-namespace pages:
+361 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical
 browsing; the retired Miscellaneous items category redirects to Items.
 
-Supplemental source-scoped profiles preserve **2,934 scalar values**
-in 603 profiles across 322 entities: 264 items, 42 beings, and 16 nature records.
+Supplemental source-scoped profiles preserve **2,983 scalar values**
+in 610 profiles across 326 entities: 266 items, 44 beings, and 16 nature records.
 Their 55 shared property definitions distinguish literal initializer values,
 computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
 have localized names but no reviewed initializer profile; no stats are invented
 for them. Equipment AP costs are documented separately from attack/use costs,
 and 48 range profiles record each weapon's literal reach in tiles.
 
-The 140 curated grids preserve 42 base health shapes and 98 attack patterns,
+The 144 curated grids preserve 44 base health shapes and 100 attack patterns,
 including holes, orientation, armor layers, and occupied zero-to-one cells.
 Native `{{Health grid|...}}` and `{{Attack grid|...}}` templates render accessible
 tables with coordinate/value hover titles. They reference three separately approved shield

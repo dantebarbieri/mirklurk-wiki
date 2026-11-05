@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.2.0",
+    "build": "0.9.5.0",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -138,17 +138,41 @@
       "path": "Languages\\English\\UI.ini",
       "sha256": "80db657b6371a68e88b8ba8eb5581f3363f3a263ffc7efe4a3ac498849770885",
       "build": "0.9.2.0"
+    },
+    {
+      "id": "game-data-0950",
+      "path": "data.win",
+      "sha256": "dd7db99ae9cf6627728f806d028dadc766e66c54696419050ae2c7e992469f74",
+      "build": "0.9.5.0"
+    },
+    {
+      "id": "items-en-0950",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "521818578e146ddd45fd368a8b3bfa51eef833ee2e5cadd21963fdfb4087707a",
+      "build": "0.9.5.0"
+    },
+    {
+      "id": "ui-en-0950",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "36fc606b8d9d86a5e31bf521bf8a2f429d479908819a54c772384a6e3f800b14",
+      "build": "0.9.5.0"
+    },
+    {
+      "id": "beings-en-0950",
+      "path": "Languages\\English\\Bestiary.ini",
+      "sha256": "781cc5f880c8b5aa09c9aec2360bf0b756d3009ec84eac929480b5f8df566c84",
+      "build": "0.9.5.0"
     }
   ],
   "entities": [
     {
       "id": "item-0",
       "category": "item",
-      "name": "Wood Buckler",
+      "name": "Wooden Buckler",
       "confidence": "observed",
       "evidence": [
         {
-          "source": "items-en",
+          "source": "items-en-0950",
           "section": "ItemTitles",
           "key": "0"
         }
@@ -4782,6 +4806,32 @@
       ]
     },
     {
+      "id": "item-278",
+      "category": "item",
+      "name": "Snail Shell Shard",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0950",
+          "section": "ItemTitles",
+          "key": "278"
+        }
+      ]
+    },
+    {
+      "id": "item-279",
+      "category": "item",
+      "name": "Intact Snail Shell",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0950",
+          "section": "ItemTitles",
+          "key": "279"
+        }
+      ]
+    },
+    {
       "id": "being-36",
       "category": "being",
       "name": "Grand Mother",
@@ -4881,6 +4931,32 @@
           "key": "27"
         }
       ]
+    },
+    {
+      "id": "being-42",
+      "category": "being",
+      "name": "Toadkin Shaman",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0950",
+          "section": "Titles",
+          "key": "42"
+        }
+      ]
+    },
+    {
+      "id": "being-43",
+      "category": "being",
+      "name": "Giant Snail",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0950",
+          "section": "Titles",
+          "key": "43"
+        }
+      ]
     }
   ],
   "facts": [
@@ -4890,13 +4966,13 @@
       "entity": "Amphibian",
       "property": "Water-movement efficiency per rank (%)",
       "value": 8.0,
-      "description": "The English skill text specifies this bonus for water traversal; its exact runtime calculation has not been verified.",
-      "confidence": "localization-described",
+      "description": "Reduces the water movement penalty by 8% per rank.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc0",
-          "key": "1"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty_water"
         }
       ]
     },
@@ -4937,14 +5013,14 @@
       "page": "Game mechanics",
       "entity": "Firm Grip",
       "property": "Slope-climbing efficiency per rank (%)",
-      "value": 6.0,
-      "description": "This is the listed slope traversal bonus, not a measured movement-speed increase.",
-      "confidence": "localization-described",
+      "value": 8.0,
+      "description": "Reduces the slope penalty by 8% per rank and improves slope movement speed.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc0",
-          "key": "3"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty/tile_get_moment.FirmGrip0.08"
         }
       ]
     },
@@ -4954,13 +5030,13 @@
       "entity": "Strider",
       "property": "Obstacle-traversal efficiency per rank (%)",
       "value": 8.0,
-      "description": "The bonus concerns vegetation and obstacles; the separate path-creation milestone occurs every three ranks.",
-      "confidence": "localization-described",
+      "description": "Reduces positive outdoor nonslope land penalties by 8% per rank.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc0",
-          "key": "0"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty"
         }
       ]
     },
@@ -5034,13 +5110,13 @@
       "entity": "Pack Mule",
       "property": "Additional carrying capacity per rank (kg)",
       "value": 1.5,
-      "description": "The listed capacity increase is additive per skill rank.",
-      "confidence": "localization-described",
+      "description": "Adds 1.5 kg per rank, plus a separate 1 kg for each completed three-rank group.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc1",
-          "key": "4"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_carrymax"
         }
       ]
     },
@@ -15704,21 +15780,36 @@
       "id": "skill-0-0-mechanics",
       "kind": "algorithm",
       "title": "Strider: described effects",
-      "summary": "Strider improves obstacle and vegetation traversal by eight percent per rank. Its path-forming benefit increases at ranks divisible by three.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "summary": "Strider improves outdoor nonslope movement and wears paths through grass.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc0",
-          "key": "0"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_stat_changes/player_get_carrymax"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty/tile_get_penalty_water/tile_get_moment"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_steps_here"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "descending-slope.FirmGrip>=5"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "Positive outdoor nonslope land penalties are reduced by 8% per rank.",
+          "Stepping through grass removes 1 plus the number of completed three-rank groups. High-grass bands stop at their terminal tile, which a later step clears."
         ],
         "fact_ids": [
           "strider-efficiency"
@@ -15729,21 +15820,36 @@
       "id": "skill-0-1-mechanics",
       "kind": "algorithm",
       "title": "Amphibian: described effects",
-      "summary": "Amphibian improves water travel by eight percent per rank. Rank ten additionally halves swimming stamina loss.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "summary": "Amphibian reduces water-movement penalties by 8% per rank.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc0",
-          "key": "1"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_stat_changes/player_get_carrymax"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty/tile_get_penalty_water/tile_get_moment"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_steps_here"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "descending-slope.FirmGrip>=5"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "The water penalty is multiplied by one minus 0.08 per rank.",
+          "Its separate swimming-stamina milestone remains at rank 10."
         ],
         "fact_ids": [
           "amphibian-efficiency",
@@ -15778,21 +15884,36 @@
       "id": "skill-0-3-mechanics",
       "kind": "algorithm",
       "title": "Firm Grip: described effects",
-      "summary": "Firm Grip improves slope-climbing efficiency by six percent per rank.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "summary": "Firm Grip reduces slope penalties by 8% per rank.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc0",
-          "key": "3"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_stat_changes/player_get_carrymax"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty/tile_get_penalty_water/tile_get_moment"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_steps_here"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "descending-slope.FirmGrip>=5"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "Slope penalty is 100 times one minus 0.08 per rank; slope animation speed also improves.",
+          "At rank 5 or above, descending no longer adds the extra 15-percentage-point slip increment. Other slip risks still apply."
         ],
         "fact_ids": [
           "firm-grip-efficiency"
@@ -15858,21 +15979,36 @@
       "id": "skill-1-1-mechanics",
       "kind": "algorithm",
       "title": "Slow Metabolism: described effects",
-      "summary": "Slow Metabolism reduces the rate of satiation loss by four percent per rank.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "summary": "Slow Metabolism conserves satiation and softens hunger's wellbeing penalty.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc1",
-          "key": "1"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_stat_changes/player_get_carrymax"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty/tile_get_penalty_water/tile_get_moment"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_steps_here"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "descending-slope.FirmGrip>=5"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "Satiation loss is still reduced by 4% per rank.",
+          "Each completed three-rank group subtracts 15 percentage points from the multiplier on the hungry wellbeing penalty. The unskilled penalty now reaches 1.5 percentage points per turn."
         ],
         "fact_ids": [
           "slow-metabolism-rate"
@@ -15908,21 +16044,36 @@
       "id": "skill-1-3-mechanics",
       "kind": "algorithm",
       "title": "Body Warmth: described effects",
-      "summary": "Body Warmth combines four-percent-per-rank reductions in warmth loss with equally scaled improvements to clothing drying.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "summary": "Body Warmth conserves warmth, improves drying and softens temperature's wellbeing penalty.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc1",
-          "key": "3"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_stat_changes/player_get_carrymax"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty/tile_get_penalty_water/tile_get_moment"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_steps_here"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "descending-slope.FirmGrip>=5"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "The existing warmth-retention and drying improvement is 4% per rank.",
+          "Each completed three-rank group subtracts 15 percentage points from the multiplier on both hot and cold wellbeing penalties."
         ],
         "fact_ids": [
           "body-warmth-rate"
@@ -15933,21 +16084,36 @@
       "id": "skill-1-4-mechanics",
       "kind": "algorithm",
       "title": "Pack Mule: described effects",
-      "summary": "Pack Mule adds 1.5 kg of carrying allowance for each rank.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "summary": "Pack Mule adds 1.5 kg per rank plus 1 kg for every completed three ranks.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "confidence": "inferred",
       "evidence": [
         {
-          "source": "ui-en",
-          "section": "SkillsDesc1",
-          "key": "4"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_stat_changes/player_get_carrymax"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_tiles_movement",
+          "key": "tile_get_penalty/tile_get_penalty_water/tile_get_moment"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_steps_here"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "descending-slope.FirmGrip>=5"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "Start at 40 kg; add 1.5 times the rank and the whole-number part of rank divided by three.",
+          "At rank 10, the total carrying allowance is 58 kg."
         ],
         "fact_ids": [
           "pack-mule-capacity"
@@ -17386,9 +17552,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0910",
+          "source": "game-data-0950",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances;treasure_get_lootarray.irandom(277)"
+          "key": "loot_amountchances;treasure_get_lootarray.irandom(283)"
         },
         {
           "source": "game-data",
@@ -17400,7 +17566,7 @@
         "page": "Loot tables",
         "steps": [
           "The amount helper builds progressively wider inclusive integer draws from the minimum up to the stated maximum, then chooses one of those draws uniformly. Low quantities therefore occur more frequently.",
-          "The treasure helper repeatedly samples an item ID from zero through 277, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
+          "The treasure helper repeatedly samples an item ID from zero through 283, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
           "Accepted items reduce the remaining value budget. Defined-item attempts increment a counter capped at 500; undefined-item draws and the early story-gated rejection are not counted.",
           "Durability and stack size can be randomized after selection. Listed shared bonus checks are additive rather than mutually exclusive weights."
         ],
@@ -17416,6 +17582,21 @@
       "confidence": "inferred",
       "evidence": [
         {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_get_real_craftcost/nearby_containers_get_amount/nearby_containers_lose_amount"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_inventory_lose_reqs"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "crafting.parentID-fallback"
+        },
+        {
           "source": "game-data",
           "section": "gml_Object_obj_station_Alarm_0",
           "key": "localMenu"
@@ -17429,26 +17610,6 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_basic_useful",
           "key": "player_inventory_get_amount/player_inventory_lose_reqs"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_menu_related",
-          "key": "menu_psynch.activeTurns/CM"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_GlobalScript_scr_smartones",
-          "key": "station_turnpass.activeTurns"
-        },
-        {
-          "source": "game-data",
-          "section": "gml_Object_UI_Draw_64",
-          "key": "fire-menu.startAPcost"
-        },
-        {
-          "source": "game-data-0899",
-          "section": "gml_GlobalScript_scr_items",
-          "key": "nearby_containers_get_amount/nearby_containers_lose_amount"
         }
       ],
       "details": {
@@ -17456,12 +17617,12 @@
         "steps": [
           "The station initialization explicitly lists separate recipe menus for alchemy stations, the armor workstation, the farmwork table and the chopping log.",
           "The Chopping Log halves the AP cost of firewood recipes.",
-          "At station IDs 53, 131 and 172, Brewer multiplies crafting AP by one minus 0.08 per rank, with a nonnegative floor.",
-          "At the same station IDs, each ingredient-consumption check can save one required unit with a threshold of 0.20 per completed three Brewer ranks.",
+          "At station IDs 53, 131 and 172, Brewer multiplies crafting AP by one minus 0.08 per rank. The result rounds to 0.2 AP before being clamped to at least zero.",
+          "At the same station IDs, each ingredient-consumption check can save one required unit with a threshold of 0.20 per completed three Brewer ranks. The component-saving check also works on the Survivor's Field Kit.",
           "A zero-quantity component is a presence requirement rather than a consumed ingredient. Component ID 10000 instead checks a carried tool's chopping capability.",
           "Lighting a fire uses a separate one-AP attempt, fuel and ignition checks. Once lit, a Campfire offers fifteen cooking recipes; a Survivor's Field Kit instead offers fifteen alchemy recipes.",
           "The fire-linked recipe menu is available only while the station has positive active fire time, and is closed when its fire expires.",
-          "Ingredient checks and consumption use the player inventory first, then containers within 64 pixels of the player."
+          "Ingredient checks and consumption use player inventory first, then containers within 24 world pixels (adjacent tiles, including diagonals), excluding corpses."
         ],
         "fact_ids": []
       }
@@ -21299,6 +21460,99 @@
         },
         "weight": null,
         "probability": 0.025,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-42-162",
+      "kind": "loot",
+      "title": "Toadkin Shaman: Toadkin Meat",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[42].item[162]"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-42",
+        "outcome": "item-162",
+        "quantity": {
+          "min": 1,
+          "max": 2
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-43-278",
+      "kind": "loot",
+      "title": "Giant Snail: Snail Shell Shard",
+      "summary": "The corpse is initialized with this item. The quantity uses the shared biased amount helper, so values inside the stated inclusive range are not equally likely.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[43].item[278]"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-43",
+        "outcome": "item-278",
+        "quantity": {
+          "min": 1,
+          "max": 3
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-43-279",
+      "kind": "loot",
+      "title": "Giant Snail: Intact Snail Shell",
+      "summary": "A separate 15% drop roll produces a shell with 9 to 15 durability.",
+      "conditions": "Base death-handler inventory only, conditional on this being reaching the loot-producing death path. Later harvesting, skill effects and recovered arrows are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[43].item[279]"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances"
+        }
+      ],
+      "details": {
+        "table": "corpse-43",
+        "outcome": "item-279",
+        "quantity": {
+          "min": 1,
+          "max": 1
+        },
+        "weight": null,
+        "probability": 0.15,
         "rolls": null
       }
     }

@@ -109,7 +109,7 @@
         "index": "Items",
         "summary": "Protective equipment and shields. Slot categories also include protective clothing.",
         "members": [
-          "Wood Buckler",
+          "Wooden Buckler",
           "Iron Buckler",
           "Leather Vest",
           "Large Scaalmyr Husk",
@@ -127,6 +127,8 @@
           "Iron Legplates",
           "Shabby Leather Vest",
           "Shabby Leather Leg Armor"
+        ,
+          "Intact Snail Shell"
         ]
       },
       {
@@ -315,6 +317,8 @@
           "Bark (Trollgnarl)",
           "Branch (Elderwort)",
           "Bat Hide"
+        ,
+          "Snail Shell Shard"
         ]
       },
       {
@@ -677,7 +681,9 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Shields, lanterns, torches and arrows. Two-handed melee weapons occupy this hand but cannot be placed here independently.",
-        "members": ["Wood Buckler", "Iron Buckler", "Torch", "Iron Arrow", "Steel Arrow", "Large Scaalmyr Husk", "Steel Shield", "Flinthead Arrow", "Improvised Torch", "Lantern", "Masterwork Lantern", "Improvised Shield", "Poison Arrow", "Improvised Enduring Torch", "Poison Arrow II", "Poison Arrow III"],
+        "members": ["Wooden Buckler", "Iron Buckler", "Torch", "Iron Arrow", "Steel Arrow", "Large Scaalmyr Husk", "Steel Shield", "Flinthead Arrow", "Improvised Torch", "Lantern", "Masterwork Lantern", "Improvised Shield", "Poison Arrow", "Improvised Enduring Torch", "Poison Arrow II", "Poison Arrow III",
+                                                                                                                                                                                                                                                                                                                  "Intact Snail Shell"
+                                                                                                                                                                                                                                                                                                                ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[15,21,23,24]"},
@@ -975,8 +981,10 @@
         "title": "Animal materials",
         "index": "Items",
         "parents": ["Crafting materials"],
-        "summary": "Pelts, hides, husks, feathers, wax, fat, glands and Glow Goo. Large Scaalmyr Husk also serves as a shield.",
-        "members": ["Large Scaalmyr Husk", "Beeswax", "Feather", "Shabby Pelt", "Small Venom Gland", "Glow Goo", "Scaalmyr Husk", "Troll Fat", "Swamp Troll Hide", "Cave Troll Hide", "Small Fire Gland", "Bat Hide"]
+        "summary": "Pelts, hides, husks, feathers, wax, fat, glands and Glow Goo. Large Scaalmyr Husk also serves as a shield. Snail Shell Shard is an animal drop with no defined crafting use.",
+        "members": ["Large Scaalmyr Husk", "Beeswax", "Feather", "Shabby Pelt", "Small Venom Gland", "Glow Goo", "Scaalmyr Husk", "Troll Fat", "Swamp Troll Hide", "Cave Troll Hide", "Small Fire Gland", "Bat Hide",
+                                                                                                                                                                                                                      "Snail Shell Shard"
+                                                                                                                                                                                                                    ]
       },
       {
         "title": "Mineral materials",
@@ -1064,6 +1072,8 @@
         "index": "Bestiary",
         "members": [
           "Toadkin"
+        ,
+          "Toadkin Shaman"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
       },
@@ -2828,8 +2838,10 @@
     },
     {
       "entity": "item-0",
-      "title": "Wood Buckler",
-      "aliases": []
+      "title": "Wooden Buckler",
+      "aliases": [
+                    "Wood Buckler"
+                  ]
     },
     {
       "entity": "item-114",
@@ -3011,6 +3023,11 @@
       "title": "Leeching",
       "aliases": []
     }
+  ,
+    {"entity": "item-278", "title": "Snail Shell Shard", "aliases": []},
+    {"entity": "item-279", "title": "Intact Snail Shell", "aliases": []},
+    {"entity": "being-42", "title": "Toadkin Shaman", "aliases": []},
+    {"entity": "being-43", "title": "Giant Snail", "aliases": []}
   ],
   "classifications": [
     {
@@ -3160,6 +3177,8 @@
           "section": "gml_Object_UI_Draw_64",
           "key": "dialogue.NPC[6].porPic[0]"
         }
+      ,
+        {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "dialogue6.Advice"}
       ],
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "dialogue": [
@@ -3183,17 +3202,17 @@
           "title": "Advice",
           "paragraphs": [
             "Early on, Eir suggests visiting the two other Unwanted at the camp marked on your starting map. This is the lead into the camp investigation, not a repeatable errand.",
-            "After you hand over the Wooden Recorder, choosing Advice goes straight to her survival tips instead. Before that, More Advice follows the camp suggestion."
+            "After you hand over the Wooden Recorder, Advice goes straight to her survival tips until Bhato sends you back to Clay with the rune. It then points toward the missing shipment and shipwreck in Broken Fen, changing again after Scaal's defeat. Before the recorder handover, More Advice follows the camp suggestion."
           ],
           "links": [
             {"label": "camp investigation", "target": "Quests and journal#quest-The_ruined_camp"},
             {"label": "Wooden Recorder", "target": "Wooden Recorder"}
           ],
-          "spoiler": false,
+          "spoiler": true,
           "confidence": "observed",
           "evidence": [
-            {"source": "beings-en", "section": "Eir", "key": "104/105"},
-            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC6.Advice/main>=2/action105;local104/MoreAdvice"},
+            {"source": "beings-en-0950", "section": "Eir", "key": "104/105/106/107"},
+            {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC6.Advice/main>=2,10,29;local104/MoreAdvice"},
             {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC6.item75/main2"}
           ]
         },
@@ -3341,6 +3360,8 @@
           "section": "gml_Object_UI_Draw_64",
           "key": "dialogue.NPC[8].porPic[1]"
         }
+      ,
+        {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "dialogue8.Advice"}
       ],
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "dialogue": [
@@ -3349,7 +3370,8 @@
           "title": "Advice",
           "paragraphs": [
             "Clay recommends searching beneath rocks and boulders for useful finds, including small animals, and examining creatures before fighting them.",
-            "Ground debris and Searching boulders list the possible finds and their conditions; a search does not guarantee every item he mentions. Use Examine to inspect a creature rather than guessing its capabilities. The Bestiary, Health and armor and Damage types pages explain the combat information."
+            "Ground debris and Searching boulders list the possible finds and their conditions; a search does not guarantee every item he mentions. Use Examine to inspect a creature rather than guessing its capabilities. The Bestiary, Health and armor and Damage types pages explain the combat information.",
+            "After Bhato sends you back with the rune, Advice instead points toward a strange magical being that prefers the Drowned Fens. This does not change his shop stock or the separate main-quest conversations."
           ],
           "links": [
             {"label": "Ground debris", "target": "Mixed ground debris"},
@@ -3358,11 +3380,11 @@
             {"label": "Health and armor", "target": "Health and armor"},
             {"label": "Damage types", "target": "Damage types"}
           ],
-          "spoiler": false,
+          "spoiler": true,
           "confidence": "localization-described",
           "evidence": [
-            {"source": "beings-en", "section": "Clay", "key": "104"},
-            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC8.Advice/action104;beast-info.hostileDistString"}
+            {"source": "beings-en-0950", "section": "Clay", "key": "104/105"},
+            {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC8.Advice/main>=10;beast-info.hostileDistString"}
           ]
         },
         {
@@ -3387,6 +3409,8 @@
           "paragraphs": [
             "After Eir sends you to him, Clay requests three rift samples. Handing them over advances his research; continue talking to obtain access to the storage chest and Alchemy workstation, then return to Eir.",
             "Later, bring Bhato's rune to Clay. He provides Clay's Strange Potion for the return to the dead camp. His subsequent instructions send you to investigate ruins and warn about the toadkin around them. Follow the journal's old-records objective rather than treating his ordinary Advice option as another quest."
+          ,
+            "When his Rift Weave request is active, carrying at least three Rift Weave now makes his quest marker appear while his dialogue is closed. This is a reminder, not a change to the handover requirement."
           ],
           "links": [
             {"label": "three rift samples", "target": "Quests and journal#quest-Rift_samples"},
@@ -3402,6 +3426,8 @@
             {"source": "beings-en", "section": "Clay", "key": "200/201/202/203/204/205/206/207"},
             {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.NPC8.main5/samples3/main6/local203/unlock;main10/item123"},
             {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue_action.NPC8.local205/item126/main11;local207/main17"}
+          ,
+            {"source": "game-data-0950", "section": "gml_Object_obj_being_Draw_0", "key": "NPC8.RiftWeave>=3/closed-dialogue/quest-marker"}
           ]
         },
         {
@@ -3502,6 +3528,8 @@
           "section": "gml_Object_UI_Draw_64",
           "key": "dialogue.NPC[12].porPic[3]"
         }
+      ,
+        {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "dialogue12.Advice"}
       ],
       "note": "Character/NPC presentation grouping; this does not assert peaceful behavior.",
       "dialogue": [
@@ -3509,17 +3537,18 @@
           "id": "advice",
           "title": "Advice",
           "paragraphs": [
-            "Bhato recommends retreating from an area that is too difficult and returning after improving your skills and supplies. This is general survival guidance, not a level requirement imposed by the conversation. Level progression explains advancement; Resting explains recovery before another expedition."
+            "Early on, Bhato recommends retreating from an area that is too difficult and returning after improving your skills and supplies. This is general survival guidance, not a level requirement imposed by the conversation. Level progression explains advancement; Resting explains recovery before another expedition.",
+            "After he sends you back to Clay with the rune, Advice recommends Scout for distant aiming. After Scaal's defeat, it becomes a late-story remark about humility. His shop stock and main-quest progression are unchanged."
           ],
           "links": [
             {"label": "Level progression", "target": "Level progression"},
             {"label": "Resting", "target": "Resting"}
           ],
-          "spoiler": false,
+          "spoiler": true,
           "confidence": "localization-described",
           "evidence": [
-            {"source": "beings-en", "section": "Bhato", "key": "104"},
-            {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC12.Advice/action104"}
+            {"source": "beings-en-0950", "section": "Bhato", "key": "104/105/106"},
+            {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "dialogue.NPC12.Advice/main>=10,29"}
           ]
         },
         {
@@ -4839,6 +4868,9 @@
         ]
       }
     }
+  ,
+    {"entity": "being-42", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[42].static-values"}, {"source": "beings-en-0950", "section": "Titles", "key": "42"}], "note": "Creature or enemy presentation grouping; this does not assert universal hostility.", "summary": "A Toadkin healer with an armored cross through its health grid. It can heal itself or a nearby Toadkin, while its blunt attack hits a 2 x 2 area.", "ability": {"title": "Healing and companions", "paragraphs": ["Every third own turn it looks for the closest wounded Toadkin-faction creature within 128 world pixels (8 tiles), including itself. Healing restores up to 5 lost HP cells and costs 4 AP; burnt cells do not heal.", "If nobody eligible is wounded, it keeps its accumulated turns until a target is available.", "When the area repopulates an ordinary Toadkin spawn, a separate 20% roll can add a Shaman companion. The existing 75% extra-Toadkin roll is independent, so both companions can appear.", "Its corpse contains 1 to 2 Toadkin Meat and a small treasure roll with a 1.2-silver budget, 25-copper minimum non-valuable value and a one-square item limit.", "It has 13 HP cells. The five cells in its central cross each start with two armor layers."], "related_entities": ["Toadkin", "Toadkin Meat"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[42]"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Step_0", "key": "being42.turnCounter/specialTarget"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Step_0", "key": "being42.special"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[42]"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}]}},
+    {"entity": "being-43", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[43].static-values"}, {"source": "beings-en-0950", "section": "Titles", "key": "43"}], "note": "Creature or enemy presentation grouping; this does not assert universal hostility.", "summary": "A slow, weak attacker whose shell armor regrows. It shares the Giant Slug faction but leaves useful shell pieces when killed.", "ability": {"title": "Shell regeneration and drops", "paragraphs": ["Every third own turn it restores one armor layer on each of its four shell cells that is still alive but has lost that layer. It does not heal lost HP or restore burnt cells.", "Its grid has 5 HP cells, four of which start with one armor layer.", "During normal spawn initialization, a selected Giant Slug becomes a Giant Snail 55% of the time in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. There is no substitution in the fort's area.", "Its corpse holds 1 to 3 Snail Shell Shards. Separately, it has a 15% chance to drop an Intact Snail Shell, with 9 to 15 durability rather than a guaranteed full shell."], "related_entities": ["Giant Slug", "Snail Shell Shard", "Intact Snail Shell"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[43]/slug-substitution"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Step_0", "key": "being43.turnCounter>=3"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Step_0", "key": "being43.special.hpgrid[1,0;2,0;1,1;2,1].1->2"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278/item279.chance0.15.durability"}]}}
   ],
   "entry_links": [
     {
@@ -5073,16 +5105,22 @@
     {
       "entry": "skill-0-0-mechanics",
       "title": "Effects",
-      "summary": "Move through vegetation and obstacles more efficiently: each rank adds 8% traversal efficiency. Every third rank also improves your ability to form paths.",
-      "conditions": null,
-      "steps": []
+      "summary": "Strider improves outdoor nonslope movement and wears paths through grass.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "steps": [
+                  "Positive outdoor nonslope land penalties are reduced by 8% per rank.",
+                  "Stepping through grass removes 1 plus the number of completed three-rank groups. High-grass bands stop at their terminal tile, which a later step clears."
+                ]
     },
     {
       "entry": "skill-0-1-mechanics",
       "title": "Effects",
-      "summary": "Travel through water more efficiently, gaining 8% efficiency per rank. At rank 10, swimming drains half as much stamina.",
-      "conditions": null,
-      "steps": []
+      "summary": "Amphibian reduces water-movement penalties by 8% per rank.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "steps": [
+                  "The water penalty is multiplied by one minus 0.08 per rank.",
+                  "Its separate swimming-stamina milestone remains at rank 10."
+                ]
     },
     {
       "entry": "skill-0-2-mechanics",
@@ -5124,9 +5162,12 @@
     {
       "entry": "skill-0-3-mechanics",
       "title": "Effects",
-      "summary": "Climb slopes more efficiently, with a 6% improvement per rank.",
-      "conditions": null,
-      "steps": []
+      "summary": "Firm Grip reduces slope penalties by 8% per rank.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "steps": [
+                  "Slope penalty is 100 times one minus 0.08 per rank; slope animation speed also improves.",
+                  "At rank 5 or above, descending no longer adds the extra 15-percentage-point slip increment. Other slip risks still apply."
+                ]
     },
     {
       "entry": "skill-0-4-mechanics",
@@ -5150,9 +5191,12 @@
     {
       "entry": "skill-1-1-mechanics",
       "title": "Effects",
-      "summary": "Stay fed longer: each rank reduces the rate at which you lose satiation by 4%.",
-      "conditions": null,
-      "steps": []
+      "summary": "Slow Metabolism conserves satiation and softens hunger's wellbeing penalty.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "steps": [
+                  "Satiation loss is still reduced by 4% per rank.",
+                  "Each completed three-rank group subtracts 15 percentage points from the multiplier on the hungry wellbeing penalty. The unskilled penalty now reaches 1.5 percentage points per turn."
+                ]
     },
     {
       "entry": "skill-1-2-mechanics",
@@ -5164,16 +5208,22 @@
     {
       "entry": "skill-1-3-mechanics",
       "title": "Effects",
-      "summary": "Hold on to warmth and dry your clothing more effectively. Each rank reduces warmth loss by 4% and improves clothing drying by 4%.",
-      "conditions": null,
-      "steps": []
+      "summary": "Body Warmth conserves warmth, improves drying and softens temperature's wellbeing penalty.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "steps": [
+                  "The existing warmth-retention and drying improvement is 4% per rank.",
+                  "Each completed three-rank group subtracts 15 percentage points from the multiplier on both hot and cold wellbeing penalties."
+                ]
     },
     {
       "entry": "skill-1-4-mechanics",
       "title": "Effects",
-      "summary": "Carry more before exceeding your allowance. Each rank adds 1.5 kg of carrying capacity.",
-      "conditions": null,
-      "steps": []
+      "summary": "Pack Mule adds 1.5 kg per rank plus 1 kg for every completed three ranks.",
+      "conditions": "Base runtime calculation before other applicable modifiers.",
+      "steps": [
+                  "Start at 40 kg; add 1.5 times the rank and the whole-number part of rank divided by three.",
+                  "At rank 10, the total carrying allowance is 58 kg."
+                ]
     },
     {
       "entry": "skill-2-0-mechanics",
@@ -5611,13 +5661,20 @@
       "steps": [
         "Some components are required as tools rather than consumed ingredients.",
         "Where chopping is required, a carried tool must meet the recipe's chopping-capability requirement.",
-        "Ingredients are taken from your inventory first, then from containers within 4 tiles of you."
+        "Ingredients are taken from your inventory first, then containers within 24 world pixels: adjacent tiles including diagonals. Corpses are excluded; take their ingredients manually first."
       ],
-      "confidence": "observed",
+      "confidence": "inferred",
       "evidence": [
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_inventory_has_reqs/player_inventory_lose_reqs.nearby_containers"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_items", "key": "nearby_containers_get_amount/nearby_containers_lose_amount.point_distance<=64"},
-        {"source": "ui-en-0899", "section": "TTgen", "key": "48"}
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_inventory_has_reqs/player_inventory_lose_reqs"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "nearby_containers_get_amount/nearby_containers_lose_amount.point_distance<=24/!corpse"
+        }
       ]
     },
     {
@@ -5907,6 +5964,10 @@
       "entry": "journal-30",
       "summary": "Added when you report Scaal's defeat to Eir: the protagonist wonders whether going home one day is now possible. It was the last journal entry in 0.8.1.5; since 0.9.0.0 the story continues to Clay defeated and Peace at Fort Solid."
     }
+  ,
+    {"entry": "corpse-42-162", "summary": "One to two Toadkin Meat; lower quantities are more likely.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."},
+    {"entry": "corpse-43-278", "summary": "One to three Snail Shell Shards; lower quantities are more likely.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."},
+    {"entry": "corpse-43-279", "summary": "A separate 15% drop roll produces an Intact Snail Shell with 9 to 15 durability.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."}
   ],
   "stations": [
     {
@@ -7122,51 +7183,135 @@
         ]
       },
       {
-        "entity": "item-32", "value": 0.6, "confidence": "inferred",
+        "entity": "item-32",
+        "value": 0.6,
+        "confidence": "inferred",
         "evidence": [
-          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[32].price/components;numeric-ID-order.recipe-value-postprocessing"},
-          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
-          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[32].price/components;numeric-ID-order.recipe-value-postprocessing"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_is_seed"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          }
         ]
       },
       {
-        "entity": "item-84", "value": 0.3, "confidence": "inferred",
+        "entity": "item-84",
+        "value": 0.3,
+        "confidence": "inferred",
         "evidence": [
-          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[84].price/components;numeric-ID-order.recipe-value-postprocessing"},
-          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
-          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[84].price/components;numeric-ID-order.recipe-value-postprocessing"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_is_seed"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          }
         ]
       },
       {
-        "entity": "item-138", "value": 1.5, "confidence": "inferred",
+        "entity": "item-138",
+        "value": 1.5,
+        "confidence": "inferred",
         "evidence": [
-          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[138].price/components;numeric-ID-order.recipe-value-postprocessing"},
-          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
-          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[138].price/components;numeric-ID-order.recipe-value-postprocessing"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_is_seed"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          }
         ]
       },
       {
-        "entity": "item-139", "value": 1.0, "confidence": "inferred",
+        "entity": "item-139",
+        "value": 1.0,
+        "confidence": "inferred",
         "evidence": [
-          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[139].price/components;numeric-ID-order.recipe-value-postprocessing"},
-          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
-          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[139].price/components;numeric-ID-order.recipe-value-postprocessing"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_is_seed"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          }
         ]
       },
       {
-        "entity": "item-140", "value": 0.25, "confidence": "inferred",
+        "entity": "item-140",
+        "value": 0.25,
+        "confidence": "inferred",
         "evidence": [
-          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[140].price/components;numeric-ID-order.recipe-value-postprocessing"},
-          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
-          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[140].price/components;numeric-ID-order.recipe-value-postprocessing"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_is_seed"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          }
         ]
       },
       {
-        "entity": "item-248", "value": 1.0, "confidence": "inferred",
+        "entity": "item-248",
+        "value": 1.0,
+        "confidence": "inferred",
         "evidence": [
-          {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[248].price/components;numeric-ID-order.recipe-value-postprocessing"},
-          {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_is_seed"},
-          {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "trade.totalCost/get_dat_item(indexHere).price"}
+          {
+            "source": "game-data",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[248].price/components;numeric-ID-order.recipe-value-postprocessing"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_GlobalScript_scr_items",
+            "key": "item_is_seed"
+          },
+          {
+            "source": "game-data",
+            "section": "gml_Object_UI_Draw_64",
+            "key": "trade.totalCost/get_dat_item(indexHere).price"
+          }
         ]
       },
       {
@@ -7617,16 +7762,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.2.0",
-      "confirmation": "Patch 0.9.2.0 was installed and launched to regenerate the English language files. The menu display and version check agree with the 29 October 2026 Steam announcement.",
+      "version": "0.9.5.0",
+      "confirmation": "Patch 0.9.5.0 was installed and launched to regenerate the English language files. The menu display and version check agree with the 5 November 2026 Steam announcement.",
       "evidence": [
         {
-          "source": "game-data-0920",
+          "source": "game-data-0950",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0920",
+          "source": "game-data-0950",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -7982,6 +8127,9 @@
       "paragraphs": [
         "Ordinary direct fire attacks remove armor before burning the hit point underneath. Thrown fire has different rules; see the flask's effect. Wound salves and ordinary resting cannot restore burned cells, but Fire Bond from rank 5 and Staff of The Fire Eater can treat them.",
         "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward."
+      ,
+        "An equipped Flint Dagger can now supply stone sparks in the fire menu. Wetness and tinder modifiers remain part of the chance even when no spark item is selected; nearby fire and skill contributions still apply, and the final chance is clamped between zero and one.",
+        "Returning to an area advances station fire time and equipped light fuel using elapsed time. This catch-up is scaled through the player's maximum AP rather than being a literal turns-per-hour rate."
       ],
       "related_entities": [
         "Simple Burn Remedy",
@@ -7995,6 +8143,10 @@
         {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "healing-grid.fireFixItem/hpgrid[-1-to-0]/healItem"},
         {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.survivorSkills[0]>=5.being_heal_burnt"},
         {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "attack.hits>1.item266.being_heal_burnt"}
+      ,
+        {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "fire-menu.checkEquipped/wet-modifiers/!late-zero-reset"},
+        {"source": "game-data-0950", "section": "gml_Object_obj_screenfader_Step_0", "key": "station_turnpass[max8,passedHours*47.5]"},
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_smartones", "key": "station_turnpass./APmax"}
       ]
     },
     {
@@ -8074,7 +8226,7 @@
       "title": "Satiation",
       "paragraphs": [
         "Eating restores satiation. On Medium difficulty, an ordinary turn removes 0.715 percentage points before skill modifiers. Resting and sleeping reduce this loss; see Resting.",
-        "At 50% or more, satiation adds 0.5 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 1 percentage point per turn at zero satiation.",
+        "At 50% or more, satiation adds 0.5 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 1.5 percentage points per turn at zero satiation before Slow Metabolism's every-third-rank reduction. The contribution rounds to 0.1 percentage-point steps.",
         "Slow Metabolism reduces satiation loss. Skill and difficulty modifiers multiply; see Wellbeing for difficulty rates.",
         "Eating without getting sick grants Well fed if satiation ends above 90%. Duration depends on the food's base satiation, up to 35 turns. Well fed reduces stamina loss, not wellbeing loss directly; see Stamina.",
         "See Foods for filling meals and sickness risks. Herbivore improves satiation from foods the game treats as plant-based. Casting an essence orb drains satiation; see Magic weapons."
@@ -8107,6 +8259,8 @@
         {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_get_real_satiation/item_is_greenfood"},
         {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "resting[14];sleeping[19].player_endturn"},
         {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses[8].player_hunger_lose"}
+      ,
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes.case0"}
       ]
     },
     {
@@ -8200,7 +8354,7 @@
       "title": "Temperature",
       "paragraphs": [
         "The comfortable temperature range is 40-60%. These are game-meter percentages, not degrees. There is no temperature penalty to wellbeing within that range.",
-        "Outside the comfortable range, the wellbeing penalty grows to 3 percentage points per turn at either 0% or 100% temperature. High temperature gives no bonus.",
+        "Outside the comfortable range, the wellbeing penalty grows to 3 percentage points per turn at either 0% or 100% temperature before Body Warmth. Each completed three Body Warmth ranks reduces the penalty multiplier by 15 percentage points; the result rounds to 0.1 percentage-point steps. High temperature gives no bonus.",
         "Each turn, body temperature moves one third of the way toward local ambient temperature before cooling modifiers. Insulation pulls it toward the comfortable midpoint. Wetness pulls it toward 10%, so rain and immersion can chill you even in mild air.",
         "Body Warmth reduces cooling loss and improves drying. Difficulty also modifies cooling losses, not every temperature change; see Wellbeing.",
         "Nearby active fires warm and dry you. Warm to the core halves ambient cooling; see Wellbeing for its other bonus. Shelter reduces rain exposure and can cool hot conditions. Equipment condition affects insulation and waterproofing; sleeping gear helps while in use.",
@@ -8237,10 +8391,10 @@
       "confidence": "observed",
       "evidence": [
         {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "warmthLoseLow/warmthLoseHigh/wetTempTresh"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_warmth_lose;player_get_stat_changes[3];player_endturn.warmth/insulation/wetness"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_warmth_lose;player_get_stat_changes[3];player_endturn.warmth/insulation/wetness;player_item_consume[235/236/237/242]"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet;player_update_gearstats;player_get_combined_wellbeing"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[235/236/237/242]"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses[7].player_warmth_lose"}
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses[7].player_warmth_lose"},
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes.case3"}
       ]
     },
     {
@@ -8253,6 +8407,8 @@
         "Compared with Medium, Easy multiplies satiation, stamina, focus and cooling losses by 0.67; Hard multiplies them by 1.2. Skill and temporary-effect modifiers multiply with these rates. Direct recovery gains are unaffected, and cooling modifiers do not slow every temperature change.",
         "High wellbeing does not instantly restore combat HP. See Resting for natural wound healing; burns cannot heal this way. If a magic orb costs more of a meter than you have, the shortfall is taken from wellbeing.",
         "Honey improves wellbeing and shortens sickness. Riftvine Berries reduce wellbeing."
+      ,
+        "Slow Metabolism now reduces hunger's wellbeing penalty every third rank; Body Warmth does the same for both hot and cold penalties. Their existing per-rank meter-retention effects are separate."
       ],
       "section_titles": [
         "Combining the four meters",
@@ -8262,6 +8418,8 @@
         "Difficulty and loss modifiers",
         "Wellbeing is not combat HP",
         "Direct food effects"
+      ,
+        null
       ],
       "related_entities": [
         "Honey",
@@ -8283,12 +8441,12 @@
       "image_caption": "Honey has a direct wellbeing benefit as well as food value.",
       "confidence": "observed",
       "evidence": [
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes;player_get_combined_wellbeing;player_endturn.rest-healing"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_hunger_lose;player_energy_lose;player_focus_lose;player_warmth_lose"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes;player_get_combined_wellbeing;player_endturn.rest-healing;player_hunger_lose;player_energy_lose;player_focus_lose;player_warmth_lose"},
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[51/218]"},
         {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "wellbeing-grid;haelth<=0.death"},
         {"source": "ui-en", "section": "AEs", "key": "20/21/22/24/25/26"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.wbDrain.player_wellbeing_dmg"}
+        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.wbDrain.player_wellbeing_dmg"},
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes"}
       ]
     },
     {
@@ -8301,6 +8459,8 @@
         "Sleeping can grant Well rested above 95% focus, with satiation and stamina above 20% and temperature strictly inside its comfortable range. Sleeping-item comfort sets the duration added, up to 35 turns. The timer can pause in bed when at least two of the three supporting conditions hold. See Wellbeing for its bonus.",
         "At 50% wellbeing or more, resting can heal one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and the temperature penalty. With full supporting meters and no temperature penalty, it is 5% per resting turn. Burns cannot heal this way; Fire Bond from rank 5 gives a separate chance to treat one.",
         "Find shelter, warmth and food before a long rest. Sleeping gear contributes insulation and waterproofing while in use. Great Bedroll and Furhide Bedroll also slow Warm to the core decay, but hunger, cold, sickness and interruptions still apply."
+      ,
+        "Getting up now stops any pending movement path. Tent exits prefer dry footing, without a guarantee that every possible exit is dry. This patch does not change the general resting recovery rates."
       ],
       "section_titles": [
         "Time keeps passing",
@@ -8310,6 +8470,8 @@
         "Well rested",
         "Natural healing",
         "Preparing a resting place"
+      ,
+        null
       ],
       "related_entities": [
         "Tattered Bedroll",
@@ -8337,6 +8499,8 @@
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_update_gearstats.sleeping-item;player_get_combined_wellbeing"},
         {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "RESTEDMAX/warmthLoseLow/warmthLoseHigh"},
         {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal"}
+      ,
+        {"source": "game-data-0950", "section": "gml_Object_obj_player_Step_0", "key": "standing.player_path_halt/target-position-sync"}
       ]
     },
     {
@@ -8370,18 +8534,24 @@
         "Wet clothing can dampen its wearer and other carried clothing. Wetness affects body Temperature; waterproofing, shelter and drying help alongside insulation.",
         "Lesser shelter blocks 80% of rain and stronger shelter blocks 95%. Shelter can cool hot conditions. Nearby active fires warm and dry you. Dungeon-like areas use a separate ambient temperature baseline.",
         "Weather and temperature keep changing while you rest. Check your shelter, clothing and wellbeing trend before sleeping."
+      ,
+        "Rain now applies clothing-filtered wetness to each body part and wets carried inventory, capped at full wetness. Container contents are wetted according to their container's waterproofing. Rain reduces container drying by rain strength times 0.15, never below zero; waterproof equipment stats themselves are unchanged."
       ],
-      "section_titles": ["Changing weather", "Rain history", "Early-game rain protection", "Wetness and exposure", "Shelter and local conditions", "Resting through weather"],
+      "section_titles": ["Changing weather", "Rain history", "Early-game rain protection", "Wetness and exposure", "Shelter and local conditions", "Resting through weather",
+                                                                                                                                                                              null
+                                                                                                                                                                            ],
       "related_entities": ["Campfire", "Traveller's Cloak", "Great Bedroll", "Furhide Bedroll"],
       "related_pages": ["Temperature", "Wellbeing", "Resting", "Action points"],
       "image_entity": "Traveller's Cloak",
       "image_caption": "Protective clothing such as a Traveller's Cloak matters when travelling in wet weather.",
       "confidence": "observed",
       "evidence": [
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.clock/temperature/localWeather/rainBalance/daysAlive"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet/wet_transfer/player_update_gearstats"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.clock/temperature/localWeather/rainBalance/daysAlive;player_gets_all_wet/wet_transfer/player_update_gearstats"},
         {"source": "ui-en", "section": "AEs", "key": "23/31"},
-        {"source": "game-data", "section": "gml_Object_manager_day_Step_0", "key": "rain/outside/weather-presentation"}
+        {"source": "game-data", "section": "gml_Object_manager_day_Step_0", "key": "rain/outside/weather-presentation"},
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_rained_upon.wet_filter/wet_inventory_all"}
+      ,
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "container_time_pass.rain/drying/containerWaterproof"}
       ]
     },
     {
@@ -8394,6 +8564,9 @@
         "Equipping costs a base 0.4 AP per square of inventory footprint, separate from attacking or using the item.",
         "Fast Draw reduces bow costs, but not orb costs; Blade Master, Master Basher and Force Fighter reduce costs for their weapon types. Brewer reduces alchemy costs.",
         "Completed turns also update satiation, focus, temperature and wellbeing. Rest and sleep change recovery rates but do not pause these meters."
+      ,
+        "Movement now uses 1 plus the selected terrain penalty divided by 16, adds 0.4 for a diagonal predecessor, then applies encumbrance, rounds to 0.2 AP and caps the step at 8 AP. Water or goo footing selects the water grid; otherwise it selects the land grid. Pathfinding still sums both penalties, so the suggested route is not guaranteed to be the least-AP route.",
+        "Repeated overspending accumulates AP debt rather than replacing earlier debt. Craft costs round to 0.2 AP, and crafting with depleted AP correctly ends the turn."
       ],
       "related_entities": [
         "Fast Draw",
@@ -8416,10 +8589,13 @@
         {"source": "ui-en", "section": "TTgen", "key": "2/19"},
         {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "actionPointsMax/actionPoints[8]"},
         {"source": "game-data", "section": "gml_Object_obj_player_Alarm_0", "key": "actionPointsMax-apDelayed/refill"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_ap_lose/player_ap_or_combat/player_endturn.minute/player_get_attackcost"},
+        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_ap_lose/player_ap_or_combat/player_endturn.minute/player_get_attackcost;player_endturn.minute+=8/energy_gain/actionPoints/wellbeing"},
         {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "item_is_equippable/equipCost/width/height"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.minute+=8/energy_gain/actionPoints/wellbeing"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_attackcost.!weapon_is_orb"}
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_attackcost.!weapon_is_orb"},
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step/player_ap_lose"}
+      ,
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "item_get_real_craftcost"},
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_pathfinding", "key": "pathfind.land-plus-water-penalty"}
       ]
     },
     {
@@ -8432,6 +8608,8 @@
         "Placing armor points",
         "Changing equipment in combat",
         "Creature armor"
+      ,
+        null
       ],
       "paragraphs": [
         "Every equipped item with an armor value adds it to your Total Armor, shown on the equipment screen. Clothing counts as well as armor: shirts, socks, hoods and cloaks often add a fraction of a point. All four hand slots count, so a shield on your inactive weapon set still adds its armor.",
@@ -8441,6 +8619,8 @@
         "You must place your armor points before combat can proceed. Left-click an HP cell to add a layer and right-click to remove one. Even clears your placement and fills cells row by row from the top left, one layer per cell on each pass. Random clears your placement and puts each point on a random cell. Done finishes placement; any points not yet placed are lost for that fight. Ending your turn is blocked until you press Done.",
         "Equipping armor during combat gives no extra points until the next fight. Unequipping an item with an armor value during combat strips its full undamaged armor value, rounded to the nearest whole number with halves rounding up, from random armored cells. When no hostiles remain, all armor layers are removed until the next fight.",
         "Creatures do not choose placement. Their armor is layered automatically when they appear, row by row from the top left like Even. Their health grids show the result; see Health and armor."
+      ,
+        "Entering combat only offers Add Armor and its tutorial if your total equipment armor is at least 1. The HP and combat interface still opens when you have less armor."
       ],
       "related_entities": [],
       "related_pages": ["Health and armor", "Action points"],
@@ -8486,6 +8666,8 @@
           "section": "TTgen",
           "key": "25/Random/Even/Done"
         }
+      ,
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_real_combat_check.totalArmor>=1"}
       ]
     },
     {
@@ -8720,6 +8902,8 @@
         "Where you cannot build",
         "Storage Chest",
         "Carry weight"
+      ,
+        null
       ],
       "paragraphs": [
         "While placing an object, press the Weapon Swap key (Z by default) to flip it horizontally before you confirm.",
@@ -8727,6 +8911,8 @@
         "You cannot place objects within about 26 tiles of the Survivors' camp. Until you bring Viend back to the fort, the same applies within 30 tiles of Fort Solid. Placement also fails on water, slopes, plants, goo and occupied tiles.",
         "Storage Chest is a placeable 7 x 5 container. Items inside lose no durability, stay dry and never go missing, unlike items left in ordinary stashes. Clay and Viend sell it.",
         "Placing an equipped item, such as a torch, removes its weight from your carry total."
+      ,
+        "Tent exits prefer a nearby dry tile, but do not guarantee one. Small Linen Tent and Waxed Linen Tent restore their blocked path tile when you get out. Chopping Log still blocks walking, but no longer marks its tile as a ranged-attack blocker."
       ],
       "related_entities": [
         "Storage Chest",
@@ -8778,6 +8964,10 @@
           "section": "gml_GlobalScript_scr_items",
           "key": "item_correct_weighloss"
         }
+      ,
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_mapcreations", "key": "solid_get_adjacent_xy_nearest.water-score+8"},
+        {"source": "game-data-0950", "section": "gml_Object_obj_player_Step_0", "key": "tent47/155.solid_grid_add[false]"},
+        {"source": "game-data-0950", "section": "gml_Object_obj_station_Alarm_0", "key": "station155/238.solid_grid_add[false]"}
       ]
     },
     {
@@ -8901,12 +9091,12 @@
     ],
     "paragraphs": [
       "Every outdoor tile has a fixed ground height. The game uses it to draw water, soil and slopes, and to decide what grows and what can walk there. Ground heights fall into the bands below, from deep water up to the high plateau. In the water, the game describes how deep you are standing, from \"Your feet are slightly submerged\" to \"You are swimming!\".",
-      "Every step costs action points depending on the tile you step onto. A diagonal step costs 0.4 AP more, heavy encumbrance raises the cost, and no single step costs more than 8 AP. Obstacles, water and the ground underneath combine: wading over sand or mud costs more than wading over soil.",
+      "Steps use either the water penalty or the land penalty, not their sum. Add 1 to the selected penalty divided by 16, add 0.4 for a diagonal, apply encumbrance, round to 0.2 AP and cap at 8 AP. Pathfinding still sums land and water penalties; animation speed uses a separate calculation.",
       "Water levels never change. Heights are set when an area is generated and are not touched by rain, time or weather afterwards, so a dry tile stays dry and a pool never spreads or drains. Rain only adds splash ripples to water and wets your clothes. The dark stains some tiles show are blood or acid, not wet ground.",
       "Each kind of ground has its own page covering where it appears, which creatures spawn and walk there, which seeds take, and whether you can build on it. The table summarizes them. The creature table column says which spawn table picks creatures that appear on that ground; see Areas.",
-      "A Boulder or a water rock costs 2.5 AP to clamber over. A Mossy Log, ruin rubble or debris costs 1.8 AP. Tall Grass and Fern patches add up to about half as much again as they grow, and bramble thickets and Rift Vine growth cost far more. Water rocks only appear in medium or deep water and give dry footing there. None of these tiles can be built on or planted.",
+      "Obstacle costs depend on the complete land penalty, including vegetation. A dry slope costs 7.2 AP at rank zero. Clear ground, paths, stone and ordinary indoor flooring have a -2.5 base penalty; mud and sand add 6 instead. Hindrance classes use penalties of 50 or 37.5, and plants can add more.",
       "A lit Campfire slowly scorches the ground beneath it into black ash. Ash walks like bare soil at 0.8 AP a step.",
-      "Strider removes 8% of the extra cost of obstacles and thick growth per rank, Amphibian removes 8% of the extra cost of water per rank, and Firm Grip makes slopes cheaper with each rank. Balance and Jumper help with jumping across gaps rather than walking.",
+      "Strider reduces positive outdoor nonslope penalties by 8% per rank. Amphibian reduces water penalties by 8% per rank. Firm Grip reduces the slope penalty by 8% per rank. Balance and Jumper help with jumping rather than ordinary walking.",
       "Every land creature can wade into the shallows, but only some go deeper, as the table shows. The Mudfin and the Razorfin cannot enter the shore shallows. Any creature can stand on a water rock, a log or the dock. Spawning ignores these limits, so a Mudfin can appear stuck in the shore shallows until it is attacked."
     ],
     "related_entities": ["Strider", "Amphibian", "Jumper", "Firm Grip", "Balance", "Tall Grass", "Boulder", "Mossy Log", "Brambles", "Fern", "Rift Vine", "Campfire"],
@@ -8922,6 +9112,9 @@
       {"source": "game-data-0900", "section": "gml_Object_manager_day_Step_0", "key": "EffRain-ripples.no-ygrid-writes"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_smartones", "key": "blood_pool.acid_pool.Wets.campfire-ash"},
       {"source": "ui-en", "section": "AEs", "key": "6.7.8.9.10.11.12.13.14.27"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_penalty/tile_get_penalty_water"}
     ],
     "tables": [
       {
@@ -8943,16 +9136,16 @@
         "columns": ["Ground", "AP per straight step", "Can build", "Seeds that take", "Creature table"],
         "rows": [
           [{"tile": "Soil"}, "0.8", "Yes", "Every land seed, by height", "Area land table"],
-          [{"tile": "Grassy ground"}, "0.8; thick grass 1.0", "Yes", "As soil; crops shrink on Rift Grass", "Area land table"],
-          [{"tile": "Sand"}, "1.2", "Yes", "Elderberry Seeds", "Sand table"],
-          [{"tile": "Mud"}, "1.2", "Yes", "Every land seed, by height; not Cranberry Seeds", "Area land table"],
+          [{"tile": "Grassy ground"}, "0.8 when clear; vegetation adds penalties", "Yes", "As soil; crops shrink on Rift Grass", "Area land table"],
+          [{"tile": "Sand"}, "1.4 when bare and dry", "Yes", "Elderberry Seeds", "Sand table"],
+          [{"tile": "Mud"}, "1.4 when bare and dry", "Yes", "Every land seed, by height; not Cranberry Seeds", "Area land table"],
           [{"tile": "Stone ground"}, "0.8", "Yes", "None on dry stone", "Area land table"],
-          [{"tile": "Goo"}, "1.2 (1.0 indoors)", "No", "None", "Rift-Thorn Mire table"],
+          [{"tile": "Goo"}, "Depends on the selected land or water penalty", "No", "None", "Rift-Thorn Mire table"],
           [{"tile": "Dock planks"}, "0.8", "No", "None", "Water table"],
-          [{"tile": "Slopes"}, "5", "No", "None", "Area land table"],
-          [{"tile": "Shallow water"}, "1.2 to 1.4", "No", "Cranberry, Willow, Cypress, Watercress", "Water table"],
-          [{"tile": "Medium water"}, "1.6 to 2.0", "Raft Base only", "Cypress, Watercress", "Water table"],
-          [{"tile": "Deep water"}, "3.4 to 5", "Raft Base only", "Watercress", "Water table"],
+          [{"tile": "Slopes"}, "7.2 when dry at Firm Grip rank 0", "No", "None", "Area land table"],
+          [{"tile": "Shallow water"}, "1 + water penalty / 16, rounded to 0.2; overlapping layers add", "No", "Cranberry, Willow, Cypress, Watercress", "Water table"],
+          [{"tile": "Medium water"}, "1 + water penalty / 16, rounded to 0.2; overlapping layers add", "Raft Base only", "Cypress, Watercress", "Water table"],
+          [{"tile": "Deep water"}, "1 + water penalty / 16, rounded to 0.2; overlapping layers add", "Raft Base only", "Watercress", "Water table"],
           [{"tile": "Interior floors"}, "0.8", "Yes, outside private homes", "None", "Rift interiors only"]
         ]
       },
@@ -8961,8 +9154,8 @@
         "columns": ["Where they can go", "Creatures"],
         "rows": [
           ["Anywhere, including deep water", [{"entity": "Dreadfly"}, {"entity": "Deathfly"}, {"entity": "Giant Gnat"}, {"entity": "Mirkfang"}, {"entity": "Giant Mirkfang"}, {"entity": "Mirkfang Matriarch"}, {"entity": "The Terror"}, {"entity": "Scaal"}]],
-          ["Land and water down to medium water", [{"entity": "Toadkin"}, {"entity": "Raving Unwanted"}, {"entity": "Mutated Unwanted"}, {"entity": "Scaalmyr Grunt"}, {"entity": "Scaalmyr Warrior"}, {"entity": "Scaalmyr Geomancer"}, {"entity": "Swamp Troll"}, {"entity": "Cave Troll"}, {"entity": "Nightmare"}]],
-          ["Land and shallow water", [{"entity": "Giant Slug"}, {"entity": "Boulder Crab"}, {"entity": "Titanspine Crab"}, {"entity": "Viper"}, {"entity": "Red Fang"}, {"entity": "Mirk Runner"}, {"entity": "Mirk Mauler"}, {"entity": "Firelouse"}, {"entity": "Sceetler"}]],
+          ["Land and water down to medium water", [{"entity": "Toadkin"}, {"entity": "Toadkin Shaman"}, {"entity": "Raving Unwanted"}, {"entity": "Mutated Unwanted"}, {"entity": "Scaalmyr Grunt"}, {"entity": "Scaalmyr Warrior"}, {"entity": "Scaalmyr Geomancer"}, {"entity": "Swamp Troll"}, {"entity": "Cave Troll"}, {"entity": "Nightmare"}]],
+          ["Land and shallow water", [{"entity": "Giant Slug"}, {"entity": "Giant Snail"}, {"entity": "Boulder Crab"}, {"entity": "Titanspine Crab"}, {"entity": "Viper"}, {"entity": "Red Fang"}, {"entity": "Mirk Runner"}, {"entity": "Mirk Mauler"}, {"entity": "Firelouse"}, {"entity": "Sceetler"}]],
           ["Open shallows, medium and deep water", [{"entity": "Mudfin"}, {"entity": "Razorfin"}]],
           ["Medium and deep water", [{"entity": "Mire Serpent"}]]
         ]
@@ -9047,7 +9240,7 @@
     "paragraphs": [
       "Most dry ground and the shore shallows are covered in grass. Short grass is a few blades over soil. Thick grass grows until it covers the ground. Moss grows on stone and inside caves and ruins. Rift Grass replaces ordinary grass around the rift.",
       "Grass grows anywhere from the shore shallows upward, in every outdoor area except Vast Waters. It stays short and thin in the Withered Mire, on mud, and in deep shade. Moss covers about a third of the stony patches in every area. Rift Grass spreads through the Rift-Thorn Mire until the rift is dealt with.",
-      "Short grass, moss and Rift Grass cost 0.8 AP a step, like bare soil. Thick grass costs 1.0 AP, and thick grass growing through shallow water 1.4 AP. Tall Grass and Fern patches are separate plants that slow you further. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
+      "Clear short grass, moss and Rift Grass can cost 0.8 AP for a straight step. Thicker growth raises the land penalty, while water or goo footing selects the separate water grid. Strider reduces positive nonslope land penalties and wears stronger paths every third rank, including high grass. You can build or place objects on an unoccupied tile.",
       "Grass does not change which land seeds take. They follow the soil height underneath, and planting clears the grass. Thick grass or moss growing through shallow water is what Cranberry Seeds need. Crops on Rift Grass shrink away instead of growing, and moss on dry stone still counts as stone, which refuses seeds.",
       "Creatures on grassy ground come from the area's land table; see each area page. In the Rift-Thorn Mire, Rift Grass tiles use the rift table like every other tile there. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
@@ -9097,7 +9290,7 @@
     "paragraphs": [
       "Pale sand covers beaches and scattered sandy patches. It slopes gently from dry ground into the water.",
       "Any side of a land area that faces the edge of the world, a Vast Waters area or a Broken Fen becomes a sandy beach about thirty tiles deep, dropping into deep water. A Broken Fen has beaches on all four sides. Every land area also gets a few inland sandy patches: two to six per area, or 24 in the Withered Mire.",
-      "Sand is heavy going at 1.2 AP a step. Wading over a sandy bottom also costs more than over soil: 1.4 AP in shallow water, 2.0 AP in medium water and 5 AP in deep water. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
+      "Bare dry sand costs 1.4 AP for an unencumbered straight step. When wading, the water penalty is selected instead of the sandy bottom's land penalty. You can build and place objects on dry sand if nothing else occupies the tile.",
       "Elderberry Seeds are the only land seed that takes on dry sand, from the upper half of the waterline up. Under water, Watercress Seeds ignore the bottom and grow on sand at their usual depth.",
       "Dry sand has its own spawn table in every area except the Rift-Thorn Mire, day and night alike. The Boulder Crab is by far the most common creature on it, and bird nests are often built on sand. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
@@ -9113,6 +9306,9 @@
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_penalty/tile_get_penalty_water"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step"}
     ],
     "index_page": "Terrain",
     "tables": [
@@ -9155,7 +9351,7 @@
     "paragraphs": [
       "Dark, wet mud lies in winding streaks across low ground. It is dry ground, not water.",
       "Every land area has 16 to 24 winding mud streaks, laid between the waterline and the first plateau. A Broken Fen has only about a third as many. Calmia Root plants grow only on mud, so mud is where to look for them.",
-      "Mud costs 1.2 AP a step, the same as sand. You can build and place objects on it, as long as nothing else stands, grows or lies on the tile.",
+      "Bare dry mud costs 1.4 AP for an unencumbered straight step, the same as sand. Vegetation can add a further penalty. You can build and place objects here if nothing else occupies the tile.",
       "Mud takes every land seed at the right height, just like soil. Grass on mud never grows thick, so muddy shallows are no good for Cranberry Seeds.",
       "Creatures on mud come from the area's land table; see each area page. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
@@ -9166,9 +9362,11 @@
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "mud-walks.irandom16-24.calmia-mud-only"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
       {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.mud-cap4"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"}
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo;nature_get_maxtile.mud-cap4"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_penalty"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step"}
     ],
     "index_page": "Terrain",
     "tables": [
@@ -9261,7 +9459,7 @@
     "paragraphs": [
       "Glistening violet goo seeps from the rift and pools over the ground. Stepping in it gives the message that your feet are entirely submerged, but it is never deep enough to swim in.",
       "Goo is found only in the Rift-Thorn Mire, which has 48 to 56 spreading pools, and in the rift depths below it.",
-      "Goo costs 1.2 AP a step outdoors and 1.0 AP in the rift depths. You cannot build, place objects or plant on it.",
+      "Goo footing selects the water penalty grid for step AP; it does not add its land penalty to that grid. You cannot build, place objects or plant on it.",
       "No seed takes on goo.",
       "Every creature in the Rift-Thorn Mire, on goo or anywhere else, comes from the rift table; see Rift-Thorn Mire. Any creature can wade into goo."
     ],
@@ -9328,7 +9526,7 @@
     "paragraphs": [
       "Slopes are the steep edges of raised ground, drawn as banks and cliffs. A slope rings the edge of each first plateau and each high plateau above it.",
       "Every land area has hills and plateaus. The Withered Mire has by far the most, with many raised hills and a base higher than any other area. Vast Waters has none.",
-      "Climbing a slope costs 5 AP a step. Each rank of Firm Grip makes it cheaper. You cannot build or plant on a slope. The flat plateau top beyond the slope walks like soil at 0.8 AP.",
+      "A straight dry slope costs 7.2 AP at Firm Grip rank zero. Each rank reduces the slope penalty by 8%. At rank 5, descending stops adding the extra 15-percentage-point slip increment, but other slip risks remain. You cannot build or plant on a slope. Clear plateau tops cost 0.8 AP.",
       "No seed takes on a slope. Trollgnarl Seed Pods do well on the plateau tops.",
       "Creatures appearing on a slope come from the area's land table. Creatures can climb slopes but never choose one as a place to wander to, so they mostly stay on level ground. Bird nests are often built on slopes. Every walking creature can cross it. Only the water creatures stay off it: the Mudfin, the Razorfin and the Mire Serpent. Flying creatures go anywhere."
     ],
@@ -9343,6 +9541,9 @@
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "wander-target.not-slope"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType2.base+0.25.mountain-walks80.nests-slope-sand"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_penalty/tile_get_moment"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step"}
     ],
     "index_page": "Terrain"
     },
@@ -9360,7 +9561,7 @@
       "Shallow water lies just below the waterline. The game says your feet are submerged. It comes in two bands. In the shore shallows, nearest the bank, grass still grows through the water. The open shallows, a little deeper, are bare water over dark soil.",
       "Every land area has shallow water along its pools and shores and in scattered puddles: about 40 puddles in most areas, 800 in the Drowned Fen, 12 in the Withered Mire and 5 in a Broken Fen. Beaches and lakes have a band of it around their edges.",
       "Water levels never change, so shallow water stays shallow. You can attack and jump as usual, and your pack stays dry.",
-      "Wading costs 1.2 AP a step over soil or stone, and 1.4 AP over sand, mud or thick grass. Each rank of Amphibian takes 8% off the water's share. You cannot build or place anything in shallow water, not even a Raft Base.",
+      "Water-layer penalties are 5 for Water1 and 15 for Water2; overlapping layers add within the water grid. The step uses that water penalty instead of the bottom's land penalty. A Water1-only step costs 1.4 AP at rank zero. Amphibian reduces the penalty by 8% per rank. You cannot build or place anything in shallow water.",
       "Shallow water takes four seeds. Cranberry Seeds need thick grass or moss growing through the water. Willow Seeds take the shore shallows, Cypress Seed Pods take both bands, and Watercress Seeds take all but the top edge of the open shallows.",
       "Creatures that appear in shallow water come from the water table. Every land creature can wade into shallow water. Mudfin and Razorfin can swim in the open shallows but not the shore shallows. The Mire Serpent stays in medium and deep water."
     ],
@@ -9374,10 +9575,12 @@
       {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04;player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "puddles40.areaType3-800.areaType2-12.areaType4-5"}
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "puddles40.areaType3-800.areaType2-12.areaType4-5"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_penalty_water"}
     ],
     "index_page": "Terrain",
     "tables": [
@@ -9417,7 +9620,7 @@
       "Medium water lies between the shallows and deep water and is greener and denser than the shallows. The game says your legs are submerged.",
       "Ponds and lakes in every land area have a band of medium water. There is much more of it in the Drowned Fen and the Broken Fen. Water rocks only appear in medium or deep water, and lilypads float on medium water and the upper part of deep water.",
       "Water levels never change. In medium water your pack stays dry, but jumps take a penalty of 3.",
-      "Wading costs 1.6 AP a step over soil or stone and 2.0 AP over sand or mud. Amphibian reduces the water's share. A water rock costs 2.5 AP but keeps you out of the water. The only thing you can place here is a Raft Base, and not on a water rock. A raft moves at 1.8 AP a step.",
+      "The water grid adds 5 for Water1, 15 for Water2 and 40 for Water3 wherever those layers overlap. Amphibian reduces the combined water penalty; sand or mud underneath is not added to AP. Water rocks keep you out of the water and use the land calculation. You can place a Raft Base here, but not on a rock.",
       "Watercress Seeds take all medium water. Cypress Seed Pods take its upper half.",
       "Creatures that appear here come from the water table. Whenever you end a move here outside Fort Solid Shorehold, there is a 2% chance a Mire Serpent bursts out of the water beside you. Small walkers such as the Giant Slug, the Viper, the Mirk Runner and the Boulder Crab cannot enter medium water. Larger walkers such as the Swamp Troll, the Toadkin and the Scaalmyr can. Swimmers and the Mire Serpent move freely here."
     ],
@@ -9433,8 +9636,10 @@
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "jump-penalty.water+3.deep+7"}
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss;jump-penalty.water+3.deep+7"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_penalty_water"}
     ],
     "index_page": "Terrain",
     "tables": [
@@ -9474,7 +9679,7 @@
       "Lakes in every land area have deep middles, and every beach drops into deep water. A Broken Fen is mostly deep water between islands. The fort's dock stands over deep water. A Vast Waters area is entirely deep water, all of it at swimming depth.",
       "Water levels never change. In deep water your pack gets wet. From chest depth you cannot attack (\"The water is too deep!\") and combat ends. From shoulder depth you cannot jump, and before that jumps take a penalty of 7.",
       "Swimming costs 0.15 stamina a turn, more when overburdened, so a full stamina bar lasts about six or seven turns. When it runs out you start drowning, and after four turns you die. Standing on a raft or a water rock stops it.",
-      "Wading or swimming costs 3.4 AP a step over soil or stone and 5 AP over sand or mud. The only thing you can place here is a Raft Base, not on a water rock. A raft moves at 1.8 AP a step and never swims or drowns, so it is the safe way across.",
+      "Deep-water AP uses the water grid, adding the penalties for whichever water layers overlap. It does not also add the sand or mud penalty underneath. Encumbrance and diagonals still matter, with an 8 AP cap. A Raft Base can be placed here, but not on a rock; a raft avoids swimming and drowning.",
       "Watercress Seeds take the top of deep water, down to about waist depth. Nothing else grows here.",
       "Creatures that appear here come from the water table. Ending a move here outside the fort's area has a 2% chance of a Mire Serpent surging up beside you. Only flyers, swimmers and the Mire Serpent can enter deep water. Every walker stops at its edge, which makes it a refuge from them."
     ],
@@ -9484,7 +9689,7 @@
     "evidence": [
       {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "tilefix_initiate.deep-0.4.water-0.3.shallow-0.2.slopes0.2-0.425"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_moment.slope0.2.hinderance0.4-0.55.stone1.25.sand-mud0.9.goo0.82.water;tile_get_height.Water3-cap28.raft-2"},
       {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
@@ -9492,9 +9697,11 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_finders", "key": "tile_meets_classneeds.size0-water2.size1-water3.swimmer-0.25"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_set_ae_water.player_wet_submerged.player_check_toodeep.player_get_swimloss"},
       {"source": "game-data-0900", "section": "gml_Object_obj_player_Alarm_0", "key": "drownPoints>=4"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_height.Water3-cap28.raft-2"},
       {"source": "ui-en", "section": "Pops", "key": "TooDeep"},
-      {"source": "ui-en", "section": "AEs", "key": "10.11.12.13.14.27"}
+      {"source": "ui-en", "section": "AEs", "key": "10.11.12.13.14.27"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "apcost_step"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_tiles_movement", "key": "tile_get_penalty_water"}
     ],
     "index_page": "Terrain",
     "tables": [
@@ -9529,7 +9736,7 @@
     "paragraphs": [
       "Caves, ruin buildings, cellars, the rift depths and people's homes have their own floors. Cave floors are bare rock. Ruin and cellar floors are old stone slabs with moss. The rift depths have dark, alien ground with goo and pits.",
       "Cave mouths are scattered through every land area. In the Sunken Ancient Ruins most of them lead to cellars and ruined buildings instead. The rift depths lie under the Rift-Thorn Mire opposite the fort. Homes belong to people such as Ranger Bhato and Gurb-Gurb.",
-      "Interior floors cost 0.8 AP a step. Rubble costs 2.5 AP, husks in the deepest rift chamber 1.6 AP and cave spikes 5 AP. You can build on open floor except in other people's homes.",
+      "Ordinary clear interior flooring has a -2.5 land penalty, giving 0.8 AP for a straight unencumbered step. Rubble, husks, spikes and other obstacles add penalties. You can build on open floors except in other people's homes.",
       "Cave and ruin floors count as stone, so seeds refuse them. Planting on rift-depth floors has not been tested.",
       "Caves and ruin interiors do not spawn creatures turn by turn. Each time you return after at least a day, a cave may restock with up to four creatures, about one for every two days away, and grows new Vile Bulb mushrooms. Ruin buildings and cellars restock the same way from a different list. The two outer rift chambers spawn every turn, up to 8 or 12 creatures. Homes never spawn creatures."
     ],
@@ -9582,6 +9789,8 @@
       "Plants, nests and loot",
       null,
       "Weather and revisiting"
+    ,
+      null
     ],
     "paragraphs": [
       "The world map is a five-by-five grid of areas. The game calls each one an area, as in \"Entering new area\" and \"Map of area\", and names it by its kind, such as Common Bog or Drowned Fen. There are nine kinds. The kind shapes the land, which trees and plants grow, which creatures roam and what landmarks you can find. Caves, ruin buildings, cellars and homes are separate interiors entered from an area.",
@@ -9596,6 +9805,8 @@
       "Each area is stocked with wild plants, bird nests and skeletons when it is first made. A skeleton is sometimes a treasure chest instead. A chest is a common chest 88.2% of the time, a richer chest 9.8% and a treasure chest 2%. They have value budgets of roughly 3 to 20, 5 to 40 and 10 to 50, filled with a few valuable items rather than many cheap ones.",
       "A bird nest gives 1 to 7 Feathers (2.5 on average), an Egg or more 40% of the time, and a small trinket 5% of the time. Ground litter gives a Rock, Twigs or both, plus independent chances of extra finds.",
       "Weather, the time of day and the outdoor temperature are shared by the whole world. When you return to an area it catches up on up to ten days. Plants grow, new Calmia Root plants appear on mud (two per day away, except in the Rift-Thorn Mire), nests and rubble refill, and after a day or more felled trees are gradually replaced toward about 120."
+    ,
+      "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ],
     "related_entities": ["Mudfin", "Boulder Crab", "Mire Serpent", "Viper", "Red Fang", "Scaalmyr Grunt", "Sceetler", "Firefly", "Feather", "Egg", "Willow", "Brambles", "Cypress", "Trollgnarl", "Elderwort Shrub", "Rift Vine"],
     "related_pages": ["Fort Solid Shorehold", "Common Bog", "Withered Mire", "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters", "Terrain", "Planting"],
@@ -9606,17 +9817,17 @@
       {"source": "ui-en", "section": "LocTitles", "key": "0.1.2.3.4.5.22.23.100"},
       {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "terrain_create_shore.off-grid.areaType100.areaType4"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "popCap24.repeat12.inside_view.spot_is_private.one-group-per-turn"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "popCap24.repeat12.inside_view.spot_is_private.one-group-per-turn;spawn-tables.areaType23.water.sand.areaType0.areaType22.default;fireflies.night.chance0.5.lt5"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
       {"source": "ui-en", "section": "Journal", "key": "10.12.29"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "fireflies.night.chance0.5.lt5"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "loot_create_treasure.chest-chance.loot_amountchances"},
-      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"}
+      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
+      {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
     ],
     "tables": [
       {
@@ -9828,6 +10039,8 @@
       "Trees",
       "Plants, nests and loot",
       "Landmarks"
+    ,
+      null
     ],
     "paragraphs": [
       "Common Bog areas surround Fort Solid Shorehold, and more are scattered across the rest of the map.",
@@ -9837,19 +10050,21 @@
       "Willow dominates, with Brambles second and only a little Cypress.",
       "Bogs grow three more wild Turnip patches than other areas. Cranberry patches line the grassy shallows.",
       "One of the bogs next to the fort holds Ranger Bhato's hideout, with a cellar entrance not far away."
+    ,
+      "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ],
     "related_entities": ["Ranger Bhato", "Giant Slug", "Giant Gnat", "Viper", "Dreadfly", "Mirk Runner", "Swamp Troll", "Mirkfang", "Firelouse", "Sceetler", "Scaalmyr Grunt", "Mutated Unwanted", "Turnip (nature)", "Cranberry"],
     "related_pages": ["Areas", "Fort Solid Shorehold", "Planting", "Terrain"],
     "confidence": "observed",
     "evidence": [
       {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs;rangerCamp.built_48x32.entrances_64x48.turnips+3"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default;sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
       {"source": "ui-en", "section": "Journal", "key": "10.12.29"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "rangerCamp.built_48x32.entrances_64x48.turnips+3"}
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
+      {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -9873,7 +10088,7 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
           [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
           [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
           [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
@@ -9941,6 +10156,8 @@
       "Creatures in water and on sand",
       "Trees",
       "Plants, nests and loot"
+    ,
+      null
     ],
     "paragraphs": [
       "Withered Mire areas fill some of the map's leftover cells, so a world can have several or none.",
@@ -9949,6 +10166,8 @@
       "The shared water and sand tables apply. With so much sand, Boulder Crabs are common.",
       "Grass stays short and thin. Trollgnarl makes up a third of new trees, and trees here die off faster than in most areas.",
       "Bird nests are twice as plentiful, on the slopes and sand. The stunted grass leaves few tiles for Cranberry Seeds, but the high, dry ground suits turnips, brambles and trollgnarls."
+    ,
+      "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ],
     "related_entities": ["Trollgnarl", "Trollgnarl Seed Pods", "Firelouse", "Raving Unwanted", "Boulder Crab", "Giant Slug", "Giant Gnat", "Viper", "Dreadfly", "Mirk Runner", "Swamp Troll", "Mirkfang", "Sceetler", "Scaalmyr Grunt"],
     "related_pages": ["Areas", "Planting", "Terrain", "Tree health and chopping", "Slopes"],
@@ -9956,11 +10175,11 @@
     "evidence": [
       {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder;nature_get_maxtile.areaType2-grass-3..5.tree-death+0.0025"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default;sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType2-grass-3..5.tree-death+0.0025"}
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
+      {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -9984,7 +10203,7 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "–", "16.85%", "7.94%", "16.25%", "7.69%", "14.95%", "7.16%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "16.85%", "7.94%", "16.25%", "7.69%", "14.95%", "7.16%"],
           [{"entity": "Giant Gnat"}, "–", "14.98%", "9.52%", "14.44%", "9.23%", "13.29%", "8.60%"],
           [{"entity": "Dreadfly"}, "15% Deathfly", "11.24%", "9.52%", "10.83%", "9.23%", "9.97%", "8.60%"],
           [{"entity": "Viper"}, "33% Red Fang", "14.98%", "12.70%", "14.44%", "12.31%", "13.29%", "11.46%"],
@@ -10053,6 +10272,8 @@
       "Trees",
       "Plants, nests and loot",
       "Landmarks"
+    ,
+      null
     ],
     "paragraphs": [
       "Every world has at least one Drowned Fen, and more appear among the map's leftover cells.",
@@ -10062,20 +10283,22 @@
       "Cypress is three times as common as usual, about one new tree in seven.",
       "Cranberry patches are abundant, and there are twice the usual Calmia Root plants. The shallows suit Cypress Seed Pods, Willow Seeds, Cranberry Seeds and Watercress Seeds.",
       "Gurb-Gurb's hollow is placed in the first Drowned Fen you enter, decided as you arrive. Smoke gives away its position."
+    ,
+      "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ],
     "related_entities": ["Gurb-Gurb", "Mudfin", "Razorfin", "Mire Serpent", "Cypress", "Cranberry", "Calmia Root", "Cypress Seed Pods", "Willow Seeds", "Cranberry Seeds", "Watercress Seeds"],
     "related_pages": ["Areas", "Planting", "Terrain", "Shallow water", "Common Bog"],
     "confidence": "observed",
     "evidence": [
       {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs;areaType3.puddles800.cranberries+10.calmia16-24"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default;sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_6", "key": "first-visit-landmarks.hut.shipwreck.camp"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "areaType3.puddles800.cranberries+10.calmia16-24"}
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
+      {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10099,7 +10322,7 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
           [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
           [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
           [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
@@ -10168,6 +10391,8 @@
       "Trees",
       "Plants, nests and loot",
       "Landmarks"
+    ,
+      null
     ],
     "paragraphs": [
       "Each world has two or three Broken Fens. Neighboring areas treat a Broken Fen like open sea, so their shared edges become beaches.",
@@ -10177,6 +10402,8 @@
       "The usual mix, but only 48 to 72 trees to start with. Felled or missing trees regrow toward the usual number over later visits.",
       "Broken Fens hold the most loot of any area: more skeletons than usual, and a quarter of them are treasure chests.",
       "Ihar's shipwreck is placed on a shoreline of the first Broken Fen you enter. If it does not fit there, the game tries again in the next Broken Fen you enter."
+    ,
+      "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ],
     "related_entities": ["Ihar", "Mudfin", "Boulder Crab", "Mire Serpent"],
     "related_pages": ["Areas", "Terrain", "Sand", "Deep water", "Vast Waters"],
@@ -10191,6 +10418,9 @@
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_6", "key": "first-visit-landmarks.hut.shipwreck.camp"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "loot_create_treasure.chest-chance.loot_amountchances"},
       {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"}
+    ,
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
+      {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10214,7 +10444,7 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
           [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
           [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
           [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
@@ -10284,6 +10514,8 @@
       "Trees",
       "Plants, nests and loot",
       "Landmarks"
+    ,
+      null
     ],
     "paragraphs": [
       "Each world has two or three Savage Mirk areas.",
@@ -10294,6 +10526,8 @@
       "The usual mix, mostly Willow and Brambles.",
       "Skeletons are more numerous than usual, and one in ten is a treasure chest.",
       "The Survivors' camp is built in the first Savage Mirk you enter, with torchlight pointing the way. Wilda, the Survivor group and Grand Mother live there. Building close to the camp is not allowed. Rifts near the camp go dead, and vines, skeletons and chests right beside it are cleared."
+    ,
+      "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ],
     "related_entities": ["Red Fang", "Razorfin", "Deathfly", "Mirk Mauler", "Giant Mirkfang", "Titanspine Crab", "Mirkfang Matriarch", "The Terror", "Wilda", "Survivor", "Grand Mother", "Calmia Root"],
     "related_pages": ["Areas", "Survivors' camp", "Terrain"],
@@ -10301,12 +10535,14 @@
     "evidence": [
       {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default;sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_6", "key": "first-visit-landmarks.hut.shipwreck.camp"},
       {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "TooCloseCamp420"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "terror25.night.campQUESTstage0.building_48x48_tall"}
+      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "terror25.night.campQUESTstage0.building_48x48_tall"},
+      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"}
+    ,
+      {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10330,7 +10566,7 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "–", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
+          [{"entity": "Giant Slug"}, "55% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
           [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
           [{"entity": "Dreadfly"}, "Always Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
           [{"entity": "Viper"}, "Always Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
@@ -10349,7 +10585,7 @@
         "after": 3,
         "columns": ["Creature", "Appears as", "Night, early", "Night, from Bring the rune back", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "–", "8.77%", "8.47%", "7.84%"],
+          [{"entity": "Giant Slug"}, "55% Giant Snail", "8.77%", "8.47%", "7.84%"],
           [{"entity": "Giant Gnat"}, "–", "10.53%", "10.17%", "9.40%"],
           [{"entity": "Dreadfly"}, "Always Deathfly", "10.53%", "10.17%", "9.40%"],
           [{"entity": "Viper"}, "Always Red Fang", "14.04%", "13.56%", "12.54%"],
@@ -10525,6 +10761,8 @@
       "Trees",
       "Plants, nests and loot",
       "After the rift"
+    ,
+      null
     ],
     "paragraphs": [
       "Each world has two or three Rift-Thorn Mires. One always sits directly opposite Fort Solid Shorehold on the world map and holds the way down into the rift depths.",
@@ -10533,21 +10771,58 @@
       "Far fewer trees, and about a quarter are Rift Vine. Trees die off faster here than anywhere else.",
       "While the rift is active, no lilypads, watercress, bird nests, Calmia Root plants, wild turnips or cranberries are placed, and Calmia Root does not come back on later visits. Crops on Rift Grass wither and goo cannot be planted, so this is a poor place for a garden.",
       "After \"Scaal defeated\", 95% of rift creature spawns are cancelled, leaving about a 46% chance of any spawn each turn. Rift Grass and Rift Vine stop growing, and crops still cannot fully ripen."
+    ,
+      "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ],
     "related_entities": ["Scaal", "Scaalmyr Grunt", "Sceetler", "Scaalmyr Warrior", "Mutated Unwanted", "Mire Serpent", "Rift Grass", "Rift Vine"],
     "related_pages": ["Areas", "Fort Solid Shorehold", "Goo", "Grassy ground", "Planting", "Interior floors", "Tree health and chopping"],
     "confidence": "observed",
     "evidence": [
-      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
-      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType23.riftDeg.tree-death+0.005"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "obj_rift.dist2.5.areaType23-max5.endedRift-gate"},
-      {"source": "game-data-0910", "section": "gml_Object_manager_area_Alarm_2", "key": "obj_rift.AT!=0.AT!=100.!rangerCamp.!libraryArea.round(10-3*dist)"}
+      {
+        "source": "game-data-0900",
+        "section": "gml_Object_obj_menu_Alarm_8",
+        "key": "worldGrid5x5.areaType-placement"
+      },
+      {
+        "source": "game-data-0900",
+        "section": "gml_Object_manager_area_Alarm_2",
+        "key": "outdoor-generation.per-areaType-knobs;obj_rift.dist2.5.areaType23-max5.endedRift-gate"
+      },
+      {
+        "source": "game-data-0900",
+        "section": "gml_GlobalScript_scr_nature",
+        "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder;nature_get_maxtile.areaType23.riftDeg.tree-death+0.005"
+      },
+      {
+        "source": "game-data-0900",
+        "section": "gml_Object_manager_area_Alarm_4",
+        "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default;sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"
+      },
+      {
+        "source": "game-data-0900",
+        "section": "gml_GlobalScript_scr_ai_related",
+        "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"
+      },
+      {
+        "source": "game-data-0900",
+        "section": "gml_Object_obj_screenfader_Step_0",
+        "key": "revisit-regrowth.passedHours-cap240.trees.calmia"
+      },
+      {
+        "source": "game-data-0910",
+        "section": "gml_Object_manager_area_Alarm_2",
+        "key": "obj_rift.AT!=0.AT!=100.!rangerCamp.!libraryArea.round(10-3*dist)"
+      },
+      {
+        "source": "game-data-0950",
+        "section": "gml_GlobalScript_scr_basic_useful",
+        "key": "being_initiate.slug-substitution"
+      },
+      {
+        "source": "game-data-0950",
+        "section": "gml_Object_manager_area_Alarm_4",
+        "key": "Toadkin.companion42.chance0.2"
+      }
     ],
     "index_page": "Areas",
     "tables": [
@@ -10625,7 +10900,7 @@
       "Each world has between two and six Vast Waters areas, and one can sit beside Fort Solid Shorehold. Land areas next to one get a beach along the shared edge.",
       "Open sea. The whole area is deep water at swimming depth, with no ground, trees, plants, nests, skeletons or rifts. The world map draws it as water.",
       "You can travel in from any neighboring edge, swimming or on a raft.",
-      "Swimming costs 0.15 stamina a turn, more when overburdened, so a full bar lasts about six or seven turns. When stamina runs out you start drowning, and four turns later you die. You cannot attack while swimming. A raft never swims or drowns and moves at 1.8 AP a step, so it is the safe way across.",
+      "Swimming costs 0.15 stamina a turn, more when overburdened, so a full bar lasts about six or seven turns. When stamina runs out you start drowning, and four turns later you die. You cannot attack while swimming. A raft never swims or drowns and avoids swimming costs, so it is the safe way across.",
       "Every tile is water, so every creature comes from the water table. Normal tougher-form odds apply. Ending a move here, swimming or rafting, has a 2% chance of a Mire Serpent."
     ],
     "related_entities": ["Mudfin", "Razorfin", "Giant Gnat", "Dreadfly", "Deathfly", "Mire Serpent", "Raft Base"],
@@ -10669,7 +10944,7 @@
     {
       "title": "Controls",
       "paragraphs": [
-        "MirkLurk is played mainly with the mouse. Point at a tile and left-click to walk there; while you hover, each step shows its action point cost. Left click moves, selects and attacks. Right click cancels and rotates things such as your attack pattern. The mouse wheel zooms the camera. With Balanced Zoom, an option that is on by default, the view is the same size at every screen resolution: 30 tiles wide fully zoomed out and 15 tiles fully zoomed in. With it off, the view is a fixed share of your screen, so a 4K screen shows twice as wide an area as a 1080p one. Scout slides the view toward the cursor so you can look ahead; the further the cursor is from you, the further it looks. When you name a new character, the button beside the name field opens an on-screen keyboard. There are no WASD movement keys.",
+        "MirkLurk is played mainly with the mouse. Point at a tile and left-click to walk there; while you hover, each step shows its action point cost. Left click moves, selects and attacks. Right click cancels and rotates things such as your attack pattern. The mouse wheel zooms the camera. With Balanced Zoom, an option that is on by default, the standard view has the same scale across screen resolutions, with a correction for displays wider than 16:9. The minimum zoom is still half the maximum. With it off, the view is a fixed share of your screen, so a 4K screen shows twice as wide an area as a 1080p one. Scout slides the view toward the cursor so you can look ahead; the further the cursor is from you, the further it looks. When you name a new character, the button beside the name field opens an on-screen keyboard. There are no WASD movement keys.",
         "Every other action has a keyboard shortcut. The table lists the defaults, using the names shown in Options > Controls. Tooltips always show the key you have bound, so they stay correct after you change it.",
         "Every binding can be changed in Options > Controls: click an entry, then press any key or mouse button. If another action already used that key, it becomes unbound and is highlighted as a conflict. Reset restores the defaults. Even if Close is left unbound, Esc still closes menus.",
         "A controller is also supported, with its own Controller page in the options. You can swap the sticks and set their sensitivity (default 1) and dead zone (default 0.1). Stats, Crafting, Draw Weapon, Rest, Hitpoints, Auto-walk, Jump, Loot All, Journal, Swap, Scout, Codex, Show UI and Screenshot have no controller button by default.",
@@ -10881,11 +11156,6 @@
         },
         {
           "source": "game-data-0910",
-          "section": "gml_Object_camera_Step_0",
-          "key": "mouseWheelInput;balancedZoom.zoomMax=480/gui-width.zoomMin=zoomMax/2;else0.25/0.125;scout.howFar512*strength*1.5"
-        },
-        {
-          "source": "game-data-0910",
           "section": "gml_Room_rm_int_Create",
           "key": "global.balancedZoom=true;Settings.BalancedZoom"
         },
@@ -10943,6 +11213,11 @@
           "source": "game-data-0920",
           "section": "gml_GlobalScript_scr_items",
           "key": "item_add;item_add_and_resize"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_camera_Step_0",
+          "key": "BalancedZoom.aspect>16/9;minimumZoom=maximum/2"
         }
       ]
     },
@@ -10954,6 +11229,8 @@
         "On Easy, those four meters drain at 67% of the normal rate. Your own position is marked on the local map, and treasure caches are more common. You also start with better gear: an Iron Dagger instead of a Shoddy Dagger, plus Flint and three Firewood (Willow).",
         "Every difficulty starts with a Small Backpack, a Loaf of Bread, a Tattered Bedroll and a Map of area.",
         "On Easy and Medium, cloudy weather cannot turn into rain during your first two days. On Hard, rain can start from the first day."
+      ,
+        "Death mode is a separate choice. Easy, Medium and Hard can each use Crawl to Safety, Load Latest or Permadeath; see Death. The character name color indicates difficulty, and the adjacent icon indicates death mode."
       ],
       "section_titles": [
         "Choosing a difficulty",
@@ -10961,6 +11238,8 @@
         "Easy",
         "Starting gear on every difficulty",
         "Early weather"
+      ,
+        null
       ],
       "related_entities": [
         "Iron Dagger",
@@ -11091,21 +11370,21 @@
           "section": "ItemTitles",
           "key": "2;3;12;25;36;39;68;89"
         }
+      ,
+        {"source": "game-data-0950", "section": "gml_Object_obj_menu_Create_0", "key": "diffPos/deadPos"},
+        {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "player-name.difficulty-color/death-icon"}
       ]
     },
     {
       "title": "Death",
       "paragraphs": [
-        "You die when your wellbeing runs out, when you lose all of your HP, or after drowning for four turns in deep water. Poison and bleeding take effect at the start of your turn, so they can finish you off before you act.",
-        "Wellbeing falls when satiation, stamina, focus or warmth are neglected, when you are sick, when thorns scratch you, when a magic weapon costs more of a meter than you have, and near rifts. When death is close, the interface counts down the turns you have left.",
-        "When you die, the music fades, the interface hides and a menu shows one of ten farewell messages. It offers Load Latest Save in place of Save and Exit, along with Options and the exits to the main menu or desktop.",
-        "Death does not delete your save; there is no permadeath. Loading takes you back to your most recent save. The game saves automatically when you enter a new area and after a successful sleep, but skips that autosave when your wellbeing is almost gone. You can also save when you exit. Saves are removed only when you delete them yourself on the load screen by holding Delete."
-      ],
-      "section_titles": [
-        "Ways to die",
-        "Warning signs",
-        "The death screen",
-        "Saves"
+        "You die when wellbeing runs out, when all HP is lost, or after four turns of drowning. Poison and bleeding at the start of your turn can kill before you act.",
+        "Choose a death mode separately from difficulty at character creation: Crawl to Safety, Load Latest or Permadeath. Load Latest is the default. Older saves without a saved death-mode setting also use Load Latest.",
+        "Load Latest takes you back to your most recent save. Crawl to Safety retains that reload option and adds a way to recover in the same area, wounded and with damaged equipment.",
+        "Permadeath deletes the character's save directory when the death menu appears. There is no reload option while dead. Choose it only if you intend to lose the character permanently.",
+        "Crawling moves you to a free, non-water tile at least 112 world pixels (7 tiles) from where you fell. It applies 40 to 120 durability-loss calls randomly across eligible equipped gear, excluding orbs. This is not a percentage loss and not that many points from every item.",
+        "If you have no HP left, crawling heals 1 to 3 lost HP cells, but not burnt cells. Before the ensuing end-turn update it sets recovery targets of 15-25% wellbeing, 5-25% stamina and 10-25% focus, clears enemy targets and refreshes combat. The final displayed meters can differ after the turn resolves.",
+        "Autosaves occur on area entry and after successful sleep, except when wellbeing is almost gone. Saving on exit remains available while alive. The death-mode icon is shown alongside the character's name."
       ],
       "related_entities": [],
       "related_pages": [
@@ -11136,54 +11415,34 @@
           "key": "drownPoints"
         },
         {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_rift_Alarm_0",
-          "key": "haelth"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_Object_manager_day_Step_0",
-          "key": "playerDead"
-        },
-        {
-          "source": "game-data-0900",
+          "source": "game-data-0950",
           "section": "gml_Object_obj_menu_Create_0",
-          "key": "LoadLast"
+          "key": "deadPos=1"
         },
         {
-          "source": "game-data-0900",
-          "section": "gml_Object_obj_menu_Step_0",
-          "key": "LoadLast"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_saveload",
+          "key": "save_player.deathOption/load_player.absent-default1"
         },
         {
-          "source": "game-data-0900",
+          "source": "game-data-0950",
           "section": "gml_Object_obj_menu_Draw_64",
-          "key": "directory_destroy"
+          "key": "death-menu.crawl/reload/permadeath"
         },
         {
-          "source": "ui-en",
-          "section": "Main",
-          "key": "WELLBEING"
+          "source": "game-data-0950",
+          "section": "gml_Object_manager_day_Step_0",
+          "key": "deadMenuTick175.permadeath.directory_destroy"
         },
         {
-          "source": "ui-en",
-          "section": "AEsGeneral",
-          "key": "TurnTillDeath"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_dur_damage"
         },
         {
-          "source": "ui-en",
-          "section": "Pops",
-          "key": "Dead0..Dead9"
-        },
-        {
-          "source": "ui-en",
-          "section": "Menus",
-          "key": "LoadLast;ExitToMain;DeleteSave"
-        },
-        {
-          "source": "ui-en",
-          "section": "TTgen",
-          "key": "1;6"
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_heal"
         }
       ]
     },
@@ -11197,7 +11456,7 @@
         "When an enemy attacks you, you may get a chance to dodge: you see where the attack will land and choose which way to shift your own grid.",
         "Enemies aim according to their intelligence. The least intelligent hit completely at random. Smarter ones go after your remaining HP, then also allow for the size of their pattern, then target clusters of healthy cells. The smartest also rotate their pattern for the most damage. On Hard, most enemies aim one step more precisely.",
         "A fight ends when no hostile creature is targeting you. There is no flee button, but distance works: beyond about one and a half times a creature's detection range it becomes more and more likely to give up, and beyond three times that range it always does. It also gives up when it can no longer find a way to reach you, and some creatures retreat when you hide in a sheltered spot. A blunt stun makes the victim lose its next turn.",
-        "A block stops the whole attack, before its pattern can hit. An equipped shield gives its base block chance plus 2.5 percentage points per Shield Savant rank. For example, a Wood Buckler has 8% base chance and 10.5% at rank 1. Without an equipped shield you cannot block. Each successful block costs the shield 1 durability (75% chance) or 2 (25% chance). Some creatures and friendly characters also have their own block chance, shown when you examine them; it applies to melee and projectile attacks.",
+        "A block stops the whole attack, before its pattern can hit. An equipped shield gives its base block chance plus 2.5 percentage points per Shield Savant rank. For example, a Wooden Buckler has 8% base chance and 10.5% at rank 1. Without an equipped shield you cannot block. Each successful block costs the shield 1 durability (75% chance) or 2 (25% chance). Some creatures and friendly characters also have their own block chance, shown when you examine them; it applies to melee and projectile attacks.",
         "A creature with no current target reacts to the attacker even when a distant attack misses or is blocked. Blend Into Nature can still evade detection after a miss at 6.5% per rank; a blocked attack does not use that evasion check."
       ],
       "section_titles": [
@@ -11303,9 +11562,21 @@
     {"entity": "item-50", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
     {"entity": "item-58", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
     {"entity": "item-118", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
-    {"entity": "item-41", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[41].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"}]},
-    {"entity": "item-96", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[96].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"}]},
-    {"entity": "item-212", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[212].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"}]},
+    {"entity": "item-41", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
+                                                                                                                                                                                                                   "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot."
+                                                                                                                                                                                                                 ], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[41].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"},
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ]},
+    {"entity": "item-96", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
+                                                                                                                                                                                                                   "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot."
+                                                                                                                                                                                                                 ], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[96].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"},
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ]},
+    {"entity": "item-212", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
+                                                                                                                                                                                                                    "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot."
+                                                                                                                                                                                                                  ], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[212].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"},
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ]},
     {"entity": "item-75", "paragraphs": ["Speak with Captain Eir at Fort Solid while carrying it. She takes one recorder automatically and the main quest moves on."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Eir.player_inventory_lose_amount[75];MAINQUESTSTAGE=2"}]},
     {"entity": "item-123", "paragraphs": ["Speak with Ranger Bhato while carrying it to report the kill. He sends you back to Fort Solid.", "Then speak with Magus Clay while carrying it. He takes the rune and gives you Clay's Strange Potion."], "confidence": "inferred", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Bhato.player_inventory_get_amount[123];MAINQUESTSTAGE=10"}, {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Clay.MAINQUESTSTAGE10.player_inventory_lose_amount[123]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.Clay.205.item_receive[126]"}]},
     {"entity": "item-126", "paragraphs": ["Speak with the Dead Unwanted at the dead camp while carrying it. A new option pours the potion into his mouth; the potion is used up and he revives as Viend, who must then be escorted to Fort Solid."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.DeadUnwanted.option114.requires[126]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.DeadUnwanted.114.player_inventory_lose_amount[126];112.being_initiate[19]"}]},
@@ -11689,6 +11960,8 @@
       "paragraphs": [
         "Its blade is flint, so it can also be the stone when you light a fire, adding 20% to the spark chance like Flint. Each strike has a 2% chance to break it, and a broken dagger is lost. Unlike metal daggers, it cannot be the striker.",
         "It weighs about a quarter of a kilogram, not its listed base weight, because the game recalculates the weight of crafted items from their ingredients."
+      ,
+        "Metal repair bonuses no longer apply to this dagger. It can supply stone sparks for a fire even while equipped; its 20% stone-spark chance is only one part of the fire-lighting calculation."
       ],
       "confidence": "inferred",
       "evidence": [
@@ -11702,6 +11975,9 @@
           "section": "gml_Object_UI_Draw_64",
           "key": "firestart.subSlots[0].sparkChanceStone;subSlots[1].sparkChance;rockItem.breakChance.player_inventory_lose_item"
         }
+      ,
+        {"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[277].!bonusValid/sparkChanceStone"},
+        {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "fire-menu.first-category.player_return_item[include-equipped]"}
       ]
     },
     {
@@ -11776,6 +12052,10 @@
         }
       ]
     }
+  ,
+    {"entity": "item-279", "paragraphs": ["While equipped in your off hand, this shell restores 0.3 durability each time your turn ends, up to its maximum of 16. Carrying it in a bag does not regenerate it.", "Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.offhand279.durability+0.3/cap16"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
+    {"entity": "item-278", "paragraphs": ["A Giant Snail drops 1 to 3 shards. One is most common: the chances of 1, 2 and 3 are 11/18, 5/18 and 1/9. There is no defined recipe or other use for the shard in this version."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278.loot_amountchances[1,3]"}, {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances"}, {"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[278];all-components"}]},
+    {"entity": "item-257", "paragraphs": ["Its carried weight is 2 kg. Unlike most crafted items, Improvised Bedroll is excluded from the recipe-based weight rewrite. Its recipe and comfort are unchanged."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[257].weight;postprocessing.components.excluded257"}]}
   ],
   "construction_recipes": [
     {
@@ -11877,11 +12157,15 @@
         "summary": "Giant Slugs form a separate faction, not part of the mixed wildlife faction.",
         "members": [
           "Giant Slug"
+        ,
+          "Giant Snail"
         ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[0].team"},
           {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
+        ,
+          {"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[43].team"}
         ]
       },
       {
@@ -11908,11 +12192,15 @@
         "summary": "Toadkin form their own targeting faction.",
         "members": [
           "Toadkin"
+        ,
+          "Toadkin Shaman"
         ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[21].team"},
           {"source": "game-data", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
+        ,
+          {"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[42].team"}
         ]
       },
       {

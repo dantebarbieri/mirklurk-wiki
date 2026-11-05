@@ -24,6 +24,23 @@ from smoke_deploy import smoke_category_memberships, smoke_reader_release, wait_
 
 # Original 0.8.1.5 fields deliberately renamed or re-evidenced by later patches.
 AMENDED_0815 = {
+    "item-0": {"name": "Wood Buckler", "evidence": [{"source": "items-en", "section": "ItemTitles", "key": "0"}]},
+    "amphibian-efficiency": {
+        "description": "The English skill text specifies this bonus for water traversal; its exact runtime calculation has not been verified.",
+        "confidence": "localization-described",
+        "evidence": [{"source": "ui-en", "section": "SkillsDesc0", "key": "1"}]},
+    "firm-grip-efficiency": {
+        "value": 6.0, "description": "This is the listed slope traversal bonus, not a measured movement-speed increase.",
+        "confidence": "localization-described",
+        "evidence": [{"source": "ui-en", "section": "SkillsDesc0", "key": "3"}]},
+    "strider-efficiency": {
+        "description": "The bonus concerns vegetation and obstacles; the separate path-creation milestone occurs every three ranks.",
+        "confidence": "localization-described",
+        "evidence": [{"source": "ui-en", "section": "SkillsDesc0", "key": "0"}]},
+    "pack-mule-capacity": {
+        "description": "The listed capacity increase is additive per skill rank.",
+        "confidence": "localization-described",
+        "evidence": [{"source": "ui-en", "section": "SkillsDesc1", "key": "4"}]},
     "being-35": {"name": "Unwanted Guard", "evidence": [{"source": "beings-en", "section": "Titles", "key": "35"}]},
     "skill-1-0": {"name": "Fire Striker", "evidence": [{"source": "ui-en", "section": "SkillsTitle1", "key": "0"}]},
     "fire-striker-chance": {"entity": "Fire Striker", "evidence": [{"source": "ui-en", "section": "SkillsDesc1", "key": "0"}]},
@@ -284,14 +301,16 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 22, "entities": 362, "facts": 107, "entries": 344},
+            {"sources": 26, "entities": 366, "facts": 107, "entries": 347},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
-            {"quest": 37, "merchant": 88, "recipe": 98, "loot": 87, "algorithm": 34},
+            {"quest": 37, "merchant": 88, "recipe": 98, "loot": 90, "algorithm": 34},
         )
         # 0.8.9.9 deliberately amended these original entries; the rest of the handoff stays pinned.
         amended = {"skill-1-0-mechanics", "skill-3-4-mechanics", "loot-amount-distribution", "crafting-station-modifiers",
+                   *(f"skill-{group}-{skill}-mechanics" for group, skill in
+                     ((0, 0), (0, 1), (0, 3), (1, 1), (1, 3), (1, 4))),
                    "corpse-budgeted-treasure", "corpse-30-66", "corpse-29-103", "corpse-4-82", "corpse-14-129",
                    *(f"corpse-{n}-69" for n in (1, 25, 27, 28)),
                    *(f"corpse-{n}-{m}" for n in (13, 14, 15, 16) for m in (107, 124)),
@@ -300,25 +319,25 @@ class DataTests(unittest.TestCase):
         extension = {"sources": [], "entities": [], "facts": data["facts"][79:],
                      "entries": [row for row in data["entries"][:249] if row["id"] not in amended]}
         raw = json.dumps(extension, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "d35d1c9e56eebb519be9bb9c24769b6731d43b4b3f84948512adba0149613d58")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "b85b9e4b47d06c6b1decb7c51575e356f7fcc9369c7bfb8bebdaef3960eedff9")
         supplement = {"sources": [], "entities": [], "facts": [],
                       "entries": [row for row in data["entries"][249:293] if row["id"] not in amended]}
         raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "d6aa4b58cbb7179362901457682a3e5270931d4fa9fb1846beaa2e26520686cc")
         update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
-        self.assertEqual(len(update), 77)
+        self.assertEqual(len(update), 86)
         raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "c427f967956f89a2e7be20cce866097178f78253ae5bb20dd8178138622ad35a")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "f0342141755a871094a434935177badcfe246b2b18e6a64a6c55697cff00f8be")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 416)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 421)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("These guides cover '''0.9.2.0'''", pages["Game mechanics"])
+        self.assertIn("These guides cover '''0.9.5.0'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -337,12 +356,12 @@ class DataTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(raw).hexdigest(), digest, f"Original {key} changed")
         amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
         raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "e6628b69210b8cdd1509e51498117e28ffe2d9987d8e542d58eb82a82cf517c1")
-        self.assertEqual(data["game"]["build"], "0.9.2.0")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "7ce6c6f3f6a19475c651b7a9b1a745d9e9bce2ebd0f10dc6890e0c0f46b60a0f")
+        self.assertEqual(data["game"]["build"], "0.9.5.0")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
-            {"localization-described": 27, "inferred": 52},
+            {"localization-described": 23, "inferred": 56},
         )
         pages = build_pages(ROOT, data)
         self.assertTrue(set(PAGE_FILES) <= pages.keys())
@@ -609,7 +628,7 @@ class HealthArmorTests(unittest.TestCase):
         from wiki_render import cell_grid
         # 0.8.9.9 pin: adds the new beings' and magic weapons' grids and the reviewed item-188/189 melee changes.
         self.assertEqual(hashlib.sha256(json.dumps(self.details["grids"], sort_keys=True).encode()).hexdigest(),
-                         "556afd67887aae2d2d7ba27533e3f7b55181ab0fb3017e22dffa9c4f8887dd9d")
+                         "2cc46e4d6f2fc1c065cf70f9160b28795201bd304c992c40d39ae442d357457e")
         totals = {0: 0, 1: 0, 2: 0, 3: 0}
         for grid in self.details["grids"]:
             rendered = cell_grid(grid, "being", self.data["illustrations"])
@@ -628,7 +647,7 @@ class HealthArmorTests(unittest.TestCase):
                         else:
                             visible = str(expected["min"]) if expected["min"] == expected["max"] else f'{expected["min"]}-{expected["max"]}'
                             self.assertEqual(cell, visible)
-        self.assertEqual(totals, {0: 317, 1: 259, 2: 35, 3: 10})
+        self.assertEqual(totals, {0: 326, 1: 263, 2: 40, 3: 10})
         self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 6)
         guide = self.pages["Health and armor"]
         for armor, name in ((1, "Bronze"), (2, "Silver"), (3, "Gold")):

@@ -220,6 +220,29 @@ Both were decoded independently and reduce exactly to their native frames;
 hashes are in the records. The four PNGs were imported with the standard
 attribution sidecars. The active register is 399 with 320 crops.
 
+## Version 0.9.5.0 shells and creatures
+
+The 2026-11-05 selection adds four primary illustrations from the fingerprinted
+`game-data-0950` build: Snail Shell Shard, Intact Snail Shell, Toadkin Shaman and
+Giant Snail. Item frames are `spr_ui_items16x32` frame 35 and
+`spr_ui_items32x32` frame 48, respectively, as named by their item records.
+The appended placeholder frames 36 and 49 are not used. Creatures use frame 0
+of `spr_toadkin_shaman` and `spr_snail`.
+
+The privately exported frames are enlarged by integer nearest-neighbor scaling
+(8x for the items and snail, 6x for the shaman), with transparent RGB normalized
+to zero, then cropped to their alpha bounds. System.Drawing independently
+decodes all eight PNGs and compares every pixel, scale, crop boundary and hash
+against the native frames. The retained original and cropped hashes are in
+the metadata register. Each File description credits Edym Pixels under the
+2026-10-14 developer approval for public-wiki display, not redistribution in Git.
+Import originals and crops with attribution sidecars before publication.
+
+The Wood Buckler original and crop are renamed to
+`File:Wooden Buckler icon.png` and `File:Wooden Buckler icon (cropped).png`,
+without changing their image bytes or leaving File redirects, after the paired
+SQL/images backup. The active register now contains 404 records and 324 crops.
+
 ## Site branding
 
 On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and

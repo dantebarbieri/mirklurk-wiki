@@ -48,7 +48,7 @@ HANDS = {f"item-{n}": text for numbers, text in (
       274, 277), "One-handed; main-hand slot"),
     ((29, 30, 169, 184, 185, 186, 187, 188, 189, 206, 266), "Two-handed; fills the main-hand and off-hand slots"),
     ((44, 93, 105, 106, 179), "Two-handed bow; main-hand slot, leaving the off-hand slot for arrows"),
-    ((0, 1, 50, 58, 118, 45, 46, 76, 174, 219, 220, 110, 111), "Off-hand slot only"),
+    ((0, 1, 50, 58, 118, 279, 45, 46, 76, 174, 219, 220, 110, 111), "Off-hand slot only"),
     ((41, 96, 212), "Main-hand or off-hand slot")) for n in numbers}
 
 
@@ -257,7 +257,7 @@ def item_article(name, facts, profiles, properties, entities, locations, price=N
     text = "\n" + top + "\n"
     if rows:
         notes = ["Base stats can change with equipment, condition and other effects."] if coin is None else []
-        if coin is None and "initial-weight" in values:
+        if coin is None and "initial-weight" in values and identity != "item-257":
             notes.append("Base weight is before crafting adjustments; final weight may differ.")
         if price_view is not None or any(key in used and used[key] == "summary" for key in ("initial-price", "value")):
             notes.append(VALUE_NOTE)
