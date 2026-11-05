@@ -34,7 +34,7 @@ repository asset publication, or change the separately reviewed curated register
 
 Optional `illustrations` records associate an item, being, nature record, or
 skill with a local title that follows the [File title convention](#file-titles),
-such as `File:Wood Buckler icon.png`. The encyclopedia
+such as `File:Wooden Buckler icon.png`. The encyclopedia
 stores new records in the exact allowlisted `content/facts/illustrations.json`
 with root `{"schema_version": 1, "illustrations": [...]}` and a 512 KiB cap.
 Non-item workstation illustrations use `station` instead of `entity`, with an
@@ -425,7 +425,7 @@ rejects them in `file_title` and `cropped_from` (see `tests/test_identifiers.py`
 
 Qualifiers separate variants of one role. A transparent-margin crop adds
 `cropped` as the last qualifier, so its preserved original is the same title
-without it (`File:Wood Buckler icon (cropped).png` and `File:Wood Buckler icon.png`;
+without it (`File:Wooden Buckler icon (cropped).png` and `File:Wooden Buckler icon.png`;
 `File:Willow sprite (mature, cropped).png` and `File:Willow sprite (mature).png`).
 Titles are ASCII raster basenames (PNG, JPEG or WebP) of letters, digits,
 spaces and `_.,'()-`, never URLs. MediaWiki resolves these relative File
@@ -554,13 +554,13 @@ only the individually reviewed images for this batch. Exclude symlinks,
 unexpected formats, oversized images, unnecessary embedded metadata, and any
 unreviewed export. Compare each image's SHA-256 with its approved record.
 
-The basename becomes the MediaWiki File title: `Wood Buckler icon.png` becomes
-`File:Wood Buckler icon.png`. Follow the [File title convention](#file-titles),
+The basename becomes the MediaWiki File title: `Wooden Buckler icon.png` becomes
+`File:Wooden Buckler icon.png`. Follow the [File title convention](#file-titles),
 check existing titles before import, and rename only through the
 [reviewed move plan](#renaming-files).
 
 Place an original attribution sidecar beside each image, for example
-`Wood Buckler icon.png.txt`. Its wikitext should identify the creator/rightsholder, describe
+`Wooden Buckler icon.png.txt`. Its wikitext should identify the creator/rightsholder, describe
 the actual permission or license basis, record the source and review scope,
 and give the original caption and image fingerprint. Do not reproduce
 localization prose, private correspondence, personal paths, or confidential
