@@ -209,6 +209,11 @@ $wgCaptchaTriggers['create'] = false;
 
 // The backup operator owns this optional lock; do not place it in public image storage.
 $wgReadOnlyFile = '/var/lib/mirklurk-backup/read-only';
+$webEditFreeze = '/var/lib/mirklurk-backup/web-edit-freeze';
+// Presence is sufficient: empty/unreadable contents must not reopen web edits.
+if (PHP_SAPI !== 'cli' && (file_exists($webEditFreeze) || is_link($webEditFreeze))) {
+    $wgReadOnly = 'Operator maintenance: web edits are temporarily frozen.';
+}
 $readOnly = mirklurkEnv('MW_READ_ONLY', '');
 if ($readOnly !== '') {
     $wgReadOnly = $readOnly;

@@ -94,6 +94,22 @@ try {
     check($wgCaptchaTriggers['createaccount'] && $wgCaptchaTriggers['addurl'], 'CAPTCHA trigger missing.');
     check(isset($wgCaptchaQuestions['Synthetic &lt;question&gt;']), 'Question HTML was not escaped.');
     check($wgReadOnly === 'Maintenance unit test', 'Edit freeze not applied.');
+    check($webEditFreeze === '/var/lib/mirklurk-backup/web-edit-freeze',
+        'Web maintenance must use a distinct marker in the existing operator mount.');
+    foreach (['', 'Explicit all-process freeze', '0'] as $reason) {
+        putenv('MW_READ_ONLY=' . $reason);
+        $configuration = static function (): array {
+            $wgReadOnly = false;
+            require __DIR__ . '/../deploy/LocalSettings.template.php';
+            return [$wgReadOnly, $wgReadOnlyFile];
+        };
+        [$actualReason, $backupFile] = $configuration();
+        check($actualReason === ($reason === '' ? false : $reason),
+            'CLI must preserve explicit environment freezes, including the string zero.');
+        check($backupFile === '/var/lib/mirklurk-backup/read-only',
+            'Clearing the environment must never disable the unconditional backup marker.');
+    }
+    putenv('MW_READ_ONLY=Maintenance unit test');
     check($wgAccountCreationThrottle[0]['count'] === 3, 'Signup rate limit missing.');
     check(count($wgCdnServersNoPurge) === 2, 'Trusted proxy configuration missing.');
     check(in_array('ConfirmEdit/QuestyCaptcha', $loaded, true), 'CAPTCHA extension not loaded.');

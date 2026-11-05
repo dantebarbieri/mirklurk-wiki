@@ -393,6 +393,8 @@ The app sets native `$wgReadOnlyFile` to `/var/lib/mirklurk-backup/read-only`.
 An optional dedicated operator-controlled directory is mounted read-only at
 `/var/lib/mirklurk-backup`; a nonempty marker makes the wiki read-only with the
 marker text as its reason. `MW_READ_ONLY` continues to work independently.
+The backup marker is unconditional for **both web and maintenance CLI**;
+`-e MW_READ_ONLY=` does not bypass it. Never clear or mask it for imports.
 This is **not** a drain barrier for requests already running. With `CACHE_DB`
 sessions, logins can also be unavailable while locked; the anonymous statistics
 healthcheck remains usable. Operators, not `Special:UnlockDB`, remove their own marker.
@@ -405,6 +407,134 @@ verify health before removing the owned marker. CLI imports, background jobs
 and administrative filesystem writers must honor that same maintenance lock.
 The homeserver runbook owns schedules, retention, permissions, offsite copies
 and recovery; this image does not schedule or run backups.
+
+### Operator web-edit freeze
+
+For approved CLI File maintenance, use the separate presence marker
+`/var/lib/mirklurk-backup/web-edit-freeze` in that **same existing read-only
+operator-control mount**. No new environment variable, mount, secret, group
+grant or root privilege is needed. The existing operator creates/removes it
+on the host; Apache must retain directory read/traverse access but no write
+access. It is not in public image storage. Any existing entry (including an
+empty file, unreadable/malformed contents, directory or dangling symlink)
+freezes non-CLI web requests with a fixed maintenance reason. Contents are
+an operator ownership record, not configuration. Do not remove an unexpected
+entry or rely on marker expiration: a crash leaves web edits safely frozen.
+An inaccessible/missing control mount violates the deployment contract; verify
+the mount and directory access before entering a window.
+
+Only PHP's actual `cli` SAPI ignores this **web-only** marker. A nonempty
+`MW_READ_ONLY` still freezes web and CLI; a nonempty backup `read-only` marker
+also freezes both, even when the web-only marker exists or CLI clears the
+environment reason. The reason shown is environment, then web-only, then
+backup; this changes reason precedence, never backup write protection.
+Native read-only mode still allows anonymous API/database statistics and the
+unchanged healthcheck; sessions/logins may need writes, so authenticate first.
+The marker is not a request-drain barrier or a substitute for the shared lock.
+
+This template-only change is schema-neutral: no extension, database, image
+path, auth, healthcheck or schema migration changes. Build the reviewed merged
+source and activate through the existing **manual** image-release procedure
+with predecessor/rollback provenance and normal acceptance. Content publishing
+does not activate it. Do not set the marker during rollout, or broaden the
+nightly base-image-only updater gate to accept template changes.
+
+#### Bounded File-maintenance window (Linux operator commands)
+
+1. Before taking the maintenance lock, obtain a fresh paired snapshot through
+   the existing authorized operator service. On the homeserver this is the
+   attended `sudo systemctl start mirklurk-snapshot.service`; if unavailable,
+   report the blocker, not a new sudo/service workaround. Check its
+   `Result=success`, `ExecMainStatus=0` and actual start/finish times. Resolve
+   `.last-snapshot` safely to a regular nonsymlink daily bundle; validate
+   `gzip -t`, safe `tar -tzf` member paths, exactly one `manifest.json` and
+   `database.sql.gz`, `tar -xOzf "$bundle" database.sql.gz | gzip -t` under
+   `set -o pipefail`, and actual images/branding members. Inspect manifest
+   format/source/image, fresh `created_utc`, and evidence that the frontend
+   stopped gracefully under the Compose lock. Retain private evidence and
+   prior restore validation; never print SQL/image contents. A generic
+   26-hour backup-age check is not an immediate pre-move snapshot.
+2. One owner holds the existing shared Compose/maintenance lock for the entire
+   bounded window. Coordinate publishers, jobs, snapshots, updates and all
+   other CLI/filesystem writers; recheck snapshot freshness after acquiring it.
+   Never start the snapshot service while holding its lock. On the homeserver:
+
+   ```sh
+   cd /srv/homeserver/docker
+   exec 9</run/lock/homeserver-compose.lock
+   flock -x -w 30 9
+   ```
+
+   Open the existing lock inode read-only; never replace/chmod it. Use only
+   `docker compose --file /srv/homeserver/docker/docker-compose.yml` and the
+   named `mirklurk` service, not a category-wide `up`.
+3. Confirm canonical/live `MW_READ_ONLY` is empty, both markers absent,
+   correct control mount/ACLs, healthy/read-write public API, authenticated
+   operator and exact authorized sources/targets/hashes. Refuse an existing
+   marker, symlink, backup lock or conflicting owner. Install a shell
+   `EXIT`/`HUP`/`INT`/`TERM` cleanup handler **before** creating the marker;
+   track successful exclusive creation, its inode and an operation-unique
+   token (UTC timestamp, PID and random suffix). Create it without clobbering:
+
+   ```sh
+   marker=/srv/docker/data/mirklurk/backup-control/web-edit-freeze
+   owner="web-maintenance-$(date -u +%Y%m%dT%H%M%SZ)-$$-$(openssl rand -hex 8)"
+   (umask 027; set -C; printf '%s\n' "$owner" > "$marker")
+   ```
+
+   Check every exit status. Cleanup must unlink **only** the regular nonsymlink
+   entry with that captured inode and exact token, never `read-only`. On
+   ownership/guard drift, stop further writes and report explicit recovery.
+   Retain the lock until cleanup and public state verification finish.
+4. Drain pre-marker web writers before File writes using the existing
+   authorized graceful frontend stop/start procedure, retaining the control
+   mount and marker. Verify the stop was graceful (not a timeout/forced kill),
+   then start the same container and confirm health. Do not assume a delay or
+   a `readonly` flag proves in-flight writers have drained.
+5. Prove the public API reports `readonly` with the fixed operator reason:
+   `/api.php?action=query&meta=siteinfo&siprop=general&format=json`. Confirm
+   statistics/health and ordinary reads still work. In the actual maintenance
+   runner, under the same app configuration, probe without writing anything:
+
+   ```sh
+   probe=$(printf '%s\n' \
+     '$m = MediaWiki\MediaWikiServices::getInstance()->getReadOnlyMode(); if ($m->isReadOnly()) { fwrite(STDERR, "CLI is frozen\n"); exit(1); } echo "CLI-WRITABLE\n";' |
+     docker compose --file /srv/homeserver/docker/docker-compose.yml \
+       exec -T --user www-data mirklurk php maintenance/run.php eval) || exit 1
+   case "$probe" in
+     *CLI-WRITABLE*) ;;
+     *) printf '%s\n' 'CLI probe did not complete successfully' >&2; exit 1 ;;
+   esac
+   ```
+
+   This queries core's effective read-only mode, not a speculative import or
+   unrelated test edit. A backup marker or explicit reason must abort this
+   probe. Check both exit status and the success sentinel: `eval` can catch
+   exceptions and exit zero without completing the input. CI additionally
+   proves native web edit/upload rejection and the
+   real CLI precedence matrix on a disposable wiki; do not make unrelated
+   production edits to test the guard.
+6. Perform only the reviewed, time-bounded CLI imports/moves, checking command
+   exit status, added/skipped/failed counts, source/target titles, hashes,
+   attribution and no-redirect expectations. Recheck lock, both markers,
+   ownership and read-only state before each batch; stop on drift. Validate
+   actual File results and the sync dry run before releasing dependent content.
+7. On success **or failure**, the finally/exit handler removes only its owned
+   web marker, confirms its absence, health, readable statistics and public
+   read/write state (no `readonly` key when the other guards are absent).
+   A remaining backup/environment freeze is not permission to clear it:
+   report its owner and incomplete restoration. Release the shared lock.
+   Obtain and validate the post-write paired snapshot through the same
+   authorized service **after** unlocking. If the trigger is unavailable,
+   report missing post-write protection rather than claiming completion.
+
+For error/crash recovery, inspect the operation record and lock, stop competing
+writers, reacquire the same lock, verify no surviving CLI maintenance or
+in-flight writers, and validate actual partial File results against the paired
+backup. Remove only the confirmed abandoned operation's web marker; do not
+delete foreign/backup markers or change canonical environment/mounts. Restore
+and verify public health/read-write state explicitly. Failed restoration or
+unknown ownership requires operator recovery, never a success-shaped fallback.
 
 Before enabling uploads:
 
