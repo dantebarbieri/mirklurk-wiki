@@ -447,6 +447,8 @@ the Shaman's class-5 budgeted treasure. All eleven prior treasure pools are
 reconstructed before adding eligible shell memberships; the Shaman's new pool
 retains the one-cell, type and budget restrictions. No equal per-item odds are
 inferred from eligibility. `loot_amountchances` supplies nonuniform quantities.
+As with existing budgeted drops, Random treasure owns the candidate list;
+Toadkin Shaman loot supplies the source context on all six eligible item pages.
 
 Amended Strider, Amphibian, Firm Grip, Slow Metabolism, Body Warmth and Pack
 Mule entries cite `being_steps_here`, `tile_get_penalty`,

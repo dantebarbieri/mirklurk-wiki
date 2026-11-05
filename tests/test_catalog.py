@@ -1198,6 +1198,15 @@ class ProfileTests(unittest.TestCase):
         pools = {row["id"]: row for row in self.catalog["acquisition"]["pools"]}
         self.assertEqual(set(pools["shaman-remains"]["eligible_item_ids"]),
                          {"item-32", "item-72", "item-73", "item-84", "item-140", "item-141"})
+        self.assertEqual(pools["shaman-remains"]["owner_source"], "random-treasure")
+        sources = {row["id"]: row for row in self.catalog["acquisition"]["sources"]}
+        self.assertEqual(sources["shaman-remains"]["pool_refs"][0]["pool"], "shaman-remains")
+        locations = page_locations(self.data, self.catalog)
+        for identity in pools["shaman-remains"]["eligible_item_ids"]:
+            page = self.pages[locations[identity]]
+            self.assertIn("{{:Toadkin Shaman loot|view=pool-source|pool=shaman-remains}}", page)
+            self.assertIn("{{:Random treasure|view=pool|pool=shaman-remains|item="
+                          + locations[identity] + "}}", page)
         self.assertEqual({identity for identity, row in pools.items() if "item-279" in row["eligible_item_ids"]},
                          {"skeleton-outdoors", "skeleton-indoors", "chest-common", "chest-middle", "survivor-remains"})
         self.assertFalse(any("item-278" in row["eligible_item_ids"] for row in pools.values()))

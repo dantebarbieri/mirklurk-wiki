@@ -181,7 +181,7 @@ class SelectiveViewTests(unittest.TestCase):
         locations = self.locations
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
-        self.assertEqual(owner.count('id="pool-item-'), 618)
+        self.assertEqual(owner.count('id="pool-item-'), 624)
         for placeholder in ("Budget-dependent", "Unknown", "Eligible, not guaranteed."):
             self.assertNotIn(placeholder, owner)
         for pool in self.catalog["acquisition"]["pools"]:

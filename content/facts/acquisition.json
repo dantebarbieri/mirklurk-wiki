@@ -491,7 +491,8 @@
         "nest-tiny",
         "cracks-tiny",
         "unwanted-remains",
-        "survivor-remains"
+        "survivor-remains",
+        "shaman-remains"
       ],
       "related_pages": [
         "Skeletons and corpses",
@@ -499,7 +500,8 @@
         "Searching ruins",
         "Bird nests",
         "Cave-floor cracks",
-        "Dead camp"
+        "Dead camp",
+        "Toadkin Shaman loot"
       ],
       "related_entities": [
         "Copper Coin",
@@ -515,9 +517,9 @@
       "confidence": "observed",
       "evidence": [
         {
-          "source": "game-data-0910",
+          "source": "game-data-0950",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(277);loot_amountchances"
+          "key": "treasure_get_lootarray.irandom(283);loot_amountchances"
         },
         {
           "source": "game-data-0899",
@@ -4114,7 +4116,7 @@
     }
   ,
     {"id": "snail-remains", "title": "Giant Snail loot", "kind": "enemy", "summary": "Shell pieces found on a Giant Snail's corpse.", "conditions": ["Ordinary corpse loot, before recovered arrows or other additional effects."], "rows": [], "related_entities": ["Giant Snail", "Snail Shell Shard", "Intact Snail Shell"], "related_pages": ["Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278/item279"}], "existing_entry_ids": ["corpse-43-278", "corpse-43-279"]},
-    {"id": "shaman-remains", "title": "Toadkin Shaman loot", "kind": "enemy", "summary": "Toadkin Meat and small budgeted treasure from a Toadkin Shaman.", "conditions": ["Ordinary corpse loot, before recovered arrows or other additional effects."], "rows": [], "related_entities": ["Toadkin Shaman", "Toadkin Meat"], "related_pages": ["Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse42.item162/treasure_get_lootarray[5,1.2,0.25]"}], "existing_entry_ids": ["corpse-42-162"], "pool_ids": ["shaman-remains"]}
+    {"id": "shaman-remains", "title": "Toadkin Shaman loot", "kind": "enemy", "summary": "Toadkin Meat and small budgeted treasure from a Toadkin Shaman.", "conditions": ["Ordinary corpse loot, before recovered arrows or other additional effects."], "rows": [], "related_entities": ["Toadkin Shaman", "Toadkin Meat"], "related_pages": ["Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse42.item162/treasure_get_lootarray[5,1.2,0.25]"}], "existing_entry_ids": ["corpse-42-162"], "pool_refs": [{"pool": "shaman-remains", "condition": "A fixed 1.2-silver budget, separately from the Toadkin Meat drop. Exact per-item odds are unknown."}]}
   ],
   "pools": [
     {
@@ -5125,7 +5127,7 @@
       ]
     }
   ,
-    {"id": "shaman-remains", "title": "Toadkin Shaman treasure", "owner_source": "shaman-remains", "summary": "The budget is 1 silver and 20 copper. Non-valuable items must be worth at least 25 copper, and only one-square items qualify. Materials and foods are excluded.", "eligible_item_ids": ["item-32", "item-72", "item-73", "item-84", "item-140", "item-141"], "quantity": null, "probability": null, "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.", "item_conditions": {}, "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse42.treasure_get_lootarray[5,1.2,0.25]"}, {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(283)/type/size/value"}]}
+    {"id": "shaman-remains", "title": "Toadkin Shaman treasure", "owner_source": "random-treasure", "summary": "The budget is 1 silver and 20 copper. Non-valuable items must be worth at least 25 copper, and only one-square items qualify. Materials and foods are excluded.", "eligible_item_ids": ["item-32", "item-72", "item-73", "item-84", "item-140", "item-141"], "quantity": null, "probability": null, "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.", "item_conditions": {}, "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse42.treasure_get_lootarray[5,1.2,0.25]"}, {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(283)/type/size/value"}]}
   ],
   "item_notes": [
     {"item": "item-75", "kind": "story", "text": "Interact with the Dead Unwanted at the dead camp early in the main quest; he hands over the recorder.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.DeadUnwanted.113.item_receive[75];MAINQUESTSTAGE=1"}]},
