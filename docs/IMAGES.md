@@ -426,7 +426,11 @@ moves or uploads Files; until the moves run it lists every new title as
 missing and pages show red links. A reviewed live migration therefore runs
 **before** the page sync, during an edit freeze:
 
-1. Take a paired database and images backup. Confirm that no target title
+Use the [bounded operator web-edit freeze](DEPLOYMENT.md#operator-web-edit-freeze),
+not the snapshot `read-only` marker: the latter blocks CLI writes too.
+Hold the shared lock and drain web writers as documented there.
+
+1. Take and validate a fresh paired database and images backup. Confirm that no target title
    exists and every source title does.
 2. Move each File page with its upload and history, suppressing redirects:
    `php maintenance/run.php moveBatch --noredirects -u <operator> -r "Readable File titles" moves.txt`
@@ -556,6 +560,12 @@ The following Linux commands are **instructions only**. They require explicit
 operator authorization, reviewed rights, an existing image-volume mount, the
 same app/database configuration, a valid operator account, and a verified
 backup. They do not configure a server, proxy, or credentials.
+First complete the [bounded operator window](DEPLOYMENT.md#operator-web-edit-freeze):
+fresh validated paired backup, exclusive shared lock, owned web-only marker,
+web-writer drain and web/CLI read-only probes. The mandatory snapshot marker
+must remain absent during approved writes; if present, abort without clearing
+it. `-e MW_READ_ONLY=` clears only the explicit environment reason, **not**
+the independent backup marker. It is not a generic CLI bypass.
 
 ```sh
 docker compose run --rm --no-deps -T -e MW_READ_ONLY= \
@@ -581,6 +591,10 @@ File page's title, attribution, served image and reviewed bytes; verify thumbnai
 display and public read access under the configured upload policy. Preserve the
 rights record privately as required. Update approved reference metadata and
 merge affected live wiki pages through the normal review process.
+Always remove only the owned web marker in the window's finally/exit handler,
+verify restored public health/read-write state and obtain the post-write paired
+snapshot after releasing the shared lock. On failure, report partial results
+and restoration/backup blockers explicitly.
 
 The image volume and database must be backed up and restored together. Do not
 copy random exports directly into MediaWiki's hashed image directories.

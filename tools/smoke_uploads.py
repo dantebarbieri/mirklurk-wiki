@@ -88,7 +88,85 @@ def confirm_editor(api, confirmed=True):
          "reason": "Synthetic contributor eligibility", "token": token}, post=True)
 
 
-def smoke_uploads(run, api, base, admin_password, editor_password):
+def smoke_edit_freezes(run, anonymous, admin, environment):
+    control = "/var/lib/mirklurk-backup"
+    original = environment["MW_READ_ONLY"]
+    try:
+        for reason in ("", "Synthetic explicit all-process freeze"):
+            environment["MW_READ_ONLY"] = reason
+            run("up", "-d", "--force-recreate", "--wait", "mirklurk")
+            run("exec", "-T", "mirklurk", "php", "-r",
+                f"mkdir('{control}', 0755);")
+            for web_freeze in (False, True):
+                for backup in (False, True):
+                    code = (
+                        f"$web = '{control}/web-edit-freeze'; $backup = '{control}/read-only'; "
+                        "foreach ([$web, $backup] as $path) { if (file_exists($path)) { unlink($path); } } "
+                    )
+                    if web_freeze:
+                        # Contents are deliberately empty and unreadable to the frontend.
+                        code += "touch($web); chmod($web, 0000); "
+                    if backup:
+                        code += "file_put_contents($backup, 'Synthetic coordinated backup'); "
+                    run("exec", "-T", "mirklurk", "php", "-r", code)
+                    general = anonymous.request({
+                        "action": "query", "meta": "siteinfo", "siprop": "general|statistics",
+                    })["query"]
+                    expected_web = bool(reason or web_freeze or backup)
+                    if ("readonly" in general["general"]) != expected_web or "pages" not in general["statistics"]:
+                        raise RuntimeError("Web freeze precedence or read-only database statistics failed.")
+                    expected_reason = (reason or ("Operator maintenance: web edits are temporarily frozen."
+                                       if web_freeze else "Synthetic coordinated backup"))
+                    if expected_web and general["general"].get("readonlyreason") != expected_reason:
+                        raise RuntimeError("Web freeze reason precedence changed.")
+                    run("exec", "-T", "mirklurk", "php", "/usr/local/lib/mirklurk/healthcheck.php")
+                    for clear_environment in (False, True):
+                        expected_cli = backup or (bool(reason) and not clear_environment)
+                        probe = (
+                            "$mode = MediaWiki\\MediaWikiServices::getInstance()->getReadOnlyMode(); "
+                            f"if ($mode->isReadOnly() !== {'true' if expected_cli else 'false'}) "
+                            "{ throw new RuntimeException('CLI read-only precedence failed'); } "
+                            "echo 'FREEZE-PROBE-OK';"
+                        )
+                        options = ("-e", "MW_READ_ONLY=") if clear_environment else ()
+                        output = run("exec", "-T", "--user", "www-data", *options,
+                                     "mirklurk", "php", "maintenance/run.php", "eval",
+                                     input_bytes=probe.encode())
+                        if b"FREEZE-PROBE-OK" not in output:
+                            raise RuntimeError("The actual maintenance runner did not complete the read-only probe.")
+                    if expected_web:
+                        rejected(admin.upload("Freeze-denied.png", png()), "readonly")
+                        rejected(admin.request({
+                            "action": "edit", "title": "User:WikiAdmin",
+                            "text": "Must never be saved during a freeze.", "token": admin.token,
+                        }), "readonly")
+            # Arbitrary contents are ownership data, not a parsed configuration.
+            run("exec", "-T", "mirklurk", "php", "-r",
+                f"unlink('{control}/read-only'); unlink('{control}/web-edit-freeze'); "
+                f"file_put_contents('{control}/web-edit-freeze', \"malformed\\0ownership\\n\");")
+            general = anonymous.request({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
+            if "readonly" not in general:
+                raise RuntimeError("Malformed operator marker contents reopened web edits.")
+            run("exec", "-T", "mirklurk", "php", "-r",
+                f"unlink('{control}/web-edit-freeze'); "
+                f"symlink('{control}/missing', '{control}/web-edit-freeze');")
+            general = anonymous.request({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
+            if "readonly" not in general:
+                raise RuntimeError("A dangling operator marker reopened web edits.")
+    finally:
+        environment["MW_READ_ONLY"] = original
+        run("exec", "-T", "mirklurk", "php", "-r",
+            f"foreach (['{control}/read-only', '{control}/web-edit-freeze'] as $path) "
+            "{ if (file_exists($path) || is_link($path)) { unlink($path); } }")
+        run("up", "-d", "--force-recreate", "--wait", "mirklurk")
+    general = anonymous.request({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
+    if "readonly" in general:
+        raise RuntimeError("Web write availability was not restored after the synthetic freeze window.")
+    print("Web/maintenance CLI freeze matrix passed, including unconditional backup and explicit environment locks.",
+          flush=True)
+
+
+def smoke_uploads(run, api, base, admin_password, editor_password, environment):
     anonymous = UploadClient(base)
     rejected(anonymous.upload("Anonymous-denied.png", png()), "mustbeloggedin", "permissiondenied", "writeapidenied")
     editor = UploadClient(base)
@@ -217,17 +295,7 @@ def smoke_uploads(run, api, base, admin_password, editor_password):
     run("exec", "-T", "--user", "www-data", "mirklurk", "php", "-r",
         "foreach (['deleted/private.png', 'temp/private.png', 'probe.php'] as $p) { unlink('/var/www/html/images/' . $p); }")
 
-    run("exec", "-T", "mirklurk", "php", "-r",
-        "if (!is_dir('/var/lib/mirklurk-backup')) { mkdir('/var/lib/mirklurk-backup', 0755); } "
-        "file_put_contents('/var/lib/mirklurk-backup/read-only', 'Synthetic coordinated backup');")
-    try:
-        locked = anonymous.request({"action": "query", "meta": "siteinfo", "siprop": "general"})["query"]["general"]
-        if "readonly" not in locked or locked.get("readonlyreason") != "Synthetic coordinated backup":
-            raise RuntimeError("Native backup lock is not reflected in the running web application.")
-        run("exec", "-T", "mirklurk", "php", "/usr/local/lib/mirklurk/healthcheck.php")
-        rejected(admin.upload("Locked.png", png()), "readonly")
-    finally:
-        run("exec", "-T", "mirklurk", "php", "-r", "unlink('/var/lib/mirklurk-backup/read-only');")
+    smoke_edit_freezes(run, anonymous, admin, environment)
     # Restore the original newcomer policy for the rest of the integration suite.
     confirm_editor(api, confirmed=False)
     rejected(editor.upload("Confirmation-removed.png", png()), "permissiondenied")

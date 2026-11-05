@@ -1367,7 +1367,7 @@ def smoke(uploads_only=False):
             if login.get("login", {}).get("result") != "Success":
                 raise RuntimeError("The freshly created administrator cannot log in.")
             csrf = api({"action": "query", "meta": "tokens"})["query"]["tokens"]["csrftoken"]
-            smoke_uploads(run, api, base, password_file.read_text(encoding="utf-8"), editor_password)
+            smoke_uploads(run, api, base, password_file.read_text(encoding="utf-8"), editor_password, environment)
             if uploads_only:
                 return
             smoke_urls(api, base, csrf, editor_password)

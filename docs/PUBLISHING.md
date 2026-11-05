@@ -249,7 +249,9 @@ Every sync revision is an ordinary edit summarized
   schedule rather than before each release.
 
 No freeze is needed for publishing. For other maintenance, the deployment's
-`MW_READ_ONLY` setting still makes the wiki read-only.
+`MW_READ_ONLY` setting still makes web and CLI read-only. Approved CLI File
+maintenance instead uses the [bounded operator web-edit freeze](DEPLOYMENT.md#operator-web-edit-freeze);
+the independent backup marker must always block both web and CLI writes.
 
 ## One-time setup
 
