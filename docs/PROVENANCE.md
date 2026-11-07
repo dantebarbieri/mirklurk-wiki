@@ -477,6 +477,48 @@ Publication and schema limits remain enforced.
 The publication caps also grow deliberately: provenance 64 to 72 KiB, image
 documentation 36 to 40 KiB and catalog regression tests 76 to 84 KiB.
 
+## Version 0.9.5.3 update
+
+Patch 0.9.5.3 (2026-11-06 UTC, Steam build 26484105) is compared directly
+with the previously analyzed and published 0.9.5.0. Nine of 284 code entries
+changed, none were added or removed. `game-data-0953` identifies the new binary.
+The installed menu, new-game version check and save version agree. A fresh
+three-minute title-screen run regenerated the English files; all four hashes
+match the existing sources, so no duplicate localization sources are added.
+The executable SHA-256 is
+`521786cbfc536284be99a3f3e473492a69f9e632aa967974d71150f0554c00b5`.
+The announcement's later edits are documented cumulatively, not assigned to
+unverified intermediate hotfixes.
+
+`gml_GlobalScript_scr_basic_useful.player_item_consume` now grants raw Wakebug
+241 three focus percentage points through the existing capped helper. The
+earlier Bursthopper 243 stamina branch remains reachable; its old later focus
+branch was unreachable. Grilled Wakebug 244 gains no focus effect. Wakebug,
+Foods and Focus now state those distinctions.
+
+`gml_Object_UI_Draw_64` gates same-kind stack merging on `stackLimit > 1`
+in both equipment routes, preserving normal swap AP checks and torch handling.
+The fire menu requires tinder plus either both spark components or positive
+`fireSelfC`; wetness and a positive final chance still matter. The equip-cost
+icon uses scaled text width. Controls and Fire reflect these fixes.
+
+`gml_Object_obj_player_Step_0` clamps focus interpolation at its target and
+resets `focusDiff`. Ground rest and all sleeper modes require both alarms
+negative and the player's turn; their nominal recovery constants are unchanged.
+Focus and Resting cite these guards. `station_turnpass` in
+`gml_GlobalScript_scr_smartones` accepts an optional held-light flag; only the
+area-return caller in `gml_Object_obj_screenfader_Step_0` passes false.
+Fire and all three torch effects distinguish held fuel from placed-station
+catch-up and ordinary turns.
+
+The version page also records silent Russian/Chinese font routing in
+`gml_GlobalScript_scr_text_related.font_lan_match` without claiming complete
+translations. The Iron Cudgel weapon animation loses seven opaque pixels in
+one frame. Unused new spider art is not a released being. All 266 item, 44 being
+and 19 nature definitions, recipes, loot, merchants and world-layout algorithms
+remain unchanged; no entity or icon sweep, import or File move is needed.
+Existing 0.9.5.0 artwork and completed backup provenance are preserved.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

@@ -1,8 +1,10 @@
-'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki shows values from the latest, [[Version 0.9.5.0|0.9.5.0]]. Each version's page lists what changed from the one before it, including changes the patch notes leave out.
+'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki shows values from the latest, [[Version 0.9.5.3|0.9.5.3]]. Each version's page lists what changed from the one before it, including changes the patch notes leave out.
 
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Versions (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
 ! Version !! Released !! Summary
+|-
+| [[Version 0.9.5.3|0.9.5.3]] || 6 November 2026 || Equipment replacement, fire-starting, rest and focus fixes, raw Wakebug focus recovery, and held-light timing.
 |-
 | [[Version 0.9.5.0|0.9.5.0]] || 5 November 2026 || Death modes, two creatures and shell equipment, revised travel costs and skills, adjacent crafting, rain and inventory fixes.
 |-

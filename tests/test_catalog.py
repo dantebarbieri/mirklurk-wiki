@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 361)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 468)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 469)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 361)
@@ -626,7 +626,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.5.0")
+        self.assertEqual(self.data["game"]["build"], "0.9.5.3")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1155,14 +1155,52 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.5.0 pin, game build blanked.
+        # 0.9.5.3 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.5.0"', b'"build": null', 1,
+                b'"build": "0.9.5.3"', b'"build": null', 1,
             )).hexdigest(),
-            "4395f3a15dd678be11ab7ec0132d190f8569a687ae141b6bfd7f6135cccf4df5",
+            "b1c4053488c292d73f1f060e6cb7391677edae69b10e9efca0df7138093e2a3d",
         )
 
+
+    def test_patch_0953_consumption_fire_rest_and_light_boundaries(self):
+        data, catalog, details = load_publication_inputs(ROOT)
+        pages = build_pages(ROOT, data, catalog, details)
+        effects = {row["entity"]: row for row in catalog["item_effects"]}
+        self.assertIn("3 percentage points of focus", pages["Wakebug"])
+        self.assertIn("capped at full focus", pages["Wakebug"])
+        self.assertNotIn("item-244", effects)
+        self.assertEqual(effects["item-243"]["paragraphs"],
+                         ["Eating Bursthopper restores 15 percentage points of stamina."])
+        for title in ("Foods", "Focus"):
+            self.assertIn("Wakebug", pages[title])
+            self.assertIn("Grilled Wakebug", pages[title])
+        self.assertIn("either both spark components or a positive contribution", pages["Fire"])
+        self.assertIn("requires tinder", pages["Fire"])
+        self.assertIn("chance, which must remain positive", pages["Fire"])
+        self.assertIn("24 world pixels", pages["Fire"])
+        self.assertIn("both the action and rest delays", pages["Resting"])
+        self.assertIn("without overshooting", pages["Focus"])
+        self.assertIn("2 percentage points of focus", pages["Resting"])
+        self.assertIn("2.5 focus and 32 stamina", pages["Resting"])
+        self.assertIn("both spark components", pages["Version 0.9.5.3"])
+        self.assertIn("Normal equip AP checks", pages["Controls"])
+        for title in ("Torch", "Improvised Torch", "Improvised Enduring Torch"):
+            self.assertIn("Ordinary turns still burn fuel", pages[title])
+            self.assertIn("placed lights still catch up", pages[title])
+        self.assertNotIn("Huge Spider", pages)
+        self.assertEqual(len(data["entities"]), 366)
+        self.assertEqual(len(data["illustrations"]), 404)
+        sources = {row["id"]: row for row in data["sources"]}
+        self.assertEqual(sources["game-data-0953"]["sha256"],
+                         "33291c42ac7ebc8dff9f328538fb5b436f04c5918585342b94acc9d7b7f26681")
+        for prefix in ("items-en", "beings-en", "ui-en", "nature-en"):
+            self.assertNotIn(prefix + "-0953", sources)
+        self.assertEqual(sources["game-data-0950"]["build"], "0.9.5.0")
+        self.assertIn("6 November 2026", pages["Version 0.9.5.3"])
+        self.assertIn("This wiki shows 0.9.5.3 values", pages["Version 0.9.5.3"])
+        self.assertIn("[[Version 0.9.5.3]]", pages["Version 0.9.5.0"])
 
     def test_patch_0950_entities_grids_loot_and_art_are_exact(self):
         self.data, self.catalog, self.details = load_publication_inputs(ROOT)
@@ -1288,7 +1326,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("75% chance", skill)
         self.assertIn("Without an equipped shield", skill)
         self.assertIn("10.5% at rank 1", self.pages["Combat basics"])
-        self.assertIn("0.9.5.0", self.pages["Main Page"])
+        self.assertIn("0.9.5.3", self.pages["Main Page"])
         self.assertIn("29 October 2026", self.pages["Version 0.9.2.0"])
         sources = {row["id"]: row for row in self.data["sources"]}
         self.assertEqual(sources["game-data-0920"]["sha256"],

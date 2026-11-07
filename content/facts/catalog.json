@@ -7762,16 +7762,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.5.0",
-      "confirmation": "Patch 0.9.5.0 was installed and launched to regenerate the English language files. The menu display and version check agree with the 5 November 2026 Steam announcement.",
+      "version": "0.9.5.3",
+      "confirmation": "Patch 0.9.5.3 was installed and launched to regenerate the English language files. The menu display and version check agree with the 6 November 2026 Steam announcement.",
       "evidence": [
         {
-          "source": "game-data-0950",
+          "source": "game-data-0953",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0950",
+          "source": "game-data-0953",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -8126,10 +8126,9 @@
       "title": "Fire",
       "paragraphs": [
         "Ordinary direct fire attacks remove armor before burning the hit point underneath. Thrown fire has different rules; see the flask's effect. Wound salves and ordinary resting cannot restore burned cells, but Fire Bond from rank 5 and Staff of The Fire Eater can treat them.",
-        "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward."
-      ,
-        "An equipped Flint Dagger can now supply stone sparks in the fire menu. Wetness and tinder modifiers remain part of the chance even when no spark item is selected; nearby fire and skill contributions still apply, and the final chance is clamped between zero and one.",
-        "Returning to an area advances station fire time and equipped light fuel using elapsed time. This catch-up is scaled through the player's maximum AP rather than being a literal turns-per-hour rate."
+        "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward.",
+        "Starting a fire requires tinder and either both spark components or a positive contribution from an existing flame. An equipped Flint Dagger can supply stone sparks. Nearby active Campfires, Survivor's Field Kits and placed torches within 24 world pixels, or lit torches in your active hands, can help. Wet tinder still reduces the chance, which must remain positive before you can attempt ignition.",
+        "Returning to an area advances placed station and light timers for elapsed area time, but does not subtract that historical time from lights held in your active hands. Held lights still use fuel during ordinary turns. Catch-up is scaled through maximum AP, not a literal turns-per-hour rate."
       ],
       "related_entities": [
         "Simple Burn Remedy",
@@ -8138,15 +8137,61 @@
       ],
       "confidence": "inferred",
       "evidence": [
-        {"source": "ui-en", "section": "TTgen", "key": "35"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "attack_lands.fire/hpgrid[-1];player_endturn.heal-grid-equals-zero"},
-        {"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "healing-grid.fireFixItem/hpgrid[-1-to-0]/healItem"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.survivorSkills[0]>=5.being_heal_burnt"},
-        {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "attack.hits>1.item266.being_heal_burnt"}
-      ,
-        {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "fire-menu.checkEquipped/wet-modifiers/!late-zero-reset"},
-        {"source": "game-data-0950", "section": "gml_Object_obj_screenfader_Step_0", "key": "station_turnpass[max8,passedHours*47.5]"},
-        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_smartones", "key": "station_turnpass./APmax"}
+        {
+          "source": "ui-en",
+          "section": "TTgen",
+          "key": "35"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "attack_lands.fire/hpgrid[-1];player_endturn.heal-grid-equals-zero"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "healing-grid.fireFixItem/hpgrid[-1-to-0]/healItem"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.survivorSkills[0]>=5.being_heal_burnt"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "attack.hits>1.item266.being_heal_burnt"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "fire-menu.checkEquipped/wet-modifiers/!late-zero-reset"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "station_turnpass[max8,passedHours*47.5]"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "station_turnpass./APmax"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "fireSelfC/subSlots[0/1/2]/finalChance"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "station_turnpass[max8,passedHours*47.5,false]"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "station_turnpass.arg1/weapon/offhand"
+        }
       ]
     },
     {
@@ -8311,11 +8356,11 @@
     {
       "title": "Focus",
       "paragraphs": [
-        "On Medium difficulty, an ordinary active turn removes 0.56 percentage points of focus before skill modifiers. Resting and sleeping restore focus and reduce its loss.",
+        "On Medium difficulty, an ordinary active turn removes 0.56 percentage points of focus before skill modifiers. Resting and sleeping restore focus and reduce its loss. Rest and sleep recovery wait for the player's turn and both action delays; focus settles at its target without overshooting.",
         "At 50% or more, focus adds 0.2 percentage points of wellbeing per turn. From 20% to below 50% it is neutral. Below 20%, the penalty grows to 0.5 percentage points per turn at zero focus.",
         "Focus below 30%, 15% and 5% adds 1, 2 and 3 percentage points of accident risk, respectively: cumulative totals of 1%, 3% and 6%. The action must have an accident check. Stamina and encumbrance can add more risk.",
         "Focused Mind and difficulty modify focus loss, not direct gains from rest or sleep. See Wellbeing for difficulty rates. Casting a poison orb drains focus directly, and The Terror's screech removes 25% at once; neither is reduced by skills or difficulty.",
-        "Cranberries restore focus immediately. Magi's Ropebelt restores 4% for every 4 unspent AP when you end a turn standing. Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule, not a fixed turn count."
+        "Cranberries restore 1 percentage point of focus; raw Wakebug restores 3, capped at full focus. Grilled Wakebug has no corresponding focus bonus. Magi's Ropebelt restores 4% for every 4 unspent AP when you end a turn standing. Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule, not a fixed turn count."
       ],
       "section_titles": [
         "Ordinary loss and recovery",
@@ -8329,7 +8374,9 @@
         "Cranberries",
         "Tattered Bedroll",
         "Great Bedroll",
-        "Furhide Bedroll"
+        "Furhide Bedroll",
+        "Wakebug",
+        "Grilled Wakebug"
       ],
       "related_pages": [
         "Resting",
@@ -8342,12 +8389,46 @@
       "image_caption": "A Tattered Bedroll provides a place to rest or sleep.",
       "confidence": "observed",
       "evidence": [
-        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "focusGainTresh/focusLoseTresh"},
-        {"source": "game-data", "section": "gml_Object_obj_player_Create_0", "key": "focusLittle/focusLow/focusLowest"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_focus_lose;player_get_stat_changes[2];player_get_accident;player_item_consume[225]"},
-        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state14;state19.targetAction[7/8/9]/focusNext"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_focus_lose.arg1-direct"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state0.item265"}
+        {
+          "source": "game-data",
+          "section": "gml_Room_rm_int_Create",
+          "key": "focusGainTresh/focusLoseTresh"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "focusLittle/focusLow/focusLowest"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_focus_lose;player_get_stat_changes[2];player_get_accident;player_item_consume[225]"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "state14;state19.targetAction[7/8/9]/focusNext"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_focus_lose.arg1-direct"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.state0.item265"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_item_consume[241];player_focus_gain"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "focusNext/focusDiff;state14/19.alarm[10]/alarm[0]/PLAYERTURN"
+        }
       ]
     },
     {
@@ -8458,9 +8539,8 @@
         "Sleep until rested ends at full focus; sleep until sunrise follows the sunrise schedule. Disturbance can wake you. Below 45% wellbeing, a falling wellbeing trend can also force you awake.",
         "Sleeping can grant Well rested above 95% focus, with satiation and stamina above 20% and temperature strictly inside its comfortable range. Sleeping-item comfort sets the duration added, up to 35 turns. The timer can pause in bed when at least two of the three supporting conditions hold. See Wellbeing for its bonus.",
         "At 50% wellbeing or more, resting can heal one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and the temperature penalty. With full supporting meters and no temperature penalty, it is 5% per resting turn. Burns cannot heal this way; Fire Bond from rank 5 gives a separate chance to treat one.",
-        "Find shelter, warmth and food before a long rest. Sleeping gear contributes insulation and waterproofing while in use. Great Bedroll and Furhide Bedroll also slow Warm to the core decay, but hunger, cold, sickness and interruptions still apply."
-      ,
-        "Getting up now stops any pending movement path. Tent exits prefer dry footing, without a guarantee that every possible exit is dry. This patch does not change the general resting recovery rates."
+        "Find shelter, warmth and food before a long rest. Sleeping gear contributes insulation and waterproofing while in use. Great Bedroll and Furhide Bedroll also slow Warm to the core decay, but hunger, cold, sickness and interruptions still apply.",
+        "Recovery waits for the player's turn and for both the action and rest delays to finish. Focus settles at its target without overshooting; the recovery amounts above are unchanged. Getting up stops pending movement, and tent exits prefer dry footing without guaranteeing it."
       ],
       "section_titles": [
         "Time keeps passing",
@@ -8469,8 +8549,7 @@
         "Waking and interruption",
         "Well rested",
         "Natural healing",
-        "Preparing a resting place"
-      ,
+        "Preparing a resting place",
         null
       ],
       "related_entities": [
@@ -8493,14 +8572,46 @@
       "image_caption": "A Great Bedroll provides sleeping comfort and protection.",
       "confidence": "observed",
       "evidence": [
-        {"source": "game-data", "section": "gml_Object_obj_player_Step_0", "key": "state14;state19.rest/sleep/interruptions/restedTime"},
-        {"source": "game-data", "section": "gml_Object_obj_player_Alarm_0", "key": "AP-refill.excludes-state19"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.minute+=8/restedTime/warmthTime/rest-healing"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_update_gearstats.sleeping-item;player_get_combined_wellbeing"},
-        {"source": "game-data", "section": "gml_Room_rm_int_Create", "key": "RESTEDMAX/warmthLoseLow/warmthLoseHigh"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal"}
-      ,
-        {"source": "game-data-0950", "section": "gml_Object_obj_player_Step_0", "key": "standing.player_path_halt/target-position-sync"}
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "state14;state19.rest/sleep/interruptions/restedTime"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_obj_player_Alarm_0",
+          "key": "AP-refill.excludes-state19"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.minute+=8/restedTime/warmthTime/rest-healing"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_update_gearstats.sleeping-item;player_get_combined_wellbeing"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Room_rm_int_Create",
+          "key": "RESTEDMAX/warmthLoseLow/warmthLoseHigh"
+        },
+        {
+          "source": "game-data-0899",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "standing.player_path_halt/target-position-sync"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "focusNext/focusDiff;state14/19.alarm[10]/alarm[0]/PLAYERTURN"
+        }
       ]
     },
     {
@@ -8509,20 +8620,63 @@
         "Foods differ in satiation, sickness risk and other effects. See each item for stats, recipes and ways to obtain it.",
         "Herbivore increases satiation from foods the game treats as plant-based, not all food. Satiation stops at 100%.",
         "Eating rolls the food's sickness risk. A meal that does not cause sickness may extend Well fed; see Satiation for its trigger and Stamina for its effect. Sickness and Well fed act separately from satiation's ordinary wellbeing contribution.",
-        "Honey improves wellbeing and shortens sickness. Bramble Berries and Bursthopper restore stamina; Cranberries restore focus. Riftvine Berries reduce wellbeing. See each item for amounts.",
+        "Honey improves wellbeing and shortens sickness. Bramble Berries and Bursthopper restore stamina; Cranberries and raw Wakebug restore focus. Grilled Wakebug has no corresponding focus bonus. Riftvine Berries reduce wellbeing. See each item for amounts.",
         "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse also warms you but causes a fire hit.",
         "Recipes list ingredients, outputs, AP and workstation requirements. Check the resulting food's sickness risk: preparation does not always make food safe."
       ],
-      "section_titles": ["Food value and effects", "Plant-based foods", "Sickness and Well fed", "Direct meter effects", "Warm meals and risks", "Cooking and preparation"],
-      "related_entities": ["Herbivore", "Honey", "Bramble Berries", "Bursthopper", "Cranberries", "Riftvine Berries", "Pleasant Vegetable Soup", "Tasty Crab Soup", "Survivor's Delight", "Baby Firelouse"],
-      "related_pages": ["Satiation", "Wellbeing", "Temperature", "Stamina", "Focus"],
+      "section_titles": [
+        "Food value and effects",
+        "Plant-based foods",
+        "Sickness and Well fed",
+        "Direct meter effects",
+        "Warm meals and risks",
+        "Cooking and preparation"
+      ],
+      "related_entities": [
+        "Herbivore",
+        "Honey",
+        "Bramble Berries",
+        "Bursthopper",
+        "Cranberries",
+        "Riftvine Berries",
+        "Pleasant Vegetable Soup",
+        "Tasty Crab Soup",
+        "Survivor's Delight",
+        "Baby Firelouse",
+        "Wakebug",
+        "Grilled Wakebug"
+      ],
+      "related_pages": [
+        "Satiation",
+        "Wellbeing",
+        "Temperature",
+        "Stamina",
+        "Focus"
+      ],
       "image_entity": "Pleasant Vegetable Soup",
       "image_caption": "Pleasant Vegetable Soup provides food and temporary warmth.",
       "confidence": "observed",
       "evidence": [
-        {"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_get_real_satiation/item_is_greenfood"},
-        {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume.food/sickness/fedTime/special-effects"},
-        {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "food.hungerGain/sicknessRisk/components/craftCost/craftReturn"}
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_get_real_satiation/item_is_greenfood"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_item_consume.food/sickness/fedTime/special-effects"
+        },
+        {
+          "source": "game-data",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "food.hungerGain/sicknessRisk/components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_item_consume[241/243/244]"
+        }
       ]
     },
     {
@@ -10949,7 +11103,8 @@
         "Every binding can be changed in Options > Controls: click an entry, then press any key or mouse button. If another action already used that key, it becomes unbound and is highlighted as a conflict. Reset restores the defaults. Even if Close is left unbound, Esc still closes menus.",
         "A controller is also supported, with its own Controller page in the options. You can swap the sticks and set their sensitivity (default 1) and dead zone (default 0.1). Stats, Crafting, Draw Weapon, Rest, Hitpoints, Auto-walk, Jump, Loot All, Journal, Swap, Scout, Codex, Show UI and Screenshot have no controller button by default.",
         "Early in the tutorial, Draw Weapon, Jump, Rest, Examine and End Turn stay locked until the story moves on.",
-        "Quick-looting, stacking and inventory sorting can turn an item to fit if its current orientation has no room. A failed placement restores the original orientation. Automatic ground-pile resizing and preparation for trading or crafting do not use this rotation."
+        "Quick-looting, stacking and inventory sorting can turn an item to fit if its current orientation has no room. A failed placement restores the original orientation. Automatic ground-pile resizing and preparation for trading or crafting do not use this rotation.",
+        "You can replace nonstackable equipment with another of the same kind, including an Improvised Shield, from inventory or the equipment slot. Normal equip AP checks still apply; this does not change stack limits. The equip-cost AP icon scales with its tooltip text at larger UI sizes."
       ],
       "section_titles": [
         "Mouse",
@@ -10957,7 +11112,8 @@
         "Changing keys",
         "Controller",
         "Tutorial",
-        "Inventory rotation"
+        "Inventory rotation",
+        "Replacing equipment and UI scale"
       ],
       "related_entities": [],
       "related_pages": [
@@ -11191,13 +11347,8 @@
         },
         {
           "source": "ui-en",
-          "section": "KeysReset",
-          "key": "Reset"
-        },
-        {
-          "source": "ui-en",
-          "section": "KeyNames",
-          "key": "1Clicker..Screenshot;StrictMove;LeftBAR;RightBAR;ClickBAR"
+          "section": "KeysReset;KeyNames",
+          "key": "Reset;1Clicker..Screenshot;StrictMove;LeftBAR;RightBAR;ClickBAR"
         },
         {
           "source": "ui-en",
@@ -11218,6 +11369,11 @@
           "source": "game-data-0950",
           "section": "gml_Object_camera_Step_0",
           "key": "BalancedZoom.aspect>16/9;minimumZoom=maximum/2"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "equip.match/stackLimit>1;tooltip.EQA"
         }
       ]
     },
@@ -11557,26 +11713,150 @@
     }
   ],
   "item_effects": [
+    {"entity": "item-241", "paragraphs": ["Eating raw Wakebug restores 3 percentage points of focus, capped at full focus. Grilled Wakebug does not give this focus bonus. Bursthopper instead retains its 15-percentage-point stamina gain."], "confidence": "observed", "evidence": [{"source": "game-data-0953", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[241/243/244];player_focus_gain"}]},
     {"entity": "item-0", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
     {"entity": "item-1", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
     {"entity": "item-50", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
     {"entity": "item-58", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
     {"entity": "item-118", "paragraphs": ["Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
-    {"entity": "item-41", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
-                                                                                                                                                                                                                   "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot."
-                                                                                                                                                                                                                 ], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[41].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"},
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ]},
-    {"entity": "item-96", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
-                                                                                                                                                                                                                   "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot."
-                                                                                                                                                                                                                 ], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[96].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"},
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ]},
-    {"entity": "item-212", "paragraphs": ["Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
-                                                                                                                                                                                                                    "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot."
-                                                                                                                                                                                                                  ], "confidence": "inferred", "evidence": [{"source": "game-data-0920", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[212].stackLimit"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "item_is_torch;item_stack_match;item_fits;item_stack"}, {"source": "game-data-0920", "section": "gml_Object_UI_Draw_64", "key": "item_stack_match"}, {"source": "game-data-0920", "section": "gml_Object_obj_player_Step_0", "key": "item_is_torch;weapon.lit;checkClass"},
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {"source": "game-data-0950", "section": "gml_Object_UI_Draw_64", "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ]},
+    {
+      "entity": "item-41",
+      "paragraphs": [
+        "Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
+        "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot.",
+        "Returning to a previously visited area does not subtract its elapsed absence time from a lit torch held in either active hand. Ordinary turns still burn fuel, and placed lights still catch up."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[41].stackLimit"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_torch;item_stack_match;item_fits;item_stack"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "item_stack_match"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "item_is_torch;weapon.lit;checkClass"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "station_turnpass[max8,passedHours*47.5,false]"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "station_turnpass.arg1/weapon/offhand"
+        }
+      ]
+    },
+    {
+      "entity": "item-96",
+      "paragraphs": [
+        "Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
+        "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot.",
+        "Returning to a previously visited area does not subtract its elapsed absence time from a lit torch held in either active hand. Ordinary turns still burn fuel, and placed lights still catch up."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[96].stackLimit"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_torch;item_stack_match;item_fits;item_stack"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "item_stack_match"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "item_is_torch;weapon.lit;checkClass"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "station_turnpass[max8,passedHours*47.5,false]"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "station_turnpass.arg1/weapon/offhand"
+        }
+      ]
+    },
+    {
+      "entity": "item-212",
+      "paragraphs": [
+        "Up to three torches of this type can share a stack, but both their remaining burn time and durability must match exactly. Different torch types cannot stack together.",
+        "Equipping a carried stack takes just one torch and leaves the rest in inventory. Torches cannot stack in an equipment slot.",
+        "Returning to a previously visited area does not subtract its elapsed absence time from a lit torch held in either active hand. Ordinary turns still burn fuel, and placed lights still catch up."
+      ],
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[212].stackLimit"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_torch;item_stack_match;item_fits;item_stack"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "item_stack_match"
+        },
+        {
+          "source": "game-data-0920",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "item_is_torch;weapon.lit;checkClass"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "equip.stackSplit/item_is_torch/!equipment-slot-stack"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "station_turnpass[max8,passedHours*47.5,false]"
+        },
+        {
+          "source": "game-data-0953",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "station_turnpass.arg1/weapon/offhand"
+        }
+      ]
+    },
     {"entity": "item-75", "paragraphs": ["Speak with Captain Eir at Fort Solid while carrying it. She takes one recorder automatically and the main quest moves on."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Eir.player_inventory_lose_amount[75];MAINQUESTSTAGE=2"}]},
     {"entity": "item-123", "paragraphs": ["Speak with Ranger Bhato while carrying it to report the kill. He sends you back to Fort Solid.", "Then speak with Magus Clay while carrying it. He takes the rune and gives you Clay's Strange Potion."], "confidence": "inferred", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Bhato.player_inventory_get_amount[123];MAINQUESTSTAGE=10"}, {"source": "game-data", "section": "gml_GlobalScript_scr_menu_related", "key": "dialogue.Clay.MAINQUESTSTAGE10.player_inventory_lose_amount[123]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.Clay.205.item_receive[126]"}]},
     {"entity": "item-126", "paragraphs": ["Speak with the Dead Unwanted at the dead camp while carrying it. A new option pours the potion into his mouth; the potion is used up and he revives as Viend, who must then be escorted to Fort Solid."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "dialogue.DeadUnwanted.option114.requires[126]"}, {"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.DeadUnwanted.114.player_inventory_lose_amount[126];112.being_initiate[19]"}]},

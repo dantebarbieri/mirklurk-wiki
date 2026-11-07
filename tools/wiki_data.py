@@ -27,6 +27,7 @@ PAGE_FILES = {
     "Version 0.9.1.2": "Version_0.9.1.2.wiki",
     "Version 0.9.2.0": "Version_0.9.2.0.wiki",
     "Version 0.9.5.0": "Version_0.9.5.0.wiki",
+    "Version 0.9.5.3": "Version_0.9.5.3.wiki",
     "Versions": "Versions.wiki",
 }
 RESEARCH_PAGE_FILES = {

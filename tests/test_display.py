@@ -250,7 +250,7 @@ class DisplayTests(unittest.TestCase):
         self.assertEqual((len(recipes), len(recipe_groups(recipes))), (98, 79))
         self.assertEqual(sum(text.count("{{Recipe row\n") for text in readers.values()), 80)
         self.assertEqual(sum(text.split("<div class=\"mirklurk-navbox\"", 1)[0].count("{{Item|") for title, text in readers.items()
-                             if f"\n'''{title}''' groups " not in text), 2271)
+                             if f"\n'''{title}''' groups " not in text), 2275)
         self.assertIn("|ap=<nowiki>1.2</nowiki>", self.pages["Grilled Turnip"])
         self.assertIn("in-place completion", self.pages["Finish Raft"])
         self.assertEqual(sum(text.count("Merchants sell it at its [[#price|Value]].") for text in readers.values()), 58)

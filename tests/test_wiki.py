@@ -301,7 +301,7 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 26, "entities": 366, "facts": 107, "entries": 347},
+            {"sources": 27, "entities": 366, "facts": 107, "entries": 347},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
@@ -330,14 +330,14 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "f0342141755a871094a434935177badcfe246b2b18e6a64a6c55697cff00f8be")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 421)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 422)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("These guides cover '''0.9.5.0'''", pages["Game mechanics"])
+        self.assertIn("These guides cover '''0.9.5.3'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -357,7 +357,7 @@ class DataTests(unittest.TestCase):
         amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
         raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "7ce6c6f3f6a19475c651b7a9b1a745d9e9bce2ebd0f10dc6890e0c0f46b60a0f")
-        self.assertEqual(data["game"]["build"], "0.9.5.0")
+        self.assertEqual(data["game"]["build"], "0.9.5.3")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},

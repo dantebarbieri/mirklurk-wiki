@@ -1,0 +1,26 @@
+'''Version 0.9.5.3''' is the patch released on 6 November 2026, following the previously documented [[Version 0.9.5.0]]. This wiki shows 0.9.5.3 values. The changes below compare those two installed builds directly, including the announcement's later edits; they are not assigned to unverified intermediate hotfixes.
+
+== Changes ==
+=== Wakebug and focus ===
+Eating raw [[Wakebug]] now restores 3 percentage points of [[Focus]], capped at full focus. [[Grilled Wakebug]] does not gain that effect. [[Bursthopper]] still restores 15 percentage points of [[Stamina]]; it has not lost a working focus bonus.
+
+=== Rest and held lights ===
+[[Resting]] and sleeping recovery wait for the player's turn and for both action delays to finish. Focus settles at its target without overshooting. Ground rest still grants 2 percentage points of focus, bed rest 2 plus 32 stamina, and sleep 2.5 plus 32; these are unchanged recovery amounts, not a deliberate reduction.
+
+Returning to a previously visited area no longer subtracts its elapsed absence time from a lit [[Torch]], [[Improvised Torch]] or [[Improvised Enduring Torch]] held in either active hand. Placed fires and lights still catch up, and ordinary turns still consume held-light fuel. See [[Fire]].
+
+== Fixes ==
+=== Equipment and interface ===
+You can replace nonstackable equipment with another of the same kind, such as a better-condition [[Improvised Shield]], through either inventory or an equipment slot. Normal equip AP checks remain; stack limits and the existing protection against stacking torches in equipment do not change.
+
+The equip-cost AP icon now scales its position with the tooltip text at larger UI sizes. The equip cost itself is unchanged. See [[Controls]].
+
+=== Starting fires ===
+Starting a fire requires tinder and either both spark components or a positive contribution from an existing flame. Nearby active fires and lit torches in your active hands can provide that help. Wet tinder still reduces the chance; an attempt requires a positive final chance. This preserves the earlier wet-tinder correction without allowing missing spark components to be ignored when no flame helps.
+
+=== Additional changes ===
+Not in the patch notes: Russian and Chinese language selections use their respective GUI fonts. This does not establish that complete translations ship.
+
+Not in the patch notes: one Iron Cudgel weapon-animation frame has a seven-pixel cleanup. Unused new spider artwork does not define a released creature, spawn or loot table; existing item and creature definitions, recipes and world-layout algorithms are unchanged.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

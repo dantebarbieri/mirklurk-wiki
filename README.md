@@ -89,10 +89,18 @@ rain, advice and equipment fixes are reflected in the existing guides as well as
 the **Version 0.9.5.0** changelog. Reserved equipment names are not obtainable items.
 [Provenance](docs/PROVENANCE.md#version-0950-update) records the amendments.
 
+Patch **0.9.5.3** followed on 2026-11-06. A new binary fingerprint records
+nine changed code entries compared directly with 0.9.5.0; the regenerated
+English files and static databanks are unchanged. Existing guides now cover
+same-kind equipment replacement, fire prerequisites, guarded rest and Focus
+recovery, raw Wakebug's focus gain, and held versus placed light timing.
+No new released entity or icon import is inferred from unused artwork.
+[Provenance](docs/PROVENANCE.md#version-0953-update) records the comparison.
+
 The reference now contains **107 numeric facts and 347 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
 variants, 90 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 520 main-namespace pages:
+summaries. The encyclopedia presentation generates 521 main-namespace pages:
 361 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical

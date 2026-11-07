@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.5.0",
+    "build": "0.9.5.3",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -162,6 +162,12 @@
       "path": "Languages\\English\\Bestiary.ini",
       "sha256": "781cc5f880c8b5aa09c9aec2360bf0b756d3009ec84eac929480b5f8df566c84",
       "build": "0.9.5.0"
+    },
+    {
+      "id": "game-data-0953",
+      "path": "data.win",
+      "sha256": "33291c42ac7ebc8dff9f328538fb5b436f04c5918585342b94acc9d7b7f26681",
+      "build": "0.9.5.3"
     }
   ],
   "entities": [
