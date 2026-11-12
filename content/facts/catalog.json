@@ -5179,13 +5179,14 @@
     {
       "entry": "skill-1-0-mechanics",
       "title": "Effects",
-      "summary": "Start fires more reliably. Each rank adds 3 percentage points to the success chance of a fire-starting attempt. From rank 5, each turn spent resting or sleeping has a 4% chance to treat one burnt hit point, turning it into an ordinary wound; from rank 10 the chance is 8%.",
+      "summary": "Start fires more reliably. Each rank adds 3 percentage points to the success chance of a fire-starting attempt when both spark components are present. Tinder, wetness and a positive final chance still matter. From rank 5, each turn spent resting or sleeping has a 4% chance to treat one burnt hit point, turning it into an ordinary wound; from rank 10 the chance is 8%.",
       "conditions": null,
       "steps": [],
       "confidence": "observed",
       "evidence": [
         {"source": "ui-en-0899", "section": "SkillsDesc1", "key": "0"},
-        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal0.04/x2.being_heal_burnt"}
+        {"source": "game-data-0899", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal0.04/x2.being_heal_burnt"},
+        {"source": "game-data-0955", "section": "gml_Object_UI_Draw_64", "key": "fire-menu.subSlots[0/1].skillBonus/finalChance"}
       ]
     },
     {
@@ -7762,16 +7763,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.5.3",
-      "confirmation": "Patch 0.9.5.3 was installed and launched to regenerate the English language files. The menu display and version check agree with the 6 November 2026 Steam announcement.",
+      "version": "0.9.5.5",
+      "confirmation": "Patch 0.9.5.5 was installed and launched. The menu display and version check agree with the 11 November 2026 Steam announcement; fresh English Items, UI, Bestiary and Keys were verified, while unchanged Nature was retained rather than regenerated.",
       "evidence": [
         {
-          "source": "game-data-0953",
+          "source": "game-data-0955",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0953",
+          "source": "game-data-0955",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -7985,7 +7986,7 @@
         "Remaining bleeding spreads to the next neighboring hit point in a fixed direction. Rotating the attack changes that direction. Spreading bleeding can reach beneath armor.",
         "An initial sharp hit normally removes armor without causing bleeding on that cell. At rank 10, Blade Master lets remaining damage cause bleeding after breaking armor.",
         "Apply an Improvised Bandage or Bandage to bleeding cells. Bandages stop bleeding but do not restore lost hit points.",
-        "A bleeding creature keeps taking its turns while it is out of sight or idle, so bleeding keeps working until it stops."
+        "A bleeding creature keeps taking its turns while it is out of sight or idle, so bleeding keeps working until it stops. The status scan now covers every row of rectangular combat grids, including lower cells that could previously be missed; armor and immunity rules still apply."
       ],
       "related_entities": [
         "Improvised Bandage",
@@ -8023,6 +8024,11 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_gen_ingamers",
           "key": "statusgrid_get/statusgrid_delete.bleed-directions"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "statuseffects_find.grid-height/statusgrid_get"
         }
       ]
     },
@@ -8032,7 +8038,7 @@
         "Poison stacks on individual hit points. At the start of the target's turn, a poisoned cell is lost and one poison counter is spent. Remaining poison can spread to a random adjacent healthy cell, including diagonals.",
         "Spreading poison can reach beneath armor. An ordinary direct poison hit removes one armor layer instead of poisoning an armored cell. Thrown poison has different rules; see the flask's effect.",
         "Minor Antidote and Antidote clear poison from the cells they cover without restoring lost hit points. Natural Antidote can reduce poison before it takes effect.",
-        "A poisoned creature keeps taking its turns while it is out of sight or idle, so poison keeps working until it runs out."
+        "A poisoned creature keeps taking its turns while it is out of sight or idle, so poison keeps working until it runs out. The status scan now covers every row of rectangular combat grids, including lower cells that could previously be missed; armor and immunity rules still apply."
       ],
       "related_entities": [
         "Minor Antidote",
@@ -8065,6 +8071,11 @@
           "source": "game-data-0901",
           "section": "gml_GlobalScript_scr_basic_useful",
           "key": "player_endturn.delayedEffects.POISON/BLEED"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "statuseffects_find.grid-height/statusgrid_get"
         }
       ]
     },
@@ -8127,7 +8138,7 @@
       "paragraphs": [
         "Ordinary direct fire attacks remove armor before burning the hit point underneath. Thrown fire has different rules; see the flask's effect. Wound salves and ordinary resting cannot restore burned cells, but Fire Bond from rank 5 and Staff of The Fire Eater can treat them.",
         "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward.",
-        "Starting a fire requires tinder and either both spark components or a positive contribution from an existing flame. An equipped Flint Dagger can supply stone sparks. Nearby active Campfires, Survivor's Field Kits and placed torches within 24 world pixels, or lit torches in your active hands, can help. Wet tinder still reduces the chance, which must remain positive before you can attempt ignition.",
+        "Starting a fire requires tinder and either both spark components or a positive contribution from an existing flame. An equipped Flint Dagger can supply stone sparks. Nearby active Campfires, Survivor's Field Kits and placed torches within 24 world pixels, or lit torches in your active hands, can help. Wet tinder still reduces the chance, which must remain positive before you can attempt ignition. Neither spark tool adds its bonus unless both spark components are present; Fire Bond's 3 percentage points per rank has the same requirement. Tinder's own bonus and wetness remain separate.",
         "Returning to an area advances placed station and light timers for elapsed area time, but does not subtract that historical time from lights held in your active hands. Held lights still use fuel during ordinary turns. Catch-up is scaled through maximum AP, not a literal turns-per-hour rate."
       ],
       "related_entities": [
@@ -8191,6 +8202,11 @@
           "source": "game-data-0953",
           "section": "gml_GlobalScript_scr_smartones",
           "key": "station_turnpass.arg1/weapon/offhand"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "fire-menu.subSlots[0/1].spark-bonuses/subSlots[2].wet/skillBonus/finalChance"
         }
       ]
     },
@@ -8540,7 +8556,7 @@
         "Sleeping can grant Well rested above 95% focus, with satiation and stamina above 20% and temperature strictly inside its comfortable range. Sleeping-item comfort sets the duration added, up to 35 turns. The timer can pause in bed when at least two of the three supporting conditions hold. See Wellbeing for its bonus.",
         "At 50% wellbeing or more, resting can heal one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and the temperature penalty. With full supporting meters and no temperature penalty, it is 5% per resting turn. Burns cannot heal this way; Fire Bond from rank 5 gives a separate chance to treat one.",
         "Find shelter, warmth and food before a long rest. Sleeping gear contributes insulation and waterproofing while in use. Great Bedroll and Furhide Bedroll also slow Warm to the core decay, but hunger, cold, sickness and interruptions still apply.",
-        "Recovery waits for the player's turn and for both the action and rest delays to finish. Focus settles at its target without overshooting; the recovery amounts above are unchanged. Getting up stops pending movement, and tent exits prefer dry footing without guaranteeing it."
+        "Recovery waits for the player's turn and for both the action and rest delays to finish. Focus settles at its target without overshooting; the recovery amounts above are unchanged. Getting up stops pending movement, and tent exits prefer dry footing without guaranteeing it. Entering a bed or bedroll releases the tile you leave. All bed rest and sleep modes process a full turn of wetness changes, including rain, immersion, ambient conditions, nearby fires and drying; sleeping does not guarantee that you become drier."
       ],
       "section_titles": [
         "Time keeps passing",
@@ -8611,6 +8627,16 @@
           "source": "game-data-0953",
           "section": "gml_Object_obj_player_Step_0",
           "key": "focusNext/focusDiff;state14/19.alarm[10]/alarm[0]/PLAYERTURN"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "sleeper.targetAction[7/8/9].free_tile/state19"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "state19.targetAction[7/8/9].player_gets_all_wet[actionPointsMax]"
         }
       ]
     },
@@ -8685,11 +8711,10 @@
         "Clear, cloudy and rainy weather can change when a completed turn crosses an hour boundary. Ambient temperature approaches a time-of-day target with small random variation. It is separate from body temperature.",
         "Dry spells increase cloud and rain chances; accumulated rain encourages clearing. The ordered hourly checks are below.",
         "On Easy and Medium, clouds cannot start new rain while fewer than two days have been survived. Hard has no early-game protection. Clouds can still form during the protected period.",
-        "Wet clothing can dampen its wearer and other carried clothing. Wetness affects body Temperature; waterproofing, shelter and drying help alongside insulation.",
+        "Wet clothing can dampen its wearer and other carried clothing. Wetness affects body Temperature; waterproofing, shelter and drying help alongside insulation. Moisture exchanged between a bag and an item inside it now uses half the item's share of bag area, in both directions. Target waterproofing and absorption limits still apply; this does not halve every source of wetness.",
         "Lesser shelter blocks 80% of rain and stronger shelter blocks 95%. Shelter can cool hot conditions. Nearby active fires warm and dry you. Dungeon-like areas use a separate ambient temperature baseline.",
-        "Weather and temperature keep changing while you rest. Check your shelter, clothing and wellbeing trend before sleeping."
-      ,
-        "Rain now applies clothing-filtered wetness to each body part and wets carried inventory, capped at full wetness. Container contents are wetted according to their container's waterproofing. Rain reduces container drying by rain strength times 0.15, never below zero; waterproof equipment stats themselves are unchanged."
+        "Weather and temperature keep changing while you rest. Check your shelter, clothing and wellbeing trend before sleeping.",
+        "Rain applies clothing-filtered wetness to each body part and wets carried inventory, capped at full wetness. Container contents are wetted according to their container's waterproofing. Rain reduces container drying by rain strength times 0.15, never below zero; waterproof equipment stats themselves are unchanged. While using a bed, bedroll or tent, incoming rain is multiplied by one minus half the sleeping item's waterproof value before the usual clothing filters and inventory propagation. For example, 80% waterproofing gives a 0.6 multiplier, not rain immunity. Sleep and bed rest still process ordinary drying and other wetness changes."
       ],
       "section_titles": ["Changing weather", "Rain history", "Early-game rain protection", "Wetness and exposure", "Shelter and local conditions", "Resting through weather",
                                                                                                                                                                               null
@@ -8703,9 +8728,10 @@
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.clock/temperature/localWeather/rainBalance/daysAlive;player_gets_all_wet/wet_transfer/player_update_gearstats"},
         {"source": "ui-en", "section": "AEs", "key": "23/31"},
         {"source": "game-data", "section": "gml_Object_manager_day_Step_0", "key": "rain/outside/weather-presentation"},
-        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_rained_upon.wet_filter/wet_inventory_all"}
-      ,
-        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "container_time_pass.rain/drying/containerWaterproof"}
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_rained_upon.wet_filter/wet_inventory_all"},
+        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "container_time_pass.rain/drying/containerWaterproof"},
+        {"source": "game-data-0955", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_rained_upon.state19.waterproof/2;player_gets_all_wet.itemPerc/2.both-directions"},
+        {"source": "game-data-0955", "section": "gml_GlobalScript_scr_gen_ingamers", "key": "wet_transfer.target-waterproof/absorption"}
       ]
     },
     {
@@ -9055,18 +9081,20 @@
         "Placing from containers",
         "Where you cannot build",
         "Storage Chest",
-        "Carry weight"
-      ,
-        null
+        "Carry weight",
+        null,
+        "Placement range",
+        "Mirrored canopies"
       ],
       "paragraphs": [
         "While placing an object, press the Weapon Swap key (Z by default) to flip it horizontally before you confirm.",
         "An object can be placed directly from a nearby container, not only from your inventory.",
-        "You cannot place objects within about 26 tiles of the Survivors' camp. Until you bring Viend back to the fort, the same applies within 30 tiles of Fort Solid. Placement also fails on water, slopes, plants, goo and occupied tiles.",
+        "You cannot place objects within about 26 tiles of the Survivors' camp. Until you bring Viend back to the fort, the same applies within 30 tiles of Fort Solid. Placement also checks the object's footprint for solid ground, water, slopes, vegetation, goo, creatures and occupied tiles. Canopies have an occupancy exception, but their anchor still cannot overlap another station; a raft has separate water and depth requirements.",
         "Storage Chest is a placeable 7 x 5 container. Items inside lose no durability, stay dry and never go missing, unlike items left in ordinary stashes. Clay and Viend sell it.",
-        "Placing an equipped item, such as a torch, removes its weight from your carry total."
-      ,
-        "Tent exits prefer a nearby dry tile, but do not guarantee one. Small Linen Tent and Waxed Linen Tent restore their blocked path tile when you get out. Chopping Log still blocks walking, but no longer marks its tile as a ranged-attack blocker."
+        "Placing an equipped item, such as a torch, removes its weight from your carry total.",
+        "Tent exits prefer a nearby dry tile, but do not guarantee one. Small Linen Tent and Waxed Linen Tent restore their blocked path tile when you get out. Chopping Log still blocks walking, but no longer marks its tile as a ranged-attack blocker.",
+        "General object placement measures range to the preview sprite's midpoint: 56 world pixels instead of 40, an increase of one 16-pixel tile. Seed placement keeps its separate range.",
+        "Mirrored Canopy (2x2 tiles) and Canopy (3x3 tiles) placement now aligns the anchor and shadow with the flipped object. Their deep-shade footprint follows the mirrored direction; other proximity and obstruction checks still apply."
       ],
       "related_entities": [
         "Storage Chest",
@@ -9117,11 +9145,32 @@
           "source": "game-data-0920",
           "section": "gml_GlobalScript_scr_items",
           "key": "item_correct_weighloss"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_GlobalScript_scr_mapcreations",
+          "key": "solid_get_adjacent_xy_nearest.water-score+8"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_player_Step_0",
+          "key": "tent47/155.solid_grid_add[false]"
+        },
+        {
+          "source": "game-data-0950",
+          "section": "gml_Object_obj_station_Alarm_0",
+          "key": "station155/238.solid_grid_add[false]"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.PHX/PHY.station/footprint/canopy-exception/raft170/midpoint-distance56"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_obj_station_Step_0",
+          "key": "canopy[249/250].signed-shade-loop"
         }
-      ,
-        {"source": "game-data-0950", "section": "gml_GlobalScript_scr_mapcreations", "key": "solid_get_adjacent_xy_nearest.water-score+8"},
-        {"source": "game-data-0950", "section": "gml_Object_obj_player_Step_0", "key": "tent47/155.solid_grid_add[false]"},
-        {"source": "game-data-0950", "section": "gml_Object_obj_station_Alarm_0", "key": "station155/238.solid_grid_add[false]"}
       ]
     },
     {
@@ -9185,10 +9234,10 @@
     ],
     "paragraphs": [
       "Seeds are planted the same way you place an object: choose the seed in your inventory, then pick a tile within three tiles of you. Planting costs 6 AP and uses up one seed. Any grass on the tile is cleared and a seedling appears.",
-      "While you hold a seed, the target tile is framed in a color that shows whether the seed can grow there, and nearby tiles get a faint frame: white where the seed would take, red where it would not. Checking these frames is the quickest way to find a spot.",
+      "While you hold a seed, the target tile is framed in a color that shows whether the seed can grow there, and nearby tiles get a faint frame: white where the seed would take, red where it would not. The preview now uses the player-placement rules and also rejects occupied hindrance tiles.",
       "A tile refuses every seed if it is under a solid object, covered in goo or cave spikes, or already holds something rooted, such as a boulder, a log, tall grass, a fern, a lilypad or another planted seed. You cannot plant inside other people's homes or other private areas. Each seed also has its own rules about ground height and ground type.",
       "A Simple Shelter or a Canopy gradually casts deep shade on the tiles beneath it. Deeply shaded tiles refuse seeds, and crops already growing there shrink away, so keep gardens out from under your shelters.",
-      "In Fort Solid Shorehold the ground within about six tiles of the fort is kept clear. Until late in the main story, planting there always fails; after that, attempts there still usually fail.",
+      "In Fort Solid Shorehold, nature is excluded within 164 world pixels (10.25 tiles) of the fort's clearing reference point, up from 104 pixels. Until late in the main story this also blocks player planting there. Once that story restriction ends, player placement skips this particular exclusion, while natural growth still rejects nearby attempts on a 90% roll. Other planting restrictions remain.",
       "Each seed grows only within its own range of depths and heights, from deep water up to the high plateau; see Terrain for the bands. Watercress Seeds go deepest and are the only seeds for medium and deep water. Cranberry Seeds need grassy shallow water. Trollgnarl Seed Pods only take raised ground.",
       "Apart from Watercress Seeds and Cranberry Seeds, every seed refuses stone, and only Elderberry Seeds accept sand. No seed takes a slope. Mud is fine for every land seed. Each ground kind's page lists the seeds that can grow on it.",
       "Planted seeds grow only while you are away from an area. When you return, the area catches up on the time you missed, up to ten days. Each tile gets a few growth chances per day, so results vary from plant to plant.",
@@ -9200,19 +9249,20 @@
     "related_pages": ["Terrain", "Areas", "Placing objects", "Tree health and chopping", "Fort Solid Shorehold", "Withered Mire", "Rift-Thorn Mire"],
     "confidence": "observed",
     "evidence": [
-      {"source": "game-data-0910", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[227..234].apCost"},
-      {"source": "game-data-0910", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.Papcost=apCost.player_ap_lose"},
-      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.range48.area_is_private.Hinderance==0.nature_can_grow"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.solid.goo.spikes.Data5.areaType0-fort104.MAINQUESTSTAGE22-chance0.9"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.case4.case6.case7.case17.case18.case19.case20.case21"},
-      {"source": "game-data-0900", "section": "gml_Object_obj_station_Step_0", "key": "shelter-canopy.Data5.chance0.01"},
-      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "passedHours-cap240.growTick960-per-hour"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "mgmt_nature_ticker.random-tile-samples.spread-irandom2"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_grow.crop-stage4.Hinderance-tree-chance0.35.rift-grass-shrink.Data5-shrink"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType23-stage29-crop-max2-watercress3.mud-cap4"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_spread.case18-chance0.15.case19.case21-chance0.2"},
-      {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"}
-    ],
+        {"source": "game-data-0910", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[227..234].apCost"},
+        {"source": "game-data-0910", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.Papcost=apCost.player_ap_lose"},
+        {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.range48.area_is_private.Hinderance==0.nature_can_grow"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.case4.case6.case7.case17.case18.case19.case20.case21"},
+        {"source": "game-data-0900", "section": "gml_Object_obj_station_Step_0", "key": "shelter-canopy.Data5.chance0.01"},
+        {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "passedHours-cap240.growTick960-per-hour"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "mgmt_nature_ticker.random-tile-samples.spread-irandom2"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_grow.crop-stage4.Hinderance-tree-chance0.35.rift-grass-shrink.Data5-shrink"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_get_maxtile.areaType23-stage29-crop-max2-watercress3.mud-cap4"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_spread.case18-chance0.15.case19.case21-chance0.2"},
+        {"source": "game-data-0900", "section": "gml_Object_databank_Create_0", "key": "deepTresh.waterTresh.darkestTresh.shallowTresh.dryTresh.mountainTresh.dryestTresh"},
+        {"source": "game-data-0955", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.placement/fort164.MAINQUESTSTAGE<=22/natural-chance0.9"},
+        {"source": "game-data-0955", "section": "gml_Object_cursor_Draw_73", "key": "seed-placement.nature_can_grow[true]/Hinderance==0"}
+      ],
     "tables": [
       {
         "after": 5,
@@ -10090,22 +10140,22 @@
       "The shared water and sand tables apply, without tougher forms.",
       "The usual mix, mostly Willow and Brambles.",
       "Skeletons here are the least likely of any area to be treasure chests, and none lie close to the fort.",
-      "Early in the story you cannot build within about thirty tiles of the fort, and the ground around it counts as private. At night the soldiers walk you back inside if you linger nearby, until later in the story. Seeds cannot take within about six tiles of the fort. At one point in the main story Viend will not let you leave the area."
+      "Early in the story you cannot build within about thirty tiles of the fort, and the ground around it counts as private. At night the soldiers walk you back inside if you linger nearby, until later in the story. The nearby nature exclusion now reaches 164 world pixels (10.25 tiles) from the fort's clearing reference point. It also blocks player planting until late in the story; afterwards player placement skips this exclusion, but natural growth still usually fails there. Other terrain and placement checks remain. At one point in the main story Viend will not let you leave the area."
     ],
     "related_entities": ["Captain Eir", "Soldier", "Viend", "Giant Slug", "Giant Gnat", "Viper", "Dreadfly", "Mirk Runner", "Raving Unwanted", "Giant Mirkfang", "Mudfin", "Boulder Crab", "Campfire"],
     "related_pages": ["Areas", "Planting", "Terrain", "Common Bog", "Vast Waters"],
     "confidence": "observed",
     "evidence": [
-      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
-      {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "areaType0.TooClose480.MAINQUESTSTAGE13"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "night-escort.MAINQUESTSTAGE15"},
-      {"source": "game-data-0900", "section": "gml_Object_UI_Draw_64", "key": "QuestLeaveBlock.MAINQUESTSTAGE12.areaType0"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.areaType0-fort104"}
-    ],
+        {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
+        {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
+        {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "spawn-tables.areaType23.water.sand.areaType0.areaType22.default"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
+        {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "areaType0.TooClose480.MAINQUESTSTAGE13"},
+        {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "night-escort.MAINQUESTSTAGE15"},
+        {"source": "game-data-0900", "section": "gml_Object_UI_Draw_64", "key": "QuestLeaveBlock.MAINQUESTSTAGE12.areaType0"},
+        {"source": "game-data-0955", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.placement/fort164.MAINQUESTSTAGE<=22/natural-chance0.9"}
+      ],
     "index_page": "Areas",
     "tables": [
       {
@@ -11099,12 +11149,14 @@
       "title": "Controls",
       "paragraphs": [
         "MirkLurk is played mainly with the mouse. Point at a tile and left-click to walk there; while you hover, each step shows its action point cost. Left click moves, selects and attacks. Right click cancels and rotates things such as your attack pattern. The mouse wheel zooms the camera. With Balanced Zoom, an option that is on by default, the standard view has the same scale across screen resolutions, with a correction for displays wider than 16:9. The minimum zoom is still half the maximum. With it off, the view is a fixed share of your screen, so a 4K screen shows twice as wide an area as a 1080p one. Scout slides the view toward the cursor so you can look ahead; the further the cursor is from you, the further it looks. When you name a new character, the button beside the name field opens an on-screen keyboard. There are no WASD movement keys.",
-        "Every other action has a keyboard shortcut. The table lists the defaults, using the names shown in Options > Controls. Tooltips always show the key you have bound, so they stay correct after you change it.",
+        "Every other action has a keyboard shortcut. The table lists the defaults, using the names shown in Options > Controls. Tooltips show the key you have bound, so they stay correct after you change it.",
         "Every binding can be changed in Options > Controls: click an entry, then press any key or mouse button. If another action already used that key, it becomes unbound and is highlighted as a conflict. Reset restores the defaults. Even if Close is left unbound, Esc still closes menus.",
         "A controller is also supported, with its own Controller page in the options. You can swap the sticks and set their sensitivity (default 1) and dead zone (default 0.1). Stats, Crafting, Draw Weapon, Rest, Hitpoints, Auto-walk, Jump, Loot All, Journal, Swap, Scout, Codex, Show UI and Screenshot have no controller button by default.",
         "Early in the tutorial, Draw Weapon, Jump, Rest, Examine and End Turn stay locked until the story moves on.",
         "Quick-looting, stacking and inventory sorting can turn an item to fit if its current orientation has no room. A failed placement restores the original orientation. Automatic ground-pile resizing and preparation for trading or crafting do not use this rotation.",
-        "You can replace nonstackable equipment with another of the same kind, including an Improvised Shield, from inventory or the equipment slot. Normal equip AP checks still apply; this does not change stack limits. The equip-cost AP icon scales with its tooltip text at larger UI sizes."
+        "You can replace nonstackable equipment with another of the same kind, including an Improvised Shield, from inventory or the equipment slot. Normal equip AP checks still apply; this does not change stack limits. The equip-cost AP icon scales with its tooltip text at larger UI sizes.",
+        "Right-clicking a stack to pick up half now rounds down: a stack of three gives you one and leaves two. A single item is still picked up whole.",
+        "Mouse-button labels now come from the selected language's Keys file. The second side-button label currently repeats the first side-button label, so do not rely on that text alone to distinguish them."
       ],
       "section_titles": [
         "Mouse",
@@ -11113,7 +11165,9 @@
         "Controller",
         "Tutorial",
         "Inventory rotation",
-        "Replacing equipment and UI scale"
+        "Replacing equipment and UI scale",
+        "Splitting stacks",
+        "Localized mouse labels"
       ],
       "related_entities": [],
       "related_pages": [
@@ -11331,16 +11385,6 @@
           "key": "leftRelease"
         },
         {
-          "source": "game-data-0900",
-          "section": "gml_Object_cursor_Draw_73",
-          "key": "keySwap"
-        },
-        {
-          "source": "game-data-0900",
-          "section": "gml_GlobalScript_scr_text_related",
-          "key": "textf_keyreplace"
-        },
-        {
           "source": "ui-en",
           "section": "Menus",
           "key": "Controls;Controller;CursorMovement;ScrollZoom;LeftStick;RightStick;Sensitivity;DeadZone"
@@ -11371,9 +11415,19 @@
           "key": "BalancedZoom.aspect>16/9;minimumZoom=maximum/2"
         },
         {
-          "source": "game-data-0953",
+          "source": "game-data-0955",
           "section": "gml_Object_UI_Draw_64",
-          "key": "equip.match/stackLimit>1;tooltip.EQA"
+          "key": "inventory.single-item/half-stack.floor;equip.match/stackLimit>1;tooltip.EQA"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_GlobalScript_scr_text_related",
+          "key": "textf_keyreplace/textf_ord_to_char.Keys.MouseSide1/MouseSide2"
+        },
+        {
+          "source": "keys-en-0955",
+          "section": "Keys",
+          "key": "MouseLeft/MouseRight/MouseMiddle/MouseSide1/MouseSide2"
         }
       ]
     },
@@ -11539,8 +11593,8 @@
         "Load Latest takes you back to your most recent save. Crawl to Safety retains that reload option and adds a way to recover in the same area, wounded and with damaged equipment.",
         "Permadeath deletes the character's save directory when the death menu appears. There is no reload option while dead. Choose it only if you intend to lose the character permanently.",
         "Crawling moves you to a free, non-water tile at least 112 world pixels (7 tiles) from where you fell. It applies 40 to 120 durability-loss calls randomly across eligible equipped gear, excluding orbs. This is not a percentage loss and not that many points from every item.",
-        "If you have no HP left, crawling heals 1 to 3 lost HP cells, but not burnt cells. Before the ensuing end-turn update it sets recovery targets of 15-25% wellbeing, 5-25% stamina and 10-25% focus, clears enemy targets and refreshes combat. The final displayed meters can differ after the turn resolves.",
-        "Autosaves occur on area entry and after successful sleep, except when wellbeing is almost gone. Saving on exit remains available while alive. The death-mode icon is shown alongside the character's name."
+        "If you have no HP left after crawling relocates you and damages equipment, it first treats 1 to 3 distinct burnt cells, limited by how many exist, then separately rolls to heal 1 to 3 ordinary wounds. Burn treatment turns a burnt cell into an ordinary wound; it is not itself an HP grant. These recovery rolls do not run if you still have HP. Before the ensuing end-turn update it sets recovery targets of 15-25% wellbeing, 5-25% stamina and 10-25% focus, clears enemy targets and refreshes combat. The final displayed meters can differ after the turn resolves.",
+        "Autosaves occur on area entry and after successful sleep, except when wellbeing is almost gone. Saving on exit remains available while alive. The death-mode icon is shown alongside the character's name; deleting another save no longer shifts these icons onto the wrong entries."
       ],
       "related_entities": [],
       "related_pages": [
@@ -11599,6 +11653,21 @@
           "source": "game-data-0950",
           "section": "gml_GlobalScript_scr_ai_related",
           "key": "being_heal"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_obj_menu_Draw_64",
+          "key": "Crawl.DEATHOPTION0.state1.hitpoints<=0.burnt/ordinary.separate-i_r[1,3]"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_heal_burnt.arg1.distinct-candidates[-1-to-0]"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_obj_menu_Alarm_11",
+          "key": "save-list.deadLabels.reset"
         }
       ]
     },
@@ -11607,7 +11676,7 @@
       "paragraphs": [
         "Combat is turn-based. On your turn you spend action points, normally 8, on moving, attacking and other actions, then press End Turn. Each turn is 8 minutes of game time. Every creature that wants to act then takes its turn, one at a time, before your AP refill.",
         "A fight starts when a hostile creature notices you: it must be close enough, able to see you and pass a detection check. Resting in a well-hidden spot makes you harder to find. You can also start a fight yourself with Draw Weapon. Before combat continues you place your armor points on your HP grid. While enemies are targeting you, you cannot leave combat or rest.",
-        "Leaving an enemy's melee range can give it a free attack. Jumping away avoids that.",
+        "Leaving an enemy's melee range can give it a free attack. Jumping away avoids that. An opportunity attack now rebuilds its geometry from the attacking creature's own attack pattern, intelligence and damage class rather than reusing the player's current geometry; the existing chance and position checks remain.",
         "Left-click the base of a creature to select it and open its HP grid. Hover over the grid to aim your weapon's attack pattern, right-click to rotate the pattern a quarter turn, and left-click to strike. You need enough AP and must be in range; ranged weapons also need ammunition and a clear shot. Every cell the pattern covers takes damage. Creatures may dodge, shifting the hit by one cell.",
         "When an enemy attacks you, you may get a chance to dodge: you see where the attack will land and choose which way to shift your own grid.",
         "Enemies aim according to their intelligence. The least intelligent hit completely at random. Smarter ones go after your remaining HP, then also allow for the size of their pattern, then target clusters of healthy cells. The smartest also rotate their pattern for the most damage. On Hard, most enemies aim one step more precisely.",
@@ -11708,6 +11777,11 @@
           "source": "game-data-0920",
           "section": "gml_Object_UI_Draw_64",
           "key": "player_get_block;dat.blockChance"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_ao_check.being_get_attack_xy/attack_globupdate/aooChance/AOallowed"
         }
       ]
     }

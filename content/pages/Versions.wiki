@@ -1,8 +1,10 @@
-'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki shows values from the latest, [[Version 0.9.5.3|0.9.5.3]]. Each version's page lists what changed from the one before it, including changes the patch notes leave out.
+'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki shows values from the latest, [[Version 0.9.5.5|0.9.5.5]]. Each version's page lists what changed from the one before it, including changes the patch notes leave out.
 
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Versions (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
 ! Version !! Released !! Summary
+|-
+| [[Version 0.9.5.5|0.9.5.5]] || 11 November 2026 || Status and opportunity attacks, placement and rift pits, Crawl burn recovery, sleeping wetness, fire sparks and interface fixes.
 |-
 | [[Version 0.9.5.3|0.9.5.3]] || 6 November 2026 || Equipment replacement, fire-starting, rest and focus fixes, raw Wakebug focus recovery, and held-light timing.
 |-

@@ -1,4 +1,4 @@
-'''Version 0.9.5.3''' is the patch released on 6 November 2026, following the previously documented [[Version 0.9.5.0]]. This wiki shows 0.9.5.3 values. The changes below compare those two installed builds directly, including the announcement's later edits; they are not assigned to unverified intermediate hotfixes.
+'''Version 0.9.5.3''' is the patch released on 6 November 2026, following the previously documented [[Version 0.9.5.0]]. The wiki now shows values from [[Version 0.9.5.5]]; this page records what changed in 0.9.5.3. The changes below compare those two installed builds directly, including the announcement's later edits; they are not assigned to unverified intermediate hotfixes.
 
 == Changes ==
 === Wakebug and focus ===

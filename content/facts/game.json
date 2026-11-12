@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.5.3",
+    "build": "0.9.5.5",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -168,6 +168,18 @@
       "path": "data.win",
       "sha256": "33291c42ac7ebc8dff9f328538fb5b436f04c5918585342b94acc9d7b7f26681",
       "build": "0.9.5.3"
+    },
+    {
+      "id": "game-data-0955",
+      "path": "data.win",
+      "sha256": "5c616834e7aff0567c0e6f152d9bc5c1db61e12dd50af98a33e5adc5f3c4d3ff",
+      "build": "0.9.5.5"
+    },
+    {
+      "id": "keys-en-0955",
+      "path": "Languages\\English\\Keys.ini",
+      "sha256": "656d818df7d552be8ee77c356fe76489787cf0b2f8c8a1a88b6f4a189494687a",
+      "build": "0.9.5.5"
     }
   ],
   "entities": [
@@ -15955,9 +15967,9 @@
       "id": "skill-1-0-mechanics",
       "kind": "algorithm",
       "title": "Fire Bond: described effects",
-      "summary": "Fire Bond adds three percentage points per rank to a fire-starting attempt. From rank 5, each turn spent resting or sleeping has a 4% chance to treat one burnt hit point, turning it into an ordinary wound; from rank 10 the chance is 8%.",
-      "conditions": "Paraphrase of the English skill description; not independently verified in gameplay.",
-      "confidence": "localization-described",
+      "summary": "Fire Bond adds three percentage points per rank to a fire-starting attempt when both spark components are present. From rank 5, each turn spent resting or sleeping has a 4% chance to treat one burnt hit point, turning it into an ordinary wound; from rank 10 the chance is 8%.",
+      "conditions": "The fire-starting bonus requires both spark components; tinder, wetness and the final chance still apply. Resting burn treatment is a separate roll.",
+      "confidence": "inferred",
       "evidence": [
         {
           "source": "ui-en-0899",
@@ -15968,13 +15980,18 @@
           "source": "game-data-0899",
           "section": "gml_GlobalScript_scr_basic_useful",
           "key": "player_endturn.state14/19.survivorSkills[0]>=5.fireHeal0.04/x2.being_heal_burnt"
+        },
+        {
+          "source": "game-data-0955",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "fire-menu.subSlots[0/1].skillBonus/finalChance"
         }
       ],
       "details": {
         "page": "Skills",
         "steps": [
-          "Treat per-rank benefits and milestone unlocks separately.",
-          "These are localized design claims; runtime implementation, rounding and modifiers may affect actual results."
+          "Both spark components are required for the three-percentage-point bonus per rank; a nearby flame does not supply a missing component's bonus.",
+          "Resting burn treatment turns one burnt cell into an ordinary wound. It does not directly restore that cell's HP."
         ],
         "fact_ids": [
           "fire-striker-chance"
