@@ -1,4 +1,4 @@
-'''Version 0.9.5.5''' is the patch released on 11 November 2026, following the previously documented [[Version 0.9.5.3]]. This wiki shows 0.9.5.5 values. The comparison is directly between those installed builds, without assigning changes to an unverified intermediate hotfix.
+'''Version 0.9.5.5''' is the patch released on 11 November 2026, following the previously documented [[Version 0.9.5.3]]. The wiki now shows values from [[Version 0.9.5.6]]; this page records what changed in 0.9.5.5. The comparison is directly between those installed builds, without assigning changes to an unverified intermediate hotfix.
 
 This page contains '''late-story location spoilers'''.
 

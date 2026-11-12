@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.5.5",
+    "build": "0.9.5.6",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -180,6 +180,36 @@
       "path": "Languages\\English\\Keys.ini",
       "sha256": "656d818df7d552be8ee77c356fe76489787cf0b2f8c8a1a88b6f4a189494687a",
       "build": "0.9.5.5"
+    },
+    {
+      "id": "game-data-0956",
+      "path": "data.win",
+      "sha256": "c7937f7a13e2070d1faefebcb3b3905800761b90337d2782e80d29bd24487dff",
+      "build": "0.9.5.6"
+    },
+    {
+      "id": "beings-zh-0956",
+      "path": "Languages\\Chinese\\Bestiary.ini",
+      "sha256": "a22956fe0fc9410c2a5351abc82bf6042026b8fba98f71e7339f628924b76799",
+      "build": "0.9.5.6"
+    },
+    {
+      "id": "items-zh-0956",
+      "path": "Languages\\Chinese\\Items.ini",
+      "sha256": "fade7f1653199e3797af095ca221d0cfc29ed649e49b76d11f077853d129d3a2",
+      "build": "0.9.5.6"
+    },
+    {
+      "id": "keys-zh-0956",
+      "path": "Languages\\Chinese\\Keys.ini",
+      "sha256": "9f020f61a46db245de01172e9b317f8dc37d2d29c94317138933fd547c1e60b9",
+      "build": "0.9.5.6"
+    },
+    {
+      "id": "ui-zh-0956",
+      "path": "Languages\\Chinese\\UI.ini",
+      "sha256": "2adb57209630685f4623a202eb2b805366eabb7ef293adcd52ebbb7ed3f4e18e",
+      "build": "0.9.5.6"
     }
   ],
   "entities": [
