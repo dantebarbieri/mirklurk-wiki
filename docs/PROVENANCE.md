@@ -583,6 +583,71 @@ illustration hashes, recipes, loot and merchants remain intact; no File import,
 move or host runtime change is warranted. Earlier artwork and backup provenance
 remain historical, not claimed as new evidence.
 
+## Version 0.9.5.6 update
+
+Installed Steam build 26612189 identifies itself as 0.9.5.6 in
+`gml_Object_obj_menu_Create_0.versionString`,
+`gml_Object_obj_menu_Step_0.manager_area.versionCheck` and
+`gml_GlobalScript_scr_saveload.save_player.VERSION`. `game-data-0956` records
+binary SHA-256
+`c7937f7a13e2070d1faefebcb3b3905800761b90337d2782e80d29bd24487dff`.
+The executable SHA-256 is
+`deadc6c8f957fc466d230469dfeffde309dc2be8eb6b8225af097d3831ecddd4`;
+its changed hash alone is not evidence of native gameplay or generation changes.
+
+The associated official Steam announcement, **Simplified Chinese now available!**
+(gid `1849192144182101`), was posted on 2026-11-12 at 08:55:03 UTC.
+It does not name 0.9.5.6. The version page uses its UTC calendar date as an
+associated announcement date, not an exact binary-release timestamp. The
+announcement confirms availability and requests font/translation issue reports;
+the author's Google Translate attribution does not establish independent
+linguistic accuracy or complete coverage.
+
+The direct 0.9.5.5-to-0.9.5.6 comparison fingerprints all 284 code entries:
+six changed, none added or removed. The three version entries above are joined
+by `gml_Object_obj_being_Destroy_0`, `gml_Object_obj_tree_Destroy_0` and
+`gml_Object_obj_menu_Draw_64`. Both destructors free an allocated audio emitter
+inside the existing non-sentinel guard after muting it. Existing sound stopping,
+path/grid destruction and tree cleanup remain. The menu language indicator
+draws two existing flag frames instead of one. Directory-based language
+selection and Chinese font routing are unchanged.
+
+Changed-entry SHA-256 identities (entry names omit the common `gml_` prefix):
+
+| Entry | SHA-256 |
+| --- | --- |
+| `GlobalScript_scr_saveload` | `85f767717fffc820954eb5bfef25b09c9e0a4e30dd274e0062f1c3fd86854386` |
+| `Object_obj_being_Destroy_0` | `864d8ac79b92a37a7bb2a04032ca8efe81fc45e88ffa4934e4e737fa2b81376d` |
+| `Object_obj_menu_Create_0` | `90862017a8ea3fd46cbc460299f382a9439f3f6bc753d4c6a2582cb3b20643b1` |
+| `Object_obj_menu_Draw_64` | `23d0243e994bff3ddf4f5b48bf35cb94ef94c7c0223d4ac41b1f06356f1ae46b` |
+| `Object_obj_menu_Step_0` | `0838fc949355b3af6c8090ceefce591ec76f52571678f12252ca69bcc4922ee4` |
+| `Object_obj_tree_Destroy_0` | `9de1cacfc109b83309072735bf20588f827873baca98e6ebfafa3a9598c00986` |
+
+A fresh owned three-minute title-screen run regenerated English Items, UI,
+Bestiary and Keys with their existing fingerprints. English Nature retained its
+known hash and timestamp: it was not regenerated. Four Chinese files were
+present before launch with unchanged pre/post hashes and timestamps. New
+language-scoped sources `items-zh-0956`, `beings-zh-0956`, `ui-zh-0956` and
+`keys-zh-0956` fingerprint these packaged assets without copying their text or
+replacing English entity-name citations. No Chinese Nature file was present.
+The startup writer is byte-identical to 0.9.5.5, so no duplicate English
+fingerprints or invented regeneration claims are added.
+
+The existing SimSun font grows from 2,162 to 2,169 glyphs, with no removals.
+This is character coverage, not a new font or translation-quality audit.
+The embedded `spr_achievements` resource grows from five 48-by-48 frames to
+nine 64-by-64 frames. No unlock identifier or condition is added in the complete
+code/string comparison; this does not prove four new live Steam achievements.
+All other 4,101 normalized sprite frames and all 413 sounds are unchanged.
+
+The 266 item, 44 being and 19 nature definitions, all gameplay/generation
+entries, recipes, loot, merchants, quests and skills remain unchanged from
+0.9.5.5. The earlier fort164 and first/second rift-depth pit rules are retained,
+not reattributed. Profiles, grids, illustrations and acquisition mechanics
+remain intact. No new entity, File import, move, runtime deployment or host
+maintenance is required. Previous publication and backup evidence remains
+historical; unrelated operational authorization gates are not cleared here.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

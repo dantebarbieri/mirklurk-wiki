@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 361)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 470)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 471)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 361)
@@ -626,7 +626,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.5.5")
+        self.assertEqual(self.data["game"]["build"], "0.9.5.6")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1155,12 +1155,12 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.5.5 pin, game build blanked.
+        # 0.9.5.6 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.5.5"', b'"build": null', 1,
+                b'"build": "0.9.5.6"', b'"build": null', 1,
             )).hexdigest(),
-            "158fd9aab730f4726d9c793614ad3baa41d6f41d10c542b263ca4ff51fb738d0",
+            "de2a7897487f8ad82f494e58d112aade5ffa18440b396c1a1beee76598dd2d23",
         )
 
 
@@ -1201,6 +1201,22 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("6 November 2026", pages["Version 0.9.5.3"])
         self.assertIn("[[Version 0.9.5.5]]", pages["Version 0.9.5.3"])
         self.assertIn("[[Version 0.9.5.3]]", pages["Version 0.9.5.0"])
+
+    def test_patch_0956_localization_provenance_does_not_overclaim(self):
+        data, catalog, details = load_publication_inputs(ROOT)
+        pages = build_pages(ROOT, data, catalog, details)
+        page = pages["Version 0.9.5.6"]
+        for text in ("announcement does not name 0.9.5.6", "not proof of the binary's exact release time",
+                     "packaged translations", "no Chinese Nature file", "not proof that four live Steam achievements",
+                     "retained unchanged rather than regenerated"):
+            self.assertIn(text, page)
+        sources = {row["id"]: row for row in data["sources"]}
+        chinese = [row for row in sources.values() if row["path"].startswith("Languages\\Chinese\\")]
+        self.assertEqual({row["path"].rsplit("\\", 1)[1] for row in chinese},
+                         {"Items.ini", "Bestiary.ini", "Keys.ini", "UI.ini"})
+        for prefix in ("items-en", "beings-en", "keys-en", "ui-en", "nature-en"):
+            self.assertNotIn(prefix + "-0956", sources)
+        self.assertIn("unchanged between 0.9.5.5 and 0.9.5.6", pages["World generation"])
 
     def test_patch_0955_combat_crawl_and_fire_guards_reach_readers(self):
         data, catalog, details = load_publication_inputs(ROOT)
@@ -1367,7 +1383,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("75% chance", skill)
         self.assertIn("Without an equipped shield", skill)
         self.assertIn("10.5% at rank 1", self.pages["Combat basics"])
-        self.assertIn("0.9.5.5", self.pages["Main Page"])
+        self.assertIn("0.9.5.6", self.pages["Main Page"])
         self.assertIn("29 October 2026", self.pages["Version 0.9.2.0"])
         sources = {row["id"]: row for row in self.data["sources"]}
         self.assertEqual(sources["game-data-0920"]["sha256"],

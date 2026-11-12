@@ -1,0 +1,23 @@
+'''Version 0.9.5.6''' is the installed build associated with the Simplified Chinese announcement of 12 November 2026, following [[Version 0.9.5.5]]. The announcement does not name 0.9.5.6: its UTC calendar date is used here as an associated announcement date, not proof of the binary's exact release time. This wiki shows 0.9.5.6 values.
+
+== Changes ==
+=== Simplified Chinese ===
+Simplified Chinese is now available through the existing language menu. The installed build includes Chinese item, bestiary, interface and key-label files. These are packaged translations, not translations generated when the game starts. There is no Chinese Nature file in this installation, so this does not establish that every nature label is translated.
+
+The existing Chinese font gains seven glyphs, increasing its coverage from 2,162 to 2,169 characters. The developer asks players to report remaining translation or font issues and says the translation used Google Translate. Availability and added glyphs do not independently establish linguistic accuracy or complete translation coverage.
+
+The main menu now displays both the existing English and Chinese flag indicators. The language-selection machinery and Chinese font routing already existed; they are not new systems in this build.
+
+== Fixes ==
+=== Audio resources ===
+Not in the patch notes: destroying creatures or trees now releases an allocated positional audio emitter after muting it. This covers the existing buzzing-creature and beehive emitters; it does not add sounds, change creature stats or establish a measured performance improvement.
+
+=== Embedded achievement artwork ===
+Not in the patch notes: the embedded achievement image set expands from five 48-by-48 frames to nine 64-by-64 frames. No new unlock conditions or achievement identifiers appear in the compared source changes; four additional art frames are not proof that four live Steam achievements were added.
+
+=== Unchanged gameplay ===
+The direct comparison with 0.9.5.5 finds no changes to item or creature stats, recipes, loot, merchants, quests, skills, combat rules, world generation or gameplay icons. The earlier fort nature and rift-pit changes remain as documented in [[World generation]]. Save version markers advance without a new save field or load migration.
+
+English item, bestiary, interface and key-label files were regenerated with unchanged contents. English Nature was retained unchanged rather than regenerated. The existing second-side-button label issue described in [[Controls]] remains.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

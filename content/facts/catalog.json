@@ -7763,16 +7763,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.5.5",
-      "confirmation": "Patch 0.9.5.5 was installed and launched. The menu display and version check agree with the 11 November 2026 Steam announcement; fresh English Items, UI, Bestiary and Keys were verified, while unchanged Nature was retained rather than regenerated.",
+      "version": "0.9.5.6",
+      "confirmation": "Installed build 0.9.5.6 was launched and independently verified. The associated 12 November 2026 Chinese-availability announcement does not name this version or establish its exact release time. English Items, UI, Bestiary and Keys were freshly regenerated with unchanged hashes; Nature was retained. The four Chinese files are packaged assets, not runtime-generated translations.",
       "evidence": [
         {
-          "source": "game-data-0955",
+          "source": "game-data-0956",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0955",
+          "source": "game-data-0956",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }

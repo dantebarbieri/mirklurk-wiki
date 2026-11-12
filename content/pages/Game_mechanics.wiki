@@ -1,6 +1,6 @@
 Learn about survival, combat, crafting and progression. See [[Skills]] for bonuses, [[Items]] for equipment stats and [[Bestiary]] for creatures.
 
 == Version ==
-These guides cover '''0.9.5.5''', the patch of 11 November 2026. Other versions may differ. See [[Version 0.9.5.5]] for what changed since 0.9.5.3, and [[Versions]] for every earlier version.
+These guides cover '''0.9.5.6''', associated with the Chinese-availability announcement of 12 November 2026; that announcement does not name a version or establish the binary's exact release time. Gameplay rules are unchanged from 0.9.5.5. Other versions may differ. See [[Version 0.9.5.6]] for what changed since 0.9.5.5, and [[Versions]] for every earlier version.
 
 [[Skills]] | [[Damage types]] | [[Health and armor]] | [[Action points]] | [[Main Page]]

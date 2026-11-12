@@ -104,10 +104,18 @@ and fire sparks. A new Keys source is recorded; Nature is retained unchanged,
 not described as regenerated. Static definitions and wiki-used art are unchanged.
 [Provenance](docs/PROVENANCE.md#version-0955-update) records the exact scope.
 
+Build **0.9.5.6** is associated with the 2026-11-12 Simplified Chinese
+announcement, which does not name the version or prove an exact release time.
+The direct comparison with 0.9.5.5 records packaged Chinese language files,
+seven additional Chinese-font glyphs, a second menu flag and two audio-emitter
+cleanup fixes. Gameplay, generation and wiki artwork are unchanged.
+[Provenance](docs/PROVENANCE.md#version-0956-update) distinguishes packaged
+translations, fresh unchanged English files and retained Nature.
+
 The reference now contains **107 numeric facts and 347 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
 variants, 90 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 522 main-namespace pages:
+summaries. The encyclopedia presentation generates 523 main-namespace pages:
 361 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical
