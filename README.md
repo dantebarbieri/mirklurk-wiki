@@ -97,10 +97,17 @@ recovery, raw Wakebug's focus gain, and held versus placed light timing.
 No new released entity or icon import is inferred from unused artwork.
 [Provenance](docs/PROVENANCE.md#version-0953-update) records the comparison.
 
+Patch **0.9.5.5** followed on 2026-11-11. The direct comparison with 0.9.5.3
+updates status scans, opportunity attacks, placement, rift pits, conditional
+Crawl burn recovery, sleeping wetness and rain protection, bag moisture exchange
+and fire sparks. A new Keys source is recorded; Nature is retained unchanged,
+not described as regenerated. Static definitions and wiki-used art are unchanged.
+[Provenance](docs/PROVENANCE.md#version-0955-update) records the exact scope.
+
 The reference now contains **107 numeric facts and 347 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
 variants, 90 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 521 main-namespace pages:
+summaries. The encyclopedia presentation generates 522 main-namespace pages:
 361 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical

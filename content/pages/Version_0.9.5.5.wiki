@@ -1,0 +1,47 @@
+'''Version 0.9.5.5''' is the patch released on 11 November 2026, following the previously documented [[Version 0.9.5.3]]. This wiki shows 0.9.5.5 values. The comparison is directly between those installed builds, without assigning changes to an unverified intermediate hotfix.
+
+This page contains '''late-story location spoilers'''.
+
+== Changes ==
+=== Placement and world generation ===
+General [[Placing objects|object placement]] now reaches 56 world pixels from the player to the preview sprite's midpoint, instead of 40. That is one additional 16-pixel tile, not two. Seed placement has a separate range. Mirrored [[Canopy (2x2 tiles)]] and [[Canopy (3x3 tiles)]] anchors, shadows and deep-shade footprints now follow the flipped direction.
+
+Placement previews better reflect station overlap, occupied footprints and terrain restrictions. Canopies retain an occupancy exception; [[Raft Base]] placement still has its own water and depth rules. [[Planting]] previews use the player-placement check and reject occupied hindrance tiles.
+
+Newly generated first and second rift depths no longer run their random pit-carving pass; the third depth is unchanged. Existing saved terrain is not automatically repaired. Removing those random draws can alter later generated choices, including exits. See [[World generation]].
+
+Not in the patch notes: the nature exclusion around Fort Solid's clearing reference point grows from 104 to 164 world pixels. Until late in the main story it also blocks player planting. Afterwards player placement skips this particular exclusion, while natural growth still rejects nearby attempts on a 90% roll. Other terrain checks remain. This affects actual nature generation as well as previews; see [[Fort Solid Shorehold]].
+
+=== Crawl recovery ===
+[[Death|Crawl to Safety]] now treats burnt cells only if you have no HP left after relocation and equipment damage. It treats 1 to 3 distinct burnt cells, limited by those available, then makes a separate 1-to-3 roll for ordinary wound healing. Treating a burn creates an ordinary wound, not immediate HP. Existing death-mode, relocation and durability-loss rules remain.
+
+=== Sleeping and wetness ===
+All bed rest and sleep modes now process a full turn of wetness changes, including rain, immersion, ambient conditions, nearby fires and drying. [[Resting]] does not guarantee drying in all weather.
+
+While using sleeping gear, incoming rain is multiplied by one minus half its waterproof value before clothing filters and inventory propagation. For example, 80% waterproofing gives a 0.6 multiplier, not immunity. Static waterproof stats are unchanged. See [[Weather]].
+
+Moisture exchange between a bag and an item inside it now uses half the item's share of bag area, in both directions. Waterproofing and absorption limits still apply; other wetness sources are not simply halved.
+
+== Fixes ==
+=== Combat ===
+The [[Poison]] and [[Sharp|bleeding]] status scan now covers the full height of rectangular grids, including lower rows that could previously be skipped. This does not bypass armor, immunities or ordinary effect rules.
+
+Opportunity attacks now rebuild their geometry from the attacking creature's own pattern, intelligence and damage class rather than reusing the player's current attack geometry. Existing chance and position checks remain; see [[Combat basics]].
+
+=== Fire, stacks and crafting ===
+Neither spark tool adds its ignition bonus unless both spark components are present. [[Fire Bond]]'s rank bonus has the same requirement. Tinder's bonus and wetness are separate; starting a [[Fire|fire]] still requires tinder and either both spark components or a positive contribution from an existing flame.
+
+Right-click half-stack pickup now rounds down: three items give one and leave two. A single item is still picked up whole. See [[Controls]].
+
+[[Crafting]] tooltips reserve vertical space for the ingredients before being clamped above the screen edge. Recipes and AP costs are unchanged.
+
+=== Saves and interface ===
+Deleting a save no longer leaves death-mode icons aligned with the wrong save entries. Entering a bed or bedroll releases the tile you leave. The container-information button has clearer artwork; this does not add container stats.
+
+Not in the patch notes: mouse labels are loaded from the selected language's Keys file. The second side-button label still reads the first side-button label. Unicode character names are preserved in filenames except for Windows-invalid characters and control characters, which become underscores; outer whitespace is trimmed.
+
+Not in the patch notes: Chinese text wrapping and case handling, language-font selection before interface rebuilds, and popup, map and introduction layout receive fixes. The SimSun font contains 163 more glyphs; this is not proof of complete translations. Recreating the menu retains the selected menu song rather than choosing another, and cleans up audio emitters. Sound assets are unchanged.
+
+Not in the patch notes: flags are reordered and one Iron Cudgel weapon-animation frame has a seven-pixel correction. Its inventory icon is unchanged, as are all wiki-used illustrations. No item, nature or being definitions, recipes, loot or merchant data are added or changed.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

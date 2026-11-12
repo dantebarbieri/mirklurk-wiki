@@ -2,6 +2,8 @@ Choose [[Inventory crafting]] or a workstation below to browse what it can make.
 
 Recipes list ingredients, outputs, base AP costs and requirements. Crafting uses ingredients from your inventory first, then from containers within 24 world pixels: adjacent tiles, including diagonals. Corpses are excluded; take their ingredients manually first. [[Inventory crafting]] explains the shared ingredient and AP rules.
 
+In crafting menus, item tooltips reserve extra vertical room for the ingredient list before being moved above the bottom edge. This changes their layout, not recipes or AP costs.
+
 Find [[Items#Recipe_ingredients_by_acquisition|ingredients by acquisition]] or browse [[:Category:Crafting materials|materials]].
 
 [[Items]] | [[Game mechanics]] | [[Main Page]]

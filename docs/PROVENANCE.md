@@ -519,6 +519,70 @@ and 19 nature definitions, recipes, loot, merchants and world-layout algorithms
 remain unchanged; no entity or icon sweep, import or File move is needed.
 Existing 0.9.5.0 artwork and completed backup provenance are preserved.
 
+## Version 0.9.5.5 update
+
+Patch 0.9.5.5 (2026-11-11 UTC, Steam build 26586914) is compared directly
+with analyzed and published 0.9.5.3. Of 284 code entries, 26 changed and none
+were added or removed. `game-data-0955` records binary SHA-256
+`5c616834e7aff0567c0e6f152d9bc5c1db61e12dd50af98a33e5adc5f3c4d3ff`.
+The executable SHA-256 is
+`400452c8412c741e64a953a28e8904c1eddd89114b71c31730ad8797c3595171`.
+Menu, new-game check and save version agree. No intermediate release attribution
+is inferred.
+
+A fresh three-minute owned title-screen run regenerated Items, UI and Bestiary
+with their existing hashes and produced Keys. `keys-en-0955` fingerprints that
+new file. The startup writer no longer rewrites Nature: its pre/post content
+hash and modification time match, so the existing `nature-en` source is retained,
+not described as regenerated. No duplicate sources are added for unchanged files.
+
+Sharp and Poison cite the height-based `statuseffects_find` scan in
+`gml_GlobalScript_scr_gen_ingamers`; Combat basics cites the complete
+`being_ao_check` geometry refresh in `gml_GlobalScript_scr_ai_related`.
+Controls cites half-stack floor rounding in `gml_Object_UI_Draw_64` and localized
+mouse names in `gml_GlobalScript_scr_text_related`, including the remaining
+second-side-button lookup error. The new Keys source identifies those labels
+without reproducing the language file.
+
+Fire and the amended `skill-1-0-mechanics` record distinguish paired spark
+bonuses and the Fire Bond gate from tinder, wetness and flame help in
+`gml_Object_UI_Draw_64`. Crafting's authored layout note cites that menu context
+and `gml_GlobalScript_scr_items.item_draw_info` on the version page's comparison.
+Death cites the Crawl branch in `gml_Object_obj_menu_Draw_64`, including its
+post-relocation zero-HP guard and separate recovery rolls, and the count-respecting
+distinct-cell `being_heal_burnt` helper. Save-list icon rebuilding is in
+`gml_Object_obj_menu_Alarm_11`.
+
+Resting cites sleeper entry's `free_tile` call in `gml_Object_UI_Draw_64`
+and all state-19 wetness ticks in `gml_Object_obj_player_Step_0`. Weather cites
+`player_rained_upon` and `player_gets_all_wet` in
+`gml_GlobalScript_scr_basic_useful`: sleeping gear's incoming-rain factor is
+`1 - waterproof / 2`, before existing filters, and both bag-transfer directions
+use half the item-area share. `wet_transfer` preserves absorption and target
+waterproofing constraints.
+
+Placing objects cites the full footprint, anchor, canopy and raft branches in
+`gml_Object_cursor_Draw_73`, including the 40-to-56-world-pixel midpoint range.
+Signed canopy shade loops are in `gml_Object_obj_station_Step_0`.
+Planting and Fort Solid Shorehold replace the obsolete 104-pixel exclusion
+with `nature_can_grow`'s 164-pixel radius and explicit placement flag:
+through quest stage 22 the exclusion applies to player planting too; later,
+only default/natural callers retain its 90% exclusion roll. World generation
+also records the removed pit pass in `dungeonlike_areas` for area types 24/25,
+not 26, and the resulting random-stream change. Saved terrain is not migrated.
+
+The version page labels silent Unicode filename, Chinese wrapping/case,
+font-rebuild and menu-audio changes separately from the announcement.
+Font glyph coverage is not translation completeness. All 413 sound assets and
+the 266 item, 44 being and 19 nature definitions are unchanged. Seven sprite
+frames changed: four flags, two container-information buttons and one Iron
+Cudgel weapon frame. The cudgel's unchanged inventory binding is
+`itemDB[157].sprite/pic`, `spr_ui_items16x48` frame 16, not the weapon frame.
+None of the changed frames supplies a wiki illustration. Profiles, grids,
+illustration hashes, recipes, loot and merchants remain intact; no File import,
+move or host runtime change is warranted. Earlier artwork and backup provenance
+remain historical, not claimed as new evidence.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

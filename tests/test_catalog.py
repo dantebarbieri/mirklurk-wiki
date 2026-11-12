@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 361)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 469)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 470)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 361)
@@ -626,7 +626,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.5.3")
+        self.assertEqual(self.data["game"]["build"], "0.9.5.5")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1155,12 +1155,12 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.5.3 pin, game build blanked.
+        # 0.9.5.5 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.5.3"', b'"build": null', 1,
+                b'"build": "0.9.5.5"', b'"build": null', 1,
             )).hexdigest(),
-            "b1c4053488c292d73f1f060e6cb7391677edae69b10e9efca0df7138093e2a3d",
+            "158fd9aab730f4726d9c793614ad3baa41d6f41d10c542b263ca4ff51fb738d0",
         )
 
 
@@ -1199,8 +1199,49 @@ class ProfileTests(unittest.TestCase):
             self.assertNotIn(prefix + "-0953", sources)
         self.assertEqual(sources["game-data-0950"]["build"], "0.9.5.0")
         self.assertIn("6 November 2026", pages["Version 0.9.5.3"])
-        self.assertIn("This wiki shows 0.9.5.3 values", pages["Version 0.9.5.3"])
+        self.assertIn("[[Version 0.9.5.5]]", pages["Version 0.9.5.3"])
         self.assertIn("[[Version 0.9.5.3]]", pages["Version 0.9.5.0"])
+
+    def test_patch_0955_combat_crawl_and_fire_guards_reach_readers(self):
+        data, catalog, details = load_publication_inputs(ROOT)
+        pages = build_pages(ROOT, data, catalog, details)
+        for title in ("Sharp", "Poison"):
+            self.assertIn("every row of rectangular combat grids", pages[title])
+            self.assertIn("armor and immunity rules still apply", pages[title])
+        self.assertIn("attacking creature's own attack pattern", pages["Combat basics"])
+        self.assertIn("existing chance and position checks remain", pages["Combat basics"])
+        death = pages["Death"]
+        for text in ("no HP left after", "distinct burnt cells", "separately rolls",
+                     "not itself an HP grant", "do not run if you still have HP"):
+            self.assertIn(text, death)
+        self.assertNotIn("but not burnt cells", death)
+        self.assertIn("unless both spark components are present", pages["Fire"])
+        self.assertIn("when both spark components are present", pages["Fire Bond"])
+        self.assertIn("positive contribution from an existing flame", pages["Fire"])
+
+    def test_patch_0955_generation_placement_and_wetness_boundaries(self):
+        data, catalog, details = load_publication_inputs(ROOT)
+        pages = build_pages(ROOT, data, catalog, details)
+        placement = pages["Placing objects"]
+        for text in ("56 world pixels instead of 40", "one 16-pixel tile",
+                     "Seed placement keeps its separate range", "anchor still cannot overlap"):
+            self.assertIn(text, placement)
+        world = pages["World generation"]
+        for text in ("first and second depths", "third depth is not part",
+                     "not automatically repaired", "164", "90% exclusion roll"):
+            self.assertIn(text, world)
+        self.assertNotIn("algorithms remain unchanged through", world)
+        planting = pages["Planting"]
+        self.assertIn("player placement skips this particular exclusion", planting)
+        self.assertIn("Other planting restrictions remain", planting)
+        self.assertNotIn("about six tiles", planting)
+        weather = pages["Weather"]
+        for text in ("in both directions", "one minus half", "0.6 multiplier, not rain immunity",
+                     "before the usual clothing filters", "does not halve every source"):
+            self.assertIn(text, weather)
+        self.assertIn("does not guarantee that you become drier", pages["Resting"])
+        self.assertIn("three gives you one and leaves two", pages["Controls"])
+        self.assertIn("single item is still picked up whole", pages["Controls"])
 
     def test_patch_0950_entities_grids_loot_and_art_are_exact(self):
         self.data, self.catalog, self.details = load_publication_inputs(ROOT)
@@ -1326,7 +1367,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("75% chance", skill)
         self.assertIn("Without an equipped shield", skill)
         self.assertIn("10.5% at rank 1", self.pages["Combat basics"])
-        self.assertIn("0.9.5.3", self.pages["Main Page"])
+        self.assertIn("0.9.5.5", self.pages["Main Page"])
         self.assertIn("29 October 2026", self.pages["Version 0.9.2.0"])
         sources = {row["id"]: row for row in self.data["sources"]}
         self.assertEqual(sources["game-data-0920"]["sha256"],
