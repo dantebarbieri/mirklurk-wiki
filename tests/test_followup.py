@@ -22,7 +22,7 @@ FACTIONS = {  # 0.8.9.9 moved Wilda and the Survivors into the camp faction (10)
     0: [5, 6, 8, 9, 12, 19, 20, 26, 33],
     3: [1, 2, 4, 7, 11, 17, 24, 25, 27, 29, 30],
     4: [0, 43], 5: [13, 14, 15, 16, 22, 32], 6: [21, 42], 7: [10, 23], 8: [28, 31, 41], 9: [3, 18],
-    10: [34, 35, 36], 11: [37, 38, 39, 40],
+    10: [34, 35, 36], 11: [37, 38, 39, 40], 12: [45, 46],
 }
 CAPACITY = {
     12: (35, 7, 5), 14: (49, 7, 7), 148: (56, 8, 7), 26: (72, 8, 9),
@@ -92,7 +92,7 @@ class FollowupTests(unittest.TestCase):
         # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers and float clears for this comparison, never for sync.
         digests = {
-            "Items": "65181a1ad9ef6775be5e9ae426f7bd1a90fe2adf5ff924c59d8766c27d5c9895",
+            "Items": "fd6ec56944d1aeb618fcf797d522b8fb9cf12f4aa08c215672b7e11d526d54ff",
             "Wooden Recorder": "cf5c04f52a8637f2aff1cfc47b9b75d0ed77326880ca4e22eace681423b1bc2c",
         }
         for title, digest in digests.items():
@@ -123,8 +123,8 @@ class FollowupTests(unittest.TestCase):
         self.assertEqual({row["id"]: {int(identity.split("-")[1]) for identity in row["members"]}
                           for row in factions}, {team: set(members) for team, members in FACTIONS.items()})
         groups = [row for row in primary_groups(self.catalog) if row["index"] == "Bestiary"]
-        self.assertEqual(len(groups), 8)
-        self.assertEqual(sum(len(row["members"]) for row in groups), 32)
+        self.assertEqual(len(groups), 9)
+        self.assertEqual(sum(len(row["members"]) for row in groups), 34)
         for faction in factions:
             title = faction["title"]
             index = "NPCs" if faction["id"] in {0, 10} else "Bestiary"

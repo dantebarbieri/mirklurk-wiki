@@ -1,0 +1,57 @@
+'''Version 0.9.6.5''' is the patch released on 19 November 2026, following the builds announced as 0.9.6.0, 0.9.6.1 and 0.9.6.2. This page covers their cumulative changes since [[Version 0.9.5.6]]; it does not assign unannounced changes to an individually compared intermediate build. This wiki shows 0.9.6.5 values.
+
+== New content ==
+=== Spider definitions and materials ===
+Not in the patch notes: [[Mirk Lurker]] and [[Deathlob]] have creature definitions, attacks and corpse drops. They share a spider faction. Their lootable corpses contain [[Spider Meat]] and [[Spider Silk]], but normal access to their spider-cave area is unconfirmed.
+
+[[Grilled Spider Meat]] restores the same 25 percentage points of satiation as raw Spider Meat, without its 5% base sickness risk. Both cost 2 AP to eat and stack to six. The grilled item's definition specifies one raw meat for one grilled meat at 2.4 base AP, but the Campfire menu does not list this option. Crafting access is unconfirmed.
+
+Spider Silk stacks to 20. No recipe using it is documented. [[Webbed treasure]] adds 8 to 20 silk, separately from its budgeted treasure roll; access to that treasure remains subject to the same cave limitation.
+
+== Changes ==
+=== Scaalmyr Geomancer ===
+The 0.9.6.0 announcement describes a [[Scaalmyr Geomancer]] rebalance. Its base XP falls from 300 to 200; its health grid grows from 5 x 3 to 5 x 4, with 20 rather than 15 armor layers. Detection and ranged distances both become 10 tiles, previously 7 and 8. Its ranged pattern's center now rolls 1 to 2 damage instead of 0 to 1; the eight outer cells remain 0 to 1.
+
+=== Languages and display ===
+Spanish support was announced with 0.9.6.0 on 16 November; Portuguese (Brazil) with 0.9.6.2 on 18 November. Both join English and Chinese in the language menu. The current installation contains five files for each language, including Chinese Nature labels. Availability does not establish complete or linguistically accurate translations.
+
+The Chinese font gains 48 glyphs, from 2,169 to 2,217; the main Latin font gains 17, from 123 to 140. Their individual additions are cumulative, not assigned to one intermediate build.
+
+[[Controls]] adds a 2560 x 1440 resolution preset and a Borderless toggle in 0.9.6.5. Borderless switches out of fullscreen and changes the window border. The developer describes it as a workaround; it is not a promise of native multi-monitor fullscreen. Balanced Zoom now uses the actual window dimensions in windowed mode.
+
+=== Fuel and inventories ===
+The [[Fire]] menu can select fuel from ordinary ground-loot or container inventories within 24 world pixels. The 0.9.6.0 announcement describes nearby fuel; 0.9.6.1 adds fuel-list scrolling and coalesced Item Used popups. The list now scrolls with arrows or the mouse wheel instead of growing indefinitely wider.
+
+Fuel consumption refreshes the ground-container picture, and stale selections leave both menu arrays together. Automatic inventory linking requires the same parent, rather than linking unrelated inventories. Partly offscreen menus have a wider right-edge grab allowance.
+
+=== Item artwork ===
+Not in the patch notes: the inventory pictures for [[Branch (Elderwort)]], [[Shabby Leather Leg Armor]], [[Steel Shield]] and [[Grilled Bat Meat]] change. Their item definitions are unchanged by these picture edits.
+
+=== Terrain and treasure ===
+Not in the patch notes: [[World generation]] evaluates an extra random check for otherwise valid ordinary cave candidates. The check's body is empty: it does not turn one third of caves into spider caves. Consuming that random draw can still change later placements.
+
+A separate spider-cave area contains a generator and spawn definitions, but normal entrance placement is unconfirmed. Its webs add a ground penalty for non-spiders; normal steps by non-spiders, including the player, clear the web. Spiders keep it intact and skip the ordinary ground-penalty grid.
+
+[[Loot tables]] now samples candidate item IDs through 287 instead of 283. Only three item definitions were added: this is not four new usable equipment items. Foods and materials remain excluded from ordinary treasure. The separate Unwanted pool can admit Grilled Spider Meat and Spider Silk; the Survivor pool can admit Spider Silk.
+
+== Fixes ==
+=== Combat, rest and exits ===
+The 0.9.6.0 one-tile melee fix lowers the generic fallback from 24 to 23 world pixels and the weapon-action allowance from its defined range plus 8 pixels to plus 7. It does not change every creature's base melee distance.
+
+Starting [[Resting|ground rest]] while walking stops the pending path. Movement speed is recalculated and clamped before a later path restart. Ihar's destination checks avoid the shipwreck's lower exit boundary, and loading him at or below that boundary moves him upward.
+
+The menu no longer offers Return to Game while the player is dead. Boats bob again; the FPS display uses a consistent color and avoids overlapping debug text.
+
+=== Fire-menu safety ===
+The 0.9.6.5 menu guard closes an incomplete fire or torch menu before accessing its four required slots. This addresses the announced crash area, without promising that every rare torch crash is eliminated.
+
+Merely adding fuel without both spark tools selected no longer takes the cutting-injury branch. Normal spark-tool accident checks remain.
+
+=== Saves and resources ===
+Not in the patch notes: creating Gurb-Gurb's hollow, Ihar's shipwreck or the Survivors' camp now requests a save. Their placement rules are not redesigned by this change. Blank save-buffer contents produce an empty array, and the zero-size buffer is released.
+
+English startup now regenerates all five language files, restoring the Nature writer omitted in 0.9.5.5 and 0.9.5.6. English Nature's contents remain unchanged. Other languages are packaged files; startup only inserts a missing Borderless interface key where needed.
+
+Not in the patch notes: spider animations and sounds, web effects and embedded achievement artwork expand. Artwork alone does not establish another usable spider, new equipment definitions or live Steam achievement unlocks.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

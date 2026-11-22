@@ -1650,7 +1650,7 @@ def build_pages(root, data, catalog=None, details=None):
                 if recipe["owner_item"] == identity:
                     pages[title] += construction_table(recipe, images, entities, locations, shown[recipe["id"]])
             offers = [entry for entry in entries if entry["kind"] == "merchant" and entry["details"]["item"] == identity]
-            if identity in price_items:
+            if offers and identity in price_items:
                 pages[title] += "\n=== Buying ===\n" + (
                     "Merchants sell it at its [[#price|Value]].\n" if span("price") in pages[title] else
                     span("price") + VALUE_LINK + ": " + selective_view(price_text(prices.get(identity), images), "price", default=True)
