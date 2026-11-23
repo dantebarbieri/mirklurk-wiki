@@ -267,6 +267,31 @@ Import only that isolated batch through the guarded operator workflow before
 publication. The register contains 409 records and 329 crops; the other
 400 records are unchanged.
 
+## Version 0.9.9.7 tester icons
+
+Thirteen newly defined tester items require inventory icons; none replace the
+stable 409-record/329-crop register. Their 13 crop records are isolated in
+`tester.json`, and the new canonical item pages are explicitly beta-only.
+The exact `sprite/pic` selections are 32x48 frames 37-42, 32x32 frames 49-50,
+16x64 frames 5-7 and 16x32 frames 36-37. These are the definition mappings,
+not a selection based on filenames or the announcement's approximate count.
+
+The 267 registered stable inventory-frame signatures were compared using
+normalized RGBA pixels; no selected beta icon matches a registered stable icon.
+Each native frame is integer-nearest-neighbor enlarged, transparent RGB
+normalized to zero and cropped at alpha bounds. Pillow and System.Drawing
+independently check all 26 originals/crops pixel-for-pixel, including scaling,
+crop bounds and byte hashes; the contact sheet was visually inspected.
+Existing developer permission and attribution wording are retained.
+
+The isolated operator batch contains only those 26 PNGs and their 26 credit
+sidecars. Original and cropped File titles follow the canonical new item
+names. No File moves, stable replacements, binaries, raw textures or native
+frames are imported. The actual guarded prebackup/dry/apply/served-byte and
+WikiAdmin attribution checks plus postwrite paired backup must be accepted
+before publishing the tester pages. Synthetic Docker fixtures cover these
+additional crops without altering stable entity/image defaults.
+
 ## Site branding
 
 On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and

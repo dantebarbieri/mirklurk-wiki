@@ -137,7 +137,8 @@ class HealingAbilityTests(unittest.TestCase):
         self.assertIs(portrait, image_for("being-19", [image, portrait]))
         self.assertNotIn("Viend ability (healing popup).png", page.split("== <nowiki>Healing", 1)[0])
         from smoke_deploy import require_image_coverage, synthetic_image_specs
-        specs = synthetic_image_specs(self.data)
+        from wiki_tester import load_tester
+        specs = synthetic_image_specs(self.data, load_tester(ROOT, self.data)["data"]["illustrations"])
         self.assertEqual(specs["Viend ability (healing popup).png"][:2], (64, 64))
         require_image_coverage(specs, self.pages)
 

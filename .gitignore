@@ -20,6 +20,7 @@
 !/content/facts/entity_details.json
 !/content/facts/illustrations.json
 !/content/facts/acquisition.json
+!/content/facts/tester.json
 !/content/pages/
 !/content/pages/Main_Page.wiki
 !/content/pages/Getting_started.wiki
@@ -45,6 +46,7 @@
 !/content/pages/Version_0.9.5.5.wiki
 !/content/pages/Version_0.9.5.6.wiki
 !/content/pages/Version_0.9.6.5.wiki
+!/content/pages/Version_0.9.9.7.wiki
 !/content/pages/Version_0.9.6.0.wiki
 !/content/pages/Version_0.9.6.1.wiki
 !/content/pages/Version_0.9.6.2.wiki
@@ -76,6 +78,7 @@
 !/tools/wiki_anchors.py
 !/tools/wiki_catalog.py
 !/tools/wiki_details.py
+!/tools/wiki_tester.py
 !/tools/wiki_render.py
 !/tools/wiki_portal.py
 !/tools/wiki_families.py
@@ -101,6 +104,7 @@
 !/tests/test_anchors.py
 !/tests/test_catalog.py
 !/tests/test_views.py
+!/tests/test_tester.py
 !/tests/test_loot_views.py
 !/tests/test_landmarks.py
 !/tests/test_camp.py

@@ -114,7 +114,7 @@ class DisplayTests(unittest.TestCase):
     def test_grid_migration_has_only_the_authorized_templates(self):
         articles = {title: text for title, text in self.pages.items() if title not in DISPLAY_TITLES}
         self.assertEqual(sum(text.count("{{Health grid|") for text in articles.values()), 46)
-        self.assertEqual(sum(text.count("{{Attack grid|") for text in articles.values()), 102)
+        self.assertEqual(sum(text.count("{{Attack grid|") for text in articles.values()), 107)
         self.assertEqual(sum(text.count("|label=Ranged attack}}") for text in articles.values()), 8)
         self.assertFalse(any('class="mirklurk-cell-grid"' in text for text in articles.values()))
         for title in ("Sceetler", "Nightmare"):

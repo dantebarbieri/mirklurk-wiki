@@ -1,0 +1,2283 @@
+{
+  "schema_version": 1,
+  "stable_build": "0.9.6.5",
+  "channel": "next_version_tester",
+  "data": {
+    "schema_version": 1,
+    "game": {
+      "name": "MirkLurk",
+      "developer": null,
+      "build": "0.9.9.7",
+      "steam_app_id": 3972980
+    },
+    "sources": [
+      {
+        "id": "game-data-0997",
+        "path": "data.win",
+        "sha256": "080a8aa55f78ac94ed01be77379fba4b89b4cd281f33d8cf6d10177afad96d15",
+        "build": "0.9.9.7"
+      },
+      {
+        "id": "beings-en-0997",
+        "path": "Languages\\English\\Bestiary.ini",
+        "sha256": "e889d4f114fdf048f8efec7856922883fb49ee8c080f462e98b5791c37035826",
+        "build": "0.9.9.7"
+      },
+      {
+        "id": "items-en-0997",
+        "path": "Languages\\English\\Items.ini",
+        "sha256": "c3368c5d86a9510ac24b90d9c9257a386a6c137758b8fc175ff3e36040a30714",
+        "build": "0.9.9.7"
+      },
+      {
+        "id": "keys-en-0997",
+        "path": "Languages\\English\\Keys.ini",
+        "sha256": "656d818df7d552be8ee77c356fe76489787cf0b2f8c8a1a88b6f4a189494687a",
+        "build": "0.9.9.7"
+      },
+      {
+        "id": "nature-en-0997",
+        "path": "Languages\\English\\Nature.ini",
+        "sha256": "5b2910545b5d441ea947fca4f0221e1485c861911d4bac6f9650d64e123b8303",
+        "build": "0.9.9.7"
+      },
+      {
+        "id": "ui-en-0997",
+        "path": "Languages\\English\\UI.ini",
+        "sha256": "2eab235332e055670e71ae24c17166fc3598d48ab9df80b861ad56aa34ab01dc",
+        "build": "0.9.9.7"
+      }
+    ],
+    "entities": [
+      {
+        "id": "item-280",
+        "category": "item",
+        "name": "Iron Shield",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "280"
+          }
+        ]
+      },
+      {
+        "id": "item-281",
+        "category": "item",
+        "name": "Iron Chestplate",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "281"
+          }
+        ]
+      },
+      {
+        "id": "item-282",
+        "category": "item",
+        "name": "Steel Buckler",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "282"
+          }
+        ]
+      },
+      {
+        "id": "item-283",
+        "category": "item",
+        "name": "Wooden Shield",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "283"
+          }
+        ]
+      },
+      {
+        "id": "item-288",
+        "category": "item",
+        "name": "Battle Hammer",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "288"
+          }
+        ]
+      },
+      {
+        "id": "item-289",
+        "category": "item",
+        "name": "Halfmoon Axe",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "289"
+          }
+        ]
+      },
+      {
+        "id": "item-290",
+        "category": "item",
+        "name": "War Mace",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "290"
+          }
+        ]
+      },
+      {
+        "id": "item-291",
+        "category": "item",
+        "name": "Well Tailored Socks",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "291"
+          }
+        ]
+      },
+      {
+        "id": "item-292",
+        "category": "item",
+        "name": "Laughable Socks",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "292"
+          }
+        ]
+      },
+      {
+        "id": "item-293",
+        "category": "item",
+        "name": "Well Tailored Shirt",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "293"
+          }
+        ]
+      },
+      {
+        "id": "item-294",
+        "category": "item",
+        "name": "Well Tailored Pants",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "294"
+          }
+        ]
+      },
+      {
+        "id": "item-295",
+        "category": "item",
+        "name": "Hand Sickle",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "295"
+          }
+        ]
+      },
+      {
+        "id": "item-296",
+        "category": "item",
+        "name": "Sturdy Shortbow",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "296"
+          }
+        ]
+      }
+    ],
+    "facts": [],
+    "illustrations": [
+      {
+        "id": "item-280-tester-illustration",
+        "entity": "item-280",
+        "file_title": "File:Iron Shield icon (cropped).png",
+        "caption": "Iron Shield inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "c3e63631983444d5f4dc846076cd345fc85f7b83b0073a37dacbe24bc3e3be8d",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[280].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "280"
+          }
+        ],
+        "pixel_art": {
+          "width": 150,
+          "height": 205,
+          "source_scale": 5
+        },
+        "cropped_from": {
+          "file_title": "File:Iron Shield icon.png",
+          "sha256": "5558872585b3763651875a61f8701acf34c289d0300ef3baab0ba1603b1ff471",
+          "pixel_art": {
+            "width": 160,
+            "height": 240,
+            "source_scale": 5
+          },
+          "left": 5,
+          "top": 20
+        }
+      },
+      {
+        "id": "item-281-tester-illustration",
+        "entity": "item-281",
+        "file_title": "File:Iron Chestplate icon (cropped).png",
+        "caption": "Iron Chestplate inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "5b4be874204d02f880d194fa4e09901faec14cfd373ccb57ec37d6704223d839",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[281].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "281"
+          }
+        ],
+        "pixel_art": {
+          "width": 155,
+          "height": 195,
+          "source_scale": 5
+        },
+        "cropped_from": {
+          "file_title": "File:Iron Chestplate icon.png",
+          "sha256": "98eaeceb384de4d4e8546bfb6927b7fcded0030df0004932d400cf8e68b6da76",
+          "pixel_art": {
+            "width": 160,
+            "height": 240,
+            "source_scale": 5
+          },
+          "left": 0,
+          "top": 30
+        }
+      },
+      {
+        "id": "item-282-tester-illustration",
+        "entity": "item-282",
+        "file_title": "File:Steel Buckler icon (cropped).png",
+        "caption": "Steel Buckler inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "a8ba696e7a3d14ceade6f24a35818d13dfe113be881157f13c1f8ef7fc2818fe",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[282].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "282"
+          }
+        ],
+        "pixel_art": {
+          "width": 192,
+          "height": 208,
+          "source_scale": 8
+        },
+        "cropped_from": {
+          "file_title": "File:Steel Buckler icon.png",
+          "sha256": "90162ca0550a88f917b29b3f747574cd85ee40f8f3732c64dc463e0328da0748",
+          "pixel_art": {
+            "width": 256,
+            "height": 256,
+            "source_scale": 8
+          },
+          "left": 24,
+          "top": 24
+        }
+      },
+      {
+        "id": "item-283-tester-illustration",
+        "entity": "item-283",
+        "file_title": "File:Wooden Shield icon (cropped).png",
+        "caption": "Wooden Shield inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "86c329bdfdf43f51884b7d3f615ff78f345d5580c035674f4d824cdee143102c",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[283].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "283"
+          }
+        ],
+        "pixel_art": {
+          "width": 150,
+          "height": 205,
+          "source_scale": 5
+        },
+        "cropped_from": {
+          "file_title": "File:Wooden Shield icon.png",
+          "sha256": "bb4cbe244c9f92bd70a0b9529ddce4f4fe595a93e9f8eebd0c5d2f4584404212",
+          "pixel_art": {
+            "width": 160,
+            "height": 240,
+            "source_scale": 5
+          },
+          "left": 5,
+          "top": 20
+        }
+      },
+      {
+        "id": "item-288-tester-illustration",
+        "entity": "item-288",
+        "file_title": "File:Battle Hammer icon (cropped).png",
+        "caption": "Battle Hammer inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "586d01990882053f92cbd2f048d51382eb7c0a997883d1321ca386db15865deb",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[288].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "288"
+          }
+        ],
+        "pixel_art": {
+          "width": 56,
+          "height": 228,
+          "source_scale": 4
+        },
+        "cropped_from": {
+          "file_title": "File:Battle Hammer icon.png",
+          "sha256": "72e8d429517c90416bd17188e68806055689d1195a2b124ba37e51a144c79e3a",
+          "pixel_art": {
+            "width": 64,
+            "height": 256,
+            "source_scale": 4
+          },
+          "left": 4,
+          "top": 20
+        }
+      },
+      {
+        "id": "item-289-tester-illustration",
+        "entity": "item-289",
+        "file_title": "File:Halfmoon Axe icon (cropped).png",
+        "caption": "Halfmoon Axe inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "d413d7e74d6553a82d2d47120b60b1f79f8dac3d00a7f857f3cc6172e0d9a77a",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[289].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "289"
+          }
+        ],
+        "pixel_art": {
+          "width": 52,
+          "height": 244,
+          "source_scale": 4
+        },
+        "cropped_from": {
+          "file_title": "File:Halfmoon Axe icon.png",
+          "sha256": "6ca42b54369763c41af9838822902196fac838096623f8f267b00d3a479ef93c",
+          "pixel_art": {
+            "width": 64,
+            "height": 256,
+            "source_scale": 4
+          },
+          "left": 8,
+          "top": 4
+        }
+      },
+      {
+        "id": "item-290-tester-illustration",
+        "entity": "item-290",
+        "file_title": "File:War Mace icon (cropped).png",
+        "caption": "War Mace inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "d9e4b4f17a37f87303a0ec109d18806bc6ce2da0bb7aec6c1e8af3f9ebe4ec6b",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[290].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "290"
+          }
+        ],
+        "pixel_art": {
+          "width": 52,
+          "height": 252,
+          "source_scale": 4
+        },
+        "cropped_from": {
+          "file_title": "File:War Mace icon.png",
+          "sha256": "a286f029ac70c74b8f9faa38ef00079dd6db3abfe2d2afca740e41748ccdb1d6",
+          "pixel_art": {
+            "width": 64,
+            "height": 256,
+            "source_scale": 4
+          },
+          "left": 8,
+          "top": 0
+        }
+      },
+      {
+        "id": "item-291-tester-illustration",
+        "entity": "item-291",
+        "file_title": "File:Well Tailored Socks icon (cropped).png",
+        "caption": "Well Tailored Socks inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "40276b554ce35eab1a3c5ae8f4191a734ea3e962599c0380d97c9f544ddb84e7",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[291].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "291"
+          }
+        ],
+        "pixel_art": {
+          "width": 88,
+          "height": 216,
+          "source_scale": 8
+        },
+        "cropped_from": {
+          "file_title": "File:Well Tailored Socks icon.png",
+          "sha256": "cabdb41b048435c7e0833b6ffe754aaa772957b648f4f95a002227d9531276b3",
+          "pixel_art": {
+            "width": 128,
+            "height": 256,
+            "source_scale": 8
+          },
+          "left": 16,
+          "top": 16
+        }
+      },
+      {
+        "id": "item-292-tester-illustration",
+        "entity": "item-292",
+        "file_title": "File:Laughable Socks icon (cropped).png",
+        "caption": "Laughable Socks inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "8d1457b46b30412a2e62fb508f0b11c7b250a15c6d85726075584d4c48a6ba10",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[292].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "292"
+          }
+        ],
+        "pixel_art": {
+          "width": 96,
+          "height": 224,
+          "source_scale": 8
+        },
+        "cropped_from": {
+          "file_title": "File:Laughable Socks icon.png",
+          "sha256": "2d8abb58074f78aa10fce57804f822e4f551a05ef1f323c54020ff0936e9ece8",
+          "pixel_art": {
+            "width": 128,
+            "height": 256,
+            "source_scale": 8
+          },
+          "left": 16,
+          "top": 16
+        }
+      },
+      {
+        "id": "item-293-tester-illustration",
+        "entity": "item-293",
+        "file_title": "File:Well Tailored Shirt icon (cropped).png",
+        "caption": "Well Tailored Shirt inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "d3ba8f1f01ca260a59a8e5b716d7960955af64c66f7228459645e1f39ca6fafc",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[293].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "293"
+          }
+        ],
+        "pixel_art": {
+          "width": 140,
+          "height": 185,
+          "source_scale": 5
+        },
+        "cropped_from": {
+          "file_title": "File:Well Tailored Shirt icon.png",
+          "sha256": "6eb7ad39387da14db24fe056c2619e1f0ba716b7a25c4e134908e26c68fd34b7",
+          "pixel_art": {
+            "width": 160,
+            "height": 240,
+            "source_scale": 5
+          },
+          "left": 10,
+          "top": 30
+        }
+      },
+      {
+        "id": "item-294-tester-illustration",
+        "entity": "item-294",
+        "file_title": "File:Well Tailored Pants icon (cropped).png",
+        "caption": "Well Tailored Pants inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "36ba83a1a7e9fca7bff453a132a56d2bc7d5b7df85e636aa530188a1508af642",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[294].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "294"
+          }
+        ],
+        "pixel_art": {
+          "width": 95,
+          "height": 215,
+          "source_scale": 5
+        },
+        "cropped_from": {
+          "file_title": "File:Well Tailored Pants icon.png",
+          "sha256": "1d819b65cfdf8f06e752c364c654607f7f0de4801d23364bfd4a6c24d1580055",
+          "pixel_art": {
+            "width": 160,
+            "height": 240,
+            "source_scale": 5
+          },
+          "left": 35,
+          "top": 15
+        }
+      },
+      {
+        "id": "item-295-tester-illustration",
+        "entity": "item-295",
+        "file_title": "File:Hand Sickle icon (cropped).png",
+        "caption": "Hand Sickle inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "396590c1caf913b2e87c4749753a43f4c05d6c00144d8208566fff2ea21922c1",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[295].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "295"
+          }
+        ],
+        "pixel_art": {
+          "width": 200,
+          "height": 240,
+          "source_scale": 8
+        },
+        "cropped_from": {
+          "file_title": "File:Hand Sickle icon.png",
+          "sha256": "649060848b3be2e49981321990333cc28b73b4c9a48d9bf35b70a9aa3b40d50a",
+          "pixel_art": {
+            "width": 256,
+            "height": 256,
+            "source_scale": 8
+          },
+          "left": 24,
+          "top": 8
+        }
+      },
+      {
+        "id": "item-296-tester-illustration",
+        "entity": "item-296",
+        "file_title": "File:Sturdy Shortbow icon (cropped).png",
+        "caption": "Sturdy Shortbow inventory icon (0.9.9.7 tester).",
+        "creator": "Edym Pixels",
+        "sha256": "77a6e6d3fd41897672e9314c585f35da4e596e8aa6f0adec56cf8138d5225090",
+        "rights_status": "approved",
+        "rights_basis": "Developer permission for public-wiki display of game artwork and screenshots",
+        "rights_note": "The wiki operator confirmed on 2026-10-14 that the developer created the game's artwork and has approved artwork and screenshots on the wiki. This is not a license to redistribute game assets through the source repository.",
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[296].sprite/pic"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "296"
+          }
+        ],
+        "pixel_art": {
+          "width": 135,
+          "height": 225,
+          "source_scale": 5
+        },
+        "cropped_from": {
+          "file_title": "File:Sturdy Shortbow icon.png",
+          "sha256": "a8fea28a21eacc080982bc3140c4ce180a9d575e89fe02938146bc16dd4d1c81",
+          "pixel_art": {
+            "width": 160,
+            "height": 240,
+            "source_scale": 5
+          },
+          "left": 20,
+          "top": 5
+        }
+      }
+    ]
+  },
+  "details": {
+    "schema_version": 1,
+    "properties": [
+      {
+        "id": "burn-time",
+        "label": "Declared burn duration",
+        "unit": "internal burn-time units",
+        "description": "Initial fuel duration; the consuming action controls how it is converted to active fire time."
+      },
+      {
+        "id": "chopping-capability",
+        "label": "Chopping capability",
+        "unit": "internal units",
+        "description": "The tool's chopping parameter; some recipes test it as a nonconsumed tool requirement."
+      },
+      {
+        "id": "craft-ap-cost",
+        "label": "Base crafting cost",
+        "unit": "AP",
+        "description": "The recipe's declared AP cost before station and skill reductions."
+      },
+      {
+        "id": "craft-yield",
+        "label": "Base recipe yield",
+        "unit": "items",
+        "description": "The declared crafting yield; in-place actions such as Finish Raft are not ordinary inventory outputs."
+      },
+      {
+        "id": "cutting-capability",
+        "label": "Cutting capability",
+        "unit": "internal units",
+        "description": "The tool's cutting parameter, before action-specific calculations."
+      },
+      {
+        "id": "damage-class-id",
+        "label": "Damage class identifier",
+        "unit": "internal ID",
+        "description": "Identifier corresponding to the game's damage-type records, not a damage amount."
+      },
+      {
+        "id": "durability-max",
+        "label": "Base maximum durability",
+        "unit": "durability units",
+        "description": "Declared maximum durability, not the condition of an individual generated or used item."
+      },
+      {
+        "id": "initial-price",
+        "label": "Initializer value",
+        "unit": "internal value units",
+        "description": "Literal database value before recipe postprocessing, durability and trade adjustments; not a guaranteed merchant price."
+      },
+      {
+        "id": "initial-weight",
+        "label": "Initializer weight",
+        "unit": "internal weight units",
+        "description": "Literal weight before the recipe postprocessing pass and runtime modifiers."
+      },
+      {
+        "id": "insulation",
+        "label": "Insulation parameter",
+        "unit": "internal fraction",
+        "description": "The declared insulation parameter, before equipment and environmental effects."
+      },
+      {
+        "id": "item-ap-cost",
+        "label": "Base item action cost",
+        "unit": "AP",
+        "description": "The initializer's general item action-cost field; particular actions and skills may use or modify it differently."
+      },
+      {
+        "id": "item-armor",
+        "label": "Declared armor",
+        "unit": "internal armor units",
+        "description": "Armor field on the item definition; placement and combat rules determine its effect."
+      },
+      {
+        "id": "melee-pattern-max",
+        "label": "Melee pattern total maximum",
+        "unit": "damage units",
+        "description": "Sum of encoded positive pattern cells, before target overlap, armor and modifiers; not guaranteed actual damage per attack."
+      },
+      {
+        "id": "melee-pattern-min",
+        "label": "Melee pattern total minimum",
+        "unit": "damage units",
+        "description": "Sum of encoded positive pattern cells, before target overlap, armor and modifiers; not guaranteed actual damage per attack."
+      },
+      {
+        "id": "spark-chance",
+        "label": "Declared spark chance",
+        "unit": "0-1 fraction",
+        "description": "An ignition component, not the overall chance to light a fire."
+      },
+      {
+        "id": "stack-limit",
+        "label": "Base stack limit",
+        "unit": "items",
+        "description": "Maximum stack count declared by the initializer."
+      },
+      {
+        "id": "waterproof",
+        "label": "Waterproofing parameter",
+        "unit": "internal fraction",
+        "description": "The declared waterproofing parameter used by wetness and drying logic."
+      },
+      {
+        "id": "equip-ap-cost",
+        "label": "Equip cost",
+        "unit": "AP",
+        "description": "Base equipment action cost from the item's inventory footprint, distinct from attacking or using the item."
+      },
+      {
+        "id": "tile-range",
+        "label": "Attack range",
+        "unit": "tiles",
+        "description": "Literal weapon reach from the item definition, measured in tiles."
+      },
+      {
+        "id": "block-chance",
+        "label": "Base block chance",
+        "unit": "0-1 fraction",
+        "description": "Innate chance to stop a whole attack; Shield Savant adds to an equipped shield's value."
+      }
+    ],
+    "profiles": [
+      {
+        "id": "item-280-tester-profile",
+        "entity": "item-280",
+        "values": {
+          "initial-weight": 3.75,
+          "initial-price": 7.5,
+          "durability-max": 150,
+          "stack-limit": 1,
+          "block-chance": 0.12,
+          "item-armor": 4,
+          "spark-chance": 0.15,
+          "equip-ap-cost": 2.4
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[280].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "280"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-281-tester-profile",
+        "entity": "item-281",
+        "values": {
+          "initial-weight": 4.25,
+          "initial-price": 8.75,
+          "durability-max": 150,
+          "stack-limit": 1,
+          "item-armor": 5,
+          "insulation": 0.05,
+          "waterproof": 0.4,
+          "spark-chance": 0.15,
+          "equip-ap-cost": 2.4
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[281].type/weight/price/durabilityMax/stackLimit/armor/insulation/waterproof/sparkChance/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "281"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-282-tester-profile",
+        "entity": "item-282",
+        "values": {
+          "initial-weight": 2,
+          "initial-price": 4,
+          "durability-max": 250,
+          "stack-limit": 1,
+          "block-chance": 0.08,
+          "item-armor": 3.5,
+          "spark-chance": 0.25,
+          "equip-ap-cost": 1.6
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[282].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "282"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-283-tester-profile",
+        "entity": "item-283",
+        "values": {
+          "initial-weight": 2,
+          "initial-price": 2.5,
+          "durability-max": 65,
+          "stack-limit": 1,
+          "block-chance": 0.12,
+          "item-armor": 2.5,
+          "equip-ap-cost": 2.4
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[283].type/weight/price/durabilityMax/stackLimit/blockChance/armor/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "283"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-288-tester-profile",
+        "entity": "item-288",
+        "values": {
+          "initial-weight": 1.25,
+          "initial-price": 10.5,
+          "durability-max": 175,
+          "stack-limit": 1,
+          "spark-chance": 0.2,
+          "damage-class-id": 15,
+          "item-ap-cost": 6.4,
+          "tile-range": 1.5,
+          "equip-ap-cost": 1.6,
+          "melee-pattern-min": 7,
+          "melee-pattern-max": 12
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[288].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/sparkChance/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "288"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-289-tester-profile",
+        "entity": "item-289",
+        "values": {
+          "initial-weight": 1.15,
+          "initial-price": 11.5,
+          "durability-max": 175,
+          "stack-limit": 1,
+          "spark-chance": 0.25,
+          "chopping-capability": 3,
+          "cutting-capability": 1.5,
+          "damage-class-id": 16,
+          "item-ap-cost": 6.4,
+          "tile-range": 1.5,
+          "equip-ap-cost": 1.6,
+          "melee-pattern-min": 8,
+          "melee-pattern-max": 11
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[289].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "289"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-290-tester-profile",
+        "entity": "item-290",
+        "values": {
+          "initial-weight": 1.5,
+          "initial-price": 11.5,
+          "durability-max": 200,
+          "stack-limit": 1,
+          "spark-chance": 0.25,
+          "chopping-capability": 1.25,
+          "cutting-capability": 1.25,
+          "damage-class-id": 16,
+          "item-ap-cost": 6.4,
+          "tile-range": 1.5,
+          "equip-ap-cost": 1.6,
+          "melee-pattern-min": 14,
+          "melee-pattern-max": 19
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[290].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "290"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-291-tester-profile",
+        "entity": "item-291",
+        "values": {
+          "initial-weight": 0.1,
+          "initial-price": 1.2,
+          "durability-max": 65,
+          "stack-limit": 1,
+          "item-armor": 0.2,
+          "insulation": 0.8,
+          "waterproof": 0.9,
+          "burn-time": 2.8,
+          "equip-ap-cost": 0.8
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[291].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "291"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-292-tester-profile",
+        "entity": "item-292",
+        "values": {
+          "initial-weight": 0.1,
+          "initial-price": 0.02,
+          "durability-max": 15,
+          "stack-limit": 1,
+          "item-armor": 0,
+          "insulation": 0.1,
+          "waterproof": 0.05,
+          "burn-time": 0.8,
+          "equip-ap-cost": 0.8
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[292].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "292"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-293-tester-profile",
+        "entity": "item-293",
+        "values": {
+          "initial-weight": 1,
+          "initial-price": 3.5,
+          "durability-max": 80,
+          "stack-limit": 1,
+          "item-armor": 0.8,
+          "insulation": 0.65,
+          "waterproof": 0.8,
+          "burn-time": 3.4,
+          "equip-ap-cost": 2.4
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[293].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "293"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-294-tester-profile",
+        "entity": "item-294",
+        "values": {
+          "initial-weight": 0.8,
+          "initial-price": 3.5,
+          "durability-max": 80,
+          "stack-limit": 1,
+          "item-armor": 0.8,
+          "insulation": 0.65,
+          "waterproof": 0.8,
+          "burn-time": 3.6,
+          "equip-ap-cost": 2.4
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[294].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "294"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-295-tester-profile",
+        "entity": "item-295",
+        "values": {
+          "initial-weight": 0.55,
+          "initial-price": 4,
+          "durability-max": 90,
+          "stack-limit": 1,
+          "spark-chance": 0.2,
+          "chopping-capability": 1.6,
+          "cutting-capability": 2,
+          "damage-class-id": 14,
+          "item-ap-cost": 5,
+          "tile-range": 1.5,
+          "equip-ap-cost": 1.6,
+          "melee-pattern-min": 4,
+          "melee-pattern-max": 6
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[295].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "295"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      },
+      {
+        "id": "item-296-tester-profile",
+        "entity": "item-296",
+        "values": {
+          "initial-weight": 0.65,
+          "initial-price": 4.25,
+          "durability-max": 90,
+          "stack-limit": 1,
+          "burn-time": 2.6,
+          "damage-class-id": 17,
+          "item-ap-cost": 6,
+          "tile-range": 13,
+          "craft-ap-cost": 8,
+          "craft-yield": 1,
+          "equip-ap-cost": 2.4,
+          "melee-pattern-min": 3,
+          "melee-pattern-max": 6
+        },
+        "confidence": "inferred",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[296].type/weight/price/durabilityMax/stackLimit/burnTime/damageClass/apCost/attackPattern/tileRange/craftCost/craftReturn/equipCost"
+          },
+          {
+            "source": "items-en-0997",
+            "section": "ItemTitles",
+            "key": "296"
+          },
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_obj_player_Create_0",
+            "key": "myCraftingMenu.item296"
+          },
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[296].components/craftCost/craftReturn;postprocessing.weight/price"
+          }
+        ],
+        "context": "0.9.9.7 tester-only literal definition values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+      }
+    ],
+    "grids": [
+      {
+        "id": "item-288-tester-pattern",
+        "entity": "item-288",
+        "kind": "melee",
+        "rows": [
+          [
+            null,
+            {
+              "min": 1,
+              "max": 2
+            },
+            null
+          ],
+          [
+            null,
+            {
+              "min": 1,
+              "max": 2
+            },
+            null
+          ],
+          [
+            {
+              "min": 1,
+              "max": 2
+            },
+            {
+              "min": 2,
+              "max": 2
+            },
+            {
+              "min": 1,
+              "max": 2
+            }
+          ],
+          [
+            null,
+            {
+              "min": 1,
+              "max": 2
+            },
+            null
+          ]
+        ],
+        "confidence": "inferred",
+        "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[288].attackPattern/postprocessing.damage"
+          }
+        ]
+      },
+      {
+        "id": "item-289-tester-pattern",
+        "entity": "item-289",
+        "kind": "melee",
+        "rows": [
+          [
+            {
+              "min": 1,
+              "max": 2
+            },
+            null
+          ],
+          [
+            null,
+            {
+              "min": 2,
+              "max": 2
+            }
+          ],
+          [
+            null,
+            {
+              "min": 2,
+              "max": 3
+            }
+          ],
+          [
+            null,
+            {
+              "min": 2,
+              "max": 2
+            }
+          ],
+          [
+            {
+              "min": 1,
+              "max": 2
+            },
+            null
+          ]
+        ],
+        "confidence": "inferred",
+        "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[289].attackPattern/postprocessing.damage"
+          }
+        ]
+      },
+      {
+        "id": "item-290-tester-pattern",
+        "entity": "item-290",
+        "kind": "melee",
+        "rows": [
+          [
+            {
+              "min": 1,
+              "max": 2
+            },
+            null,
+            null,
+            null,
+            {
+              "min": 1,
+              "max": 2
+            }
+          ],
+          [
+            null,
+            {
+              "min": 2,
+              "max": 2
+            },
+            null,
+            {
+              "min": 2,
+              "max": 2
+            },
+            null
+          ],
+          [
+            null,
+            null,
+            {
+              "min": 2,
+              "max": 3
+            },
+            null,
+            null
+          ],
+          [
+            null,
+            {
+              "min": 2,
+              "max": 2
+            },
+            null,
+            {
+              "min": 2,
+              "max": 2
+            },
+            null
+          ],
+          [
+            {
+              "min": 1,
+              "max": 2
+            },
+            null,
+            null,
+            null,
+            {
+              "min": 1,
+              "max": 2
+            }
+          ]
+        ],
+        "confidence": "inferred",
+        "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[290].attackPattern/postprocessing.damage"
+          }
+        ]
+      },
+      {
+        "id": "item-295-tester-pattern",
+        "entity": "item-295",
+        "kind": "melee",
+        "rows": [
+          [
+            null,
+            {
+              "min": 1,
+              "max": 2
+            },
+            null
+          ],
+          [
+            {
+              "min": 2,
+              "max": 2
+            },
+            null,
+            {
+              "min": 1,
+              "max": 2
+            }
+          ]
+        ],
+        "confidence": "inferred",
+        "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[295].attackPattern/postprocessing.damage"
+          }
+        ]
+      },
+      {
+        "id": "item-296-tester-pattern",
+        "entity": "item-296",
+        "kind": "melee",
+        "rows": [
+          [
+            {
+              "min": 1,
+              "max": 2
+            },
+            null,
+            null
+          ],
+          [
+            null,
+            {
+              "min": 1,
+              "max": 2
+            },
+            null
+          ],
+          [
+            null,
+            null,
+            {
+              "min": 1,
+              "max": 2
+            }
+          ]
+        ],
+        "confidence": "inferred",
+        "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+        "evidence": [
+          {
+            "source": "game-data-0997",
+            "section": "gml_Object_databank_Alarm_1",
+            "key": "itemDB[296].attackPattern/postprocessing.damage"
+          }
+        ]
+      }
+    ]
+  },
+  "item_notes": [
+    {
+      "entity": "item-280",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[280].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "280"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-281",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[281].type/weight/price/durabilityMax/stackLimit/armor/insulation/waterproof/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "281"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-282",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[282].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "282"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-283",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[283].type/weight/price/durabilityMax/stackLimit/blockChance/armor/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "283"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-288",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.",
+        "Its base attack uses [[Blunt]] damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[288].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "288"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-289",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.",
+        "Its base attack uses [[Force]] damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[289].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "289"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-290",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.",
+        "Its base attack uses [[Force]] damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[290].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "290"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-291",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[291].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "291"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-292",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[292].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "292"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-293",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[293].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "293"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-294",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[294].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "294"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-295",
+      "paragraphs": [
+        "This tester item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.",
+        "Its base attack uses [[Sharp]] damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[295].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "295"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    },
+    {
+      "entity": "item-296",
+      "paragraphs": [
+        "Craft through the player's crafting menu: 2 [[Twine]], 2 [[Branch (Trollgnarl)]] and 10 [[Spider Silk]] produce one bow for a base cost of 8 AP. This recipe is available in the tester, not in stable 0.9.6.5.",
+        "The listed weight is the base definition's 0.65 kg. Crafting recalculates weight from the components; the effective weight can therefore differ. Its declared value alone does not establish merchant stock.",
+        "Its base attack uses [[Piercing]] damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].type/weight/price/durabilityMax/stackLimit/burnTime/damageClass/apCost/attackPattern/tileRange/craftCost/craftReturn/equipCost"
+        },
+        {
+          "source": "items-en-0997",
+          "section": "ItemTitles",
+          "key": "296"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myCraftingMenu.item296"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].components/craftCost/craftReturn;postprocessing.weight/price"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"
+        }
+      ]
+    }
+  ],
+  "page_notes": [
+    {
+      "page": "Finish Raft",
+      "paragraphs": [
+        "The base item action cost is 6 AP rather than stable 0.9.6.5's 6.4 AP. The tester adds Push, Pull and Board to the context menu; Push and Pull each cost 6 AP.",
+        "Push targets a free tile 16 pixels away. AP is spent before the destination check, so a blocked push still costs AP. Pull moves the player 3 pixels away and then moves the raft toward that position; push nudges the player 3 pixels toward it.",
+        "Direct boarding requires being within 8 pixels; otherwise interaction opens the context menu. Push/pull motion takes time and its destination is not saved. No persistence of an in-progress movement is promised."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.raft;menu actions/obj_station.pushpullX/pushpullY"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[171].apCost"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "raft.Push/Pull/Board/PUapcost/tile_is_free"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_obj_station_Step_0",
+          "key": "pushpullX/pushpullY/move_towards_point"
+        }
+      ]
+    },
+    {
+      "page": "Grilled Spider Meat",
+      "paragraphs": [
+        "A burning [[Campfire]] now offers the recipe: 1 [[Spider Meat]] produces 1 Grilled Spider Meat for 2.4 base AP. The recipe values are unchanged; the tester adds actual menu access. [[Survivor's Field Kit]] does not receive this recipe."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.campfire38.item285/excluded172"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[285].components/craftCost/craftReturn"
+        }
+      ]
+    },
+    {
+      "page": "Campfire",
+      "paragraphs": [
+        "When burning, the tester's cooking menu includes [[Grilled Spider Meat]]: 1 [[Spider Meat]] yields 1 grilled meat for 2.4 base AP."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.campfire38.item285"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[285].components/craftCost/craftReturn"
+        }
+      ]
+    },
+    {
+      "page": "Survivor's Field Kit",
+      "paragraphs": [
+        "The new [[Grilled Spider Meat]] cooking-menu access belongs to a burning [[Campfire]], not this field kit."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.index38/index172.item285"
+        }
+      ]
+    },
+    {
+      "page": "Spider Meat",
+      "paragraphs": [
+        "In the tester, a burning [[Campfire]] provides access to the [[Grilled Spider Meat]] recipe: 1 raw meat into 1 grilled meat for 2.4 base AP."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.campfire38.item285"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[285].components/craftCost/craftReturn"
+        }
+      ]
+    },
+    {
+      "page": "Twine",
+      "paragraphs": [
+        "The tester adds a craftable [[Sturdy Shortbow]]: 2 [[Twine]], 2 [[Branch (Trollgnarl)]] and 10 [[Spider Silk]] produce one bow for 8 base AP through the player's crafting menu."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myCraftingMenu.item296"
+        }
+      ]
+    },
+    {
+      "page": "Branch (Trollgnarl)",
+      "paragraphs": [
+        "The tester adds a craftable [[Sturdy Shortbow]]: 2 [[Twine]], 2 [[Branch (Trollgnarl)]] and 10 [[Spider Silk]] produce one bow for 8 base AP through the player's crafting menu."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myCraftingMenu.item296"
+        }
+      ]
+    },
+    {
+      "page": "Spider Silk",
+      "paragraphs": [
+        "The tester adds a craftable [[Sturdy Shortbow]]: 2 [[Twine]], 2 [[Branch (Trollgnarl)]] and 10 [[Spider Silk]] produce one bow for 8 base AP through the player's crafting menu."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myCraftingMenu.item296"
+        }
+      ]
+    },
+    {
+      "page": "World generation",
+      "paragraphs": [
+        "Newly generated areas can now get the special spider-cave entrance. Approximately one third of eligible ordinary small-cave candidates become this entrance after cave selection and collision checks; this is not an area-wide encounter probability. Previously saved areas do not receive the entrance when revisited.",
+        "The cave layout, webs, treasure, [[Mirk Lurker]] and [[Deathlob]] were already defined in stable 0.9.6.5. Their base stats are unchanged. A displayed cave name is unconfirmed; cave-like and dungeon-like classifications differ."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "savedYgrid.earlyExit/eligibleCave.chance0.333.specialEntrance"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45]/beingDB[46].static-values"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_map_and_weather",
+          "key": "area_is_cavelike.includes13/area_is_dungeonlike.excludes13"
+        }
+      ]
+    },
+    {
+      "page": "Areas",
+      "paragraphs": [
+        "Newly generated areas can now get the special spider-cave entrance. Approximately one third of eligible ordinary small-cave candidates become this entrance after cave selection and collision checks; this is not an area-wide encounter probability. Previously saved areas do not receive the entrance when revisited.",
+        "The cave layout, webs, treasure, [[Mirk Lurker]] and [[Deathlob]] were already defined in stable 0.9.6.5. Their base stats are unchanged. A displayed cave name is unconfirmed; cave-like and dungeon-like classifications differ."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "savedYgrid.earlyExit/eligibleCave.chance0.333.specialEntrance"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45]/beingDB[46].static-values"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_map_and_weather",
+          "key": "area_is_cavelike.includes13/area_is_dungeonlike.excludes13"
+        }
+      ]
+    },
+    {
+      "page": "Mirk Lurker",
+      "paragraphs": [
+        "Newly generated areas can now get the special spider-cave entrance. Approximately one third of eligible ordinary small-cave candidates become this entrance after cave selection and collision checks; this is not an area-wide encounter probability. Previously saved areas do not receive the entrance when revisited.",
+        "The cave layout, webs, treasure, [[Mirk Lurker]] and [[Deathlob]] were already defined in stable 0.9.6.5. Their base stats are unchanged. A displayed cave name is unconfirmed; cave-like and dungeon-like classifications differ."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "savedYgrid.earlyExit/eligibleCave.chance0.333.specialEntrance"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45]/beingDB[46].static-values"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_map_and_weather",
+          "key": "area_is_cavelike.includes13/area_is_dungeonlike.excludes13"
+        }
+      ]
+    },
+    {
+      "page": "Deathlob",
+      "paragraphs": [
+        "Newly generated areas can now get the special spider-cave entrance. Approximately one third of eligible ordinary small-cave candidates become this entrance after cave selection and collision checks; this is not an area-wide encounter probability. Previously saved areas do not receive the entrance when revisited.",
+        "The cave layout, webs, treasure, [[Mirk Lurker]] and [[Deathlob]] were already defined in stable 0.9.6.5. Their base stats are unchanged. A displayed cave name is unconfirmed; cave-like and dungeon-like classifications differ.",
+        "Outside selection also gives Deathlob a relative weight of 0.125 in [[Sunken Ancient Ruins]] and 0.1 in other general outside areas. These are not 12.5% and 10% encounter probabilities; normal population caps and other gates still apply."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "outside population.Deathlob.relativeWeights"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "savedYgrid.earlyExit/eligibleCave.chance0.333.specialEntrance"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45]/beingDB[46].static-values"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_map_and_weather",
+          "key": "area_is_cavelike.includes13/area_is_dungeonlike.excludes13"
+        }
+      ]
+    },
+    {
+      "page": "Sunken Ancient Ruins",
+      "paragraphs": [
+        "Deathlob is included in the outside enemy pool with a relative selection weight of 0.125. This is not a 12.5% encounter chance and does not bypass the normal spawn conditions."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "outside population.area22.Deathlob"
+        }
+      ]
+    },
+    {
+      "page": "Honey",
+      "paragraphs": [
+        "Outside-area replenishment has a new outer 50% gate before existing checks. All trees are counted, with fewer than 4.25 special resources overall and fewer than one per tree. A tree still needs at least 12 branches and must pass the 1.5% tree roll before branch selection plus the remaining branch checks. This is not 50% per tree or a guaranteed minimum distance between honey-bearing trees."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "outside.chance0.5/activateAllTrees/totSpecial/specialCarry/branchAmount"
+        }
+      ]
+    },
+    {
+      "page": "Tree health and chopping",
+      "paragraphs": [
+        "Branch death chance is quartered within the 16-pixel view margin. Outside it, activated trees with average branch life at most 0.01 have a 1% removal roll per check.",
+        "Log placement is conditional: mossy-log tiles within 128 pixels reduce the attempted line length, and the attempt requires a positive existing log count. Terrain, obstruction and ground-cover checks still apply. A dead tree is removed even if no logs are placed, so replacement logs are not guaranteed."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.avgLife/chance0.01/stumpCount/lineLength/instance_destroy"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_nature",
+          "key": "tree_grow.inside_view16/deathChance.divide4"
+        }
+      ]
+    },
+    {
+      "page": "Wellbeing",
+      "paragraphs": [
+        "With no sickness effect, the accidental 0.16 wellbeing increase is removed and sickness time is reset. Sickness levels retain their 1%, 2% and 3% penalties."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_get_combined_wellbeing.highestLvl/sickTime"
+        }
+      ]
+    },
+    {
+      "page": "Placing objects",
+      "paragraphs": [
+        "The container-collision check is applied only when the tile being checked is within 8 pixels of the proposed placement point. This is not a general container scan over the whole footprint."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_cursor_Draw_73",
+          "key": "placement.point_distance(xx,yy,PHX,PHY)<=8/collision_point.obj_container"
+        }
+      ]
+    },
+    {
+      "page": "Temperature",
+      "paragraphs": [
+        "The newly accessible spider cave is cave-like but is excluded from the separate dungeon-like classification. Its HUD and temperature/drying calculation use the current weather temperature, not the fixed underground 0.35 value. Do not infer underground exposure rules merely from its cave tiles."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_map_and_weather",
+          "key": "area_is_dungeonlike.excludes13/area_is_cavelike.includes13"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "player_gets_all_wet.whatTemp"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "daycycle/temperature.area_is_dungeonlike"
+        }
+      ]
+    },
+    {
+      "page": "Weather",
+      "paragraphs": [
+        "The newly accessible spider cave uses the weather/day clock, not the underground HUD, because it is excluded from the dungeon-like classification. Cave-like geometry does not itself establish underground temperature or display behavior."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_map_and_weather",
+          "key": "area_is_dungeonlike.excludes13/area_is_cavelike.includes13"
+        },
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "daycycle/weather/temperature.area_is_dungeonlike"
+        }
+      ]
+    },
+    {
+      "page": "Fern",
+      "paragraphs": [
+        "Revisiting outside areas other than Rift-Thorn Mire can attempt Fern growth over elapsed days. The 240-hour elapsed-time cap permits up to 10 day iterations, each with up to 256 candidate-position searches. This is ground-cover growth, not new log production."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "outsideRevisit.passedDays/passedHours/Fern80"
+        }
+      ]
+    },
+    {
+      "page": "Willow",
+      "paragraphs": [
+        "Activated, almost-dead trees outside the view margin can be removed by a 1% check in the tester. Replacement logs are conditional, not guaranteed; see [[Tree health and chopping#0.9.9.7_tester|the tester's tree and log limits]]."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ]
+    },
+    {
+      "page": "Cypress",
+      "paragraphs": [
+        "Activated, almost-dead trees outside the view margin can be removed by a 1% check in the tester. Replacement logs are conditional, not guaranteed; see [[Tree health and chopping#0.9.9.7_tester|the tester's tree and log limits]]."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ]
+    },
+    {
+      "page": "Trollgnarl",
+      "paragraphs": [
+        "Activated, almost-dead trees outside the view margin can be removed by a 1% check in the tester. Replacement logs are conditional, not guaranteed; see [[Tree health and chopping#0.9.9.7_tester|the tester's tree and log limits]]."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ]
+    },
+    {
+      "page": "Elderwort Shrub",
+      "paragraphs": [
+        "Activated, almost-dead trees outside the view margin can be removed by a 1% check in the tester. Replacement logs are conditional, not guaranteed; see [[Tree health and chopping#0.9.9.7_tester|the tester's tree and log limits]]."
+      ],
+      "evidence": [
+        {
+          "source": "game-data-0997",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ]
+    }
+  ]
+}

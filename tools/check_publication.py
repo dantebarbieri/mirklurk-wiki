@@ -7,7 +7,7 @@ import sys
 import tempfile
 from pathlib import Path, PurePosixPath
 
-from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, parse_data
+from wiki_data import DataError, MAX_FACTS_BYTES, PAGE_FILES, RESEARCH_PAGE_FILES, TESTER_PAGE_FILES, parse_data
 from wiki_catalog import MAX_CATALOG_BYTES, parse_catalog, validate_catalog
 from wiki_references import resolve_acquisition_references
 from wiki_acquisition import MAX_ACQUISITION_BYTES
@@ -20,17 +20,20 @@ ALLOWED_FILES = {
     ".dockerignore": 4 * 1024,
     "README.md": 32 * 1024,
     "CONTRIBUTING.md": 32 * 1024,
-    "docs/PROVENANCE.md": 88 * 1024,
+    "docs/PROVENANCE.md": 92 * 1024,
     "docs/IMPORTING.md": 32 * 1024,
     "docs/PUBLICATION.md": 32 * 1024,
     "docs/DEPLOYMENT.md": 50 * 1024,
-    "docs/IMAGES.md": 40 * 1024,
+    "docs/IMAGES.md": 42 * 1024,
     "docs/PUBLISHING.md": 17 * 1024,
     "docs/TEMPLATES.md": 18 * 1024,
     "content/facts/game.json": MAX_FACTS_BYTES,
     "content/facts/catalog.json": MAX_CATALOG_BYTES,
     "content/facts/entity_details.json": MAX_DETAILS_BYTES,
     "content/facts/illustrations.json": MAX_ILLUSTRATIONS_BYTES,
+    "content/facts/tester.json": 128 * 1024,
+    "tools/wiki_tester.py": 12 * 1024,
+    "tests/test_tester.py": 8 * 1024,
     "content/facts/acquisition.json": MAX_ACQUISITION_BYTES,
     "content/pages/NPCs.wiki": 32 * 1024,
     "content/templates/Coins.wiki": 4 * 1024,
@@ -67,7 +70,7 @@ ALLOWED_FILES = {
     "tools/build_wiki.py": 32 * 1024,
     "tools/sync_wiki.py": 32 * 1024,
     "tools/plan_file_moves.py": 6 * 1024,
-    "tools/smoke_deploy.py": 96 * 1024,
+    "tools/smoke_deploy.py": 97 * 1024,
     "tests/test_safety.py": 48 * 1024,
     "tests/test_wiki.py": 48 * 1024,
     "tests/test_anchors.py": 8 * 1024,
@@ -118,7 +121,8 @@ ALLOWED_FILES = {
     ".github/workflows/auto-merge-base-image.yml": 4 * 1024,
     ".github/dependabot.yml": 2 * 1024,
     ".github/skills/game-update/SKILL.md": 20 * 1024,
-    **{f"content/pages/{name}": 32 * 1024 for name in (*PAGE_FILES.values(), *RESEARCH_PAGE_FILES.values())},
+    **{f"content/pages/{name}": 32 * 1024
+       for name in (*PAGE_FILES.values(), *RESEARCH_PAGE_FILES.values(), *TESTER_PAGE_FILES.values())},
 }
 FORBIDDEN_DIRECTORIES = {
     "languages", "saves", "dumps", "exports", "raw", "research", "raw-research",

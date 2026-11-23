@@ -785,6 +785,66 @@ Changed-entry SHA-256 identities (common `gml_` prefix omitted):
 | `Object_obj_solid_Draw_0` | `4c81e4af1bc2f95d90bd6d43de6afa52c16ecf89660515d385f222c6da1e62fb` |
 | `Room_rm_int_Create` | `c8a9be48ac9d4de76851b935a7c248b3afab68fb3584402784d1927098770da7` |
 
+## Version 0.9.9.7 tester
+
+This comparison documents the operator-installed `next_version_tester` build
+observed on 2026-11-23; the observation is **not** a release date. The supplied
+Discord announcement has no URL, message ID or timestamp. No Steam announcement
+identifies this build, and the developer's intention to release 1.0 is not a
+released-1.0 claim. Stable `game.json`, `catalog.json`, `acquisition.json`,
+`entity_details.json` and `illustrations.json` remain unchanged at 0.9.6.5.
+
+`content/facts/tester.json` is independently bounded and validated using the
+existing source, numeric-profile, grid and rights metadata validators.
+Its separate `game-data-0997` fingerprint identifies SHA-256
+`080a8aa55f78ac94ed01be77379fba4b89b4cd281f33d8cf6d10177afad96d15`.
+Five separately scoped English INI fingerprints record the actual launch output;
+unchanged file bytes are not claimed as new translations. All 284 decompiled
+entry fingerprints and 20 language-file snapshots were checked privately;
+28 code entries changed. Raw dumps, native frames and the supplied save remain
+outside the repository.
+
+Thirteen new definitions (280-283 and 288-296) use exact `ItemTitles` names.
+Four were already named but undefined; the other nine names are additions.
+There are 13 isolated profiles/131 numeric values and five attack grids.
+Definitions cite `gml_Object_databank_Alarm_1`; equip cost uses its dimensions
+pass, pattern totals use its positive-cell summation, and base weight is
+qualified because recipe postprocessing can alter it. Item 296's components,
+cost and yield are paired with `gml_Object_obj_player_Create_0.myCraftingMenu`
+to establish actual crafting access. Item 285's unchanged recipe becomes
+accessible in `gml_GlobalScript_scr_menu_related.menu_psynch` only for burning
+Campfire 38, not Field Kit 172. Prices do not establish merchant inventory.
+`gml_GlobalScript_scr_items.treasure_get_lootarray` now samples through 296;
+type, cell, value and NONLOOTABLE guards remain in force.
+
+The special-cave replacement in `gml_Object_manager_area_Alarm_2` occurs after
+ordinary-cave selection/collision checks and is skipped for saved terrain.
+Area 13 and beings 45/46 were already defined. `area_is_cavelike` includes 13
+but `area_is_dungeonlike` does not. Exact HUD calls in `gml_Object_UI_Draw_64`
+therefore keep the weather/day clock; `player_gets_all_wet.whatTemp` in
+`gml_GlobalScript_scr_basic_useful` uses weather temperature instead of 0.35.
+No cave-wide underground exposure behavior is inferred. Deathlob's relative
+outside weights in `gml_Object_manager_area_Alarm_4` are not probabilities.
+
+Raft base AP, Push/Pull/Board costs and the failed-push AP order cite
+`gml_Object_databank_Alarm_1`, `gml_Object_UI_Draw_64`, `player_interact`,
+`menu_psynch` and `gml_Object_obj_station_Step_0`; unsaved motion targets are
+not promised to persist. Honey limits retain the nested per-tree selection
+and branch guards. `tree_grow` and `smartactivation` preserve view, branch-life,
+nearby-log-count, placement and destruction conditions: no guaranteed logs.
+Outside revisit Fern attempts are capped and are not log growth.
+
+New canonical item titles are explicitly tester-only pages, outside stable
+entity lookups and display registries. Labeled beta sections preserve stable
+tables; the tester changelog deliberately avoids stable New/Changed footers.
+The homepage and version index distinguish beta from latest stable.
+The separate `TESTER_PAGE_FILES` allowlist participates in complete catalog
+publication; the legacy base-facts-only renderer retains its stable authored
+page set. Tester history is outside stable introduction-footer generation.
+Smoke fixtures include the 13 isolated crops without committing game pixels.
+Normal source-control review, zero-missing preview and guarded artwork import
+plus paired backups remain publication prerequisites.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

@@ -36,6 +36,9 @@ PAGE_FILES = {
     "Version 0.9.6.2": "Version_0.9.6.2.wiki",
     "Versions": "Versions.wiki",
 }
+TESTER_PAGE_FILES = {
+    "Version 0.9.9.7": "Version_0.9.9.7.wiki",
+}
 RESEARCH_PAGE_FILES = {
     "Quests and journal": "Quests_and_journal.wiki",
     "Merchants": "Merchants.wiki",
