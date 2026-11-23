@@ -123,11 +123,22 @@ The 0.9.6.0, 0.9.6.1, 0.9.6.2 and 0.9.6.5 announcements have separate
 version pages. Source-only changes remain qualified as observed by 0.9.6.5
 in the direct comparison, without inventing intermediate-build histories.
 
+The **0.9.9.7 next_version_tester** comparison is an isolated beta reference;
+**0.9.6.5 remains latest stable/default**. `tester.json` holds six separate
+source fingerprints, 13 new item definitions, 131 numeric profile values,
+five attack patterns and approved icon metadata. New item pages and affected
+stable-page sections are explicitly tester-only. Stable facts, acquisition
+tables, entity profiles and the 409-record art register are unchanged.
+The Discord announcement has no supplied date or link; no release date or
+released 1.0 status is inferred. [Provenance](docs/PROVENANCE.md#version-0997-tester)
+records the comparison and access conditions.
+
 The reference now contains **107 numeric facts and 351 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
 variants, 94 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 535 main-namespace pages:
-366 individual item, being, nature, skill, and damage-type pages, 52 item-family
+summaries. The encyclopedia presentation generates 549 main-namespace pages:
+366 stable individual item, being, nature, skill, and damage-type pages,
+13 tester-only item pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 125 ordinary MediaWiki category pages support hierarchical
 browsing; the retired Miscellaneous items category redirects to Items.

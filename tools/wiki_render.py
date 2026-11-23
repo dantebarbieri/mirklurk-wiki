@@ -13,7 +13,7 @@ from wiki_catalog import (
     fact_owners, faction_groups, ingredient_acquisition, page_locations, primary_groups, skill_category_title, validate_catalog,
 )
 from wiki_anchors import acquisition_fragments, entity_fragment, entry_fragments, fragment, illustration_fragment, span, titled, validate_anchors, validate_readable_identifiers
-from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, entry_page, prose_link_parts, read_authored, validate_data
+from wiki_data import CATEGORY_PAGES, DataError, HEALTH_ARMOR_ICONS, MECHANIC_GUIDE_TITLES, PAGE_FILES, RESEARCH_PAGE_FILES, RESEARCH_PAGE_REDIRECTS, TESTER_PAGE_FILES, entry_page, prose_link_parts, read_authored, validate_data
 from wiki_details import empty_details, validate_capacity_profiles, validate_coin_profiles, validate_details
 from wiki_portal import browse_order, compose_portals, section_order
 from wiki_families import CAPACITY_KINDS, SECTIONS, armor_order, capacity_kind, clothing_subgroups, story_order, weapon_ranks
@@ -1142,6 +1142,7 @@ def currency_page(currency, entities, locations):
 
 
 def build_pages(root, data, catalog=None, details=None):
+    full_catalog = catalog is not None
     if not isinstance(data, dict):
         raise DataError("root: expected an object")
     base = {key: value for key, value in data.items() if key != "illustrations"}
@@ -1175,7 +1176,8 @@ def build_pages(root, data, catalog=None, details=None):
     ingredients = ingredient_acquisition(data, catalog)
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
-    pages = {title: read_authored(root, title, filename) for title, filename in {**PAGE_FILES, "NPCs": "NPCs.wiki", **active}.items()}
+    authored = {**PAGE_FILES, "NPCs": "NPCs.wiki", **active, **(TESTER_PAGE_FILES if full_catalog else {})}
+    pages = {title: read_authored(root, title, filename) for title, filename in authored.items()}
     for alias, target in RESEARCH_PAGE_REDIRECTS.items():
         if target in active:
             pages[alias] = f"#REDIRECT [[{target}]]\n"
@@ -1954,8 +1956,12 @@ def build_pages(root, data, catalog=None, details=None):
                     raise DataError(f'NPC dialogue: missing linked page or explicit anchor: {link["target"]}')
     compose_portals(pages, portal_extra, images, entities, (catalog, locations, creatures, items, profile_values))
 
+    if full_catalog and "Version 0.9.9.7" in pages and data["game"]["build"] == "0.9.6.5":
+        from wiki_tester import add_tester_pages
+        add_tester_pages(root, data, pages)
+
     validate_transclusions(pages)
-    validate_anchors(pages, lenient={*PAGE_FILES, *RESEARCH_PAGE_FILES, "NPCs"})
+    validate_anchors(pages, lenient={*PAGE_FILES, *RESEARCH_PAGE_FILES, *TESTER_PAGE_FILES, "NPCs"})
     validate_readable_identifiers(pages)
     validate_display_dependencies(pages)
     return pages

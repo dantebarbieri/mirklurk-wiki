@@ -3,4 +3,6 @@ Learn about survival, combat, crafting and progression. See [[Skills]] for bonus
 == Version ==
 These guides cover '''0.9.6.5''', released on 19 November 2026. See [[Version 0.9.6.5]] for that release and separately qualified comparison findings, and [[Versions]] for each earlier release. Other versions may differ.
 
+[[Version 0.9.9.7|The 0.9.9.7 tester]] is documented separately. Only explicitly labeled tester pages and sections describe that beta; the default stats and acquisition tables still cover stable 0.9.6.5.
+
 [[Skills]] | [[Damage types]] | [[Health and armor]] | [[Action points]] | [[Main Page]]

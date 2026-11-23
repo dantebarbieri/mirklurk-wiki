@@ -1125,13 +1125,13 @@ def cache_diagnostics(api, title, owner, rendered):
     }), flush=True)
 
 
-def synthetic_image_specs(data):
+def synthetic_image_specs(data, tester_images=()):
     # Original solid-color RGB/RGBA pixels, not game artwork or a committed fixture.
     specs = {"Synthetic-thumbnail.png": (64, 32, bytes((37, 149, 211)), 16)}
     specs.update({filename: (size, size, pixel, 32) for filename, size, pixel in BRANDING_IMAGES.values()})
     specs.update({title.removeprefix("File:"): (64, 64, bytes((40 * armor, 149, 211, 128)), 32)
                   for armor, (title, _) in HEALTH_ARMOR_ICONS.items()})
-    for index, image in enumerate(sorted(data["illustrations"], key=lambda row: row["file_title"])):
+    for index, image in enumerate(sorted(data["illustrations"] + list(tester_images), key=lambda row: row["file_title"])):
         filename = image["file_title"].removeprefix("File:")
         pixels = image["pixel_art"]
         specs.setdefault(filename, (pixels["width"], pixels["height"], bytes((index % 256, index // 256, 73, 255)), 32))
@@ -1162,7 +1162,8 @@ def smoke_images(run, api, base, data, *corpora):
         return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
 
     signature = b"\x89PNG\r\n\x1a\n"
-    specs = synthetic_image_specs(data)
+    from wiki_tester import load_tester
+    specs = synthetic_image_specs(data, load_tester(ROOT, data)["data"]["illustrations"])
     require_image_coverage(specs, *corpora)
     originals = {}
     run("exec", "-T", "--user", "www-data", "mirklurk", "mkdir", "/tmp/mirklurk-smoke-images")

@@ -4,6 +4,8 @@ Welcome to the '''MirkLurk Wiki''', an independent guide to the Mirk.
 
 '''Current version:''' 0.9.6.5, released on 19 November 2026. See [[Version 0.9.6.5|what's new in 0.9.6.5]] or [[Versions|every version]].
 
+'''Tester branch:''' [[Version 0.9.9.7|0.9.9.7 (next_version_tester)]] has separate beta-only documentation. The stable reference remains 0.9.6.5.
+
 '''Spoilers:''' this wiki includes story events, locations and discoveries.
 
 == New to the Mirk? ==
