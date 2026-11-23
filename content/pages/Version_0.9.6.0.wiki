@@ -1,0 +1,33 @@
+'''Version 0.9.6.0''' is the patch released on 16 November 2026, following [[Version 0.9.5.6]]. Its announcement adds Spanish support and describes display, fuel, combat and interface fixes. The wiki now shows values from [[Version 0.9.6.5]]; no separate 0.9.6.0 binary comparison was made.
+
+'''Spoilers:''' this page names a creature and a story character.
+
+== Changes ==
+=== Languages and display ===
+Spanish joins the language options, and the Chinese font gains missing characters. The announcement does not give a glyph count for this release.
+
+[[Controls|Balanced Zoom]] works better in windowed mode. In the installed 0.9.6.5 build it uses the actual window dimensions.
+
+=== Fuel and crafting ===
+The [[Fire]] menu checks nearby tiles for fuel. Crafting and fire-crafting updates an existing ingredient-loss popup when using materials from nearby containers, rather than creating another popup.
+
+=== Scaalmyr Geomancer ===
+[[Scaalmyr Geomancer]] is rebalanced because its XP reward was too high for its threat. Exact values observed in the later build are retained under [[Version 0.9.6.5#Changes_observed_by_0.9.6.5|the comparison through 0.9.6.5]], not as a separate 0.9.6.0 snapshot.
+
+== Fixes ==
+=== Combat, rest and exits ===
+Weapons with one-tile reach no longer occasionally reach two tiles.
+
+Starting [[Resting|ground rest]] while walking no longer causes the announced movement glitches. [[Ihar]] is moved away from the exit if he blocks it and avoids returning there.
+
+=== Interface and scenery ===
+The boat near Fort Solid bobs again. The FPS display uses a consistent color.
+
+Inventories can no longer be linked to ground containers. Menus extending beyond the right edge are pushed further onto the screen, making them easier to grab.
+
+== Announcement ==
+[https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1849458702688760 Steam announcement], posted on 16 November 2026 (UTC). These release-specific changes come from that announcement; source-only findings from the direct 0.9.5.6 to 0.9.6.5 comparison remain on [[Version 0.9.6.5]].
+
+'''Previous:''' [[Version 0.9.5.6]] | '''Next:''' [[Version 0.9.6.1]]
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

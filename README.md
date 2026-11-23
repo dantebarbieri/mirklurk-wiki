@@ -119,11 +119,14 @@ and documents Spanish/Portuguese, windowed display, nearby fuel and save fixes.
 All five English language files are regenerated, including unchanged Nature;
 packaged translations and the limited Borderless-key migration are distinguished.
 [Provenance](docs/PROVENANCE.md#version-0965-update) records the exact scope.
+The 0.9.6.0, 0.9.6.1, 0.9.6.2 and 0.9.6.5 announcements have separate
+version pages. Source-only changes remain qualified as observed by 0.9.6.5
+in the direct comparison, without inventing intermediate-build histories.
 
 The reference now contains **107 numeric facts and 351 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
 variants, 94 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 532 main-namespace pages:
+summaries. The encyclopedia presentation generates 535 main-namespace pages:
 366 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 125 ordinary MediaWiki category pages support hierarchical

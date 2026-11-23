@@ -20,4 +20,6 @@ The direct comparison with 0.9.5.5 finds no changes to item or creature stats, r
 
 English item, bestiary, interface and key-label files were regenerated with unchanged contents. English Nature was retained unchanged rather than regenerated. The existing second-side-button label issue described in [[Controls]] remains.
 
+'''Next:''' [[Version 0.9.6.0]]
+
 [[Versions]] | [[Game mechanics]] | [[Main Page]]

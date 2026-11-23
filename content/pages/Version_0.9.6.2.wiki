@@ -1,0 +1,19 @@
+'''Version 0.9.6.2''' is the patch released on 18 November 2026, following [[Version 0.9.6.1]]. The Portuguese-language announcement names 0.9.6.2 in its body and describes two fixes. The wiki now shows values from [[Version 0.9.6.5]]; no separate 0.9.6.2 binary comparison was made.
+
+== Changes ==
+=== Portuguese (Brazil) ===
+Portuguese (Brazil) joins the language options. Availability does not establish complete or linguistically accurate translations.
+
+== Fixes ==
+=== Death menu ===
+The menu no longer offers Return to Game while the player is dead. Continuing to watch the world after death could cause issues such as being unable to open the menu again.
+
+=== Fire-menu graphics ===
+A graphical issue when removing firewood from inventories with the [[Fire|fire-crafting menu]] open is fixed.
+
+== Announcement ==
+[https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1849827110422859 Steam announcement], posted on 18 November 2026 (UTC). Source-only findings from the direct 0.9.5.6 to 0.9.6.5 comparison remain on [[Version 0.9.6.5]].
+
+'''Previous:''' [[Version 0.9.6.1]] | '''Next:''' [[Version 0.9.6.5]]
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

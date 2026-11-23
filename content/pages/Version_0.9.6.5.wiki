@@ -1,6 +1,20 @@
-'''Version 0.9.6.5''' is the patch released on 19 November 2026, following the builds announced as 0.9.6.0, 0.9.6.1 and 0.9.6.2. This page covers their cumulative changes since [[Version 0.9.5.6]]; it does not assign unannounced changes to an individually compared intermediate build. This wiki shows 0.9.6.5 values.
+'''Version 0.9.6.5''' is the patch released on 19 November 2026, following [[Version 0.9.6.2]]. This release adds borderless windows and a resolution preset, and fixes fire-menu problems. This wiki shows 0.9.6.5 values.
 
-== New content ==
+'''Spoilers:''' the comparison findings below name creatures and story locations.
+
+== Changes ==
+=== Window options ===
+[[Controls]] adds a 2560 x 1440 resolution preset and a Borderless toggle. Borderless switches out of fullscreen and changes the window border. The developer describes it as a workaround; it is not a promise of native multi-monitor fullscreen.
+
+== Fixes ==
+=== Fire-menu safety ===
+The menu guard closes an incomplete fire or torch menu before accessing its four required slots. This addresses the announced rare crash when lighting torches through campfires, without promising that every rare torch crash is eliminated.
+
+Merely adding fuel without both spark tools selected no longer takes the cutting-injury branch. Normal spark-tool accident checks remain.
+
+== Changes observed by 0.9.6.5 ==
+The findings below come from the direct comparison of [[Version 0.9.5.6|0.9.5.6]] with the installed 0.9.6.5 build. They were observed by 0.9.6.5, but their exact introduction versions are unconfirmed unless an announcement is identified. No intermediate binary was individually compared. The separate [[Version 0.9.6.0]], [[Version 0.9.6.1]] and [[Version 0.9.6.2]] pages describe each earlier release's announced changes.
+
 === Spider definitions and materials ===
 Not in the patch notes: [[Mirk Lurker]] and [[Deathlob]] have creature definitions, attacks and corpse drops. They share a spider faction. Their lootable corpses contain [[Spider Meat]] and [[Spider Silk]], but normal access to their spider-cave area is unconfirmed.
 
@@ -8,19 +22,18 @@ Not in the patch notes: [[Mirk Lurker]] and [[Deathlob]] have creature definitio
 
 Spider Silk stacks to 20. No recipe using it is documented. [[Webbed treasure]] adds 8 to 20 silk, separately from its budgeted treasure roll; access to that treasure remains subject to the same cave limitation.
 
-== Changes ==
 === Scaalmyr Geomancer ===
-The 0.9.6.0 announcement describes a [[Scaalmyr Geomancer]] rebalance. Its base XP falls from 300 to 200; its health grid grows from 5 x 3 to 5 x 4, with 20 rather than 15 armor layers. Detection and ranged distances both become 10 tiles, previously 7 and 8. Its ranged pattern's center now rolls 1 to 2 damage instead of 0 to 1; the eight outer cells remain 0 to 1.
+[[Version 0.9.6.0]] announces a [[Scaalmyr Geomancer]] rebalance. Across the comparison its base XP falls from 300 to 200; its health grid grows from 5 x 3 to 5 x 4, with 20 rather than 15 armor layers. Detection and ranged distances both become 10 tiles, previously 7 and 8. Its ranged pattern's center now rolls 1 to 2 damage instead of 0 to 1; the eight outer cells remain 0 to 1. These exact values describe the compared endpoints, not a separate 0.9.6.0 build.
 
 === Languages and display ===
-Spanish support was announced with 0.9.6.0 on 16 November; Portuguese (Brazil) with 0.9.6.2 on 18 November. Both join English and Chinese in the language menu. The current installation contains five files for each language, including Chinese Nature labels. Availability does not establish complete or linguistically accurate translations.
+The current installation contains five files for each of English, Chinese, Spanish and Portuguese (Brazil), including Chinese Nature labels. Availability does not establish complete or linguistically accurate translations.
 
 The Chinese font gains 48 glyphs, from 2,169 to 2,217; the main Latin font gains 17, from 123 to 140. Their individual additions are cumulative, not assigned to one intermediate build.
 
-[[Controls]] adds a 2560 x 1440 resolution preset and a Borderless toggle in 0.9.6.5. Borderless switches out of fullscreen and changes the window border. The developer describes it as a workaround; it is not a promise of native multi-monitor fullscreen. Balanced Zoom now uses the actual window dimensions in windowed mode.
+Balanced Zoom uses the actual window dimensions in windowed mode, consistent with the improvement announced in [[Version 0.9.6.0]].
 
 === Fuel and inventories ===
-The [[Fire]] menu can select fuel from ordinary ground-loot or container inventories within 24 world pixels. The 0.9.6.0 announcement describes nearby fuel; 0.9.6.1 adds fuel-list scrolling and coalesced Item Used popups. The list now scrolls with arrows or the mouse wheel instead of growing indefinitely wider.
+The [[Fire]] menu can select fuel from ordinary ground-loot or container inventories within 24 world pixels. Nearby fuel is announced in [[Version 0.9.6.0]]; the exact distance is an observed 0.9.6.5 value.
 
 Fuel consumption refreshes the ground-container picture, and stale selections leave both menu arrays together. Automatic inventory linking requires the same parent, rather than linking unrelated inventories. Partly offscreen menus have a wider right-edge grab allowance.
 
@@ -34,18 +47,12 @@ A separate spider-cave area contains a generator and spawn definitions, but norm
 
 [[Loot tables]] now samples candidate item IDs through 287 instead of 283. Only three item definitions were added: this is not four new usable equipment items. Foods and materials remain excluded from ordinary treasure. The separate Unwanted pool can admit Grilled Spider Meat and Spider Silk; the Survivor pool can admit Spider Silk.
 
-== Fixes ==
 === Combat, rest and exits ===
 The 0.9.6.0 one-tile melee fix lowers the generic fallback from 24 to 23 world pixels and the weapon-action allowance from its defined range plus 8 pixels to plus 7. It does not change every creature's base melee distance.
 
 Starting [[Resting|ground rest]] while walking stops the pending path. Movement speed is recalculated and clamped before a later path restart. Ihar's destination checks avoid the shipwreck's lower exit boundary, and loading him at or below that boundary moves him upward.
 
-The menu no longer offers Return to Game while the player is dead. Boats bob again; the FPS display uses a consistent color and avoids overlapping debug text.
-
-=== Fire-menu safety ===
-The 0.9.6.5 menu guard closes an incomplete fire or torch menu before accessing its four required slots. This addresses the announced crash area, without promising that every rare torch crash is eliminated.
-
-Merely adding fuel without both spark tools selected no longer takes the cutting-injury branch. Normal spark-tool accident checks remain.
+The FPS display avoids overlapping debug text. The announcement-specific death-menu and boat changes are on their respective release pages.
 
 === Saves and resources ===
 Not in the patch notes: creating Gurb-Gurb's hollow, Ihar's shipwreck or the Survivors' camp now requests a save. Their placement rules are not redesigned by this change. Blank save-buffer contents produce an empty array, and the zero-size buffer is released.
@@ -53,5 +60,10 @@ Not in the patch notes: creating Gurb-Gurb's hollow, Ihar's shipwreck or the Sur
 English startup now regenerates all five language files, restoring the Nature writer omitted in 0.9.5.5 and 0.9.5.6. English Nature's contents remain unchanged. Other languages are packaged files; startup only inserts a missing Borderless interface key where needed.
 
 Not in the patch notes: spider animations and sounds, web effects and embedded achievement artwork expand. Artwork alone does not establish another usable spider, new equipment definitions or live Steam achievement unlocks.
+
+== Announcement ==
+[https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1849827110427476 Steam announcement], posted on 19 November 2026 (UTC).
+
+'''Previous:''' [[Version 0.9.6.2]]
 
 [[Versions]] | [[Game mechanics]] | [[Main Page]]
