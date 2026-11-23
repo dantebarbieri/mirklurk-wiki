@@ -273,6 +273,9 @@
           "Flask of Fire",
           "Bat Meat",
           "Grilled Bat Meat"
+        ,
+          "Spider Meat",
+          "Grilled Spider Meat"
         ]
       },
       {
@@ -319,6 +322,8 @@
           "Bat Hide"
         ,
           "Snail Shell Shard"
+        ,
+          "Spider Silk"
         ]
       },
       {
@@ -649,6 +654,9 @@
           "Firefly",
           "Bat Meat",
           "Grilled Bat Meat"
+        ,
+          "Spider Meat",
+          "Grilled Spider Meat"
         ]
       },
       {
@@ -908,14 +916,18 @@
         "index": "Items",
         "parents": ["Food and drink"],
         "summary": "Raw meat, eggs and edible small creatures, including live insects. Some cause sickness.",
-        "members": ["Large Maggot", "Large Beetle", "Frog", "Crab Meat", "Bug Meat", "Snake Meat", "Egg", "Strange Glowing Bug", "Vile Meat", "Toadkin Meat", "Cave Creeper", "Wakebug", "Baby Firelouse", "Bursthopper", "Firefly", "Bat Meat"]
+        "members": ["Large Maggot", "Large Beetle", "Frog", "Crab Meat", "Bug Meat", "Snake Meat", "Egg", "Strange Glowing Bug", "Vile Meat", "Toadkin Meat", "Cave Creeper", "Wakebug", "Baby Firelouse", "Bursthopper", "Firefly", "Bat Meat",
+                                                                                                                                                                                                                                                 "Spider Meat"
+                                                                                                                                                                                                                                               ]
       },
       {
         "title": "Prepared foods",
         "index": "Items",
         "parents": ["Food and drink"],
         "summary": "Bread, cooked food and meals. Check each food for sickness risk and other effects.",
-        "members": ["Loaf of Bread", "Grilled Maggot", "Crisp Beetle", "Grilled Frog Legs", "Grilled Crab Meat", "Grilled Bug Meat", "Grilled Snake Meat", "Fried Egg", "Grilled Vile Meat", "Grilled Toadkin Meat", "Grilled Cave Creeper", "Grilled Turnip", "Pleasant Vegetable Soup", "Tasty Crab Soup", "Survivor's Delight", "Grilled Wakebug", "Grilled Baby Firelouse", "Grilled Bursthopper", "Grilled Bat Meat"]
+        "members": ["Loaf of Bread", "Grilled Maggot", "Crisp Beetle", "Grilled Frog Legs", "Grilled Crab Meat", "Grilled Bug Meat", "Grilled Snake Meat", "Fried Egg", "Grilled Vile Meat", "Grilled Toadkin Meat", "Grilled Cave Creeper", "Grilled Turnip", "Pleasant Vegetable Soup", "Tasty Crab Soup", "Survivor's Delight", "Grilled Wakebug", "Grilled Baby Firelouse", "Grilled Bursthopper", "Grilled Bat Meat",
+                                                                                                                                                                                                                                                                                                                                                                                                                           "Grilled Spider Meat"
+                                                                                                                                                                                                                                                                                                                                                                                                                         ]
       },
       {
         "title": "Plant foods",
@@ -975,7 +987,9 @@
         "index": "Items",
         "parents": ["Crafting materials"],
         "summary": "Fiber, twine and fabrics.",
-        "members": ["Flax", "Linen", "Plant Fiber", "Twine", "Rift Weave"]
+        "members": ["Flax", "Linen", "Plant Fiber", "Twine", "Rift Weave",
+                                                                           "Spider Silk"
+                                                                         ]
       },
       {
         "title": "Animal materials",
@@ -1005,7 +1019,31 @@
         "index": "Items",
         "parents": ["Crafting materials", "Food and drink"],
         "summary": "Foods also used in recipes, including meals, remedies and other crafting.",
-        "members": ["Honey", "Large Maggot", "Large Beetle", "Frog", "Crab Meat", "Bug Meat", "Grilled Bug Meat", "Snake Meat", "Egg", "Vile Meat", "Toadkin Meat", "Cave Creeper", "Bramble Berries", "Riftvine Berries", "Turnip (item)", "Elderwort Berries", "Cranberries", "Watercress", "Wakebug", "Baby Firelouse", "Bursthopper", "Firefly", "Bat Meat"]
+        "members": [
+          "Honey",
+          "Large Maggot",
+          "Large Beetle",
+          "Frog",
+          "Crab Meat",
+          "Bug Meat",
+          "Grilled Bug Meat",
+          "Snake Meat",
+          "Egg",
+          "Vile Meat",
+          "Toadkin Meat",
+          "Cave Creeper",
+          "Bramble Berries",
+          "Riftvine Berries",
+          "Turnip (item)",
+          "Elderwort Berries",
+          "Cranberries",
+          "Watercress",
+          "Wakebug",
+          "Baby Firelouse",
+          "Bursthopper",
+          "Firefly",
+          "Bat Meat"
+        ]
       },
       {
         "title": "Bugs",
@@ -1196,6 +1234,12 @@
           "The Terror"
         ],
         "summary": "Grouped by appearance; aggression factions may differ."
+      },
+      {
+        "title": "Spiders",
+        "index": "Bestiary",
+        "members": ["Mirk Lurker", "Deathlob"],
+        "summary": "Defined spider creatures. Normal access to their cave area is unconfirmed."
       }
     ]
   },
@@ -3028,6 +3072,12 @@
     {"entity": "item-279", "title": "Intact Snail Shell", "aliases": []},
     {"entity": "being-42", "title": "Toadkin Shaman", "aliases": []},
     {"entity": "being-43", "title": "Giant Snail", "aliases": []}
+  ,
+    {"entity": "item-284", "title": "Spider Meat", "aliases": []},
+    {"entity": "item-285", "title": "Grilled Spider Meat", "aliases": []},
+    {"entity": "item-286", "title": "Spider Silk", "aliases": []},
+    {"entity": "being-45", "title": "Mirk Lurker", "aliases": []},
+    {"entity": "being-46", "title": "Deathlob", "aliases": []}
   ],
   "classifications": [
     {
@@ -4871,6 +4921,9 @@
   ,
     {"entity": "being-42", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[42].static-values"}, {"source": "beings-en-0950", "section": "Titles", "key": "42"}], "note": "Creature or enemy presentation grouping; this does not assert universal hostility.", "summary": "A Toadkin healer with an armored cross through its health grid. It can heal itself or a nearby Toadkin, while its blunt attack hits a 2 x 2 area.", "ability": {"title": "Healing and companions", "paragraphs": ["Every third own turn it looks for the closest wounded Toadkin-faction creature within 128 world pixels (8 tiles), including itself. Healing restores up to 5 lost HP cells and costs 4 AP; burnt cells do not heal.", "If nobody eligible is wounded, it keeps its accumulated turns until a target is available.", "When the area repopulates an ordinary Toadkin spawn, a separate 20% roll can add a Shaman companion. The existing 75% extra-Toadkin roll is independent, so both companions can appear.", "Its corpse contains 1 to 2 Toadkin Meat and a small treasure roll with a 1.2-silver budget, 25-copper minimum non-valuable value and a one-square item limit.", "It has 13 HP cells. The five cells in its central cross each start with two armor layers."], "related_entities": ["Toadkin", "Toadkin Meat"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[42]"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Step_0", "key": "being42.turnCounter/specialTarget"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Step_0", "key": "being42.special"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[42]"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}]}},
     {"entity": "being-43", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[43].static-values"}, {"source": "beings-en-0950", "section": "Titles", "key": "43"}], "note": "Creature or enemy presentation grouping; this does not assert universal hostility.", "summary": "A slow, weak attacker whose shell armor regrows. It shares the Giant Slug faction but leaves useful shell pieces when killed.", "ability": {"title": "Shell regeneration and drops", "paragraphs": ["Every third own turn it restores one armor layer on each of its four shell cells that is still alive but has lost that layer. It does not heal lost HP or restore burnt cells.", "Its grid has 5 HP cells, four of which start with one armor layer.", "During normal spawn initialization, a selected Giant Slug becomes a Giant Snail 55% of the time in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. There is no substitution in the fort's area.", "Its corpse holds 1 to 3 Snail Shell Shards. Separately, it has a 15% chance to drop an Intact Snail Shell, with 9 to 15 durability rather than a guaranteed full shell."], "related_entities": ["Giant Slug", "Snail Shell Shard", "Intact Snail Shell"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[43]/slug-substitution"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Step_0", "key": "being43.turnCounter>=3"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Step_0", "key": "being43.special.hpgrid[1,0;2,0;1,1;2,1].1->2"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278/item279.chance0.15.durability"}]}}
+  ,
+    {"entity": "being-45", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[45].static-values"}], "note": "Defined creature; ordinary world access is not established.", "summary": "A spider with 12 HP cells and a 40% base dodge chance. Normal access to its cave area is unconfirmed.", "ability": {"title": "Attacks, webs and drops", "paragraphs": ["Its 10 AP and 4-AP attack cost allow up to two attacks in a turn if it spends no AP elsewhere.", "Its base attacks are Blunt. An attack switches to Poison when its turn counter has reached two, then resets that counter. The counter advances during being-turn processing, not per strike; do not treat this as a guaranteed alternating-attack schedule.", "It starts with 12 HP cells and 0 inherent armor layers. Spiders avoid the ordinary ground-penalty grid and keep webs intact when stepping through them.", "Its definition and the spider-cave spawning branch exist, but a normal entrance to that area is unconfirmed."], "related_entities": ["Spider Meat", "Spider Silk"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[45];player_endturn.turnCounter"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Step_0", "key": "attackClass.index45.turnCounter"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeonlike_areas.area13"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}]}},
+    {"entity": "being-46", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[46].static-values"}], "note": "Defined creature; ordinary world access is not established.", "summary": "A spider with 25 HP cells and a 33% base dodge chance. Normal access to its cave area is unconfirmed.", "ability": {"title": "Attacks, webs and drops", "paragraphs": ["Its 10 AP and 3-AP attack cost allow up to three attacks in a turn if it spends no AP elsewhere.", "Its base attacks are Blunt. An attack switches to Poison when its turn counter has reached three, then resets that counter. The counter advances during being-turn processing, not per strike; do not treat this as a guaranteed alternating-attack schedule.", "It starts with 25 HP cells and 6 inherent armor layers. Spiders avoid the ordinary ground-penalty grid and keep webs intact when stepping through them.", "Its definition and the spider-cave spawning branch exist, but a normal entrance to that area is unconfirmed."], "related_entities": ["Spider Meat", "Spider Silk"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[46];player_endturn.turnCounter"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Step_0", "key": "attackClass.index46.turnCounter"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeonlike_areas.area13"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}]}}
   ],
   "entry_links": [
     {
@@ -5969,6 +6022,11 @@
     {"entry": "corpse-42-162", "summary": "One to two Toadkin Meat; lower quantities are more likely.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."},
     {"entry": "corpse-43-278", "summary": "One to three Snail Shell Shards; lower quantities are more likely.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."},
     {"entry": "corpse-43-279", "summary": "A separate 15% drop roll produces an Intact Snail Shell with 9 to 15 durability.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."}
+  ,
+    {"entry": "corpse-45-284", "summary": "A lootable Mirk Lurker corpse contains 3 Spider Meat.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."},
+    {"entry": "corpse-45-286", "summary": "A lootable Mirk Lurker corpse contains 2 to 3 Spider Silk.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."},
+    {"entry": "corpse-46-284", "summary": "A lootable Deathlob corpse contains 7 to 11 Spider Meat.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."},
+    {"entry": "corpse-46-286", "summary": "A lootable Deathlob corpse contains 6 to 8 Spider Silk.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."}
   ],
   "stations": [
     {
@@ -7667,6 +7725,10 @@
           }
         ]
       }
+    ,
+      {"entity": "item-284", "value": 0.05, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[284].price;postprocessing.price"}]},
+      {"entity": "item-285", "value": 0.12, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[285].price;postprocessing.price"}]},
+      {"entity": "item-286", "value": 0.2, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[286].price;postprocessing.price"}]}
     ],
     "covered_offers": [
       "merchant-8-item-85",
@@ -7763,16 +7825,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.5.6",
-      "confirmation": "Installed build 0.9.5.6 was launched and independently verified. The associated 12 November 2026 Chinese-availability announcement does not name this version or establish its exact release time. English Items, UI, Bestiary and Keys were freshly regenerated with unchanged hashes; Nature was retained. The four Chinese files are packaged assets, not runtime-generated translations.",
+      "version": "0.9.6.5",
+      "confirmation": "The installed 0.9.6.5 menu display and version check agree with the version-named Steam announcement of 19 November 2026. This is a direct comparison with 0.9.5.6, not separate analyses of intermediate binaries.",
       "evidence": [
         {
-          "source": "game-data-0956",
+          "source": "game-data-0965",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0956",
+          "source": "game-data-0965",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "versionCheck"
         }
@@ -8140,6 +8202,8 @@
         "Simple Burn Remedy turns a burn into an ordinary wound. It does not restore HP immediately; heal the wound afterward.",
         "Starting a fire requires tinder and either both spark components or a positive contribution from an existing flame. An equipped Flint Dagger can supply stone sparks. Nearby active Campfires, Survivor's Field Kits and placed torches within 24 world pixels, or lit torches in your active hands, can help. Wet tinder still reduces the chance, which must remain positive before you can attempt ignition. Neither spark tool adds its bonus unless both spark components are present; Fire Bond's 3 percentage points per rank has the same requirement. Tinder's own bonus and wetness remain separate.",
         "Returning to an area advances placed station and light timers for elapsed area time, but does not subtract that historical time from lights held in your active hands. Held lights still use fuel during ordinary turns. Catch-up is scaled through maximum AP, not a literal turns-per-hour rate."
+      ,
+        "The fire menu can draw fuel from ordinary ground-loot or container inventories within 24 world pixels. This does not collect fuel from arbitrary distant tiles. Arrow buttons or the mouse wheel scroll the available fuel instead of widening the menu indefinitely. Merely adding fuel without both spark tools selected no longer takes the cutting-accident branch."
       ],
       "related_entities": [
         "Simple Burn Remedy",
@@ -8208,6 +8272,9 @@
           "section": "gml_Object_UI_Draw_64",
           "key": "fire-menu.subSlots[0/1].spark-bonuses/subSlots[2].wet/skillBonus/finalChance"
         }
+      ,
+        {"source": "game-data-0965", "section": "gml_Object_UI_Draw_64", "key": "type5.searchyGroundy/uiTempScroller/accRisk.subSlots0+1"},
+        {"source": "game-data-0965", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_ui_search.arg3.distance24/status-209/type0"}
       ]
     },
     {
@@ -8557,6 +8624,8 @@
         "At 50% wellbeing or more, resting can heal one ordinary wounded combat cell. The chance depends on satiation, stamina, focus and the temperature penalty. With full supporting meters and no temperature penalty, it is 5% per resting turn. Burns cannot heal this way; Fire Bond from rank 5 gives a separate chance to treat one.",
         "Find shelter, warmth and food before a long rest. Sleeping gear contributes insulation and waterproofing while in use. Great Bedroll and Furhide Bedroll also slow Warm to the core decay, but hunger, cold, sickness and interruptions still apply.",
         "Recovery waits for the player's turn and for both the action and rest delays to finish. Focus settles at its target without overshooting; the recovery amounts above are unchanged. Getting up stops pending movement, and tent exits prefer dry footing without guaranteeing it. Entering a bed or bedroll releases the tile you leave. All bed rest and sleep modes process a full turn of wetness changes, including rain, immersion, ambient conditions, nearby fires and drying; sleeping does not guarantee that you become drier."
+      ,
+        "Starting ground rest while walking now stops the pending path before rest begins."
       ],
       "section_titles": [
         "Time keeps passing",
@@ -8566,6 +8635,8 @@
         "Well rested",
         "Natural healing",
         "Preparing a resting place",
+        null
+      ,
         null
       ],
       "related_entities": [
@@ -8638,6 +8709,8 @@
           "section": "gml_Object_obj_player_Step_0",
           "key": "state19.targetAction[7/8/9].player_gets_all_wet[actionPointsMax]"
         }
+      ,
+        {"source": "game-data-0965", "section": "gml_Object_obj_player_Step_0", "key": "forceRest.player_path_halt"}
       ]
     },
     {
@@ -11157,6 +11230,9 @@
         "You can replace nonstackable equipment with another of the same kind, including an Improvised Shield, from inventory or the equipment slot. Normal equip AP checks still apply; this does not change stack limits. The equip-cost AP icon scales with its tooltip text at larger UI sizes.",
         "Right-clicking a stack to pick up half now rounds down: a stack of three gives you one and leaves two. A single item is still picked up whole.",
         "Mouse-button labels now come from the selected language's Keys file. The second side-button label currently repeats the first side-button label, so do not rely on that text alone to distinguish them."
+      ,
+        "Options adds a 2560 x 1440 preset and a Borderless toggle. Borderless leaves fullscreen before changing the window border; it is a windowed workaround, not a guarantee of native multi-monitor fullscreen. Balanced Zoom now uses the window's actual width and height in windowed mode.",
+        "Menus can be grabbed nearer their right edge when partly offscreen. Automatic inventory linking now requires both menus to belong to the same parent; it does not join unrelated ground piles and carried inventories."
       ],
       "section_titles": [
         "Mouse",
@@ -11168,6 +11244,9 @@
         "Replacing equipment and UI scale",
         "Splitting stacks",
         "Localized mouse labels"
+      ,
+        null,
+        null
       ],
       "related_entities": [],
       "related_pages": [
@@ -11425,9 +11504,9 @@
           "key": "textf_keyreplace/textf_ord_to_char.Keys.MouseSide1/MouseSide2"
         },
         {
-          "source": "keys-en-0955",
-          "section": "Keys",
-          "key": "MouseLeft/MouseRight/MouseMiddle/MouseSide1/MouseSide2"
+          "source": "game-data-0965",
+          "section": "gml_Object_obj_menu_Step_0",
+          "key": "options.resolution1/borderless7;gml_Object_camera_Step_0.balancedZoom;UI_Draw_64.bound64/linkedMenu.parentID"
         }
       ]
     },
@@ -12410,6 +12489,10 @@
     {"entity": "item-279", "paragraphs": ["While equipped in your off hand, this shell restores 0.3 durability each time your turn ends, up to its maximum of 16. Carrying it in a bag does not regenerate it.", "Equip it in your active off hand to block attacks. Shield Savant adds 2.5 percentage points per rank to its base block chance; you do not need the skill for the base chance.", "A successful block stops the whole attack and costs 1 durability 75% of the time or 2 durability 25% of the time. This is separate from the shield's armor value."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_endturn.offhand279.durability+0.3/cap16"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_block"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_ai_related", "key": "being_blocks_attack"}, {"source": "game-data-0920", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;item_durloss"}]},
     {"entity": "item-278", "paragraphs": ["A Giant Snail drops 1 to 3 shards. One is most common: the chances of 1, 2 and 3 are 11/18, 5/18 and 1/9. There is no defined recipe or other use for the shard in this version."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278.loot_amountchances[1,3]"}, {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances"}, {"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[278];all-components"}]},
     {"entity": "item-257", "paragraphs": ["Its carried weight is 2 kg. Unlike most crafted items, Improvised Bedroll is excluded from the recipe-based weight rewrite. Its recipe and comfort are unchanged."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[257].weight;postprocessing.components.excluded257"}]}
+  ,
+    {"entity": "item-284", "paragraphs": ["Eating it costs 2 AP, restores 25 percentage points of satiation and has a 5% base sickness risk. A Mirk Lurker's lootable corpse contains three; a Deathlob's contains 7 to 11. Normal access to these spiders is unconfirmed."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[284].apCost/hungerGain/sicknessRisk"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45,46].item284"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}]},
+    {"entity": "item-285", "paragraphs": ["Eating it costs 2 AP and restores 25 percentage points of satiation, with no base sickness risk. Its definition specifies one Spider Meat for one Grilled Spider Meat at a base cost of 2.4 AP. The Campfire menu does not list it, so access to this crafting option is unconfirmed.", "Recipe postprocessing gives it a carried weight of 0.18 kg rather than its 0.25 kg original weight. Its base value remains 12 copper."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[285].components/craftCost/craftReturn;postprocessing.weight/price"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.station38.CM.no-item285"}]},
+    {"entity": "item-286", "paragraphs": ["A light material that stacks to 20. Mirk Lurker corpses contain 2 to 3 and Deathlob corpses contain 6 to 8. A webbed special treasure adds 8 to 20. Normal access to their spider-cave area is unconfirmed; no recipe using Spider Silk is documented."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[286].weight/stackLimit"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45,46].item286"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.item286"}]}
   ],
   "construction_recipes": [
     {
@@ -12631,6 +12714,8 @@
           {"source": "game-data-0899", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}
         ]
       }
+    ,
+      {"id": 12, "title": "Spider faction", "summary": "Mirk Lurker and Deathlob share this targeting faction; normal access to their area is unconfirmed.", "members": ["Mirk Lurker", "Deathlob"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[45,46].team"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}]}
     ],
     "paragraphs": [
       "Beings normally avoid targeting their own faction. Nightmare, Raving Unwanted and Clay's boss form are exceptions: they can target each other, but never themselves. Late in the story, Captain Eir and Magus Clay also treat each other as enemies.",

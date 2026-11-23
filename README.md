@@ -112,24 +112,32 @@ cleanup fixes. Gameplay, generation and wiki artwork are unchanged.
 [Provenance](docs/PROVENANCE.md#version-0956-update) distinguishes packaged
 translations, fresh unchanged English files and retained Nature.
 
-The reference now contains **107 numeric facts and 347 structured entries**:
+Patch **0.9.6.5**, announced on 2026-11-19, is compared directly with 0.9.5.6.
+The cumulative update adds three item and two spider definitions, with normal
+spider-cave access explicitly unconfirmed, rebalances Scaalmyr Geomancer,
+and documents Spanish/Portuguese, windowed display, nearby fuel and save fixes.
+All five English language files are regenerated, including unchanged Nature;
+packaged translations and the limited Borderless-key migration are distinguished.
+[Provenance](docs/PROVENANCE.md#version-0965-update) records the exact scope.
+
+The reference now contains **107 numeric facts and 351 structured entries**:
 37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
-variants, 90 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 523 main-namespace pages:
-361 individual item, being, nature, skill, and damage-type pages, 52 item-family
+variants, 94 conditional loot entries, and 34 original algorithm/skill
+summaries. The encyclopedia presentation generates 532 main-namespace pages:
+366 individual item, being, nature, skill, and damage-type pages, 52 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
-compatibility redirects. Another 123 ordinary MediaWiki category pages support hierarchical
+compatibility redirects. Another 125 ordinary MediaWiki category pages support hierarchical
 browsing; the retired Miscellaneous items category redirects to Items.
 
-Supplemental source-scoped profiles preserve **2,983 scalar values**
-in 610 profiles across 326 entities: 266 items, 44 beings, and 16 nature records.
+Supplemental source-scoped profiles preserve **3,037 scalar values**
+in 617 profiles across 331 entities: 269 items, 46 beings, and 16 nature records.
 Their 55 shared property definitions distinguish literal initializer values,
 computed attack-pattern totals, and unresolved runtime effects. Flax and Linen
 have localized names but no reviewed initializer profile; no stats are invented
 for them. Equipment AP costs are documented separately from attack/use costs,
 and 48 range profiles record each weapon's literal reach in tiles.
 
-The 144 curated grids preserve 44 base health shapes and 100 attack patterns,
+The 148 curated grids preserve 46 base health shapes and 102 attack patterns,
 including holes, orientation, armor layers, and occupied zero-to-one cells.
 Native `{{Health grid|...}}` and `{{Attack grid|...}}` templates render accessible
 tables with coordinate/value hover titles. They reference three separately approved shield
@@ -153,11 +161,11 @@ image-sizing policy as other artwork. See [author syntax and limits](docs/TEMPLA
 [separate runtime deployment prerequisite](docs/DEPLOYMENT.md). Publication
 fails closed before page edits if the target wiki lacks working Scribunto.
 
-The metadata-only artwork register covers 399 reviewed selections: 263 items,
-42 beings, 25 skills, 16 nature records, three workstation variants and 31
+The metadata-only artwork register covers 409 reviewed selections: 266 items,
+44 beings, 25 skills, 16 nature records, three workstation variants and 31
 ground and area guide images.
 Three supplementary NPC-location exteriors and ten overworld sprites
-preserve the existing portraits. 320 records now embed transparent-margin crops
+preserve the existing portraits. 329 records now embed transparent-margin crops
 under `(cropped)` File titles; the original Files are kept. All File titles
 use readable [page-title names](docs/IMAGES.md#file-titles)
 ([details](docs/IMAGES.md#transparent-margin-crops)).
@@ -247,21 +255,22 @@ NPC and merchant indexes link to the guide; its finding-NPCs section leads to
 the character-owned search instructions and exterior images. **World seed logic**
 redirects to the new title. Supplemental citations retain the original research records unchanged.
 
-Twenty-two source pages own 130 additional acquisition rows, covering starting
+Twenty-seven source pages own 131 additional acquisition rows, covering starting
 equipment, separate dead-camp containers, environmental searches, plant/tree
 harvesting, insects, story rewards, Survivor corpses and mapmaking. All 27 historical world-loot
-records move to named owners without changing their evidence. Random treasure owns eleven source-specific pools with 613 verified
+records move to named owners without changing their evidence. Random treasure owns thirteen source-specific pools with 714 verified
 eligibility memberships, not invented per-item probabilities. Shared interruption
 and story gates remain visible in filtered item views. Pools show alphabetical
 item/category lists beneath their budget rules, not repeated unknown quantity
 and probability cells. Item readers get short named-source references after
-their recipes, sellers and specific acquisition records. All 266 item pages have
-documented methods or explicit notes: 263 cover acquisition, built-in equipment,
+their recipes, sellers and specific acquisition records. All 269 item pages have
+documented methods or explicit notes: 266 cover acquisition, built-in equipment,
 or construction actions; three explain the limits of the available evidence.
 
-Fifty-eight verified standard unit prices cover all 88 offers. Each offered
+Sixty-one verified standard unit prices include prices covering all 88 offers. Each offered
 item owns one `<onlyinclude>` price value, and
 merchant tables transclude it rather than copying prices.
+The new spider items have documented values but no documented merchant offers.
 The Currency and trading guide likewise transcludes coin-owned denomination,
 weight, and stack tables. The bundled ParserFunctions extension selects named recipe and seller views;
 no new namespace, recipe subpage, synchronization service, or hidden data store
@@ -282,7 +291,7 @@ entries or facts; schema support is not a claim that a subsystem is fully docume
 Reviewed death-handler cases document base creature loot, and lit campfire/
 field-kit menus are traced. Some procedural quantities, final item-specific
 treasure probabilities and some merchant locations
-remain explicitly limited or unverified. Eligibility is exhaustive for the eleven
+remain explicitly limited or unverified. Eligibility is exhaustive for the thirteen
 documented pools, not a measurement of each item's final drop rate.
 
 ## Contents

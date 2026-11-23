@@ -243,6 +243,30 @@ The Wood Buckler original and crop are renamed to
 without changing their image bytes or leaving File redirects, after the paired
 SQL/images backup. The active register now contains 404 records and 324 crops.
 
+## Version 0.9.6.5 spiders, food and revised item icons
+
+Five new primary selections use only defined entities: Spider Meat and Grilled
+Spider Meat use `spr_ui_items16x48` frames 29 and 30; Spider Silk uses
+`spr_ui_items32x16` frame 25. Mirk Lurker and Deathlob use frame 0 of
+`spr_spider_medium` and `spr_spider_boss`. The unused huge-spider sprite,
+undefined equipment 280-283 and achievement artwork are not imported.
+
+Four existing usable item frames changed without changing their definitions:
+Branch (Elderwort), Shabby Leather Leg Armor, Steel Shield and Grilled Bat Meat.
+Their replacement originals use the `0.9.6.5` qualifier; crops use
+`0.9.6.5, cropped`. Earlier File titles and image bytes remain intact.
+There are no File moves or overwrites in this batch.
+
+All nine native frames are enlarged with integer nearest-neighbor scaling,
+transparent RGB normalized to zero, and cropped to their alpha bounds.
+Pillow and System.Drawing independently decode all eighteen originals and
+crops and compare every pixel, scale, boundary and byte hash. The privately
+reviewed batch includes attribution sidecars under the existing developer
+approval for public-wiki display, not asset redistribution in Git.
+Import only that isolated batch through the guarded operator workflow before
+publication. The register contains 409 records and 329 crops; the other
+400 records are unchanged.
+
 ## Site branding
 
 On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and

@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.5.6",
+    "build": "0.9.6.5",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -210,6 +210,114 @@
       "path": "Languages\\Chinese\\UI.ini",
       "sha256": "2adb57209630685f4623a202eb2b805366eabb7ef293adcd52ebbb7ed3f4e18e",
       "build": "0.9.5.6"
+    },
+    {
+      "id": "game-data-0965",
+      "path": "data.win",
+      "sha256": "5e7e0cd817151c9f4e76c12ce0575c87bb21e16fb9b1e3100f22d5afb85bca0a",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "beings-zh-0965",
+      "path": "Languages\\Chinese\\Bestiary.ini",
+      "sha256": "db8efdb2591c5c9097afd4b7ac6b2d69caf1267beabc7c19d6aafd1af72977ac",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "items-zh-0965",
+      "path": "Languages\\Chinese\\Items.ini",
+      "sha256": "ce9491014d046bcc14619c7d268646b5830a20eefb7f4aba41ed21a0378f3b12",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "nature-zh-0965",
+      "path": "Languages\\Chinese\\Nature.ini",
+      "sha256": "0e2ba579a29d8b78544a8942f09e4dcff953cb5158daf2f848fbb8f5ec73a2cc",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "ui-zh-0965",
+      "path": "Languages\\Chinese\\UI.ini",
+      "sha256": "3c930635b30b70d7aa64f9f6c9317f30ec7ebaf193226b607f5e2b6986a1066a",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "beings-en-0965",
+      "path": "Languages\\English\\Bestiary.ini",
+      "sha256": "e889d4f114fdf048f8efec7856922883fb49ee8c080f462e98b5791c37035826",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "items-en-0965",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "c028fb8f3fc7c924886b6cc9ed95e172d4d0a52fb5a79f579a2bc6d0fca2a42f",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "ui-en-0965",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "0f9473c2607d63aed84af9ef3fb3c69687a01edd6d8da83ae8b642913e318992",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "beings-es-0965",
+      "path": "Languages\\Español\\Bestiary.ini",
+      "sha256": "a071dea26b0cce7cea57d4dbdca315899c3bc9c5887df133168ccb969eae3c65",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "items-es-0965",
+      "path": "Languages\\Español\\Items.ini",
+      "sha256": "25f3f322575b007a8345149ee893d712517d7f2575f55ebad71d4e74358a0815",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "keys-es-0965",
+      "path": "Languages\\Español\\Keys.ini",
+      "sha256": "51341aa238367db88f042de0e15a211a0df203e25954a8e7ff44954ffad30e2a",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "nature-es-0965",
+      "path": "Languages\\Español\\Nature.ini",
+      "sha256": "e4bcc9adf291063bafb013e986cd863d98ab1568399fa4206fd0ac26381b18c7",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "ui-es-0965",
+      "path": "Languages\\Español\\UI.ini",
+      "sha256": "5f7ad9296c1fcc2b785bbc4c5e1878c24a54e4c3d5f43d2065ca65061ed9cb29",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "beings-pt-br-0965",
+      "path": "Languages\\Portuguese (Brazil)\\Bestiary.ini",
+      "sha256": "bed28ce518b476a535b817004e840057573c43abbdda42af05688f24f9e74388",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "items-pt-br-0965",
+      "path": "Languages\\Portuguese (Brazil)\\Items.ini",
+      "sha256": "c96eee46c2d31fad67a624145a7b0d7cdb62be7766c95589cc491fe9c0d6a053",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "keys-pt-br-0965",
+      "path": "Languages\\Portuguese (Brazil)\\Keys.ini",
+      "sha256": "3bdd12b24f113c412f65ac0d34f113dc728cc0cbe0861bb0e4a8212deda70639",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "nature-pt-br-0965",
+      "path": "Languages\\Portuguese (Brazil)\\Nature.ini",
+      "sha256": "e03e060a3ee4b6f52a529554a5ae0ea03744de7adfb3c366143afff80bec4487",
+      "build": "0.9.6.5"
+    },
+    {
+      "id": "ui-pt-br-0965",
+      "path": "Languages\\Portuguese (Brazil)\\UI.ini",
+      "sha256": "ddd78381950d9b240553aeaa999f43a0f755d296209ea0fd2b2ee24e194ace84",
+      "build": "0.9.6.5"
     }
   ],
   "entities": [
@@ -4880,6 +4988,45 @@
       ]
     },
     {
+      "id": "item-284",
+      "category": "item",
+      "name": "Spider Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0965",
+          "section": "ItemTitles",
+          "key": "284"
+        }
+      ]
+    },
+    {
+      "id": "item-285",
+      "category": "item",
+      "name": "Grilled Spider Meat",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0965",
+          "section": "ItemTitles",
+          "key": "285"
+        }
+      ]
+    },
+    {
+      "id": "item-286",
+      "category": "item",
+      "name": "Spider Silk",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "items-en-0965",
+          "section": "ItemTitles",
+          "key": "286"
+        }
+      ]
+    },
+    {
       "id": "being-36",
       "category": "being",
       "name": "Grand Mother",
@@ -5003,6 +5150,32 @@
           "source": "beings-en-0950",
           "section": "Titles",
           "key": "43"
+        }
+      ]
+    },
+    {
+      "id": "being-45",
+      "category": "being",
+      "name": "Mirk Lurker",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0965",
+          "section": "Titles",
+          "key": "45"
+        }
+      ]
+    },
+    {
+      "id": "being-46",
+      "category": "being",
+      "name": "Deathlob",
+      "confidence": "observed",
+      "evidence": [
+        {
+          "source": "beings-en-0965",
+          "section": "Titles",
+          "key": "46"
         }
       ]
     }
@@ -17605,9 +17778,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0950",
+          "source": "game-data-0965",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances;treasure_get_lootarray.irandom(283)"
+          "key": "loot_amountchances;treasure_get_lootarray.irandom(287)"
         },
         {
           "source": "game-data",
@@ -17619,7 +17792,7 @@
         "page": "Loot tables",
         "steps": [
           "The amount helper builds progressively wider inclusive integer draws from the minimum up to the stated maximum, then chooses one of those draws uniformly. Low quantities therefore occur more frequently.",
-          "The treasure helper repeatedly samples an item ID from zero through 283, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
+          "The treasure helper repeatedly samples an item ID from zero through 287, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
           "Accepted items reduce the remaining value budget. Defined-item attempts increment a counter capped at 500; undefined-item draws and the early story-gated rejection are not counted.",
           "Durability and stack size can be randomized after selection. Listed shared bonus checks are additive rather than mutually exclusive weights."
         ],
@@ -21606,6 +21779,130 @@
         },
         "weight": null,
         "probability": 0.15,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-45-284",
+      "kind": "loot",
+      "title": "Mirk Lurker: Spider Meat",
+      "summary": "The corpse is initialized with this item. This is a fixed base quantity.",
+      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[45].item[284]"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances/loot_array_overstacker"
+        }
+      ],
+      "details": {
+        "table": "corpse-45",
+        "outcome": "item-284",
+        "quantity": {
+          "min": 3,
+          "max": 3
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-45-286",
+      "kind": "loot",
+      "title": "Mirk Lurker: Spider Silk",
+      "summary": "The corpse is initialized with this item. The shared biased amount helper favors lower counts within the inclusive range.",
+      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[45].item[286]"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances/loot_array_overstacker"
+        }
+      ],
+      "details": {
+        "table": "corpse-45",
+        "outcome": "item-286",
+        "quantity": {
+          "min": 2,
+          "max": 3
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-46-284",
+      "kind": "loot",
+      "title": "Deathlob: Spider Meat",
+      "summary": "The corpse is initialized with this item. The shared biased amount helper favors lower counts within the inclusive range.",
+      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[46].item[284]"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances/loot_array_overstacker"
+        }
+      ],
+      "details": {
+        "table": "corpse-46",
+        "outcome": "item-284",
+        "quantity": {
+          "min": 7,
+          "max": 11
+        },
+        "weight": null,
+        "probability": 1,
+        "rolls": null
+      }
+    },
+    {
+      "id": "corpse-46-286",
+      "kind": "loot",
+      "title": "Deathlob: Spider Silk",
+      "summary": "The corpse is initialized with this item. The shared biased amount helper favors lower counts within the inclusive range.",
+      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "death.corpse[46].item[286]"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "loot_amountchances/loot_array_overstacker"
+        }
+      ],
+      "details": {
+        "table": "corpse-46",
+        "outcome": "item-286",
+        "quantity": {
+          "min": 6,
+          "max": 8
+        },
+        "weight": null,
+        "probability": 1,
         "rolls": null
       }
     }

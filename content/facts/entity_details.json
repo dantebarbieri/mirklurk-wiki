@@ -8794,27 +8794,32 @@
           "source": "game-data-0920",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[16].blockChance"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[16].xp/armor/hostileDist/rangedDist/hpgridsize"
         }
       ],
       "values": {
-        "base-xp": 300,
-        "being-armor": 15,
+        "base-xp": 200,
+        "being-armor": 20,
         "tile-speed": 6,
         "idle-move-chance": 0.45,
         "base-speed": 1,
-        "awareness-distance": 7,
+        "awareness-distance": 10,
         "awareness-chance": 1,
         "maximum-ap": 10,
         "melee-ap-cost": 6,
         "melee-distance": 1.5,
-        "ranged-distance": 8,
+        "ranged-distance": 10,
         "ranged-ap-cost": 6,
         "dodge-chance": 0.05,
         "opportunity-chance": 0.2,
         "damage-class-id": 24,
         "ranged-damage-class-id": 18,
         "hp-grid-width": 5,
-        "hp-grid-height": 3,
+        "hp-grid-height": 4,
         "block-chance": 0.075
       }
     },
@@ -8833,13 +8838,18 @@
           "source": "beings-en",
           "section": "Titles",
           "key": "16"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[16].rangedAttackPattern"
         }
       ],
       "values": {
         "melee-pattern-min": 2,
         "melee-pattern-max": 11,
-        "ranged-pattern-min": 0,
-        "ranged-pattern-max": 9
+        "ranged-pattern-min": 1,
+        "ranged-pattern-max": 10
       }
     },
     {
@@ -16090,6 +16100,190 @@
         "melee-pattern-min": 0,
         "melee-pattern-max": 1
       }
+    },
+    {
+      "id": "item-284-initializer",
+      "entity": "item-284",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[284].static-values"
+        },
+        {
+          "source": "items-en-0965",
+          "section": "ItemTitles",
+          "key": "284"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.25,
+        "initial-price": 0.05,
+        "stack-limit": 6,
+        "durability-max": 1,
+        "item-ap-cost": 2,
+        "satiation-gain": 0.25,
+        "sickness-risk": 0.05
+      }
+    },
+    {
+      "id": "item-285-initializer",
+      "entity": "item-285",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[285].static-values"
+        },
+        {
+          "source": "items-en-0965",
+          "section": "ItemTitles",
+          "key": "285"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.25,
+        "initial-price": 0.12,
+        "stack-limit": 6,
+        "durability-max": 1,
+        "item-ap-cost": 2,
+        "satiation-gain": 0.25,
+        "sickness-risk": 0,
+        "craft-ap-cost": 2.4,
+        "craft-yield": 1
+      }
+    },
+    {
+      "id": "item-286-initializer",
+      "entity": "item-286",
+      "context": "Literal initializer values. Recipe postprocessing may recalculate item weight and value; skills, condition and runtime actions can further change effective values.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[286].static-values"
+        },
+        {
+          "source": "items-en-0965",
+          "section": "ItemTitles",
+          "key": "286"
+        }
+      ],
+      "values": {
+        "initial-weight": 0.02,
+        "initial-price": 0.2,
+        "stack-limit": 20,
+        "durability-max": 1
+      }
+    },
+    {
+      "id": "being-45-initializer",
+      "entity": "being-45",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45].static-values"
+        },
+        {
+          "source": "beings-en-0965",
+          "section": "Titles",
+          "key": "45"
+        }
+      ],
+      "values": {
+        "base-xp": 75,
+        "being-armor": 0,
+        "tile-speed": 7,
+        "idle-move-chance": 0.25,
+        "base-speed": 1.5,
+        "awareness-distance": 8,
+        "awareness-chance": 0.45,
+        "maximum-ap": 10,
+        "melee-ap-cost": 4,
+        "melee-distance": 1.5,
+        "ranged-distance": -1,
+        "dodge-chance": 0.4,
+        "damage-class-id": 15,
+        "hp-grid-width": 6,
+        "hp-grid-height": 6
+      }
+    },
+    {
+      "id": "being-45-attack-pattern-totals",
+      "entity": "being-45",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45].attackPattern;postprocessing.damage"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 2,
+        "melee-pattern-max": 6
+      }
+    },
+    {
+      "id": "being-46-initializer",
+      "entity": "being-46",
+      "context": "Literal being-definition values, before state, faction, targeting and runtime modifiers.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[46].static-values"
+        },
+        {
+          "source": "beings-en-0965",
+          "section": "Titles",
+          "key": "46"
+        }
+      ],
+      "values": {
+        "base-xp": 260,
+        "being-armor": 0,
+        "tile-speed": 8,
+        "idle-move-chance": 0.25,
+        "base-speed": 1.5,
+        "awareness-distance": 9,
+        "awareness-chance": 0.75,
+        "maximum-ap": 10,
+        "melee-ap-cost": 3,
+        "melee-distance": 2.25,
+        "ranged-distance": -1,
+        "dodge-chance": 0.33,
+        "damage-class-id": 15,
+        "hp-grid-width": 7,
+        "hp-grid-height": 7
+      }
+    },
+    {
+      "id": "being-46-attack-pattern-totals",
+      "entity": "being-46",
+      "context": "Computed using the initializer's own damage-pattern summation: integer part is the minimum and the first fractional digit is the maximum for each positive cell.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[46].attackPattern;postprocessing.damage"
+        }
+      ],
+      "values": {
+        "melee-pattern-min": 6,
+        "melee-pattern-max": 6
+      }
     }
   ],
   "grids": [
@@ -17101,13 +17295,35 @@
             "health": 1,
             "armor": 1
           }
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 1
+          }
         ]
       ],
       "confidence": "inferred",
       "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0965",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[16].hpgridsize/armor"
         },
@@ -17209,8 +17425,8 @@
             "max": 1
           },
           {
-            "min": 0,
-            "max": 1
+            "min": 1,
+            "max": 2
           },
           {
             "min": 0,
@@ -17236,7 +17452,7 @@
       "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-0965",
           "section": "gml_Object_databank_Alarm_3",
           "key": "beingDB[16].rangedAttackPattern"
         },
@@ -25294,6 +25510,352 @@
           "source": "game-data",
           "section": "gml_GlobalScript_scr_gui_general",
           "key": "attack_draw.minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-45-health",
+      "entity": "being-45",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[45].hpgrid-shape/inherent-armor"
+        }
+      ]
+    },
+    {
+      "id": "being-45-melee",
+      "entity": "being-45",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          {
+            "min": 0,
+            "max": 1
+          },
+          {
+            "min": 0,
+            "max": 1
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[45].attackPattern"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "being-46-health",
+      "entity": "being-46",
+      "kind": "health",
+      "rows": [
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 2
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ],
+        [
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          {
+            "health": 1,
+            "armor": 1
+          },
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null
+        ],
+        [
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          },
+          null,
+          null,
+          {
+            "health": 1,
+            "armor": 0
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Normal newly initialized health and armor for this being definition, not its current wounds, story state, or status effects. Each occupied square is one hit point; armor is a separate layer count.",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[46].hpgridsize/armor"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "being_initiate.index[46].hpgrid-shape/inherent-armor"
+        }
+      ]
+    },
+    {
+      "id": "being-46-melee",
+      "entity": "being-46",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 1
+          }
+        ],
+        [
+          {
+            "min": 1,
+            "max": 1
+          },
+          {
+            "min": 2,
+            "max": 2
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attack pattern, rows top to bottom and columns left to right. Empty positions do not attack; occupied cells give a damage roll range. Overlap, armor, ammunition and skills can change the result. On items, the melee key names the existing attackPattern profile, not a claim that bows are melee-only.",
+      "evidence": [
+        {
+          "source": "game-data-0965",
+          "section": "gml_Object_databank_Alarm_3",
+          "key": "beingDB[46].attackPattern"
+        },
+        {
+          "source": "game-data-0965",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
         }
       ]
     }

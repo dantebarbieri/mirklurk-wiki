@@ -96,11 +96,11 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["skill-0-0"], "Strider")
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
-        self.assertEqual(len(self.catalog["pages"]), 361)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 471)
-        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 123)
+        self.assertEqual(len(self.catalog["pages"]), 366)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 480)
+        self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 125)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
-        self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 361)
+        self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 366)
 
     def test_all_primary_records_and_typed_relationships_are_retained(self):
         locations = self.locations
@@ -152,12 +152,12 @@ class CatalogTests(unittest.TestCase):
                     "equip-ap-cost", "inventory-slots-added", "storage-grid-width", "storage-grid-height"}],
                 "profiles": [r for r in self.details["profiles"] if not r["id"].endswith(("-equip-cost", "-capacity"))],
             }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "476f5c647094f7dba6bd8a1583db8f40f33934cdbe616cc6dade7644790f96a1",
+            "b02f7c68aca76b38792d23de482c4bb9985d02e61a77c0934a9c00346e9b25f0",
         )
         self.assertEqual(len(self.details["properties"]), 55)
-        self.assertEqual(len(self.details["profiles"]), 610)
-        self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 326)
-        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 2983)
+        self.assertEqual(len(self.details["profiles"]), 617)
+        self.assertEqual(len({row["entity"] for row in self.details["profiles"]}), 331)
+        self.assertEqual(sum(len(row["values"]) for row in self.details["profiles"]), 3037)
         locations = self.locations
         entities = {row["id"]: row for row in self.data["entities"]}
         prices = {row["entity"]: row for row in self.catalog["unit_prices"]["prices"]}
@@ -206,20 +206,21 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("== Stats ==", self.pages[name])
 
     def test_final_image_metadata_has_exact_coverage_without_guessed_frames(self):
-        self.assertEqual(len(self.data["illustrations"]), 404)
-        self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 324)
+        self.assertEqual(len(self.data["illustrations"]), 409)
+        self.assertEqual(sum("cropped_from" in row for row in self.data["illustrations"]), 329)
         current = {row["id"]: row for row in self.data["illustrations"]}
         # 0.8.9.9 art, Finish Raft and the 0.9.1.0 flints came later.
         added = {f"item-{n}" for n in (*range(258, 263), *range(264, 276))} | {f"being-{n}" for n in range(36, 42)}
         later = added | {"item-171", "item-276", "item-277", "item-278", "item-279", "being-42", "being-43"}
+        later |= {"item-284", "item-285", "item-286", "being-45", "being-46"}
         every = [{key: value for key, value in uncropped(row).items() if key != "pixel_art"}
                  for row in self.data["illustrations"] if not {"role", "guide"} & row.keys()]
         self.assertEqual({row.get("entity") for row in every[-len(later):]}, later)
         images = [row for row in every if row.get("entity") not in later]
-        # Pins follow readable File titles (tools/plan_file_moves.py).
+        # Pins include four verified 0.9.6.5 frame replacements, with new File titles.
         self.assertEqual(
             hashlib.sha256((json.dumps({"schema_version": 1, "illustrations": images}, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "20cbb811fa93b7087a7673f04c9a88d04d2625ac63d8cc9d9aea1631c445b26d",
+            "c1677f7b2a080c1f37eca079d941aa398934de39b39ae262b6cbbef82f48be46",
         )
         replaced_trees = {"nature-4", "nature-7", "nature-17", "nature-20"}
         # 0.8.9.9 renames; old captions keep pins.
@@ -227,6 +228,20 @@ class CatalogTests(unittest.TestCase):
                    "being-35-illustration": "Unwanted Guard in-game sprite, shown in a representative frame."}
         self.assertTrue(all(current[key]["caption"] != old for key, old in renamed.items()))
         restored = [dict(row, caption=renamed.get(row["id"], row["caption"])) for row in images]
+        old_art = {
+            "item-224": "9303cca8289023e9081f543e8e8b7df2c975057a46c440f1afc1e56fa880efc3",
+            "item-195": "6e7291b0134e9ee03856267e7e4403538a9a1c617829b13fe9d2861a1312742d",
+            "item-58": "1a7cae3b3921719aa8550add8c1c2d4d1ee4d3700c37911b254067c67dad37fd",
+            "item-260": "6982d9e34b0519c56172107a2c804b441e20c58f7a05ad2152ec76c9da8365f8",
+        }
+        # Restore only the replaced frames for the unchanged original-handoff pins.
+        for row in restored:
+            if row.get("entity") in old_art:
+                suffix = "-0899" if row["entity"] == "item-260" else ""
+                row.update(file_title=row["file_title"].replace(" (0.9.6.5)", ""),
+                           sha256=old_art[row["entity"]],
+                           evidence=[dict(ref, source=("game-data" if index == 0 else "items-en") + suffix)
+                                     for index, ref in enumerate(row["evidence"])])
         buckler = next(row for row in restored if row.get("entity") == "item-0")
         buckler.update(file_title="File:Wood Buckler icon.png", caption="Wood Buckler inventory icon.")
         original_batch = {"schema_version": 1, "illustrations": [
@@ -350,7 +365,7 @@ class CatalogTests(unittest.TestCase):
     def test_reviewed_npc_mapping_separates_characters_from_creatures(self):
         npcs = {row["entity"] for row in self.catalog["classifications"] if row["kind"] == "npc"}
         self.assertEqual(npcs, {f"being-{number}" for number in (5, 6, 8, 9, 12, 19, 20, 26, 33, 34, 35, 36)})
-        self.assertEqual(len(self.catalog["classifications"]), 44)
+        self.assertEqual(len(self.catalog["classifications"]), 46)
         self.assertIn("Dead Unwanted is Viend before his revival", self.pages["Dead Unwanted"])
         bestiary = self.pages["Bestiary"]
         for name in ("Ranger Bhato", "Magus Clay", "Captain Eir", "Wilda", "Grand Mother"):
@@ -535,8 +550,8 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256((json.dumps(original_prices, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
                          "cacc81734f11f214e0bf28c0115050d129fe497112d0e415ba70e8aff4e1dc4e")
         self.assertEqual(hashlib.sha256((json.dumps(raw_prices["prices"][42:], ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-                         "125f614c56fda32d7cd9eb43ccbdce7269688f1e1a179e5edf9366cb7c3cdf04")
-        self.assertEqual(len(prices["prices"]), 58)
+                         "c1f1f98d5e6b060f710e2cad14ffcda59c06418801da87de6521afd3f2973edd")
+        self.assertEqual(len(prices["prices"]), 61)
         self.assertEqual(len(prices["covered_offers"]), 88)
         self.assertEqual(prices["unresolved_offers"], [])
         self.assertEqual({row["entity"]: row["value"] for row in prices["prices"] if row["entity"] in resolved},
@@ -548,7 +563,7 @@ class CatalogTests(unittest.TestCase):
         known_prices = {row["entity"]: row for row in prices["prices"]}
         items = {row["details"]["item"] for row in self.data["entries"] if row["kind"] == "merchant"}
         self.assertEqual(len(items), 58)
-        expected_default_owners = {locations[identity] for identity in items} | {
+        expected_default_owners = {locations[identity] for identity in known_prices} | {
             locations[row["entity"]] for row in self.catalog["currency"]["coins"]}
         self.assertEqual({title for title, page in self.pages.items() if "" in available_views(page)}, expected_default_owners)
         for identity in items:
@@ -626,7 +641,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "0.9.5.6")
+        self.assertEqual(self.data["game"]["build"], "0.9.6.5")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -900,7 +915,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("Fiber, twine and fabrics", self.pages["Category:Fibers and fabrics"])
         self.assertEqual(len(recipes), 98)
         self.assertEqual(sum(entry["kind"] == "merchant" for entry in self.data["entries"]), 88)
-        self.assertEqual(len(self.catalog["unit_prices"]["prices"]), 58)
+        self.assertEqual(len(self.catalog["unit_prices"]["prices"]), 61)
 
     def test_prices_use_exact_minimum_coin_count_and_approved_icons(self):
         cases = ((20, "{{Coins|2000}}"), (Decimal("3.57"), "{{Coins|357}}"),
@@ -929,8 +944,8 @@ class CatalogTests(unittest.TestCase):
 
     def test_health_and_attack_grids_preserve_shape_orientation_and_cell_meaning(self):
         grids = self.details["grids"]
-        self.assertEqual(len(grids), 144)
-        self.assertEqual(sum(g["kind"] == "health" for g in grids), 44)
+        self.assertEqual(len(grids), 148)
+        self.assertEqual(sum(g["kind"] == "health" for g in grids), 46)
         nightmare = next(g for g in grids if g["id"] == "being-28-health")
         self.assertEqual((len(nightmare["rows"]), len(nightmare["rows"][0])), (7, 3))
         self.assertEqual({(y, x) for y, row in enumerate(nightmare["rows"]) for x, cell in enumerate(row) if cell is None},
@@ -1155,12 +1170,12 @@ class ProfileTests(unittest.TestCase):
             page = build_pages(ROOT, data)["Entity synthetic-item"]
             self.assertEqual(page.count("[[File:Synthetic.png|"), 1)
             self.assertIn("Synthetic test creator", audit_report(data))
-        # 0.9.5.6 pin, game build blanked.
+        # 0.9.6.5 pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "0.9.5.6"', b'"build": null', 1,
+                b'"build": "0.9.6.5"', b'"build": null', 1,
             )).hexdigest(),
-            "de2a7897487f8ad82f494e58d112aade5ffa18440b396c1a1beee76598dd2d23",
+            "aeef9c6558d0a32f3a56a07a457887685754f7206cca4639760bd33869f1642f",
         )
 
 
@@ -1190,8 +1205,8 @@ class ProfileTests(unittest.TestCase):
             self.assertIn("Ordinary turns still burn fuel", pages[title])
             self.assertIn("placed lights still catch up", pages[title])
         self.assertNotIn("Huge Spider", pages)
-        self.assertEqual(len(data["entities"]), 366)
-        self.assertEqual(len(data["illustrations"]), 404)
+        self.assertEqual(len(data["entities"]), 371)
+        self.assertEqual(len(data["illustrations"]), 409)
         sources = {row["id"]: row for row in data["sources"]}
         self.assertEqual(sources["game-data-0953"]["sha256"],
                          "33291c42ac7ebc8dff9f328538fb5b436f04c5918585342b94acc9d7b7f26681")
@@ -1211,12 +1226,81 @@ class ProfileTests(unittest.TestCase):
                      "retained unchanged rather than regenerated"):
             self.assertIn(text, page)
         sources = {row["id"]: row for row in data["sources"]}
-        chinese = [row for row in sources.values() if row["path"].startswith("Languages\\Chinese\\")]
+        chinese = [row for row in sources.values()
+                   if row["path"].startswith("Languages\\Chinese\\") and row["build"] == "0.9.5.6"]
         self.assertEqual({row["path"].rsplit("\\", 1)[1] for row in chinese},
                          {"Items.ini", "Bestiary.ini", "Keys.ini", "UI.ini"})
         for prefix in ("items-en", "beings-en", "keys-en", "ui-en", "nature-en"):
             self.assertNotIn(prefix + "-0956", sources)
         self.assertIn("unchanged between 0.9.5.5 and 0.9.5.6", pages["World generation"])
+
+    def test_patch_0965_spider_access_poison_and_recipe_boundaries(self):
+        data, catalog, details = load_publication_inputs(ROOT)
+        pages = build_pages(ROOT, data, catalog, details)
+        names = {row["id"]: row["name"] for row in data["entities"]}
+        self.assertEqual(names["being-45"], "Mirk Lurker")
+        for title in ("Mirk Lurker", "Deathlob", "Spider Meat", "Spider Silk"):
+            self.assertIn("unconfirmed", pages[title])
+        self.assertIn("not per strike", pages["Mirk Lurker"])
+        self.assertIn("not per strike", pages["Deathlob"])
+        self.assertIn("Campfire menu does not list", pages["Grilled Spider Meat"])
+        self.assertIn("0.18 kg", pages["Grilled Spider Meat"])
+        self.assertNotIn("{{Recipe row|Grilled Spider Meat", pages["Campfire"])
+        for title in ("Spider Meat", "Grilled Spider Meat", "Spider Silk"):
+            self.assertIn('<span id="price">', pages[title])
+            self.assertNotIn("=== Buying ===", pages[title])
+            self.assertNotIn("Merchants sell it", pages[title])
+        self.assertIn("check's body is empty", pages["World generation"])
+        self.assertIn("including the player", pages["Version 0.9.6.5"])
+        self.assertIn("normal world access is unconfirmed", pages["Webbed treasure"])
+        self.assertIn("7 to 44 silver", pages["Random treasure"])
+        images = {row.get("entity"): row for row in data["illustrations"] if "role" not in row}
+        for identity in ("item-224", "item-195", "item-58", "item-260"):
+            self.assertIn("(0.9.6.5, cropped)", images[identity]["file_title"])
+            self.assertIn("(0.9.6.5)", images[identity]["cropped_from"]["file_title"])
+        self.assertEqual(images["being-45"]["file_title"], "File:Mirk Lurker sprite (cropped).png")
+        pools = {row["id"]: set(row["eligible_item_ids"]) for row in catalog["acquisition"]["pools"]}
+        self.assertTrue({"item-285", "item-286"} <= pools["unwanted-remains"])
+        self.assertIn("item-286", pools["survivor-remains"])
+        for identity, members in pools.items():
+            self.assertNotIn("item-284", members, identity)
+            if identity not in {"unwanted-remains", "survivor-remains"}:
+                self.assertFalse({"item-285", "item-286"} & members, identity)
+
+    def test_patch_0965_combat_grid_changes_are_exact(self):
+        _, _, details = load_publication_inputs(ROOT)
+        profiles = {row["id"]: row["values"] for row in details["profiles"]}
+        grids = {row["id"]: row["rows"] for row in details["grids"]}
+        geomancer = profiles["being-16-initializer"]
+        self.assertEqual([geomancer[key] for key in
+                          ("base-xp", "being-armor", "awareness-distance", "ranged-distance")],
+                         [200, 20, 10, 10])
+        self.assertEqual(grids["being-16-ranged"][1][1], {"min": 1, "max": 2})
+        for identity, health, armor in (("being-16", 20, 20), ("being-45", 12, 0), ("being-46", 25, 6)):
+            cells = [cell for row in grids[identity + "-health"] for cell in row if cell]
+            self.assertEqual((sum(cell["health"] for cell in cells), sum(cell["armor"] for cell in cells)),
+                             (health, armor))
+        self.assertEqual(profiles["being-45-attack-pattern-totals"],
+                         {"melee-pattern-min": 2, "melee-pattern-max": 6})
+        self.assertEqual(profiles["being-46-attack-pattern-totals"],
+                         {"melee-pattern-min": 6, "melee-pattern-max": 6})
+
+    def test_patch_0965_language_lifecycle_and_cumulative_attribution(self):
+        data, catalog, details = load_publication_inputs(ROOT)
+        pages = build_pages(ROOT, data, catalog, details)
+        current = pages["Version 0.9.6.5"]
+        self.assertIn("cumulative changes since", current)
+        self.assertIn("English startup now regenerates all five", current)
+        self.assertIn("English Nature's contents remain unchanged", current)
+        self.assertIn("only inserts a missing Borderless", current)
+        self.assertIn("not proof of the binary's exact release time", pages["Version 0.9.5.6"])
+        sources = [row for row in data["sources"]
+                   if row["path"].startswith("Languages\\Chinese\\")]
+        self.assertIn("Nature.ini", {row["path"].rsplit("\\", 1)[1] for row in sources})
+        self.assertIn("2560", pages["Controls"])
+        self.assertIn("Borderless", pages["Controls"])
+        self.assertIn("24 world pixels", pages["Fire"])
+        self.assertIn("walking", pages["Resting"])
 
     def test_patch_0955_combat_crawl_and_fire_guards_reach_readers(self):
         data, catalog, details = load_publication_inputs(ROOT)
@@ -1383,7 +1467,7 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("75% chance", skill)
         self.assertIn("Without an equipped shield", skill)
         self.assertIn("10.5% at rank 1", self.pages["Combat basics"])
-        self.assertIn("0.9.5.6", self.pages["Main Page"])
+        self.assertIn("0.9.6.5", self.pages["Main Page"])
         self.assertIn("29 October 2026", self.pages["Version 0.9.2.0"])
         sources = {row["id"]: row for row in self.data["sources"]}
         self.assertEqual(sources["game-data-0920"]["sha256"],

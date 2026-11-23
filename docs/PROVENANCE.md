@@ -648,6 +648,134 @@ remain intact. No new entity, File import, move, runtime deployment or host
 maintenance is required. Previous publication and backup evidence remains
 historical; unrelated operational authorization gates are not cleared here.
 
+## Version 0.9.6.5 update
+
+Steam build 26778843 identifies itself as 0.9.6.5 in the menu display,
+new-world version check and saved-player VERSION. `game-data-0965` records
+binary SHA-256 `5e7e0cd817151c9f4e76c12ce0575c87bb21e16fb9b1e3100f22d5afb85bca0a`.
+The executable fingerprint is
+`6b658ef56eaa64c5f1bb4898cd054b42ca40ec2c6920a90e0ea90424d4f72d99`;
+no native behavior is inferred from that hash.
+
+The latest version-named Steam announcement (gid `1849827110427476`) was posted
+on 2026-11-19 at 08:13:21 UTC. Intervening announcements name 0.9.6.0
+(16 November, gid `1849458702688760`), 0.9.6.1 (17 November,
+gid `1849458702692481`) and 0.9.6.2 (18 November, Portuguese-availability
+body, gid `1849827110422859`). The comparison is directly from 0.9.5.6
+to the installed 0.9.6.5 binary. Announcement attribution is not a claim
+that intermediate binaries were individually installed or analyzed.
+
+All 284 entries were fingerprinted: 35 changed, none added or removed.
+The three new item definitions are Spider Meat (284), Grilled Spider Meat
+(285) and Spider Silk (286). Their English names cite `items-en-0965`;
+initializer profiles and current unit prices cite `databank_Alarm_1`.
+The grilled definition has a one-meat, one-output, 2.4-AP recipe and
+postprocessed weight 0.18 kg, but the complete Campfire menu in
+`scr_menu_related.menu_psynch` does not add 285. Its recipe remains prose
+with an access qualification, not an invented station-specific recipe row.
+No recipe consuming silk was found.
+
+Mirk Lurker (45) and Deathlob (46) names cite `beings-en-0965`.
+Their profiles, attack grids and health shapes use `databank_Alarm_3`
+and the complete `scr_basic_useful.being_initiate` initialization.
+Mirk Lurker has 12 HP cells without inherent armor; Deathlob has 25 HP cells
+and six inherent armor layers. New conditional corpse entries preserve
+the fixed three-meat Mirk Lurker drop and biased silk/meat quantities,
+including Deathlob's overstack splitting. The shared turn counter advances
+per being-turn processing, not per strike: the poison thresholds in
+`obj_being_Step_0` are documented separately from localization descriptions.
+
+The six Geomancer initializer changes are XP 300 to 200, armor 15 to 20,
+health size 5x3 to 5x4, detection 7 to 10, ranged distance 8 to 10,
+and ranged-center pattern 0.1 to 1.2. Its health/ranged grids and pattern
+totals change accordingly; other melee and shield values retain provenance.
+
+`manager_area_Alarm_2` consumes a new chance(0.333) draw only after an
+ordinary cave candidate passes collision checks, but its body is empty.
+Only `scr_mapcreations.create_solid` maps the special entrance sprite to
+area 13; normal generation does not select that sprite. Normal spider-cave
+access is explicitly unconfirmed, not a one-third cave-conversion claim.
+The latent area generator, webs, movement penalties and conditional treasure
+are distinguished from ordinary world reachability. New-location autosaves
+do not imply redesigned Gurb-Gurb, Ihar or camp placements.
+
+Treasure candidate IDs extend through 287. That is not a fourth new item:
+287 is a special container, and equipment 280-283 remains undefined.
+The twelve prior pool eligibility sets were reconstructed before extending
+the unrestricted Unwanted pool with 285/286 and Survivor pool with 286.
+Ordinary food/material exclusions preserve all other pool memberships.
+The amount algorithm and candidate-bound citations advance to this build.
+The conditional Webbed treasure source records its separate 8-20 silk
+addition and a thirteenth pool with 87 candidates. Its configured 7.5-45
+budget reaches integer results 7-44: the half-step loop ends at 44.5 and
+`i_r` delegates to `irandom_range`. The 714 total eligibility memberships
+do not imply ordinary access to this special container.
+
+Original current prose covers the announced borderless/resolution/windowed
+zoom changes, nearby fuel, scrolling, popup merging, same-parent inventory
+linking, narrower generic melee allowance, rest path halt, Ihar's exit
+boundary, dead-menu removal, boat bobbing and FPS alignment. Empty JSON
+and zero-size-buffer handling remain bounded robustness changes, not a
+claim that all save failures or rare torch crashes are eliminated.
+
+All five English INIs were freshly regenerated in the owned title-screen
+run: Nature's content hash is unchanged, but the Nature writer is restored.
+The 0.9.5.5/0.9.5.6 retained-Nature lifecycle does not apply to this build.
+Twenty files span English, Chinese, Spanish and Portuguese (Brazil).
+Non-English files are packaged translations; startup only inserts a missing
+Menus/Borderless key. Spanish UI underwent that limited migration in this
+run. New language-scoped hashes record changed or newly present files;
+existing identical hashes remain shared, including English Nature and Keys
+and Chinese Keys. Neither raw translations nor linguistic accuracy claims
+are published. SimSun adds 48 glyphs (2169 to 2217), CI GameDev adds 17
+(123 to 140); other font inventories remain unchanged.
+
+New spider/web audio and animation and achievement-art changes do not
+establish new live achievement unlocks, another defined spider, or usable
+undefined equipment. Only exact initializer-mapped illustration frames
+are considered for the separate guarded import described in IMAGES.md.
+No runtime redeployment is required by this content update.
+
+Changed-entry SHA-256 identities (common `gml_` prefix omitted):
+
+| Entry | SHA-256 |
+| --- | --- |
+| `GlobalScript_scr_ai_related` | `33a247dfc0bdb2b0dde8df9b0003887d746bbcf196b287b19a1dff082a2924d7` |
+| `GlobalScript_scr_basic_useful` | `6abef285aaf0eccb90fb23885dc69a264159619e4f9f29eafc289ee8a7424acc` |
+| `GlobalScript_scr_items` | `d13d461340f5071750dc7638da9743b3618e73c11d6d57e86cc0d5240c5d117c` |
+| `GlobalScript_scr_map_and_weather` | `c1526901a68e9192a0fc791055437b7382a40a7977245efc813c89e1a352da6a` |
+| `GlobalScript_scr_mapcreations` | `dcc981a2f78e10253dda40f49134251a390363dd54c967c7aa5cace318aec1c3` |
+| `GlobalScript_scr_menu_related` | `e812f67d0cd29c67980fe4f5a7b18ec2cdd287099adb0b460b8546e594be7e7c` |
+| `GlobalScript_scr_pathfinding` | `b9e952301e14b270d33c6c62ce1c8d4a5adc0ba92427e631ddcb6537478d355b` |
+| `GlobalScript_scr_popups_and_effects` | `b4b26bd711d65a9179413d630c46ead5f8e4da94f12cc9e0abffe1dca3ab9f3c` |
+| `GlobalScript_scr_saveload` | `7efb08787343d443e89d0e7215f616d0501468422cca67de4888eb3942829ea1` |
+| `GlobalScript_scr_smartones` | `528254e4a2e71efbca7751818f0978a3d9a8d4831e2190adb0807ce0f32690b8` |
+| `GlobalScript_scr_tiles_autotiling` | `f33dada9de2d203090051ccd4d6be8b9780db6db3e34262255e32d24459e6030` |
+| `GlobalScript_scr_tiles_finders` | `d20ff2858d08a3897d252ba5ca664e7d6525b67fb0d361f740222ac44dc6b669` |
+| `GlobalScript_scr_tiles_movement` | `1816a0783a218324b25cb6b2961e06eca5a235da8b177f8c1927c3c41e75d799` |
+| `Object_PAR_being_Alarm_1` | `a6ec2fd52b0ee9fda36661d0105b60d25984423b9f1db535b5bd046047bb7e2a` |
+| `Object_PAR_solid_Create_0` | `dde6987cc067c4bc630d6d20a181037eb4db1f7b1964cfd993c93f2ca8cd5f41` |
+| `Object_UI_Create_0` | `45f454b3d12dc22e1526d403f7c1df156c92999a8c18c0612802511a2f20a796` |
+| `Object_UI_Draw_64` | `2d5a3fce2bc01dcb537c1979b9109747110f66760240938d8b9f4419cb975c86` |
+| `Object_UI_Step_0` | `60be730a4d5c400383aefb7bdb9248586ee80c7f9ff5aecdc8f62185d9c4d9a8` |
+| `Object_camera_Step_0` | `60efd2492a1a72398e6575b60dd74c61638e7c5ece13e513126d621836551a2c` |
+| `Object_databank_Alarm_1` | `a2486cff71215019cc59d947c0b58fdeb5ad58b38700afafacc59cb25ffd6975` |
+| `Object_databank_Alarm_3` | `65dd6f4ad122910d7b9bdcdb90582bd3c9e0a59be91cb3744dfac764c9bf1499` |
+| `Object_manager_area_Alarm_2` | `d2dfc1451e9933fed3154b51afd4baf7273a52a0e9bcf0c6be0d33fe34994180` |
+| `Object_manager_area_Alarm_6` | `aa5d046b70275399444d8bdc1db132a6574655bc070ef67a109ea41ee0244fb6` |
+| `Object_manager_area_Draw_64` | `3d220e6ccd0f757fcc106263456fbfcdc3d35260cdbd2c68e67ebfe7d9474cd2` |
+| `Object_manager_particles_Create_0` | `c707b361659029a958dbfe10e8a654264a7e322e936b3eb7376bacb6b00ccff0` |
+| `Object_obj_being_Alarm_0` | `63ad2ebc7a896a6fb7fb69ebdc0a5e9483afe35a4aa29dc514ea496255e72e1b` |
+| `Object_obj_being_Step_0` | `55163c09e9f0f664746a9ada9da085623991d78ef0d278964f3a148053624e02` |
+| `Object_obj_container_Destroy_0` | `ae6d0baa32d91fd588d39b20eebcdec28fae167e8d4b56129ccf9bd0d6bf1d50` |
+| `Object_obj_eff_popup_Create_0` | `6b870f4e31d85f5addbcd6365c6608ba23847ad382cde2a9681dc50fd6e1736a` |
+| `Object_obj_menu_Create_0` | `a8c6af51f8bcad6b031d3543855423267b8b8734c21f43fd231c09787fa51538` |
+| `Object_obj_menu_Draw_64` | `bd755cffaf40902b6bc983d7d79cb3770283eef45d6897b64db165db3f252a71` |
+| `Object_obj_menu_Step_0` | `34195d19ab7798afc5dcb1821e9dff9a18ef6ebc5b80eb2a99d42f2f9491dbb3` |
+| `Object_obj_player_Step_0` | `b602acd2ef7e7d86c584675fb08e00a85813ccc2ad3d47363d5008a48b8ea12b` |
+| `Object_obj_solid_Draw_0` | `4c81e4af1bc2f95d90bd6d43de6afa52c16ecf89660515d385f222c6da1e62fb` |
+| `Room_rm_int_Create` | `c8a9be48ac9d4de76851b935a7c248b3afab68fb3584402784d1927098770da7` |
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

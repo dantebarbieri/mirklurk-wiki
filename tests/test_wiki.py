@@ -301,11 +301,11 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 34, "entities": 366, "facts": 107, "entries": 347},
+            {"sources": 52, "entities": 371, "facts": 107, "entries": 351},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
-            {"quest": 37, "merchant": 88, "recipe": 98, "loot": 90, "algorithm": 34},
+            {"quest": 37, "merchant": 88, "recipe": 98, "loot": 94, "algorithm": 34},
         )
         # 0.8.9.9 deliberately amended these original entries; the rest of the handoff stays pinned.
         amended = {"skill-1-0-mechanics", "skill-3-4-mechanics", "loot-amount-distribution", "crafting-station-modifiers",
@@ -325,19 +325,19 @@ class DataTests(unittest.TestCase):
         raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "d6aa4b58cbb7179362901457682a3e5270931d4fa9fb1846beaa2e26520686cc")
         update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
-        self.assertEqual(len(update), 86)
+        self.assertEqual(len(update), 90)
         raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "41950e0a2ad06e676ff4ef0cd6125f65846b3068a3b558566fd0fad30c36afbc")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "b174c9effef477358b9a9713c0072720f0e51563b6a030a6cc152a881d1456f3")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 424)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 430)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("These guides cover '''0.9.5.6'''", pages["Game mechanics"])
+        self.assertIn("These guides cover '''0.9.6.5'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -357,7 +357,7 @@ class DataTests(unittest.TestCase):
         amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
         raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "7ce6c6f3f6a19475c651b7a9b1a745d9e9bce2ebd0f10dc6890e0c0f46b60a0f")
-        self.assertEqual(data["game"]["build"], "0.9.5.6")
+        self.assertEqual(data["game"]["build"], "0.9.6.5")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
@@ -628,7 +628,7 @@ class HealthArmorTests(unittest.TestCase):
         from wiki_render import cell_grid
         # 0.8.9.9 pin: adds the new beings' and magic weapons' grids and the reviewed item-188/189 melee changes.
         self.assertEqual(hashlib.sha256(json.dumps(self.details["grids"], sort_keys=True).encode()).hexdigest(),
-                         "2cc46e4d6f2fc1c065cf70f9160b28795201bd304c992c40d39ae442d357457e")
+                         "e9896acdc98cc00bc17e6b78334c1204919d73bede144159ca9d79f90497f642")
         totals = {0: 0, 1: 0, 2: 0, 3: 0}
         for grid in self.details["grids"]:
             rendered = cell_grid(grid, "being", self.data["illustrations"])
@@ -647,7 +647,7 @@ class HealthArmorTests(unittest.TestCase):
                         else:
                             visible = str(expected["min"]) if expected["min"] == expected["max"] else f'{expected["min"]}-{expected["max"]}'
                             self.assertEqual(cell, visible)
-        self.assertEqual(totals, {0: 326, 1: 263, 2: 40, 3: 10})
+        self.assertEqual(totals, {0: 358, 1: 272, 2: 41, 3: 10})
         self.assertEqual(sum(page.count('class="health-armor-icon"') for page in self.pages.values()), 6)
         guide = self.pages["Health and armor"]
         for armor, name in ((1, "Bronze"), (2, "Silver"), (3, "Gold")):
