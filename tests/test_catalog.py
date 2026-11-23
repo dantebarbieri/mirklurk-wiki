@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 366)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 480)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 483)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 125)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 366)
@@ -1289,7 +1289,7 @@ class ProfileTests(unittest.TestCase):
         data, catalog, details = load_publication_inputs(ROOT)
         pages = build_pages(ROOT, data, catalog, details)
         current = pages["Version 0.9.6.5"]
-        self.assertIn("cumulative changes since", current)
+        self.assertIn("Changes observed by 0.9.6.5", current)
         self.assertIn("English startup now regenerates all five", current)
         self.assertIn("English Nature's contents remain unchanged", current)
         self.assertIn("only inserts a missing Borderless", current)
@@ -1301,6 +1301,35 @@ class ProfileTests(unittest.TestCase):
         self.assertIn("Borderless", pages["Controls"])
         self.assertIn("24 world pixels", pages["Fire"])
         self.assertIn("walking", pages["Resting"])
+
+    def test_announced_096_releases_have_separate_histories_without_guessed_introductions(self):
+        pages = build_pages(ROOT, *load_publication_inputs(ROOT))
+        expected = {
+            "0": ("16 November 2026", "Spanish", "Scaalmyr Geomancer", "1849458702688760"),
+            "1": ("17 November 2026", "Item Used", "mouse wheel", "1849458702692481"),
+            "2": ("18 November 2026", "Portuguese (Brazil)", "Return to Game", "1849827110422859"),
+            "5": ("19 November 2026", "Borderless", "2560 x 1440", "1849827110427476"),
+        }
+        for suffix, fragments in expected.items():
+            title = "Version 0.9.6." + suffix
+            with self.subTest(title=title):
+                for fragment in fragments:
+                    self.assertIn(fragment, pages[title])
+                self.assertIn("[[Versions]] | [[Game mechanics]] | [[Main Page]]", pages[title])
+                self.assertIn("[[" + title + "|" + title.removeprefix("Version ") + "]]", pages["Versions"])
+        self.assertIn("no separate 0.9.6.1 binary comparison", pages["Version 0.9.6.1"])
+        self.assertIn("names 0.9.6.2 in its body", pages["Version 0.9.6.2"])
+        self.assertIn("No intermediate binary was individually compared", pages["Version 0.9.6.5"])
+        self.assertNotIn("Portuguese (Brazil)", pages["Version 0.9.6.0"])
+        self.assertNotIn("Return to Game", pages["Version 0.9.6.5"])
+        self.assertIn("Changed in [[Version 0.9.6.0|", pages["Scaalmyr Geomancer"])
+        self.assertNotIn("Changed in [[Version 0.9.6.5|", pages["Scaalmyr Geomancer"])
+        for title in ("Mirk Lurker", "Deathlob", "Spider Meat", "Spider Silk",
+                      "Grilled Spider Meat", "Steel Shield", "Grilled Bat Meat"):
+            self.assertNotIn("New in [[Version 0.9.6.", pages[title])
+            self.assertNotIn("Changed in [[Version 0.9.6.", pages[title])
+        self.assertIn("check's body is empty", pages["Version 0.9.6.5"])
+        self.assertIn("Crafting access is unconfirmed", pages["Version 0.9.6.5"])
 
     def test_patch_0955_combat_crawl_and_fire_guards_reach_readers(self):
         data, catalog, details = load_publication_inputs(ROOT)

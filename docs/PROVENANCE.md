@@ -664,6 +664,15 @@ gid `1849458702692481`) and 0.9.6.2 (18 November, Portuguese-availability
 body, gid `1849827110422859`). The comparison is directly from 0.9.5.6
 to the installed 0.9.6.5 binary. Announcement attribution is not a claim
 that intermediate binaries were individually installed or analyzed.
+Each announcement now has a separate Version page and dated Versions-index
+row. The 0.9.6.2 version is named in the Portuguese announcement's body,
+not its title. Announcement-specific changes stay on their respective pages;
+unattributed source findings remain under "Changes observed by 0.9.6.5",
+explicitly bounded to the 0.9.5.6-to-0.9.6.5 comparison. This section is
+outside the New content/Changes headings that generate introduction footers,
+so it does not assign the spiders, changed item art or other source-only
+findings to an unverified release. Gameplay records and artwork are unchanged
+by this history reorganization.
 
 All 284 entries were fingerprinted: 35 changed, none added or removed.
 The three new item definitions are Spider Meat (284), Grilled Spider Meat

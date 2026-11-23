@@ -1,0 +1,18 @@
+'''Version 0.9.6.1''' is the patch released on 17 November 2026, following [[Version 0.9.6.0]]. Its announcement covers Chinese characters, item-use popups and fuel-menu navigation. The wiki now shows values from [[Version 0.9.6.5]]; no separate 0.9.6.1 binary comparison was made.
+
+== Changes ==
+=== Chinese characters ===
+More missing Chinese characters are added. The announcement does not identify this release's individual glyphs or their count.
+
+== Fixes ==
+=== Popups and fuel menus ===
+Item Used popups update correctly.
+
+The [[Fire|fuel menu]] scrolls with arrows or the mouse wheel instead of overstacking and expanding indefinitely to the right.
+
+== Announcement ==
+[https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1849458702692481 Steam announcement], posted on 17 November 2026 (UTC). Source-only findings from the direct 0.9.5.6 to 0.9.6.5 comparison remain on [[Version 0.9.6.5]].
+
+'''Previous:''' [[Version 0.9.6.0]] | '''Next:''' [[Version 0.9.6.2]]
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

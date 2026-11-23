@@ -330,7 +330,7 @@ class DataTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "b174c9effef477358b9a9713c0072720f0e51563b6a030a6cc152a881d1456f3")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 430)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 433)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
