@@ -102,6 +102,11 @@
           "Traveller's Cloak",
           "Ranger's Cloak",
           "Clay's Magus Hood"
+        ,
+          "Well Tailored Socks",
+          "Laughable Socks",
+          "Well Tailored Shirt",
+          "Well Tailored Pants"
         ]
       },
       {
@@ -129,6 +134,11 @@
           "Shabby Leather Leg Armor"
         ,
           "Intact Snail Shell"
+        ,
+          "Iron Shield",
+          "Iron Chestplate",
+          "Steel Buckler",
+          "Wooden Shield"
         ]
       },
       {
@@ -181,6 +191,12 @@
           "Orb of Steel Essence",
           "Orb of Wind",
           "Orb of Storm"
+        ,
+          "Battle Hammer",
+          "Halfmoon Axe",
+          "War Mace",
+          "Hand Sickle",
+          "Sturdy Shortbow"
         ]
       },
       {
@@ -502,6 +518,10 @@
           "Steel Greatsword",
           "Iron Battleaxe",
           "Steel Battleaxe"
+        ,
+          "Halfmoon Axe",
+          "War Mace",
+          "Hand Sickle"
         ]
       },
       {
@@ -574,10 +594,19 @@
           "Flint Dagger"
         ]
       },
-      {"title": "Sharp weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Sharp damage: daggers, knives and swords.", "members": ["Shoddy Dagger", "Flint Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Greatsword", "Steel Greatsword"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[2,3,4,5,6,7,8,9,10,11,184,185].damageClass"}, {"source": "game-data-0910", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[277].damageClass"}]},
-      {"title": "Blunt weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Blunt damage, which can stun.", "members": ["Stone Club", "Iron Cudgel", "Steel Cudgel", "Heavy Branch (Cypress)", "Iron Warhammer", "Steel Warhammer", "Orb of Iron Essence", "Orb of Steel Essence"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[31,90,157,158,169,186,187,271,272].damageClass"}]},
-      {"title": "Force weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Force damage.", "members": ["Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Orb of Storm"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[27,28,29,30,188,189,190,191,274].damageClass"}]},
-      {"title": "Piercing weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Piercing damage, mostly bows.", "members": ["Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Iron Morning Star", "Steel Morning Star", "Gurb's Expertimental Bow"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[44,93,105,106,160,161,179].damageClass"}]},
+      {"title": "Sharp weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Sharp damage: daggers, knives and swords.", "members": ["Shoddy Dagger", "Flint Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Greatsword", "Steel Greatsword",
+                                                                                                                                                                                                                                                                                                                                                                                                                            "Hand Sickle"
+                                                                                                                                                                                                                                                                                                                                                                                                                          ], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[2,3,4,5,6,7,8,9,10,11,184,185].damageClass"}, {"source": "game-data-0910", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[277].damageClass"}]},
+      {"title": "Blunt weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Blunt damage, which can stun.", "members": ["Stone Club", "Iron Cudgel", "Steel Cudgel", "Heavy Branch (Cypress)", "Iron Warhammer", "Steel Warhammer", "Orb of Iron Essence", "Orb of Steel Essence",
+                                                                                                                                                                                                                                                                                                                "Battle Hammer"
+                                                                                                                                                                                                                                                                                                              ], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[31,90,157,158,169,186,187,271,272].damageClass"}]},
+      {"title": "Force weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Force damage.", "members": ["Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Orb of Storm",
+                                                                                                                                                                                                                                                                                                 "Halfmoon Axe",
+                                                                                                                                                                                                                                                                                                 "War Mace"
+                                                                                                                                                                                                                                                                                               ], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[27,28,29,30,188,189,190,191,274].damageClass"}]},
+      {"title": "Piercing weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Piercing damage, mostly bows.", "members": ["Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Iron Morning Star", "Steel Morning Star", "Gurb's Expertimental Bow",
+                                                                                                                                                                                                                                                                                                            "Sturdy Shortbow"
+                                                                                                                                                                                                                                                                                                          ], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[44,93,105,106,160,161,179].damageClass"}]},
       {"title": "Fire weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Fire damage.", "members": ["Staff of The Fire Eater", "Orb of Fire", "Orb of Greater Fire"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[266,269,270].damageClass"}]},
       {"title": "Weak-damage weapons", "index": "Items", "parents": ["Weapons"], "summary": "Weapons that deal Weak damage.", "members": ["Orb of Wind"], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[273].damageClass"}]},
       {"title": "Repair kits", "index": "Items", "parents": ["Consumables", "Repair and refuelling supplies"], "summary": "Cloth, Wood and Metal Repair Kits, which restore the condition of equipment.", "members": ["Cloth Repair Kit", "Wood Repair Kit", "Metal Repair Kit"], "confidence": "inferred", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "items_bonus_apply.repair-and-fuel/amount-decrement"}]},
@@ -676,7 +705,13 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "One-handed weapons, two-handed weapons and torches. Two-handed melee weapons occupy both hands; bows use arrows in the off hand.",
-        "members": ["Shoddy Dagger", "Flint Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Torch", "Shortbow (Willow)", "Stone Club", "Improvised Bow", "Improvised Torch", "Longbow (Cypress)", "Longbow (Yew)", "Iron Cudgel", "Steel Cudgel", "Serpent Fang", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Thorns of Wackah", "Improvised Enduring Torch", "Staff of The Fire Eater", "Orb of Poison", "Orb of Greater Poison", "Orb of Fire", "Orb of Greater Fire", "Orb of Iron Essence", "Orb of Steel Essence", "Orb of Wind", "Orb of Storm"],
+        "members": ["Shoddy Dagger", "Flint Dagger", "Iron Dagger", "Steel Dagger", "Decent Hunting Knife", "Great Hunting Knife", "Hunter Master's Knife", "Steel Longsword", "Iron Shortsword", "Steel Shortsword", "Iron Longsword", "Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Torch", "Shortbow (Willow)", "Stone Club", "Improvised Bow", "Improvised Torch", "Longbow (Cypress)", "Longbow (Yew)", "Iron Cudgel", "Steel Cudgel", "Serpent Fang", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Iron Mace", "Steel Mace", "Thorns of Wackah", "Improvised Enduring Torch", "Staff of The Fire Eater", "Orb of Poison", "Orb of Greater Poison", "Orb of Fire", "Orb of Greater Fire", "Orb of Iron Essence", "Orb of Steel Essence", "Orb of Wind", "Orb of Storm",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "Battle Hammer",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "Halfmoon Axe",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "War Mace",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "Hand Sickle",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "Sturdy Shortbow"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[16,17,23]"},
@@ -691,6 +726,10 @@
         "summary": "Shields, lanterns, torches and arrows. Two-handed melee weapons occupy this hand but cannot be placed here independently.",
         "members": ["Wooden Buckler", "Iron Buckler", "Torch", "Iron Arrow", "Steel Arrow", "Large Scaalmyr Husk", "Steel Shield", "Flinthead Arrow", "Improvised Torch", "Lantern", "Masterwork Lantern", "Improvised Shield", "Poison Arrow", "Improvised Enduring Torch", "Poison Arrow II", "Poison Arrow III",
                                                                                                                                                                                                                                                                                                                   "Intact Snail Shell"
+                                                                                                                                                                                                                                                                                                                ,
+                                                                                                                                                                                                                                                                                                                  "Iron Shield",
+                                                                                                                                                                                                                                                                                                                  "Steel Buckler",
+                                                                                                                                                                                                                                                                                                                  "Wooden Shield"
                                                                                                                                                                                                                                                                                                                 ],
         "confidence": "inferred",
         "evidence": [
@@ -728,7 +767,9 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Shirts worn beneath outer torso equipment.",
-        "members": ["Simple Shirt", "Wool Shirt", "Hiker's Shirt"],
+        "members": ["Simple Shirt", "Wool Shirt", "Hiker's Shirt",
+                                                                   "Well Tailored Shirt"
+                                                                 ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[3]"},
@@ -740,7 +781,9 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Vests and chest armor, worn separately from shirts.",
-        "members": ["Leather Vest", "Steel Chestplate", "Troll Skin Vest", "Shabby Leather Vest", "Forager's Vest", "Explorer's Vest", "Expedition Vest"],
+        "members": ["Leather Vest", "Steel Chestplate", "Troll Skin Vest", "Shabby Leather Vest", "Forager's Vest", "Explorer's Vest", "Expedition Vest",
+                                                                                                                                                          "Iron Chestplate"
+                                                                                                                                                        ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[4]"},
@@ -800,7 +843,9 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Pants, worn separately from leg armor.",
-        "members": ["Simple Pants", "Hiker's Pants", "Worn Leather Pants"],
+        "members": ["Simple Pants", "Hiker's Pants", "Worn Leather Pants",
+                                                                           "Well Tailored Pants"
+                                                                         ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[9]"},
@@ -824,7 +869,10 @@
         "index": "Items",
         "parents": ["Equipment by slot"],
         "summary": "Socks, worn separately from shoes and boots.",
-        "members": ["Worn Socks", "Decent Socks", "Fine Wool Socks"],
+        "members": ["Worn Socks", "Decent Socks", "Fine Wool Socks",
+                                                                     "Well Tailored Socks",
+                                                                     "Laughable Socks"
+                                                                   ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[11]"},
@@ -862,28 +910,37 @@
         "index": "Items",
         "parents": ["Weapons", "Cutting and chopping tools"],
         "summary": "Hand axes, felling axes and battleaxes, used for combat and chopping.",
-        "members": ["Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Iron Battleaxe", "Steel Battleaxe"]
+        "members": ["Iron Hand Axe", "Steel Hand Axe", "Iron Felling Axe", "Steel Felling Axe", "Iron Battleaxe", "Steel Battleaxe",
+                                                                                                                                     "Halfmoon Axe"
+                                                                                                                                   ]
       },
       {
         "title": "Clubs, maces and hammers",
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Clubs, cudgels, morning stars, maces, warhammers and Heavy Branch. Damage types vary.",
-        "members": ["Stone Club", "Iron Cudgel", "Steel Cudgel", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Iron Warhammer", "Steel Warhammer", "Iron Mace", "Steel Mace"]
+        "members": ["Stone Club", "Iron Cudgel", "Steel Cudgel", "Iron Morning Star", "Steel Morning Star", "Heavy Branch (Cypress)", "Iron Warhammer", "Steel Warhammer", "Iron Mace", "Steel Mace",
+                                                                                                                                                                                                      "Battle Hammer",
+                                                                                                                                                                                                      "War Mace"
+                                                                                                                                                                                                    ]
       },
       {
         "title": "Bows",
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Bows use the main hand with arrows readied in the off hand.",
-        "members": ["Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Gurb's Expertimental Bow"]
+        "members": ["Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Gurb's Expertimental Bow",
+                                                                                                                             "Sturdy Shortbow"
+                                                                                                                           ]
       },
       {
         "title": "Two-handed weapons",
         "index": "Items",
         "parents": ["Weapons"],
         "summary": "Melee weapons occupy both hands. Bows instead use off-hand ammunition.",
-        "members": ["Iron Felling Axe", "Steel Felling Axe", "Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Thorns of Wackah", "Staff of The Fire Eater"],
+        "members": ["Iron Felling Axe", "Steel Felling Axe", "Shortbow (Willow)", "Improvised Bow", "Longbow (Cypress)", "Longbow (Yew)", "Heavy Branch (Cypress)", "Gurb's Expertimental Bow", "Iron Greatsword", "Steel Greatsword", "Iron Warhammer", "Steel Warhammer", "Iron Battleaxe", "Steel Battleaxe", "Thorns of Wackah", "Staff of The Fire Eater",
+                                                                                                                                                                                                                                                                                                                                                                "Sturdy Shortbow"
+                                                                                                                                                                                                                                                                                                                                                              ],
         "confidence": "inferred",
         "evidence": [
           {"source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[*].type[17]"},
@@ -1043,6 +1100,8 @@
           "Bursthopper",
           "Firefly",
           "Bat Meat"
+        ,
+          "Spider Meat"
         ]
       },
       {
@@ -1239,7 +1298,7 @@
         "title": "Spiders",
         "index": "Bestiary",
         "members": ["Mirk Lurker", "Deathlob"],
-        "summary": "Defined spider creatures. Normal access to their cave area is unconfirmed."
+        "summary": "Defined spider creatures. Their cave is reachable through new-area entrances."
       }
     ]
   },
@@ -3078,6 +3137,20 @@
     {"entity": "item-286", "title": "Spider Silk", "aliases": []},
     {"entity": "being-45", "title": "Mirk Lurker", "aliases": []},
     {"entity": "being-46", "title": "Deathlob", "aliases": []}
+  ,
+    {"entity": "item-280", "title": "Iron Shield", "aliases": []},
+    {"entity": "item-281", "title": "Iron Chestplate", "aliases": []},
+    {"entity": "item-282", "title": "Steel Buckler", "aliases": []},
+    {"entity": "item-283", "title": "Wooden Shield", "aliases": []},
+    {"entity": "item-288", "title": "Battle Hammer", "aliases": []},
+    {"entity": "item-289", "title": "Halfmoon Axe", "aliases": []},
+    {"entity": "item-290", "title": "War Mace", "aliases": []},
+    {"entity": "item-291", "title": "Well Tailored Socks", "aliases": []},
+    {"entity": "item-292", "title": "Laughable Socks", "aliases": []},
+    {"entity": "item-293", "title": "Well Tailored Shirt", "aliases": []},
+    {"entity": "item-294", "title": "Well Tailored Pants", "aliases": []},
+    {"entity": "item-295", "title": "Hand Sickle", "aliases": []},
+    {"entity": "item-296", "title": "Sturdy Shortbow", "aliases": []}
   ],
   "classifications": [
     {
@@ -4922,8 +4995,12 @@
     {"entity": "being-42", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[42].static-values"}, {"source": "beings-en-0950", "section": "Titles", "key": "42"}], "note": "Creature or enemy presentation grouping; this does not assert universal hostility.", "summary": "A Toadkin healer with an armored cross through its health grid. It can heal itself or a nearby Toadkin, while its blunt attack hits a 2 x 2 area.", "ability": {"title": "Healing and companions", "paragraphs": ["Every third own turn it looks for the closest wounded Toadkin-faction creature within 128 world pixels (8 tiles), including itself. Healing restores up to 5 lost HP cells and costs 4 AP; burnt cells do not heal.", "If nobody eligible is wounded, it keeps its accumulated turns until a target is available.", "When the area repopulates an ordinary Toadkin spawn, a separate 20% roll can add a Shaman companion. The existing 75% extra-Toadkin roll is independent, so both companions can appear.", "Its corpse contains 1 to 2 Toadkin Meat and a small treasure roll with a 1.2-silver budget, 25-copper minimum non-valuable value and a one-square item limit.", "It has 13 HP cells. The five cells in its central cross each start with two armor layers."], "related_entities": ["Toadkin", "Toadkin Meat"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[42]"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Step_0", "key": "being42.turnCounter/specialTarget"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Step_0", "key": "being42.special"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[42]"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}]}},
     {"entity": "being-43", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[43].static-values"}, {"source": "beings-en-0950", "section": "Titles", "key": "43"}], "note": "Creature or enemy presentation grouping; this does not assert universal hostility.", "summary": "A slow, weak attacker whose shell armor regrows. It shares the Giant Slug faction but leaves useful shell pieces when killed.", "ability": {"title": "Shell regeneration and drops", "paragraphs": ["Every third own turn it restores one armor layer on each of its four shell cells that is still alive but has lost that layer. It does not heal lost HP or restore burnt cells.", "Its grid has 5 HP cells, four of which start with one armor layer.", "During normal spawn initialization, a selected Giant Slug becomes a Giant Snail 55% of the time in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. There is no substitution in the fort's area.", "Its corpse holds 1 to 3 Snail Shell Shards. Separately, it has a 15% chance to drop an Intact Snail Shell, with 9 to 15 durability rather than a guaranteed full shell."], "related_entities": ["Giant Slug", "Snail Shell Shard", "Intact Snail Shell"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[43]/slug-substitution"}, {"source": "game-data-0950", "section": "gml_Object_manager_area_Step_0", "key": "being43.turnCounter>=3"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Step_0", "key": "being43.special.hpgrid[1,0;2,0;1,1;2,1].1->2"}, {"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278/item279.chance0.15.durability"}]}}
   ,
-    {"entity": "being-45", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[45].static-values"}], "note": "Defined creature; ordinary world access is not established.", "summary": "A spider with 12 HP cells and a 40% base dodge chance. Normal access to its cave area is unconfirmed.", "ability": {"title": "Attacks, webs and drops", "paragraphs": ["Its 10 AP and 4-AP attack cost allow up to two attacks in a turn if it spends no AP elsewhere.", "Its base attacks are Blunt. An attack switches to Poison when its turn counter has reached two, then resets that counter. The counter advances during being-turn processing, not per strike; do not treat this as a guaranteed alternating-attack schedule.", "It starts with 12 HP cells and 0 inherent armor layers. Spiders avoid the ordinary ground-penalty grid and keep webs intact when stepping through them.", "Its definition and the spider-cave spawning branch exist, but a normal entrance to that area is unconfirmed."], "related_entities": ["Spider Meat", "Spider Silk"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[45];player_endturn.turnCounter"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Step_0", "key": "attackClass.index45.turnCounter"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeonlike_areas.area13"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}]}},
-    {"entity": "being-46", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[46].static-values"}], "note": "Defined creature; ordinary world access is not established.", "summary": "A spider with 25 HP cells and a 33% base dodge chance. Normal access to its cave area is unconfirmed.", "ability": {"title": "Attacks, webs and drops", "paragraphs": ["Its 10 AP and 3-AP attack cost allow up to three attacks in a turn if it spends no AP elsewhere.", "Its base attacks are Blunt. An attack switches to Poison when its turn counter has reached three, then resets that counter. The counter advances during being-turn processing, not per strike; do not treat this as a guaranteed alternating-attack schedule.", "It starts with 25 HP cells and 6 inherent armor layers. Spiders avoid the ordinary ground-penalty grid and keep webs intact when stepping through them.", "Its definition and the spider-cave spawning branch exist, but a normal entrance to that area is unconfirmed."], "related_entities": ["Spider Meat", "Spider Silk"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[46];player_endturn.turnCounter"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Step_0", "key": "attackClass.index46.turnCounter"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeonlike_areas.area13"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}]}}
+    {"entity": "being-45", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[45].static-values"}], "note": "Its base definition predates 1.0; the release makes its cave ordinarily reachable in new areas.", "summary": "A spider with 12 HP cells and a 40% base dodge chance. Its spider cave is reachable in newly generated areas.", "ability": {"title": "Attacks, webs and drops", "paragraphs": ["Its 10 AP and 4-AP attack cost allow up to two attacks in a turn if it spends no AP elsewhere.", "Its base attacks are Blunt. An attack switches to Poison when its turn counter has reached two, then resets that counter. The counter advances during being-turn processing, not per strike; do not treat this as a guaranteed alternating-attack schedule.", "It starts with 12 HP cells and 0 inherent armor layers. Spiders avoid the ordinary ground-penalty grid and keep webs intact when stepping through them.", "The spider cave entrance first became functional in the 0.9.9.7 tester and is shipped in public 1.0. Only newly generated areas can receive it; the creature's base stats are unchanged."], "related_entities": ["Spider Meat", "Spider Silk"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[45];player_endturn.turnCounter"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Step_0", "key": "attackClass.index45.turnCounter"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeonlike_areas.area13"}, {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_2", "key": "eligibleCave.chance0.333.specialEntrance"}]}},
+    {"entity": "being-46", "kind": "creature", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[46].static-values"}], "note": "Its base definition predates 1.0; the release makes its cave ordinarily reachable in new areas.", "summary": "A spider with 25 HP cells and a 33% base dodge chance. Its spider cave is reachable in newly generated areas.", "ability": {"title": "Attacks, webs and drops", "paragraphs": ["Its 10 AP and 3-AP attack cost allow up to three attacks in a turn if it spends no AP elsewhere.", "Its base attacks are Blunt. An attack switches to Poison when its turn counter has reached three, then resets that counter. The counter advances during being-turn processing, not per strike; do not treat this as a guaranteed alternating-attack schedule.", "It starts with 25 HP cells and 6 inherent armor layers. Spiders avoid the ordinary ground-penalty grid and keep webs intact when stepping through them.", "The spider cave entrance first became functional in the 0.9.9.7 tester and is shipped in public 1.0. Only newly generated areas can receive it; the creature's base stats are unchanged.",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             "Outside land selection has relative weight 0.125 in Sunken Ancient Ruins and 0.1 in other general outside pools, not 12.5% or 10% encounter probabilities. Population, terrain, visibility and quest gates still apply."
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ], "related_entities": ["Spider Meat", "Spider Silk"], "related_pages": ["Areas"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.index[46];player_endturn.turnCounter"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Step_0", "key": "attackClass.index46.turnCounter"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeonlike_areas.area13"}, {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_2", "key": "eligibleCave.chance0.333.specialEntrance"},
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.Deathlob.relativeWeights"}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ]}}
   ],
   "entry_links": [
     {
@@ -6023,10 +6100,10 @@
     {"entry": "corpse-43-278", "summary": "One to three Snail Shell Shards; lower quantities are more likely.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."},
     {"entry": "corpse-43-279", "summary": "A separate 15% drop roll produces an Intact Snail Shell with 9 to 15 durability.", "conditions": "Requires a lootable corpse. Harvesting, skills and recovered arrows are additional."}
   ,
-    {"entry": "corpse-45-284", "summary": "A lootable Mirk Lurker corpse contains 3 Spider Meat.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."},
-    {"entry": "corpse-45-286", "summary": "A lootable Mirk Lurker corpse contains 2 to 3 Spider Silk.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."},
-    {"entry": "corpse-46-284", "summary": "A lootable Deathlob corpse contains 7 to 11 Spider Meat.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."},
-    {"entry": "corpse-46-286", "summary": "A lootable Deathlob corpse contains 6 to 8 Spider Silk.", "conditions": "Ordinary access to these spiders is unconfirmed. Harvesting and recovered arrows are additional."}
+    {"entry": "corpse-45-284", "summary": "A lootable Mirk Lurker corpse contains 3 Spider Meat.", "conditions": "The spider cave is reachable through entrances in newly generated areas. Harvesting and recovered arrows are additional."},
+    {"entry": "corpse-45-286", "summary": "A lootable Mirk Lurker corpse contains 2 to 3 Spider Silk.", "conditions": "The spider cave is reachable through entrances in newly generated areas. Harvesting and recovered arrows are additional."},
+    {"entry": "corpse-46-284", "summary": "A lootable Deathlob corpse contains 7 to 11 Spider Meat.", "conditions": "The spider cave is reachable through entrances in newly generated areas. Harvesting and recovered arrows are additional."},
+    {"entry": "corpse-46-286", "summary": "A lootable Deathlob corpse contains 6 to 8 Spider Silk.", "conditions": "The spider cave is reachable through entrances in newly generated areas. Harvesting and recovered arrows are additional."}
   ],
   "stations": [
     {
@@ -7729,6 +7806,20 @@
       {"entity": "item-284", "value": 0.05, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[284].price;postprocessing.price"}]},
       {"entity": "item-285", "value": 0.12, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[285].price;postprocessing.price"}]},
       {"entity": "item-286", "value": 0.2, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[286].price;postprocessing.price"}]}
+    ,
+      {"entity": "item-280", "value": 7.5, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[280].price;postprocessing.price"}]},
+      {"entity": "item-281", "value": 8.75, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[281].price;postprocessing.price"}]},
+      {"entity": "item-282", "value": 4, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[282].price;postprocessing.price"}]},
+      {"entity": "item-283", "value": 2.5, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[283].price;postprocessing.price"}]},
+      {"entity": "item-288", "value": 10.5, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[288].price;postprocessing.price"}]},
+      {"entity": "item-289", "value": 11.5, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[289].price;postprocessing.price"}]},
+      {"entity": "item-290", "value": 11.5, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[290].price;postprocessing.price"}]},
+      {"entity": "item-291", "value": 1.2, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[291].price;postprocessing.price"}]},
+      {"entity": "item-292", "value": 0.02, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[292].price;postprocessing.price"}]},
+      {"entity": "item-293", "value": 3.5, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[293].price;postprocessing.price"}]},
+      {"entity": "item-294", "value": 3.5, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[294].price;postprocessing.price"}]},
+      {"entity": "item-295", "value": 4, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[295].price;postprocessing.price"}]},
+      {"entity": "item-296", "value": 4.25, "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[296].price;postprocessing.price"}]}
     ],
     "covered_offers": [
       "merchant-8-item-85",
@@ -7825,18 +7916,18 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "0.9.6.5",
-      "confirmation": "The installed 0.9.6.5 menu display and version check agree with the version-named Steam announcement of 19 November 2026. This is a direct comparison with 0.9.5.6, not separate analyses of intermediate binaries.",
+      "version": "1.0.0.0",
+      "confirmation": "The official Steam 1.0 announcement of 25 November 2026 ends Early Access. The installed public menu, version check and save writer identify its binary as 1.0.0.0; 1.0 is the announcement label.",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_Object_obj_menu_Step_0",
-          "key": "versionCheck"
+          "key": "manager_area.versionCheck"
         }
       ]
     },
@@ -8523,6 +8614,8 @@
         "Body Warmth reduces cooling loss and improves drying. Difficulty also modifies cooling losses, not every temperature change; see Wellbeing.",
         "Nearby active fires warm and dry you. Warm to the core halves ambient cooling; see Wellbeing for its other bonus. Shelter reduces rain exposure and can cool hot conditions. Equipment condition affects insulation and waterproofing; sleeping gear helps while in use.",
         "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse does too, but also causes a fire hit. Casting a fire orb drains warmth; see Magic weapons."
+      ,
+        "The spider cave is now dungeon-like as well as cave-like. Unlike the 0.9.9.7 tester, its HUD uses the underground indicator without weather overlays. Player warmth and drying use a normalized 0.35 ambient baseline instead of the current weather temperature. Container drying also uses 0.35 before existing fire, rain and waterproofing modifiers; this does not mean every wetness calculation ignores weather."
       ],
       "section_titles": [
         "The comfortable range",
@@ -8531,6 +8624,8 @@
         "Cooling modifiers",
         "Fire, shelter and clothing",
         "Warm food"
+      ,
+        "Spider cave in 1.0"
       ],
       "related_entities": [
         "Body Warmth",
@@ -8559,6 +8654,11 @@
         {"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet;player_update_gearstats;player_get_combined_wellbeing"},
         {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.bonuses[7].player_warmth_lose"},
         {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes.case3"}
+      ,
+        {"source": "game-data-1000", "section": "gml_GlobalScript_scr_map_and_weather", "key": "area_is_dungeonlike.area_is_cavelike.includes13"},
+        {"source": "game-data-1000", "section": "gml_Object_UI_Draw_64", "key": "daycycle/temperature.area_is_dungeonlike"},
+        {"source": "game-data-1000", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet.whatTemp"},
+        {"source": "game-data-1000", "section": "gml_Object_obj_container_Alarm_1", "key": "whatTemp/clothDryValue"}
       ]
     },
     {
@@ -8573,6 +8673,8 @@
         "Honey improves wellbeing and shortens sickness. Riftvine Berries reduce wellbeing."
       ,
         "Slow Metabolism now reduces hunger's wellbeing penalty every third rank; Body Warmth does the same for both hot and cold penalties. Their existing per-rank meter-retention effects are separate."
+      ,
+        "With no sickness effect, the accidental 0.16 wellbeing increase is removed and sickness time is reset. Sickness levels retain their 1%, 2% and 3% penalties."
       ],
       "section_titles": [
         "Combining the four meters",
@@ -8584,6 +8686,8 @@
         "Direct food effects"
       ,
         null
+      ,
+        "Release 1.0"
       ],
       "related_entities": [
         "Honey",
@@ -8611,6 +8715,8 @@
         {"source": "ui-en", "section": "AEs", "key": "20/21/22/24/25/26"},
         {"source": "game-data-0899", "section": "gml_Object_obj_player_Step_0", "key": "weapon_is_orb.wbDrain.player_wellbeing_dmg"},
         {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_stat_changes"}
+      ,
+        {"source": "game-data-1000", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_get_combined_wellbeing.highestLvl/sickTime"}
       ]
     },
     {
@@ -8788,9 +8894,13 @@
         "Lesser shelter blocks 80% of rain and stronger shelter blocks 95%. Shelter can cool hot conditions. Nearby active fires warm and dry you. Dungeon-like areas use a separate ambient temperature baseline.",
         "Weather and temperature keep changing while you rest. Check your shelter, clothing and wellbeing trend before sleeping.",
         "Rain applies clothing-filtered wetness to each body part and wets carried inventory, capped at full wetness. Container contents are wetted according to their container's waterproofing. Rain reduces container drying by rain strength times 0.15, never below zero; waterproof equipment stats themselves are unchanged. While using a bed, bedroll or tent, incoming rain is multiplied by one minus half the sleeping item's waterproof value before the usual clothing filters and inventory propagation. For example, 80% waterproofing gives a 0.6 multiplier, not rain immunity. Sleep and bed rest still process ordinary drying and other wetness changes."
+      ,
+        "The spider cave is now dungeon-like as well as cave-like. Unlike the 0.9.9.7 tester, its HUD uses the underground indicator without weather overlays. Player warmth and drying use a normalized 0.35 ambient baseline instead of the current weather temperature. Container drying also uses 0.35 before existing fire, rain and waterproofing modifiers; this does not mean every wetness calculation ignores weather."
       ],
       "section_titles": ["Changing weather", "Rain history", "Early-game rain protection", "Wetness and exposure", "Shelter and local conditions", "Resting through weather",
                                                                                                                                                                               null
+                                                                                                                                                                            ,
+                                                                                                                                                                              "Spider cave in 1.0"
                                                                                                                                                                             ],
       "related_entities": ["Campfire", "Traveller's Cloak", "Great Bedroll", "Furhide Bedroll"],
       "related_pages": ["Temperature", "Wellbeing", "Resting", "Action points"],
@@ -8805,6 +8915,11 @@
         {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "container_time_pass.rain/drying/containerWaterproof"},
         {"source": "game-data-0955", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_rained_upon.state19.waterproof/2;player_gets_all_wet.itemPerc/2.both-directions"},
         {"source": "game-data-0955", "section": "gml_GlobalScript_scr_gen_ingamers", "key": "wet_transfer.target-waterproof/absorption"}
+      ,
+        {"source": "game-data-1000", "section": "gml_GlobalScript_scr_map_and_weather", "key": "area_is_dungeonlike.area_is_cavelike.includes13"},
+        {"source": "game-data-1000", "section": "gml_Object_UI_Draw_64", "key": "daycycle/temperature.area_is_dungeonlike"},
+        {"source": "game-data-1000", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_gets_all_wet.whatTemp"},
+        {"source": "game-data-1000", "section": "gml_Object_obj_container_Alarm_1", "key": "whatTemp/clothDryValue"}
       ]
     },
     {
@@ -8925,10 +9040,12 @@
     },
     {
       "title": "Tree health and chopping",
-      "section_titles": ["Tree life", "Do trees slowly die?", "Branches follow their parent", "Rifts", "Dead wood", "Chop cost and dryness", "Trunks and part names", "Willow", "Cypress", "Trollgnarl", "Elderwort Shrub", "Brambles and Rift Vine", "Tools", "Paying for a chop", "Felling and accidents"],
+      "section_titles": ["Tree life", "Do trees slowly die?", "Branches follow their parent", "Rifts", "Dead wood", "Chop cost and dryness", "Trunks and part names", "Willow", "Cypress", "Trollgnarl", "Elderwort Shrub", "Brambles and Rift Vine", "Tools", "Paying for a chop", "Felling and accidents",
+                                                                                                                                                                                                                                                                                                             "Dying trees and replacement logs"
+                                                                                                                                                                                                                                                                                                           ],
       "paragraphs": [
         "Every part of a tree or shrub, from trunk to twig, has its own life value between 0 and 1. The Harvest menu shows it as a freshness label: Very Fresh from about 0.88 life, Fresh from about 0.63, Half Dead from about 0.38, Mostly Dead from about 0.13 and Dead below that. A plant starts at full life, and each new branch starts with the life of the part it grows from.",
-        "No. Life never goes back up, but most trees lose almost none. Plants grow only while you are away: when you return to an outdoor area, each plant catches up about one growth step per three hours you were gone, counting at most 240 hours. On each step a part of a Willow, Cypress, Trollgnarl or Elderwort Shrub has a small chance to lose some life. The chance is negligible on low, wet ground and rises the higher the ground sits within the range where the species grows. A trunk at the top of that range loses about a third of its life over a ten-day absence on average, while a lowland tree stays fresh. Low inner branches of tall trees are far more at risk and can die off on high ground. Trees in Withered Mire and Rift-Thorn Mire decay slightly faster, Elderwort Shrubs eight times slower, and Brambles and Rift Vine never lose life this way.",
+        "No. Life never goes back up, but most trees lose almost none. Plants grow only while you are away: when you return to an outdoor area, each plant catches up about one growth step per three hours you were gone, counting at most 240 hours. On each step a part of a Willow, Cypress, Trollgnarl or Elderwort Shrub has a small chance to lose some life. The chance is negligible on low, wet ground and rises the higher the ground sits within the range where the species grows. A trunk at the top of that range loses about a third of its life over a ten-day absence on average, while a lowland tree stays fresh. Low inner branches of tall trees are far more at risk and can die off on high ground. Trees in Withered Mire and Rift-Thorn Mire decay slightly faster, Elderwort Shrubs eight times slower, and Brambles and Rift Vine never lose life this way. Branch-death chance is now quartered within the 16-pixel view margin.",
         "A branch cannot stay much healthier than the part it grows from. On each growth step where a part's parent has lower life, the part's life moves halfway to its parent's. Once a parent falls below 0.33 life, the parts on it stop growing, so a dying trunk drags its whole crown down with it.",
         "Rifts dry out nearby plants of every kind, including Brambles and Rift Vine. When a rift opens, and every in-game hour while it stays open in your area, each plant part within 60 pixels of a small rift or 192 pixels of a large one has a two-in-three chance to lose 0.01 to 0.1 life. That averages about 0.04 life per hour, so a fresh part beside an open rift falls below 0.33 in roughly 18 hours. Plants still catching up on growth are skipped.",
         "A part at 0.33 life or less is dead wood: it shows no leaves and grows no new branches. This point falls inside the Mostly Dead label. Lower life also makes new branches less likely and fades a part toward pale grey. A part at 0.001 life or less becomes fully dead at 0.",
@@ -8942,6 +9059,8 @@
         "The cost is divided by the chopping strength of the tool you pick, rounded to the nearest 0.2 AP, and is never below 0.2 AP. Any carried item with a chopping strength can be picked; with no tool you chop barehanded at strength 1. Felling axes are strongest, while a Serpent Fang doubles the cost. Each successful chop wears down the tool, but bare hands never wear out.",
         "Action points are not whole numbers: a chop takes exactly the cost shown, such as 2.4 AP, and costs are shown to one decimal place. A chop is refused if it costs more than your 8 AP maximum, and a falling part cannot be chopped. Outside combat you may chop with less AP than the cost: your AP drops to 0, your turn ends and the shortfall comes out of your next turn. In combat you must have enough AP. Like any action, chopping tires you; see Stamina.",
         "When the cut lands, the part falls with everything growing from it. With low focus or stamina, or under some effects, a swing can go wrong: the AP is spent, the part stays standing and you lose 2 wellbeing."
+      ,
+        "Branch death chance is quartered within the 16-pixel view margin. Outside it, activated trees with average branch life at most 0.01 have a 1% removal roll per check. Log placement is conditional: mossy-log tiles within 128 pixels reduce the attempted line length, and the attempt requires a positive existing log count. Terrain, obstruction and ground-cover checks still apply. A dead tree is removed even if no logs are placed, so replacement logs are not guaranteed."
       ],
       "related_entities": ["Willow", "Cypress", "Trollgnarl", "Elderwort Shrub", "Brambles", "Rift Vine"],
       "related_pages": ["Action points", "Stamina", "Focus", "Wellbeing"],
@@ -8957,6 +9076,9 @@
         { "source": "game-data", "section": "gml_Object_UI_Draw_64", "key": "apKost" },
         { "source": "game-data", "section": "gml_Object_databank_Alarm_1", "key": "chopMod" },
         { "source": "ui-en", "section": "TreeStuff", "key": "Fresh0-4" }
+      ,
+        {"source": "game-data-1000", "section": "gml_GlobalScript_scr_gen_ingamers", "key": "smartactivation.avgLife/chance0.01/stumpCount/lineLength/instance_destroy"},
+        {"source": "game-data-1000", "section": "gml_GlobalScript_scr_nature", "key": "tree_grow.inside_view16/deathChance.divide4"}
       ]
     },
     {
@@ -9158,6 +9280,8 @@
         null,
         "Placement range",
         "Mirrored canopies"
+      ,
+        "Release 1.0"
       ],
       "paragraphs": [
         "While placing an object, press the Weapon Swap key (Z by default) to flip it horizontally before you confirm.",
@@ -9168,6 +9292,8 @@
         "Tent exits prefer a nearby dry tile, but do not guarantee one. Small Linen Tent and Waxed Linen Tent restore their blocked path tile when you get out. Chopping Log still blocks walking, but no longer marks its tile as a ranged-attack blocker.",
         "General object placement measures range to the preview sprite's midpoint: 56 world pixels instead of 40, an increase of one 16-pixel tile. Seed placement keeps its separate range.",
         "Mirrored Canopy (2x2 tiles) and Canopy (3x3 tiles) placement now aligns the anchor and shadow with the flipped object. Their deep-shade footprint follows the mirrored direction; other proximity and obstruction checks still apply."
+      ,
+        "The container-collision check is applied only when the tile being checked is within 8 pixels of the proposed placement point. This is not a general container scan over the whole footprint."
       ],
       "related_entities": [
         "Storage Chest",
@@ -9244,6 +9370,8 @@
           "section": "gml_Object_obj_station_Step_0",
           "key": "canopy[249/250].signed-shade-loop"
         }
+      ,
+        {"source": "game-data-1000", "section": "gml_Object_cursor_Draw_73", "key": "placement.point_distance(xx,yy,PHX,PHY)<=8/collision_point.obj_container"}
       ]
     },
     {
@@ -10068,6 +10196,9 @@
       "Weather and revisiting"
     ,
       null
+    ,
+      "New spider-cave entrances",
+      "New spider-cave entrances (continued)"
     ],
     "paragraphs": [
       "The world map is a five-by-five grid of areas. The game calls each one an area, as in \"Entering new area\" and \"Map of area\", and names it by its kind, such as Common Bog or Drowned Fen. There are nine kinds. The kind shapes the land, which trees and plants grow, which creatures roam and what landmarks you can find. Caves, ruin buildings, cellars and homes are separate interiors entered from an area.",
@@ -10076,7 +10207,7 @@
       "Each time you end a turn of eight minutes, the area may add one creature, or a small group, at a random spot out of your sight and outside private ground. Nothing more appears once 24 creatures are about. In real-time combat, 95% of turns add nothing. The ground at the chosen spot picks the table: every tile in the Rift-Thorn Mire uses its rift table; elsewhere water tiles use the water table, dry sand the sand table, and other ground the area's land table. Each area page lists its land table.",
       "The water and sand tables are the same in every area except the Rift-Thorn Mire, and they do not change with the time of day or the story.",
       "Outside Fort Solid Shorehold, some creatures can appear as a tougher form. In the Savage Mirk they always do. A Giant Mirkfang, including one upgraded from a Mirkfang, is a Mirkfang Matriarch 4% of the time.",
-      "The land tables change as the main story moves on. From the journal entry \"Bring the rune back\", Sceetlers join them. From \"Escort Viend\", Scaalmyr Grunts and Mutated Unwanted join too, and a Grunt brings a Sceetler 52.5% of the time. After \"Scaal defeated\", 95% of Scaalmyr spawns are cancelled and re-rolled elsewhere. Scaalmyr then make up under 1% of land spawns: 0.90% by day and 0.72% at night, or 0.63% and 0.54% in the Withered Mire. The Rift-Thorn Mire falls to about a 46% chance of any spawn each turn.",
+      "The land tables change as the main story moves on. From the journal entry \"Bring the rune back\", Sceetlers join them. From \"Escort Viend\", Scaalmyr Grunts and Mutated Unwanted join too, and a Grunt brings a Sceetler 52.5% of the time. After \"Scaal defeated\", 95% of Scaalmyr spawns are cancelled and re-rolled elsewhere. The conditional land selection percentages now also include Deathlob's small relative weight; they are not the probability of an encounter each turn.",
       "Whenever you end a move, on foot or by raft, in medium or deep water anywhere but Fort Solid Shorehold, there is a 2% chance a Mire Serpent surges out beside you. It never appears any other way. At night, each turn has a 50% chance of releasing one to four Firefly lights while fewer than five are about.",
       "Each new tree's kind is drawn from the area's mix before a spot is chosen. A kind that cannot grow at the chosen spot simply fails, so kinds with a narrow height range, such as Trollgnarl and Cypress, end up rarer than the table suggests.",
       "Each area is stocked with wild plants, bird nests and skeletons when it is first made. A skeleton is sometimes a treasure chest instead. A chest is a common chest 88.2% of the time, a richer chest 9.8% and a treasure chest 2%. They have value budgets of roughly 3 to 20, 5 to 40 and 10 to 50, filled with a few valuable items rather than many cheap ones.",
@@ -10084,27 +10215,84 @@
       "Weather, the time of day and the outdoor temperature are shared by the whole world. When you return to an area it catches up on up to ten days. Plants grow, new Calmia Root plants appear on mud (two per day away, except in the Rift-Thorn Mire), nests and rubble refill, and after a day or more felled trees are gradually replaced toward about 120."
     ,
       "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
+    ,
+      "Newly generated areas can receive spider-cave entrances through the 0.333 replacement roll for eligible, collision-valid ordinary cave candidates. This is not a one-third chance for every area or cave. Already saved terrain is loaded without that generation step. The existing Mirk Lurker and Deathlob definitions are unchanged.",
+      "Area 13 now uses dungeon-like exposure and UI rules. The ordinary population updater still exits for this nonoutside area before its later dungeon fallback; that fallback does not establish additional inhabitants. Initial cave generation retains its existing relative Mirk Lurker:Deathlob weights of 15:1."
     ],
     "related_entities": ["Mudfin", "Boulder Crab", "Mire Serpent", "Viper", "Red Fang", "Scaalmyr Grunt", "Sceetler", "Firefly", "Feather", "Egg", "Willow", "Brambles", "Cypress", "Trollgnarl", "Elderwort Shrub", "Rift Vine"],
     "related_pages": ["Fort Solid Shorehold", "Common Bog", "Withered Mire", "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters", "Terrain", "Planting"],
     "confidence": "observed",
     "evidence": [
-      {"source": "ui-en", "section": "Menus", "key": "NewArea"},
-      {"source": "items-en", "section": "Items", "key": "89"},
-      {"source": "ui-en", "section": "LocTitles", "key": "0.1.2.3.4.5.22.23.100"},
-      {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "worldGrid5x5.areaType-placement"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "terrain_create_shore.off-grid.areaType100.areaType4"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "popCap24.repeat12.inside_view.spot_is_private.one-group-per-turn;spawn-tables.areaType23.water.sand.areaType0.areaType22.default;fireflies.night.chance0.5.lt5"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "sceetWeight-MQS10.gruntWeight-MQS12.team5-cancel0.95-MQS29"},
-      {"source": "ui-en", "section": "Journal", "key": "10.12.29"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_ai_related", "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"},
-      {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_2", "key": "outdoor-generation.per-areaType-knobs"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "loot_create_treasure.chest-chance.loot_amountchances"},
-      {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "revisit-regrowth.passedHours-cap240.trees.calmia"},
-      {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
-      {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
+      {
+        "source": "ui-en",
+        "section": "Menus",
+        "key": "NewArea"
+      },
+      {
+        "source": "items-en",
+        "section": "Items",
+        "key": "89"
+      },
+      {
+        "source": "ui-en",
+        "section": "LocTitles",
+        "key": "0.1.2.3.4.5.22.23.100"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_Object_obj_menu_Alarm_8",
+        "key": "worldGrid5x5.areaType-placement"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_GlobalScript_scr_mapcreations",
+        "key": "terrain_create_shore.off-grid.areaType100.areaType4;dungeonlike_areas.area13.spiders45:15/46:1"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_Object_manager_area_Alarm_4",
+        "key": "population.cap24/repeat12/private/view;outside.weights/MQS10/MQS12/MQS29;fireflies;Toadkin.companion42;nonoutside.earlyExit.area13"
+      },
+      {
+        "source": "ui-en",
+        "section": "Journal",
+        "key": "10.12.29"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_GlobalScript_scr_basic_useful",
+        "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04;being_initiate.slug-substitution"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_GlobalScript_scr_ai_related",
+        "key": "being_emerge_here.waterTresh.areaType!=0.chance0.02"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_GlobalScript_scr_nature",
+        "key": "tree_try_to_create.willow.brambles0.3.cypress0.05.trollgnarl.drowned0.11.elder"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_Object_manager_area_Alarm_2",
+        "key": "outdoor-generation.per-areaType-knobs;savedYgrid.earlyExit/eligibleCave.chance0.333"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_GlobalScript_scr_items",
+        "key": "loot_create_treasure.chest-chance.loot_amountchances"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_Object_obj_screenfader_Step_0",
+        "key": "revisit-regrowth.passedHours-cap240.trees.calmia"
+      },
+      {
+        "source": "game-data-1000",
+        "section": "gml_GlobalScript_scr_map_and_weather",
+        "key": "area_is_dungeonlike.includes13"
+      }
     ],
     "tables": [
       {
@@ -10342,6 +10530,8 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
       {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
       {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
+    ,
+      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.weighted_pick.Deathlob46/relativeWeight"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10365,20 +10555,22 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.04%", "10.63%", "22.82%", "10.20%", "20.34%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.37%", "12.76%", "20.28%", "12.23%", "18.08%", "11.14%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "16.03%", "12.76%", "15.21%", "12.23%", "13.56%", "11.14%"],
+          [{"entity": "Viper"}, "33% Red Fang", "21.37%", "17.01%", "20.28%", "16.31%", "18.08%", "14.86%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.01%", "2.45%", "0.90%", "2.23%"],
           [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.68%", "17.01%", "10.14%", "16.31%", "9.04%", "14.86%"],
+          [{"entity": "Swamp Troll"}, "–", "5.34%", "12.76%", "5.07%", "12.23%", "4.52%", "11.14%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.07%", "4.08%", "4.52%", "3.71%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.23%", "5.94%"],
           [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.76%", "–", "12.23%", "–", "11.14%"]
+        ,
+          [{"entity": "Deathlob"}, "–", "0.11%", "0.09%", "0.10%", "0.08%", "0.09%", "0.07%"]
         ],
-        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time. These conditional selection percentages normalize the full weighted pool, including Deathlob's relative weight 0.1; they are not per-turn encounter chances."
       },
       {
         "after": 3,
@@ -10457,6 +10649,8 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.variant-upgrade.AT!=0.AT==5.matriarch0.04"},
       {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
       {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
+    ,
+      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.weighted_pick.Deathlob46/relativeWeight"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10480,20 +10674,22 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "16.85%", "7.94%", "16.25%", "7.69%", "14.95%", "7.16%"],
-          [{"entity": "Giant Gnat"}, "–", "14.98%", "9.52%", "14.44%", "9.23%", "13.29%", "8.60%"],
-          [{"entity": "Dreadfly"}, "15% Deathfly", "11.24%", "9.52%", "10.83%", "9.23%", "9.97%", "8.60%"],
-          [{"entity": "Viper"}, "33% Red Fang", "14.98%", "12.70%", "14.44%", "12.31%", "13.29%", "11.46%"],
-          [{"entity": "Raving Unwanted"}, "–", "15.73%", "14.60%", "15.16%", "14.15%", "13.95%", "13.18%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "16.84%", "7.93%", "16.23%", "7.69%", "14.94%", "7.16%"],
+          [{"entity": "Giant Gnat"}, "–", "14.97%", "9.52%", "14.43%", "9.23%", "13.28%", "8.59%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "11.23%", "9.52%", "10.82%", "9.23%", "9.96%", "8.59%"],
+          [{"entity": "Viper"}, "33% Red Fang", "14.97%", "12.69%", "14.43%", "12.30%", "13.28%", "11.45%"],
+          [{"entity": "Raving Unwanted"}, "–", "15.72%", "14.59%", "15.15%", "14.15%", "13.94%", "13.17%"],
           [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "2.66%", "2.29%"],
-          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "7.49%", "12.70%", "7.22%", "12.31%", "6.64%", "11.46%"],
-          [{"entity": "Swamp Troll"}, "–", "3.75%", "9.52%", "3.61%", "9.23%", "3.32%", "8.60%"],
-          [{"entity": "Sceetler"}, "–", "–", "–", "3.61%", "3.08%", "3.32%", "2.87%"],
-          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "5.32%", "4.58%"],
-          [{"entity": "Firelouse"}, "–", "14.98%", "13.97%", "14.44%", "13.54%", "13.29%", "12.61%"],
-          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "9.52%", "–", "9.23%", "–", "8.60%"]
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "7.49%", "12.69%", "7.22%", "12.30%", "6.64%", "11.45%"],
+          [{"entity": "Swamp Troll"}, "–", "3.74%", "9.52%", "3.61%", "9.23%", "3.32%", "8.59%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "3.61%", "3.08%", "3.32%", "2.86%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "5.31%", "4.58%"],
+          [{"entity": "Firelouse"}, "–", "14.97%", "13.96%", "14.43%", "13.53%", "13.28%", "12.60%"],
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "9.52%", "–", "9.23%", "–", "8.59%"]
+        ,
+          [{"entity": "Deathlob"}, "–", "0.07%", "0.06%", "0.07%", "0.06%", "0.07%", "0.06%"]
         ],
-        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time. These conditional selection percentages normalize the full weighted pool, including Deathlob's relative weight 0.1; they are not per-turn encounter chances."
       },
       {
         "after": 3,
@@ -10576,6 +10772,8 @@
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_6", "key": "first-visit-landmarks.hut.shipwreck.camp"},
       {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
       {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
+    ,
+      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.weighted_pick.Deathlob46/relativeWeight"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10599,20 +10797,22 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.04%", "10.63%", "22.82%", "10.20%", "20.34%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.37%", "12.76%", "20.28%", "12.23%", "18.08%", "11.14%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "16.03%", "12.76%", "15.21%", "12.23%", "13.56%", "11.14%"],
+          [{"entity": "Viper"}, "33% Red Fang", "21.37%", "17.01%", "20.28%", "16.31%", "18.08%", "14.86%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.01%", "2.45%", "0.90%", "2.23%"],
           [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.68%", "17.01%", "10.14%", "16.31%", "9.04%", "14.86%"],
+          [{"entity": "Swamp Troll"}, "–", "5.34%", "12.76%", "5.07%", "12.23%", "4.52%", "11.14%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.07%", "4.08%", "4.52%", "3.71%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.23%", "5.94%"],
           [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.76%", "–", "12.23%", "–", "11.14%"]
+        ,
+          [{"entity": "Deathlob"}, "–", "0.11%", "0.09%", "0.10%", "0.08%", "0.09%", "0.07%"]
         ],
-        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time. These conditional selection percentages normalize the full weighted pool, including Deathlob's relative weight 0.1; they are not per-turn encounter chances."
       },
       {
         "after": 3,
@@ -10698,6 +10898,8 @@
     ,
       {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"},
       {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
+    ,
+      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.weighted_pick.Deathlob46/relativeWeight"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10721,20 +10923,22 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "Dreadfly"}, "15% Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "Viper"}, "33% Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Giant Slug"}, "22.5% Giant Snail", "24.04%", "10.63%", "22.82%", "10.20%", "20.34%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.37%", "12.76%", "20.28%", "12.23%", "18.08%", "11.14%"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "16.03%", "12.76%", "15.21%", "12.23%", "13.56%", "11.14%"],
+          [{"entity": "Viper"}, "33% Red Fang", "21.37%", "17.01%", "20.28%", "16.31%", "18.08%", "14.86%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.01%", "2.45%", "0.90%", "2.23%"],
           [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "10.68%", "17.01%", "10.14%", "16.31%", "9.04%", "14.86%"],
+          [{"entity": "Swamp Troll"}, "–", "5.34%", "12.76%", "5.07%", "12.23%", "4.52%", "11.14%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.07%", "4.08%", "4.52%", "3.71%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.23%", "5.94%"],
           [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.76%", "–", "12.23%", "–", "11.14%"]
+        ,
+          [{"entity": "Deathlob"}, "–", "0.11%", "0.09%", "0.10%", "0.08%", "0.09%", "0.07%"]
         ],
-        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time. These conditional selection percentages normalize the full weighted pool, including Deathlob's relative weight 0.1; they are not per-turn encounter chances."
       },
       {
         "after": 3,
@@ -10820,6 +11024,8 @@
       {"source": "game-data-0950", "section": "gml_GlobalScript_scr_basic_useful", "key": "being_initiate.slug-substitution"}
     ,
       {"source": "game-data-0950", "section": "gml_Object_manager_area_Alarm_4", "key": "Toadkin.companion42.chance0.2"}
+    ,
+      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.weighted_pick.Deathlob46/relativeWeight"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10843,40 +11049,44 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day, early", "Night, early", "Day, from Bring the rune back", "Night, from Bring the rune back", "Day, from Escort Viend", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "55% Giant Snail", "24.06%", "10.64%", "22.84%", "10.20%", "20.36%", "9.29%"],
-          [{"entity": "Giant Gnat"}, "–", "21.39%", "12.77%", "20.30%", "12.24%", "18.10%", "11.15%"],
-          [{"entity": "Dreadfly"}, "Always Deathfly", "16.04%", "12.77%", "15.23%", "12.24%", "13.57%", "11.15%"],
-          [{"entity": "Viper"}, "Always Red Fang", "21.39%", "17.02%", "20.30%", "16.33%", "18.10%", "14.87%"],
-          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.02%", "2.45%", "0.90%", "2.23%"],
+          [{"entity": "Giant Slug"}, "55% Giant Snail", "24.04%", "10.63%", "22.82%", "10.20%", "20.34%", "9.29%"],
+          [{"entity": "Giant Gnat"}, "–", "21.37%", "12.76%", "20.28%", "12.23%", "18.08%", "11.14%"],
+          [{"entity": "Dreadfly"}, "Always Deathfly", "16.03%", "12.76%", "15.21%", "12.23%", "13.56%", "11.14%"],
+          [{"entity": "Viper"}, "Always Red Fang", "21.37%", "17.01%", "20.28%", "16.31%", "18.08%", "14.86%"],
+          [{"entity": "Raving Unwanted"}, "–", "1.07%", "2.55%", "1.01%", "2.45%", "0.90%", "2.23%"],
           [{"entity": "Mutated Unwanted"}, "–", "–", "–", "–", "–", "3.62%", "2.97%"],
-          [{"entity": "Mirk Runner"}, "Always Mirk Mauler", "10.70%", "17.02%", "10.15%", "16.33%", "9.05%", "14.87%"],
-          [{"entity": "Swamp Troll"}, "–", "5.35%", "12.77%", "5.08%", "12.24%", "4.52%", "11.15%"],
-          [{"entity": "Sceetler"}, "–", "–", "–", "5.08%", "4.08%", "4.52%", "3.72%"],
-          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.24%", "5.95%"],
+          [{"entity": "Mirk Runner"}, "Always Mirk Mauler", "10.68%", "17.01%", "10.14%", "16.31%", "9.04%", "14.86%"],
+          [{"entity": "Swamp Troll"}, "–", "5.34%", "12.76%", "5.07%", "12.23%", "4.52%", "11.14%"],
+          [{"entity": "Sceetler"}, "–", "–", "–", "5.07%", "4.08%", "4.52%", "3.71%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "–", "–", "7.23%", "5.94%"],
           [{"entity": "Firelouse"}, "–", "–", "1.70%", "–", "1.63%", "–", "1.49%"],
-          [{"entity": "Mirkfang"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.77%", "–", "12.24%", "–", "11.15%"]
+          [{"entity": "Mirkfang"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "12.76%", "–", "12.23%", "–", "11.14%"]
+        ,
+          [{"entity": "Deathlob"}, "–", "0.11%", "0.09%", "0.10%", "0.08%", "0.09%", "0.07%"]
         ],
-        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time."
+        "caption": "Land tiles: the chance that a creature spawned on land is each kind. The story columns start at those journal entries. A Scaalmyr Grunt brings a Sceetler 52.5% of the time. These conditional selection percentages normalize the full weighted pool, including Deathlob's relative weight 0.1; they are not per-turn encounter chances."
       },
       {
         "after": 3,
         "columns": ["Creature", "Appears as", "Night, early", "Night, from Bring the rune back", "Night, from Escort Viend"],
         "rows": [
-          [{"entity": "Giant Slug"}, "55% Giant Snail", "8.77%", "8.47%", "7.84%"],
-          [{"entity": "Giant Gnat"}, "–", "10.53%", "10.17%", "9.40%"],
-          [{"entity": "Dreadfly"}, "Always Deathfly", "10.53%", "10.17%", "9.40%"],
-          [{"entity": "Viper"}, "Always Red Fang", "14.04%", "13.56%", "12.54%"],
-          [{"entity": "Raving Unwanted"}, "–", "2.11%", "2.03%", "1.88%"],
+          [{"entity": "Giant Slug"}, "55% Giant Snail", "8.77%", "8.47%", "7.83%"],
+          [{"entity": "Giant Gnat"}, "–", "10.52%", "10.16%", "9.40%"],
+          [{"entity": "Dreadfly"}, "Always Deathfly", "10.52%", "10.16%", "9.40%"],
+          [{"entity": "Viper"}, "Always Red Fang", "14.03%", "13.55%", "12.53%"],
+          [{"entity": "Raving Unwanted"}, "–", "2.10%", "2.03%", "1.88%"],
           [{"entity": "Mutated Unwanted"}, "–", "–", "–", "2.51%"],
-          [{"entity": "Mirk Runner"}, "Always Mirk Mauler", "14.04%", "13.56%", "12.54%"],
-          [{"entity": "Swamp Troll"}, "–", "10.53%", "10.17%", "9.40%"],
+          [{"entity": "Mirk Runner"}, "Always Mirk Mauler", "14.03%", "13.55%", "12.53%"],
+          [{"entity": "Swamp Troll"}, "–", "10.52%", "10.16%", "9.40%"],
           [{"entity": "Sceetler"}, "–", "–", "3.39%", "3.13%"],
-          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "5.02%"],
+          [{"entity": "Scaalmyr Grunt"}, "–", "–", "–", "5.01%"],
           [{"entity": "Firelouse"}, "–", "1.40%", "1.36%", "1.25%"],
-          [{"entity": "Mirkfang"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "10.53%", "10.17%", "9.40%"],
-          [{"entity": "The Terror"}, "–", "17.54%", "16.95%", "15.67%"]
+          [{"entity": "Mirkfang"}, "Always Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "10.52%", "10.16%", "9.40%"],
+          [{"entity": "The Terror"}, "–", "17.53%", "16.94%", "15.66%"]
+        ,
+          [{"entity": "Deathlob"}, "–", "0.07%", "0.07%", "0.06%"]
         ],
-        "caption": "Land tiles at night in the Savage Mirk that holds the Survivors' camp, while Wilda's request to kill The Terror is open and The Terror is not already in the area."
+        "caption": "Land tiles at night in the Savage Mirk that holds the Survivors' camp, while Wilda's request to kill The Terror is open and The Terror is not already in the area. These conditional selection percentages normalize the full weighted pool, including Deathlob's relative weight 0.1; they are not per-turn encounter chances."
       },
       {
         "after": 4,
@@ -10931,6 +11141,8 @@
       "Creatures in water and on sand",
       "Trees",
       "Plants, nests and loot"
+    ,
+      "Release 1.0"
     ],
     "paragraphs": [
       "Each world has three or four Sunken Ancient Ruins. The Library is in one of them, chosen at random at least two cells from the fort and away from the rift.",
@@ -10939,6 +11151,8 @@
       "The shared water and sand tables apply.",
       "Only about half as many trees as usual. The first tree placed is always an Elderwort Shrub, so each of these areas has at least one.",
       "Treasure chests are common, but more than half of the rubble piles have been picked clean."
+    ,
+      "Deathlob is included in the outside enemy pool with a relative selection weight of 0.125. This is not a 12.5% encounter chance and does not bypass the normal spawn conditions."
     ],
     "related_entities": ["Toadkin", "Dreadfly", "Giant Gnat", "Viper", "Mirk Runner", "Mirkfang", "Giant Slug", "Elderwort Shrub"],
     "related_pages": ["Areas", "Terrain", "Stone ground", "Interior floors"],
@@ -10952,6 +11166,9 @@
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_mapcreations", "key": "create_solid.areaType22.entrances->21.building_128x96->20"},
       {"source": "game-data-0900", "section": "gml_GlobalScript_scr_items", "key": "rubble59-60.areaType22.nothing0.55"},
       {"source": "game-data-0900", "section": "gml_Object_obj_menu_Alarm_8", "key": "libraryArea.dist2-fort.dist1.2-rift.areaType22"}
+    ,
+      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside population.area22.Deathlob"},
+      {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.weighted_pick.Deathlob46/relativeWeight"}
     ],
     "index_page": "Areas",
     "tables": [
@@ -10975,15 +11192,17 @@
         "after": 2,
         "columns": ["Creature", "Tougher form", "Day", "Night", "Notes"],
         "rows": [
-          [{"entity": "Giant Slug"}, "–", "3.68%", "2.94%", "–"],
-          [{"entity": "Giant Gnat"}, "–", "14.71%", "11.76%", "–"],
-          [{"entity": "Dreadfly"}, "15% Deathfly", "22.06%", "17.65%", "–"],
-          [{"entity": "Viper"}, "33% Red Fang", "14.71%", "11.76%", "–"],
-          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "11.76%", "23.53%", "–"],
-          [{"entity": "Toadkin"}, "–", "33.09%", "26.47%", "75% come as a pair"],
-          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "5.88%", "–"]
+          [{"entity": "Giant Slug"}, "–", "3.67%", "2.94%", "–"],
+          [{"entity": "Giant Gnat"}, "–", "14.68%", "11.75%", "–"],
+          [{"entity": "Dreadfly"}, "15% Deathfly", "22.02%", "17.62%", "–"],
+          [{"entity": "Viper"}, "33% Red Fang", "14.68%", "11.75%", "–"],
+          [{"entity": "Mirk Runner"}, "15% Mirk Mauler", "11.74%", "23.49%", "–"],
+          [{"entity": "Toadkin"}, "–", "33.03%", "26.43%", "75% come as a pair"],
+          [{"entity": "Mirkfang"}, "20% Giant Mirkfang; 4% of those are a Mirkfang Matriarch", "–", "5.87%", "–"]
+        ,
+          [{"entity": "Deathlob"}, "–", "0.18%", "0.15%", "Relative weight 0.125; ordinary population gates apply."]
         ],
-        "caption": "Land tiles. The table never changes with the story."
+        "caption": "Land tiles. The table never changes with the story. These conditional selection percentages normalize the full weighted pool, including Deathlob's relative weight 0.125; they are not per-turn encounter chances."
       },
       {
         "after": 3,
@@ -12017,9 +12236,13 @@
     {"entity": "item-132", "paragraphs": ["Picking it up advances the journal to Toward Scaal.", "A magic ward blocks a passage on the way down to Scaal. Interact with the ward while carrying the Ward Breaker to dissolve it; the Ward Breaker is used up. Without it, the ward cannot be passed."], "confidence": "observed", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_items", "key": "item_receive.player[132].MAINQUESTSTAGE=26"}, {"source": "game-data", "section": "gml_GlobalScript_scr_smartones", "key": "transPoint.index-2991.BlockedMagic/player_inventory_lose_amount[132]"}]},
     {
       "entity": "item-51",
-      "paragraphs": ["Eating Honey adds 1 percentage point of wellbeing and reduces sickness duration."],
+      "paragraphs": ["Eating Honey adds 1 percentage point of wellbeing and reduces sickness duration.",
+                                                                                                         "Outside-area replenishment has a new outer 50% gate before existing checks. All trees are counted, with fewer than 4.25 special resources overall and fewer than one per tree. A tree still needs at least 12 branches and must pass the 1.5% tree roll before branch selection plus the remaining branch checks. This is not 50% per tree or a guaranteed minimum distance between honey-bearing trees."
+                                                                                                       ],
       "confidence": "observed",
-      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[51]"}]
+      "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume[51]"},
+                                                                                                                              {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_4", "key": "outside.chance0.5/activateAllTrees/totSpecial/specialCarry/branchAmount"}
+                                                                                                                            ]
     },
     {
       "entity": "item-176",
@@ -12490,9 +12713,26 @@
     {"entity": "item-278", "paragraphs": ["A Giant Snail drops 1 to 3 shards. One is most common: the chances of 1, 2 and 3 are 11/18, 5/18 and 1/9. There is no defined recipe or other use for the shard in this version."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278.loot_amountchances[1,3]"}, {"source": "game-data-0950", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances"}, {"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[278];all-components"}]},
     {"entity": "item-257", "paragraphs": ["Its carried weight is 2 kg. Unlike most crafted items, Improvised Bedroll is excluded from the recipe-based weight rewrite. Its recipe and comfort are unchanged."], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[257].weight;postprocessing.components.excluded257"}]}
   ,
-    {"entity": "item-284", "paragraphs": ["Eating it costs 2 AP, restores 25 percentage points of satiation and has a 5% base sickness risk. A Mirk Lurker's lootable corpse contains three; a Deathlob's contains 7 to 11. Normal access to these spiders is unconfirmed."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[284].apCost/hungerGain/sicknessRisk"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45,46].item284"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}]},
-    {"entity": "item-285", "paragraphs": ["Eating it costs 2 AP and restores 25 percentage points of satiation, with no base sickness risk. Its definition specifies one Spider Meat for one Grilled Spider Meat at a base cost of 2.4 AP. The Campfire menu does not list it, so access to this crafting option is unconfirmed.", "Recipe postprocessing gives it a carried weight of 0.18 kg rather than its 0.25 kg original weight. Its base value remains 12 copper."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[285].components/craftCost/craftReturn;postprocessing.weight/price"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.station38.CM.no-item285"}]},
-    {"entity": "item-286", "paragraphs": ["A light material that stacks to 20. Mirk Lurker corpses contain 2 to 3 and Deathlob corpses contain 6 to 8. A webbed special treasure adds 8 to 20. Normal access to their spider-cave area is unconfirmed; no recipe using Spider Silk is documented."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[286].weight/stackLimit"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45,46].item286"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.item286"}]}
+    {"entity": "item-284", "paragraphs": ["Eating it costs 2 AP, restores 25 percentage points of satiation and has a 5% base sickness risk. A Mirk Lurker's lootable corpse contains three; a Deathlob's contains 7 to 11. Their cave is reachable through entrances in newly generated areas."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[284].apCost/hungerGain/sicknessRisk"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45,46].item284"}, {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_2", "key": "eligibleCave.chance0.333.specialEntrance"}]},
+    {"entity": "item-285", "paragraphs": ["Eating it costs 2 AP and restores 25 percentage points of satiation, with no base sickness risk. Its definition specifies one Spider Meat for one Grilled Spider Meat at a base cost of 2.4 AP. A burning Campfire now offers this recipe; Survivor's Field Kit does not.", "Recipe postprocessing gives it a carried weight of 0.18 kg rather than its 0.25 kg original weight. Its base value remains 12 copper."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[285].components/craftCost/craftReturn;postprocessing.weight/price"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_psynch.station38.CM.item285"}]},
+    {"entity": "item-286", "paragraphs": ["A light material that stacks to 20. Mirk Lurker corpses contain 2 to 3 and Deathlob corpses contain 6 to 8. A webbed special treasure adds 8 to 20. Their cave is reachable through new-area entrances. Spider Silk is now used to craft a Sturdy Shortbow."], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[286].weight/stackLimit"}, {"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45,46].item286"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.item286"},
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_2", "key": "eligibleCave.chance0.333.specialEntrance"},
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       {"source": "game-data-1000", "section": "gml_Object_obj_player_Create_0", "key": "myCraftingMenu.item296"}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ]}
+  ,
+    {"entity": "item-280", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[280].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "280"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-281", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[281].type/weight/price/durabilityMax/stackLimit/armor/insulation/waterproof/sparkChance/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "281"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-282", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[282].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "282"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-283", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[283].type/weight/price/durabilityMax/stackLimit/blockChance/armor/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "283"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-288", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.", "Its base attack uses Blunt damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[288].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/sparkChance/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "288"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-289", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.", "Its base attack uses Force damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[289].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "289"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-290", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.", "Its base attack uses Force damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[290].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "290"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-291", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[291].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "291"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-292", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[292].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "292"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-293", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[293].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "293"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-294", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[294].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "294"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-295", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "This item has no crafting recipe in its definition. Its declared value alone does not establish merchant stock; random treasure still applies its usual eligibility checks and value budgets.", "Its base attack uses Sharp damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[295].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "295"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]},
+    {"entity": "item-296", "paragraphs": ["First documented in the 0.9.9.7 tester; now shipped in public 1.0.0.0 with the same base definition.", "Craft through the player's crafting menu: 2 Twine, 2 Branch (Trollgnarl) and 10 Spider Silk produce one bow for a base cost of 8 AP. This recipe first appeared in the 0.9.9.7 tester and is available in the 1.0 release.", "The listed weight is the base definition's 0.65 kg. Crafting recalculates weight from the components; the effective weight can therefore differ. Its declared value alone does not establish merchant stock.", "Its base attack uses Piercing damage. The pattern shows potential per-cell damage, not guaranteed damage to a target."], "confidence": "inferred", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[296].type/weight/price/durabilityMax/stackLimit/burnTime/damageClass/apCost/attackPattern/tileRange/craftCost/craftReturn/equipCost"}, {"source": "items-en-1000", "section": "ItemTitles", "key": "296"}, {"source": "game-data-1000", "section": "gml_Object_obj_player_Create_0", "key": "myCraftingMenu.item296"}, {"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[296].components/craftCost/craftReturn;postprocessing.weight/price"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/price"}]}
   ],
   "construction_recipes": [
     {
@@ -12715,7 +12955,7 @@
         ]
       }
     ,
-      {"id": 12, "title": "Spider faction", "summary": "Mirk Lurker and Deathlob share this targeting faction; normal access to their area is unconfirmed.", "members": ["Mirk Lurker", "Deathlob"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[45,46].team"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}]}
+      {"id": 12, "title": "Spider faction", "summary": "Mirk Lurker and Deathlob share this targeting faction; their cave is reachable through new-area entrances.", "members": ["Mirk Lurker", "Deathlob"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_databank_Alarm_3", "key": "beingDB[45,46].team"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_ai_related", "key": "being_get_target"}]}
     ],
     "paragraphs": [
       "Beings normally avoid targeting their own faction. Nightmare, Raving Unwanted and Clay's boss form are exceptions: they can target each other, but never themselves. Late in the story, Captain Eir and Magus Clay also treat each other as enemies.",

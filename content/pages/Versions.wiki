@@ -1,10 +1,12 @@
-'''Versions''' lists every MirkLurk version this wiki documents, newest first. The wiki's latest stable reference is [[Version 0.9.6.5|0.9.6.5]]. [[Version 0.9.9.7|0.9.9.7]] is a separate, explicitly labeled tester reference, not a stable release. Each version has its own announcement history. When only a comparison spanning several releases is available, findings keep that range rather than claiming an exact introduction version.
+'''Versions''' lists every MirkLurk version this wiki documents, newest first. The latest stable reference is [[Version 1.0.0.0|1.0.0.0]], announced as '''1.0'''. [[Version 0.9.9.7|0.9.9.7]] is a historical tester, not a stable release. Each version has its own announcement history. When only a comparison spanning several releases is available, findings keep that range rather than claiming an exact introduction version.
 
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Versions (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
 ! Version !! Released !! Summary
 |-
-| [[Version 0.9.9.7|0.9.9.7 (tester)]] || Unconfirmed; next_version_tester || Beta-only items, newly accessible cave, raft controls and tree changes. Stable defaults remain 0.9.6.5.
+| [[Version 1.0.0.0|1.0.0.0 (announced as 1.0)]] || 25 November 2026 || Early Access ends: spider cave, 13 items, raft controls, achievements, German and crafting XP fixes.
+|-
+| [[Version 0.9.9.7|0.9.9.7 (tester)]] || Unconfirmed; next_version_tester || Historical preview of the new items, cave, raft controls and tree changes shipped in 1.0.
 |-
 | [[Version 0.9.6.5|0.9.6.5]] || 19 November 2026 || Borderless windows, 2560 x 1440 preset and fire-menu fixes; separately qualified findings observed by this build.
 |-

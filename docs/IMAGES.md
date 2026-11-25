@@ -292,6 +292,23 @@ WikiAdmin attribution checks plus postwrite paired backup must be accepted
 before publishing the tester pages. Synthetic Docker fixtures cover these
 additional crops without altering stable entity/image defaults.
 
+## Version 1.0.0.0 artwork reuse
+
+The release promotes the 13 approved tester crop records into the ordinary
+register: **422 illustrations, including 342 alpha-bounded inventory crops**.
+All 13 literal sprite/frame selections and native RGBA hashes were checked
+against the release export and are identical to their reviewed 0.9.9.7 sources.
+The corresponding 26 original/cropped File titles, bytes, scaling/crop metadata,
+developer permission and attribution are reused exactly. Historical extraction
+captions are provenance, not a current-beta restriction.
+
+No new inventory-art import, File move, replacement, or logo change is needed.
+Previously accepted import and backup evidence remains history; this release
+does not claim a new host write or fresh operator snapshot. Game menu/flag
+branding changes are documented in prose rather than unnecessarily importing
+new art. `tester.json` retains its original approved records as a historical
+snapshot while current pages use the stable register.
+
 ## Site branding
 
 On 2026-09-28, the operator selected two supplied PNGs for the wiki logo and

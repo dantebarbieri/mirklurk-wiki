@@ -1,13 +1,15 @@
 '''World generation''' happens in two stages: the game chooses the world map's area types and several landmark zones upfront, then generates each area's terrain when you enter it. There is '''no reusable world seed'''. The route you explore affects both terrain borders and where some NPC locations, including the Survivors' camp, appear.
 
-This guide covers '''0.9.6.5''' and contains '''location and story spoilers'''. A '''zone''' is one cell of the five-by-five world map, labeled A through E and 1 through 5. See [[Areas]] for what each kind of area contains; the game itself calls a cell an area.
+This guide covers '''1.0.0.0''' and contains '''location and story spoilers'''. A '''zone''' is one cell of the five-by-five world map, labeled A through E and 1 through 5. See [[Areas]] for what each kind of area contains; the game itself calls a cell an area.
 
 Generation rules are unchanged between 0.9.5.5 and 0.9.5.6. Version 0.9.5.5 changes nature acceptance near Fort Solid and removes the random pit pass from the first two rift depths. Removing those random draws can also change later generated choices, including exit positions. The 0.9.5.0 Giant Snail substitutions and Toadkin Shaman companion rolls also consume randomness. Older builds therefore need not generate identical areas from the same internal random state.
 
 == Spider-cave access ==
-Version 0.9.6.5 adds a random check when an ordinary cave candidate passes its collision checks. The check does not replace the entrance, but its random draw can change later placements.
+The 0.9.9.7 tester makes a formerly empty cave-replacement check functional; public 1.0 ships it. When an eligible ordinary cave candidate passes the existing selection and collision checks, a 0.333 roll can assign the special entrance to the spider cave. This is not a one-third chance per area or for every cave.
 
-The current build defines a separate cave area with webs, [[Mirk Lurker]], [[Deathlob]] and webbed treasure. Normal placement of an entrance to this area is unconfirmed. Do not expect one third of ordinary caves to lead there: the ordinary cave check's body is empty.
+The cave layout, webs, [[Mirk Lurker]], [[Deathlob]] and webbed treasure were already defined in 0.9.6.5; their base definitions are unchanged. Only newly generated areas can receive the entrance. Previously saved areas do not receive it when revisited.
+
+Unlike the tester, 1.0 treats this cave as dungeon-like for its underground HUD and 0.35 ambient-temperature baseline. The ordinary population updater still exits before its later dungeon fallback, so that fallback does not establish new inhabitants. Initial cave generation retains its relative Mirk Lurker:Deathlob weights of 15:1.
 
 == What is decided upfront? ==
 Creating a world chooses its grid of area types and the zones for Fort Solid, [[Ranger Bhato]]'s hideout, [[Scaal]]'s lair and the Library. Those assignments exist before all the zones are explored; their exact exterior positions are created when the relevant areas are generated.

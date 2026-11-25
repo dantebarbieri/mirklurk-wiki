@@ -290,7 +290,7 @@ class DataTests(unittest.TestCase):
     def test_curated_json_exact_size_boundary(self):
         raw = json.dumps(synthetic_data()).encode()
         at_limit = raw + b" " * (MAX_FACTS_BYTES - len(raw))
-        self.assertEqual(MAX_FACTS_BYTES, 655360)
+        self.assertEqual(MAX_FACTS_BYTES, 688128)
         self.assertEqual(parse_data(at_limit)["schema_version"], 1)
         self.assertEqual(blob_errors("content/facts/game.json", at_limit), [])
         with self.assertRaises(DataError):
@@ -301,11 +301,11 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 52, "entities": 371, "facts": 107, "entries": 351},
+            {"sources": 84, "entities": 384, "facts": 107, "entries": 361},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
-            {"quest": 37, "merchant": 88, "recipe": 98, "loot": 94, "algorithm": 34},
+            {"quest": 37, "merchant": 88, "recipe": 100, "loot": 94, "algorithm": 42},
         )
         # 0.8.9.9 deliberately amended these original entries; the rest of the handoff stays pinned.
         amended = {"skill-1-0-mechanics", "skill-3-4-mechanics", "loot-amount-distribution", "crafting-station-modifiers",
@@ -325,19 +325,19 @@ class DataTests(unittest.TestCase):
         raw = json.dumps(supplement, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "d6aa4b58cbb7179362901457682a3e5270931d4fa9fb1846beaa2e26520686cc")
         update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
-        self.assertEqual(len(update), 90)
+        self.assertEqual(len(update), 100)
         raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "b174c9effef477358b9a9713c0072720f0e51563b6a030a6cc152a881d1456f3")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "256777b7c56f339c5cfc525d7602a76d27114e9be6e8f5cc1dfc6a08d8c31c5b")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 433)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 449)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("These guides cover '''0.9.6.5'''", pages["Game mechanics"])
+        self.assertIn("These guides cover '''1.0.0.0'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -357,7 +357,7 @@ class DataTests(unittest.TestCase):
         amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
         raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "7ce6c6f3f6a19475c651b7a9b1a745d9e9bce2ebd0f10dc6890e0c0f46b60a0f")
-        self.assertEqual(data["game"]["build"], "0.9.6.5")
+        self.assertEqual(data["game"]["build"], "1.0.0.0")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},
@@ -628,7 +628,7 @@ class HealthArmorTests(unittest.TestCase):
         from wiki_render import cell_grid
         # 0.8.9.9 pin: adds the new beings' and magic weapons' grids and the reviewed item-188/189 melee changes.
         self.assertEqual(hashlib.sha256(json.dumps(self.details["grids"], sort_keys=True).encode()).hexdigest(),
-                         "e9896acdc98cc00bc17e6b78334c1204919d73bede144159ca9d79f90497f642")
+                         "1dbbf1eda46f38cd7cbb39bf79588eddb618bb913f127e374e00a37ef423fefd")
         totals = {0: 0, 1: 0, 2: 0, 3: 0}
         for grid in self.details["grids"]:
             rendered = cell_grid(grid, "being", self.data["illustrations"])

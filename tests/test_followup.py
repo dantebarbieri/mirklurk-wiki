@@ -92,8 +92,8 @@ class FollowupTests(unittest.TestCase):
         # Both are re-pinned for readable anchors and title selectors replacing source-ID anchors.
         # Strip only the known mobile wrappers and float clears for this comparison, never for sync.
         digests = {
-            "Items": "fd6ec56944d1aeb618fcf797d522b8fb9cf12f4aa08c215672b7e11d526d54ff",
-            "Wooden Recorder": "cf5c04f52a8637f2aff1cfc47b9b75d0ed77326880ca4e22eace681423b1bc2c",
+            "Items": "ff56b8635705d5dfb4f5edf3ec2c0843a639a138fdf18b6474abcdd40396c96d",
+            "Wooden Recorder": "530049392f8fadd7d209949fdb1356a6c317d1227e1783b404460fa55d02e5e9",
         }
         for title, digest in digests.items():
             with self.subTest(title=title):
@@ -219,12 +219,12 @@ class FollowupTests(unittest.TestCase):
 
     def test_armor_groups_cover_each_item_once_using_reviewed_slots(self):
         expected = {
-            "Head armor": {54, 116, 117, 119}, "Torso armor": {43, 55, 147, 194},
-            "Armored gloves": {165}, "Leg armor": {56, 192, 193, 195}, "Shields": {0, 1, 50, 58, 118, 279},
+            "Head armor": {54, 116, 117, 119}, "Torso armor": {43, 55, 147, 194, 281},
+            "Armored gloves": {165}, "Leg armor": {56, 192, 193, 195}, "Shields": {0, 1, 50, 58, 118, 279, 280, 282, 283},
         }
         groups = armor_groups(self.catalog)
         self.assertEqual({row["title"]: {int(identity.split("-")[1]) for identity in row["members"]} for row in groups}, expected)
-        self.assertEqual(sum(len(row["members"]) for row in groups), 19)
+        self.assertEqual(sum(len(row["members"]) for row in groups), 23)
         for group in groups:
             for title in ("Items", "Category:Armor"):
                 self.assertIn("=== " + group["title"] + " ===", self.pages[title])

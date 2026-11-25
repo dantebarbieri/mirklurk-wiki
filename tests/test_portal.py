@@ -45,7 +45,7 @@ class PortalTests(unittest.TestCase):
 
     def test_item_families_read_basic_to_best(self):
         clothes = self.pages["Items"].split("\n=== Socks ===\n", 1)[1].split("\n===", 1)[0]
-        self.assertEqual(re.findall(r"\{\{Item\|([^}|]+)", clothes), ["Worn Socks", "Decent Socks", "Fine Wool Socks"])
+        self.assertEqual(re.findall(r"\{\{Item\|([^}|]+)", clothes), ["Laughable Socks", "Worn Socks", "Decent Socks", "Fine Wool Socks", "Well Tailored Socks"])
         weapons = self.section("Items", "Weapons")
         found = re.findall(r"\{\{Item\|([^}|]+)", weapons)
         self.assertLess(found.index("Shoddy Dagger"), found.index("Iron Dagger"))
@@ -62,11 +62,11 @@ class PortalTests(unittest.TestCase):
 
     def test_family_pages_and_navboxes_list_tiers_in_order(self):
         self.assertEqual(re.findall(r"^\| \d+ \|\| \{\{Item\|([^}]+)\}\}", self.pages["Socks"], re.M),
-                         ["Worn Socks", "Decent Socks", "Fine Wool Socks"])
+                         ["Laughable Socks", "Worn Socks", "Decent Socks", "Fine Wool Socks", "Well Tailored Socks"])
         socks = self.pages["Decent Socks"]
         navbox = socks.split('<div class="mirklurk-navbox"', 1)[1].split("</div>", 1)[0]
         self.assertIn("'''[[Socks]]''' (lowest to highest value)", navbox)
-        self.assertIn("{{DEFAULTSORT:Socks 02 Decent Socks}}", socks)
+        self.assertIn("{{DEFAULTSORT:Socks 03 Decent Socks}}", socks)
         self.assertLess(socks.index("mirklurk-navbox"), socks.index("[[Category:"))
         mirkfang = self.pages["Giant Mirkfang"]
         self.assertIn("'''[[:Category:Mirkfangs|Mirkfangs]]''' (weakest to strongest)", mirkfang)

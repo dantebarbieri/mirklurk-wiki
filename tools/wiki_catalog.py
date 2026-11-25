@@ -18,11 +18,11 @@ from wiki_references import resolve_catalog_references
 
 
 DEDICATED_CATEGORIES = {"item", "being", "nature", "skill", "damage_class"}
-MAX_CATALOG_BYTES = 576 * 1024
+MAX_CATALOG_BYTES = 640 * 1024
 BUILT_IN_ATTACK = "item-31"  # Unarmed: the game's fist attack, stored as an item but never carried.
 RESERVED_TITLES = {*PAGE_FILES, *RESEARCH_PAGE_FILES, *RESEARCH_PAGE_REDIRECTS, "NPCs", "Source provenance", "Loot mechanics"}
 VALUE_LINK = "[[Currency and trading#currency-trade-standard-value|Value]]"
-VALUE_NOTE = ("Merchants sell at this value and pay it for an item in full condition; "
+VALUE_NOTE = ("If a merchant stocks it, this is its purchase price. Merchants pay this value for an item in full condition; "
               "[[Currency and trading#currency-trade-durability|wear and fuel lower the selling price]].")
 
 TRADE_DURABILITY_EXAMPLE = (

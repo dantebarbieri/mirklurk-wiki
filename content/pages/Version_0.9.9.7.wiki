@@ -1,4 +1,4 @@
-'''Version 0.9.9.7''' is a test build available through Steam's <code>next_version_tester</code> branch, not a released 1.0 version. The wiki's latest stable reference remains [[Version 0.9.6.5|0.9.6.5]]. Tester-only item pages and sections are labeled explicitly; stable stats and acquisition tables still describe 0.9.6.5.
+'''Version 0.9.9.7''' is the historical test build supplied through Steam's <code>next_version_tester</code> branch, not a released 1.0 version. The wiki now shows stable [[Version 1.0.0.0|1.0.0.0]] values. This page preserves the tester's comparison with 0.9.6.5; its additions shipped in 1.0, with the release-specific differences documented separately.
 
 The developer's Discord announcement supplied to the wiki describes this as the intended final 1.0 version undergoing stability testing. Its release date is unconfirmed: the supplied message has no timestamp or link, and no Steam announcement identifies 0.9.9.7. The comparison below is between 0.9.6.5 and the installed 0.9.9.7 tester.
 
@@ -30,6 +30,8 @@ Areas already saved with terrain are loaded without this generation step. Explor
 [[Mirk Lurker]] and [[Deathlob]], the cave layout, webs and treasure were already defined in 0.9.6.5. This tester makes the entrance assignment functional; it does not add two new enemy definitions or change their base stats. A displayed in-game name for this cave is unconfirmed. Cave-like classification includes it, but the separate dungeon-like classification does not, so dungeon-wide behavior should not be assumed.
 
 In particular, the cave's HUD keeps the weather/day clock rather than the underground display. The temperature and drying calculation uses the current weather temperature rather than the fixed underground 0.35 value. Cave tiles alone do not imply underground exposure rules.
+
+'''Version boundary:''' this exclusion applies to 0.9.9.7. Public [[Version 1.0.0.0]] includes the spider cave in dungeon-like exposure and UI calculations; it does not change the ordinary population updater's earlier exit for this area.
 
 == Tester changes ==
 === Cooking ===

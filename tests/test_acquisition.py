@@ -45,10 +45,10 @@ class AcquisitionTests(unittest.TestCase):
                 normal.add(entry["details"]["outcome"])
         notes = {note["item"]: note for note in document["item_notes"]}
         unverified = {identity for identity, note in notes.items() if note["kind"] in {"unverified", "unreleased"}}
-        self.assertEqual(unverified, {"item-40", "item-48", "item-49"})
+        self.assertEqual(unverified, {"item-40", "item-48", "item-49", "item-292"})
         self.assertFalse(normal & unverified)
         self.assertIn("item-254", normal)
-        self.assertEqual(len(normal | (notes.keys() - unverified)), 268)
+        self.assertEqual(len(normal | (notes.keys() - unverified)), 280)
         self.assertEqual(normal | notes.keys(), {entity["id"] for entity in self.data["entities"] if entity["category"] == "item"})
         self.assertFalse(any("No documented acquisition source is available yet." in text for text in self.pages.values()))
         self.assertIn("built-in", self.pages["Unarmed"])
@@ -57,13 +57,15 @@ class AcquisitionTests(unittest.TestCase):
         for identity in ("item-170",):
             self.assertIn("[[" + locations[identity] + "#Recipes|", self.pages["Finish Raft"])
         for identity in unverified:
-            self.assertIn("Unknown" if identity == "item-40" else "unreleased content", self.pages[locations[identity]])
+            expected = ("Unknown" if identity == "item-40" else "No acquisition route is confirmed"
+                        if identity == "item-292" else "unreleased content")
+            self.assertIn(expected, self.pages[locations[identity]])
             self.assertNotIn("unobtainable", self.pages[locations[identity]])
 
     def test_clothing_is_browsable_in_items_and_category_by_reviewed_slots(self):
         clothes = next(row for row in self.catalog["taxonomy"]["groups"] if row["title"] == "Clothes")
-        expected = {"Headwear": 5, "Shirts": 3, "Outerwear": 3, "Cloaks": 5, "Gloves": 4,
-                    "Pants": 3, "Socks": 3, "Footwear": 5}
+        expected = {"Headwear": 5, "Shirts": 4, "Outerwear": 3, "Cloaks": 5, "Gloves": 4,
+                    "Pants": 4, "Socks": 5, "Footwear": 5}
         groups = clothing_subgroups(self.catalog, clothes["members"])
         self.assertEqual({label: len(members) for label, members, _ in groups}, expected)
         self.assertEqual(set().union(*(members for _, members, _ in groups)), set(clothes["members"]))
@@ -76,7 +78,7 @@ class AcquisitionTests(unittest.TestCase):
                 for slot in slots:
                     self.assertIn("[[:Category:" + slot + "|", section)
         anchors = re.findall(r'id="item-([^"]+)"', self.pages["Items"])
-        self.assertEqual(len(anchors), 270)
+        self.assertEqual(len(anchors), 283)
         self.assertEqual(set(anchors), {locations[row["id"]].replace(" ", "_") for row in self.data["entities"] if row["category"] == "item" and row["id"] != "item-31"})
 
     def test_overlapping_clothing_tags_never_duplicate_primary_index_anchors(self):
@@ -100,9 +102,9 @@ class AcquisitionTests(unittest.TestCase):
         inputs.update(row["item"] for recipe in self.catalog["construction_recipes"] for row in recipe["inputs"])
         routes = ingredient_acquisition(self.data, self.catalog)
         self.assertEqual(set(routes), inputs)
-        self.assertEqual(len(inputs), 55)
-        expected = {"Creature drops": 13, "Gatherables": 37, "Purchased ingredients": 1,
-                    "Crafted ingredients": 4, "Other ingredient sources": 1}
+        self.assertEqual(len(inputs), 57)
+        expected = {"Creature drops": 15, "Gatherables": 37, "Purchased ingredients": 1,
+                    "Crafted ingredients": 4, "Other ingredient sources": 2}
         categories = category_definitions(self.data, self.catalog)
         self.assertEqual(set(categories["Recipe ingredients"]["members"]), inputs)
         locations = self.locations
@@ -166,7 +168,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "c7883316fc07be573b36de0a9e1a8c3d2ff8c4f7ed177927d88b5997c6457857")
+                         "da1fcce37ae9d0bbc8da392e8fabce4289d3fb8a89727cb9dbfff84f9f7b05f2")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
@@ -342,12 +344,12 @@ class AcquisitionTests(unittest.TestCase):
         from test_editorial import gameplay_record
         unchanged = [gameplay_record(pool) for pool in document["pools"]]
         self.assertEqual(hashlib.sha256((json.dumps(unchanged, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest(),
-                         "94593ceb530d82432d340a7c7e327047afff529b370bf9a4fd33981d98042696")
+                         "8adba713352f0ff0aec72cf9c6d2d68347b1fea3f89dff79cf771d63df26efa4")
         self.assertEqual({identity: len(pool["eligible_item_ids"]) for identity, pool in pools.items()}, {
-            "skeleton-outdoors": 93, "skeleton-indoors": 71, "chest-common": 97, "chest-middle": 96,
-            "chest-rich": 78, "ruins-large": 20, "ruins-small": 9, "nest-tiny": 7,
-            "cracks-tiny": 6, "unwanted-remains": 75, "survivor-remains": 69, "shaman-remains": 6,
-            "webbed-treasure": 87,
+            "skeleton-outdoors": 100, "skeleton-indoors": 78, "chest-common": 109, "chest-middle": 107,
+            "chest-rich": 89, "ruins-large": 21, "ruins-small": 10, "nest-tiny": 7,
+            "cracks-tiny": 6, "unwanted-remains": 75, "survivor-remains": 70, "shaman-remains": 6,
+            "webbed-treasure": 98,
         })
         self.assertEqual(pools["chest-common"]["item_conditions"], {})
         self.assertIn("item-258", set(pools["unwanted-remains"]["eligible_item_ids"]) & set(pools["survivor-remains"]["eligible_item_ids"]))

@@ -1,4 +1,4 @@
-"""Isolated tester documentation; never replace the stable facts or display registry."""
+"""Validate isolated or historical tester documentation without overriding stable data."""
 
 from pathlib import Path
 
@@ -17,7 +17,7 @@ def load_tester(root, stable):
                        "item_notes", "page_notes"}, set(), "tester")
     if (type(document["schema_version"]) is not int or document["schema_version"] != 1
             or document["channel"] != "next_version_tester" or document["stable_build"] != "0.9.6.5"
-            or stable["game"]["build"] != document["stable_build"]):
+            or stable["game"]["build"] not in (document["stable_build"], "1.0.0.0")):
         raise DataError("tester: explicit stable build and tester channel required")
     data = validate_data(document["data"])
     if data["game"]["build"] != "0.9.9.7" or data["facts"] or data.get("entries"):
@@ -25,9 +25,19 @@ def load_tester(root, stable):
     entities = {row["id"]: row for row in data["entities"]}
     for row in entities.values():
         _title(row["name"])
-    if (set(entities) & {row["id"] for row in stable["entities"]}
-            or any(row["category"] != "item" for row in entities.values())):
+    stable_entities = {row["id"]: row for row in stable["entities"]}
+    historical = stable["game"]["build"] == "1.0.0.0"
+    overlap = entities.keys() & stable_entities.keys()
+    if (any(row["category"] != "item" for row in entities.values())
+            or not historical and overlap
+            or historical and (overlap != entities.keys() or any(
+                stable_entities[identity]["category"] != "item"
+                or stable_entities[identity]["name"] != row["name"]
+                for identity, row in entities.items()))):
         raise DataError("tester: new items must not shadow stable entities")
+    if any(row["name"] == stable_row["name"] and row["id"] != stable_row["id"]
+           for row in entities.values() for stable_row in stable_entities.values()):
+        raise DataError("tester: item titles must not shadow stable entities")
     if len({row["name"] for row in entities.values()}) != len(entities):
         raise DataError("tester: duplicate item page title")
     details = validate_details(document["details"], data)
@@ -37,6 +47,10 @@ def load_tester(root, stable):
     if ({row.get("entity") for row in images} != entities.keys()
             or len(images) != len(entities) or any(row["rights_status"] != "approved" for row in images)):
         raise DataError("tester: every new item needs exactly one approved illustration")
+    if historical:
+        stable_images = {row["entity"]: row for row in stable.get("illustrations", []) if "entity" in row}
+        if any(stable_images.get(row["entity"]) != row for row in images):
+            raise DataError("tester: historical items must retain their approved illustrations")
     sources = {row["id"]: row for row in data["sources"]}
     for field, owner in (("item_notes", "entity"), ("page_notes", "page")):
         seen = set()
