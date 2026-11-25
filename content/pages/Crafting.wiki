@@ -7,7 +7,7 @@ In crafting menus, item tooltips reserve extra vertical room for the ingredient 
 == Crafting experience ==
 In 1.0, a successful crafting-menu action starts with half its actual modified AP cost, rounded '''up''' to a whole number. Subtract one for each completed five character levels and grant XP only if the result is positive. The cost itself is rounded to 0.2 AP steps before this calculation; it is not necessarily the recipe's base AP cost.
 
-[[Twine]] is an exception: it starts at 1 XP before the same level reduction. At levels below 5, an actual 2.4-AP craft now grants 2 XP rather than the tester's 1; an 8-AP craft remains 4 XP. This is not a fixed percentage increase to every recipe or an AP-cost change.
+[[Twine]] is an exception: it starts at 1 XP before the same level reduction. At levels below 5, an actual 2.4-AP craft grants 2 XP; an 8-AP craft grants 4 XP. This is not a fixed percentage increase to every recipe or an AP-cost change.
 
 Find [[Items#Recipe_ingredients_by_acquisition|ingredients by acquisition]] or browse [[:Category:Crafting materials|materials]].
 

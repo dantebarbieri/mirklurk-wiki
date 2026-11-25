@@ -1162,6 +1162,9 @@ def build_pages(root, data, catalog=None, details=None):
     shown = entry_fragments(entries, owners, locations, catalog.get("construction_recipes", []))
     entries = [{**row, "anchor": shown[row["id"]]} for row in entries]
     images = sorted(data.get("illustrations", []), key=lambda row: row["id"])
+    if data["game"]["build"] == "1.0.0.0":
+        images = [{**image, "caption": image["caption"].replace(" (0.9.9.7 tester)", "")}
+                  for image in images]
     prices = {row["entity"]: row for row in catalog.get("unit_prices", {}).get("prices", [])}
     merchant_profiles = {row["entity"]: row for row in catalog.get("merchant_profiles", [])}
     price_items = ({entry["details"]["item"] for entry in entries if entry["kind"] == "merchant"} | prices.keys()) if "unit_prices" in catalog else set()

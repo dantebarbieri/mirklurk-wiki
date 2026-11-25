@@ -262,7 +262,7 @@ class CatalogTests(unittest.TestCase):
         for row in (row for row in self.data["illustrations"] if row.get("entity") in later):
             page = self.pages[locations[row["entity"]]]
             self.assertEqual(page.count(f'[[{row["file_title"]}|'), 1)
-            self.assertIn(literal(image_caption(row)), page)
+            self.assertIn(literal(image_caption(row).replace(" (0.9.9.7 tester)", "")), page)
             if "cropped_from" in row:
                 self.assertNotIn(row["cropped_from"]["file_title"] + "|", page)
         self.assertIn("no inventory icon", self.pages[locations["item-171"]])
@@ -1176,7 +1176,7 @@ class ProfileTests(unittest.TestCase):
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
                 b'"build": "1.0.0.0"', b'"build": null', 1,
             )).hexdigest(),
-            "5436be8d4962bd1a617ceb7afa5ecd551a9fd5a4aefde67a0abaf5ebec7cad9c",
+            "325e296d7e6dcc045d3742ebd42dff137be851c59bd4d356cd96039028b7b258",
         )
 
 

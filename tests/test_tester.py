@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -40,6 +41,7 @@ class TesterDocumentationTests(unittest.TestCase):
             self.assertNotIn("crafted, bought", text)
             self.assertNotIn("Merchants sell", text)
             self.assertNotIn("New in [[Version 0.9.9.7", text)
+            self.assertNotIn("0.9.9.7", text)
         self.assertIn("[[Inventory crafting]]", pages["Sturdy Shortbow"])
         self.assertIn("{{Item|Twine|quantity=2}}", pages["Sturdy Shortbow"])
         self.assertIn("{{Item|Branch (Trollgnarl)|quantity=2}}", pages["Sturdy Shortbow"])
@@ -47,7 +49,7 @@ class TesterDocumentationTests(unittest.TestCase):
         self.assertIn("[[Piercing|", pages["Sturdy Shortbow"])
         self.assertNotIn("2.4000000000000004", pages["Sturdy Shortbow"])
 
-    def test_release_access_and_exposure_preserve_the_historical_tester_boundary(self):
+    def test_release_access_and_exposure_have_one_current_stable_reference(self):
         meat = self.pages["Grilled Spider Meat"]
         self.assertNotIn("== 0.9.9.7 tester ==", meat)
         self.assertIn("burning Campfire", meat)
@@ -56,12 +58,15 @@ class TesterDocumentationTests(unittest.TestCase):
         self.assertIn("not 12.5% or 10%", self.pages["Deathlob"])
         self.assertIn("normalized 0.35", self.pages["Temperature"])
         self.assertIn("ordinary population updater still exits", self.pages["World generation"])
-        self.assertIn("weather/day clock", self.pages["Version 0.9.9.7"])
-        self.assertIn("Version boundary:", self.pages["Version 0.9.9.7"])
+        self.assertEqual(self.pages["Version 0.9.9.7"], "#REDIRECT [[Version 1.0.0.0]]\n")
         for note in self.tester["page_notes"]:
             self.assertNotIn("== 0.9.9.7 tester ==", self.pages[note["page"]])
-        self.assertIn("no timestamp or link", self.pages["Version 0.9.9.7"])
-        self.assertIn("not a released 1.0", self.pages["Version 0.9.9.7"])
+        for title in ("Main Page", "Versions", "Game mechanics", "World generation",
+                      "Crafting", "Version 1.0.0.0"):
+            self.assertNotIn("0.9.9.7", self.pages[title], title)
+            self.assertNotIn("tester", self.pages[title].lower(), title)
+        self.assertEqual(hashlib.sha256((ROOT / "content" / "facts" / "tester.json").read_bytes()).hexdigest(),
+                         "d8c468049e2a2b483ff7cb775aaf09dd3a40645f6a7fec5ff346329d01eeb481")
 
     def test_promoted_art_reuses_the_approved_tester_records_and_smoke_pixels(self):
         images = self.tester["data"]["illustrations"]
@@ -71,11 +76,13 @@ class TesterDocumentationTests(unittest.TestCase):
         for image in images:
             self.assertIn(image, self.stable["illustrations"])
             self.assertIn(image["file_title"].removeprefix("File:"), specs)
+            title = next(row["name"] for row in self.tester["data"]["entities"] if row["id"] == image["entity"])
+            self.assertIn(image["caption"].replace(" (0.9.9.7 tester)", ""), self.pages[title])
 
-    def test_base_only_release_render_retains_linked_tester_history_without_overlays(self):
+    def test_base_only_release_render_preserves_the_legacy_redirect_without_overlays(self):
         pages = build_pages(ROOT, load_data(ROOT / "content" / "facts" / "game.json"))
         self.assertIn("Version 0.9.9.7", pages)
-        self.assertIn("weather/day clock", pages["Version 0.9.9.7"])
+        self.assertEqual(pages["Version 0.9.9.7"], "#REDIRECT [[Version 1.0.0.0]]\n")
         self.assertNotIn("tester only (next_version_tester)", pages["Sturdy Shortbow"])
         self.assertNotIn("== 0.9.9.7 tester ==", pages["Finish Raft"])
 

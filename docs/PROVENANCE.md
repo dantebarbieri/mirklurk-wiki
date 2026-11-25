@@ -849,6 +849,12 @@ plus paired backups remain publication prerequisites.
 
 ## Version 1.0.0.0 update
 
+Public gameplay documentation is consolidated into the current stable release.
+The legacy `Version 0.9.9.7` title redirects to `Version 1.0.0.0`, rather than
+remaining a separate tester presentation. Its original wiki revisions, Git
+history, immutable tester snapshot and extraction evidence remain preserved;
+the retained historical comparisons are source provenance, not a current beta guide.
+
 The official Steam announcement **Patch 1.0 - Leaving Early Access!**
 ([announcement](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852980209))
 has UTC timestamp **2026-11-25T08:02:15Z**. Its title says 1.0; installed public

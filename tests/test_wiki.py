@@ -327,7 +327,7 @@ class DataTests(unittest.TestCase):
         update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
         self.assertEqual(len(update), 100)
         raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "cf22f1f7466ccbb18aab952f6fc0ceb6b9c58f50c6036a9252762594379ab53d")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "2ac9d39f08002e557b22ced65ca1e09b1fe2622dee6f042719771520b8ab9d63")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
         self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 449)

@@ -303,6 +303,8 @@ developer permission and attribution are reused exactly. Historical extraction
 captions are provenance, not a current-beta restriction.
 
 No new inventory-art import, File move, replacement, or logo change is needed.
+Current release captions omit the tester channel label; the unchanged registry
+records retain the exact extraction captions and source evidence.
 Previously accepted import and backup evidence remains history; this release
 does not claim a new host write or fresh operator snapshot. Game menu/flag
 branding changes are documented in prose rather than unnecessarily importing

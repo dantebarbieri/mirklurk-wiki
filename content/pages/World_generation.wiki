@@ -5,11 +5,11 @@ This guide covers '''1.0.0.0''' and contains '''location and story spoilers'''. 
 Generation rules are unchanged between 0.9.5.5 and 0.9.5.6. Version 0.9.5.5 changes nature acceptance near Fort Solid and removes the random pit pass from the first two rift depths. Removing those random draws can also change later generated choices, including exit positions. The 0.9.5.0 Giant Snail substitutions and Toadkin Shaman companion rolls also consume randomness. Older builds therefore need not generate identical areas from the same internal random state.
 
 == Spider-cave access ==
-The 0.9.9.7 tester makes a formerly empty cave-replacement check functional; public 1.0 ships it. When an eligible ordinary cave candidate passes the existing selection and collision checks, a 0.333 roll can assign the special entrance to the spider cave. This is not a one-third chance per area or for every cave.
+In 1.0, when an eligible ordinary cave candidate passes the existing selection and collision checks, a 0.333 roll can assign the special entrance to the spider cave. This is not a one-third chance per area or for every cave.
 
 The cave layout, webs, [[Mirk Lurker]], [[Deathlob]] and webbed treasure were already defined in 0.9.6.5; their base definitions are unchanged. Only newly generated areas can receive the entrance. Previously saved areas do not receive it when revisited.
 
-Unlike the tester, 1.0 treats this cave as dungeon-like for its underground HUD and 0.35 ambient-temperature baseline. The ordinary population updater still exits before its later dungeon fallback, so that fallback does not establish new inhabitants. Initial cave generation retains its relative Mirk Lurker:Deathlob weights of 15:1.
+Public 1.0 treats this cave as dungeon-like for its underground HUD and 0.35 ambient-temperature baseline. The ordinary population updater still exits before its later dungeon fallback, so that fallback does not establish new inhabitants. Initial cave generation retains its relative Mirk Lurker:Deathlob weights of 15:1.
 
 == What is decided upfront? ==
 Creating a world chooses its grid of area types and the zones for Fort Solid, [[Ranger Bhato]]'s hideout, [[Scaal]]'s lair and the Library. Those assignments exist before all the zones are explored; their exact exterior positions are created when the relevant areas are generated.

@@ -1,12 +1,12 @@
 '''Version 1.0.0.0''' is the patch released on 25 November 2026, announced as '''1.0 - Leaving Early Access!''' The [https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852980209 official Steam announcement] was posted at 08:02:15 UTC and ends Early Access. The installed public game's menu, version check and save writer identify the binary as '''1.0.0.0'''. This wiki shows 1.0.0.0 values.
 
-This page compares the public release with [[Version 0.9.6.5]] and separately identifies additional changes since the [[Version 0.9.9.7|0.9.9.7 tester]]. Tester additions are now part of the stable reference; they are not counted again as new definitions since the tester.
+This page describes the public release's changes from [[Version 0.9.6.5]]. Gameplay descriptions and item statistics throughout the wiki cover the current stable release.
 
 '''Spoilers:''' this page names creatures, a new cave and late-story achievement milestones.
 
 == New content ==
 === Items ===
-The release adds '''13 item definitions''' compared with 0.9.6.5, all already present in the tester. The announcement's "around 20" is approximate; there are no further item-definition additions since 0.9.9.7.
+The release adds '''13 item definitions''' compared with 0.9.6.5. The announcement's "around 20" is approximate.
 
 {| class="wikitable"
 ! Group !! Items
@@ -26,15 +26,15 @@ Only Sturdy Shortbow has a crafting recipe among these additions. Declared price
 === German and combat music ===
 German is available through the fifth language flag, with five packaged language files. Map-title font selection and language-switch refresh ordering are corrected; Russian-specific font branches do not establish a newly shipped Russian translation folder.
 
-One additional combat track joins the existing combat-music list. The menu receives 1.0 branding, and existing click-sound volumes are rebalanced.
+Missing translation keys can be filled without replacing existing translations. One additional combat track joins the existing combat-music list. The menu receives 1.0 branding, and existing click-sound volumes are rebalanced.
 
 == Changes ==
 === Spider-cave access and exposure ===
 [[World generation]] can assign the special spider-cave entrance in newly generated areas. The replacement roll is 0.333 '''for eligible ordinary cave candidates''' after selection and collision checks, not one cave in three areas. Saved terrain is not regenerated.
 
-The cave layout, webs, treasure, [[Mirk Lurker]] and [[Deathlob]] definitions already existed in 0.9.6.5. Making the entrance functional in the tester and shipping it in 1.0 makes them ordinarily reachable without adding two new enemy definitions or changing their base stats.
+The cave layout, webs, treasure, [[Mirk Lurker]] and [[Deathlob]] definitions already existed in 0.9.6.5. The functional entrance in 1.0 makes them ordinarily reachable without adding two new enemy definitions or changing their base stats.
 
-'''Additional change since the tester:''' the cave is now dungeon-like as well as cave-like. Its HUD uses the underground indicator without weather overlays; [[Temperature]] and [[Weather]] use a 0.35 ambient baseline for player warmth and container drying before other modifiers. This does not remove every weather influence from wetness calculations.
+The cave is dungeon-like as well as cave-like. Its HUD uses the underground indicator without weather overlays; [[Temperature]] and [[Weather]] use a 0.35 ambient baseline for player warmth and container drying before other modifiers. This does not remove every weather influence from wetness calculations.
 
 The ordinary [[Areas|population updater]] still exits for this nonoutside area before its later dungeon fallback. The classification change does not establish additional ordinary inhabitants; initial cave generation retains relative Mirk Lurker:Deathlob weights of 15:1. Outside Deathlob selection weights of 0.125 in [[Sunken Ancient Ruins]] and 0.1 in the general outside pool remain relative weights, not encounter percentages.
 
@@ -43,10 +43,10 @@ Sturdy Shortbow is craftable in the player's menu from 2 [[Twine]], 2 [[Branch (
 
 [[Loot tables]] can consider item IDs through the new bow. Normal exclusions, cell-size limits, budget checks and the candidate limit remain; this does not guarantee every new item in every pool.
 
-'''Additional change since the tester:''' [[Crafting]] XP rounds half the actual modified AP cost up instead of to the nearest whole number, then applies the existing level reduction. Twine still starts at 1 XP. An actual 2.4-AP craft below level 5 now grants 2 XP instead of 1; an 8-AP craft still grants 4.
+[[Crafting]] XP rounds half the actual modified AP cost up, then applies the existing level reduction. Twine starts at 1 XP. An actual 2.4-AP craft below level 5 grants 2 XP; an 8-AP craft grants 4.
 
 === Rafts ===
-[[Finish Raft]] has a 6-AP base action cost instead of 6.4 and provides Push, Pull and Board. Push and Pull cost 6 AP; a blocked push still spends AP. Direct boarding requires being within 8 pixels. Movement targets are not saved, so continuing an in-progress push or pull after loading is unconfirmed.
+[[Finish Raft]] has a 6-AP base action cost instead of 6.4 and provides Push, Pull and Board. Push and Pull cost 6 AP; a blocked push still spends AP. Direct boarding requires being within 8 pixels and enters the rafting state. Movement is gradual, and frozen rafts stop bobbing. Movement targets are not saved, so continuing an in-progress push or pull after loading is unconfirmed.
 
 === Honey, trees and ground cover ===
 [[Honey]] replenishment has an outer 50% attempt gate, a total-resource limit of 4.25, fewer than one resource per eligible tree, at least 12 branches and a nested 1.5% tree roll. These are not a 50% per-tree drop chance or a guaranteed minimum distance between honey-bearing trees.
@@ -57,12 +57,13 @@ Log scattering checks the candidate position correctly. [[Fern]] can regrow on o
 
 == Fixes ==
 * Equipped torch fuel no longer provides the faulty direct-equipped fuel search; nearby ground fuel remains usable and tool searches still include equipped tools.
+* Closing a submenu clears its secondary selected slot.
 * Hidden-hollow placement checks container collisions at the placement origin. It is not a blanket collision scan over every container in the footprint.
 * Jump completion preserves its visual height target after halting the path, addressing the endless deep-water-fall issue.
-* Poison tens follow cell opacity, and the release additionally corrects the ones digit with modulo 10.
+* Poison damage-number opacity follows its cell opacity, and the ones digit uses modulo 10.
 * Cured sickness resets its remaining time instead of accidentally adding 0.16 wellbeing. Existing sickness levels retain their 1%, 2% and 3% penalties.
-* Non-English new-game map titles use the corrected font selection; the debug font grows from 96 to 204 glyphs.
+* Non-English new-game map titles use the corrected font selection; the debug font contains 204 glyphs.
 
-'''Not in the patch notes:''' the release's dungeon-like spider-cave exposure differs from the tester; language changes refresh the UI before the menu. Inherited tree-part drawing samples, offscreen being draw culling and highlighting changes are graphical, not despawn or tree-growth guarantees. Developer item-picker expansion is not a player feature. The save format adds no serialized fields beyond its updated version literal.
+'''Not in the patch notes:''' the spider cave uses dungeon-like exposure; language changes refresh the UI before the menu. Tree-part drawing samples, offscreen being draw culling and highlighting changes are graphical, not despawn or tree-growth guarantees. Developer item-picker expansion is not a player feature. The save format adds no serialized fields beyond its updated version literal.
 
 [[Versions]] | [[Game mechanics]] | [[Main Page]]

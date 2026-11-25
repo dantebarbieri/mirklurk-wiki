@@ -3,6 +3,6 @@ Learn about survival, combat, crafting and progression. See [[Skills]] for bonus
 == Version ==
 These guides cover '''1.0.0.0''', released as '''1.0''' on 25 November 2026. See [[Version 1.0.0.0]] for the release that ends Early Access and [[Versions]] for earlier versions. Other versions may differ.
 
-[[Version 0.9.9.7|The 0.9.9.7 tester]] remains a historical reference. Default stats and acquisition tables describe public 1.0.0.0; [[Achievements]] explains the release's unlock conditions and limits.
+Default stats and acquisition tables describe public 1.0.0.0; [[Achievements]] explains the release's unlock conditions and limits.
 
 [[Skills]] | [[Damage types]] | [[Health and armor]] | [[Action points]] | [[Main Page]]

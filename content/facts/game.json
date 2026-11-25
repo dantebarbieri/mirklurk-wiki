@@ -22377,7 +22377,7 @@
       "id": "release-1000-finish-raft",
       "kind": "algorithm",
       "title": "Finish Raft in 1.0",
-      "summary": "Release behavior, first documented in the 0.9.9.7 tester.",
+      "summary": "Moving and boarding a finished raft.",
       "conditions": "Existing terrain, action and eligibility conditions still apply.",
       "confidence": "inferred",
       "evidence": [
@@ -22416,7 +22416,7 @@
       "id": "release-1000-fern",
       "kind": "algorithm",
       "title": "Fern in 1.0",
-      "summary": "Release behavior, first documented in the 0.9.9.7 tester.",
+      "summary": "Regrowth attempts when revisiting an outside area.",
       "conditions": "Existing terrain, action and eligibility conditions still apply.",
       "confidence": "inferred",
       "evidence": [
@@ -22438,7 +22438,7 @@
       "id": "release-1000-willow",
       "kind": "algorithm",
       "title": "Willow in 1.0",
-      "summary": "Release behavior, first documented in the 0.9.9.7 tester.",
+      "summary": "Branch aging and conditional ground-log placement.",
       "conditions": "Existing terrain, action and eligibility conditions still apply.",
       "confidence": "inferred",
       "evidence": [
@@ -22460,7 +22460,7 @@
       "id": "release-1000-cypress",
       "kind": "algorithm",
       "title": "Cypress in 1.0",
-      "summary": "Release behavior, first documented in the 0.9.9.7 tester.",
+      "summary": "Branch aging and conditional ground-log placement.",
       "conditions": "Existing terrain, action and eligibility conditions still apply.",
       "confidence": "inferred",
       "evidence": [
@@ -22482,7 +22482,7 @@
       "id": "release-1000-trollgnarl",
       "kind": "algorithm",
       "title": "Trollgnarl in 1.0",
-      "summary": "Release behavior, first documented in the 0.9.9.7 tester.",
+      "summary": "Branch aging and conditional ground-log placement.",
       "conditions": "Existing terrain, action and eligibility conditions still apply.",
       "confidence": "inferred",
       "evidence": [
@@ -22504,7 +22504,7 @@
       "id": "release-1000-elderwort-shrub",
       "kind": "algorithm",
       "title": "Elderwort Shrub in 1.0",
-      "summary": "Release behavior, first documented in the 0.9.9.7 tester.",
+      "summary": "Branch aging and conditional ground-log placement.",
       "conditions": "Existing terrain, action and eligibility conditions still apply.",
       "confidence": "inferred",
       "evidence": [
