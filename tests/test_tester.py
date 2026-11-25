@@ -79,6 +79,21 @@ class TesterDocumentationTests(unittest.TestCase):
         self.assertNotIn("tester only (next_version_tester)", pages["Sturdy Shortbow"])
         self.assertNotIn("== 0.9.9.7 tester ==", pages["Finish Raft"])
 
+    def test_promoted_bow_recipe_folds_matching_initializer_stats(self):
+        page = self.pages["Sturdy Shortbow"]
+        summary = page.split("== How to acquire ==", 1)[0]
+        self.assertNotIn("Base crafting cost", summary)
+        self.assertNotIn("Base recipe yield", summary)
+        self.assertIn("|ap=<nowiki>8</nowiki>", page)
+        self.assertIn("|output={{Item|Sturdy Shortbow|quantity=1}}", page)
+
+    def test_release_raft_instructions_are_not_repeated(self):
+        page = self.pages["Finish Raft"]
+        for step in ("The base item action cost is 6 AP",
+                     "Push targets a free tile 16 pixels away",
+                     "Direct boarding requires being within 8 pixels"):
+            self.assertEqual(page.count(step), 1, step)
+
     def test_shadowed_stable_entities_and_unapproved_beta_art_fail_before_rendering(self):
         def shadow(document):
             identity = document["data"]["entities"][0]["id"]

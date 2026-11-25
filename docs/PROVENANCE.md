@@ -867,7 +867,9 @@ among previously defined items compared with 0.9.6.5.
 The 13 previously isolated item entities, 131 numeric values, five attack grids
 and 13 approved illustrations are promoted into the ordinary registries.
 Item titles cite `items-en-1000.ItemTitles`; numeric profiles cite
-`gml_Object_databank_Alarm_1`. The historical six tester source records are
+`gml_Object_databank_Alarm_1`. Promoted profiles use the ordinary initializer
+context so matching recipe costs and yields appear only in the recipe display.
+The historical six tester source records are
 retained because the unchanged artwork still cites its actual extraction build.
 `tester.json` is not rewritten. Historical validation permits overlap only for
 the complete canonical promoted item set with its exact approved artwork;

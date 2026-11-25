@@ -22407,9 +22407,6 @@
         "steps": [
           "The base item action cost is 6 AP rather than stable 0.9.6.5's 6.4 AP. The release adds Push, Pull and Board to the context menu; Push and Pull each cost 6 AP.",
           "Push targets a free tile 16 pixels away. AP is spent before the destination check, so a blocked push still costs AP. Pull moves the player 3 pixels away and then moves the raft toward that position; push nudges the player 3 pixels toward it.",
-          "Direct boarding requires being within 8 pixels; otherwise interaction opens the context menu. Push/pull motion takes time and its destination is not saved. No persistence of an in-progress movement is promised.",
-          "The base item action cost is 6 AP rather than 0.9.6.5's 6.4 AP. The release adds Push, Pull and Board to the context menu; Push and Pull each cost 6 AP.",
-          "Push targets a free tile 16 pixels away. AP is spent before the destination check, so a blocked push still costs AP. Pull moves the player 3 pixels away and then moves the raft toward that position; push nudges the player 3 pixels toward it.",
           "Direct boarding requires being within 8 pixels; otherwise interaction opens the context menu. Push/pull motion takes time and its destination is not saved. No persistence of an in-progress movement is promised."
         ],
         "fact_ids": []

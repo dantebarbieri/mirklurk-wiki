@@ -152,7 +152,7 @@ class CatalogTests(unittest.TestCase):
                     "equip-ap-cost", "inventory-slots-added", "storage-grid-width", "storage-grid-height"}],
                 "profiles": [r for r in self.details["profiles"] if not r["id"].endswith(("-equip-cost", "-capacity"))],
             }, ensure_ascii=False, indent=2) + "\n").encode()).hexdigest(),
-            "77630e3e71582ce1675940c981e7ea727ec9dfce04143a6c64f48f1f97f863f5",
+            "41617b77377ed8b1127e18800e90fc6f395cb7f9b0db1e28cde4304928806e9c",
         )
         self.assertEqual(len(self.details["properties"]), 55)
         self.assertEqual(len(self.details["profiles"]), 630)
@@ -1176,7 +1176,7 @@ class ProfileTests(unittest.TestCase):
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
                 b'"build": "1.0.0.0"', b'"build": null', 1,
             )).hexdigest(),
-            "879134235d755ff33142a8c0e911daa914d6a9534ea3ce9809e3b531b1986b72",
+            "5436be8d4962bd1a617ceb7afa5ecd551a9fd5a4aefde67a0abaf5ebec7cad9c",
         )
 
 
