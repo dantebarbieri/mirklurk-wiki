@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "build": "0.9.6.5",
+  "build": "1.0.0.0",
   "sources": [
     {
       "id": "starting-equipment",
@@ -4120,10 +4120,10 @@
     {"id": "snail-remains", "title": "Giant Snail loot", "kind": "enemy", "summary": "Shell pieces found on a Giant Snail's corpse.", "conditions": ["Ordinary corpse loot, before recovered arrows or other additional effects."], "rows": [], "related_entities": ["Giant Snail", "Snail Shell Shard", "Intact Snail Shell"], "related_pages": ["Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse43.item278/item279"}], "existing_entry_ids": ["corpse-43-278", "corpse-43-279"]},
     {"id": "shaman-remains", "title": "Toadkin Shaman loot", "kind": "enemy", "summary": "Toadkin Meat and small budgeted treasure from a Toadkin Shaman.", "conditions": ["Ordinary corpse loot, before recovered arrows or other additional effects."], "rows": [], "related_entities": ["Toadkin Shaman", "Toadkin Meat"], "related_pages": ["Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse42.item162/treasure_get_lootarray[5,1.2,0.25]"}], "existing_entry_ids": ["corpse-42-162"], "pool_refs": [{"pool": "shaman-remains", "condition": "A fixed 1.2-silver budget, separately from the Toadkin Meat drop. Exact per-item odds are unknown."}]}
   ,
-    {"id": "spider-45-remains", "title": "Mirk Lurker loot", "kind": "enemy", "summary": "Spider Meat and Spider Silk from a lootable Mirk Lurker corpse.", "conditions": ["Normal access to its spider-cave area is unconfirmed."], "rows": [], "related_entities": ["Mirk Lurker", "Spider Meat", "Spider Silk"], "related_pages": ["World generation", "Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45]"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}], "existing_entry_ids": ["corpse-45-284", "corpse-45-286"]},
-    {"id": "spider-46-remains", "title": "Deathlob loot", "kind": "enemy", "summary": "Spider Meat and Spider Silk from a lootable Deathlob corpse.", "conditions": ["Normal access to its spider-cave area is unconfirmed."], "rows": [], "related_entities": ["Deathlob", "Spider Meat", "Spider Silk"], "related_pages": ["World generation", "Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[46]"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}], "existing_entry_ids": ["corpse-46-284", "corpse-46-286"]}
+    {"id": "spider-45-remains", "title": "Mirk Lurker loot", "kind": "enemy", "summary": "Spider Meat and Spider Silk from a lootable Mirk Lurker corpse.", "conditions": ["Newly generated areas can provide a spider-cave entrance."], "rows": [], "related_entities": ["Mirk Lurker", "Spider Meat", "Spider Silk"], "related_pages": ["World generation", "Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[45]"}, {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_2", "key": "eligibleCave.chance0.333.specialEntrance"}], "existing_entry_ids": ["corpse-45-284", "corpse-45-286"]},
+    {"id": "spider-46-remains", "title": "Deathlob loot", "kind": "enemy", "summary": "Spider Meat and Spider Silk from a lootable Deathlob corpse.", "conditions": ["Newly generated areas can provide a spider-cave entrance."], "rows": [], "related_entities": ["Deathlob", "Spider Meat", "Spider Silk"], "related_pages": ["World generation", "Loot tables"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse[46]"}, {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_2", "key": "eligibleCave.chance0.333.specialEntrance"}], "existing_entry_ids": ["corpse-46-284", "corpse-46-286"]}
   ,
-    {"id": "webbed-treasure", "title": "Webbed treasure", "kind": "random-container", "summary": "A special spider-cave container adds Spider Silk after a separate budgeted treasure roll.", "conditions": ["Normal access to the spider-cave area and this container is unconfirmed.", "Its initial loot population adds silk once, separately from ordinary treasure exclusions. Reopening it does not repeat that population."], "rows": [{"id": "webbed-treasure-silk", "item": "Spider Silk", "quantity": {"min": 8, "max": 20}, "probability": {"numerator": 1, "denominator": 1, "scope": "Only when this special container's initial loot is populated."}, "odds_note": null, "condition": "The special webbed container's initial loot population; normal world access is unconfirmed.", "coverage": "conditional", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.maxam=loot_amountchances[7.5,45];lootType0;min=maxam/4;item286.i_r[8,20]"}]}], "pool_refs": [{"pool": "webbed-treasure", "condition": "Only this special container's initial loot population; normal world access is unconfirmed."}], "related_entities": ["Spider Silk", "Mirk Lurker", "Deathlob"], "related_pages": ["World generation", "Random treasure"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.maxam=loot_amountchances[7.5,45];lootType0;min=maxam/4;item286.i_r[8,20]"}, {"source": "game-data-0965", "section": "gml_Object_manager_area_Alarm_2", "key": "cave.chance0.333.empty-body"}]}
+    {"id": "webbed-treasure", "title": "Webbed treasure", "kind": "random-container", "summary": "A special spider-cave container adds Spider Silk after a separate budgeted treasure roll.", "conditions": ["This container can appear in a newly generated spider cave.", "Its initial loot population adds silk once, separately from ordinary treasure exclusions. Reopening it does not repeat that population."], "rows": [{"id": "webbed-treasure-silk", "item": "Spider Silk", "quantity": {"min": 8, "max": 20}, "probability": {"numerator": 1, "denominator": 1, "scope": "Only when this special container's initial loot is populated."}, "odds_note": null, "condition": "The special webbed container's initial loot population; access requires a generated spider-cave entrance.", "coverage": "conditional", "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.maxam=loot_amountchances[7.5,45];lootType0;min=maxam/4;item286.i_r[8,20]"}]}], "pool_refs": [{"pool": "webbed-treasure", "condition": "Only this special container's initial loot population; access requires a generated spider-cave entrance."}], "related_entities": ["Spider Silk", "Mirk Lurker", "Deathlob"], "related_pages": ["World generation", "Random treasure"], "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.maxam=loot_amountchances[7.5,45];lootType0;min=maxam/4;item286.i_r[8,20]"}, {"source": "game-data-1000", "section": "gml_Object_manager_area_Alarm_2", "key": "eligibleCave.chance0.333.specialEntrance"}]}
   ],
   "pools": [
     {
@@ -4226,6 +4226,14 @@
         "item-277"
       ,
         "item-279"
+      ,
+        "item-282",
+        "item-283",
+        "item-291",
+        "item-293",
+        "item-294",
+        "item-295",
+        "item-296"
       ],
       "quantity": null,
       "probability": null,
@@ -4234,9 +4242,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4333,6 +4341,14 @@
         "item-257"
       ,
         "item-279"
+      ,
+        "item-282",
+        "item-283",
+        "item-291",
+        "item-293",
+        "item-294",
+        "item-295",
+        "item-296"
       ],
       "quantity": null,
       "probability": null,
@@ -4341,9 +4357,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4466,6 +4482,19 @@
         "item-273"
       ,
         "item-279"
+      ,
+        "item-280",
+        "item-281",
+        "item-282",
+        "item-283",
+        "item-288",
+        "item-289",
+        "item-290",
+        "item-291",
+        "item-293",
+        "item-294",
+        "item-295",
+        "item-296"
       ],
       "quantity": null,
       "probability": null,
@@ -4474,9 +4503,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4598,6 +4627,18 @@
         "item-274"
       ,
         "item-279"
+      ,
+        "item-280",
+        "item-281",
+        "item-282",
+        "item-283",
+        "item-288",
+        "item-289",
+        "item-290",
+        "item-293",
+        "item-294",
+        "item-295",
+        "item-296"
       ],
       "quantity": null,
       "probability": null,
@@ -4608,9 +4649,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4713,6 +4754,18 @@
         "item-272",
         "item-273",
         "item-274"
+      ,
+        "item-280",
+        "item-281",
+        "item-282",
+        "item-283",
+        "item-288",
+        "item-289",
+        "item-290",
+        "item-293",
+        "item-294",
+        "item-295",
+        "item-296"
       ],
       "quantity": null,
       "probability": null,
@@ -4723,9 +4776,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4770,6 +4823,8 @@
         "item-157",
         "item-166",
         "item-253"
+      ,
+        "item-291"
       ],
       "quantity": null,
       "probability": null,
@@ -4778,9 +4833,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4814,6 +4869,8 @@
         "item-115",
         "item-139",
         "item-257"
+      ,
+        "item-291"
       ],
       "quantity": null,
       "probability": null,
@@ -4822,9 +4879,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -4900,9 +4957,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -5011,9 +5068,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -5109,6 +5166,8 @@
         "item-279"
       ,
         "item-286"
+      ,
+        "item-291"
       ],
       "quantity": null,
       "probability": null,
@@ -5117,9 +5176,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"
+          "key": "treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"
         },
         {
           "source": "game-data-0899",
@@ -5139,11 +5198,24 @@
       ]
     }
   ,
-    {"id": "shaman-remains", "title": "Toadkin Shaman treasure", "owner_source": "random-treasure", "summary": "The budget is 1 silver and 20 copper. Non-valuable items must be worth at least 25 copper, and only one-square items qualify. Materials and foods are excluded.", "eligible_item_ids": ["item-32", "item-72", "item-73", "item-84", "item-140", "item-141"], "quantity": null, "probability": null, "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.", "item_conditions": {}, "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse42.treasure_get_lootarray[5,1.2,0.25]"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(287)/type/size/value"}]}
+    {"id": "shaman-remains", "title": "Toadkin Shaman treasure", "owner_source": "random-treasure", "summary": "The budget is 1 silver and 20 copper. Non-valuable items must be worth at least 25 copper, and only one-square items qualify. Materials and foods are excluded.", "eligible_item_ids": ["item-32", "item-72", "item-73", "item-84", "item-140", "item-141"], "quantity": null, "probability": null, "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.", "item_conditions": {}, "confidence": "inferred", "evidence": [{"source": "game-data-0950", "section": "gml_Object_obj_being_Alarm_0", "key": "corpse42.treasure_get_lootarray[5,1.2,0.25]"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.irandom(296)/type/size/value"}]}
   ,
-    {"id": "webbed-treasure", "title": "Webbed treasure pool", "owner_source": "random-treasure", "summary": "The special webbed container rolls a budget of 7 to 44 silver with a lower-value bias. Each roll's minimum non-valuable item value is one quarter of that budget. Normal access to this container is unconfirmed; the separately added silk is not part of this pool.", "eligible_item_ids": ["item-1", "item-4", "item-5", "item-6", "item-7", "item-8", "item-9", "item-10", "item-11", "item-14", "item-26", "item-27", "item-28", "item-29", "item-30", "item-44", "item-47", "item-50", "item-54", "item-55", "item-56", "item-57", "item-58", "item-72", "item-73", "item-74", "item-86", "item-89", "item-97", "item-98", "item-99", "item-100", "item-101", "item-105", "item-106", "item-110", "item-111", "item-112", "item-116", "item-117", "item-127", "item-145", "item-146", "item-147", "item-148", "item-153", "item-154", "item-155", "item-156", "item-157", "item-158", "item-159", "item-160", "item-161", "item-165", "item-166", "item-167", "item-168", "item-176", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-190", "item-191", "item-192", "item-193", "item-197", "item-198", "item-200", "item-201", "item-209", "item-251", "item-252", "item-253", "item-256", "item-266", "item-267", "item-268", "item-269", "item-270", "item-271", "item-272", "item-273", "item-274"], "quantity": null, "probability": null, "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.", "item_conditions": {}, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.maxam=loot_amountchances[7.5,45];lootType0;min=maxam/4;item286.i_r[8,20]"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;treasure_get_lootarray.irandom(287)/NONLOOTABLE/type/size/value/quest/tries"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_smartones", "key": "i_r.irandom_range"}, {"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"}]}
+    {"id": "webbed-treasure", "title": "Webbed treasure pool", "owner_source": "random-treasure", "summary": "The special webbed container rolls a budget of 7 to 44 silver with a lower-value bias. Each roll's minimum non-valuable item value is one quarter of that budget. The container is generated in the newly accessible spider cave; the separately added silk is not part of this pool.", "eligible_item_ids": ["item-1", "item-4", "item-5", "item-6", "item-7", "item-8", "item-9", "item-10", "item-11", "item-14", "item-26", "item-27", "item-28", "item-29", "item-30", "item-44", "item-47", "item-50", "item-54", "item-55", "item-56", "item-57", "item-58", "item-72", "item-73", "item-74", "item-86", "item-89", "item-97", "item-98", "item-99", "item-100", "item-101", "item-105", "item-106", "item-110", "item-111", "item-112", "item-116", "item-117", "item-127", "item-145", "item-146", "item-147", "item-148", "item-153", "item-154", "item-155", "item-156", "item-157", "item-158", "item-159", "item-160", "item-161", "item-165", "item-166", "item-167", "item-168", "item-176", "item-184", "item-185", "item-186", "item-187", "item-188", "item-189", "item-190", "item-191", "item-192", "item-193", "item-197", "item-198", "item-200", "item-201", "item-209", "item-251", "item-252", "item-253", "item-256", "item-266", "item-267", "item-268", "item-269", "item-270", "item-271", "item-272", "item-273", "item-274",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-280",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-281",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-282",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-283",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-288",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-289",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-290",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-293",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-294",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-295",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "item-296"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ], "quantity": null, "probability": null, "odds_note": "Exact per-item odds are unknown. Budget, earlier selections and the 500-candidate limit affect the result.", "item_conditions": {}, "confidence": "inferred", "evidence": [{"source": "game-data-0965", "section": "gml_GlobalScript_scr_menu_related", "key": "menu_add.index287.maxam=loot_amountchances[7.5,45];lootType0;min=maxam/4;item286.i_r[8,20]"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "loot_amountchances;treasure_get_lootarray.irandom(296)/NONLOOTABLE/type/size/value/quest/tries"}, {"source": "game-data-0965", "section": "gml_GlobalScript_scr_smartones", "key": "i_r.irandom_range"}, {"source": "game-data-0965", "section": "gml_Object_databank_Alarm_1", "key": "itemDB.final-price/width/height/numeric-ID-order.recipe-postprocessing"}]}
   ],
   "item_notes": [
+    {"item": "item-292", "kind": "unverified", "text": "No acquisition route is confirmed. It has no defined crafting recipe and is not eligible for the listed treasure pools. Its declared 2-copper value does not establish merchant stock.", "evidence": [{"source": "game-data-1000", "section": "gml_Object_databank_Alarm_1", "key": "itemDB[292].type/price/no-components"}, {"source": "game-data-1000", "section": "gml_GlobalScript_scr_items", "key": "treasure_get_lootarray.type/cells/minimumValue"}]},
     {"item": "item-75", "kind": "story", "text": "Interact with the Dead Unwanted at the dead camp early in the main quest; he hands over the recorder.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.DeadUnwanted.113.item_receive[75];MAINQUESTSTAGE=1"}]},
     {"item": "item-123", "kind": "story", "text": "Ranger Bhato points you to an old cellar beneath nearby ruins. The Sceetler living there drops the rune when you kill it during this quest step.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_mapcreations", "key": "dungeon.MAINQUESTSTAGE8.spawn_in_dungeon[13]"}, {"source": "game-data", "section": "gml_Object_obj_being_Alarm_0", "key": "loot.being13.item_drop[123];MAINQUESTSTAGE=9"}]},
     {"item": "item-126", "kind": "story", "text": "Magus Clay gives it to you after you bring him the Glowing Rune.", "evidence": [{"source": "game-data", "section": "gml_GlobalScript_scr_text_related", "key": "dialogue.Clay.205.item_receive[126];MAINQUESTSTAGE=11"}]},
@@ -5223,7 +5295,7 @@
     {
       "item": "item-48",
       "kind": "unreleased",
-      "text": "Not obtainable in 0.9.6.5. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
+      "text": "Not obtainable in 1.0.0.0. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5235,7 +5307,7 @@
     {
       "item": "item-49",
       "kind": "unreleased",
-      "text": "Not obtainable in 0.9.6.5. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
+      "text": "Not obtainable in 1.0.0.0. The game files name this item but give it no item data, so it has no stats, icon, recipe, seller or drop and cannot appear in play. It may be planned for a later update.",
       "evidence": [
         {
           "source": "game-data-0899",
@@ -5247,7 +5319,7 @@
     {
       "item": "item-40",
       "kind": "unverified",
-      "text": "Acquisition in 0.9.6.5: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
+      "text": "Acquisition in 1.0.0.0: Unknown. Ordinary treasure excludes this ignition tool, and its value exceeds the Unwanted and Survivor corpse budgets. Recipes, fixed finds and sellers are not documented.",
       "evidence": [
         {
           "source": "game-data-0899",

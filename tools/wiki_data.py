@@ -34,6 +34,8 @@ PAGE_FILES = {
     "Version 0.9.6.0": "Version_0.9.6.0.wiki",
     "Version 0.9.6.1": "Version_0.9.6.1.wiki",
     "Version 0.9.6.2": "Version_0.9.6.2.wiki",
+    "Version 1.0.0.0": "Version_1.0.0.0.wiki",
+    "Achievements": "Achievements.wiki",
     "Versions": "Versions.wiki",
 }
 TESTER_PAGE_FILES = {
@@ -55,7 +57,8 @@ ENTRY_PAGES = {
     "recipe": "Crafting",
     "loot": "Loot tables",
 }
-ALGORITHM_PAGES = {"Weather", "Level progression", "World generation", *RESEARCH_PAGE_REDIRECTS, "Skills", "Crafting", "Loot tables"}
+ALGORITHM_PAGES = {"Weather", "Level progression", "World generation", *RESEARCH_PAGE_REDIRECTS, "Skills", "Crafting", "Loot tables",
+                   "Achievements", "Finish Raft", "Fern", "Willow", "Cypress", "Trollgnarl", "Elderwort Shrub"}
 CATEGORY_PAGES = {
     "item": "Items",
     "being": "Bestiary",
@@ -84,7 +87,7 @@ HEALTH_ARMOR_ICONS = {
 # Reader-visible names (File titles, anchors, view parameters) use page titles, never source IDs.
 SOURCE_ID = re.compile(r"\b(?:being|item|nature|skill|skill-group|damage-class)-\d", re.IGNORECASE)
 FILE_TITLE = r"File:[A-Z][A-Za-z0-9 _.,'()-]{0,119}"
-MAX_FACTS_BYTES = 640 * 1024
+MAX_FACTS_BYTES = 672 * 1024
 IDENTIFIER = re.compile(r"[a-z0-9][a-z0-9_.-]{0,79}\Z")
 
 

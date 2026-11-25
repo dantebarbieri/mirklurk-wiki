@@ -388,7 +388,7 @@ def smoke_display_rendering(api, pages, data, catalog, details, parse_grids, che
             "No item inputs", "Unknown", "Unknown", cost, "Unknown"
         ]:
             raise RuntimeError("Recipe row invented a default value or lost a custom/zero cost.")
-    print("Native displays: all 148 grids, exact coins, 270 items, 34 creatures and authored lists, "
+    print("Native displays: all 153 grids, exact coins, 283 items, 34 creatures and authored lists, "
           "images, accessibility, invalid inputs and resource bounds passed.", flush=True)
 
 

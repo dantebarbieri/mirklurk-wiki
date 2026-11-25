@@ -5189,21 +5189,16 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data",
+          "source": "game-data-1000",
           "section": "gml_Object_databank_Alarm_1",
-          "key": "itemDB[171].weight/price/stackLimit/apCost/craftCost/craftReturn/NONLOOTABLE"
-        },
-        {
-          "source": "items-en",
-          "section": "ItemTitles",
-          "key": "171"
+          "key": "itemDB[171].apCost"
         }
       ],
       "values": {
         "initial-weight": 5,
         "initial-price": 0.01,
         "stack-limit": 1,
-        "item-ap-cost": 6.4,
+        "item-ap-cost": 6,
         "craft-ap-cost": 8,
         "craft-yield": 1,
         "random-treasure-exclusion": true
@@ -16284,6 +16279,407 @@
         "melee-pattern-min": 6,
         "melee-pattern-max": 6
       }
+    },
+    {
+      "id": "item-280-tester-profile",
+      "entity": "item-280",
+      "values": {
+        "initial-weight": 3.75,
+        "initial-price": 7.5,
+        "durability-max": 150,
+        "stack-limit": 1,
+        "block-chance": 0.12,
+        "item-armor": 4,
+        "spark-chance": 0.15,
+        "equip-ap-cost": 2.4
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[280].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "280"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-281-tester-profile",
+      "entity": "item-281",
+      "values": {
+        "initial-weight": 4.25,
+        "initial-price": 8.75,
+        "durability-max": 150,
+        "stack-limit": 1,
+        "item-armor": 5,
+        "insulation": 0.05,
+        "waterproof": 0.4,
+        "spark-chance": 0.15,
+        "equip-ap-cost": 2.4
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[281].type/weight/price/durabilityMax/stackLimit/armor/insulation/waterproof/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "281"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-282-tester-profile",
+      "entity": "item-282",
+      "values": {
+        "initial-weight": 2,
+        "initial-price": 4,
+        "durability-max": 250,
+        "stack-limit": 1,
+        "block-chance": 0.08,
+        "item-armor": 3.5,
+        "spark-chance": 0.25,
+        "equip-ap-cost": 1.6
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[282].type/weight/price/durabilityMax/stackLimit/blockChance/armor/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "282"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-283-tester-profile",
+      "entity": "item-283",
+      "values": {
+        "initial-weight": 2,
+        "initial-price": 2.5,
+        "durability-max": 65,
+        "stack-limit": 1,
+        "block-chance": 0.12,
+        "item-armor": 2.5,
+        "equip-ap-cost": 2.4
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[283].type/weight/price/durabilityMax/stackLimit/blockChance/armor/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "283"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-288-tester-profile",
+      "entity": "item-288",
+      "values": {
+        "initial-weight": 1.25,
+        "initial-price": 10.5,
+        "durability-max": 175,
+        "stack-limit": 1,
+        "spark-chance": 0.2,
+        "damage-class-id": 15,
+        "item-ap-cost": 6.4,
+        "tile-range": 1.5,
+        "equip-ap-cost": 1.6,
+        "melee-pattern-min": 7,
+        "melee-pattern-max": 12
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[288].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "288"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-289-tester-profile",
+      "entity": "item-289",
+      "values": {
+        "initial-weight": 1.15,
+        "initial-price": 11.5,
+        "durability-max": 175,
+        "stack-limit": 1,
+        "spark-chance": 0.25,
+        "chopping-capability": 3,
+        "cutting-capability": 1.5,
+        "damage-class-id": 16,
+        "item-ap-cost": 6.4,
+        "tile-range": 1.5,
+        "equip-ap-cost": 1.6,
+        "melee-pattern-min": 8,
+        "melee-pattern-max": 11
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[289].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "289"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-290-tester-profile",
+      "entity": "item-290",
+      "values": {
+        "initial-weight": 1.5,
+        "initial-price": 11.5,
+        "durability-max": 200,
+        "stack-limit": 1,
+        "spark-chance": 0.25,
+        "chopping-capability": 1.25,
+        "cutting-capability": 1.25,
+        "damage-class-id": 16,
+        "item-ap-cost": 6.4,
+        "tile-range": 1.5,
+        "equip-ap-cost": 1.6,
+        "melee-pattern-min": 14,
+        "melee-pattern-max": 19
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[290].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "290"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-291-tester-profile",
+      "entity": "item-291",
+      "values": {
+        "initial-weight": 0.1,
+        "initial-price": 1.2,
+        "durability-max": 65,
+        "stack-limit": 1,
+        "item-armor": 0.2,
+        "insulation": 0.8,
+        "waterproof": 0.9,
+        "burn-time": 2.8,
+        "equip-ap-cost": 0.8
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[291].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "291"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-292-tester-profile",
+      "entity": "item-292",
+      "values": {
+        "initial-weight": 0.1,
+        "initial-price": 0.02,
+        "durability-max": 15,
+        "stack-limit": 1,
+        "item-armor": 0,
+        "insulation": 0.1,
+        "waterproof": 0.05,
+        "burn-time": 0.8,
+        "equip-ap-cost": 0.8
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[292].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "292"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-293-tester-profile",
+      "entity": "item-293",
+      "values": {
+        "initial-weight": 1,
+        "initial-price": 3.5,
+        "durability-max": 80,
+        "stack-limit": 1,
+        "item-armor": 0.8,
+        "insulation": 0.65,
+        "waterproof": 0.8,
+        "burn-time": 3.4,
+        "equip-ap-cost": 2.4
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[293].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "293"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-294-tester-profile",
+      "entity": "item-294",
+      "values": {
+        "initial-weight": 0.8,
+        "initial-price": 3.5,
+        "durability-max": 80,
+        "stack-limit": 1,
+        "item-armor": 0.8,
+        "insulation": 0.65,
+        "waterproof": 0.8,
+        "burn-time": 3.6,
+        "equip-ap-cost": 2.4
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[294].type/weight/price/durabilityMax/stackLimit/burnTime/armor/insulation/waterproof/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "294"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-295-tester-profile",
+      "entity": "item-295",
+      "values": {
+        "initial-weight": 0.55,
+        "initial-price": 4,
+        "durability-max": 90,
+        "stack-limit": 1,
+        "spark-chance": 0.2,
+        "chopping-capability": 1.6,
+        "cutting-capability": 2,
+        "damage-class-id": 14,
+        "item-ap-cost": 5,
+        "tile-range": 1.5,
+        "equip-ap-cost": 1.6,
+        "melee-pattern-min": 4,
+        "melee-pattern-max": 6
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[295].type/weight/price/durabilityMax/stackLimit/damageClass/apCost/attackPattern/tileRange/chopMod/cutMod/sparkChance/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "295"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
+    },
+    {
+      "id": "item-296-tester-profile",
+      "entity": "item-296",
+      "values": {
+        "initial-weight": 0.65,
+        "initial-price": 4.25,
+        "durability-max": 90,
+        "stack-limit": 1,
+        "burn-time": 2.6,
+        "damage-class-id": 17,
+        "item-ap-cost": 6,
+        "tile-range": 13,
+        "craft-ap-cost": 8,
+        "craft-yield": 1,
+        "equip-ap-cost": 2.4,
+        "melee-pattern-min": 3,
+        "melee-pattern-max": 6
+      },
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].type/weight/price/durabilityMax/stackLimit/burnTime/damageClass/apCost/attackPattern/tileRange/craftCost/craftReturn/equipCost"
+        },
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "296"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myCraftingMenu.item296"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].components/craftCost/craftReturn;postprocessing.weight/price"
+        }
+      ],
+      "context": "Literal initializer values. Crafting postprocessing can recalculate weight and value; condition and skills can change effective values."
     }
   ],
   "grids": [
@@ -25856,6 +26252,264 @@
           "source": "game-data-0965",
           "section": "gml_GlobalScript_scr_ai_related",
           "key": "being_attacks_target.AttPatt[iy][ix]/minD/maxD"
+        }
+      ]
+    },
+    {
+      "id": "item-288-tester-pattern",
+      "entity": "item-288",
+      "kind": "melee",
+      "rows": [
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          {
+            "min": 2,
+            "max": 2
+          },
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[288].attackPattern/postprocessing.damage"
+        }
+      ]
+    },
+    {
+      "id": "item-289-tester-pattern",
+      "entity": "item-289",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          null,
+          {
+            "min": 2,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 2,
+            "max": 3
+          }
+        ],
+        [
+          null,
+          {
+            "min": 2,
+            "max": 2
+          }
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[289].attackPattern/postprocessing.damage"
+        }
+      ]
+    },
+    {
+      "id": "item-290-tester-pattern",
+      "entity": "item-290",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          null,
+          null,
+          {
+            "min": 1,
+            "max": 2
+          }
+        ],
+        [
+          null,
+          {
+            "min": 2,
+            "max": 2
+          },
+          null,
+          {
+            "min": 2,
+            "max": 2
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "min": 2,
+            "max": 3
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          {
+            "min": 2,
+            "max": 2
+          },
+          null,
+          {
+            "min": 2,
+            "max": 2
+          },
+          null
+        ],
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          null,
+          null,
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[290].attackPattern/postprocessing.damage"
+        }
+      ]
+    },
+    {
+      "id": "item-295-tester-pattern",
+      "entity": "item-295",
+      "kind": "melee",
+      "rows": [
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          {
+            "min": 2,
+            "max": 2
+          },
+          null,
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[295].attackPattern/postprocessing.damage"
+        }
+      ]
+    },
+    {
+      "id": "item-296-tester-pattern",
+      "entity": "item-296",
+      "kind": "melee",
+      "rows": [
+        [
+          {
+            "min": 1,
+            "max": 2
+          },
+          null,
+          null
+        ],
+        [
+          null,
+          {
+            "min": 1,
+            "max": 2
+          },
+          null
+        ],
+        [
+          null,
+          null,
+          {
+            "min": 1,
+            "max": 2
+          }
+        ]
+      ],
+      "confidence": "inferred",
+      "context": "Unrotated base attackPattern. The melee metadata key names this pattern, not a claim that a bow is melee-only. Armor, ammunition, skills and overlapping cells affect damage.",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].attackPattern/postprocessing.damage"
         }
       ]
     }

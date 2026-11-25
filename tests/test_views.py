@@ -181,7 +181,7 @@ class SelectiveViewTests(unittest.TestCase):
         locations = self.locations
         names = {row["id"]: row["name"] for row in self.data["entities"]}
         owner = self.pages["Random treasure"]
-        self.assertEqual(owner.count('id="pool-item-'), 714)
+        self.assertEqual(owner.count('id="pool-item-'), 776)
         for placeholder in ("Budget-dependent", "Unknown", "Eligible, not guaranteed."):
             self.assertNotIn(placeholder, owner)
         for pool in self.catalog["acquisition"]["pools"]:
@@ -437,7 +437,7 @@ class SelectiveViewTests(unittest.TestCase):
             self.assertIn("\n\n".join(literal(paragraph) for paragraph in effect["paragraphs"]), page)
             for paragraph in effect["paragraphs"]:
                 self.assertFalse(any(paragraph in self.pages[guide["title"]] for guide in self.catalog["guides"]))
-        self.assertEqual(headings, {"Consumption effects": 14, "Effects": 29, "Where to plant": 8, "How it's used": 7})
+        self.assertEqual(headings, {"Consumption effects": 14, "Effects": 42, "Where to plant": 8, "How it's used": 7})
         bursthopper = next(row for row in self.catalog["item_effects"] if row["entity"] == "item-243")
         self.assertIn("15 percentage points of stamina", bursthopper["paragraphs"][0])
         self.assertNotIn("focus", bursthopper["paragraphs"][0].lower())
@@ -484,10 +484,11 @@ class SelectiveViewTests(unittest.TestCase):
         added = {locations[row["id"]] for row in self.data["entities"][336:]} | {
             "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Version 0.9.1.0", "Version 0.9.1.2", "Version 0.9.2.0", "Version 0.9.5.0", "Version 0.9.5.3", "Version 0.9.5.5", "Version 0.9.5.6", "Version 0.9.6.5", "Wooden Buckler", "Versions",
             "Version history", "Patch notes", "Survivor", "Fire Bond", "Webbed treasure",
-            "Version 0.9.6.0", "Version 0.9.6.1", "Version 0.9.6.2", "Version 0.9.9.7"}
+            "Version 0.9.6.0", "Version 0.9.6.1", "Version 0.9.6.2", "Version 0.9.9.7",
+            "Version 1.0.0.0", "Achievements"}
         from wiki_tester import load_tester
         added |= {row["name"] for row in load_tester(ROOT, self.data)["data"]["entities"]}
-        self.assertEqual(len(added), 71)
+        self.assertEqual(len(added), 73)
         families = {title for title, text in self.pages.items() if f"\n'''{title}''' groups " in text}
         old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added - families
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)
@@ -507,8 +508,8 @@ class SelectiveViewTests(unittest.TestCase):
             "nature-17": "f8b178269b50ff3da8bb828a4cee6f5805880036a11c656f451f5eba3557939e",
             "nature-20": "5404f6444c81488e1535dc57bdd5b17c7cf992d52939dd0a8d8c486172ce65e0",
         }
-        self.assertEqual(len(self.data["illustrations"]), 409)
-        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 381)
+        self.assertEqual(len(self.data["illustrations"]), 422)
+        self.assertEqual(sum("role" not in row for row in self.data["illustrations"]), 394)
         for identity, digest in hashes.items():
             images = [image for image in self.data["illustrations"] if image.get("entity") == identity]
             self.assertEqual(len(images), 1)

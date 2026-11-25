@@ -123,22 +123,24 @@ The 0.9.6.0, 0.9.6.1, 0.9.6.2 and 0.9.6.5 announcements have separate
 version pages. Source-only changes remain qualified as observed by 0.9.6.5
 in the direct comparison, without inventing intermediate-build histories.
 
-The **0.9.9.7 next_version_tester** comparison is an isolated beta reference;
-**0.9.6.5 remains latest stable/default**. `tester.json` holds six separate
-source fingerprints, 13 new item definitions, 131 numeric profile values,
-five attack patterns and approved icon metadata. New item pages and affected
-stable-page sections are explicitly tester-only. Stable facts, acquisition
-tables, entity profiles and the 409-record art register are unchanged.
-The Discord announcement has no supplied date or link; no release date or
-released 1.0 status is inferred. [Provenance](docs/PROVENANCE.md#version-0997-tester)
-records the comparison and access conditions.
+Public **1.0**, released on 2026-11-25 and identified by its binary as
+**1.0.0.0**, ends Early Access and is now the stable/default reference.
+The 13 item additions, recipes, cave entrances and raft/tree behavior are documented
+with unchanged approved artwork. Release
+changes include 14 achievement checks, German, crafting XP rounding and the
+spider cave's dungeon-like exposure. Its ordinary population updater still exits
+before the later dungeon fallback.
+[Provenance](docs/PROVENANCE.md#version-1000-update) records both baseline
+comparisons, 25 language fingerprints, source caveats and exact artwork reuse.
+Retained extraction metadata remains historical evidence; gameplay has one
+current stable reference rather than separate tester explanations.
 
-The reference now contains **107 numeric facts and 351 structured entries**:
-37 quest/journal notes, 88 merchant offers, 98 station-specific recipe
-variants, 94 conditional loot entries, and 34 original algorithm/skill
-summaries. The encyclopedia presentation generates 549 main-namespace pages:
-366 stable individual item, being, nature, skill, and damage-type pages,
-13 tester-only item pages, 52 item-family
+The reference now contains **107 numeric facts and 361 structured entries**:
+37 quest/journal notes, 88 merchant offers, 100 station-specific recipe
+variants, 94 conditional loot entries, and 42 original algorithm/skill
+summaries. The encyclopedia presentation generates 553 main-namespace pages:
+379 stable individual item, being, nature, skill, and damage-type pages,
+54 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and
 compatibility redirects. Another 125 ordinary MediaWiki category pages support hierarchical
 browsing; the retired Miscellaneous items category redirects to Items.

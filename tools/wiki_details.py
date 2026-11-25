@@ -14,7 +14,7 @@ from wiki_acquisition import MAX_ACQUISITION_BYTES
 
 
 MAX_DETAILS_BYTES = 768 * 1024
-MAX_ILLUSTRATIONS_BYTES = 512 * 1024
+MAX_ILLUSTRATIONS_BYTES = 544 * 1024
 CAPACITY_PROPERTIES = {"inventory-slots-added", "storage-grid-width", "storage-grid-height"}
 
 

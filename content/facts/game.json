@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "0.9.6.5",
+    "build": "1.0.0.0",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -318,6 +318,198 @@
       "path": "Languages\\Portuguese (Brazil)\\UI.ini",
       "sha256": "ddd78381950d9b240553aeaa999f43a0f755d296209ea0fd2b2ee24e194ace84",
       "build": "0.9.6.5"
+    },
+    {
+      "id": "game-data-1000",
+      "path": "data.win",
+      "build": "1.0.0.0",
+      "sha256": "36df11ceea9089a25eec26f97f42822636e195f828d2eeb3b189164b6abcc539"
+    },
+    {
+      "id": "game-data-0997",
+      "path": "data.win",
+      "sha256": "080a8aa55f78ac94ed01be77379fba4b89b4cd281f33d8cf6d10177afad96d15",
+      "build": "0.9.9.7"
+    },
+    {
+      "id": "beings-en-0997",
+      "path": "Languages\\English\\Bestiary.ini",
+      "sha256": "e889d4f114fdf048f8efec7856922883fb49ee8c080f462e98b5791c37035826",
+      "build": "0.9.9.7"
+    },
+    {
+      "id": "items-en-0997",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "c3368c5d86a9510ac24b90d9c9257a386a6c137758b8fc175ff3e36040a30714",
+      "build": "0.9.9.7"
+    },
+    {
+      "id": "keys-en-0997",
+      "path": "Languages\\English\\Keys.ini",
+      "sha256": "656d818df7d552be8ee77c356fe76489787cf0b2f8c8a1a88b6f4a189494687a",
+      "build": "0.9.9.7"
+    },
+    {
+      "id": "nature-en-0997",
+      "path": "Languages\\English\\Nature.ini",
+      "sha256": "5b2910545b5d441ea947fca4f0221e1485c861911d4bac6f9650d64e123b8303",
+      "build": "0.9.9.7"
+    },
+    {
+      "id": "ui-en-0997",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "2eab235332e055670e71ae24c17166fc3598d48ab9df80b861ad56aa34ab01dc",
+      "build": "0.9.9.7"
+    },
+    {
+      "id": "beings-zh-1000",
+      "path": "Languages\\Chinese\\Bestiary.ini",
+      "sha256": "302b793d3c1da87ec43da4f7824dcc25b6eb160aa69e8192cbb7f1a803f18e5c",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "items-zh-1000",
+      "path": "Languages\\Chinese\\Items.ini",
+      "sha256": "6796a29bda3e2eba984dd904df2efd6662ce68c45f27cffbee98f2868da5585d",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "keys-zh-1000",
+      "path": "Languages\\Chinese\\Keys.ini",
+      "sha256": "9f020f61a46db245de01172e9b317f8dc37d2d29c94317138933fd547c1e60b9",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "nature-zh-1000",
+      "path": "Languages\\Chinese\\Nature.ini",
+      "sha256": "0e2ba579a29d8b78544a8942f09e4dcff953cb5158daf2f848fbb8f5ec73a2cc",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "ui-zh-1000",
+      "path": "Languages\\Chinese\\UI.ini",
+      "sha256": "ea97f774f4b60b4534ec3019e2a7f43b0f48138bb4486344189e3dafeffcedf0",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "beings-en-1000",
+      "path": "Languages\\English\\Bestiary.ini",
+      "sha256": "e889d4f114fdf048f8efec7856922883fb49ee8c080f462e98b5791c37035826",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "items-en-1000",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "c3368c5d86a9510ac24b90d9c9257a386a6c137758b8fc175ff3e36040a30714",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "keys-en-1000",
+      "path": "Languages\\English\\Keys.ini",
+      "sha256": "656d818df7d552be8ee77c356fe76489787cf0b2f8c8a1a88b6f4a189494687a",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "nature-en-1000",
+      "path": "Languages\\English\\Nature.ini",
+      "sha256": "5b2910545b5d441ea947fca4f0221e1485c861911d4bac6f9650d64e123b8303",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "ui-en-1000",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "2eab235332e055670e71ae24c17166fc3598d48ab9df80b861ad56aa34ab01dc",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "beings-es-1000",
+      "path": "Languages\\Español\\Bestiary.ini",
+      "sha256": "fdf77ff831783ae3f01f5e654cb268621774237288bcf14288b00ed450275729",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "items-es-1000",
+      "path": "Languages\\Español\\Items.ini",
+      "sha256": "666e8756467b765f38df1548cdd4828a657a20cc25aafe90c50da8aa71c30330",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "keys-es-1000",
+      "path": "Languages\\Español\\Keys.ini",
+      "sha256": "51341aa238367db88f042de0e15a211a0df203e25954a8e7ff44954ffad30e2a",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "nature-es-1000",
+      "path": "Languages\\Español\\Nature.ini",
+      "sha256": "e4bcc9adf291063bafb013e986cd863d98ab1568399fa4206fd0ac26381b18c7",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "ui-es-1000",
+      "path": "Languages\\Español\\UI.ini",
+      "sha256": "989816196aa468dc00ee0b40dfa8661d545ab2e837c3eea5d3e43b7726a573db",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "beings-de-1000",
+      "path": "Languages\\German\\Bestiary.ini",
+      "sha256": "84f5d79dab3c984c98b7659248fa75ce7c06d5d7371aef1162dd652216fe9464",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "items-de-1000",
+      "path": "Languages\\German\\Items.ini",
+      "sha256": "d621f4a87bafeb7615bb311aa7b3d9a01aa23d3ea294b6186cd98e0af001f391",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "keys-de-1000",
+      "path": "Languages\\German\\Keys.ini",
+      "sha256": "a80726af67bb15ed95609052d4c3fc76d1759978763f11600ae91ebc56edffc8",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "nature-de-1000",
+      "path": "Languages\\German\\Nature.ini",
+      "sha256": "986be1f62fa6227c7c85c40acfdf09cd1184f12bdb04622af823e00b557f05f0",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "ui-de-1000",
+      "path": "Languages\\German\\UI.ini",
+      "sha256": "11a7a8ba10e732272ee04c1dbe4bf908faf711927d3703e5aa2d248487eae7f5",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "beings-pt-br-1000",
+      "path": "Languages\\Portuguese (Brazil)\\Bestiary.ini",
+      "sha256": "87fd3fc805ca4d957b529d02d6303e3a43a281475df5459084ae5e386faa2528",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "items-pt-br-1000",
+      "path": "Languages\\Portuguese (Brazil)\\Items.ini",
+      "sha256": "4f8cd8186eddb40c3b64bd1c284f459312d7a6a7026e41e3602ac71fa28df19f",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "keys-pt-br-1000",
+      "path": "Languages\\Portuguese (Brazil)\\Keys.ini",
+      "sha256": "3bdd12b24f113c412f65ac0d34f113dc728cc0cbe0861bb0e4a8212deda70639",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "nature-pt-br-1000",
+      "path": "Languages\\Portuguese (Brazil)\\Nature.ini",
+      "sha256": "e03e060a3ee4b6f52a529554a5ae0ea03744de7adfb3c366143afff80bec4487",
+      "build": "1.0.0.0"
+    },
+    {
+      "id": "ui-pt-br-1000",
+      "path": "Languages\\Portuguese (Brazil)\\UI.ini",
+      "sha256": "e495817cfe54c7866ca2370e275ae9dca414124a5ab2195663037aafbe9649d8",
+      "build": "1.0.0.0"
     }
   ],
   "entities": [
@@ -5023,6 +5215,175 @@
           "source": "items-en-0965",
           "section": "ItemTitles",
           "key": "286"
+        }
+      ]
+    },
+    {
+      "id": "item-280",
+      "category": "item",
+      "name": "Iron Shield",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "280"
+        }
+      ]
+    },
+    {
+      "id": "item-281",
+      "category": "item",
+      "name": "Iron Chestplate",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "281"
+        }
+      ]
+    },
+    {
+      "id": "item-282",
+      "category": "item",
+      "name": "Steel Buckler",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "282"
+        }
+      ]
+    },
+    {
+      "id": "item-283",
+      "category": "item",
+      "name": "Wooden Shield",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "283"
+        }
+      ]
+    },
+    {
+      "id": "item-288",
+      "category": "item",
+      "name": "Battle Hammer",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "288"
+        }
+      ]
+    },
+    {
+      "id": "item-289",
+      "category": "item",
+      "name": "Halfmoon Axe",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "289"
+        }
+      ]
+    },
+    {
+      "id": "item-290",
+      "category": "item",
+      "name": "War Mace",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "290"
+        }
+      ]
+    },
+    {
+      "id": "item-291",
+      "category": "item",
+      "name": "Well Tailored Socks",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "291"
+        }
+      ]
+    },
+    {
+      "id": "item-292",
+      "category": "item",
+      "name": "Laughable Socks",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "292"
+        }
+      ]
+    },
+    {
+      "id": "item-293",
+      "category": "item",
+      "name": "Well Tailored Shirt",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "293"
+        }
+      ]
+    },
+    {
+      "id": "item-294",
+      "category": "item",
+      "name": "Well Tailored Pants",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "294"
+        }
+      ]
+    },
+    {
+      "id": "item-295",
+      "category": "item",
+      "name": "Hand Sickle",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "295"
+        }
+      ]
+    },
+    {
+      "id": "item-296",
+      "category": "item",
+      "name": "Sturdy Shortbow",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "items-en-1000",
+          "section": "ItemTitles",
+          "key": "296"
         }
       ]
     },
@@ -17778,9 +18139,9 @@
       "confidence": "inferred",
       "evidence": [
         {
-          "source": "game-data-0965",
+          "source": "game-data-1000",
           "section": "gml_GlobalScript_scr_items",
-          "key": "loot_amountchances;treasure_get_lootarray.irandom(287)"
+          "key": "loot_amountchances;treasure_get_lootarray.irandom(296)"
         },
         {
           "source": "game-data",
@@ -17792,7 +18153,7 @@
         "page": "Loot tables",
         "steps": [
           "The amount helper builds progressively wider inclusive integer draws from the minimum up to the stated maximum, then chooses one of those draws uniformly. Low quantities therefore occur more frequently.",
-          "The treasure helper repeatedly samples an item ID from zero through 287, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
+          "The treasure helper repeatedly samples an item ID from zero through 296, rejecting undefined or nonlootable entries and entries that fail budget, minimum-value, type, size or story conditions.",
           "Accepted items reduce the remaining value budget. Defined-item attempts increment a counter capped at 500; undefined-item draws and the early story-gated rejection are not counted.",
           "Durability and stack size can be randomized after selection. Listed shared bonus checks are additive rather than mutually exclusive weights."
         ],
@@ -21787,7 +22148,7 @@
       "kind": "loot",
       "title": "Mirk Lurker: Spider Meat",
       "summary": "The corpse is initialized with this item. This is a fixed base quantity.",
-      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "conditions": "Conditional on a lootable corpse. The spider cave is reachable through entrances in newly generated areas; harvesting and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -21799,6 +22160,11 @@
           "source": "game-data-0965",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances/loot_array_overstacker"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "eligibleCave.chance0.333.specialEntrance"
         }
       ],
       "details": {
@@ -21818,7 +22184,7 @@
       "kind": "loot",
       "title": "Mirk Lurker: Spider Silk",
       "summary": "The corpse is initialized with this item. The shared biased amount helper favors lower counts within the inclusive range.",
-      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "conditions": "Conditional on a lootable corpse. The spider cave is reachable through entrances in newly generated areas; harvesting and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -21830,6 +22196,11 @@
           "source": "game-data-0965",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances/loot_array_overstacker"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "eligibleCave.chance0.333.specialEntrance"
         }
       ],
       "details": {
@@ -21849,7 +22220,7 @@
       "kind": "loot",
       "title": "Deathlob: Spider Meat",
       "summary": "The corpse is initialized with this item. The shared biased amount helper favors lower counts within the inclusive range.",
-      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "conditions": "Conditional on a lootable corpse. The spider cave is reachable through entrances in newly generated areas; harvesting and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -21861,6 +22232,11 @@
           "source": "game-data-0965",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances/loot_array_overstacker"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "eligibleCave.chance0.333.specialEntrance"
         }
       ],
       "details": {
@@ -21880,7 +22256,7 @@
       "kind": "loot",
       "title": "Deathlob: Spider Silk",
       "summary": "The corpse is initialized with this item. The shared biased amount helper favors lower counts within the inclusive range.",
-      "conditions": "Conditional on a lootable corpse; ordinary access to the spider-cave area is unconfirmed. Harvesting, recovered arrows and other effects are separate.",
+      "conditions": "Conditional on a lootable corpse. The spider cave is reachable through entrances in newly generated areas; harvesting and recovered arrows are separate.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -21892,6 +22268,11 @@
           "source": "game-data-0965",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances/loot_array_overstacker"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_manager_area_Alarm_2",
+          "key": "eligibleCave.chance0.333.specialEntrance"
         }
       ],
       "details": {
@@ -21904,6 +22285,311 @@
         "weight": null,
         "probability": 1,
         "rolls": null
+      }
+    },
+    {
+      "id": "recipe-personal-crafting-menu-296",
+      "kind": "recipe",
+      "title": "Sturdy Shortbow at Personal crafting menu",
+      "summary": "Base ingredients, yield and AP cost. Skills and workstation modifiers can alter effective expenditure.",
+      "conditions": "Available in the player's crafting menu with the listed ingredients and sufficient AP.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[296].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_obj_player_Create_0",
+          "key": "myCraftingMenu.item296"
+        }
+      ],
+      "details": {
+        "station": "Personal crafting menu",
+        "inputs": [
+          {
+            "item": "item-92",
+            "quantity": 2
+          },
+          {
+            "item": "item-213",
+            "quantity": 2
+          },
+          {
+            "item": "item-286",
+            "quantity": 10
+          }
+        ],
+        "outputs": [
+          {
+            "item": "item-296",
+            "quantity": 1
+          }
+        ],
+        "cost": {
+          "amount": 8,
+          "unit": "base AP"
+        }
+      }
+    },
+    {
+      "id": "recipe-campfire-285",
+      "kind": "recipe",
+      "title": "Grilled Spider Meat at Campfire",
+      "summary": "Base ingredients, yield and AP cost. Skills and workstation modifiers can alter effective expenditure.",
+      "conditions": "Requires a burning Campfire, the listed ingredients and sufficient AP.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[285].components/craftCost/craftReturn"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.campfire38.CM.item285"
+        }
+      ],
+      "details": {
+        "station": "Campfire",
+        "inputs": [
+          {
+            "item": "item-284",
+            "quantity": 1
+          }
+        ],
+        "outputs": [
+          {
+            "item": "item-285",
+            "quantity": 1
+          }
+        ],
+        "cost": {
+          "amount": 2.4,
+          "unit": "base AP"
+        }
+      }
+    },
+    {
+      "id": "release-1000-finish-raft",
+      "kind": "algorithm",
+      "title": "Finish Raft in 1.0",
+      "summary": "Moving and boarding a finished raft.",
+      "conditions": "Existing terrain, action and eligibility conditions still apply.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.raft;menu actions/obj_station.pushpullX/pushpullY"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_databank_Alarm_1",
+          "key": "itemDB[171].apCost"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "raft.Push/Pull/Board/PUapcost/tile_is_free"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_obj_station_Step_0",
+          "key": "pushpullX/pushpullY/move_towards_point"
+        }
+      ],
+      "details": {
+        "page": "Finish Raft",
+        "steps": [
+          "The base item action cost is 6 AP rather than stable 0.9.6.5's 6.4 AP. The release adds Push, Pull and Board to the context menu; Push and Pull each cost 6 AP.",
+          "Push targets a free tile 16 pixels away. AP is spent before the destination check, so a blocked push still costs AP. Pull moves the player 3 pixels away and then moves the raft toward that position; push nudges the player 3 pixels toward it.",
+          "Direct boarding requires being within 8 pixels; otherwise interaction opens the context menu. Push/pull motion takes time and its destination is not saved. No persistence of an in-progress movement is promised."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "release-1000-fern",
+      "kind": "algorithm",
+      "title": "Fern in 1.0",
+      "summary": "Regrowth attempts when revisiting an outside area.",
+      "conditions": "Existing terrain, action and eligibility conditions still apply.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "outsideRevisit.passedDays/passedHours/Fern80"
+        }
+      ],
+      "details": {
+        "page": "Fern",
+        "steps": [
+          "Revisiting outside areas other than Rift-Thorn Mire can attempt Fern growth over elapsed days. The 240-hour elapsed-time cap permits up to 10 day iterations, each with up to 256 candidate-position searches. This is ground-cover growth, not new log production."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "release-1000-willow",
+      "kind": "algorithm",
+      "title": "Willow in 1.0",
+      "summary": "Branch aging and conditional ground-log placement.",
+      "conditions": "Existing terrain, action and eligibility conditions still apply.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ],
+      "details": {
+        "page": "Willow",
+        "steps": [
+          "Activated, almost-dead trees outside the view margin can be removed by a 1% check in 1.0. Replacement logs are conditional, not guaranteed; see Tree health and chopping."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "release-1000-cypress",
+      "kind": "algorithm",
+      "title": "Cypress in 1.0",
+      "summary": "Branch aging and conditional ground-log placement.",
+      "conditions": "Existing terrain, action and eligibility conditions still apply.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ],
+      "details": {
+        "page": "Cypress",
+        "steps": [
+          "Activated, almost-dead trees outside the view margin can be removed by a 1% check in 1.0. Replacement logs are conditional, not guaranteed; see Tree health and chopping."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "release-1000-trollgnarl",
+      "kind": "algorithm",
+      "title": "Trollgnarl in 1.0",
+      "summary": "Branch aging and conditional ground-log placement.",
+      "conditions": "Existing terrain, action and eligibility conditions still apply.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ],
+      "details": {
+        "page": "Trollgnarl",
+        "steps": [
+          "Activated, almost-dead trees outside the view margin can be removed by a 1% check in 1.0. Replacement logs are conditional, not guaranteed; see Tree health and chopping."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "release-1000-elderwort-shrub",
+      "kind": "algorithm",
+      "title": "Elderwort Shrub in 1.0",
+      "summary": "Branch aging and conditional ground-log placement.",
+      "conditions": "Existing terrain, action and eligibility conditions still apply.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_gen_ingamers",
+          "key": "smartactivation.nature_is_tree/avgLife/stumpCount/instance_destroy"
+        }
+      ],
+      "details": {
+        "page": "Elderwort Shrub",
+        "steps": [
+          "Activated, almost-dead trees outside the view margin can be removed by a 1% check in 1.0. Replacement logs are conditional, not guaranteed; see Tree health and chopping."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "crafting-experience-1000",
+      "kind": "algorithm",
+      "title": "Successful crafting-menu XP",
+      "summary": "The release rounds half of the actual modified AP cost up, rather than to the nearest whole number.",
+      "conditions": "Successful crafting-menu actions only; grant XP only when the level-adjusted result is positive.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "successfulCraft.xpRap.ceil.RAP/2;item92.override1;level.div5;XPgain"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_get_real_craftcost.round0.2"
+        }
+      ],
+      "details": {
+        "page": "Crafting",
+        "steps": [
+          "Use the actual modified crafting AP cost, rounded to 0.2 steps, not necessarily the base recipe cost.",
+          "Start with half that cost rounded up. Twine instead starts at 1 XP. Subtract the character level divided by five, rounded down.",
+          "Grant only a positive result. At levels below 5, an actual 2.4-AP craft gives 2 XP and an 8-AP craft gives 4 XP."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "achievement-checks-1000",
+      "kind": "algorithm",
+      "title": "Fourteen Steam achievement checks",
+      "summary": "The game contains 14 unique achievement checks; wiki condition labels are not official Steam display names.",
+      "conditions": "All set paths exclude demo mode and check prior achievement state. Steam backend unlocking was not tested.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1000",
+          "section": "gml_GlobalScript_scr_basic_useful",
+          "key": "journal_update.ach_viend/ach_scaal/ach_scaal_perma/ach_justice/ach_terror"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_manager_day_Step_0",
+          "key": "midnight.daysAlive.ach_day3/ach_day10/ach_day30/ach_day100"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_cursor_Draw_75",
+          "key": "keyMap/world/Ledger.collectedAreas/chance0.05.ach_maps"
+        },
+        {
+          "source": "game-data-1000",
+          "section": "gml_Object_obj_being_Alarm_0",
+          "key": "leaveLoot.ach_nightmare/ach_serpent/ach_troll/ach_terror/ach_spider"
+        }
+      ],
+      "details": {
+        "page": "Achievements",
+        "steps": [
+          "Journal updates check the revived Unwanted, Scaal-defeated and justice milestones. Scaal's milestone has a separate Permadeath achievement. Progressing the camp quest beyond its initial state checks The Terror.",
+          "Map collection requires the map key in the world, a carried Map Ledger and every collected-area entry true; each eligible draw has a 5% check.",
+          "Survival checks run after midnight's day increment, at 3, 10, 30 and 100 days.",
+          "Completed death/loot branches check Nightmare, Mire Serpent, either Swamp Troll or Cave Troll, The Terror and Deathlob. Mirk Lurker is not the spider trigger.",
+          "Journal progress can be checked during loading, but midnight, map and death checks retain their own gates. Existing-save achievements are not uniformly retroactive."
+        ],
+        "fact_ids": []
       }
     }
   ]

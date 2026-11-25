@@ -1,4 +1,4 @@
-'''Version 0.9.6.5''' is the patch released on 19 November 2026, following [[Version 0.9.6.2]]. This release adds borderless windows and a resolution preset, and fixes fire-menu problems. This wiki shows 0.9.6.5 values.
+'''Version 0.9.6.5''' is the patch released on 19 November 2026, following [[Version 0.9.6.2]]. This release adds borderless windows and a resolution preset, and fixes fire-menu problems. The wiki now shows values from [[Version 1.0.0.0]]; this page retains the earlier release's history.
 
 '''Spoilers:''' the comparison findings below name creatures and story locations.
 

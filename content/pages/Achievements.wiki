@@ -1,0 +1,39 @@
+'''Achievements''' describes the 14 unique Steam achievement conditions checked by the public 1.0.0.0 game. The labels below are wiki descriptions, '''not official Steam display names'''. Actual Steam unlocks have not been tested.
+
+'''Story spoilers:''' the table names late-story milestones and enemies.
+
+{| class="wikitable"
+! Wiki condition label !! Game check !! Important limits
+|-
+| Revive Viend || Reach the revived Unwanted's main-journal milestone or later || Checked when the journal updates, including its update during save loading.
+|-
+| Defeat Scaal || Reach the Scaal-defeated journal milestone or later || The journal milestone is the check, not merely encountering [[Scaal]].
+|-
+| Defeat Scaal in Permadeath || Reach that journal milestone with Permadeath selected || Requires the Permadeath setting.
+|-
+| Complete the justice milestone || Reach the main-journal justice outcome || Checked during journal updates.
+|-
+| Resolve The Terror || Progress the Survivors' camp quest beyond its initial state, or complete [[The Terror]]'s death/loot processing || Two paths check the same achievement, not two achievements.
+|-
+| Collect every area map || Every collected-area entry in the carried [[Map Ledger]] is true || Hold the map key in the world; each eligible draw has a 5% checking roll. Merely visiting every area is insufficient.
+|-
+| Survive 3 days || Days alive at least 3 || Checked after the midnight day increment.
+|-
+| Survive 10 days || Days alive at least 10 || Checked after the midnight day increment.
+|-
+| Survive 30 days || Days alive at least 30 || Checked after the midnight day increment.
+|-
+| Survive 100 days || Days alive at least 100 || Checked after the midnight day increment.
+|-
+| Defeat a Nightmare || [[Nightmare]] death/loot branch || Requires completed corpse/death processing and the loot-leaving branch.
+|-
+| Defeat a Mire Serpent || [[Mire Serpent]] death/loot branch || Not awarded for an encounter alone.
+|-
+| Defeat a troll || [[Swamp Troll]] or [[Cave Troll]] death/loot branch || Either species checks the same achievement.
+|-
+| Defeat a Deathlob || [[Deathlob]] death/loot branch || [[Mirk Lurker]] does not trigger this check.
+|}
+
+All set paths exclude the demo and check whether the achievement was already recorded. Existing saves are '''not uniformly retroactive''': eligible journal progress may be checked on loading, while day achievements wait for midnight and the map check requires its own conditions.
+
+[[Version 1.0.0.0]] | [[Quests and journal]] | [[Game mechanics]] | [[Main Page]]

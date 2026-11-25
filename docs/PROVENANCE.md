@@ -791,8 +791,10 @@ This comparison documents the operator-installed `next_version_tester` build
 observed on 2026-11-23; the observation is **not** a release date. The supplied
 Discord announcement has no URL, message ID or timestamp. No Steam announcement
 identifies this build, and the developer's intention to release 1.0 is not a
-released-1.0 claim. Stable `game.json`, `catalog.json`, `acquisition.json`,
-`entity_details.json` and `illustrations.json` remain unchanged at 0.9.6.5.
+released-1.0 claim. At the initial tester publication, stable `game.json`,
+`catalog.json`, `acquisition.json`, `entity_details.json` and `illustrations.json`
+remained unchanged at 0.9.6.5. The later stable promotion is documented below;
+the archived tester metadata and this comparison retain their version scope.
 
 `content/facts/tester.json` is independently bounded and validated using the
 existing source, numeric-profile, grid and rights metadata validators.
@@ -844,6 +846,131 @@ page set. Tester history is outside stable introduction-footer generation.
 Smoke fixtures include the 13 isolated crops without committing game pixels.
 Normal source-control review, zero-missing preview and guarded artwork import
 plus paired backups remain publication prerequisites.
+
+## Version 1.0.0.0 update
+
+Public gameplay documentation is consolidated into the current stable release.
+The legacy `Version 0.9.9.7` title redirects to `Version 1.0.0.0`, rather than
+remaining a separate tester presentation. Its original wiki revisions, Git
+history, immutable tester snapshot and extraction evidence remain preserved;
+the retained historical comparisons are source provenance, not a current beta guide.
+
+The official Steam announcement **Patch 1.0 - Leaving Early Access!**
+([announcement](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852980209))
+has UTC timestamp **2026-11-25T08:02:15Z**. Its title says 1.0; installed public
+build 26915460 identifies its binary as **1.0.0.0**. The release date and
+Early Access ending are announcement claims, not deductions from version strings.
+`game-data-1000` identifies SHA-256
+`36df11ceea9089a25eec26f97f42822636e195f828d2eeb3b189164b6abcc539`.
+
+Both complete comparisons were checked independently: 284 code-entry
+fingerprints, 34 changes against 0.9.6.5 and 13 against 0.9.9.7, with no
+added/removed entries. These counts overlap and must not be added. There are
+282 item definitions, 19 nature definitions and 46 being definitions. All
+static fields are identical to the tester; only raft action cost changed
+among previously defined items compared with 0.9.6.5.
+
+The 13 previously isolated item entities, 131 numeric values, five attack grids
+and 13 approved illustrations are promoted into the ordinary registries.
+Item titles cite `items-en-1000.ItemTitles`; numeric profiles cite
+`gml_Object_databank_Alarm_1`. Promoted profiles use the ordinary initializer
+context so matching recipe costs and yields appear only in the recipe display.
+The historical six tester source records are
+retained because the unchanged artwork still cites its actual extraction build.
+`tester.json` is not rewritten. Historical validation permits overlap only for
+the complete canonical promoted item set with its exact approved artwork;
+it neither renders tester overlays over release pages nor permits arbitrary
+entity shadowing.
+
+All 25 verified INI fingerprints are recorded separately for English, Chinese,
+Spanish, Portuguese (Brazil) and German, covering Bestiary, Items, Keys, Nature
+and UI. IDs use `beings`, `items`, `keys`, `nature` or `ui`, language codes
+`en`, `zh`, `es`, `pt-br`, `de`, and suffix `1000`. They distinguish retained
+packaged/prior translations from English startup writers. The startup source
+is unchanged from the tester; no translation-quality certification is inferred.
+German has five packaged files and a fifth menu flag.
+
+Two recipe entries pair literal recipe fields with actual menu access:
+`recipe-personal-crafting-menu-296` uses two Twine, two Trollgnarl Branch and
+ten Spider Silk for one bow at 8 base AP; `recipe-campfire-285` uses one raw
+Spider Meat for one grilled meat at 2.4 base AP, only at a burning Campfire.
+`gml_Object_obj_player_Create_0.myCraftingMenu` and
+`gml_GlobalScript_scr_menu_related.menu_psynch` establish access. Field Kit
+172 receives neither the cooking-menu addition nor an inferred new recipe.
+Other new items have no defined recipes; their prices do not establish stock.
+Laughable Socks has no confirmed acquisition route among the listed sources:
+its type, size and 2-copper value exclude it from the modeled pools, and its
+definition has no recipe. Its explicit acquisition note does not assert that
+no other source could exist.
+Item leads claim buying only for actual merchant offers, not a unit-price row.
+
+All 13 existing treasure-pool sets were reproduced before computing release
+membership. `treasure_get_lootarray` samples through 296, retaining its type,
+size, value, NONLOOTABLE, durability, quest and candidate-limit rules.
+`loot-amount-distribution` is amended in place. The four spider corpse entries,
+their acquisition sources, Spider Meat/Silk effects and webbed treasure now
+describe access through new-area entrances rather than an unconfirmed entrance.
+The separately added silk is not part of the random-treasure pool.
+
+`gml_Object_manager_area_Alarm_2` makes the eligible small-cave replacement
+functional; saved Ygrid loading skips generation. `create_solid` and the
+existing area-13 layout/spider definitions remain unchanged. Initial spider
+weights are 15:1, not globally normalized encounter probabilities. Existing
+outside spawn percentages were independently reproduced for 413 table cells,
+then renormalized with Deathlob's relative weights 0.125/0.1; tables explicitly
+describe conditional weighted selection, not per-turn encounter chance.
+
+Unlike the tester, `area_is_dungeonlike` in
+`gml_GlobalScript_scr_map_and_weather` now includes area 13 via cavelike.
+The exact `UI_Draw_64`, `player_gets_all_wet` and container Alarm 1 callers
+apply underground display and ambient temperature 0.35 before existing
+modifiers. This is not a fixed player body temperature or removal of every
+rain influence. Complete `manager_area_Alarm_4` eligibility exits for area 13
+before its later dungeon fallback. The exact-stage-8 quest branch also exits;
+its no-argument helper requires the ranger-camp coordinates and area 21.
+No new ordinary cave inhabitants or spider-exclusivity exception is inferred
+from the changed classification.
+
+`achievement-checks-1000` documents 14 unique guarded Steam identifiers:
+journal checks `ach_viend`, `ach_scaal`, `ach_scaal_perma`, `ach_justice`,
+`ach_terror`; midnight checks `ach_day3`, `ach_day10`, `ach_day30`, `ach_day100`;
+map check `ach_maps`; death/loot checks `ach_nightmare`, `ach_serpent`,
+`ach_troll`, `ach_terror`, `ach_spider`. The Terror's two paths share one ID.
+Evidence cites full journal, day-step, cursor-draw and being-death callers.
+The map check requires the carried Ledger's complete collected-area matrix
+and a 5% eligible-draw check; death checks require completed loot processing.
+All exclude demo and check prior state. Display names/backend unlocks are
+unverified, and old-save checks are not uniformly retroactive.
+
+`crafting-experience-1000` cites successful crafting in `UI_Draw_64` and
+`item_get_real_craftcost`: ceil of half the actual modified cost, minus level
+divided by five rounded down, positive gains only; Twine starts at one.
+The 0.2-AP cost rounding precedes XP. Poison ones use modulo 10 in
+`hpcell_draw`, following the tester opacity fix.
+
+Inherited raft controls, failed-push AP, honey attempt/resource/branch limits,
+view-limited branch aging, conditional dead-tree removal/log placement and
+capped Fern revisits retain their complete source guards. Entity-specific
+procedures reuse bounded algorithm entries on explicitly allowlisted pages.
+Tree removal does not guarantee logs or a daily rate. Cured-sickness,
+fuel-search, placement-origin collision and jump fixes retain their tester
+provenance; their actual source fields are unchanged in the release.
+
+`area_create_map` chooses the debug font except for Chinese/Russian; the debug
+font gains 108 glyphs. Language changes refresh UI before menu. One combat
+track joins the day manager's battle list; click volumes and menu branding
+are release presentation changes, not new wiki art requirements. The serializer
+changes only its version literal; no new save fields or relabeled beta fixture.
+
+Publication bounds are deliberately increased to 672 KiB for game facts,
+640 KiB for catalog metadata and 544 KiB for illustrations to hold the promoted
+definitions, expanded spawn tables and retained fingerprints. Rights checks,
+named-page allowlists and source validation remain enforced. The provenance
+document's indexed publication cap grows to 104 KiB for this release evidence;
+the image-documentation cap grows to 44 KiB for the reuse record.
+All retained
+original/crop pixels and credits are reused; no new File import or host mutation
+is required for this release.
 
 ## Build output
 

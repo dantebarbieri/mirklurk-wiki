@@ -1162,6 +1162,9 @@ def build_pages(root, data, catalog=None, details=None):
     shown = entry_fragments(entries, owners, locations, catalog.get("construction_recipes", []))
     entries = [{**row, "anchor": shown[row["id"]]} for row in entries]
     images = sorted(data.get("illustrations", []), key=lambda row: row["id"])
+    if data["game"]["build"] == "1.0.0.0":
+        images = [{**image, "caption": image["caption"].replace(" (0.9.9.7 tester)", "")}
+                  for image in images]
     prices = {row["entity"]: row for row in catalog.get("unit_prices", {}).get("prices", [])}
     merchant_profiles = {row["entity"]: row for row in catalog.get("merchant_profiles", [])}
     price_items = ({entry["details"]["item"] for entry in entries if entry["kind"] == "merchant"} | prices.keys()) if "unit_prices" in catalog else set()
@@ -1176,7 +1179,8 @@ def build_pages(root, data, catalog=None, details=None):
     ingredients = ingredient_acquisition(data, catalog)
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
-    authored = {**PAGE_FILES, "NPCs": "NPCs.wiki", **active, **(TESTER_PAGE_FILES if full_catalog else {})}
+    history = TESTER_PAGE_FILES if full_catalog or data["game"]["build"] == "1.0.0.0" else {}
+    authored = {**PAGE_FILES, "NPCs": "NPCs.wiki", **active, **history}
     pages = {title: read_authored(root, title, filename) for title, filename in authored.items()}
     for alias, target in RESEARCH_PAGE_REDIRECTS.items():
         if target in active:
@@ -1694,7 +1698,7 @@ def build_pages(root, data, catalog=None, details=None):
                 pages[title] += "Acquisition: Unknown.\n"
             constructed = any(recipe["owner_item"] == identity for recipe in catalog.get("construction_recipes", []))
             ways = [label for label, present in (
-                ("crafted", own_recipes or constructed), ("bought", identity in price_items or offers),
+                ("crafted", own_recipes or constructed), ("bought", offers),
                 ("collected", loot_owners), ("found as random treasure", eligible_sources)) if present]
             uses = sorted({owners[entry["id"]] for entry in related if entry["kind"] == "recipe"}
                           | {locations[recipe["owner_item"]] for recipe in catalog.get("construction_recipes", [])
