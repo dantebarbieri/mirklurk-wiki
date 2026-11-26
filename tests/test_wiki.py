@@ -301,7 +301,7 @@ class DataTests(unittest.TestCase):
         data = load_data(ROOT / "content" / "facts" / "game.json")
         self.assertEqual(
             {key: len(data[key]) for key in ("sources", "entities", "facts", "entries")},
-            {"sources": 84, "entities": 384, "facts": 107, "entries": 361},
+            {"sources": 95, "entities": 384, "facts": 107, "entries": 361},
         )
         self.assertEqual(
             Counter(entry["kind"] for entry in data["entries"]),
@@ -327,17 +327,17 @@ class DataTests(unittest.TestCase):
         update = [row for index, row in enumerate(data["entries"]) if row["id"] in amended or index >= 293]
         self.assertEqual(len(update), 100)
         raw = json.dumps(update, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-        self.assertEqual(hashlib.sha256(raw).hexdigest(), "2ac9d39f08002e557b22ced65ca1e09b1fe2622dee6f042719771520b8ab9d63")
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), "de2156c99437dfc3b607e9c9867c86625f575efa4414ffe29f472d953783d170")
         self.assertEqual(data.get("illustrations", []), [])
         pages = build_pages(ROOT, data)
-        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 449)
+        self.assertEqual(len([title for title, text in pages.items() if f"\n'''{title}''' groups " not in text]), 450)
         self.assertTrue(RESEARCH_PAGE_FILES.keys() <= pages.keys())
         for title in RESEARCH_PAGE_FILES:
             self.assertIn(f"[[{title}]]", pages["Main Page"])
         self.assertIn("[[Loot mechanics", pages["Loot tables"])
         self.assertIn("Budgeted creature treasure", pages["Loot mechanics"])
         self.assertIn("There is no seed code you can enter to recreate a world", pages["World generation"])
-        self.assertIn("These guides cover '''1.0.0.0'''", pages["Game mechanics"])
+        self.assertIn("These guides cover '''1.0.1.0'''", pages["Game mechanics"])
         self.assertIn("versionString", audit_report(data))
         self.assertNotIn("versionString", pages["Game mechanics"])
 
@@ -357,7 +357,7 @@ class DataTests(unittest.TestCase):
         amended = [record for key in ("entities", "facts") for record in data[key] if record["id"] in AMENDED_0815]
         raw = json.dumps(amended, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
         self.assertEqual(hashlib.sha256(raw).hexdigest(), "7ce6c6f3f6a19475c651b7a9b1a745d9e9bce2ebd0f10dc6890e0c0f46b60a0f")
-        self.assertEqual(data["game"]["build"], "1.0.0.0")
+        self.assertEqual(data["game"]["build"], "1.0.1.0")
         self.assertEqual(
             {confidence: sum(f["confidence"] == confidence for f in data["facts"][:79])
              for confidence in ("localization-described", "inferred")},

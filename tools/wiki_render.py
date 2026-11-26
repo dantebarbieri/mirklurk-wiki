@@ -1162,7 +1162,7 @@ def build_pages(root, data, catalog=None, details=None):
     shown = entry_fragments(entries, owners, locations, catalog.get("construction_recipes", []))
     entries = [{**row, "anchor": shown[row["id"]]} for row in entries]
     images = sorted(data.get("illustrations", []), key=lambda row: row["id"])
-    if data["game"]["build"] == "1.0.0.0":
+    if data["game"]["build"] in ("1.0.0.0", "1.0.1.0"):
         images = [{**image, "caption": image["caption"].replace(" (0.9.9.7 tester)", "")}
                   for image in images]
     prices = {row["entity"]: row for row in catalog.get("unit_prices", {}).get("prices", [])}
@@ -1179,7 +1179,7 @@ def build_pages(root, data, catalog=None, details=None):
     ingredients = ingredient_acquisition(data, catalog)
     researched = {row["page"] for row in data["facts"]} | {entry_page(row) for row in entries} | set(facts.values()) | set(owners.values())
     active = {title: filename for title, filename in RESEARCH_PAGE_FILES.items() if title in researched}
-    history = TESTER_PAGE_FILES if full_catalog or data["game"]["build"] == "1.0.0.0" else {}
+    history = TESTER_PAGE_FILES if full_catalog or data["game"]["build"] in ("1.0.0.0", "1.0.1.0") else {}
     authored = {**PAGE_FILES, "NPCs": "NPCs.wiki", **active, **history}
     pages = {title: read_authored(root, title, filename) for title, filename in authored.items()}
     for alias, target in RESEARCH_PAGE_REDIRECTS.items():

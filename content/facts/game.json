@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "1.0.0.0",
+    "build": "1.0.1.0",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -510,6 +510,72 @@
       "path": "Languages\\Portuguese (Brazil)\\UI.ini",
       "sha256": "e495817cfe54c7866ca2370e275ae9dca414124a5ab2195663037aafbe9649d8",
       "build": "1.0.0.0"
+    },
+    {
+      "id": "game-data-1010",
+      "path": "data.win",
+      "build": "1.0.1.0",
+      "sha256": "f2a710600e2cac7b4547937a0577775836c73b596a5b27886255aa406e5bb841"
+    },
+    {
+      "id": "beings-zh-1010",
+      "path": "Languages\\Chinese\\Bestiary.ini",
+      "sha256": "32eb2804b0aa499c378b499a0131dd2cc1b7c94f87b83ef784aa7c3cb97c1091",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "items-en-1010",
+      "path": "Languages\\English\\Items.ini",
+      "sha256": "b3acb7e858962481d324593dae3fccd9e748aaace717c22926133addd1f3f21a",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "ui-en-1010",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "e6dcff39592db3f7efb4c48c25f093dfe779f5a07790574f9a6dba03a48a0b41",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "beings-de-1010",
+      "path": "Languages\\German\\Bestiary.ini",
+      "sha256": "ea15d435d2b549813c0962021b14806b1811c2df2961b3394521b1af5c8cc4c1",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "ui-de-1010",
+      "path": "Languages\\German\\UI.ini",
+      "sha256": "1384aa14de59cafd69a4db901a5e78e06e327c3b54ffcd17240ca5b16399ba85",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "beings-ru-1010",
+      "path": "Languages\\Russian\\Bestiary.ini",
+      "sha256": "61f4aeae83e74b1d7a2e657574a345338af217e4bab74984afee936570e59859",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "items-ru-1010",
+      "path": "Languages\\Russian\\Items.ini",
+      "sha256": "deb84b9d5bd90ba1c78dcf2e57fb6230f68fd5c570047a16f73559e58d89acc1",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "keys-ru-1010",
+      "path": "Languages\\Russian\\Keys.ini",
+      "sha256": "d5d1dd325069813c5a66367e67ed0bd5172e67ca8167f79825cef69298b207ef",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "nature-ru-1010",
+      "path": "Languages\\Russian\\Nature.ini",
+      "sha256": "a3bcc316f93e4f0bc44bac5e3d98eaaf4f3e8741e9eaed759da53cf0e746dfb1",
+      "build": "1.0.1.0"
+    },
+    {
+      "id": "ui-ru-1010",
+      "path": "Languages\\Russian\\UI.ini",
+      "sha256": "b36525fffe09d5ca629ecb4e40708e0d9804f516d084fab7e3276aea82f9236c",
+      "build": "1.0.1.0"
     }
   ],
   "entities": [
@@ -16966,7 +17032,7 @@
       "kind": "algorithm",
       "title": "Shield Savant: shield blocking",
       "summary": "An equipped shield supplies its innate block chance, and Shield Savant adds 2.5 percentage points per rank.",
-      "conditions": "Requires a recognized shield in the active off-hand slot; no shield means no block chance.",
+      "conditions": "Requires a recognized shield in the active off-hand slot; Iron Shield, Steel Buckler and Wooden Shield are recognized from 1.0.1.0. No shield means no block chance.",
       "confidence": "inferred",
       "evidence": [
         {
@@ -16975,19 +17041,24 @@
           "key": "4"
         },
         {
-          "source": "game-data-0920",
+          "source": "game-data-1010",
           "section": "gml_GlobalScript_scr_basic_useful",
           "key": "player_get_block"
         },
         {
-          "source": "game-data-0920",
+          "source": "game-data-1010",
           "section": "gml_GlobalScript_scr_ai_related",
           "key": "being_blocks_attack"
         },
         {
-          "source": "game-data-0920",
+          "source": "game-data-1010",
           "section": "gml_GlobalScript_scr_items",
           "key": "loot_amountchances;item_durloss"
+        },
+        {
+          "source": "game-data-1010",
+          "section": "gml_GlobalScript_scr_items",
+          "key": "item_is_shield[280,282,283]"
         }
       ],
       "details": {

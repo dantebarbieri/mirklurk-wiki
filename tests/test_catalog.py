@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 379)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 499)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 500)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 125)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 379)
@@ -642,7 +642,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "1.0.0.0")
+        self.assertEqual(self.data["game"]["build"], "1.0.1.0")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1174,9 +1174,9 @@ class ProfileTests(unittest.TestCase):
         # Release pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "1.0.0.0"', b'"build": null', 1,
+                b'"build": "1.0.1.0"', b'"build": null', 1,
             )).hexdigest(),
-            "325e296d7e6dcc045d3742ebd42dff137be851c59bd4d356cd96039028b7b258",
+            "a324ccec4ec45b7156b06c0da0ab898e2b0da1f5e0b6224492c9180741a7bcef",
         )
 
 
@@ -1496,7 +1496,7 @@ class ProfileTests(unittest.TestCase):
         skill = self.pages["Shield Savant"]
         self.assertIn("2.5 percentage points", skill)
         self.assertIn("75% chance", skill)
-        self.assertIn("Without an equipped shield", skill)
+        self.assertIn("without a recognized shield", skill)
         self.assertIn("10.5% at rank 1", self.pages["Combat basics"])
         self.assertIn("1.0.0.0", self.pages["Main Page"])
         self.assertIn("29 October 2026", self.pages["Version 0.9.2.0"])
