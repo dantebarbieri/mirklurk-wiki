@@ -1,4 +1,4 @@
-'''Version 1.0.0.0''' is the patch released on 25 November 2026, announced as '''1.0 - Leaving Early Access!''' The [https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852980209 official Steam announcement] was posted at 08:02:15 UTC and ends Early Access. The installed public game's menu, version check and save writer identify the binary as '''1.0.0.0'''. This wiki shows 1.0.0.0 values.
+'''Version 1.0.0.0''' is the patch released on 25 November 2026, announced as '''1.0 - Leaving Early Access!''' The [https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852980209 official Steam announcement] was posted at 08:02:15 UTC and ends Early Access. The installed public game's menu, version check and save writer identify the binary as '''1.0.0.0'''. The wiki now shows values from [[Version 1.0.1.0]]; this page retains the 1.0 release's history.
 
 This page describes the public release's changes from [[Version 0.9.6.5]]. Gameplay descriptions and item statistics throughout the wiki cover the current stable release.
 

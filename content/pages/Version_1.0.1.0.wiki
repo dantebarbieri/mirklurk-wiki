@@ -1,0 +1,30 @@
+'''Version 1.0.1.0''' is the patch released on 26 November 2026, following [[Version 1.0.0.0]]. The [https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852985197 official Steam announcement] was posted at 11:50:32 UTC. This wiki shows 1.0.1.0 values.
+
+== New content ==
+=== Russian ===
+Russian is available as the sixth language, with five packaged language files and its own menu flag.
+
+'''Not in the patch notes:''' with Russian selected and a female player already created, text lookup can use a matching female-specific popup or journal variant. If that variant is missing, the base text remains. This is not a general grammatical transformation or a promise that every line has a female variant.
+
+== Changes ==
+=== Fonts and translations ===
+The Chinese font adds one glyph, U+8854, bringing its inventory from 2,217 to 2,218. The Russian font changes from Arial to Consolas while retaining its 182 codepoints; equal codepoint counts do not mean identical lettering.
+
+'''Not in the patch notes:''' the main font adds 16 Polish Latin characters, increasing its inventory from 145 to 161. This is character support, not a newly shipped Polish translation.
+
+English tree-targeting and concealment instructions receive wording corrections. [[Jar of Fireflies]] is described as a flickering light source; its mechanics do not change. Packaged Chinese dialogue and German character/dialogue wording and two new-day messages also change. These corrections do not establish the quality or completeness of every translation.
+
+'''Not in the patch notes:''' missing-key filling supports a supplied German translation of [[Sturdy Shortbow]]. It preserves existing keys and does not regenerate every German or Russian translation.
+
+== Fixes ==
+=== Shield recognition ===
+[[Iron Shield]], [[Steel Buckler]] and [[Wooden Shield]] now qualify for the player's shield-block check when equipped in the active off hand. Their base chances were already defined in 1.0.0.0, but the check omitted them.
+
+Their existing base chances remain '''12%, 8% and 12%''' respectively. [[Shield Savant]] adds 2.5 percentage points per rank, using the existing [[Combat basics|blocking rules]] and durability loss on a successful block. This is a recognition fix, not new stats, guaranteed blocking or a change to armor calculations. Iron Chestplate is not added to the shield check.
+
+=== Long equipment labels ===
+The equipment menu adds a wider backdrop when either the waterproofing or insulation label is wider than the menu. This accommodates long translated labels without changing the displayed stat calculations; it is not a blanket guarantee against every clipping or layout problem.
+
+'''Not in the patch notes:''' a developer/quick-mode debug damage shortcut changes damage class. This is not an ordinary combat change. The save writer changes its version label only: no new save fields, terrain regeneration, recipes, achievement checks, raft movement or crafting XP changes are introduced by this patch. Existing item, nature and creature stats and artwork are unchanged.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

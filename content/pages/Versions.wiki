@@ -1,8 +1,10 @@
-'''Versions''' lists the MirkLurk releases this wiki documents, newest first. The latest stable reference is [[Version 1.0.0.0|1.0.0.0]], announced as '''1.0'''. Each release has its own announcement history. When only a comparison spanning several releases is available, findings keep that range rather than claiming an exact introduction version.
+'''Versions''' lists the MirkLurk releases this wiki documents, newest first. The latest stable reference is [[Version 1.0.1.0|1.0.1.0]]. Each release has its own announcement history. When only a comparison spanning several releases is available, findings keep that range rather than claiming an exact introduction version.
 
 <div class="mirklurk-scroll noresize" role="group" tabindex="0" aria-label="Versions (scroll horizontally)" style="max-width:100%;overflow-x:auto;">
 {| class="wikitable"
 ! Version !! Released !! Summary
+|-
+| [[Version 1.0.1.0|1.0.1.0]] || 26 November 2026 || Russian, shield-block recognition, font and translation corrections, and long equipment labels.
 |-
 | [[Version 1.0.0.0|1.0.0.0 (announced as 1.0)]] || 25 November 2026 || Early Access ends: spider cave, 13 items, raft controls, achievements, German and crafting XP fixes.
 |-

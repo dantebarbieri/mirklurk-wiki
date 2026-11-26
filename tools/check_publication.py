@@ -33,7 +33,7 @@ ALLOWED_FILES = {
     "content/facts/illustrations.json": MAX_ILLUSTRATIONS_BYTES,
     "content/facts/tester.json": 128 * 1024,
     "tools/wiki_tester.py": 12 * 1024,
-    "tests/test_tester.py": 8 * 1024,
+    "tests/test_tester.py": 10 * 1024,
     "content/facts/acquisition.json": MAX_ACQUISITION_BYTES,
     "content/pages/NPCs.wiki": 32 * 1024,
     "content/templates/Coins.wiki": 4 * 1024,

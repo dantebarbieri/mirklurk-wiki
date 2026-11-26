@@ -28,10 +28,10 @@ class TesterDocumentationTests(unittest.TestCase):
         before = copy.deepcopy(self.stable)
         pages = build_pages(ROOT, *self.inputs)
         self.assertEqual(self.stable, before)
-        self.assertEqual(self.stable["game"]["build"], "1.0.0.0")
+        self.assertEqual(self.stable["game"]["build"], "1.0.1.0")
         self.assertLessEqual({row["id"] for row in self.tester["data"]["entities"]},
                              {row["id"] for row in self.stable["entities"]})
-        self.assertIn("'''Current version:''' 1.0.0.0", pages["Main Page"])
+        self.assertIn("'''Current version:''' 1.0.1.0", pages["Main Page"])
         self.assertNotIn("== 0.9.9.7 tester ==", pages["Finish Raft"])
         for entity in self.tester["data"]["entities"]:
             text = pages[entity["name"]]
@@ -62,7 +62,7 @@ class TesterDocumentationTests(unittest.TestCase):
         for note in self.tester["page_notes"]:
             self.assertNotIn("== 0.9.9.7 tester ==", self.pages[note["page"]])
         for title in ("Main Page", "Versions", "Game mechanics", "World generation",
-                      "Crafting", "Version 1.0.0.0"):
+                      "Crafting", "Version 1.0.0.0", "Version 1.0.1.0"):
             self.assertNotIn("0.9.9.7", self.pages[title], title)
             self.assertNotIn("tester", self.pages[title].lower(), title)
         self.assertEqual(hashlib.sha256((ROOT / "content" / "facts" / "tester.json").read_bytes()).hexdigest(),
@@ -100,6 +100,26 @@ class TesterDocumentationTests(unittest.TestCase):
                      "Push targets a free tile 16 pixels away",
                      "Direct boarding requires being within 8 pixels"):
             self.assertEqual(page.count(step), 1, step)
+
+    def test_shield_fix_distinguishes_recognition_from_unchanged_initializer_values(self):
+        profiles = {row["entity"]: row for row in self.inputs[2]["profiles"]
+                    if row["id"].endswith("-tester-profile")}
+        for identity, title, chance in (
+            ("item-280", "Iron Shield", 0.12),
+            ("item-282", "Steel Buckler", 0.08),
+            ("item-283", "Wooden Shield", 0.12),
+        ):
+            page = self.pages[title]
+            self.assertIn("active off hand", page)
+            self.assertIn("1.0.1.0 fixes", page)
+            self.assertIn("already defined in 1.0.0.0", page)
+            self.assertIn("does not increase its stats", page)
+            self.assertEqual(profiles[identity]["values"]["block-chance"], chance)
+            self.assertTrue(any(row["source"] == "game-data-1000"
+                                for row in profiles[identity]["evidence"]))
+        self.assertNotIn("fixes this shield", self.pages["Iron Chestplate"])
+        self.assertIn("recognized from 1.0.1.0", self.pages["Shield Savant"])
+        self.assertIn("Version 1.0.1.0 fixes recognition", self.pages["Combat basics"])
 
     def test_shadowed_stable_entities_and_unapproved_beta_art_fail_before_rendering(self):
         def shadow(document):

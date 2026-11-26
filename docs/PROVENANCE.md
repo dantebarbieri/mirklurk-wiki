@@ -972,6 +972,74 @@ All retained
 original/crop pixels and credits are reused; no new File import or host mutation
 is required for this release.
 
+## Version 1.0.1.0 update
+
+The [official Steam announcement](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852985197)
+was posted at **2026-11-26T11:50:32Z**. Public Steam build 26946940 identifies
+itself as **1.0.1.0** in `obj_menu_Create_0.versionString`,
+`obj_menu_Step_0.versionCheck` and `scr_saveload.save_player.VERSION`.
+`game-data-1010` fingerprints binary SHA-256
+`f2a710600e2cac7b4547937a0577775836c73b596a5b27886255aa406e5bb841`.
+The complete direct comparison with accepted 1.0.0.0 verifies all 284 code
+entries: nine changed, none added or removed. All 282 item, 19 nature and
+46 being definitions and their static fields remain unchanged. Recipes,
+world generation, save grids, achievement checks, rafts and crafting XP
+retain their earlier evidence; no new acquisition or artwork is inferred.
+
+`gml_GlobalScript_scr_items.item_is_shield` adds item IDs 280, 282 and 283
+(Iron Shield, Steel Buckler and Wooden Shield). Complete
+`scr_basic_useful.player_get_block` requires a recognized shield in equipped
+slot 21, then adds `dat.blockChance` and `fighterSkills[4] * 0.025`.
+The real `scr_ai_related.being_blocks_attack` caller uses that chance and
+the existing successful-block durability loss. This is not a stat increase:
+the 12%, 8% and 12% initializer chances already existed in 1.0.0.0, whose
+predicate omitted these IDs. Iron Chestplate 281 is not a shield. The three
+item effects, Combat basics, Shield Savant display and its algorithm conditions
+now explain recognition separately from the unchanged chance and armor.
+The algorithm's runtime evidence is re-cited to the new build and includes
+the exact predicate; profiles and grids are unchanged.
+
+All 30 runtime-copied INIs were hash-verified across six languages. Ten
+previously unrecorded language fingerprints are appended: `items-en-1010`,
+`ui-en-1010`, `beings-zh-1010`, `beings-de-1010`, `ui-de-1010`, and five
+`beings/items/keys/nature/ui-ru-1010` records. Retained English Bestiary,
+Keys and Nature and other unchanged translations keep their existing sources;
+the archived 1.0 and tester evidence is preserved. English startup writers
+provide `TTgen` keys 26/30 and the changed item-248 `ItemDesc2` wording.
+The Chinese Bestiary dialogue and German Bestiary/UI changes are packaged
+data, not a claim of wholesale regeneration or translation-quality testing.
+
+`obj_menu_Draw_64` draws six overview flags and maps Russian to flag frame 5.
+The existing `font_lan_match` Russian branch remains. Complete
+`scr_text_related.textf_get_text` reads the base key, then only for Russian
+and an existing female player (`sex == 1`) checks the same key in the
+`__female` section before closing the INI. Missing overrides retain base text.
+Packaged Russian UI includes 13 popup and 11 journal variants. This does not
+promise every section has gender variants or transform arbitrary grammar.
+
+Verified font records show Chinese 2,217 to 2,218 codepoints, adding U+8854;
+Russian Arial to Consolas retains 182 codepoints without proving identical
+raster shapes. The main font grows from 145 to 161 with 16 Polish Latin
+characters; no Polish language folder is added. `UI_Draw_64` measures the
+waterproofing and insulation strings and conditionally draws
+`spr_ui_frame_smallest` frame 7 when their maximum width exceeds menu width.
+Stat calculations and the extracted tooltip-Y expression remain unchanged.
+`rm_int_Create.wadder` gains guarded optional translations and a German/Deutsch
+argument supplied only for item 296; existing keys are not overwritten.
+`obj_being_Draw_0` changes a quick/developer-mode damage shortcut from poison
+to the bleeding/status family, not ordinary creature combat.
+
+The sprite comparison verifies 4,236 identical frames, one new equipment
+backdrop, one removed news frame and two changed flags; no item, nature or
+being icons change. All 422 illustration records, approved credits and
+original/cropped File identities are reused unchanged, with zero imports.
+Historical tester validation and display-only caption normalization accept
+the new stable build while retaining the compatibility redirect to 1.0 and
+the exact immutable snapshot. The current wiki has 690 managed titles.
+The historical/current-release regression file's publication cap increases
+from 8 to 10 KiB for the shield-recognition test; other bounds, rights checks
+and namespace allowlists remain enforced.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts
