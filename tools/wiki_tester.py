@@ -17,7 +17,7 @@ def load_tester(root, stable):
                        "item_notes", "page_notes"}, set(), "tester")
     if (type(document["schema_version"]) is not int or document["schema_version"] != 1
             or document["channel"] != "next_version_tester" or document["stable_build"] != "0.9.6.5"
-            or stable["game"]["build"] not in (document["stable_build"], "1.0.0.0", "1.0.1.0")):
+            or stable["game"]["build"] not in (document["stable_build"], "1.0.0.0", "1.0.1.0", "1.0.1.5")):
         raise DataError("tester: explicit stable build and tester channel required")
     data = validate_data(document["data"])
     if data["game"]["build"] != "0.9.9.7" or data["facts"] or data.get("entries"):
@@ -26,7 +26,7 @@ def load_tester(root, stable):
     for row in entities.values():
         _title(row["name"])
     stable_entities = {row["id"]: row for row in stable["entities"]}
-    historical = stable["game"]["build"] in ("1.0.0.0", "1.0.1.0")
+    historical = stable["game"]["build"] in ("1.0.0.0", "1.0.1.0", "1.0.1.5")
     overlap = entities.keys() & stable_entities.keys()
     if (any(row["category"] != "item" for row in entities.values())
             or not historical and overlap

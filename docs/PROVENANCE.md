@@ -1040,6 +1040,91 @@ The historical/current-release regression file's publication cap increases
 from 8 to 10 KiB for the shield-recognition test; other bounds, rights checks
 and namespace allowlists remain enforced.
 
+## Version 1.0.1.5 update
+
+The [official announcement](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852988563)
+was posted at **2026-11-27T08:15:26Z**, not the next day's verification date.
+Public build 26967583 identifies itself as 1.0.1.5 in the menu, version check
+and save writer. `game-data-1015` fingerprints binary SHA-256
+`262a5d80a360e5020284ae0ecf87dc87513116e34b6ee801497fbe00ef2a0e71`.
+All 284 baseline/current code-entry hashes were verified: 11 changed, none
+added or removed. The 282 item, 19 nature and 46 being definitions and all
+their parsed fields are unchanged. Recipes, achievement checks, serialized
+save fields and grids, fonts and item art retain their earlier evidence.
+
+All 35 copied language files were independently hash-verified. Twelve new
+language sources are appended: seven `ui-en/zh/es/de/pl/pt/ru-1015` records,
+five Polish files in total (`beings/items/keys/nature/ui-pl-1015`), and
+`beings-ru-1015`. Together with the binary this brings the source register
+from 95 to 108. Existing unchanged path/hash records keep their citations.
+`obj_menu_Draw_64` draws seven flags and maps Polish to frame 6.
+Complete `scr_text_related.textf_get_text` extends the existing Russian
+female-key lookup to Polish, preserving base fallback when the same key in
+the `__female` section is absent. Polish UI contains one such popup key;
+neither universal gender inflection nor translation quality is inferred.
+The Polish glyphs already existed in 1.0.1.0; translation availability is new.
+Russian Bestiary and UI corrections change Mirk terminology. All older
+language UIs add `Menus/EatSounds`. Complete `rm_int_Create.wadder` gains
+optional Russian and Polish arguments; the audio-label call supplies them,
+but unsupplied missing translations still become `unknown` and existing
+keys are never overwritten.
+
+`rm_int_Create` initializes `global.eatSounds` and absent
+`Settings/EatSounds` to true. `obj_menu_Create_0.showStuff[4]` reads the
+label, `obj_menu_Draw_64` adds the checkbox, and `obj_menu_Alarm_10` saves
+the choice. Complete `scr_basic_useful.player_item_consume` substitutes
+`snd_ui_click_darkthud` for the three bite sounds only in the food type-19
+branch when disabled; all satiation, sickness and other consumption paths
+remain unchanged. Foods and the changelog describe a substitute sound,
+not total silence or a universal consumption mute. The menu backdrop still
+measures only the four older labels, so no all-label layout guarantee is made.
+
+The successful `UI_Draw_64` craft-171 path now assigns `P.mySleepMenu`
+instead of the missing-menu sentinel. Existing station initialization already
+used this shared menu. `scr_smartones.player_interact` still boards directly
+within 8 pixels; otherwise its generic interaction path requires a valid
+local menu and calls `scr_menu_related.menu_psynch`, which supplies the
+existing raft Push/Pull/Board options. `release-1000-finish-raft` gains this
+completion fix and new caller citations without duplicating its earlier
+movement instructions. AP, XP, terrain eligibility and save behavior do not
+change. No gameplay reproduction or broader interaction guarantee is claimed.
+
+The new `spider-cave-revisit-1015` algorithm and World generation, Areas and
+Interior floors distinguish **two callers**. The earlier corrected 1.0
+analysis remains valid: `manager_area_Alarm_4` exits for nonoutside area 13
+before its later dungeon fallback. It does not prove the absence of other
+placement paths. Complete old/new `obj_screenfader_Step_0` establishes the
+distinct saved-area catch-up caller. In 1.0.1.0, cave-like area 13 could use
+the ordinary repeat of `min(enemiesLeft, round(passedDays / 2))` with
+Mirk Runner/Mirk Mauler/Cave Troll/Firelouse weights 15/5/5/5, and cave-nature
+16 regrowth into tile 148. The new area-13 branch makes one weighted
+Mirk Lurker/Deathlob 15:1 call per eligible catch-up evaluation, outside that
+elapsed-day/population repeat gate. It does not require clearing the cave,
+positive elapsed days or fewer than four inhabitants. The growth-stage
+alpha guard prevents ordinary frame-by-frame repetition.
+Complete `scr_ai_related.spawn_in_dungeon` tries up to 256 candidate positions,
+checking margins, terrain/class needs, entrance distance and collisions;
+failure destroys the candidate. Therefore a call is not a successful-spawn
+guarantee or daily rate. Saved non-spiders are not purged. Area 13 excludes
+the ordinary nature-16/tile-148 regrowth branch, while other caves retain it.
+No translated name for nature 16 is invented. Initial spider generation
+only removes a redundant true condition; its 15:1 pool remains unchanged.
+The prior correction and its immutable source/revision history are preserved;
+this adds historical evidence about a different caller rather than restoring
+the retracted Alarm-4 explanation.
+
+The only changed exported sprite frame is the Polish flag; 4,238 other frames
+are identical, with no additions or removals. All 422 illustration records
+and existing developer attribution, original/cropped File identities and
+served images are reused unchanged, with zero imports. Historical tester
+validation and display-only caption normalization explicitly accept the new
+stable build while keeping the immutable snapshot and compatibility redirect
+to 1.0. The managed title count becomes 691. Focused current-release
+regressions distinguish failed placement, saved occupants and substitute
+audio from stronger unsupported promises. The provenance publication cap
+increases from 104 to 110 KiB and the release regression file from 10 to
+12 KiB for this evidence and its focused tests; other policy bounds remain.
+
 ## Build output
 
 The builder reads exactly the named authored pages and vetted JSON. It sorts

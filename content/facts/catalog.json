@@ -7916,16 +7916,16 @@
   "currency": {
     "schema_version": 1,
     "documented_build": {
-      "version": "1.0.1.0",
-      "confirmation": "The official Steam patch announcement of 26 November 2026 and the installed public menu, version check and save writer identify 1.0.1.0.",
+      "version": "1.0.1.5",
+      "confirmation": "The official Steam patch announcement of 27 November 2026 and the installed public menu, version check and save writer identify 1.0.1.5.",
       "evidence": [
         {
-          "source": "game-data-1010",
+          "source": "game-data-1015",
           "section": "gml_Object_obj_menu_Create_0",
           "key": "versionString"
         },
         {
-          "source": "game-data-1010",
+          "source": "game-data-1015",
           "section": "gml_Object_obj_menu_Step_0",
           "key": "manager_area.versionCheck"
         }
@@ -8827,7 +8827,7 @@
         "Eating rolls the food's sickness risk. A meal that does not cause sickness may extend Well fed; see Satiation for its trigger and Stamina for its effect. Sickness and Well fed act separately from satiation's ordinary wellbeing contribution.",
         "Honey improves wellbeing and shortens sickness. Bramble Berries and Bursthopper restore stamina; Cranberries and raw Wakebug restore focus. Grilled Wakebug has no corresponding focus bonus. Riftvine Berries reduce wellbeing. See each item for amounts.",
         "Pleasant Vegetable Soup, Tasty Crab Soup and Survivor's Delight grant temporary warmth. Baby Firelouse also warms you but causes a fire hit.",
-        "Recipes list ingredients, outputs, AP and workstation requirements. Check the resulting food's sickness risk: preparation does not always make food safe."
+        "Recipes list ingredients, outputs, AP and workstation requirements. Check the resulting food's sickness risk: preparation does not always make food safe. From 1.0.1.5, the Eating Sounds setting replaces food bite sounds with a UI thud when disabled; it does not make consumption silent or mute every drink or remedy. It defaults to enabled and is saved with the settings."
       ],
       "section_titles": [
         "Food value and effects",
@@ -8881,7 +8881,11 @@
           "source": "game-data-0953",
           "section": "gml_GlobalScript_scr_basic_useful",
           "key": "player_item_consume[241/243/244]"
-        }
+        },
+        {"source": "game-data-1015", "section": "gml_GlobalScript_scr_basic_useful", "key": "player_item_consume.type19/global.eatSounds/bites-or-darkthud"},
+        {"source": "game-data-1015", "section": "gml_Room_rm_int_Create", "key": "global.eatSounds/Settings.EatSounds.defaulttrue"},
+        {"source": "game-data-1015", "section": "gml_Object_obj_menu_Draw_64", "key": "showStuff4/global.eatSounds.checkbox"},
+        {"source": "game-data-1015", "section": "gml_Object_obj_menu_Alarm_10", "key": "Settings.EatSounds"}
       ]
     },
     {
@@ -10143,7 +10147,7 @@
       "Cave mouths are scattered through every land area. In the Sunken Ancient Ruins most of them lead to cellars and ruined buildings instead. The rift depths lie under the Rift-Thorn Mire opposite the fort. Homes belong to people such as Ranger Bhato and Gurb-Gurb.",
       "Ordinary clear interior flooring has a -2.5 land penalty, giving 0.8 AP for a straight unencumbered step. Rubble, husks, spikes and other obstacles add penalties. You can build on open floors except in other people's homes.",
       "Cave and ruin floors count as stone, so seeds refuse them. Planting on rift-depth floors has not been tested.",
-      "Caves and ruin interiors do not spawn creatures turn by turn. Each time you return after at least a day, a cave may restock with up to four creatures, about one for every two days away, and grows new Vile Bulb mushrooms. Ruin buildings and cellars restock the same way from a different list. The two outer rift chambers spawn every turn, up to 8 or 12 creatures. Homes never spawn creatures."
+      "Ordinary caves and ruin interiors do not spawn creatures turn by turn. On revisits, ordinary caves may restock toward four creatures, about one placement call for every two days away, and attempt cave-nature regrowth. Ruin buildings and cellars use the same restocking gate with a different list. From 1.0.1.5 the spider cave instead makes one Mirk Lurker or Deathlob placement call per eligible catch-up evaluation, weighted 15:1. It need not be cleared and need not have been left for a full day; placement can fail. Saved non-spider inhabitants are not removed, and this cave skips ordinary cave-nature regrowth. The two outer rift chambers spawn every turn, up to 8 or 12 creatures. Homes never spawn creatures."
     ],
     "related_entities": ["Mirk Runner", "Mirk Mauler", "Cave Troll", "Firelouse", "Nightmare", "Scaalmyr Grunt", "Sceetler", "Scaalmyr Warrior", "Scaalmyr Geomancer"],
     "related_pages": ["Terrain", "Stone ground", "Goo", "Sunken Ancient Ruins", "Rift-Thorn Mire"],
@@ -10153,13 +10157,15 @@
       {"source": "game-data-0900", "section": "gml_Object_obj_screenfader_Step_0", "key": "LastVisit.cave-restock.areas20-21"},
       {"source": "game-data-0900", "section": "gml_Object_manager_area_Alarm_4", "key": "areaType24-cap8.areaType25-cap12.interior-table"},
       {"source": "game-data-0900", "section": "gml_Object_cursor_Draw_73", "key": "placement.Water1.slope.goo.NatureData.raft-waterTresh"},
-      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"}
+      {"source": "game-data-0900", "section": "gml_GlobalScript_scr_nature", "key": "nature_can_grow.height-windows.stone.sand.slope.solid.goo"},
+      {"source": "game-data-1015", "section": "gml_Object_obj_screenfader_Step_0", "key": "area13.spiders45:15/46:1/ordinary-cave-nature16-exclusion"},
+      {"source": "game-data-1015", "section": "gml_GlobalScript_scr_ai_related", "key": "spawn_in_dungeon.safetyMax256/failed-candidate-destroy"}
     ],
     "index_page": "Terrain",
     "tables": [
       {
         "after": 4,
-        "columns": ["Creature", "Caves", "Ruin buildings and cellars", "Outer rift chambers"],
+        "columns": ["Creature", "Ordinary caves", "Ruin buildings and cellars", "Outer rift chambers"],
         "rows": [
           [{"entity": "Mirk Runner"}, "50.00%", "–", "–"],
           [{"entity": "Mirk Mauler"}, "16.67%", "20.00%", "–"],
@@ -10171,7 +10177,7 @@
           [{"entity": "Scaalmyr Warrior"}, "–", "–", "39.47%"],
           [{"entity": "Scaalmyr Geomancer"}, "–", "–", "21.05%"]
         ],
-        "caption": "Chance that a restocked or spawned creature is each kind."
+        "caption": "Conditional selection shares for ordinary caves, ruins and outer rift chambers; the spider cave uses its separate 15:1 pool."
       }
     ],
     "images": [
@@ -10217,7 +10223,7 @@
       "A normal Giant Slug selection can become a Giant Snail: 55% in Savage Mirk and 22.5% in other areas outside Fort Solid Shorehold. The selection tables are unchanged; these chances apply afterwards. During repopulation, an ordinary Toadkin spawn can also bring a Shaman on an independent 20% companion roll."
     ,
       "Newly generated areas can receive spider-cave entrances through the 0.333 replacement roll for eligible, collision-valid ordinary cave candidates. This is not a one-third chance for every area or cave. Already saved terrain is loaded without that generation step. The existing Mirk Lurker and Deathlob definitions are unchanged.",
-      "Area 13 now uses dungeon-like exposure and UI rules. The ordinary population updater still exits for this nonoutside area before its later dungeon fallback; that fallback does not establish additional inhabitants. Initial cave generation retains its existing relative Mirk Lurker:Deathlob weights of 15:1."
+      "Area 13 now uses dungeon-like exposure and UI rules. The ordinary population updater still exits for this nonoutside area before its later dungeon fallback; that fallback does not establish additional inhabitants. Initial cave generation retains its existing relative Mirk Lurker:Deathlob weights of 15:1. A separate revisit catch-up caller could add ordinary cave creatures in 1.0.1.0. From 1.0.1.5 that caller selects spiders at 15:1 once per eligible catch-up evaluation, without the ordinary elapsed-day or population repeat gate. Placement can fail, existing saved non-spiders remain, and ordinary cave-nature regrowth is excluded here; other caves are unchanged."
     ],
     "related_entities": ["Mudfin", "Boulder Crab", "Mire Serpent", "Viper", "Red Fang", "Scaalmyr Grunt", "Sceetler", "Firefly", "Feather", "Egg", "Willow", "Brambles", "Cypress", "Trollgnarl", "Elderwort Shrub", "Rift Vine"],
     "related_pages": ["Fort Solid Shorehold", "Common Bog", "Withered Mire", "Drowned Fen", "Broken Fen", "Savage Mirk", "Sunken Ancient Ruins", "Rift-Thorn Mire", "Vast Waters", "Terrain", "Planting"],
@@ -10292,7 +10298,9 @@
         "source": "game-data-1000",
         "section": "gml_GlobalScript_scr_map_and_weather",
         "key": "area_is_dungeonlike.includes13"
-      }
+      },
+      {"source": "game-data-1015", "section": "gml_Object_obj_screenfader_Step_0", "key": "areaToArea.area13.catch-up/spiders45:15/46:1/ordinary-repeat-and-nature-exclusion"},
+      {"source": "game-data-1010", "section": "gml_Object_obj_screenfader_Step_0", "key": "area_is_cavelike.ordinary-pool11/29/18/27"}
     ],
     "tables": [
       {

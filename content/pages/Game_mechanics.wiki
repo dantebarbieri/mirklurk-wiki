@@ -1,8 +1,8 @@
 Learn about survival, combat, crafting and progression. See [[Skills]] for bonuses, [[Items]] for equipment stats and [[Bestiary]] for creatures.
 
 == Version ==
-These guides cover '''1.0.1.0''', released on 26 November 2026. See [[Version 1.0.1.0]] for the latest patch and [[Versions]] for earlier versions. The [[Version 1.0.0.0|1.0 release]] ended Early Access. Other versions may differ.
+These guides cover '''1.0.1.5''', released on 27 November 2026. See [[Version 1.0.1.5]] for the latest patch and [[Versions]] for earlier versions. The [[Version 1.0.0.0|1.0 release]] ended Early Access. Other versions may differ.
 
-Default stats and acquisition tables describe public 1.0.1.0; [[Achievements]] explains the unlock conditions and limits.
+Default stats and acquisition tables describe public 1.0.1.5; [[Achievements]] explains the unlock conditions and limits. The latest patch adds Polish and an Eating Sounds setting, fixes newly finished raft interactions, and changes spider-cave revisit replenishment. Existing stats and recipes are unchanged.
 
 [[Skills]] | [[Damage types]] | [[Health and armor]] | [[Action points]] | [[Main Page]]
