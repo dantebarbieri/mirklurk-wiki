@@ -135,18 +135,27 @@ comparisons, 25 language fingerprints, source caveats and exact artwork reuse.
 Retained extraction metadata remains historical evidence; gameplay has one
 current stable reference rather than separate tester explanations.
 
-Patch **1.0.1.0**, released on 2026-11-26, is now the stable/default reference.
-It corrects blocking recognition for Iron Shield, Steel Buckler and Wooden
+Patch **1.0.1.0**, released on 2026-11-26,
+corrects blocking recognition for Iron Shield, Steel Buckler and Wooden
 Shield without changing their stats, adds Russian with selective female-text
 variants, and corrects fonts, translations and long equipment labels.
 [Provenance](docs/PROVENANCE.md#version-1010-update) records the exact nine-entry
 comparison and 30 verified language files. No new item art or world-generation
 changes are introduced.
 
-The reference now contains **107 numeric facts and 361 structured entries**:
+Patch **1.0.1.5**, released on 2026-11-27, is the stable/default reference.
+It adds Polish and an eating-sound option that substitutes a UI thud, fixes
+newly finished raft interactions, and changes the distinct saved spider-cave
+revisit caller. Placement can fail and saved non-spiders are not purged;
+the ordinary population updater's early exit remains unchanged.
+[Provenance](docs/PROVENANCE.md#version-1015-update) records 11 changed code
+entries, 35 verified language files and the additive historical caller evidence.
+Existing stats, fonts and approved item artwork are unchanged.
+
+The reference now contains **107 numeric facts and 362 structured entries**:
 37 quest/journal notes, 88 merchant offers, 100 station-specific recipe
-variants, 94 conditional loot entries, and 42 original algorithm/skill
-summaries. The encyclopedia presentation generates 554 main-namespace pages:
+variants, 94 conditional loot entries, and 43 original algorithm/skill
+summaries. The encyclopedia presentation generates 555 main-namespace pages:
 379 stable individual item, being, nature, skill, and damage-type pages,
 54 item-family
 pages, plus workstation articles, topic guides/indexes, the version pages and

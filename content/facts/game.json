@@ -3,7 +3,7 @@
   "game": {
     "name": "MirkLurk",
     "developer": null,
-    "build": "1.0.1.0",
+    "build": "1.0.1.5",
     "steam_app_id": 3972980
   },
   "sources": [
@@ -576,6 +576,84 @@
       "path": "Languages\\Russian\\UI.ini",
       "sha256": "b36525fffe09d5ca629ecb4e40708e0d9804f516d084fab7e3276aea82f9236c",
       "build": "1.0.1.0"
+    },
+    {
+      "id": "game-data-1015",
+      "path": "data.win",
+      "sha256": "262a5d80a360e5020284ae0ecf87dc87513116e34b6ee801497fbe00ef2a0e71",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "ui-zh-1015",
+      "path": "Languages\\Chinese\\UI.ini",
+      "sha256": "d0825bc8f4a5aa5a6273197ad3255cf843b98771f43399797660965b50b070ef",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "ui-en-1015",
+      "path": "Languages\\English\\UI.ini",
+      "sha256": "8a35712a119f521c877fccc1fc4250fea82897c8b4527dd9d94a78ee1327264e",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "ui-es-1015",
+      "path": "Languages\\Español\\UI.ini",
+      "sha256": "2c082e2a80f64b67a3f2e8a88a29bf2168dbb452a4559bb4d20d40457a194375",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "ui-de-1015",
+      "path": "Languages\\German\\UI.ini",
+      "sha256": "1f7e565461b163868b0bd9b0cb73a9ff307c9d41f18f7760d3cb8f557027b1db",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "beings-pl-1015",
+      "path": "Languages\\Polish\\Bestiary.ini",
+      "sha256": "39b2d6105fc11b3b0650c72ecf4ff5671f7999935065a7d186c3fb2f18abdcb8",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "items-pl-1015",
+      "path": "Languages\\Polish\\Items.ini",
+      "sha256": "6b0f283cea56f214e6864f314bfbcc5e7291bb2121bb5bc9aab2a9a091f7b0f2",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "keys-pl-1015",
+      "path": "Languages\\Polish\\Keys.ini",
+      "sha256": "ce19c008c9c67abc81a39234407b51bc97e723fdd31a1b934c3c73634fa8a12b",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "nature-pl-1015",
+      "path": "Languages\\Polish\\Nature.ini",
+      "sha256": "bba21506ff16b139dc4e2a6b7fab94520ec9e2eb4f6645cc56abc9d26b8cfd69",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "ui-pl-1015",
+      "path": "Languages\\Polish\\UI.ini",
+      "sha256": "2f4d55eebe6c785ecd8a3b3e7237ffa596e75e0c6afd9c655f9fa5f128a6c87a",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "ui-pt-1015",
+      "path": "Languages\\Portuguese (Brazil)\\UI.ini",
+      "sha256": "b4d4dccc3995e15b35d76c77fb777ccbc51f7b483d145c31f8cff73f822f2987",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "beings-ru-1015",
+      "path": "Languages\\Russian\\Bestiary.ini",
+      "sha256": "5598275ebbba9659d30d4d5989b387197086512dce474df2df05064c54455f1f",
+      "build": "1.0.1.5"
+    },
+    {
+      "id": "ui-ru-1015",
+      "path": "Languages\\Russian\\UI.ini",
+      "sha256": "0aa257172127177d7b18a44a983a27f2cb171c2a7ef912f97431b07b4554d834",
+      "build": "1.0.1.5"
     }
   ],
   "entities": [
@@ -22447,7 +22525,7 @@
     {
       "id": "release-1000-finish-raft",
       "kind": "algorithm",
-      "title": "Finish Raft in 1.0",
+      "title": "Moving and boarding a finished raft",
       "summary": "Moving and boarding a finished raft.",
       "conditions": "Existing terrain, action and eligibility conditions still apply.",
       "confidence": "inferred",
@@ -22471,6 +22549,21 @@
           "source": "game-data-1000",
           "section": "gml_Object_obj_station_Step_0",
           "key": "pushpullX/pushpullY/move_towards_point"
+        },
+        {
+          "source": "game-data-1015",
+          "section": "gml_Object_UI_Draw_64",
+          "key": "CRAFTINDEX171.localMenu=P.mySleepMenu"
+        },
+        {
+          "source": "game-data-1015",
+          "section": "gml_GlobalScript_scr_smartones",
+          "key": "player_interact.raft171.distance8/localMenu/menu_psynch"
+        },
+        {
+          "source": "game-data-1015",
+          "section": "gml_GlobalScript_scr_menu_related",
+          "key": "menu_psynch.index171.subSlots11/12/13"
         }
       ],
       "details": {
@@ -22478,7 +22571,8 @@
         "steps": [
           "The base item action cost is 6 AP rather than stable 0.9.6.5's 6.4 AP. The release adds Push, Pull and Board to the context menu; Push and Pull each cost 6 AP.",
           "Push targets a free tile 16 pixels away. AP is spent before the destination check, so a blocked push still costs AP. Pull moves the player 3 pixels away and then moves the raft toward that position; push nudges the player 3 pixels toward it.",
-          "Direct boarding requires being within 8 pixels; otherwise interaction opens the context menu. Push/pull motion takes time and its destination is not saved. No persistence of an in-progress movement is promised."
+          "Direct boarding requires being within 8 pixels; otherwise interaction opens the context menu. Push/pull motion takes time and its destination is not saved. No persistence of an in-progress movement is promised.",
+          "Version 1.0.1.5 assigns the shared interaction menu as soon as Finish Raft crafting succeeds. The newly finished raft can therefore offer the existing Push, Pull and Board context actions without reloading. Their AP costs, movement and direct-boarding rules are unchanged."
         ],
         "fact_ids": []
       }
@@ -22659,6 +22753,47 @@
           "Survival checks run after midnight's day increment, at 3, 10, 30 and 100 days.",
           "Completed death/loot branches check Nightmare, Mire Serpent, either Swamp Troll or Cave Troll, The Terror and Deathlob. Mirk Lurker is not the spider trigger.",
           "Journal progress can be checked during loading, but midnight, map and death checks retain their own gates. Existing-save achievements are not uniformly retroactive."
+        ],
+        "fact_ids": []
+      }
+    },
+    {
+      "id": "spider-cave-revisit-1015",
+      "kind": "algorithm",
+      "title": "Spider-cave revisit replenishment",
+      "summary": "A separate area-transition catch-up caller selects spiders on eligible spider-cave revisits.",
+      "conditions": "Applies to area 13 catch-up evaluations in 1.0.1.5; a placement call is not a guaranteed spawn.",
+      "confidence": "inferred",
+      "evidence": [
+        {
+          "source": "game-data-1015",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "areaToArea.peaked.alpha>=1/LastVisit/passedHours<=240/area13.spiders45:15/46:1"
+        },
+        {
+          "source": "game-data-1015",
+          "section": "gml_GlobalScript_scr_ai_related",
+          "key": "spawn_in_dungeon.safetyMax256/collision/class-needs/failed-candidate-destroy"
+        },
+        {
+          "source": "game-data-1010",
+          "section": "gml_Object_obj_screenfader_Step_0",
+          "key": "area_is_cavelike.repeat(min(enemiesLeft,round(passedDays/2))).11:15/29:5/18:5/27:5/nature16.tile148"
+        },
+        {
+          "source": "game-data-1015",
+          "section": "gml_Object_manager_area_Alarm_4",
+          "key": "nonoutside.earlyExit.area13"
+        }
+      ],
+      "details": {
+        "page": "World generation",
+        "steps": [
+          "Returning to the spider cave in 1.0.1.5 makes one creature-placement call per eligible area-transition catch-up evaluation. It selects Mirk Lurker or Deathlob with relative weights 15:1, not a daily spawn rate.",
+          "This spider branch does not use the ordinary cave's elapsed-day or four-creature repeat gate. It does not require a cleared cave or a positive number of days away, and is not repeated on every catch-up frame.",
+          "Placement checks up to 256 candidate positions for terrain, creature-class and collision requirements. If no suitable position is found, the candidate is destroyed, so a call need not add a creature.",
+          "The distinct 1.0.1.0 revisit caller could select Mirk Runner, Mirk Mauler, Cave Troll or Firelouse in this cave. The unchanged ordinary turn-by-turn population updater exits before its dungeon fallback; that earlier correction did not rule out the separate revisit caller.",
+          "Existing saved non-spider inhabitants are not purged. Area 13 no longer runs the ordinary cave-nature regrowth branch (nature 16, tile 148); other caves keep their existing restocking and regrowth rules. Initial spider-cave generation and creature stats are unchanged."
         ],
         "fact_ids": []
       }

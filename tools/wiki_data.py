@@ -36,6 +36,7 @@ PAGE_FILES = {
     "Version 0.9.6.2": "Version_0.9.6.2.wiki",
     "Version 1.0.0.0": "Version_1.0.0.0.wiki",
     "Version 1.0.1.0": "Version_1.0.1.0.wiki",
+    "Version 1.0.1.5": "Version_1.0.1.5.wiki",
     "Achievements": "Achievements.wiki",
     "Versions": "Versions.wiki",
 }

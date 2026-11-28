@@ -97,7 +97,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(locations["item-221"], "Turnip (item)")
         self.assertEqual(locations["nature-18"], "Turnip (nature)")
         self.assertEqual(len(self.catalog["pages"]), 379)
-        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 500)
+        self.assertEqual(sum(":" not in t and "''' groups " not in x for t, x in self.pages.items()), 501)
         self.assertEqual(sum(title.startswith("Category:") for title in self.pages), 125)
         self.assertTrue(all(row["title"] in self.pages for row in self.catalog["pages"]))
         self.assertEqual(len({row["entity"] for row in self.catalog["pages"]}), 379)
@@ -642,7 +642,7 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("10% floor", guide)
         self.assertIn("fewest possible coins are not guaranteed", guide)
         self.assertIn("Currency and trading", self.pages["Merchants"])
-        self.assertEqual(self.data["game"]["build"], "1.0.1.0")
+        self.assertEqual(self.data["game"]["build"], "1.0.1.5")
         self.assertIn("user report", self.audit)
 
     def test_currency_editorial_qualifications_stay_on_technical_page(self):
@@ -1174,9 +1174,9 @@ class ProfileTests(unittest.TestCase):
         # Release pin, game build blanked.
         self.assertEqual(
             hashlib.sha256((ROOT / "content" / "facts" / "game.json").read_bytes().replace(
-                b'"build": "1.0.1.0"', b'"build": null', 1,
+                b'"build": "1.0.1.5"', b'"build": null', 1,
             )).hexdigest(),
-            "a324ccec4ec45b7156b06c0da0ab898e2b0da1f5e0b6224492c9180741a7bcef",
+            "a8612f1465dce81c629c305832b7ef24c1737db20530ab95f1938e86f4b15aae",
         )
 
 

@@ -1,0 +1,35 @@
+'''Version 1.0.1.5''' is the patch released on 27 November 2026, following [[Version 1.0.1.0]]. The [https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852988563 official Steam announcement] was posted at 08:15:26 UTC. This wiki shows 1.0.1.5 values.
+
+This page contains '''location spoilers''' for the spider cave.
+
+== New content ==
+=== Polish ===
+Polish is available as the seventh language, with five packaged language files and its own selection flag. The font already gained Polish characters in 1.0.1.0; the translation ships in this patch.
+
+'''Not in the patch notes:''' Polish now shares Russian's selective female-text lookup for an existing female player. A matching female-specific key is used when available; otherwise the base text remains. This is not a general grammatical transformation or a promise that every line has a variant.
+
+== Changes ==
+=== Eating sounds ===
+The Eating Sounds checkbox replaces food bite sounds with a UI thud when disabled. It defaults to enabled, including when an older settings file lacks the key, and the choice is saved. It does not make consumption silent or mute every drink, remedy or other sound. [[Foods|Food effects]], sickness risk and satiation are unchanged.
+
+=== Russian wording and language migration ===
+Russian dialogue and interface wording receive corrections to the Mirk's name. Every existing language gains the Eating Sounds label.
+
+'''Not in the patch notes:''' missing-key filling accepts supplied Russian and Polish translations. The new audio-option call supplies them; existing keys are not overwritten, and missing translations are not automatically translated.
+
+== Fixes ==
+=== Newly finished rafts ===
+Successful [[Finish Raft]] crafting now assigns the shared interaction menu immediately. The newly finished raft can offer the existing Push, Pull and Board actions without reloading. Their AP costs, movement, direct-boarding range and save behavior are unchanged; no broader rafting guarantee is implied.
+
+=== Spider-cave revisits ===
+The saved-area catch-up caller now selects [[Mirk Lurker]] or [[Deathlob]] in the spider cave, with relative weights '''15:1'''. It makes one placement call per eligible catch-up evaluation, not one guaranteed creature or a daily spawn rate. See [[World generation]] and [[Interior floors]].
+
+'''Not in the patch notes:''' this call is outside the ordinary cave's elapsed-day and population repeat gate. It does not require a cleared cave, a positive number of days away or fewer than four inhabitants. Placement checks up to 256 candidate positions and can fail. Existing saved non-spider inhabitants are not purged.
+
+The distinct 1.0.1.0 revisit caller could replenish this cave from the ordinary Mirk Runner, Mirk Mauler, Cave Troll and Firelouse pool. This is separate from the ordinary turn-by-turn population updater, whose early exit remains unchanged; the earlier correction of that updater did not exclude other placement callers.
+
+'''Not in the patch notes:''' this cave no longer runs ordinary cave-nature regrowth (nature 16, tile 148). Other caves keep their existing restocking and regrowth rules. Initial spider-cave generation, creature stats and saved terrain are unchanged.
+
+Existing item, nature and creature stats, recipes, achievement checks, fonts and item artwork are unchanged. The save writer updates its version label, not the serialized fields or grid format.
+
+[[Versions]] | [[Game mechanics]] | [[Main Page]]

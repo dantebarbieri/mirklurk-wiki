@@ -485,10 +485,10 @@ class SelectiveViewTests(unittest.TestCase):
             "Version 0.8.9.9", *(f"Version 0.9.0.{n}" for n in range(3)), "Version 0.9.1.0", "Version 0.9.1.2", "Version 0.9.2.0", "Version 0.9.5.0", "Version 0.9.5.3", "Version 0.9.5.5", "Version 0.9.5.6", "Version 0.9.6.5", "Wooden Buckler", "Versions",
             "Version history", "Patch notes", "Survivor", "Fire Bond", "Webbed treasure",
             "Version 0.9.6.0", "Version 0.9.6.1", "Version 0.9.6.2", "Version 0.9.9.7",
-            "Version 1.0.0.0", "Version 1.0.1.0", "Achievements"}
+            "Version 1.0.0.0", "Version 1.0.1.0", "Version 1.0.1.5", "Achievements"}
         from wiki_tester import load_tester
         added |= {row["name"] for row in load_tester(ROOT, self.data)["data"]["entities"]}
-        self.assertEqual(len(added), 74)
+        self.assertEqual(len(added), 75)
         families = {title for title, text in self.pages.items() if f"\n'''{title}''' groups " in text}
         old_titles = sorted(title for title in set(self.pages) - new_guides - source_titles - DISPLAY_TITLES - {"World generation"} - added - families
                             if not title.startswith("Category:") or title.removeprefix("Category:") in historical_categories)

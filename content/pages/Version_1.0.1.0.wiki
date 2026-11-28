@@ -1,4 +1,4 @@
-'''Version 1.0.1.0''' is the patch released on 26 November 2026, following [[Version 1.0.0.0]]. The [https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852985197 official Steam announcement] was posted at 11:50:32 UTC. This wiki shows 1.0.1.0 values.
+'''Version 1.0.1.0''' is the patch released on 26 November 2026, following [[Version 1.0.0.0]]. The [https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852985197 official Steam announcement] was posted at 11:50:32 UTC. The wiki now shows values from [[Version 1.0.1.5]]; this page retains the patch's history.
 
 == New content ==
 === Russian ===

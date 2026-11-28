@@ -28,10 +28,10 @@ class TesterDocumentationTests(unittest.TestCase):
         before = copy.deepcopy(self.stable)
         pages = build_pages(ROOT, *self.inputs)
         self.assertEqual(self.stable, before)
-        self.assertEqual(self.stable["game"]["build"], "1.0.1.0")
+        self.assertEqual(self.stable["game"]["build"], "1.0.1.5")
         self.assertLessEqual({row["id"] for row in self.tester["data"]["entities"]},
                              {row["id"] for row in self.stable["entities"]})
-        self.assertIn("'''Current version:''' 1.0.1.0", pages["Main Page"])
+        self.assertIn("'''Current version:''' 1.0.1.5", pages["Main Page"])
         self.assertNotIn("== 0.9.9.7 tester ==", pages["Finish Raft"])
         for entity in self.tester["data"]["entities"]:
             text = pages[entity["name"]]
@@ -62,7 +62,7 @@ class TesterDocumentationTests(unittest.TestCase):
         for note in self.tester["page_notes"]:
             self.assertNotIn("== 0.9.9.7 tester ==", self.pages[note["page"]])
         for title in ("Main Page", "Versions", "Game mechanics", "World generation",
-                      "Crafting", "Version 1.0.0.0", "Version 1.0.1.0"):
+                      "Crafting", "Version 1.0.0.0", "Version 1.0.1.0", "Version 1.0.1.5"):
             self.assertNotIn("0.9.9.7", self.pages[title], title)
             self.assertNotIn("tester", self.pages[title].lower(), title)
         self.assertEqual(hashlib.sha256((ROOT / "content" / "facts" / "tester.json").read_bytes()).hexdigest(),
@@ -120,6 +120,35 @@ class TesterDocumentationTests(unittest.TestCase):
         self.assertNotIn("fixes this shield", self.pages["Iron Chestplate"])
         self.assertIn("recognized from 1.0.1.0", self.pages["Shield Savant"])
         self.assertIn("Version 1.0.1.0 fixes recognition", self.pages["Combat basics"])
+
+    def test_spider_revisit_documents_the_distinct_caller_and_failed_placement(self):
+        entry = next(row for row in self.stable["entries"] if row["id"] == "spider-cave-revisit-1015")
+        self.assertEqual(entry["confidence"], "inferred")
+        self.assertTrue(any(row["source"] == "game-data-1010" for row in entry["evidence"]))
+        page = self.pages["World generation"]
+        for caveat in ("relative weights 15:1", "does not require a cleared cave",
+                       "up to 256 candidate positions", "candidate is destroyed",
+                       "Existing saved non-spider inhabitants are not purged",
+                       "unchanged ordinary turn-by-turn population updater"):
+            self.assertIn(caveat, page)
+        self.assertIn("Ordinary caves", self.pages["Interior floors"])
+        self.assertIn("Placement can fail", self.pages["Areas"])
+        self.assertIn("nature 16, tile 148", self.pages["Version 1.0.1.5"])
+
+    def test_patch_audio_and_raft_fix_do_not_promise_silence_or_changed_costs(self):
+        self.assertIn("UI thud", self.pages["Foods"])
+        self.assertIn("does not make consumption silent", self.pages["Foods"])
+        self.assertIn("defaults to enabled", self.pages["Foods"])
+        page = self.pages["Finish Raft"]
+        self.assertIn("as soon as Finish Raft crafting succeeds", page)
+        self.assertIn("without reloading", page)
+        self.assertEqual(page.count("Push targets a free tile 16 pixels away"), 1)
+        self.assertIn("AP costs, movement and direct-boarding rules are unchanged", page)
+        version = self.pages["Version 1.0.1.5"]
+        self.assertIn("27 November 2026", version)
+        self.assertIn("seventh language", version)
+        self.assertIn("base text remains", version)
+        self.assertIn("font already gained Polish characters in 1.0.1.0", version)
 
     def test_shadowed_stable_entities_and_unapproved_beta_art_fail_before_rendering(self):
         def shadow(document):

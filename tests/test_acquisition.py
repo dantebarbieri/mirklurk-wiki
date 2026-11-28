@@ -168,7 +168,7 @@ class AcquisitionTests(unittest.TestCase):
         # Prose carries prerequisites too: retain condition, odds_note and probability.scope.
         snapshot = json.dumps(document, sort_keys=True, separators=(",", ":")) + "\n"
         self.assertEqual(hashlib.sha256(snapshot.encode()).hexdigest(),
-                         "55e85e7ea604d11656bcfdae6416b3ff952f32f86007b95d72ac485d67a290f0")
+                         "a81ff2a2a9151939e58dd8ba332ee154e0fa379edbddabb9ad8f7a803d4a9dc0")
 
     def test_gathering_quantities_and_insect_distributions_remain_exact(self):
         sources = {source["id"]: source for source in self.catalog["acquisition"]["sources"]}
